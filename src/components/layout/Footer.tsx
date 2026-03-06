@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Youtube, Instagram, Facebook, Heart } from 'lucide-react'
-import { COUNTRIES, getFlagImageUrl } from '@/lib/countries'
+import { COUNTRIES, getFlagSrcSet } from '@/lib/countries'
 
 export function Footer() {
     const currentYear = new Date().getFullYear()
@@ -51,7 +51,7 @@ export function Footer() {
                                             {failedFlagSlugs.has(country.slug) ? (
                                                 <span className="flex h-full w-full items-center justify-center text-xs leading-none">{country.flagEmoji}</span>
                                             ) : (
-                                                <img src={getFlagImageUrl(country.slug, 40)} alt="" className="h-full w-full object-cover" onError={() => setFailedFlagSlugs((prev) => new Set(prev).add(country.slug))} />
+                                                <img {...getFlagSrcSet(country.slug)} alt="" className="h-full w-full object-cover" loading="lazy" onError={() => setFailedFlagSlugs((prev) => new Set(prev).add(country.slug))} />
                                             )}
                                         </span>
                                         <span>{country.name}</span>
@@ -140,8 +140,14 @@ export function Footer() {
                     </div>
                 </div>
 
+                {/* Trust signals */}
+                <div className="mt-8 flex flex-wrap items-center justify-center gap-6 text-xs text-slate-500">
+                    <span>Authorized Enagic Distributor</span>
+                    <span className="text-white/40">·</span>
+                    <span>True Legacy World — Global Team</span>
+                </div>
                 {/* Bottom Bar */}
-                <div className="mt-12 border-t border-white/10 pt-8 flex flex-col items-center gap-4 sm:flex-row sm:justify-between">
+                <div className="mt-8 border-t border-white/10 pt-8 flex flex-col items-center gap-4 sm:flex-row sm:justify-between">
                     <p className="text-xs text-slate-500">
                         © {currentYear} True Legacy World. All rights reserved.
                     </p>

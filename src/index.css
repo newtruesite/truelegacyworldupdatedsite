@@ -30,6 +30,7 @@
     color: #e8edf8;
     overflow-x: hidden;
     -webkit-font-smoothing: antialiased;
+    font-size: clamp(16px, 2vw, 18px);
   }
 
   h1,
@@ -305,6 +306,22 @@
 
 .animate-marquee {
   animation: marquee-scroll 30s linear infinite;
+}
+
+/* World map dot pulse: scale 1 → 1.4, opacity 1 → 0.3, 2s infinite */
+@keyframes map-dot-pulse {
+  0%, 100% {
+    transform: translateY(-50%) scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: translateY(-50%) scale(1.4);
+    opacity: 0.3;
+  }
+}
+
+.map-dot-pulse {
+  animation: map-dot-pulse 2s ease-in-out infinite;
 }
 
 /* ============================================================

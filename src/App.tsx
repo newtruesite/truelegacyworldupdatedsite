@@ -1,9 +1,13 @@
+import { useEffect } from 'react'
 import { BrowserRouter, Routes, Route, useLocation, Navigate } from 'react-router-dom'
+import { PdfLeadCaptureProvider } from '@/contexts/PdfLeadCaptureContext'
+import { LocaleProvider } from '@/contexts/LocaleContext'
 import { AnimatePresence, motion } from 'framer-motion'
 import HomePage from '@/pages/HomePage'
 import CountryPage from '@/pages/CountryPage'
 import RegionPage from '@/pages/RegionPage'
 import TrainingPage from '@/pages/TrainingPage'
+import LoginPage from '@/pages/LoginPage'
 import SettingsPage from '@/pages/SettingsPage'
 import EmGuardePage from '@/pages/EmGuardePage'
 import K8Page from '@/pages/K8Page'
@@ -21,11 +25,21 @@ function PageTransitionWrapper({ children }: { children: React.ReactNode }) {
   )
 }
 
+function ScrollToTop() {
+  const { pathname } = useLocation()
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [pathname])
+  return null
+}
+
 function AnimatedRoutes() {
   const location = useLocation()
 
   return (
-    <AnimatePresence mode="wait">
+    <>
+      <ScrollToTop />
+      <AnimatePresence mode="wait">
       <Routes location={location} key={location.pathname}>
         {/* Home */}
         <Route
@@ -37,6 +51,14 @@ function AnimatedRoutes() {
           }
         />
         {/* Static pages first — so they don't get matched by /:country */}
+        <Route
+          path="/login"
+          element={
+            <PageTransitionWrapper>
+              <LoginPage />
+            </PageTransitionWrapper>
+          }
+        />
         <Route
           path="/training"
           element={
@@ -102,13 +124,18 @@ function AnimatedRoutes() {
         />
       </Routes>
     </AnimatePresence>
+    </>
   )
 }
 
 export default function App() {
   return (
     <BrowserRouter>
-      <AnimatedRoutes />
+      <LocaleProvider>
+        <PdfLeadCaptureProvider>
+          <AnimatedRoutes />
+        </PdfLeadCaptureProvider>
+      </LocaleProvider>
     </BrowserRouter>
   )
 }

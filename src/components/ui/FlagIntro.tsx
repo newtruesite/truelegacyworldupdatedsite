@@ -1,7 +1,8 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
 import type { Country } from '@/lib/countries'
-import { getFlagImageUrl } from '@/lib/countries'
+import { getFlagSrcSet } from '@/lib/countries'
+import { useLocaleContext } from '@/contexts/LocaleContext'
 
 interface FlagIntroProps {
     country: Country
@@ -9,22 +10,24 @@ interface FlagIntroProps {
 
 export function FlagIntro({ country }: FlagIntroProps) {
     const [flagFailed, setFlagFailed] = useState(false)
+    const { locale } = useLocaleContext()
+    const welcomeText = locale === 'es' ? `Bienvenido a ${country.nativeName}` : locale === 'fr' ? `Bienvenue au ${country.nativeName}` : `Welcome to ${country.name}`
     return (
-        <div className="flex flex-col items-center justify-center py-16 text-center">
-            {/* Animated flag drop with subtle ruffle */}
+        <div className="flex flex-col items-center justify-center py-16 text-center scroll-mt-20">
+            {/* Animated flag: moves to final position (subtle translateY from below) */}
             <motion.div
-                initial={{ y: -80, opacity: 0, scale: 0.5 }}
+                initial={{ y: 24, opacity: 0, scale: 0.92 }}
                 animate={{ y: 0, opacity: 1, scale: 1 }}
                 transition={{
                     type: 'spring',
                     stiffness: 200,
-                    damping: 18,
-                    delay: 0.1,
+                    damping: 22,
+                    delay: 0.05,
                 }}
                 className="mb-6 relative"
             >
                 <motion.div
-                    className="relative w-40 h-28 md:w-48 md:h-32 rounded-md overflow-hidden border border-white/20 bg-[#0a2060]"
+                    className="relative min-w-[180px] min-h-[120px] w-[200px] h-[133px] md:w-56 md:h-[150px] rounded-md overflow-hidden border border-white/20 bg-[#0a2060] flex items-center justify-center"
                     animate={{ skewX: [-2, 2, -2], y: [0, -4, 0] }}
                     transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
                     style={{
@@ -45,9 +48,9 @@ export function FlagIntro({ country }: FlagIntroProps) {
                         </motion.div>
                     ) : (
                         <img
-                            src={getFlagImageUrl(country.slug, 160)}
+                            {...getFlagSrcSet(country.slug)}
                             alt={`Flag of ${country.name}`}
-                            className="h-full w-full object-cover"
+                            className="h-full w-full object-contain object-center"
                             onError={() => setFlagFailed(true)}
                         />
                     )}
@@ -73,9 +76,7 @@ export function FlagIntro({ country }: FlagIntroProps) {
                     True Legacy World — {country.region}
                 </p>
                 <h1 className="text-4xl font-bold text-white sm:text-5xl lg:text-6xl">
-                    {country.locale === 'es'
-                        ? `Bienvenido a ${country.nativeName}`
-                        : `Welcome to ${country.name}`}
+                    {welcomeText}
                 </h1>
             </motion.div>
 

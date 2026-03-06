@@ -11,18 +11,43 @@ export const SLUG_TO_ISO2: Record<string, string> = {
     paraguay: 'py',
     mexico: 'mx',
     brazil: 'br',
+    uae: 'ae',
+    india: 'in',
+    malaysia: 'my',
 }
 
-/** flagcdn.com only supports w20, w40, w80, w160 (w96 etc. fail) — use 160 for HD */
+/** flagcdn.com: w80 default, w160 for retina. Use getFlagImageUrl(slug, 80) and (slug, 160) for srcset. */
 const FLAGCDN_WIDTHS = [20, 40, 80, 160] as const
 
-export function getFlagImageUrl(slug: string, width = 80): string {
+export function getFlagImageUrl(slug: string, width: 20 | 40 | 80 | 160 = 80): string {
     const iso2 = SLUG_TO_ISO2[slug] ?? slug.slice(0, 2)
     const w = FLAGCDN_WIDTHS.reduce((prev, curr) =>
         Math.abs(curr - width) < Math.abs(prev - width) ? curr : prev
-    )
+    ) as 20 | 40 | 80 | 160
     return `https://flagcdn.com/w${w}/${iso2}.png`
 }
+
+/** Asia slugs that use local high-res flag assets under /assets/flags/asia/ */
+const ASIA_FLAG_SLUGS = ['uae', 'india', 'malaysia'] as const
+
+/** Returns { src, srcSet } — local high-res for Asia (UAE, India, Malaysia), else flagcdn.com */
+export function getFlagSrcSet(slug: string): { src: string; srcSet: string } {
+    if (ASIA_FLAG_SLUGS.includes(slug as (typeof ASIA_FLAG_SLUGS)[number])) {
+        const base = `/assets/flags/asia/${slug}`
+        return {
+            src: `${base}.png`,
+            srcSet: `${base}.png 1x, ${base}@2x.png 2x`,
+        }
+    }
+    const iso2 = SLUG_TO_ISO2[slug] ?? slug.slice(0, 2)
+    return {
+        src: `https://flagcdn.com/w80/${iso2}.png`,
+        srcSet: `https://flagcdn.com/w80/${iso2}.png 1x, https://flagcdn.com/w160/${iso2}.png 2x`,
+    }
+}
+
+/** True Legacy LATAM Instagram — used for South American / Spanish country pages */
+export const INSTAGRAM_LATAM = 'https://instagram.com/truelegacylatam'
 
 export interface Country {
     slug: string
@@ -32,7 +57,7 @@ export interface Country {
     flagEmoji: string
     youtubeUrl: string
     youtubeId: string
-    locale: 'en' | 'es'
+    locale: 'en' | 'es' | 'fr'
     jotformUrl: string
     youtube: string
     instagram: string
@@ -77,12 +102,12 @@ export const COUNTRIES: Country[] = [
     {
         slug: 'morocco',
         name: 'Morocco',
-        nativeName: 'Morocco',
+        nativeName: 'Maroc',
         flag: '🇲🇦',
         flagEmoji: '🇲🇦',
         youtubeUrl: 'https://youtu.be/HH8Yh2tLTKc',
         youtubeId: 'HH8Yh2tLTKc',
-        locale: 'en',
+        locale: 'fr',
         jotformUrl: JOTFORM_EN,
         youtube: 'https://youtube.com/@TrueLegacyWorld',
         instagram: 'https://instagram.com/truelegacyworld',
@@ -112,12 +137,12 @@ export const COUNTRIES: Country[] = [
         nativeName: 'Colombia',
         flag: '🇨🇴',
         flagEmoji: '🇨🇴',
-        youtubeUrl: 'https://youtu.be/xpQ6KHcCfJs',
-        youtubeId: 'xpQ6KHcCfJs',
+        youtubeUrl: 'https://www.youtube.com/watch?v=QxYHhQYQ8PY',
+        youtubeId: 'QxYHhQYQ8PY',
         locale: 'es',
         jotformUrl: JOTFORM_ES,
         youtube: 'https://youtube.com/@TrueLegacyLATAM',
-        instagram: 'https://instagram.com/truelegacyworld',
+        instagram: INSTAGRAM_LATAM,
         region: 'Latin America',
         mapX: 26,
         mapY: 55,
@@ -128,12 +153,12 @@ export const COUNTRIES: Country[] = [
         nativeName: 'Paraguay',
         flag: '🇵🇾',
         flagEmoji: '🇵🇾',
-        youtubeUrl: 'https://youtu.be/EMvZOe6im-U',
-        youtubeId: 'EMvZOe6im-U',
+        youtubeUrl: 'https://www.youtube.com/watch?v=BkwOdIR_ZgU',
+        youtubeId: 'BkwOdIR_ZgU',
         locale: 'es',
         jotformUrl: JOTFORM_ES,
         youtube: 'https://youtube.com/@TrueLegacyLATAM',
-        instagram: 'https://instagram.com/truelegacyworld',
+        instagram: INSTAGRAM_LATAM,
         region: 'Latin America',
         mapX: 29,
         mapY: 73,
@@ -144,12 +169,12 @@ export const COUNTRIES: Country[] = [
         nativeName: 'México',
         flag: '🇲🇽',
         flagEmoji: '🇲🇽',
-        youtubeUrl: 'https://youtu.be/3dBfFcLL3jU',
-        youtubeId: '3dBfFcLL3jU',
+        youtubeUrl: 'https://www.youtube.com/watch?v=79WSQDzIzU4',
+        youtubeId: '79WSQDzIzU4',
         locale: 'en',
         jotformUrl: JOTFORM_EN,
         youtube: 'https://youtube.com/@TrueLegacyLATAM',
-        instagram: 'https://instagram.com/truelegacyworld',
+        instagram: INSTAGRAM_LATAM,
         region: 'Latin America',
         mapX: 16,
         mapY: 42,
@@ -160,15 +185,63 @@ export const COUNTRIES: Country[] = [
         nativeName: 'Brasil',
         flag: '🇧🇷',
         flagEmoji: '🇧🇷',
-        youtubeUrl: 'https://youtu.be/tLHc0PaCdsE',
-        youtubeId: 'tLHc0PaCdsE',
+        youtubeUrl: 'https://www.youtube.com/watch?v=xxvXOluPOrY',
+        youtubeId: 'xxvXOluPOrY',
         locale: 'es',
         jotformUrl: JOTFORM_ES,
         youtube: 'https://youtube.com/@TrueLegacyLATAM',
-        instagram: 'https://instagram.com/truelegacyworld',
+        instagram: INSTAGRAM_LATAM,
         region: 'Latin America',
         mapX: 30,
         mapY: 64,
+    },
+    {
+        slug: 'uae',
+        name: 'United Arab Emirates',
+        nativeName: 'الإمارات العربية المتحدة',
+        flag: '🇦🇪',
+        flagEmoji: '🇦🇪',
+        youtubeUrl: 'https://youtube.com/@TrueLegacyWorld',
+        youtubeId: 'erTkubfkt9o',
+        locale: 'en',
+        jotformUrl: JOTFORM_EN,
+        youtube: 'https://youtube.com/@TrueLegacyWorld',
+        instagram: 'https://instagram.com/truelegacyworld',
+        region: 'Asia',
+        mapX: 58,
+        mapY: 42,
+    },
+    {
+        slug: 'india',
+        name: 'India',
+        nativeName: 'भारत',
+        flag: '🇮🇳',
+        flagEmoji: '🇮🇳',
+        youtubeUrl: 'https://youtube.com/@TrueLegacyWorld',
+        youtubeId: 'erTkubfkt9o',
+        locale: 'en',
+        jotformUrl: JOTFORM_EN,
+        youtube: 'https://youtube.com/@TrueLegacyWorld',
+        instagram: 'https://instagram.com/truelegacyworld',
+        region: 'Asia',
+        mapX: 68,
+        mapY: 45,
+    },
+    {
+        slug: 'malaysia',
+        name: 'Malaysia',
+        nativeName: 'Malaysia',
+        flag: '🇲🇾',
+        flagEmoji: '🇲🇾',
+        youtubeUrl: 'https://youtube.com/@TrueLegacyWorld',
+        youtubeId: 'erTkubfkt9o',
+        locale: 'en',
+        jotformUrl: JOTFORM_EN,
+        youtube: 'https://youtube.com/@TrueLegacyWorld',
+        instagram: 'https://instagram.com/truelegacyworld',
+        region: 'Asia',
+        mapX: 76,
+        mapY: 52,
     },
 ]
 

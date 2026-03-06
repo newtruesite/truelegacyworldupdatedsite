@@ -7,6 +7,8 @@ import { Footer } from '@/components/layout/Footer'
 import { AuroraBackground } from '@/components/ui/AuroraBackground'
 import { COUNTRIES } from '@/lib/countries'
 import { t } from '@/lib/translations'
+import { useLocaleContext } from '@/contexts/LocaleContext'
+import { usePdfLeadCapture } from '@/contexts/PdfLeadCaptureContext'
 
 const K8_PDF_URL = 'https://www.truelegacyworld.com/_files/ugd/7b12be_e690ffee275f44b887f409eac751f9dc.pdf'
 
@@ -28,28 +30,17 @@ const FEATURES_ES = [
 export default function K8Page() {
     const { countrySlug } = useParams<{ countrySlug: string }>()
     const country = COUNTRIES.find((c) => c.slug === countrySlug) ?? COUNTRIES.find((c) => c.slug === 'usa')!
-    const locale = country.locale ?? 'en'
+    const { locale } = useLocaleContext()
     const copy = t[locale]
     const jotformUrl = country.jotformUrl ?? 'https://form.jotform.com/260232994952060'
     const isSpanish = locale === 'es'
     const FEATURES = isSpanish ? FEATURES_ES : FEATURES_EN
 
-    const [pdfEmail, setPdfEmail] = useState('')
-    const [pdfUnlocked, setPdfUnlocked] = useState(false)
-    const [showPdfForm, setShowPdfForm] = useState(false)
     const [heroImgError, setHeroImgError] = useState(false)
-
-    const handlePdfSubmit = (e: React.FormEvent) => {
-        e.preventDefault()
-        if (pdfEmail.trim()) {
-            setPdfUnlocked(true)
-            setShowPdfForm(false)
-            window.open(K8_PDF_URL, '_blank')
-        }
-    }
+    const { openModal: openPdfModal } = usePdfLeadCapture()
 
     return (
-        <div className="min-h-screen bg-[#070b16]">
+        <div className="min-h-screen bg-[#070b16] overflow-x-hidden">
             <Navbar />
 
             <AuroraBackground className="pt-28 pb-0">
@@ -196,38 +187,13 @@ export default function K8Page() {
                         >
                             <ExternalLink className="w-4 h-4" /> {copy.k8.learnMore}
                         </a>
-                        {pdfUnlocked ? (
-                            <a
-                                href={K8_PDF_URL}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="flex items-center justify-center gap-2 rounded-2xl border border-white/10 bg-white/5 px-6 py-4 text-sm font-semibold text-white hover:bg-white/10 transition-all"
-                            >
-                                <Download className="w-4 h-4 text-cyan-400" /> {copy.k8.downloadPdf}
-                            </a>
-                        ) : showPdfForm ? (
-                            <form onSubmit={handlePdfSubmit} className="flex flex-col sm:flex-row gap-2 rounded-2xl border border-cyan-500/30 bg-white/5 p-3">
-                                <input
-                                    type="email"
-                                    value={pdfEmail}
-                                    onChange={(e) => setPdfEmail(e.target.value)}
-                                    placeholder={isSpanish ? 'Tu correo electrónico' : 'Your email address'}
-                                    required
-                                    className="flex-1 min-w-0 rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white placeholder-slate-500 focus:border-cyan-400 focus:outline-none"
-                                />
-                                <button type="submit" className="rounded-xl bg-cyan-600 hover:bg-cyan-500 px-4 py-3 text-sm font-semibold text-white transition-all">
-                                    {isSpanish ? 'Enviar' : 'Submit'}
-                                </button>
-                            </form>
-                        ) : (
-                            <button
-                                type="button"
-                                onClick={() => setShowPdfForm(true)}
-                                className="flex items-center justify-center gap-2 rounded-2xl border border-white/10 bg-white/5 px-6 py-4 text-sm font-semibold text-white hover:bg-white/10 transition-all"
-                            >
-                                <Download className="w-4 h-4 text-cyan-400" /> {copy.k8.downloadPdf}
-                            </button>
-                        )}
+                        <button
+                            type="button"
+                            onClick={() => openPdfModal(K8_PDF_URL, 'kangen')}
+                            className="flex items-center justify-center gap-2 rounded-2xl border border-white/10 bg-white/5 px-6 py-4 text-sm font-semibold text-white hover:bg-white/10 transition-all min-h-[48px] hover:scale-[1.02]"
+                        >
+                            <Download className="w-4 h-4 text-cyan-400" /> {copy.k8.downloadPdf}
+                        </button>
                     </motion.div>
 
                     {/* CTA button above back link */}

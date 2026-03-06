@@ -7,9 +7,10 @@ import { VSLPlayer } from '@/components/ui/VSLPlayer'
 import { Navbar } from '@/components/layout/Navbar'
 import { Footer } from '@/components/layout/Footer'
 import { TestimonialsSplit } from '@/components/ui/split-testimonial'
-import { COUNTRIES, getCountryBySlug, getFlagImageUrl } from '@/lib/countries'
+import { COUNTRIES, getCountryBySlug, getFlagSrcSet } from '@/lib/countries'
 import type { Country } from '@/lib/countries'
 import { t } from '@/lib/translations'
+import { useLocaleContext } from '@/contexts/LocaleContext'
 
 // ── Custom SVG Icons (no emojis) ──────────────────────────────
 function IconArrow({ size = 20 }: { size?: number }) {
@@ -62,13 +63,6 @@ function IconDroplet({ size = 22 }: { size?: number }) {
     return (
         <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
             <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z" />
-        </svg>
-    )
-}
-function IconStar({ size = 14, filled = false }: { size?: number; filled?: boolean }) {
-    return (
-        <svg width={size} height={size} viewBox="0 0 24 24" fill={filled ? '#F5A623' : 'none'} stroke="#F5A623" strokeWidth="1.8">
-            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
         </svg>
     )
 }
@@ -224,9 +218,6 @@ function getContent(country: Country) {
         productsLabel: es ? 'Nuestros Productos' : 'Our Products',
         productsSub: es ? 'Tecnología de bienestar que funciona' : 'Wellness Technology That Works',
         leadersLabel: es ? 'Líderes en' : 'Leaders Building True Legacy in',
-        testimonialStripQuote: es ? 'Con trabajo duro, enfoque y fe, recuperé la estabilidad financiera y descubrí un nuevo sentido de propósito. Este negocio me devolvió la esperanza.' : 'Through hard work, focus, and faith, I was able to regain financial stability and discover a new sense of purpose. This business gave me back hope.',
-        testimonialStripName: 'Nigara Ismailova',
-        testimonialStripRole: es ? 'Líder True Legacy' : 'True Legacy Leader',
         socialProofLeaders: es ? 'Líderes en 3 continentes' : 'Leaders across 3 continents',
         socialProofCountries: es ? 'Más de 45 países activos' : '45+ countries active',
         socialProofEnagic: es ? 'Red distribuidor certificado Enagic' : 'Enagic certified distributor network',
@@ -259,17 +250,17 @@ export default function CountryPage() {
     const country = getCountryBySlug(slug || '')
     if (!country) return <Navigate to="/" replace />
 
-    const locale = country.locale ?? 'en'
+    const { locale } = useLocaleContext()
     const jotformUrl = country.jotformUrl ?? DEFAULT_JOTFORM
     const copy = t[locale]
     const c = getContent(country)
 
     return (
-        <div className="min-h-screen" style={{ background: '#060b1e' }}>
+        <div className="min-h-screen overflow-x-hidden" style={{ background: '#060b1e' }}>
             <Navbar />
 
             {/* ===== HERO (TL background style) ===== */}
-            <TLBackground className="min-h-screen pt-20 pb-0">
+            <TLBackground className="min-h-screen pt-20 pb-0 scroll-mt-20">
                 <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-10">
                     <FlagIntro country={country} />
                     <p className="text-center text-slate-400 text-sm md:text-base max-w-2xl mx-auto mt-4 font-light leading-relaxed">
@@ -398,16 +389,23 @@ export default function CountryPage() {
                                 <div className="rounded-2xl overflow-hidden border-2 border-white/15 shadow-2xl shadow-black/50 mb-4 aspect-[4/3] bg-[#0a1628] relative flex items-center justify-center">
                                     {!emguardeImgError && (
                                         <img
-                                            src="/products/emguarde.png"
+                                            src="/assets/images/emguarde-product.png"
                                             alt="emGuarde — EMF harmonizer by Enagic, True Legacy World"
                                             className="w-full h-full object-contain hover:scale-105 transition-transform duration-500 bg-black/40"
                                             loading="lazy"
                                             decoding="async"
-                                            onError={() => setEmguardeImgError(true)}
+                                            onError={(e) => {
+                                                const t = e.currentTarget
+                                                if (t.src.includes('emguarde-product')) {
+                                                    t.src = '/products/emguarde.png'
+                                                } else {
+                                                    setEmguardeImgError(true)
+                                                }
+                                            }}
                                         />
                                     )}
                                     {emguardeImgError && (
-                                        <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 text-purple-400/90">
+                                        <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 text-purple-400/90 bg-white bg-none">
                                             <IconShield size={48} />
                                             <span className="text-sm font-semibold text-white/90">emGuarde™</span>
                                         </div>
@@ -537,24 +535,6 @@ export default function CountryPage() {
                 </div>
             </motion.section>
 
-            {/* ===== TESTIMONIAL STRIP ===== */}
-            <div className="section-divider" />
-            <div className="py-8 px-4" style={{ background: '#070c1a' }}>
-                <div className="mx-auto max-w-5xl">
-                    <blockquote className="text-center">
-                        <p className="text-lg md:text-xl text-slate-300 font-light leading-relaxed italic mb-4 max-w-3xl mx-auto">
-                            &ldquo;{c.testimonialStripQuote}&rdquo;
-                        </p>
-                        <div className="flex items-center justify-center gap-1 mb-2">
-                            {[...Array(5)].map((_, i) => <IconStar key={i} size={14} filled />)}
-                        </div>
-                        <p className="text-sm font-semibold text-white">{c.testimonialStripName}</p>
-                        <p className="text-xs text-slate-500">{c.testimonialStripRole}</p>
-                    </blockquote>
-                </div>
-            </div>
-            <div className="section-divider" />
-
             {/* ===== SOCIAL PROOF STRIP (stat updated: leaders across 3 continents, not 100k+) ===== */}
             <section className="py-10" style={{ background: '#060b1e' }}>
                 <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -607,7 +587,7 @@ export default function CountryPage() {
                                     {failedFlagSlugs.has(cx.slug) ? (
                                         <span className="flex h-full w-full items-center justify-center text-lg leading-none">{cx.flagEmoji || cx.flag || '🏳️'}</span>
                                     ) : (
-                                        <img src={getFlagImageUrl(cx.slug, 80)} alt="" className="h-full w-full object-cover" onError={() => setFailedFlagSlugs((prev) => new Set(prev).add(cx.slug))} />
+                                        <img {...getFlagSrcSet(cx.slug)} alt="" className="h-full w-full object-cover" loading="lazy" onError={() => setFailedFlagSlugs((prev) => new Set(prev).add(cx.slug))} />
                                     )}
                                 </span>
                                 <span className="font-medium">{cx.name}</span>

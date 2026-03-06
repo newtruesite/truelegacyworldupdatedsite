@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useParams, Link, Navigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { ArrowLeft } from 'lucide-react'
-import { COUNTRIES, getFlagImageUrl } from '@/lib/countries'
+import { COUNTRIES, getFlagSrcSet } from '@/lib/countries'
 import { REGIONS } from '@/components/ui/RegionMap'
 import { AuroraBackground } from '@/components/ui/AuroraBackground'
 import { Navbar } from '@/components/layout/Navbar'
@@ -12,7 +12,8 @@ import { Footer } from '@/components/layout/Footer'
 const regionIdToName: Record<string, string> = {
     'north-america': 'North America',
     'latin-america': 'Latin America',
-    'africa': 'Africa'
+    'africa': 'Africa',
+    'asia': 'Asia',
 }
 
 export default function RegionPage() {
@@ -31,7 +32,7 @@ export default function RegionPage() {
     const regionCountries = COUNTRIES.filter(c => c.region === regionName)
 
     return (
-        <div className="min-h-screen bg-[#070b16] flex flex-col">
+        <div className="min-h-screen bg-[#070b16] flex flex-col overflow-x-hidden">
             <Navbar />
 
             <main className="flex-grow pt-28 pb-16">
@@ -77,8 +78,8 @@ export default function RegionPage() {
                                         to={`/${country.slug}`}
                                         className="group block relative overflow-hidden rounded-2xl glass border border-white/10 bg-white/5 p-6 hover:bg-white/10 hover:border-cyan-500/30 transition-all duration-300 hover:-translate-y-1"
                                     >
-                                        {/* FLAG BOX — image so all systems show real flags; emoji fallback if image fails */}
-                                        <div className="relative w-full h-28 rounded-xl overflow-hidden border border-white/20 bg-[#0a2060] mb-4 flex items-center justify-center">
+                                        {/* FLAG BOX — full flag visible on mobile (aspect ratio), retina srcset */}
+                                        <div className="relative w-full aspect-[4/3] min-h-[120px] rounded-xl overflow-hidden border border-white/20 bg-[#0a2060] mb-4 flex items-center justify-center">
                                             {failedFlagSlugs.has(country.slug) ? (
                                                 <motion.div
                                                     animate={{ x: [0, 2, -2, 2, 0] }}
@@ -91,11 +92,9 @@ export default function RegionPage() {
                                                 </motion.div>
                                             ) : (
                                                 <img
-                                                    src={getFlagImageUrl(country.slug, 160)}
+                                                    {...getFlagSrcSet(country.slug)}
                                                     alt={`${country.name} flag — True Legacy World`}
-                                                    className="w-full h-full object-cover"
-                                                    width={160}
-                                                    height={120}
+                                                    className="w-full h-full object-contain"
                                                     loading="lazy"
                                                     decoding="async"
                                                     onError={() => setFailedFlagSlugs((prev) => new Set(prev).add(country.slug))}

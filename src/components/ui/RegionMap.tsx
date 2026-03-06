@@ -27,6 +27,7 @@ export const REGIONS = [
     { id: 'north-america', name: 'North America', mapX: 20, mapY: 28 },
     { id: 'latin-america', name: 'Latin America', mapX: 25, mapY: 60 },
     { id: 'africa', name: 'Africa', mapX: 45, mapY: 42 },
+    { id: 'asia', name: 'Asia', mapX: 72, mapY: 38 },
 ]
 
 export function RegionMap() {

@@ -1,0 +1,239 @@
+import { useState, useCallback, useEffect } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
+import { X } from 'lucide-react'
+import type { ProductInterest } from '@/contexts/PdfLeadCaptureContext'
+
+const FORM_NAME = 'pdf-lead-capture'
+
+type Option = { value: string; label: string }
+
+type Props = {
+  isOpen: boolean
+  onClose: () => void
+  pdfUrl: string
+  productPreset?: ProductInterest
+  countryOptions: Option[]
+}
+
+const PRODUCT_OPTIONS: { value: ProductInterest; labelEn: string; labelEs: string }[] = [
+  { value: 'emguarde', labelEn: 'Emguarde', labelEs: 'Emguarde' },
+  { value: 'kangen', labelEn: 'Kangen Water', labelEs: 'Agua Kangen' },
+  { value: 'both', labelEn: 'Both', labelEs: 'Ambos' },
+]
+
+export function PdfLeadCaptureModal({ isOpen, onClose, pdfUrl, productPreset, countryOptions }: Props) {
+  const [submitted, setSubmitted] = useState(false)
+  const [submitting, setSubmitting] = useState(false)
+  const [errors, setErrors] = useState<Record<string, string>>({})
+  const [form, setForm] = useState({
+    fullName: '',
+    email: '',
+    phone: '',
+    country: '',
+    productInterest: 'both' as ProductInterest,
+    botField: '',
+  })
+
+  useEffect(() => {
+    if (isOpen && productPreset) {
+      setForm((prev) => ({ ...prev, productInterest: productPreset }))
+    }
+    if (!isOpen) {
+      setForm({ fullName: '', email: '', phone: '', country: '', productInterest: productPreset ?? 'both', botField: '' })
+      setSubmitted(false)
+    }
+  }, [isOpen, productPreset])
+
+  const isSpanish = typeof navigator !== 'undefined' && navigator.language.startsWith('es')
+  const t = {
+    heading: isSpanish ? 'Obtén Tu Guía Gratuita' : 'Get Your Free Guide',
+    fullName: isSpanish ? 'Nombre Completo' : 'Full Name',
+    email: isSpanish ? 'Correo Electrónico' : 'Email Address',
+    phone: isSpanish ? 'Teléfono' : 'Phone Number',
+    country: isSpanish ? 'País' : 'Country',
+    productInterest: isSpanish ? '¿Qué producto te interesa?' : 'Which product interests you?',
+    submit: isSpanish ? 'Envíame el PDF' : 'Send Me the PDF',
+    thankYou: isSpanish ? '¡Gracias! Revisa tu correo y tu descarga comenzará en un momento.' : 'Thank you! Check your email and your download will start in a moment.',
+    required: isSpanish ? 'Requerido' : 'Required',
+  }
+
+  const validate = useCallback(() => {
+    const next: Record<string, string> = {}
+    if (!form.fullName.trim()) next.fullName = t.required
+    if (!form.email.trim()) next.email = t.required
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) next.email = isSpanish ? 'Correo no válido' : 'Invalid email'
+    if (!form.country) next.country = t.required
+    setErrors(next)
+    return Object.keys(next).length === 0
+  }, [form.fullName, form.email, form.country, t, isSpanish])
+
+  const handleSubmit = useCallback(
+    async (e: React.FormEvent) => {
+      e.preventDefault()
+      if (!validate()) return
+      setSubmitting(true)
+      setErrors({})
+
+      const formData = new FormData()
+      formData.append('form-name', FORM_NAME)
+      formData.append('full-name', form.fullName)
+      formData.append('email', form.email)
+      formData.append('phone', form.phone)
+      formData.append('country', form.country)
+      formData.append('product-interest', form.productInterest)
+      if (form.botField) formData.append('bot-field', form.botField)
+
+      try {
+        const params = new URLSearchParams()
+        formData.forEach((value, key) => params.append(key, value.toString()))
+        const res = await fetch('/', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body: params.toString(),
+        })
+        if (!res.ok) throw new Error('Submit failed')
+        setSubmitted(true)
+        setTimeout(() => {
+          if (pdfUrl) window.open(pdfUrl, '_blank')
+          setSubmitted(false)
+          onClose()
+        }, 1500)
+      } catch {
+        setErrors({ email: isSpanish ? 'Error al enviar. Intenta de nuevo.' : 'Submit failed. Please try again.' })
+      } finally {
+        setSubmitting(false)
+      }
+    },
+    [form, validate, pdfUrl, onClose, isSpanish]
+  )
+
+  const handleChange = useCallback((field: string, value: string) => {
+    setForm((prev) => ({ ...prev, [field]: value }))
+    setErrors((prev) => ({ ...prev, [field]: '' }))
+  }, [])
+
+  if (!isOpen) return null
+
+  return (
+    <AnimatePresence>
+      <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="absolute inset-0 bg-black/70 backdrop-blur-sm"
+          onClick={onClose}
+        />
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0, scale: 0.95 }}
+          className="relative z-10 w-full max-w-md rounded-2xl bg-[#0f172a] border border-white/10 shadow-2xl overflow-hidden"
+          onClick={(e) => e.stopPropagation()}
+        >
+          <div className="flex items-center justify-between p-5 border-b border-white/10">
+            <h2 className="text-xl font-bold text-white">{t.heading}</h2>
+            <button
+              type="button"
+              onClick={onClose}
+              className="p-2 rounded-lg text-slate-400 hover:text-white hover:bg-white/10 transition-colors"
+              aria-label="Close"
+            >
+              <X className="h-5 w-5" />
+            </button>
+          </div>
+          <div className="p-5">
+            {submitted ? (
+              <p className="text-slate-300 text-center py-8">{t.thankYou}</p>
+            ) : (
+              <form onSubmit={handleSubmit} name={FORM_NAME} method="post" data-netlify="true" data-netlify-honeypot="bot-field">
+                <input type="hidden" name="form-name" value={FORM_NAME} />
+                <div className="hidden" aria-hidden="true">
+                  <label>Don’t fill this out: <input name="bot-field" value={form.botField} onChange={(e) => handleChange('botField', e.target.value)} /></label>
+                </div>
+
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium text-slate-300 mb-1">{t.fullName} *</label>
+                    <input
+                      type="text"
+                      name="full-name"
+                      value={form.fullName}
+                      onChange={(e) => handleChange('fullName', e.target.value)}
+                      className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white placeholder-slate-500 focus:border-cyan-500 focus:outline-none focus:ring-1 focus:ring-cyan-500/30"
+                      placeholder={t.fullName}
+                    />
+                    {errors.fullName && <p className="mt-1 text-xs text-red-400">{errors.fullName}</p>}
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-slate-300 mb-1">{t.email} *</label>
+                    <input
+                      type="email"
+                      name="email"
+                      value={form.email}
+                      onChange={(e) => handleChange('email', e.target.value)}
+                      className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white placeholder-slate-500 focus:border-cyan-500 focus:outline-none focus:ring-1 focus:ring-cyan-500/30"
+                      placeholder={t.email}
+                    />
+                    {errors.email && <p className="mt-1 text-xs text-red-400">{errors.email}</p>}
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-slate-300 mb-1">{t.phone}</label>
+                    <input
+                      type="tel"
+                      name="phone"
+                      value={form.phone}
+                      onChange={(e) => handleChange('phone', e.target.value)}
+                      className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white placeholder-slate-500 focus:border-cyan-500 focus:outline-none focus:ring-1 focus:ring-cyan-500/30"
+                      placeholder={t.phone}
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-slate-300 mb-1">{t.country} *</label>
+                    <select
+                      name="country"
+                      value={form.country}
+                      onChange={(e) => handleChange('country', e.target.value)}
+                      className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white focus:border-cyan-500 focus:outline-none focus:ring-1 focus:ring-cyan-500/30"
+                    >
+                      <option value="">{isSpanish ? 'Selecciona' : 'Select'}</option>
+                      {countryOptions.map((opt) => (
+                        <option key={opt.value} value={opt.value}>{opt.label}</option>
+                      ))}
+                    </select>
+                    {errors.country && <p className="mt-1 text-xs text-red-400">{errors.country}</p>}
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-slate-300 mb-2">{t.productInterest}</label>
+                    <div className="space-y-2">
+                      {PRODUCT_OPTIONS.map((opt) => (
+                        <label key={opt.value} className="flex items-center gap-2 cursor-pointer">
+                          <input
+                            type="radio"
+                            name="product-interest"
+                            value={opt.value}
+                            checked={form.productInterest === opt.value}
+                            onChange={(e) => handleChange('productInterest', e.target.value as ProductInterest)}
+                            className="text-cyan-500"
+                          />
+                          <span className="text-slate-300">{isSpanish ? opt.labelEs : opt.labelEn}</span>
+                        </label>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+                <button
+                  type="submit"
+                  disabled={submitting}
+                  className="mt-6 w-full min-h-[48px] rounded-xl bg-gradient-to-r from-blue-600 to-cyan-500 font-bold text-white py-3 px-4 transition-all hover:opacity-90 disabled:opacity-50"
+                >
+                  {submitting ? (isSpanish ? 'Enviando…' : 'Sending…') : t.submit}
+                </button>
+              </form>
+            )}
+          </div>
+        </motion.div>
+      </div>
+    </AnimatePresence>
+  )
+}

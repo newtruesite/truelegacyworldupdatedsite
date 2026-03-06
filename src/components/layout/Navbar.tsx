@@ -1,9 +1,10 @@
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Menu, X, ChevronDown } from 'lucide-react'
-import { COUNTRIES, getFlagImageUrl } from '@/lib/countries'
+import { COUNTRIES, getFlagSrcSet } from '@/lib/countries'
 import { t } from '@/lib/translations'
+import { useLocaleContext } from '@/contexts/LocaleContext'
 import { cn } from '@/lib/utils'
 
 // ── Custom SVG Icon Components ──────────────────────────────
@@ -63,6 +64,19 @@ export function Navbar() {
     const [menuOpen, setMenuOpen] = useState(false)
     const [countriesOpen, setCountriesOpen] = useState(false)
     const [failedFlagSlugs, setFailedFlagSlugs] = useState<Set<string>>(new Set())
+    const [navVisible, setNavVisible] = useState(true)
+    const lastScrollY = useRef(0)
+
+    useEffect(() => {
+        const onScroll = () => {
+            const y = window.scrollY
+            if (y > lastScrollY.current && y > 80) setNavVisible(false)
+            else setNavVisible(true)
+            lastScrollY.current = y
+        }
+        window.addEventListener('scroll', onScroll, { passive: true })
+        return () => window.removeEventListener('scroll', onScroll)
+    }, [])
     const navigate = useNavigate()
     const location = useLocation()
     const pathname = location.pathname
@@ -71,16 +85,14 @@ export function Navbar() {
     const isCountryPage = firstSegment && COUNTRY_SLUGS.includes(firstSegment)
     const country = isCountryPage ? COUNTRIES.find((c) => c.slug === firstSegment) : null
     const jotformUrl = country?.jotformUrl ?? null
-    const isSpanish = country?.locale === 'es'
-
-    const locale = country?.locale ?? 'en'
+    const { locale, setLocale: setLocaleOverride } = useLocaleContext()
     const navLabels = {
-        home: isSpanish ? 'Inicio' : 'Home',
-        training: isSpanish ? 'Capacitación' : 'Training',
-        community: isSpanish ? 'Comunidad de Facebook' : 'Facebook Community',
-        countries: isSpanish ? 'Países' : 'Countries',
-        findRegion: isSpanish ? 'Encuentra tu región' : 'Find Your Region',
-        unlockLegacy: isSpanish ? 'Desbloquea tu legado' : 'Unlock Your Legacy',
+        home: t[locale].nav_home,
+        training: t[locale].nav_training,
+        community: locale === 'es' ? 'Comunidad de Facebook' : locale === 'fr' ? 'Communauté Facebook' : 'Facebook Community',
+        countries: locale === 'es' ? 'Países' : locale === 'fr' ? 'Pays' : 'Countries',
+        findRegion: locale === 'es' ? 'Encuentra tu región' : locale === 'fr' ? 'Trouvez votre région' : 'Find Your Region',
+        unlockLegacy: t[locale].unlockLegacy,
         navProductK8: t[locale].navProductK8,
         navProductEmguarde: t[locale].navProductEmguarde,
     }
@@ -92,9 +104,12 @@ export function Navbar() {
     }
 
     return (
-        <header className="fixed top-0 z-50 w-full">
+        <header
+            className="fixed top-0 left-0 right-0 z-50 w-full transition-transform duration-300 ease-out overflow-visible"
+            style={{ transform: navVisible ? 'translateY(0)' : 'translateY(-100%)' }}
+        >
             <nav
-                className="mx-3 mt-3 rounded-2xl px-5 py-3 flex items-center justify-between"
+                className="mx-3 mt-2 pt-2 rounded-2xl px-4 sm:px-5 py-3 flex items-center justify-between min-h-[52px]"
                 style={{
                     background: 'rgba(5,16,48,0.85)',
                     backdropFilter: 'blur(24px)',
@@ -116,7 +131,10 @@ export function Navbar() {
                         <Link
                             key={to}
                             to={to}
-                            className="px-3 py-2 text-[13px] font-medium text-slate-300 hover:text-white transition-colors rounded-lg hover:bg-white/5"
+                            className={cn(
+                                'px-3 py-2 text-[13px] font-medium transition-colors rounded-lg',
+                                pathname === to ? 'text-white bg-white/10' : 'text-slate-300 hover:text-white hover:bg-white/5'
+                            )}
                         >
                             {label}
                         </Link>
@@ -176,7 +194,7 @@ export function Navbar() {
                                                 {failedFlagSlugs.has(c.slug) ? (
                                                     <span className="flex h-full w-full items-center justify-center text-base leading-none">{c.flagEmoji}</span>
                                                 ) : (
-                                                    <img src={getFlagImageUrl(c.slug, 40)} alt="" className="h-full w-full object-cover" onError={() => setFailedFlagSlugs((prev) => new Set(prev).add(c.slug))} />
+                                                    <img {...getFlagSrcSet(c.slug)} alt="" className="h-full w-full object-cover" loading="lazy" onError={() => setFailedFlagSlugs((prev) => new Set(prev).add(c.slug))} />
                                                 )}
                                             </span>
                                             <span>{c.name}</span>
@@ -186,6 +204,23 @@ export function Navbar() {
                             )}
                         </AnimatePresence>
                     </div>
+                </div>
+
+                {/* Language toggle — EN | ES | FR (FR shown for Morocco / when locale is fr) */}
+                <div className="flex items-center gap-0.5 text-[12px] font-medium text-slate-400">
+                    {(['en', 'es', 'fr'] as const).map((loc) => (
+                        <button
+                            key={loc}
+                            onClick={() => setLocaleOverride(loc)}
+                            className={cn(
+                                'min-h-[44px] min-w-[44px] flex items-center justify-center px-2 py-2 rounded-lg transition-colors',
+                                locale === loc ? 'text-white bg-white/10' : 'hover:text-white hover:bg-white/5'
+                            )}
+                            aria-label={loc === 'en' ? 'English' : loc === 'es' ? 'Español' : 'Français'}
+                        >
+                            {loc === 'en' ? 'EN' : loc === 'es' ? 'ES' : 'FR'}
+                        </button>
+                    ))}
                 </div>
 
                 {/* CTA — Unlock Your Legacy only on country pages (has jotform); Find Your Region on home/other */}
@@ -217,92 +252,117 @@ export function Navbar() {
                     )}
                     <button
                         onClick={() => setMenuOpen(!menuOpen)}
-                        className="flex h-10 w-10 items-center justify-center rounded-xl text-slate-300 hover:bg-white/5 hover:text-white transition-colors lg:hidden"
+                        className="flex h-11 w-11 min-h-[44px] min-w-[44px] items-center justify-center rounded-xl text-slate-300 hover:bg-white/5 hover:text-white transition-colors lg:hidden"
+                        aria-label={menuOpen ? 'Close menu' : 'Open menu'}
                     >
                         {menuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
                     </button>
                 </div>
             </nav>
 
-            {/* Mobile menu */}
+            {/* Mobile menu — full-height drawer from right */}
             <AnimatePresence>
                 {menuOpen && (
-                    <motion.div
-                        initial={{ opacity: 0, y: -10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -10 }}
-                        className="mx-3 mt-1 rounded-2xl border border-white/10 overflow-hidden shadow-2xl"
-                        style={{ background: 'rgba(5,16,48,0.97)', backdropFilter: 'blur(24px)' }}
-                    >
-                        <div className="p-4 space-y-1">
-                            {[{ label: navLabels.home, to: '/' }, { label: navLabels.training, to: '/training' }].map(({ label, to }) => (
-                                <Link key={to} to={to} onClick={() => setMenuOpen(false)}
-                                    className="block px-4 py-2.5 text-[13px] font-medium text-slate-300 hover:text-white hover:bg-white/5 rounded-xl transition-colors"
+                    <>
+                        <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            className="fixed inset-0 z-40 bg-black/50 backdrop-blur-sm lg:hidden"
+                            onClick={() => setMenuOpen(false)}
+                            aria-hidden
+                        />
+                        <motion.div
+                            initial={{ x: '100%' }}
+                            animate={{ x: 0 }}
+                            exit={{ x: '100%' }}
+                            transition={{ type: 'tween', duration: 0.3 }}
+                            className="fixed top-0 right-0 z-50 h-full w-full max-w-sm border-l border-white/10 overflow-y-auto shadow-2xl lg:hidden"
+                            style={{ background: 'rgba(5,16,48,0.98)', backdropFilter: 'blur(24px)' }}
+                        >
+                            <div className="flex items-center justify-between p-4 border-b border-white/10">
+                                <span className="text-sm font-semibold text-white">Menu</span>
+                                <button
+                                    onClick={() => setMenuOpen(false)}
+                                    className="flex h-11 w-11 min-h-[44px] min-w-[44px] items-center justify-center rounded-xl text-slate-300 hover:bg-white/5 hover:text-white transition-colors"
+                                    aria-label="Close menu"
                                 >
-                                    {label}
-                                </Link>
-                            ))}
-                            <a href="https://www.facebook.com/groups/truelegacycommunity" target="_blank" rel="noopener noreferrer"
-                                onClick={() => setMenuOpen(false)}
-                                className="block px-4 py-2.5 text-[13px] font-medium text-slate-300 hover:text-white hover:bg-white/5 rounded-xl transition-colors"
-                            >
-                                {navLabels.community}
-                            </a>
-                            <div className="section-divider my-2" />
-                            <p className="px-4 py-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-slate-500">{isSpanish ? 'Productos' : 'Products'}</p>
-                            <Link to={country ? `/${country.slug}/emguarde` : '/emguarde'} onClick={() => setMenuOpen(false)}
-                                className="flex items-center gap-2.5 px-4 py-2.5 text-[13px] font-medium text-purple-300 hover:bg-purple-500/10 rounded-xl transition-colors"
-                            >
-                                <IconShield className="text-purple-400" /> {navLabels.navProductEmguarde}
-                            </Link>
-                            <Link to={country ? `/${country.slug}/k8` : '/k8'} onClick={() => setMenuOpen(false)}
-                                className="flex items-center gap-2.5 px-4 py-2.5 text-[13px] font-medium text-cyan-300 hover:bg-cyan-500/10 rounded-xl transition-colors"
-                            >
-                                <IconDroplets className="text-cyan-400" /> {navLabels.navProductK8}
-                            </Link>
-                            <div className="section-divider my-2" />
-                            <p className="px-4 py-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-slate-500">{isSpanish ? 'Elige tu país' : 'Select Country'}</p>
-                            <div className="grid grid-cols-2 gap-1">
-                                {COUNTRIES.map((c) => (
-                                    <button key={c.slug} onClick={() => goToCountry(c.slug)}
-                                        className="flex items-center gap-2 rounded-xl px-3 py-2.5 text-[13px] text-slate-300 hover:bg-white/5 hover:text-white transition-colors"
-                                    >
-                                        <span className="inline-flex h-5 w-7 flex-shrink-0 overflow-hidden rounded border border-white/20 bg-[#0a2060]">
-                                            {failedFlagSlugs.has(c.slug) ? (
-                                                <span className="flex h-full w-full items-center justify-center text-base leading-none">{c.flagEmoji}</span>
-                                            ) : (
-                                                <img src={getFlagImageUrl(c.slug, 40)} alt="" className="h-full w-full object-cover" onError={() => setFailedFlagSlugs((prev) => new Set(prev).add(c.slug))} />
-                                            )}
-                                        </span>
-                                        <span>{c.name}</span>
-                                    </button>
-                                ))}
+                                    <X className="h-5 w-5" />
+                                </button>
                             </div>
-                            <div className="pt-2">
-                                {jotformUrl ? (
-                                    <a
-                                        href={jotformUrl}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        onClick={() => setMenuOpen(false)}
-                                        className="block w-full rounded-xl px-4 py-3 text-center text-[13px] font-bold text-white transition-all"
-                                        style={{ background: 'linear-gradient(135deg, #1B3A8C, #1e6fc0)' }}
+                            <div className="p-4 space-y-1">
+                                {[{ label: navLabels.home, to: '/' }, { label: navLabels.training, to: '/training' }].map(({ label, to }) => (
+                                    <Link key={to} to={to} onClick={() => setMenuOpen(false)}
+                                        className={cn(
+                                            'flex items-center min-h-[56px] px-4 py-3 text-base font-medium rounded-xl transition-colors',
+                                            pathname === to ? 'text-white bg-white/10' : 'text-slate-300 hover:text-white hover:bg-white/5'
+                                        )}
                                     >
-                                        {navLabels.unlockLegacy}
-                                    </a>
-                                ) : (
-                                    <Link
-                                        to="/#map"
-                                        onClick={() => setMenuOpen(false)}
-                                        className="block w-full rounded-xl px-4 py-3 text-center text-[13px] font-bold text-white transition-all"
-                                        style={{ background: 'linear-gradient(135deg, #1B3A8C, #1e6fc0)' }}
-                                    >
-                                        {navLabels.findRegion}
+                                        {label}
                                     </Link>
-                                )}
+                                ))}
+                                <a href="https://www.facebook.com/groups/truelegacycommunity" target="_blank" rel="noopener noreferrer"
+                                    onClick={() => setMenuOpen(false)}
+                                    className="flex items-center min-h-[56px] px-4 py-3 text-base font-medium text-slate-300 hover:text-white hover:bg-white/5 rounded-xl transition-colors"
+                                >
+                                    {navLabels.community}
+                                </a>
+                                <div className="section-divider my-2" />
+                                <p className="px-4 py-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-slate-500">{locale === 'es' ? 'Productos' : locale === 'fr' ? 'Produits' : 'Products'}</p>
+                                <Link to={country ? `/${country.slug}/emguarde` : '/emguarde'} onClick={() => setMenuOpen(false)}
+                                    className="flex items-center min-h-[56px] gap-2.5 px-4 py-3 text-base font-medium text-purple-300 hover:bg-purple-500/10 rounded-xl transition-colors"
+                                >
+                                    <IconShield className="text-purple-400" /> {navLabels.navProductEmguarde}
+                                </Link>
+                                <Link to={country ? `/${country.slug}/k8` : '/k8'} onClick={() => setMenuOpen(false)}
+                                    className="flex items-center min-h-[56px] gap-2.5 px-4 py-3 text-base font-medium text-cyan-300 hover:bg-cyan-500/10 rounded-xl transition-colors"
+                                >
+                                    <IconDroplets className="text-cyan-400" /> {navLabels.navProductK8}
+                                </Link>
+                                <div className="section-divider my-2" />
+                                <p className="px-4 py-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-slate-500">{locale === 'es' ? 'Elige tu país' : locale === 'fr' ? 'Choisissez votre pays' : 'Select Country'}</p>
+                                <div className="grid grid-cols-2 gap-1">
+                                    {COUNTRIES.map((c) => (
+                                        <button key={c.slug} onClick={() => goToCountry(c.slug)}
+                                            className="flex items-center min-h-[56px] gap-2 rounded-xl px-3 py-3 text-base text-slate-300 hover:bg-white/5 hover:text-white transition-colors"
+                                        >
+                                            <span className="inline-flex h-5 w-7 flex-shrink-0 overflow-hidden rounded border border-white/20 bg-[#0a2060]">
+                                                {failedFlagSlugs.has(c.slug) ? (
+                                                    <span className="flex h-full w-full items-center justify-center text-base leading-none">{c.flagEmoji}</span>
+                                                ) : (
+                                                    <img {...getFlagSrcSet(c.slug)} alt="" className="h-full w-full object-cover" loading="lazy" onError={() => setFailedFlagSlugs((prev) => new Set(prev).add(c.slug))} />
+                                                )}
+                                            </span>
+                                            <span>{c.name}</span>
+                                        </button>
+                                    ))}
+                                </div>
+                                <div className="pt-2 pb-8">
+                                    {jotformUrl ? (
+                                        <a
+                                            href={jotformUrl}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            onClick={() => setMenuOpen(false)}
+                                            className="flex items-center justify-center min-h-[56px] w-full rounded-xl px-4 py-3 text-center text-base font-bold text-white transition-all"
+                                            style={{ background: 'linear-gradient(135deg, #1B3A8C, #1e6fc0)' }}
+                                        >
+                                            {navLabels.unlockLegacy}
+                                        </a>
+                                    ) : (
+                                        <Link
+                                            to="/#map"
+                                            onClick={() => setMenuOpen(false)}
+                                            className="flex items-center justify-center min-h-[56px] w-full rounded-xl px-4 py-3 text-center text-base font-bold text-white transition-all"
+                                            style={{ background: 'linear-gradient(135deg, #1B3A8C, #1e6fc0)' }}
+                                        >
+                                            {navLabels.findRegion}
+                                        </Link>
+                                    )}
+                                </div>
                             </div>
-                        </div>
-                    </motion.div>
+                        </motion.div>
+                    </>
                 )}
             </AnimatePresence>
         </header>

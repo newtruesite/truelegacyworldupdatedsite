@@ -7,6 +7,8 @@ import { Footer } from '@/components/layout/Footer'
 import { AuroraBackground } from '@/components/ui/AuroraBackground'
 import { COUNTRIES } from '@/lib/countries'
 import { t } from '@/lib/translations'
+import { useLocaleContext } from '@/contexts/LocaleContext'
+import { usePdfLeadCapture } from '@/contexts/PdfLeadCaptureContext'
 
 const PDF_URL = 'https://www.truelegacyworld.com/_files/ugd/7b12be_ff7cba88b07d461890527e0d74fcea43.pdf'
 
@@ -35,28 +37,17 @@ const EMF_STATS = [
 export default function EmGuardePage() {
     const { countrySlug } = useParams<{ countrySlug: string }>()
     const country = COUNTRIES.find((c) => c.slug === countrySlug) ?? COUNTRIES.find((c) => c.slug === 'usa')!
-    const locale = country.locale ?? 'en'
+    const { locale } = useLocaleContext()
     const copy = t[locale]
     const jotformUrl = country.jotformUrl ?? 'https://form.jotform.com/260232994952060'
     const isSpanish = locale === 'es'
     const FEATURES = isSpanish ? FEATURES_ES : FEATURES_EN
 
-    const [pdfEmail, setPdfEmail] = useState('')
-    const [pdfUnlocked, setPdfUnlocked] = useState(false)
-    const [showPdfForm, setShowPdfForm] = useState(false)
     const [heroImgError, setHeroImgError] = useState(false)
-
-    const handlePdfSubmit = (e: React.FormEvent) => {
-        e.preventDefault()
-        if (pdfEmail.trim()) {
-            setPdfUnlocked(true)
-            setShowPdfForm(false)
-            window.open(PDF_URL, '_blank')
-        }
-    }
+    const { openModal: openPdfModal } = usePdfLeadCapture()
 
     return (
-        <div className="min-h-screen bg-[#070b16]">
+        <div className="min-h-screen bg-[#070b16] overflow-x-hidden">
             <Navbar />
 
             <AuroraBackground className="pt-28 pb-0">
@@ -92,10 +83,18 @@ export default function EmGuardePage() {
                             <div className="text-center w-full">
                                 {!heroImgError ? (
                                     <img
-                                        src="/products/emguarde.png"
-                                        alt="emGuarde device"
-                                        className="max-h-[280px] w-auto object-contain mx-auto mb-4"
-                                        onError={() => setHeroImgError(true)}
+                                        src="/assets/images/emguarde-product.png"
+                                        alt="Emguarde EMF protection device — Enagic technology"
+                                        className="max-h-[280px] w-auto max-w-[600px] object-contain mx-auto mb-4 w-full md:max-w-[600px]"
+                                        style={{ filter: 'drop-shadow(0 20px 40px rgba(0,0,0,0.3))' }}
+                                        loading="lazy"
+                                        onError={(e) => {
+                                            const t = e.currentTarget
+                                            if (t.src.includes('emguarde-product')) {
+                                                t.src = '/products/emguarde.png'
+                                                t.onerror = () => setHeroImgError(true)
+                                            } else setHeroImgError(true)
+                                        }}
                                     />
                                 ) : (
                                     <div className="flex flex-col items-center justify-center gap-3 py-8">
@@ -183,38 +182,13 @@ export default function EmGuardePage() {
                         >
                             <ExternalLink className="w-4 h-4" /> {copy.emguarde.learnMore}
                         </a>
-                        {pdfUnlocked ? (
-                            <a
-                                href={PDF_URL}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="flex items-center justify-center gap-2 rounded-2xl border border-white/10 bg-white/5 px-6 py-4 text-sm font-semibold text-white hover:bg-white/10 transition-all"
-                            >
-                                <Download className="w-4 h-4 text-cyan-400" /> {copy.emguarde.downloadPdf}
-                            </a>
-                        ) : showPdfForm ? (
-                            <form onSubmit={handlePdfSubmit} className="flex flex-col sm:flex-row gap-2 rounded-2xl border border-cyan-500/30 bg-white/5 p-3">
-                                <input
-                                    type="email"
-                                    value={pdfEmail}
-                                    onChange={(e) => setPdfEmail(e.target.value)}
-                                    placeholder={isSpanish ? 'Tu correo electrónico' : 'Your email address'}
-                                    required
-                                    className="flex-1 min-w-0 rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white placeholder-slate-500 focus:border-cyan-400 focus:outline-none"
-                                />
-                                <button type="submit" className="rounded-xl bg-cyan-600 hover:bg-cyan-500 px-4 py-3 text-sm font-semibold text-white transition-all">
-                                    {isSpanish ? 'Enviar' : 'Submit'}
-                                </button>
-                            </form>
-                        ) : (
-                            <button
-                                type="button"
-                                onClick={() => setShowPdfForm(true)}
-                                className="flex items-center justify-center gap-2 rounded-2xl border border-white/10 bg-white/5 px-6 py-4 text-sm font-semibold text-white hover:bg-white/10 transition-all"
-                            >
-                                <Download className="w-4 h-4 text-cyan-400" /> {copy.emguarde.downloadPdf}
-                            </button>
-                        )}
+                        <button
+                            type="button"
+                            onClick={() => openPdfModal(PDF_URL, 'emguarde')}
+                            className="flex items-center justify-center gap-2 rounded-2xl border border-white/10 bg-white/5 px-6 py-4 text-sm font-semibold text-white hover:bg-white/10 transition-all min-h-[48px] hover:scale-[1.02]"
+                        >
+                            <Download className="w-4 h-4 text-cyan-400" /> {copy.emguarde.downloadPdf}
+                        </button>
                     </motion.div>
 
                     {/* CTA button above back link */}

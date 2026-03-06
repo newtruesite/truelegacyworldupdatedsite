@@ -39,10 +39,23 @@
 
   <!-- Canonical -->
   <link rel="canonical" href="https://truelegacyworld.com/" />
+  <!-- Netlify Identity -->
+  <script src="https://identity.netlify.com/v1/netlify-identity-widget.js" defer></script>
 </head>
 
 <body>
   <div id="root"></div>
+  <!-- Netlify Forms: hidden form for pdf-lead-capture (discovered at build) -->
+  <form name="pdf-lead-capture" method="POST" data-netlify="true" data-netlify-honeypot="bot-field" hidden>
+    <input type="text" name="full-name" />
+    <input type="email" name="email" />
+    <input type="tel" name="phone" />
+    <select name="country"><option value="">Country</option></select>
+    <input type="radio" name="product-interest" value="emguarde" />
+    <input type="radio" name="product-interest" value="kangen" />
+    <input type="radio" name="product-interest" value="both" />
+    <input type="text" name="bot-field" />
+  </form>
   <script type="module" src="/src/main.tsx"></script>
 </body>
 

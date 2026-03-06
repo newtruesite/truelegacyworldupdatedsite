@@ -13,6 +13,7 @@ export interface Testimonial {
     flagEmoji?: string
     image?: string
     stars?: number
+    instagram?: string
 }
 
 const DEFAULT_TESTIMONIALS: Testimonial[] = [
@@ -26,6 +27,7 @@ const DEFAULT_TESTIMONIALS: Testimonial[] = [
         flagEmoji: "🇺🇸",
         image: "/testimonials/nigara.png",
         stars: 5,
+        instagram: "https://www.instagram.com/nigarai/",
     },
     {
         id: 2,
@@ -37,6 +39,7 @@ const DEFAULT_TESTIMONIALS: Testimonial[] = [
         flagEmoji: "🇵🇰",
         image: "/testimonials/zah.png",
         stars: 5,
+        instagram: "https://www.instagram.com/zahphysique/",
     },
     {
         id: 3,
@@ -119,8 +122,8 @@ const DEFAULT_TESTIMONIALS: Testimonial[] = [
 
 // Spanish testimonials for LATAM / Spanish country pages
 const SPANISH_TESTIMONIALS: Testimonial[] = [
-    { id: 1, quote: "Con trabajo duro, enfoque y fe, pude recuperar la estabilidad financiera y descubrir un nuevo sentido de propósito. Hoy, casi 10 años después, no solo he transformado mi salud y mis finanzas, sino que también he podido ayudar a otros a hacer lo mismo en todo el mundo. Este negocio me devolvió la esperanza. Si yo pude seguir adelante, tú también puedes. Solo necesitas dar ese primer paso.", name: "Nigara Ismailova", role: "Líder True Legacy", company: "Norteamérica", flagEmoji: "🇺🇸", image: "/testimonials/nigara.png", stars: 5 },
-    { id: 2, quote: "Crecí en Pakistán con las probabilidades en mi contra, desde ser un niño fuera de forma con grandes sueños hasta convertirme en refugiado. Después de 11 años de dedicación a mi salud, transformé mi cuerpo y mi mentalidad. La tecnología K8 de Enagic fue la pieza que faltaba para elevar mi salud al siguiente nivel. Ahora me apasiona ayudar a otros a crear su propio legado de bienestar.", name: "Zah Naderi", role: "Coach de Alto Rendimiento", company: "Norteamérica", flagEmoji: "🇵🇰", image: "/testimonials/zah.png", stars: 5 },
+    { id: 1, quote: "Con trabajo duro, enfoque y fe, pude recuperar la estabilidad financiera y descubrir un nuevo sentido de propósito. Hoy, casi 10 años después, no solo he transformado mi salud y mis finanzas, sino que también he podido ayudar a otros a hacer lo mismo en todo el mundo. Este negocio me devolvió la esperanza. Si yo pude seguir adelante, tú también puedes. Solo necesitas dar ese primer paso.", name: "Nigara Ismailova", role: "Líder True Legacy", company: "Norteamérica", flagEmoji: "🇺🇸", image: "/testimonials/nigara.png", stars: 5, instagram: "https://www.instagram.com/nigarai/" },
+    { id: 2, quote: "Crecí en Pakistán con las probabilidades en mi contra, desde ser un niño fuera de forma con grandes sueños hasta convertirme en refugiado. Después de 11 años de dedicación a mi salud, transformé mi cuerpo y mi mentalidad. La tecnología K8 de Enagic fue la pieza que faltaba para elevar mi salud al siguiente nivel. Ahora me apasiona ayudar a otros a crear su propio legado de bienestar.", name: "Zah Naderi", role: "Coach de Alto Rendimiento", company: "Norteamérica", flagEmoji: "🇵🇰", image: "/testimonials/zah.png", stars: 5, instagram: "https://www.instagram.com/zahphysique/" },
     { id: 3, quote: "Durante 10 años dediqué mi corazón a mi negocio de alimentos y bebidas, pero cuando llegó el COVID, estuve a punto de perderlo todo. El miedo de no poder mantener a mi familia era abrumador. Enagic me dio la estabilidad financiera y la paz mental que necesitaba para seguir adelante. Este camino también me impulsó a crecer como persona, a reconocer mis fortalezas y a entender que el éxito viene de creer en uno mismo y rodearte del equipo correcto. Enagic no es solo un negocio; es una oportunidad que realmente transforma vidas.", name: "Egbert Nah", role: "Empresario", company: "Asia", flagEmoji: "🇸🇬", image: "/testimonials/egbert.png", stars: 5 },
     { id: 4, quote: "Me llamo Doina y el Agua Kangen realmente cambió mi vida diaria como madre soltera que vive con fibromialgia. Durante años viví con dolor constante, especialmente en las manos, y nada de lo que probé parecía ayudar con la inflamación. Una amiga me introdujo al Agua Kangen y, aunque no podía pagar la máquina de entrada, elegí invertir en mi salud y en el futuro de mis hijos. Después de unos meses siendo constante, empecé a notar cambios reales: menos dolor, más energía, piel más clara. Hoy digo con honestidad que es una de las mejores inversiones que he hecho para mi salud, mis hijos y mi vida.", name: "Doina Rotar", role: "Cliente True Legacy", company: "Norteamérica", flagEmoji: "🇺🇸", image: "/testimonials/doina.png", stars: 5 },
     { id: 5, quote: "Mi camino con el Agua Kangen comenzó como una búsqueda de mejor salud y decisiones más sabias. Estaba cansada de pagar de más por agua que no me hacía sentir bien. Después de ser constante, vi cambios reales: mejor ánimo, más energía, menos fatiga e inflamación. Lo que empezó como una decisión de salud se convirtió en una oportunidad más grande, y confié en el proceso sabiendo que estaba entrando en algo alineado y con propósito.", name: "Ryan Pool", role: "Empresario", company: "USA", flagEmoji: "🇺🇸", image: "/testimonials/ryan.png", stars: 5 },
@@ -132,7 +135,7 @@ const SPANISH_TESTIMONIALS: Testimonial[] = [
 
 interface TestimonialsSplitProps {
     testimonials?: Testimonial[]
-    locale?: 'en' | 'es'
+    locale?: 'en' | 'es' | 'fr'
 }
 
 export function TestimonialsSplit({ testimonials, locale = 'en' }: TestimonialsSplitProps) {
@@ -194,7 +197,7 @@ export function TestimonialsSplit({ testimonials, locale = 'en' }: TestimonialsS
                                 animate={{ opacity: 1, y: 0 }}
                                 exit={{ opacity: 0, y: -40 }}
                                 transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-                                className="text-xl md:text-2xl lg:text-3xl font-light leading-relaxed tracking-tight text-white"
+                                className="text-base md:text-lg font-light leading-relaxed tracking-tight text-white"
                             >
                                 "{active.quote}"
                             </motion.blockquote>
@@ -220,8 +223,24 @@ export function TestimonialsSplit({ testimonials, locale = 'en' }: TestimonialsS
                     </AnimatePresence>
                 </div>
 
-                {/* Right: Photo */}
-                <div className="relative w-full md:w-48 h-48 md:h-64 flex-shrink-0">
+                {/* Right: Instagram (above photo) + Photo */}
+                <div className="relative w-full md:w-64 md:h-80 flex-shrink-0 flex flex-col items-center">
+                    {active.instagram && (
+                        <a
+                            href={active.instagram}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            onClick={(e) => e.stopPropagation()}
+                            className="inline-flex items-center gap-1.5 text-sm text-amber-400/90 hover:text-amber-300 mb-3"
+                        >
+                            <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+                                <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
+                                <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+                                <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
+                            </svg>
+                            <span>{active.instagram.replace(/^https?:\/\/(www\.)?instagram\.com\//i, '@').replace(/\/?$/, '')}</span>
+                        </a>
+                    )}
                     <AnimatePresence mode="wait">
                         <motion.div
                             key={active.id}
@@ -229,7 +248,7 @@ export function TestimonialsSplit({ testimonials, locale = 'en' }: TestimonialsS
                             animate={{ opacity: 1, filter: "blur(0px)", scale: 1 }}
                             exit={{ opacity: 0, filter: "blur(20px)", scale: 0.95 }}
                             transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-                            className="absolute inset-0"
+                            className="w-full h-full min-h-[200px] md:min-h-[280px]"
                         >
                             <div
                                 className="w-full h-full rounded-[1.5rem] overflow-hidden border-[2px] border-white/[0.15] shadow-[0_8px_32px_rgba(0,0,0,0.4),0_0_0_1px_rgba(255,255,255,0.05)] bg-[#0a1628] flex items-center justify-center"
@@ -238,7 +257,7 @@ export function TestimonialsSplit({ testimonials, locale = 'en' }: TestimonialsS
                                     <img
                                         src={active.image}
                                         alt={active.name}
-                                        className="w-full h-full object-contain"
+                                        className="w-full h-full object-cover"
                                     />
                                 ) : (
                                     <div className="w-full h-full bg-gradient-to-br from-blue-800 to-navy-900 flex items-center justify-center">
@@ -248,48 +267,48 @@ export function TestimonialsSplit({ testimonials, locale = 'en' }: TestimonialsS
                             </div>
                         </motion.div>
                     </AnimatePresence>
-
-                    {/* Click indicator */}
-                    <motion.div
-                        animate={{
-                            opacity: isHovering ? 1 : 0,
-                            scale: isHovering ? 1 : 0.8,
-                        }}
-                        transition={{ duration: 0.2 }}
-                        className="absolute -bottom-10 left-1/2 -translate-x-1/2 flex items-center gap-1 text-xs text-orange-400 font-medium"
-                    >
-                        <span>{locale === 'es' ? 'Siguiente' : 'Next'}</span>
-                        <ArrowUpRight className="w-3 h-3" />
-                    </motion.div>
                 </div>
+            </div>
 
-                {/* Progress Dots */}
-                <div className="absolute -bottom-12 left-0 flex items-center gap-3 md:col-span-1">
-                    {list.map((_, index) => (
-                        <button
-                            key={index}
-                            onClick={(e) => {
-                                e.stopPropagation()
-                                setActiveIndex(index)
-                            }}
-                            className="relative p-1"
-                            aria-label={`Testimonial ${index + 1}`}
-                        >
-                            <span
-                                className={`block w-2 h-2 rounded-full transition-all duration-300 ${index === activeIndex
-                                        ? "bg-orange-500 scale-100"
-                                        : "bg-white/20 scale-75 hover:bg-white/40 hover:scale-100"
-                                    }`}
-                            />
-                            {index === activeIndex && (
-                                <motion.span
-                                    layoutId="activeDot"
-                                    className="absolute inset-0 border border-orange-500/50 rounded-full"
-                                    transition={{ duration: 0.3 }}
+            {/* Dots and Next in their own row below the card so they don't overlap CTAs */}
+            <div className="mt-8 mb-6 flex flex-col items-center gap-4">
+                <div className="flex items-center justify-center gap-4 flex-wrap">
+                    {/* Progress Dots */}
+                    <div className="flex items-center gap-3">
+                        {list.map((_, index) => (
+                            <button
+                                key={index}
+                                onClick={(e) => {
+                                    e.stopPropagation()
+                                    setActiveIndex(index)
+                                }}
+                                className="relative p-1 min-h-[44px] min-w-[44px] flex items-center justify-center"
+                                aria-label={`Testimonial ${index + 1}`}
+                            >
+                                <span
+                                    className={`block w-2 h-2 rounded-full transition-all duration-300 ${index === activeIndex
+                                            ? "bg-orange-500 scale-100"
+                                            : "bg-white/20 scale-75 hover:bg-white/40 hover:scale-100"
+                                        }`}
                                 />
-                            )}
-                        </button>
-                    ))}
+                                {index === activeIndex && (
+                                    <motion.span
+                                        layoutId="activeDot"
+                                        className="absolute inset-0 border border-orange-500/50 rounded-full"
+                                        transition={{ duration: 0.3 }}
+                                    />
+                                )}
+                            </button>
+                        ))}
+                    </div>
+                    <button
+                        type="button"
+                        onClick={(e) => { e.stopPropagation(); nextTestimonial() }}
+                        className="inline-flex items-center gap-1.5 min-h-[44px] px-4 text-sm text-orange-400 hover:text-orange-300 font-medium"
+                    >
+                        <span>{locale === 'es' ? 'Siguiente' : locale === 'fr' ? 'Suivant' : 'Next'}</span>
+                        <ArrowUpRight className="w-4 h-4" />
+                    </button>
                 </div>
             </div>
         </div>
