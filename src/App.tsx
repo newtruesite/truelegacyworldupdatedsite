@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route, useLocation, Navigate } from 'react-route
 import { PdfLeadCaptureProvider } from '@/contexts/PdfLeadCaptureContext'
 import { LocaleProvider } from '@/contexts/LocaleContext'
 import { AnimatePresence, motion } from 'framer-motion'
+import { trackPageView } from '@/lib/analytics'
 import HomePage from '@/pages/HomePage'
 import CountryPage from '@/pages/CountryPage'
 import RegionPage from '@/pages/RegionPage'
@@ -31,6 +32,7 @@ function ScrollToTop() {
   const { pathname } = useLocation()
   useEffect(() => {
     window.scrollTo(0, 0)
+    trackPageView(pathname)
   }, [pathname])
   return null
 }

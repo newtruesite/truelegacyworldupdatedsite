@@ -6,6 +6,7 @@ import { COUNTRIES, getFlagSrcSet } from '@/lib/countries'
 import { t } from '@/lib/translations'
 import { useLocaleContext } from '@/contexts/LocaleContext'
 import { cn } from '@/lib/utils'
+import { trackEvent } from '@/lib/analytics'
 
 // ── Custom SVG Icon Components ──────────────────────────────
 function IconShield({ className }: { className?: string }) {
@@ -230,6 +231,13 @@ export function Navbar() {
                             href={jotformUrl}
                             target="_blank"
                             rel="noopener noreferrer"
+                            onClick={() =>
+                                trackEvent('join_click', {
+                                    location: 'navbar_desktop',
+                                    countrySlug: country?.slug ?? null,
+                                    locale,
+                                })
+                            }
                             className="hidden sm:inline-flex items-center gap-2 rounded-xl px-5 py-2.5 text-[13px] font-semibold text-white transition-all hover:scale-105"
                             style={{
                                 background: 'linear-gradient(135deg, #1B3A8C 0%, #1e6fc0 100%)',
@@ -343,7 +351,14 @@ export function Navbar() {
                                             href={jotformUrl}
                                             target="_blank"
                                             rel="noopener noreferrer"
-                                            onClick={() => setMenuOpen(false)}
+                                            onClick={() => {
+                                                trackEvent('join_click', {
+                                                    location: 'navbar_mobile',
+                                                    countrySlug: country?.slug ?? null,
+                                                    locale,
+                                                })
+                                                setMenuOpen(false)
+                                            }}
                                             className="flex items-center justify-center min-h-[56px] w-full rounded-xl px-4 py-3 text-center text-base font-bold text-white transition-all"
                                             style={{ background: 'linear-gradient(135deg, #1B3A8C, #1e6fc0)' }}
                                         >

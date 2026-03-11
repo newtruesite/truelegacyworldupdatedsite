@@ -10,6 +10,7 @@ import { SocialProofStrip } from '@/components/ui/SocialProofStrip'
 import { Navbar } from '@/components/layout/Navbar'
 import { Footer } from '@/components/layout/Footer'
 import { ProductSection } from '@/components/products/ProductSection'
+import { trackEvent } from '@/lib/analytics'
 
 function IconGlobe() {
     return (
@@ -254,6 +255,12 @@ export default function HomePage() {
                         >
                             <Link
                                 to="/#map"
+                                onClick={() =>
+                                    trackEvent('join_click', {
+                                        location: 'home_join',
+                                        locale,
+                                    })
+                                }
                                 className="inline-flex items-center justify-center min-h-[48px] px-8 py-4 rounded-2xl font-bold text-white transition-all hover:scale-[1.02]"
                                 style={{
                                     background: 'linear-gradient(135deg, #1B3A8C 0%, #1e6fc0 100%)',
@@ -277,6 +284,12 @@ export default function HomePage() {
             >
                 <Link
                     to="/#map"
+                    onClick={() =>
+                        trackEvent('join_click', {
+                            location: 'home_join_sticky',
+                            locale,
+                        })
+                    }
                     className="flex items-center justify-center min-h-[48px] w-full rounded-2xl font-bold text-white"
                     style={{
                         background: 'linear-gradient(135deg, #1B3A8C 0%, #1e6fc0 100%)',

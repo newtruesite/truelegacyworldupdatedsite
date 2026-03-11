@@ -12,6 +12,7 @@ import type { Country } from '@/lib/countries'
 import { t } from '@/lib/translations'
 import { useLocaleContext } from '@/contexts/LocaleContext'
 import { ProductSection } from '@/components/products/ProductSection'
+import { trackEvent } from '@/lib/analytics'
 
 // ── Custom SVG Icons (no emojis) ──────────────────────────────
 function IconArrow({ size = 20 }: { size?: number }) {
@@ -200,8 +201,8 @@ const COUNTRY_LEADERS: Record<string, Array<{ name: string; role: string; image:
     ],
 }
 
-function getContent(country: Country) {
-    const es = country.locale === 'es'
+function getContent(country: Country, locale: 'en' | 'es' | 'fr') {
+    const es = locale === 'es'
     return {
         headline: es ? `Salud Verdadera. Riqueza Real. ${country.nativeName}.` : `True Health. Real Wealth. ${country.name}.`,
         sub: es
@@ -254,7 +255,7 @@ export default function CountryPage() {
     const { locale } = useLocaleContext()
     const jotformUrl = country.jotformUrl ?? DEFAULT_JOTFORM
     const copy = t[locale]
-    const c = getContent(country)
+    const c = getContent(country, locale)
 
     return (
         <div className="min-h-screen overflow-x-hidden" style={{ background: '#060b1e' }}>
@@ -314,6 +315,13 @@ export default function CountryPage() {
                             <a
                                 href={jotformUrl}
                                 target="_blank" rel="noopener noreferrer"
+                                onClick={() =>
+                                    trackEvent('join_click', {
+                                        location: 'country_hero',
+                                        countrySlug: country.slug,
+                                        locale,
+                                    })
+                                }
                                 className="mb-3 flex w-full items-center justify-center gap-2 rounded-2xl px-6 py-4 text-sm font-bold text-white transition-all hover:scale-105 shadow-lg shadow-yellow-500/25"
                                 style={{
                                     background: 'linear-gradient(135deg, #1B3A8C 0%, #1e6fc0 100%)',
@@ -425,6 +433,13 @@ export default function CountryPage() {
                             href={jotformUrl}
                             target="_blank"
                             rel="noopener noreferrer"
+                            onClick={() =>
+                                trackEvent('join_click', {
+                                    location: 'country_get_paid',
+                                    countrySlug: country.slug,
+                                    locale,
+                                })
+                            }
                             className="flex-shrink-0 rounded-2xl bg-yellow-500 hover:bg-yellow-400 text-black font-bold px-8 py-4 transition-all hover:scale-105 whitespace-nowrap"
                         >
                             {copy.startJourney}
@@ -498,6 +513,12 @@ export default function CountryPage() {
                         <div className="flex flex-col gap-3 w-full md:w-auto">
                             <Link
                                 to="/library"
+                                onClick={() =>
+                                    trackEvent('pdf_library_entry', {
+                                        countrySlug: country.slug,
+                                        locale,
+                                    })
+                                }
                                 className="inline-flex items-center justify-center rounded-2xl bg-cyan-500 px-6 py-3 text-sm font-semibold text-slate-950 shadow-lg shadow-cyan-500/40 hover:bg-cyan-400 transition-colors"
                             >
                                 {locale === 'es'

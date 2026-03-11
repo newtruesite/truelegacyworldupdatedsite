@@ -2,6 +2,7 @@ import { motion } from 'framer-motion'
 import { PDF_DOCUMENTS, type PdfCategory } from '@/lib/pdfs'
 import { useLocaleContext } from '@/contexts/LocaleContext'
 import { t } from '@/lib/translations'
+import { trackEvent } from '@/lib/analytics'
 
 const CATEGORY_ORDER: PdfCategory[] = ['research', 'experts', 'home', 'product']
 
@@ -88,6 +89,14 @@ export default function PdfLibraryPage() {
                               href={doc.path}
                               target="_blank"
                               rel="noreferrer"
+                              onClick={() =>
+                                trackEvent('pdf_open', {
+                                  id: doc.id,
+                                  category: group.category,
+                                  path: doc.path,
+                                  locale,
+                                })
+                              }
                               className="inline-flex items-center justify-center rounded-full bg-cyan-500 px-4 py-2 text-xs font-semibold text-slate-950 shadow-lg shadow-cyan-500/40 hover:bg-cyan-400 transition-colors"
                             >
                               {copy.openPdf}
