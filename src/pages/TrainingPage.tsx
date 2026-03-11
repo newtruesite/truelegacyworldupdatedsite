@@ -12,6 +12,7 @@ declare global {
       currentUser: () => { email: string } | null
       on: (event: string, cb: (user: unknown) => void) => void
       logout: () => void
+      open?: (action?: 'login' | 'signup' | 'recovery') => void
     }
   }
 }

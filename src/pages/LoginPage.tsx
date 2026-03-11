@@ -3,15 +3,6 @@ import { Link, useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { AuroraBackground } from '@/components/ui/AuroraBackground'
 
-declare global {
-  interface Window {
-    netlifyIdentity?: {
-      open: (action?: 'login' | 'signup' | 'recovery') => void
-      on: (event: string, cb: (user: unknown) => void) => void
-    }
-  }
-}
-
 export default function LoginPage() {
   const navigate = useNavigate()
 
@@ -19,13 +10,14 @@ export default function LoginPage() {
     const identity = window.netlifyIdentity
     if (!identity) return
     identity.on('login', () => {
-      navigate('/training', { replace: true })
+      const from = (window.history.state && (window.history.state as any).usr?.from) || '/training'
+      navigate(from, { replace: true })
     })
   }, [navigate])
 
-  const openLogin = () => window.netlifyIdentity?.open('login')
-  const openSignup = () => window.netlifyIdentity?.open('signup')
-  const openRecovery = () => window.netlifyIdentity?.open('recovery')
+  const openLogin = () => window.netlifyIdentity?.open?.('login')
+  const openSignup = () => window.netlifyIdentity?.open?.('signup')
+  const openRecovery = () => window.netlifyIdentity?.open?.('recovery')
 
   return (
     <div className="min-h-screen flex flex-col" style={{ background: '#060b1e' }}>

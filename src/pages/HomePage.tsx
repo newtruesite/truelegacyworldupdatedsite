@@ -9,6 +9,7 @@ import { PhotoCarousel3D } from '@/components/ui/PhotoCarousel3D'
 import { SocialProofStrip } from '@/components/ui/SocialProofStrip'
 import { Navbar } from '@/components/layout/Navbar'
 import { Footer } from '@/components/layout/Footer'
+import { ProductSection } from '@/components/products/ProductSection'
 
 function IconGlobe() {
     return (
@@ -178,6 +179,9 @@ export default function HomePage() {
 
                     <PhotoCarousel3D />
                 </section>
+
+                {/* ===== ENAGIC PRODUCTS (GLOBAL TEASER) ===== */}
+                <ProductSection productIds={['k8', 'sd501', 'anespa_dx', 'emguarde']} variant="home" />
 
                 {/* ===== JOIN THE TEAM ===== */}
                 <section id="join" className="relative py-20 md:py-24" style={{ background: '#060b1e' }}>

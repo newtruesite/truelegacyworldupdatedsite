@@ -11,6 +11,7 @@ import { COUNTRIES, getCountryBySlug, getFlagSrcSet } from '@/lib/countries'
 import type { Country } from '@/lib/countries'
 import { t } from '@/lib/translations'
 import { useLocaleContext } from '@/contexts/LocaleContext'
+import { ProductSection } from '@/components/products/ProductSection'
 
 // ── Custom SVG Icons (no emojis) ──────────────────────────────
 function IconArrow({ size = 20 }: { size?: number }) {
@@ -359,110 +360,7 @@ export default function CountryPage() {
             </TLBackground>
 
             {/* ===== PRODUCTS SECTION ===== */}
-            <section className="py-20" style={{ background: '#070c1a' }}>
-                <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-                    <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        className="text-center mb-12"
-                    >
-                        <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[#F5A623] mb-3">{c.productsLabel}</p>
-                        <h2 className="text-3xl md:text-4xl font-bold text-white font-display">
-                            {c.productsSub}
-                        </h2>
-                    </motion.div>
-
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
-                        {/* emGuarde */}
-                        <motion.div
-                            initial={{ opacity: 0, y: 20 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            viewport={{ once: true }}
-                            transition={{ delay: 0.1 }}
-                        >
-                            <Link
-                                to={`/${country.slug}/emguarde`}
-                                className="group block rounded-3xl border border-purple-500/15 p-8 hover:border-purple-500/40 transition-all hover:-translate-y-1"
-                                style={{ background: 'rgba(5,16,48,0.6)', backdropFilter: 'blur(20px)' }}
-                            >
-                                <div className="rounded-2xl overflow-hidden border-2 border-white/15 shadow-2xl shadow-black/50 mb-4 aspect-[4/3] bg-[#0a1628] relative flex items-center justify-center">
-                                    {!emguardeImgError && (
-                                        <img
-                                            src="/assets/images/emguarde-product.png"
-                                            alt="emGuarde — EMF harmonizer by Enagic, True Legacy World"
-                                            className="w-full h-full object-contain hover:scale-105 transition-transform duration-500 bg-black/40"
-                                            loading="lazy"
-                                            decoding="async"
-                                            onError={(e) => {
-                                                const t = e.currentTarget
-                                                if (t.src.includes('emguarde-product')) {
-                                                    t.src = '/products/emguarde.png'
-                                                } else {
-                                                    setEmguardeImgError(true)
-                                                }
-                                            }}
-                                        />
-                                    )}
-                                    {emguardeImgError && (
-                                        <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 text-purple-400/90 bg-white bg-none">
-                                            <IconShield size={48} />
-                                            <span className="text-sm font-semibold text-white/90">emGuarde™</span>
-                                        </div>
-                                    )}
-                                </div>
-                                <h3 className="font-bold text-white text-xl mb-2">emGuarde™</h3>
-                                <p className="text-slate-400 text-sm leading-relaxed mb-4">
-                                    {locale === 'es' ? 'Un armonizador EMF que equilibra tu entorno ante dispositivos modernos y mejora tu calma y bienestar diarios.' : 'A breakthrough EMF harmonizer, balancing your environment around modern devices and enhancing your daily calm and well-being.'}
-                                </p>
-                                <span className="inline-flex items-center gap-1.5 text-sm font-semibold text-purple-400 group-hover:text-purple-300 transition-colors">
-                                    {copy.seeMore} <IconArrow size={16} />
-                                </span>
-                            </Link>
-                        </motion.div>
-
-                        {/* K8 */}
-                        <motion.div
-                            initial={{ opacity: 0, y: 20 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            viewport={{ once: true }}
-                            transition={{ delay: 0.2 }}
-                        >
-                            <Link
-                                to={`/${country.slug}/k8`}
-                                className="group block rounded-3xl border border-cyan-500/15 p-8 hover:border-cyan-500/40 transition-all hover:-translate-y-1"
-                                style={{ background: 'rgba(5,16,48,0.6)', backdropFilter: 'blur(20px)' }}
-                            >
-                                <div className="rounded-2xl overflow-hidden border-2 border-white/15 shadow-2xl shadow-black/50 mb-4 aspect-[4/3] bg-[#0a1628] relative flex items-center justify-center">
-                                    {!k8ImgError && (
-                                        <img
-                                            src="/products/k8.png"
-                                            alt="Leveluk K8 Kangen Water ionizer by Enagic — True Legacy World"
-                                            className="w-full h-full object-contain hover:scale-105 transition-transform duration-500 bg-black/40"
-                                            loading="lazy"
-                                            decoding="async"
-                                            onError={() => setK8ImgError(true)}
-                                        />
-                                    )}
-                                    {k8ImgError && (
-                                        <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 text-cyan-400/90">
-                                            <IconDroplet size={48} />
-                                            <span className="text-sm font-semibold text-white/90">Leveluk K8</span>
-                                        </div>
-                                    )}
-                                </div>
-                                <h3 className="font-bold text-white text-xl mb-2">Leveluk K8</h3>
-                                <p className="text-slate-400 text-sm leading-relaxed mb-4">
-                                    {locale === 'es' ? 'El K8 es nuestro ionizador estrella, con cinco tipos de agua para beber, cocinar y limpiar — un esencial moderno para hogares conscientes de su salud.' : 'The K8 is our flagship ionizer, delivering five versatile waters for drinking, cooking, and cleaning — a modern essential for health-conscious homes.'}
-                                </p>
-                                <span className="inline-flex items-center gap-1.5 text-sm font-semibold text-cyan-400 group-hover:text-cyan-300 transition-colors">
-                                    {copy.seeMore} <IconArrow size={16} />
-                                </span>
-                            </Link>
-                        </motion.div>
-                    </div>
-                </div>
-            </section>
+            <ProductSection productIds={['emguarde', 'k8']} country={country} variant="country" />
 
             {/* ===== GET PAID TO SHARE WORLD-HEALING PRODUCTS ===== */}
             <motion.section
@@ -571,6 +469,52 @@ export default function CountryPage() {
                         <h2 className="text-3xl md:text-4xl font-bold text-white font-display">{c.testimonialsLabel}</h2>
                     </motion.div>
                     <TestimonialsSplit locale={locale} />
+                </div>
+            </section>
+
+            {/* ===== RESEARCH & PDF LIBRARY CTA ===== */}
+            <section className="py-16 border-t border-white/5" style={{ background: '#050b18' }}>
+                <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+                    <div className="rounded-3xl border border-cyan-500/25 bg-gradient-to-br from-cyan-500/10 via-slate-900/80 to-slate-950/90 p-8 md:p-10 flex flex-col md:flex-row items-start md:items-center gap-6">
+                        <div className="flex-1">
+                            <p className="text-[11px] font-semibold uppercase tracking-[0.3em] text-cyan-300 mb-2">
+                                TRUE LEGACY RESEARCH
+                            </p>
+                            <h2 className="text-2xl md:text-3xl font-display font-bold text-white mb-3">
+                                {locale === 'es'
+                                    ? `Investigación y PDFs para ${country.nativeName}`
+                                    : locale === 'fr'
+                                    ? `Recherche & PDFs pour ${country.nativeName}`
+                                    : `Research & PDFs for ${country.name}`}
+                            </h2>
+                            <p className="text-slate-300 text-sm md:text-base max-w-2xl">
+                                {locale === 'es'
+                                    ? 'Accede a investigaciones, testimonios médicos y guías oficiales de Enagic sobre Agua Kangen® y Anespa DX para compartir información confiable con tu comunidad.'
+                                    : locale === 'fr'
+                                    ? "Accédez aux recherches, avis médicaux et documents officiels Enagic sur l'eau Kangen® et Anespa DX afin de partager des informations fiables avec votre communauté."
+                                    : 'Access research, medical testimonials, and official Enagic guides on Kangen Water® and Anespa DX so you can share credible information with your community.'}
+                            </p>
+                        </div>
+                        <div className="flex flex-col gap-3 w-full md:w-auto">
+                            <Link
+                                to="/library"
+                                className="inline-flex items-center justify-center rounded-2xl bg-cyan-500 px-6 py-3 text-sm font-semibold text-slate-950 shadow-lg shadow-cyan-500/40 hover:bg-cyan-400 transition-colors"
+                            >
+                                {locale === 'es'
+                                    ? 'Ir a la Biblioteca de PDFs'
+                                    : locale === 'fr'
+                                    ? 'Aller à la bibliothèque de PDFs'
+                                    : 'Go to PDF Library'}
+                            </Link>
+                            <p className="text-[11px] text-slate-400">
+                                {locale === 'es'
+                                    ? 'Requiere crear una cuenta gratuita de miembro de True Legacy.'
+                                    : locale === 'fr'
+                                    ? "Nécessite la création d'un compte membre True Legacy gratuit."
+                                    : 'Requires a free True Legacy member login.'}
+                            </p>
+                        </div>
+                    </div>
                 </div>
             </section>
 

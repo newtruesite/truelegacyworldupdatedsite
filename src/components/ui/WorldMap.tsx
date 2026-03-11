@@ -1,12 +1,8 @@
+import { useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
-
-// Convert lat/long to CSS percentage for equirectangular map: left = (lon+180)/360*100, top = (90-lat)/180*100
-function latLongToPercent(lat: number, long: number): { top: string; left: string } {
-  const left = ((long + 180) / 360) * 100
-  const top = ((90 - lat) / 180) * 100
-  return { top: `${top}%`, left: `${left}%` }
-}
+import { COUNTRIES, type Country } from '@/lib/countries'
+import { useLocaleContext } from '@/contexts/LocaleContext'
 
 type PinConfig = {
   id: string
@@ -16,12 +12,10 @@ type PinConfig = {
   route: string
 }
 
-const PINS: PinConfig[] = [
-  { id: 'north-america', label: 'North America', ...latLongToPercent(45, -100), route: '/region/north-america' },
-  { id: 'south-america', label: 'Latin America', ...latLongToPercent(-15, -60), route: '/region/latin-america' },
-  { id: 'africa', label: 'Africa', ...latLongToPercent(0, 20), route: '/region/africa' },
-  { id: 'asia', label: 'Asia', ...latLongToPercent(25, 55), route: '/region/asia' },
-]
+function getCountryLabel(country: Country, locale: 'en' | 'es' | 'fr'): string {
+  if (locale === 'en') return country.name
+  return country.nativeName || country.name
+}
 
 function PinMarker({ label, onClick, index }: { label: string; onClick: () => void; index: number }) {
   return (
@@ -35,19 +29,22 @@ function PinMarker({ label, onClick, index }: { label: string; onClick: () => vo
       transition={{ type: 'spring', stiffness: 220, damping: 18, delay: 0.3 + index * 0.12 }}
       whileHover={{ scale: 1.08 }}
       whileTap={{ scale: 0.98 }}
+      aria-label={label}
+      title={label}
     >
-      {/* Small True Legacy logo above the pin dot so it's visible on the map */}
-      <img
-        src="/logos/tl-horizontal-white.png"
-        alt=""
-        className="w-10 h-3.5 object-contain object-center -translate-y-1/2 mb-0.5 opacity-90 drop-shadow-md"
-        aria-hidden
-      />
-      {/* Dot centered on the map pin — pulse animation */}
+      {/* TL-branded pin with glow */}
       <span className="map-dot-pulse flex shrink-0 -translate-y-1/2 inline-flex items-center justify-center">
-        <svg className="w-4 h-4 text-[#F5A623] drop-shadow-md relative z-10" viewBox="0 0 16 16" fill="currentColor" aria-hidden>
-          <circle cx="8" cy="8" r="6" />
-        </svg>
+        <span className="relative inline-flex items-center justify-center">
+          <span className="absolute inline-flex h-6 w-6 rounded-full bg-cyan-400/40 blur-sm" aria-hidden />
+          <svg
+            className="relative w-4 h-5 text-[#F5A623] drop-shadow-md"
+            viewBox="0 0 20 24"
+            fill="currentColor"
+            aria-hidden
+          >
+            <path d="M10 0C5.86 0 2.5 3.36 2.5 7.5c0 5.33 6.3 11.73 7.02 12.44a.7.7 0 0 0 .96 0c.72-.71 7.02-7.11 7.02-12.44C17.5 3.36 14.14 0 10 0Zm0 11.25a3.75 3.75 0 1 1 0-7.5 3.75 3.75 0 0 1 0 7.5Z" />
+          </svg>
+        </span>
       </span>
       {/* Label below the dot */}
       <span className="mt-1 px-2.5 py-1 rounded-md bg-[#0a1628]/95 text-white text-[10px] sm:text-xs font-semibold tracking-wide whitespace-nowrap border border-[#F5A623]/40 shadow-lg">
@@ -59,13 +56,26 @@ function PinMarker({ label, onClick, index }: { label: string; onClick: () => vo
 
 export function WorldMap() {
   const navigate = useNavigate()
+  const { locale } = useLocaleContext()
+
+  const pins = useMemo<PinConfig[]>(
+    () =>
+      COUNTRIES.map((country) => ({
+        id: country.slug,
+        label: getCountryLabel(country, locale),
+        top: `${country.mapY}%`,
+        left: `${country.mapX}%`,
+        route: `/${country.slug}`,
+      })),
+    [locale]
+  )
 
   return (
     <div className="relative w-full h-full overflow-hidden bg-[#e3eef8] flex items-center justify-center">
       {/* 1) Pins overlay first (DOM index 0), nextSibling = img */}
       <div className="absolute inset-0 z-10 pointer-events-none">
         <div className="relative z-10 h-full w-full pointer-events-auto">
-          {PINS.map((pin, index) => (
+          {pins.map((pin, index) => (
             <div
               key={pin.id}
               className="absolute pointer-events-auto left-0 top-0"
@@ -82,8 +92,8 @@ export function WorldMap() {
       </div>
       {/* 2) Map image */}
       <img
-        src="/world-map-hero.png"
-        alt="True Legacy World — global regions: North America, Latin America, Africa, Asia"
+        src="/assets/maps/world-map-light.png"
+        alt="True Legacy World — select your country to explore your local True Legacy community"
         className="absolute inset-0 h-full w-full object-contain pointer-events-none"
         loading="lazy"
       />
