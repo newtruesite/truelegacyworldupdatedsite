@@ -41,8 +41,8 @@ export function getFlagSrcSet(slug: string): { src: string; srcSet: string } {
     }
     const iso2 = SLUG_TO_ISO2[slug] ?? slug.slice(0, 2)
     return {
-        src: `https://flagcdn.com/w80/${iso2}.png`,
-        srcSet: `https://flagcdn.com/w80/${iso2}.png 1x, https://flagcdn.com/w160/${iso2}.png 2x`,
+        src: `https://flagcdn.com/w160/${iso2}.png`,
+        srcSet: `https://flagcdn.com/w160/${iso2}.png 1x, https://flagcdn.com/w320/${iso2}.png 2x`,
     }
 }
 
@@ -233,8 +233,8 @@ export const COUNTRIES: Country[] = [
         nativeName: 'Malaysia',
         flag: '🇲🇾',
         flagEmoji: '🇲🇾',
-        youtubeUrl: 'https://youtube.com/@TrueLegacyWorld',
-        youtubeId: 'erTkubfkt9o',
+        youtubeUrl: 'https://youtu.be/I3Bk2L5nKW8',
+        youtubeId: 'I3Bk2L5nKW8',
         locale: 'en',
         jotformUrl: JOTFORM_EN,
         youtube: 'https://youtube.com/@TrueLegacyWorld',

@@ -1,6 +1,8 @@
 export type ProductId =
   | 'k8'
   | 'sd501'
+  | 'sd501_super'
+  | 'sd501_dx'
   | 'anespa_dx'
   | 'emguarde'
   | 'ukon_sigma'
@@ -32,7 +34,8 @@ export const PRODUCTS: Record<ProductId, ProductDefinition> = {
     slug: 'k8',
     name: 'Leveluk K8',
     category: 'ionizer',
-    enagicProductUrl: 'https://www.enagic.com/en_US/products/leveluk-k8',
+    enagicProductUrl:
+      'https://information.enagic.com/en/introduction?company_id=2&h=65c8bc2eba9f21e83eb4b6aae8ae3fd4&enroller_id=37000004828&sponsor_id=37000004829&representative_id=37000004828&line_rank=0&product_id=1016',
     pdfGuideUrl: 'https://www.enagic.com/pdf/1096/Kangen_Water_Ionizers_Product_Guide.pdf?v=1767139619',
     secondaryPdfUrl: 'https://www.enagic.com/pdf/1099/Machine_Care_and_Maintenance_Guide.pdf?v=1767139562',
     imageSrc: '/products/k8.png',
@@ -49,12 +52,37 @@ export const PRODUCTS: Record<ProductId, ProductDefinition> = {
     imageSrc: '/products/sd501.png',
     imageAlt: 'Leveluk SD501 Kangen Water® ionizer by Enagic',
   },
+  sd501_super: {
+    id: 'sd501_super',
+    slug: 'sd501-super',
+    name: 'Leveluk Super 501',
+    category: 'ionizer',
+    enagicProductUrl:
+      'https://information.enagic.com/en/introduction?company_id=2&h=65c8bc2eba9f21e83eb4b6aae8ae3fd4&enroller_id=37000004828&sponsor_id=37000004829&representative_id=37000004828&line_rank=0&product_id=1007',
+    pdfGuideUrl: 'https://www.enagic.com/pdf/1096/Kangen_Water_Ionizers_Product_Guide.pdf?v=1767139619',
+    secondaryPdfUrl: 'https://www.enagic.com/pdf/1099/Machine_Care_and_Maintenance_Guide.pdf?v=1767139562',
+    imageSrc: '/products/sd501-super.png',
+    imageAlt: 'Leveluk Super 501 high-output Kangen Water® ionizer by Enagic',
+  },
+  sd501_dx: {
+    id: 'sd501_dx',
+    slug: 'sd501-dx',
+    name: 'Leveluk SD501 Platinum DX',
+    category: 'ionizer',
+    enagicProductUrl:
+      'https://information.enagic.com/en/introduction?company_id=2&h=65c8bc2eba9f21e83eb4b6aae8ae3fd4&enroller_id=37000004828&sponsor_id=37000004829&representative_id=37000004828&line_rank=0&product_id=1064',
+    pdfGuideUrl: 'https://www.enagic.com/pdf/1096/Kangen_Water_Ionizers_Product_Guide.pdf?v=1767139619',
+    secondaryPdfUrl: 'https://www.enagic.com/pdf/1099/Machine_Care_and_Maintenance_Guide.pdf?v=1767139562',
+    imageSrc: '/products/sd501-dx.png',
+    imageAlt: 'Leveluk SD501 DX platinum Kangen Water® ionizer by Enagic',
+  },
   anespa_dx: {
     id: 'anespa_dx',
     slug: 'anespa-dx',
     name: 'Anespa DX',
     category: 'shower',
-    enagicProductUrl: 'https://www.enagic.com/en_US/products/anespa-dx',
+    enagicProductUrl:
+      'https://information.enagic.com/en/introduction?company_id=2&h=65c8bc2eba9f21e83eb4b6aae8ae3fd4&enroller_id=37000004828&sponsor_id=37000004829&representative_id=37000004828&line_rank=0&product_id=1062',
     pdfGuideUrl: 'https://www.enagic.com/pdf/1094/ANESPA_DX_Product_Guide.pdf?v=1767139664',
     imageSrc: '/products/anespa-dx.png',
     imageAlt: 'Anespa DX mineral ion water spa system by Enagic',
@@ -67,7 +95,7 @@ export const PRODUCTS: Record<ProductId, ProductDefinition> = {
     enagicProductUrl:
       'https://information.enagic.com/en/introduction?company_id=2&h=65c8bc2eba9f21e83eb4b6aae8ae3fd4&enroller_id=37000004828&sponsor_id=37000004829&representative_id=37000004828&line_rank=0&product_id=1007',
     pdfGuideUrl: 'https://www.truelegacyworld.com/_files/ugd/7b12be_ff7cba88b07d461890527e0d74fcea43.pdf',
-    imageSrc: '/assets/images/emguarde-product.png',
+    imageSrc: '/products/emguarde.png',
     imageAlt: 'emGuarde™ EMF harmonizer by Enagic',
   },
   ukon_sigma: {

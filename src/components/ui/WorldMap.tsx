@@ -1,20 +1,73 @@
 import { useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { COUNTRIES, type Country } from '@/lib/countries'
 import { useLocaleContext } from '@/contexts/LocaleContext'
 
-type PinConfig = {
-  id: string
+type RegionId = 'north_america' | 'south_america' | 'africa' | 'asia'
+
+type RegionPinConfig = {
+  id: RegionId
   label: string
   top: string
   left: string
   route: string
 }
 
-function getCountryLabel(country: Country, locale: 'en' | 'es' | 'fr'): string {
-  if (locale === 'en') return country.name
-  return country.nativeName || country.name
+const REGION_PINS_BASE: Array<{
+  id: RegionId
+  /** Percentage positions tuned for the world map background */
+  top: number
+  left: number
+  /** Region route for that area */
+  route: string
+}> = [
+  {
+    id: 'north_america',
+    top: 30,
+    left: 18,
+    route: '/region/north-america',
+  },
+  {
+    id: 'south_america',
+    top: 62,
+    left: 27,
+    route: '/region/latin-america',
+  },
+  {
+    id: 'africa',
+    top: 48,
+    left: 48,
+    route: '/region/africa',
+  },
+  {
+    id: 'asia',
+    top: 46,
+    left: 68,
+    route: '/region/asia',
+  },
+]
+
+function getRegionLabel(id: RegionId, locale: 'en' | 'es' | 'fr'): string {
+  switch (id) {
+    case 'north_america':
+      if (locale === 'es') return 'Norteamérica'
+      if (locale === 'fr') return 'Amérique du Nord'
+      return 'North America'
+    case 'south_america':
+      if (locale === 'es') return 'Sudamérica'
+      if (locale === 'fr') return 'Amérique du Sud'
+      return 'South America'
+    case 'africa':
+      if (locale === 'es') return 'África'
+      if (locale === 'fr') return 'Afrique'
+      return 'Africa'
+    case 'asia':
+      if (locale === 'es') return 'Asia'
+      if (locale === 'fr') return 'Asie'
+      return 'Asia'
+    default:
+      return ''
+  }
 }
 
 function PinMarker({ label, onClick, index }: { label: string; onClick: () => void; index: number }) {
@@ -32,7 +85,6 @@ function PinMarker({ label, onClick, index }: { label: string; onClick: () => vo
       aria-label={label}
       title={label}
     >
-      {/* TL-branded pin with glow */}
       <span className="map-dot-pulse flex shrink-0 -translate-y-1/2 inline-flex items-center justify-center">
         <span className="relative inline-flex items-center justify-center">
           <span className="absolute inline-flex h-6 w-6 rounded-full bg-cyan-400/40 blur-sm" aria-hidden />
@@ -46,7 +98,6 @@ function PinMarker({ label, onClick, index }: { label: string; onClick: () => vo
           </svg>
         </span>
       </span>
-      {/* Label below the dot */}
       <span className="mt-1 px-2.5 py-1 rounded-md bg-[#0a1628]/95 text-white text-[10px] sm:text-xs font-semibold tracking-wide whitespace-nowrap border border-[#F5A623]/40 shadow-lg">
         {label}
       </span>
@@ -58,47 +109,51 @@ export function WorldMap() {
   const navigate = useNavigate()
   const { locale } = useLocaleContext()
 
-  const pins = useMemo<PinConfig[]>(
+  const pins = useMemo<RegionPinConfig[]>(
     () =>
-      COUNTRIES.map((country) => ({
-        id: country.slug,
-        label: getCountryLabel(country, locale),
-        top: `${country.mapY}%`,
-        left: `${country.mapX}%`,
-        route: `/${country.slug}`,
+      REGION_PINS_BASE.map((region) => ({
+        id: region.id,
+        label: getRegionLabel(region.id, locale),
+        top: `${region.top}%`,
+        left: `${region.left}%`,
+        route: region.route,
       })),
     [locale]
   )
 
   return (
-    <div className="relative w-full h-full overflow-hidden bg-[#e3eef8] flex items-center justify-center">
-      {/* 1) Pins overlay first (DOM index 0), nextSibling = img */}
-      <div className="absolute inset-0 z-10 pointer-events-none">
-        <div className="relative z-10 h-full w-full pointer-events-auto">
-          {pins.map((pin, index) => (
-            <div
-              key={pin.id}
-              className="absolute pointer-events-auto left-0 top-0"
-              style={{ top: pin.top, left: pin.left, transform: 'translate(-50%, -50%)' }}
-            >
-              <PinMarker
-                label={pin.label}
-                index={index}
-                onClick={() => navigate(pin.route)}
-              />
+    <div className="relative w-full overflow-visible flex items-center justify-center">
+      {/* Soft outer glow anchoring the map into the background */}
+      <div className="pointer-events-none absolute inset-x-[-40px] top-6 h-64 rounded-[999px] bg-[radial-gradient(circle_at_center,rgba(6,16,56,0.8)_0,rgba(6,11,30,0)_70%)]" />
+      <div className="relative w-full max-w-5xl">
+        {/* Map image */}
+        <div className="relative w-full">
+          <img
+            src="/assets/maps/world-map-truelegacy.png"
+            alt="True Legacy World — choose your region to explore local True Legacy communities"
+            className="block w-full h-auto object-contain pointer-events-none select-none"
+            loading="lazy"
+          />
+          {/* Pins overlay */}
+          <div className="pointer-events-none absolute inset-0">
+            <div className="relative z-10 h-full w-full pointer-events-auto">
+              {pins.map((pin, index) => (
+                <div
+                  key={pin.id}
+                  className="absolute pointer-events-auto left-0 top-0"
+                  style={{ top: pin.top, left: pin.left, transform: 'translate(-50%, -60%)' }}
+                >
+                  <PinMarker
+                    label={pin.label}
+                    index={index}
+                    onClick={() => navigate(pin.route)}
+                  />
+                </div>
+              ))}
             </div>
-          ))}
+          </div>
         </div>
       </div>
-      {/* 2) Map image */}
-      <img
-        src="/assets/maps/world-map-light.png"
-        alt="True Legacy World — select your country to explore your local True Legacy community"
-        className="absolute inset-0 h-full w-full object-contain pointer-events-none"
-        loading="lazy"
-      />
-      {/* 3) Gradient overlay */}
-      <div className="pointer-events-none absolute inset-0 z-[1] bg-[radial-gradient(circle_at_center,transparent_0,transparent_55%,rgba(0,8,25,0.4)_100%)]" />
     </div>
   )
 }

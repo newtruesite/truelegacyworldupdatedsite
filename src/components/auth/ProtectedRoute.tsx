@@ -7,10 +7,15 @@ interface Props {
 
 export function ProtectedRoute({ children }: Props) {
   const location = useLocation()
+
+  if (typeof window === 'undefined') {
+    return null
+  }
+
   const user = window.netlifyIdentity?.currentUser()
 
   if (!user) {
-    return <Navigate to="/login" state={{ from: location.pathname }} replace />
+    return <Navigate to="/login" replace state={{ from: location }} />
   }
 
   return children

@@ -96,6 +96,7 @@ export function Navbar() {
         unlockLegacy: t[locale].unlockLegacy,
         navProductK8: t[locale].navProductK8,
         navProductEmguarde: t[locale].navProductEmguarde,
+        products: locale === 'es' ? 'Productos' : locale === 'fr' ? 'Produits' : 'Products',
     }
 
     const goToCountry = (slug: string) => {
@@ -125,10 +126,7 @@ export function Navbar() {
 
                 {/* Desktop nav */}
                 <div className="hidden items-center gap-1 lg:flex">
-                    {[
-                        { label: navLabels.home, to: '/' },
-                        { label: navLabels.training, to: '/training' },
-                    ].map(({ label, to }) => (
+                    {[{ label: navLabels.home, to: '/' }, { label: navLabels.training, to: '/training' }].map(({ label, to }) => (
                         <Link
                             key={to}
                             to={to}
@@ -161,6 +159,12 @@ export function Navbar() {
                         className="flex items-center gap-1.5 px-3 py-2 text-[13px] font-medium text-cyan-300 hover:text-cyan-200 transition-colors rounded-lg hover:bg-cyan-500/10"
                     >
                         <IconDroplets className="text-cyan-400" /> {navLabels.navProductK8}
+                    </Link>
+                    <Link
+                        to="/products"
+                        className="flex items-center gap-1.5 px-3 py-2 text-[13px] font-medium text-amber-300 hover:text-amber-200 transition-colors rounded-lg hover:bg-amber-500/10"
+                    >
+                        {navLabels.products}
                     </Link>
 
                     {/* Separator */}
@@ -326,6 +330,11 @@ export function Navbar() {
                                     className="flex items-center min-h-[56px] gap-2.5 px-4 py-3 text-base font-medium text-cyan-300 hover:bg-cyan-500/10 rounded-xl transition-colors"
                                 >
                                     <IconDroplets className="text-cyan-400" /> {navLabels.navProductK8}
+                                </Link>
+                                <Link to="/products" onClick={() => setMenuOpen(false)}
+                                    className="flex items-center min-h-[56px] gap-2.5 px-4 py-3 text-base font-medium text-amber-300 hover:bg-amber-500/10 rounded-xl transition-colors"
+                                >
+                                    {navLabels.products}
                                 </Link>
                                 <div className="section-divider my-2" />
                                 <p className="px-4 py-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-slate-500">{locale === 'es' ? 'Elige tu país' : locale === 'fr' ? 'Choisissez votre pays' : 'Select Country'}</p>

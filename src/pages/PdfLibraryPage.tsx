@@ -3,6 +3,7 @@ import { PDF_DOCUMENTS, type PdfCategory } from '@/lib/pdfs'
 import { useLocaleContext } from '@/contexts/LocaleContext'
 import { t } from '@/lib/translations'
 import { trackEvent } from '@/lib/analytics'
+import { usePdfLeadCapture } from '@/contexts/PdfLeadCaptureContext'
 
 const CATEGORY_ORDER: PdfCategory[] = ['research', 'experts', 'home', 'product']
 
@@ -16,6 +17,7 @@ const CATEGORY_TITLE_KEY: Record<PdfCategory, keyof (typeof t)['en']['pdfLibrary
 export default function PdfLibraryPage() {
   const { locale } = useLocaleContext()
   const copy = t[locale].pdfLibrary
+  const { openModal } = usePdfLeadCapture()
 
   const grouped = CATEGORY_ORDER.map((category) => ({
     category,
@@ -85,22 +87,21 @@ export default function PdfLibraryPage() {
                               'Official Enagic product literature so you can confidently present the technology.'}
                           </p>
                           <div className="mt-2">
-                            <a
-                              href={doc.path}
-                              target="_blank"
-                              rel="noreferrer"
-                              onClick={() =>
+                            <button
+                              type="button"
+                              onClick={() => {
                                 trackEvent('pdf_open', {
                                   id: doc.id,
                                   category: group.category,
                                   path: doc.path,
                                   locale,
                                 })
-                              }
+                                openModal(doc.path)
+                              }}
                               className="inline-flex items-center justify-center rounded-full bg-cyan-500 px-4 py-2 text-xs font-semibold text-slate-950 shadow-lg shadow-cyan-500/40 hover:bg-cyan-400 transition-colors"
                             >
                               {copy.openPdf}
-                            </a>
+                            </button>
                           </div>
                         </div>
                       </motion.article>

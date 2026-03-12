@@ -1,21 +1,10 @@
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { CheckCircle, LogOut, Menu, Video } from 'lucide-react'
+import { CheckCircle, Menu, Video } from 'lucide-react'
 import { AuroraBackground } from '@/components/ui/AuroraBackground'
 import { Navbar } from '@/components/layout/Navbar'
 import { Footer } from '@/components/layout/Footer'
-
-declare global {
-  interface Window {
-    netlifyIdentity?: {
-      currentUser: () => { email: string } | null
-      on: (event: string, cb: (user: unknown) => void) => void
-      logout: () => void
-      open?: (action?: 'login' | 'signup' | 'recovery') => void
-    }
-  }
-}
 
 const BENEFITS = [
   'Exclusive weekly live training calls with global leaders',
@@ -54,73 +43,62 @@ const TRAINING_LESSONS: Record<string, LessonItem[]> = {
 
 export default function TrainingPage() {
   const navigate = useNavigate()
-  const [user, setUser] = useState<{ email: string } | null | undefined>(undefined)
+  const [isAuthed, setIsAuthed] = useState(false)
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [activeModule, setActiveModule] = useState(MODULES[0].id)
 
   useEffect(() => {
+    if (typeof window === 'undefined' || !window.netlifyIdentity) return
     const identity = window.netlifyIdentity
-    if (!identity) {
-      setUser(null)
-      return
-    }
-    const onInit = () => {
-      setUser(identity.currentUser())
-    }
-    identity.on('init', onInit)
-    onInit()
-    identity.on('login', (u) => setUser(u as { email: string }))
-    identity.on('logout', () => setUser(null))
-    return () => {
-      identity.on('init', () => {})
-      identity.on('login', () => {})
-      identity.on('logout', () => {})
-    }
-  }, [])
 
-  useEffect(() => {
-    if (user === null) {
+    const checkUser = () => {
+      const user = identity.currentUser()
+      if (!user) {
+        navigate('/login', { replace: true, state: { from: { pathname: '/training' } } })
+      } else {
+        setIsAuthed(true)
+      }
+    }
+
+    identity.on('init', checkUser)
+    identity.on('login', checkUser)
+    identity.on('logout', () => {
+      setIsAuthed(false)
       navigate('/login', { replace: true })
+    })
+
+    // Trigger initial init if needed
+    identity.init?.()
+    checkUser()
+
+    return () => {
+      identity.off?.('init', checkUser)
+      identity.off?.('login', checkUser)
+      identity.off?.('logout')
     }
-  }, [user, navigate])
-
-  const handleLogout = () => {
-    window.netlifyIdentity?.logout()
-    navigate('/', { replace: true })
-  }
-
-  if (user === undefined) {
-    return (
-      <div className="min-h-screen flex items-center justify-center" style={{ background: '#060b1e' }}>
-        <div className="text-slate-400">Loading…</div>
-      </div>
-    )
-  }
-
-  if (user === null) {
-    return null
-  }
+  }, [navigate])
 
   const currentModule = MODULES.find((m) => m.id === activeModule)
   const lessons = TRAINING_LESSONS[activeModule] ?? []
+
+  if (!isAuthed) {
+    return null
+  }
 
   return (
     <div className="min-h-screen" style={{ background: '#060b1e' }}>
       <Navbar />
       <AuroraBackground className="pt-28 pb-16 min-h-screen">
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between mb-8">
-            <h1 className="text-2xl md:text-3xl font-bold text-white">
-              Leadership Training
-            </h1>
-            <button
-              type="button"
-              id="logout-btn"
-              onClick={handleLogout}
-              className="flex items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-sm font-medium text-slate-300 hover:text-white hover:bg-white/10 min-h-[48px]"
-            >
-              <LogOut className="h-4 w-4" /> Log out
-            </button>
+          <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-8">
+            <div>
+              <h1 className="text-2xl md:text-3xl font-bold text-white">
+                Leadership Training
+              </h1>
+              <p className="text-slate-400 text-sm md:text-base mt-1">
+                On-demand leadership and business training for True Legacy partners worldwide.
+              </p>
+            </div>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">

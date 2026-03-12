@@ -203,42 +203,92 @@ const COUNTRY_LEADERS: Record<string, Array<{ name: string; role: string; image:
 
 function getContent(country: Country, locale: 'en' | 'es' | 'fr') {
     const es = locale === 'es'
+    const fr = locale === 'fr'
     return {
-        headline: es ? `Salud Verdadera. Riqueza Real. ${country.nativeName}.` : `True Health. Real Wealth. ${country.name}.`,
+        headline: es
+            ? `Salud Verdadera. Riqueza Real. ${country.nativeName}.`
+            : fr
+            ? `Vraie Santé. Vraie Richesse. ${country.nativeName}.`
+            : `True Health. Real Wealth. ${country.name}.`,
         sub: es
             ? 'True Legacy es un equipo global de coaches que comparten Agua Kangen y emGuarde — dos de las tecnologías de bienestar más comentadas. No solo vendemos productos; construimos líderes.'
+            : fr
+            ? "True Legacy est une équipe mondiale de coachs qui partagent l’eau Kangen et emGuarde — deux des technologies bien‑être les plus reconnues. Nous ne faisons pas que vendre des produits. Nous formons des leaders."
             : 'True Legacy is a global team of coaches sharing Kangen Water and emGuarde — two of the most talked-about wellness technologies on the market. We don\'t just sell products. We build leaders.',
-        watchLabel: es ? 'Mira el Video Completo' : 'Watch the Full Blueprint',
-        vslTitle: es ? `Blueprint de True Legacy — ${country.nativeName}` : `True Legacy Blueprint — ${country.name}`,
-        ctaHeadline: es ? '¿Listo para construir tu legado con nosotros?' : 'Ready to build your legacy with us?',
-        ctaDesc: es ? 'Miles de líderes ya están transformando vidas. Tu oportunidad comienza aquí.' : 'Thousands of leaders worldwide are already building their legacy. Your opportunity starts here.',
+        watchLabel: es ? 'Mira el Video Completo' : fr ? 'Regardez la vidéo complète' : 'Watch the Full Blueprint',
+        vslTitle: es
+            ? `Blueprint de True Legacy — ${country.nativeName}`
+            : fr
+            ? `Blueprint True Legacy — ${country.nativeName}`
+            : `True Legacy Blueprint — ${country.name}`,
+        ctaHeadline: es
+            ? '¿Listo para construir tu legado con nosotros?'
+            : fr
+            ? 'Prêt à construire votre héritage avec nous ?'
+            : 'Ready to build your legacy with us?',
+        ctaDesc: es
+            ? 'Miles de líderes ya están transformando vidas. Tu oportunidad comienza aquí.'
+            : fr
+            ? 'Des milliers de leaders transforment déjà des vies. Votre opportunité commence ici.'
+            : 'Thousands of leaders worldwide are already building their legacy. Your opportunity starts here.',
         points: es
             ? ['Agua Kangen de grado médico para tu salud', 'Protección EMF con emGuarde 24/7', 'Plan de compensación de 8 niveles', 'Comunidad global de líderes y mentores']
+            : fr
+            ? [
+                  'Eau Kangen de qualité médicale pour une vraie santé',
+                  'Protection EMF avec emGuarde 24h/24',
+                  'Plan de compensation 8 points pour des revenus mondiaux',
+                  'Communauté mondiale de leaders et de mentors',
+              ]
             : ['Medical-grade Kangen Water for real health', 'EMF protection with emGuarde 24/7', '8-tier compensation plan for global income', 'Global community of leaders and mentors'],
-        joinBtn: es ? 'Empieza Ahora' : 'Take the Lead',
-        communityBtn: es ? 'Comunidad de Facebook' : 'Join the Facebook Community',
-        productsLabel: es ? 'Nuestros Productos' : 'Our Products',
-        productsSub: es ? 'Tecnología de bienestar que funciona' : 'Wellness Technology That Works',
-        leadersLabel: es ? 'Líderes en' : 'Leaders Building True Legacy in',
-        socialProofLeaders: es ? 'Líderes en 3 continentes' : 'Leaders across 3 continents',
-        socialProofCountries: es ? 'Más de 45 países activos' : '45+ countries active',
-        socialProofEnagic: es ? 'Red distribuidor certificado Enagic' : 'Enagic certified distributor network',
-        joinCommunity: es ? 'Únete a la comunidad' : 'Join the Community',
-        testimonialsLabel: es ? 'Lo Que Dicen' : 'What Our Leaders Are Saying',
-        globalLabel: es ? 'También disponible en' : 'Also available in',
-        ytHandle: es ? '@TrueLegacyLATAM' : '@TrueLegacyWorld',
-        seeMore: es ? 'Explorar la tecnología' : 'Explore the Technology',
-        getPaidHeadline: es ? 'Cobra por compartir productos que sanan' : 'Get Paid to Share World-Healing Products',
-        getPaidSub: es ? 'No es solo bienestar. Es un negocio construido sobre productos que realmente cambian vidas.' : "This isn't just wellness. It's a business built on products that actually change lives.",
-        getPaidCard1Title: es ? 'Ingresos reales. Productos reales.' : 'Real Income. Real Products.',
-        getPaidCard1Desc: es ? 'Ganas compartiendo máquinas Kangen Water y dispositivos emGuarde — productos que la gente recompra, recomienda y recomienda. Sin ventas frías. Solo bienestar genuino que se vende solo.' : 'You earn by sharing Kangen Water machines and emGuarde devices — products people reorder, recommend, and rave about. No cold pitching. No fake hype. Just genuine wellness that sells itself.',
-        getPaidCard2Title: es ? 'Mercado global. Alcance ilimitado.' : 'Global Market. Unlimited Reach.',
-        getPaidCard2Desc: es ? 'True Legacy opera en Norteamérica, Latinoamérica y África. Al unirte, te conectas a una red internacional con sistemas probados — tu potencial de ingresos no tiene fronteras.' : 'True Legacy operates across North America, Latin America, and Africa. When you join, you plug into an international network with proven systems already in place — your income potential has no borders.',
-        getPaidCard3Title: es ? 'Plan de compensación de 8 puntos de Enagic' : "Enagic's 8-Point Compensation Plan",
-        getPaidCard3Desc: es ? 'Enagic paga hasta 8 puntos de comisión directos por venta — puedes ganar con cada máquina vendida en tu red, no solo tus ventas directas. Así es como los líderes construyen riqueza generacional.' : "Enagic pays up to 8 direct commission points per sale — meaning you can earn on every machine sold within your network, not just your direct sales. This is how leaders build generational wealth.",
-        getPaidCtaHeadline: es ? '¿Listo para construir tu legado?' : 'Ready to build your legacy?',
-        getPaidCtaDesc: es ? 'Únete a coaches en 3 continentes que ganan mientras sanan el mundo. No se necesita experiencia — solo la voluntad de liderar.' : 'Join coaches across 3 continents who are earning while healing the world. No experience needed — just the willingness to lead.',
-        getPaidCtaBtn: es ? 'Comienza tu camino' : 'Start Your Journey',
+        joinBtn: es ? 'Empieza Ahora' : fr ? 'Prenez le lead' : 'Take the Lead',
+        communityBtn: es ? 'Comunidad de Facebook' : fr ? 'Communauté Facebook' : 'Join the Facebook Community',
+        productsLabel: es ? 'Nuestros Productos' : fr ? 'Nos Produits' : 'Our Products',
+        productsSub: es ? 'Tecnología de bienestar que funciona' : fr ? 'Une technologie bien‑être qui fonctionne' : 'Wellness Technology That Works',
+        leadersLabel: es ? 'Líderes en' : fr ? 'Leaders True Legacy en' : 'Leaders Building True Legacy in',
+        socialProofLeaders: es ? 'Líderes en 3 continentes' : fr ? 'Leaders sur 3 continents' : 'Leaders across 3 continents',
+        socialProofCountries: es ? 'Más de 45 países activos' : fr ? 'Plus de 45 pays actifs' : '45+ countries active',
+        socialProofEnagic: es ? 'Red distribuidor certificado Enagic' : fr ? 'Réseau de distributeurs certifiés Enagic' : 'Enagic certified distributor network',
+        joinCommunity: es ? 'Únete a la comunidad' : fr ? 'Rejoindre la communauté' : 'Join the Community',
+        testimonialsLabel: es ? 'Lo Que Dicen' : fr ? 'Ce que disent nos leaders' : 'What Our Leaders Are Saying',
+        globalLabel: es ? 'También disponible en' : fr ? 'Également disponible dans' : 'Also available in',
+        ytHandle: es ? '@TrueLegacyLATAM' : fr ? '@TrueLegacyWorld' : '@TrueLegacyWorld',
+        seeMore: es ? 'Explorar la tecnología' : fr ? 'Explorer la technologie' : 'Explore the Technology',
+        getPaidHeadline: es
+            ? 'Cobra por compartir productos que sanan'
+            : fr
+            ? 'Soyez payé pour partager des produits qui guérissent'
+            : 'Get Paid to Share World-Healing Products',
+        getPaidSub: es
+            ? 'No es solo bienestar. Es un negocio construido sobre productos que realmente cambian vidas.'
+            : fr
+            ? "Ce n'est pas qu'un programme bien‑être. C'est une activité construite sur des produits qui changent réellement des vies."
+            : "This isn't just wellness. It's a business built on products that actually change lives.",
+        getPaidCard1Title: es ? 'Ingresos reales. Productos reales.' : fr ? 'Revenus réels. Produits réels.' : 'Real Income. Real Products.',
+        getPaidCard1Desc: es
+            ? 'Ganas compartiendo máquinas Kangen Water y dispositivos emGuarde — productos que la gente recompra, recomienda y recomienda. Sin ventas frías. Solo bienestar genuino que se vende solo.'
+            : fr
+            ? 'Vous gagnez en partageant les machines Kangen et les appareils emGuarde — des produits que les gens recommandent et rachètent. Pas de ventes forcées. Juste du bien‑être authentique.'
+            : 'You earn by sharing Kangen Water machines and emGuarde devices — products people reorder, recommend, and rave about. No cold pitching. No fake hype. Just genuine wellness that sells itself.',
+        getPaidCard2Title: es ? 'Mercado global. Alcance ilimitado.' : fr ? 'Marché mondial. Portée illimitée.' : 'Global Market. Unlimited Reach.',
+        getPaidCard2Desc: es
+            ? 'True Legacy opera en Norteamérica, Latinoamérica y África. Al unirte, te conectas a una red internacional con sistemas probados — tu potencial de ingresos no tiene fronteras.'
+            : fr
+            ? "True Legacy est présent en Amérique du Nord, Amérique latine et Afrique. En nous rejoignant, vous vous connectez à un réseau international avec des systèmes déjà en place."
+            : 'True Legacy operates across North America, Latin America, and Africa. When you join, you plug into an international network with proven systems already in place — your income potential has no borders.',
+        getPaidCard3Title: es ? 'Plan de compensación de 8 puntos de Enagic' : fr ? 'Plan de compensation Enagic à 8 points' : "Enagic's 8-Point Compensation Plan",
+        getPaidCard3Desc: es
+            ? 'Enagic paga hasta 8 puntos de comisión directos por venta — puedes ganar con cada máquina vendida en tu red, no solo tus ventas directas. Así es como los líderes construyen riqueza generacional.'
+            : fr
+            ? "Enagic verse jusqu'à 8 points de commission directe par vente — vous pouvez gagner sur chaque machine vendue dans votre réseau, pas seulement vos ventes directes."
+            : "Enagic pays up to 8 direct commission points per sale — meaning you can earn on every machine sold within your network, not just your direct sales. This is how leaders build generational wealth.",
+        getPaidCtaHeadline: es ? '¿Listo para construir tu legado?' : fr ? 'Prêt à construire votre héritage ?' : 'Ready to build your legacy?',
+        getPaidCtaDesc: es
+            ? 'Únete a coaches en 3 continentes que ganan mientras sanan el mundo. No se necesita experiencia — solo la voluntad de liderar.'
+            : fr
+            ? "Rejoignez des coachs sur 3 continents qui gagnent tout en soignant le monde. Aucune expérience requise — seulement la volonté de mener."
+            : 'Join coaches across 3 continents who are earning while healing the world. No experience needed — just the willingness to lead.',
+        getPaidCtaBtn: es ? 'Comienza tu camino' : fr ? 'Commencez votre parcours' : 'Start Your Journey',
     }
 }
 
@@ -561,6 +611,13 @@ export default function CountryPage() {
                     </div>
                 </div>
             </section>
+
+            {/* ===== FULL PRODUCT CATALOG FOR THIS COUNTRY ===== */}
+            <ProductSection
+                productIds={['k8', 'sd501', 'sd501_super', 'sd501_dx', 'anespa_dx', 'emguarde', 'ukon_sigma', 'kangen_wagyu']}
+                country={country}
+                variant="country"
+            />
 
             <Footer />
         </div>

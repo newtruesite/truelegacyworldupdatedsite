@@ -13,6 +13,7 @@ import SettingsPage from '@/pages/SettingsPage'
 import EmGuardePage from '@/pages/EmGuardePage'
 import K8Page from '@/pages/K8Page'
 import PdfLibraryPage from '@/pages/PdfLibraryPage'
+import ProductsPage from '@/pages/ProductsPage'
 import { ProtectedRoute } from '@/components/auth/ProtectedRoute'
 
 function PageTransitionWrapper({ children }: { children: React.ReactNode }) {
@@ -67,7 +68,9 @@ function AnimatedRoutes() {
           path="/training"
           element={
             <PageTransitionWrapper>
-              <TrainingPage />
+              <ProtectedRoute>
+                <TrainingPage />
+              </ProtectedRoute>
             </PageTransitionWrapper>
           }
         />
@@ -75,9 +78,15 @@ function AnimatedRoutes() {
           path="/library"
           element={
             <PageTransitionWrapper>
-              <ProtectedRoute>
-                <PdfLibraryPage />
-              </ProtectedRoute>
+              <PdfLibraryPage />
+            </PageTransitionWrapper>
+          }
+        />
+        <Route
+          path="/products"
+          element={
+            <PageTransitionWrapper>
+              <ProductsPage />
             </PageTransitionWrapper>
           }
         />

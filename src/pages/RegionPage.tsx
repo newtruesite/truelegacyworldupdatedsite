@@ -7,6 +7,7 @@ import { REGIONS } from '@/components/ui/RegionMap'
 import { AuroraBackground } from '@/components/ui/AuroraBackground'
 import { Navbar } from '@/components/layout/Navbar'
 import { Footer } from '@/components/layout/Footer'
+import { useLocaleContext } from '@/contexts/LocaleContext'
 
 // Map the URL region IDs back to the string names used in the COUNTRIES array
 const regionIdToName: Record<string, string> = {
@@ -19,6 +20,7 @@ const regionIdToName: Record<string, string> = {
 export default function RegionPage() {
     const { regionId } = useParams<{ regionId: string }>()
     const [failedFlagSlugs, setFailedFlagSlugs] = useState<Set<string>>(new Set())
+    const { locale } = useLocaleContext()
 
     if (!regionId || !regionIdToName[regionId]) {
         // If an invalid region is typed in the URL, redirect home
@@ -45,7 +47,11 @@ export default function RegionPage() {
                                 className="inline-flex items-center gap-2 text-slate-400 hover:text-white transition-colors mb-8"
                             >
                                 <ArrowLeft className="h-4 w-4" />
-                                Back to Global Map
+                                {locale === 'es'
+                                    ? 'Volver al mapa global'
+                                    : locale === 'fr'
+                                    ? 'Retour à la carte globale'
+                                    : 'Back to Global Map'}
                             </Link>
 
                             <motion.div
@@ -54,13 +60,21 @@ export default function RegionPage() {
                                 transition={{ duration: 0.5 }}
                             >
                                 <span className="inline-block mb-4 rounded-full border border-cyan-500/30 bg-cyan-500/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-widest text-cyan-400">
-                                    Region Selection
+                                    {locale === 'es'
+                                        ? 'Selecciona tu región'
+                                        : locale === 'fr'
+                                        ? 'Sélectionnez votre région'
+                                        : 'Region Selection'}
                                 </span>
                                 <h1 className="text-4xl font-extrabold text-white sm:text-5xl lg:text-6xl tracking-tight">
                                     <span className="gradient-text">{regionName}</span>
                                 </h1>
                                 <p className="mt-4 text-xl text-slate-400 max-w-2xl">
-                                    Select a hub below to view the dedicated True Legacy blueprint for your selected country.
+                                    {locale === 'es'
+                                        ? 'Elige un país para ver el plano True Legacy dedicado a tu mercado.'
+                                        : locale === 'fr'
+                                        ? 'Choisissez un pays ci‑dessous pour voir le plan True Legacy dédié à votre marché.'
+                                        : 'Select a hub below to view the dedicated True Legacy blueprint for your selected country.'}
                                 </p>
                             </motion.div>
                         </div>

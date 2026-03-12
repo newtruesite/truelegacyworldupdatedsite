@@ -84,7 +84,7 @@ export default function HomePage() {
 
                 {/* ===== HERO + MAP ===== */}
                 <div ref={heroRef}>
-                <TLBackground className="relative min-h-screen flex flex-col items-center justify-start pt-32 pb-12">
+                <TLBackground className="relative min-h-screen flex flex-col items-center justify-start pt-32 pb-0">
 
                     {/* Hero Text — extra top margin for spacing from navbar / "top categories" */}
                     <motion.div
@@ -95,43 +95,46 @@ export default function HomePage() {
                     >
                         {/* Eyebrow */}
                         <p className="mb-3 text-xs font-semibold tracking-[0.3em] uppercase text-tl-gold opacity-80">
-                            Find your region on the map &nbsp;·&nbsp; Ubica tu región en el mapa
+                            {locale === 'es'
+                                ? 'Ubica tu región en el mapa'
+                                : locale === 'fr'
+                                ? 'Trouvez votre région sur la carte'
+                                : 'Find your region on the map'}
                         </p>
 
                         {/* Main heading — fluid on mobile */}
                         <h1 className="text-white leading-[1.1] mb-5 font-display font-bold px-1" style={{ fontSize: 'clamp(2rem, 8vw, 4rem)' }}>
-                            Creating True Health
+                            {copy.hero_heading}
                             <br />
-                            <span className="gradient-text">Around the World.</span>
+                            <span className="gradient-text">{copy.hero_around}</span>
                         </h1>
 
                         <p className="text-base md:text-lg text-slate-400 font-light max-w-2xl mx-auto leading-relaxed min-[480px]:text-base">
-                            With True Legacy, you lead a global movement transforming lives —
-                            creating real health breakthroughs and genuine opportunities for lasting prosperity.
+                            {copy.heroSub}
                         </p>
                         <p className="mt-4 text-sm md:text-base text-slate-500 font-light max-w-xl mx-auto min-[480px]:text-base">
-                            Join a community of entrepreneurs who make money by sharing world-changing products — like the <strong className="text-cyan-400/90">Kangen</strong> water machine and <strong className="text-purple-400/90">emGuarde</strong>. Pick your region on the map and start your journey.
+                            {locale === 'es'
+                                ? 'Únete a una comunidad de emprendedores que ganan compartiendo productos que cambian el mundo — como la máquina de Agua Kangen y emGuarde. Elige tu región en el mapa y comienza tu camino.'
+                                : locale === 'fr'
+                                ? "Rejoignez une communauté d’entrepreneurs qui gagnent en partageant des produits qui changent le monde — comme la machine d’eau Kangen et emGuarde. Choisissez votre région sur la carte et commencez votre parcours."
+                                : 'Join a community of entrepreneurs who make money by sharing world‑changing products — like the Kangen water machine and emGuarde. Pick your region on the map and start your journey.'}
                         </p>
                         <SocialProofStrip />
                     </motion.div>
 
-                    {/* World Map — taller aspect so "True Legacy" at top of image isn't cut off */}
+                    {/* World Map — seamless continent selector, no boxed \"screen\" */}
                     <motion.div
                         id="map"
-                        initial={{ opacity: 0, scale: 0.97 }}
-                        animate={{ opacity: 1, scale: 1 }}
+                        initial={{ opacity: 0, y: 24 }}
+                        animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 1.1, delay: 0.25 }}
-                        className="relative z-10 w-full max-w-6xl mx-auto px-4 scroll-mt-28"
+                        className="relative z-10 w-full max-w-6xl mx-auto px-4 scroll-mt-28 pb-16"
                     >
-                        <div
-                            className="w-full rounded-3xl overflow-hidden shadow-2xl"
-                            style={{
-                                aspectRatio: '16/9',
-                                boxShadow: '0 32px 80px rgba(0,0,0,0.45), 0 0 0 1px rgba(255,255,255,0.08)',
-                                border: '1px solid rgba(255,255,255,0.1)',
-                            }}
-                        >
-                            <WorldMap />
+                        <div className="relative w-full">
+                            <div className="absolute -inset-x-10 -top-10 h-40 bg-gradient-to-b from-white/5 to-transparent opacity-40 pointer-events-none" />
+                            <div className="relative w-full overflow-visible">
+                                <WorldMap />
+                            </div>
                         </div>
                     </motion.div>
 
@@ -140,7 +143,7 @@ export default function HomePage() {
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         transition={{ delay: 1.5, duration: 1 }}
-                        className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
+                        className="absolute bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
                     >
                         <span className="text-[9px] uppercase tracking-[0.35em] font-semibold text-slate-500">Scroll to Explore</span>
                         <div className="w-px h-10 bg-gradient-to-b from-slate-500 to-transparent" />
@@ -296,7 +299,7 @@ export default function HomePage() {
                         boxShadow: '0 4px 24px rgba(27,58,140,0.4)',
                     }}
                 >
-                    Join the Team
+                    {copy.join_cta}
                 </Link>
             </div>
 

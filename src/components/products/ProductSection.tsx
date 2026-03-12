@@ -85,7 +85,7 @@ export function ProductSection({ productIds, country, variant = 'country' }: Pro
                   <img
                     src={product.imageSrc}
                     alt={product.imageAlt}
-                    className="w-full h-full object-contain hover:scale-105 transition-transform duration-500"
+                    className="absolute w-full h-full object-contain hover:scale-105 transition-transform duration-500"
                     loading="lazy"
                     decoding="async"
                   />
