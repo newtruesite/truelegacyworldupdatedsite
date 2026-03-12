@@ -20,7 +20,7 @@ const regionIdToName: Record<string, string> = {
 export default function RegionPage() {
     const { regionId } = useParams<{ regionId: string }>()
     const [failedFlagSlugs, setFailedFlagSlugs] = useState<Set<string>>(new Set())
-    const { locale } = useLocaleContext()
+    const { locale, setLocale } = useLocaleContext()
 
     if (!regionId || !regionIdToName[regionId]) {
         // If an invalid region is typed in the URL, redirect home
@@ -90,6 +90,11 @@ export default function RegionPage() {
                                 >
                                     <Link
                                         to={`/${country.slug}`}
+                                        onClick={() => {
+                                            if (regionId === 'latin-america') {
+                                                setLocale('es')
+                                            }
+                                        }}
                                         className="group block relative overflow-hidden rounded-2xl glass border border-white/10 bg-white/5 p-6 hover:bg-white/10 hover:border-cyan-500/30 transition-all duration-300 hover:-translate-y-1"
                                     >
                                         {/* FLAG BOX — full flag visible on mobile (aspect ratio), retina srcset */}
