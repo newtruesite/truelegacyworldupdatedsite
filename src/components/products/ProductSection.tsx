@@ -78,14 +78,15 @@ export function ProductSection({ productIds, country, variant = 'country' }: Pro
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.1 }}
-                className="group block rounded-3xl border border-white/10 p-8 hover:border-white/30 transition-all hover:-translate-y-1"
-                style={{ background: 'rgba(5,16,48,0.7)', backdropFilter: 'blur(20px)' }}
+                className="product-card group block rounded-3xl border border-white/10 p-8 hover:border-white/30 transition-all hover:-translate-y-1"
+                data-product={id}
+                style={{ background: '#0a0a0a', backdropFilter: 'blur(20px)' }}
               >
-                <div className="rounded-2xl overflow-hidden border-2 border-white/15 shadow-2xl shadow-black/50 mb-4 aspect-[4/3] bg-[#0a1628] relative flex items-center justify-center">
+                <div className="rounded-2xl overflow-hidden border-2 border-white/15 shadow-2xl shadow-black/50 mb-4 aspect-[4/3] bg-[#05070F] flex items-center justify-center">
                   <img
                     src={product.imageSrc}
                     alt={product.imageAlt}
-                    className="absolute w-full h-full object-contain hover:scale-105 transition-transform duration-500"
+                    className="product-image w-full h-full object-contain hover:scale-105 transition-transform duration-500"
                     loading="lazy"
                     decoding="async"
                   />

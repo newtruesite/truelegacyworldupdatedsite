@@ -152,6 +152,18 @@ function AnimatedRoutes() {
 }
 
 export default function App() {
+  useEffect(() => {
+    const imgs = Array.from(document.querySelectorAll('img'))
+    const handleError = (e: Event) => {
+      const target = e.target as HTMLImageElement
+      target.style.display = 'none'
+    }
+    imgs.forEach((img) => img.addEventListener('error', handleError))
+    return () => {
+      imgs.forEach((img) => img.removeEventListener('error', handleError))
+    }
+  }, [])
+
   return (
     <BrowserRouter>
       <LocaleProvider>

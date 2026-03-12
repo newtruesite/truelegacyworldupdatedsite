@@ -44,11 +44,11 @@ function IconChevron({ className }: { className?: string }) {
 // ── True Legacy Logo + tagline (Creating True Health Around the World) ──────────────────
 function NavLogo() {
     return (
-        <div className="flex flex-col gap-0.5">
+        <div className="flex flex-col gap-0.5 nav-logo-container">
             <img
                 src="/logos/tl-horizontal-white.png"
                 alt="True Legacy"
-                className="h-9 md:h-11 w-auto block"
+                className="nav-logo h-9 md:h-11 w-auto block"
                 loading="eager"
                 fetchPriority="high"
             />
