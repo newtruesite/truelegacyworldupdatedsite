@@ -30,16 +30,12 @@ export function PdfLeadCaptureModal({ isOpen, onClose, pdfUrl, productPreset, co
     email: '',
     phone: '',
     country: '',
-    productInterest: 'both' as ProductInterest,
     botField: '',
   })
 
   useEffect(() => {
-    if (isOpen && productPreset) {
-      setForm((prev) => ({ ...prev, productInterest: productPreset }))
-    }
     if (!isOpen) {
-      setForm({ fullName: '', email: '', phone: '', country: '', productInterest: productPreset ?? 'both', botField: '' })
+      setForm({ fullName: '', email: '', phone: '', country: '', botField: '' })
       setSubmitted(false)
     }
   }, [isOpen, productPreset])
@@ -79,7 +75,6 @@ export function PdfLeadCaptureModal({ isOpen, onClose, pdfUrl, productPreset, co
       formData.append('email', form.email)
       formData.append('phone', form.phone)
       formData.append('country', form.country)
-      formData.append('product-interest', form.productInterest)
       formData.append('pdf_requested', pdfUrl ? new URL(pdfUrl).pathname.split('/').pop() || 'Resource' : '')
       formData.append('pdf_url', pdfUrl || '')
       if (form.botField) formData.append('bot-field', form.botField)
@@ -209,24 +204,6 @@ export function PdfLeadCaptureModal({ isOpen, onClose, pdfUrl, productPreset, co
                       ))}
                     </select>
                     {errors.country && <p className="mt-1 text-xs text-red-400">{errors.country}</p>}
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-slate-300 mb-2">{t.productInterest}</label>
-                    <div className="space-y-2">
-                      {PRODUCT_OPTIONS.map((opt) => (
-                        <label key={opt.value} className="flex items-center gap-2 cursor-pointer">
-                          <input
-                            type="radio"
-                            name="product-interest"
-                            value={opt.value}
-                            checked={form.productInterest === opt.value}
-                            onChange={(e) => handleChange('productInterest', e.target.value as ProductInterest)}
-                            className="text-cyan-500"
-                          />
-                          <span className="text-slate-300">{isSpanish ? opt.labelEs : opt.labelEn}</span>
-                        </label>
-                      ))}
-                    </div>
                   </div>
                 </div>
                 <button

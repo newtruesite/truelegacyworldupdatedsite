@@ -498,19 +498,6 @@ export default function CountryPage() {
     const copy = t[locale]
     const c = getContent(country, locale)
 
-    useEffect(() => {
-        const hero = document.getElementById('hero')
-        const stickyBar = document.getElementById('sticky-cta')
-        const onScroll = () => {
-            if (!stickyBar || !hero) return
-            const heroBottom = hero.getBoundingClientRect().bottom
-            stickyBar.style.transform = heroBottom > 0 ? 'translateY(100%)' : 'translateY(0)'
-        }
-        window.addEventListener('scroll', onScroll)
-        onScroll()
-        return () => window.removeEventListener('scroll', onScroll)
-    }, [])
-
     const continentInfo = COUNTRY_TO_CONTINENT[country.slug]
     const continentName = continentInfo
         ? (locale === 'es' ? continentInfo.nameEs : locale === 'fr' ? continentInfo.nameFr : continentInfo.nameEn)
@@ -896,11 +883,28 @@ export default function CountryPage() {
             {/* ===== STICKY CTA BAR (Section 11 CRO) ===== */}
             <div
                 id="sticky-cta"
-                className="sticky-cta-bar fixed bottom-0 left-0 right-0 z-[999] flex items-center justify-between gap-4 px-4 sm:px-6 py-3.5 -translate-y-full transition-transform duration-300"
+                className="sticky-cta-bar"
                 style={{
-                    background: 'linear-gradient(90deg, #020d16 0%, #041824 100%)',
+                    position: 'fixed',
+                    bottom: 0,
+                    left: 0,
+                    right: 0,
+                    top: 'auto',
+                    width: '100%',
+                    zIndex: 9000,
+                    transform: 'none',
+                    margin: 0,
+                    borderRadius: 0,
+                    background: 'rgba(5,14,20,0.97)',
                     borderTop: '1px solid rgba(0,168,150,0.3)',
-                    backdropFilter: 'blur(10px)',
+                    backdropFilter: 'blur(12px)',
+                    WebkitBackdropFilter: 'blur(12px)',
+                    padding: '14px 24px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    gap: '16px',
+                    boxShadow: '0 -4px 24px rgba(0,0,0,0.4)',
                 }}
             >
                 <p className="sticky-cta-text text-sm text-slate-400 m-0 font-medium">
