@@ -13,13 +13,52 @@ export function Footer() {
                 <div className="grid grid-cols-1 gap-12 lg:grid-cols-4">
                     {/* Brand */}
                     <div className="lg:col-span-1">
-                        <Link to="/" className="flex items-center gap-3 group mb-4 logo-container" style={{ background: 'transparent', padding: 0 }}>
-                            <img
-                                src="/logos/tl-horizontal-white.png"
-                                alt="True Legacy World"
-                                className="h-10 w-auto object-contain nav-logo logo-img"
-                                style={{ background: 'transparent', backgroundColor: 'transparent', mixBlendMode: 'normal' }}
-                            />
+                        <Link
+                            to="/"
+                            className="group mb-4 logo-container inline-flex items-center"
+                            style={{ background: 'transparent', padding: 0, border: 'none', boxShadow: 'none' }}
+                        >
+                            <span
+                                style={{
+                                    fontSize: '18px',
+                                    fontWeight: 900,
+                                    color: '#00a896',
+                                    letterSpacing: '-0.5px',
+                                    lineHeight: 1,
+                                    fontFamily: 'system-ui, -apple-system, sans-serif',
+                                }}
+                            >
+                                TRUE
+                            </span>
+                            <span
+                                style={{
+                                    fontSize: '18px',
+                                    fontWeight: 900,
+                                    color: '#ffffff',
+                                    letterSpacing: '-0.5px',
+                                    lineHeight: 1,
+                                    fontFamily: 'system-ui, -apple-system, sans-serif',
+                                    marginLeft: '5px',
+                                }}
+                            >
+                                LEGACY
+                            </span>
+                            <span
+                                style={{
+                                    fontSize: '10px',
+                                    fontWeight: 600,
+                                    color: '#5a8595',
+                                    letterSpacing: '0.12em',
+                                    textTransform: 'uppercase',
+                                    marginLeft: '6px',
+                                    lineHeight: 1,
+                                    alignSelf: 'flex-end',
+                                    paddingBottom: '1px',
+                                    fontFamily: 'system-ui, -apple-system, sans-serif',
+                                }}
+                            >
+                                WORLD
+                            </span>
                         </Link>
                         <p className="text-sm text-slate-400 leading-relaxed mb-6">
                             A global movement transforming lives through health innovation, entrepreneurship, and lasting legacy building.

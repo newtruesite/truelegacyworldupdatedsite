@@ -41,20 +41,59 @@ function IconChevron({ className }: { className?: string }) {
     )
 }
 
-// ── True Legacy Logo + tagline (Creating True Health Around the World) ──────────────────
+// ── True Legacy Logo (CSS text only — no image) ─────────────────────────────────────────
 function NavLogo() {
     return (
-        <div className="flex flex-col gap-0.5 nav-logo-container logo-wrapper" style={{ background: 'transparent', padding: 0 }}>
-            <img
-                src="/logos/tl-horizontal-white.png"
-                alt="True Legacy"
-                className="nav-logo h-9 md:h-11 w-auto block logo-img"
-                loading="eager"
-                fetchPriority="high"
-                style={{ background: 'transparent', backgroundColor: 'transparent', mixBlendMode: 'normal' }}
-            />
-            <span className="text-[10px] md:text-xs font-medium text-slate-400 tracking-wide hidden sm:block">
-                Creating True Health Around the World
+        <div
+            className="flex items-center gap-[2px] nav-logo-container logo-wrapper"
+            style={{
+                background: 'transparent',
+                padding: 0,
+                border: 'none',
+                lineHeight: 0,
+                boxShadow: 'none',
+            }}
+        >
+            <span
+                style={{
+                    fontSize: '18px',
+                    fontWeight: 900,
+                    color: '#00a896',
+                    letterSpacing: '-0.5px',
+                    lineHeight: 1,
+                    fontFamily: 'system-ui, -apple-system, sans-serif',
+                }}
+            >
+                TRUE
+            </span>
+            <span
+                style={{
+                    fontSize: '18px',
+                    fontWeight: 900,
+                    color: '#ffffff',
+                    letterSpacing: '-0.5px',
+                    lineHeight: 1,
+                    fontFamily: 'system-ui, -apple-system, sans-serif',
+                    marginLeft: '5px',
+                }}
+            >
+                LEGACY
+            </span>
+            <span
+                style={{
+                    fontSize: '10px',
+                    fontWeight: 600,
+                    color: '#5a8595',
+                    letterSpacing: '0.12em',
+                    textTransform: 'uppercase',
+                    marginLeft: '6px',
+                    lineHeight: 1,
+                    alignSelf: 'flex-end',
+                    paddingBottom: '1px',
+                    fontFamily: 'system-ui, -apple-system, sans-serif',
+                }}
+            >
+                WORLD
             </span>
         </div>
     )

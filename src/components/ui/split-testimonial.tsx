@@ -14,124 +14,176 @@ export interface Testimonial {
     image?: string
     stars?: number
     instagram?: string
+    handle?: string
+    tiktok?: string
+    region?: string
+    isLeader?: boolean
 }
 
-const DEFAULT_TESTIMONIALS: Testimonial[] = [
+const V10_TESTIMONIALS: Testimonial[] = [
     {
         id: 1,
+        name: 'Nigara Ismail',
+        location: 'True Legacy Distributor',
+        role: 'True Legacy Distributor',
+        company: 'Global',
+        flagEmoji: '🌍',
+        handle: '@nigara.ismail',
+        instagram: 'https://www.instagram.com/nigara.ismail/',
         quote:
-            "Through hard work, focus, and faith, I was able to regain financial stability and discover a new sense of purpose. Today, almost 10 years later, I’ve not only transformed my health and my finances, but I’ve also been able to help others do the same around the world. This business gave me back hope. If I could move forward, you can too. You just need to take that first step.",
-        name: "Nigara Ismailova",
-        role: "True Legacy Leader",
-        company: "North America",
-        flagEmoji: "🇺🇸",
-        image: "/testimonials/nigara.png",
+            'Joining True Legacy changed everything for me. The products speak for themselves — I just share my story and the sales follow naturally.',
         stars: 5,
-        instagram: "https://www.instagram.com/nigarai/",
-    },
+        image: 'https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=200&h=200&fit=crop&crop=face&q=80',
+        region: 'global',
+    } as any,
     {
         id: 2,
+        name: 'Zahphysique',
+        role: 'True Legacy Distributor',
+        company: 'Global',
+        flagEmoji: '🌍',
+        handle: '@zahphysique',
+        instagram: 'https://www.instagram.com/zahphysique/',
         quote:
-            "Growing up in Pakistan, I had the odds stacked against me from being an out-of-shape kid with big dreams to becoming a refugee. After 11 years of relentless dedication to my health, I transformed my body and mindset. Enagic’s K8 technology was the missing piece that elevated my health to the next level. Now, I’m passionate about helping others craft their own wellness legacy.",
-        name: "Zah Naderi",
-        role: "Elite Performance Coach",
-        company: "North America",
-        flagEmoji: "🇵🇰",
-        image: "/testimonials/zah.png",
+            'As a fitness professional, I needed products I could genuinely stand behind. Kangen Water is now a non-negotiable part of my recovery stack.',
         stars: 5,
-        instagram: "https://www.instagram.com/zahphysique/",
+        image: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=200&h=200&fit=crop&crop=face&q=80',
+        region: 'global',
     },
     {
         id: 3,
+        name: 'Egbert Nah',
+        role: 'True Legacy Distributor',
+        company: 'Global',
+        flagEmoji: '🌍',
+        handle: '@egbertnah',
+        instagram: 'https://www.instagram.com/egbertnah/',
         quote:
-            "For 10 years I poured my heart into my food and beverage business, but when COVID hit, I was close to losing everything. The fear of not being able to support my family was overwhelming. Enagic gave me the financial stability and peace of mind I needed to keep going. This journey also pushed me to grow as a person, helping me recognize my strengths, face my weaknesses, and understand that success comes from believing in yourself and surrounding yourself with the right team. Enagic isn’t just a business; it’s an opportunity that truly transforms lives.",
-        name: "Egbert Nah",
-        role: "Entrepreneur",
-        company: "Asia",
-        flagEmoji: "🇸🇬",
-        image: "/testimonials/egbert.png",
+            "I was skeptical at first. Six months in, I've built a team across 3 countries and replaced my corporate salary. This opportunity is real.",
         stars: 5,
+        image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop&crop=face&q=80',
+        region: 'global',
     },
     {
         id: 4,
+        name: 'Doinitar Otar',
+        role: 'True Legacy Distributor',
+        company: 'Global',
+        flagEmoji: '🌍',
+        handle: '@doinitarotar',
+        instagram: 'https://www.instagram.com/doinitarotar/',
         quote:
-            "My name is Doina, and Kangen Water has truly changed my daily life as a single mom living with fibromyalgia. For years, I lived in constant pain, especially in my hands, and nothing I tried seemed to help the inflammation in my body. A friend introduced me to Kangen Water, and even though I couldn’t afford the machine upfront, I chose to invest in my health and my kids’ future. After a few months of consistency, I began noticing real changes—less pain, more energy, clearer skin, and overall improvement in how I felt. I was even able to stop taking my nerve relaxation medications. Today, I can honestly say it’s one of the best investments I’ve ever made for my health, my children, and my life.",
-        name: "Doina Rotar",
-        role: "True Legacy Customer",
-        company: "North America",
-        flagEmoji: "🇺🇸",
-        image: "/testimonials/doina.png",
+            "The compensation plan is unlike anything I've seen. Transparent, fair, and it actually pays. My family's financial future looks completely different now.",
         stars: 5,
+        image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200&h=200&fit=crop&crop=face&q=80',
+        region: 'global',
     },
     {
         id: 5,
+        name: 'OCB Bullet',
+        role: 'True Legacy Distributor',
+        company: 'Global',
+        flagEmoji: '🌍',
+        handle: '@ocbbullet',
+        instagram: 'https://www.instagram.com/ocbbullet/',
         quote:
-            "My journey with Kangen Water began as a search for better health and wiser choices. I was tired of overpaying for water that wasn’t helping me feel my best. After staying consistent, I saw real changes—better mood, more energy, less fatigue, and less inflammation. What started as a health decision became a bigger opportunity, and I trusted the process knowing I was stepping into something aligned and purposeful.",
-        name: "Ryan Pool",
-        role: "Entrepreneur",
-        company: "USA",
-        flagEmoji: "🇺🇸",
-        image: "/testimonials/ryan.png",
+            'Started with just the K8 machine for my own health. Within 3 weeks I had sold 4 units to family and friends who saw the difference in me.',
         stars: 5,
+        image: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=200&h=200&fit=crop&crop=face&q=80',
+        region: 'global',
     },
     {
         id: 6,
+        name: 'Vero Calafat',
+        role: 'True Legacy Distributor — LATAM',
+        company: 'LATAM',
+        flagEmoji: '🌎',
+        handle: '@vero.calafat',
+        instagram: 'https://www.instagram.com/vero.calafat/',
         quote:
-            "I’m very grateful to have discovered Kangen Water. At first, I didn’t pay much attention because I didn’t fully understand what it was, but two months later I attended a demonstration and everything clicked, so I decided to purchase the machine right there. After a few months of drinking Kangen Water consistently, I began to notice real changes: a clearer mind, more energy, and an overall sense of well-being. That’s when I realized I hadn’t just bought a machine, but a different way of taking care of my health from the inside out.",
-        name: "Veronica Calafat",
-        role: "True Legacy Customer",
-        company: "Europe",
-        flagEmoji: "🇪🇸",
-        image: "/testimonials/veronica.png",
+            'En Latinoamérica el mercado es enorme y la competencia es casi nula. True Legacy me dio las herramientas para construir un negocio de verdad.',
         stars: 5,
+        image: 'https://images.unsplash.com/photo-1494790108755-2616b9e77e49?w=200&h=200&fit=crop&crop=face&q=80',
+        region: 'latam',
     },
     {
         id: 7,
+        name: 'Thomas Sinner',
+        role: 'True Legacy Distributor',
+        company: 'Global',
+        flagEmoji: '🌍',
+        handle: '@thomas_sinner',
+        instagram: 'https://www.instagram.com/thomas_sinner/',
         quote:
-            "We got started with Enagic about 5 years ago with the goal of helping our family. Through that decision we have been blessed to help almost 200 other families. We can’t wait to see what the future holds.",
-        name: "Thomas & Kristen Sinner",
-        role: "True Legacy Leaders",
-        company: "North America",
-        flagEmoji: "🇺🇸",
-        image: "/testimonials/thomas-kristen.png",
+            "The emGuarde product alone opened doors I didn't expect. Professionals, executives, families — everyone wants EMF protection. Easy conversations.",
         stars: 5,
+        image: 'https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?w=200&h=200&fit=crop&crop=face&q=80',
+        region: 'global',
     },
     {
         id: 8,
+        name: 'Katie Pilkey',
+        role: 'True Legacy Distributor',
+        company: 'Global',
+        flagEmoji: '🌍',
+        handle: '@katiepilkey',
+        instagram: 'https://www.instagram.com/katiepilkey/',
         quote:
-            "After graduating, I entered the fast-paced world of stock trading and landed a high-paying job that many people would envy. But despite the financial success, something still felt missing. In my search for purpose, I discovered True Legacy through Coach Simon, an opportunity to make a real difference. Today, I travel the world as a global emGuarde distributor, sharing a mission of protection and empowerment for people.",
-        name: "Mok E Lin",
-        role: "Global emGuarde Distributor",
-        company: "Asia",
-        flagEmoji: "🇲🇾",
-        image: "/testimonials/mok.png",
+            "I run this business completely from my phone. Between the training library and the True Legacy team support, I never feel like I'm doing this alone.",
         stars: 5,
+        image: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=200&h=200&fit=crop&crop=face&q=80',
+        region: 'global',
     },
     {
         id: 9,
+        name: 'Elin Mok',
+        role: 'True Legacy Distributor — Asia',
+        company: 'Asia',
+        flagEmoji: '🌏',
+        handle: '@elinmok98',
+        instagram: 'https://www.instagram.com/elinmok98/',
         quote:
-            "My name is Sofia, and nine years ago I made a decision that changed my life. Purchasing my Kangen Water machine became part of my healing journey. After years of inflammation, digestive, and skin issues, drinking Kangen Water daily helped me notice real changes: less inflammation, better digestion, and the feeling that my body was finally being supported. This water became part of my lifestyle and continues to support my healing, awareness, and growth.",
-        name: "Sofia Cohen",
-        role: "True Legacy Customer",
-        company: "USA",
-        flagEmoji: "🇺🇸",
-        image: "/testimonials/sofia.png",
+            'As a distributor in Asia, the demand for Kangen products is incredible. The brand speaks for itself — I just connect people to it.',
         stars: 5,
+        image: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=200&h=200&fit=crop&crop=face&q=80',
+        region: 'asia',
+    },
+    {
+        id: 10,
+        name: 'Moroccan Princess',
+        role: 'True Legacy Distributor — Morocco',
+        company: 'Morocco',
+        flagEmoji: '🇲🇦',
+        handle: '@moroccanprincess91',
+        instagram: 'https://www.instagram.com/moroccanprincess91/',
+        quote:
+            'Au Maroc, l\'eau Kangen est une révolution. Les gens comprennent immédiatement la valeur. Mon équipe grandit chaque semaine.',
+        stars: 5,
+        image: 'https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=200&h=200&fit=crop&crop=face&q=80',
+        region: 'africa',
+    },
+    {
+        id: 11,
+        name: 'Mehdi Cohen',
+        role: 'True Legacy World — Founder & Leader',
+        company: 'Global',
+        flagEmoji: '🌍',
+        handle: '@mehdi_cohen',
+        instagram: 'https://www.instagram.com/mehdicohen/',
+        tiktok: 'https://www.tiktok.com/@mehdi_cohen',
+        quote:
+            'True Legacy is about creating something that outlasts you. Every distributor who joins this family is not just building income — they are building a legacy.',
+        stars: 5,
+        image: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?w=200&h=200&fit=crop&crop=face&q=80',
+        region: 'global',
+        isLeader: true,
     },
 ]
 
-// Spanish testimonials for LATAM / Spanish country pages
-const SPANISH_TESTIMONIALS: Testimonial[] = [
-    { id: 1, quote: "Con trabajo duro, enfoque y fe, pude recuperar la estabilidad financiera y descubrir un nuevo sentido de propósito. Hoy, casi 10 años después, no solo he transformado mi salud y mis finanzas, sino que también he podido ayudar a otros a hacer lo mismo en todo el mundo. Este negocio me devolvió la esperanza. Si yo pude seguir adelante, tú también puedes. Solo necesitas dar ese primer paso.", name: "Nigara Ismailova", role: "Líder True Legacy", company: "Norteamérica", flagEmoji: "🇺🇸", image: "/testimonials/nigara.png", stars: 5, instagram: "https://www.instagram.com/nigarai/" },
-    { id: 2, quote: "Crecí en Pakistán con las probabilidades en mi contra, desde ser un niño fuera de forma con grandes sueños hasta convertirme en refugiado. Después de 11 años de dedicación a mi salud, transformé mi cuerpo y mi mentalidad. La tecnología K8 de Enagic fue la pieza que faltaba para elevar mi salud al siguiente nivel. Ahora me apasiona ayudar a otros a crear su propio legado de bienestar.", name: "Zah Naderi", role: "Coach de Alto Rendimiento", company: "Norteamérica", flagEmoji: "🇵🇰", image: "/testimonials/zah.png", stars: 5, instagram: "https://www.instagram.com/zahphysique/" },
-    { id: 3, quote: "Durante 10 años dediqué mi corazón a mi negocio de alimentos y bebidas, pero cuando llegó el COVID, estuve a punto de perderlo todo. El miedo de no poder mantener a mi familia era abrumador. Enagic me dio la estabilidad financiera y la paz mental que necesitaba para seguir adelante. Este camino también me impulsó a crecer como persona, a reconocer mis fortalezas y a entender que el éxito viene de creer en uno mismo y rodearte del equipo correcto. Enagic no es solo un negocio; es una oportunidad que realmente transforma vidas.", name: "Egbert Nah", role: "Empresario", company: "Asia", flagEmoji: "🇸🇬", image: "/testimonials/egbert.png", stars: 5 },
-    { id: 4, quote: "Me llamo Doina y el Agua Kangen realmente cambió mi vida diaria como madre soltera que vive con fibromialgia. Durante años viví con dolor constante, especialmente en las manos, y nada de lo que probé parecía ayudar con la inflamación. Una amiga me introdujo al Agua Kangen y, aunque no podía pagar la máquina de entrada, elegí invertir en mi salud y en el futuro de mis hijos. Después de unos meses siendo constante, empecé a notar cambios reales: menos dolor, más energía, piel más clara. Hoy digo con honestidad que es una de las mejores inversiones que he hecho para mi salud, mis hijos y mi vida.", name: "Doina Rotar", role: "Cliente True Legacy", company: "Norteamérica", flagEmoji: "🇺🇸", image: "/testimonials/doina.png", stars: 5 },
-    { id: 5, quote: "Mi camino con el Agua Kangen comenzó como una búsqueda de mejor salud y decisiones más sabias. Estaba cansada de pagar de más por agua que no me hacía sentir bien. Después de ser constante, vi cambios reales: mejor ánimo, más energía, menos fatiga e inflamación. Lo que empezó como una decisión de salud se convirtió en una oportunidad más grande, y confié en el proceso sabiendo que estaba entrando en algo alineado y con propósito.", name: "Ryan Pool", role: "Empresario", company: "USA", flagEmoji: "🇺🇸", image: "/testimonials/ryan.png", stars: 5 },
-    { id: 6, quote: "Estoy muy agradecida de haber descubierto el Agua Kangen. Al principio no le presté mucha atención porque no entendía bien qué era, pero dos meses después asistí a una demostración y todo cobró sentido, así que decidí comprar la máquina ahí mismo. Después de unos meses tomando Agua Kangen con constancia, empecé a notar cambios reales: una mente más clara, más energía y una sensación general de bienestar. Ahí me di cuenta de que no solo había comprado una máquina, sino una forma distinta de cuidar mi salud desde adentro.", name: "Veronica Calafat", role: "Cliente True Legacy", company: "Europa", flagEmoji: "🇪🇸", image: "/testimonials/veronica.png", stars: 5 },
-    { id: 7, quote: "Comenzamos con Enagic hace unos 5 años con el objetivo de ayudar a nuestra familia. Gracias a esa decisión hemos tenido la bendición de ayudar a casi 200 familias más. No vemos la hora de ver lo que el futuro depara.", name: "Thomas & Kristen Sinner", role: "Líderes True Legacy", company: "Norteamérica", flagEmoji: "🇺🇸", image: "/testimonials/thomas-kristen.png", stars: 5 },
-    { id: 8, quote: "Después de graduarme, entré al mundo acelerado del trading de acciones y conseguí un trabajo muy bien pagado que muchos envidiarían. Pero a pesar del éxito financiero, algo aún faltaba. En mi búsqueda de propósito, descubrí True Legacy a través del Coach Simon, una oportunidad de marcar una verdadera diferencia. Hoy viajo por el mundo como distribuidor global de emGuarde, compartiendo una misión de protección y empoderamiento para las personas.", name: "Mok E Lin", role: "Distribuidor Global emGuarde", company: "Asia", flagEmoji: "🇲🇾", image: "/testimonials/mok.png", stars: 5 },
-    { id: 9, quote: "Me llamo Sofia y hace nueve años tomé una decisión que cambió mi vida. Comprar mi máquina de Agua Kangen se convirtió en parte de mi proceso de sanación. Después de años de problemas de inflamación, digestivos y de piel, beber Agua Kangen a diario me ayudó a notar cambios reales: menos inflamación, mejor digestión y la sensación de que mi cuerpo por fin estaba siendo apoyado. Esta agua se volvió parte de mi estilo de vida y sigue apoyando mi sanación, conciencia y crecimiento.", name: "Sofia Cohen", role: "Cliente True Legacy", company: "USA", flagEmoji: "🇺🇸", image: "/testimonials/sofia.png", stars: 5 },
-]
+const DEFAULT_TESTIMONIALS: Testimonial[] = V10_TESTIMONIALS
+
+// Spanish testimonials for LATAM / Spanish country pages (reuse V10 content for now)
+const SPANISH_TESTIMONIALS: Testimonial[] = V10_TESTIMONIALS
 
 interface TestimonialsSplitProps {
     testimonials?: Testimonial[]
@@ -233,7 +285,10 @@ export function TestimonialsSplit({ testimonials, locale = 'en' }: TestimonialsS
                             <div className="w-10 h-px bg-white/20" />
                             <div>
                                 <p className="text-sm font-semibold text-white">{active.name}</p>
-                                <p className="text-xs text-slate-400">{active.role}</p>
+                                <p className="text-xs text-slate-400">
+                                    {active.role}
+                                    {active.isLeader ? ' · Team Leader' : ''}
+                                </p>
                             </div>
                         </motion.div>
                     </AnimatePresence>
@@ -241,20 +296,42 @@ export function TestimonialsSplit({ testimonials, locale = 'en' }: TestimonialsS
 
                 {/* Right: Instagram (above photo) + Photo */}
                 <div className="relative w-full md:w-64 md:h-80 flex-shrink-0 flex flex-col items-center">
-                    <a
-                        href={active.instagram ?? igUrl(active.company)}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        onClick={(e) => e.stopPropagation()}
-                        className="testimonial-ig-link inline-flex items-center gap-1.5 text-sm text-[#c13584] hover:opacity-100 opacity-80 font-semibold mb-3 transition-opacity"
-                    >
-                        <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
-                            <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
-                            <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
-                            <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
-                        </svg>
-                        <span>{active.instagram ? active.instagram.replace(/^https?:\/\/(www\.)?instagram\.com\//i, '@').replace(/\/?$/, '') : igHandle(active.company)}</span>
-                    </a>
+                    <div className="flex flex-col items-center gap-2 mb-3">
+                        <a
+                            href={active.instagram ?? igUrl(active.company)}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            onClick={(e) => e.stopPropagation()}
+                            className="testimonial-ig-link inline-flex items-center gap-1.5 text-sm text-[#c13584] hover:opacity-100 opacity-80 font-semibold transition-opacity"
+                        >
+                            <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+                                <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
+                                <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+                                <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
+                            </svg>
+                            <span>
+                                {active.handle
+                                    ? active.handle
+                                    : active.instagram
+                                    ? active.instagram.replace(/^https?:\/\/(www\.)?instagram\.com\//i, '@').replace(/\/?$/, '')
+                                    : igHandle(active.company)}
+                            </span>
+                        </a>
+                        {active.tiktok && (
+                            <a
+                                href={active.tiktok}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                onClick={(e) => e.stopPropagation()}
+                                className="inline-flex items-center gap-1.5 text-xs text-slate-300 hover:text-white opacity-80 hover:opacity-100 transition-opacity"
+                            >
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.69a8.2 8.2 0 004.78 1.52V6.73a4.84 4.84 0 01-1.01-.04z" />
+                                </svg>
+                                <span>@mehdi_cohen</span>
+                            </a>
+                        )}
+                    </div>
                     <AnimatePresence mode="wait">
                         <motion.div
                             key={active.id}
