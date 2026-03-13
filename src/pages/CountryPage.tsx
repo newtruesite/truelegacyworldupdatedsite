@@ -202,6 +202,181 @@ const COUNTRY_LEADERS: Record<string, Array<{ name: string; role: string; image:
     ],
 }
 
+type PdfConfig = {
+    icon: string
+    title: string
+    desc: string
+    url: string
+    name: string
+    badge?: string
+}
+
+type PdfSectionConfig = {
+    sectionTitle: string
+    sectionSubtitle: string
+    ctaLabel: string
+    pdfs: PdfConfig[]
+}
+
+const PDF_SECTION_CONTENT: Record<'en' | 'es' | 'fr', PdfSectionConfig> = {
+    en: {
+        sectionTitle: 'Free Resources to Start Your Journey',
+        sectionSubtitle:
+            'Download our exclusive guides. Learn the products, master the business, and start building your True Legacy.',
+        ctaLabel: 'Get Free Access →',
+        pdfs: [
+            {
+                icon: '💧',
+                title: 'Kangen Water Machines Complete Guide',
+                desc: 'Everything you need to know about all 6 Kangen machines — specs, benefits, pricing, and which machine is right for each customer.',
+                url: 'https://www.enagic.com/pdf/1096/Kangen_Water_Ionizers_Product_Guide.pdf',
+                name: 'Kangen Water Ionizers Guide',
+                badge: 'Most Popular',
+            },
+            {
+                icon: '🚿',
+                title: 'Anespa DX Shower System Guide',
+                desc: 'Discover how the Anespa DX turns a daily shower into a mineral hot-spring spa experience your customers will talk about.',
+                url: 'https://www.enagic.com/pdf/1094/ANESPA_DX_Product_Guide.pdf',
+                name: 'Anespa DX Guide',
+            },
+            {
+                icon: '💰',
+                title: 'The 8-Point Compensation Plan',
+                desc: 'Understand exactly how you earn as a True Legacy distributor. This is the document every serious builder studies first.',
+                url: 'https://www.enagic.com/pdf/1095/Compensation_Plan_Guide.pdf',
+                name: 'Compensation Plan Guide',
+                badge: 'Essential',
+            },
+            {
+                icon: '🌿',
+                title: 'Kangen Ukon Turmeric Guide',
+                desc: 'Wild Okinawan turmeric, the science behind curcumin, and why this product is a perfect add-on for health-conscious buyers.',
+                url: 'https://www.enagic.com/pdf/1097/Kangen_Ukon_Product_Guide.pdf',
+                name: 'Kangen Ukon Guide',
+            },
+            {
+                icon: '🥩',
+                title: 'Kangen Wagyu Beef Guide',
+                desc: 'Premium hormone-free Wagyu beef raised on Kangen Water. A conversation-starting product for high-end customers.',
+                url: 'https://www.enagic.com/pdf/1098/Kangen_Wagyu_Product_Guide.pdf',
+                name: 'Kangen Wagyu Guide',
+            },
+            {
+                icon: '🔧',
+                title: 'Machine Care & Maintenance',
+                desc: 'Keep customers happy for life. Proper machine care reduces returns, builds trust, and generates referrals on autopilot.',
+                url: 'https://www.enagic.com/pdf/1099/Machine_Care_and_Maintenance_Guide.pdf',
+                name: 'Machine Care Guide',
+            },
+        ],
+    },
+    es: {
+        sectionTitle: 'Recursos Gratuitos Para Empezar Tu Viaje',
+        sectionSubtitle:
+            'Descarga nuestras guías exclusivas. Aprende los productos, domina el negocio y empieza a construir tu True Legacy.',
+        ctaLabel: 'Obtener Acceso Gratuito →',
+        pdfs: [
+            {
+                icon: '💧',
+                title: 'Guía Completa de Máquinas Kangen Water',
+                desc: 'Todo lo que necesitas saber sobre las 6 máquinas Kangen — especificaciones, beneficios, precios y cuál es la ideal para cada cliente.',
+                url: 'https://www.enagic.com/pdf/1096/Kangen_Water_Ionizers_Product_Guide.pdf',
+                name: 'Guía de Ionizadores Kangen',
+                badge: 'Más Popular',
+            },
+            {
+                icon: '🚿',
+                title: 'Guía del Sistema de Ducha Anespa DX',
+                desc: 'Descubre cómo el Anespa DX convierte tu ducha diaria en una experiencia de spa de aguas termales japonesas.',
+                url: 'https://www.enagic.com/pdf/1094/ANESPA_DX_Product_Guide.pdf',
+                name: 'Guía Anespa DX',
+            },
+            {
+                icon: '💰',
+                title: 'El Plan de Compensación de 8 Puntos',
+                desc: 'Entiende exactamente cómo ganas dinero como distribuidor de True Legacy. Documento clave para construir ingresos serios.',
+                url: 'https://www.enagic.com/pdf/1095/Compensation_Plan_Guide.pdf',
+                name: 'Guía del Plan de Compensación',
+                badge: 'Esencial',
+            },
+            {
+                icon: '🌿',
+                title: 'Guía de Cúrcuma Kangen Ukon',
+                desc: 'Cúrcuma silvestre de Okinawa. Beneficios para la salud y por qué este producto se vende solo cuando lo entiendes bien.',
+                url: 'https://www.enagic.com/pdf/1097/Kangen_Ukon_Product_Guide.pdf',
+                name: 'Guía Kangen Ukon',
+            },
+            {
+                icon: '🥩',
+                title: 'Guía de Kangen Wagyu Beef',
+                desc: 'Carne Wagyu premium libre de hormonas, criada con agua Kangen. Perfecta para clientes que aman el lujo y la salud.',
+                url: 'https://www.enagic.com/pdf/1098/Kangen_Wagyu_Product_Guide.pdf',
+                name: 'Guía Kangen Wagyu',
+            },
+            {
+                icon: '🔧',
+                title: 'Cuidado y Mantenimiento de Máquinas',
+                desc: 'Mantén a tus clientes felices de por vida. El mantenimiento correcto reduce devoluciones y genera recomendaciones.',
+                url: 'https://www.enagic.com/pdf/1099/Machine_Care_and_Maintenance_Guide.pdf',
+                name: 'Guía de Mantenimiento',
+            },
+        ],
+    },
+    fr: {
+        sectionTitle: 'Ressources Gratuites Pour Démarrer',
+        sectionSubtitle:
+            'Téléchargez nos guides exclusifs. Apprenez les produits, maîtrisez le business et commencez à construire votre True Legacy.',
+        ctaLabel: 'Obtenir un Accès Gratuit →',
+        pdfs: [
+            {
+                icon: '💧',
+                title: 'Guide Complet des Machines Kangen Water',
+                desc: 'Tout ce que vous devez savoir sur les 6 machines Kangen — spécifications, bénéfices, prix et quelle machine convient à chaque client.',
+                url: 'https://www.enagic.com/pdf/1096/Kangen_Water_Ionizers_Product_Guide.pdf',
+                name: 'Guide des Ioniseurs Kangen',
+                badge: 'Le Plus Populaire',
+            },
+            {
+                icon: '🚿',
+                title: 'Guide du Système de Douche Anespa DX',
+                desc: 'Découvrez comment l’Anespa DX transforme votre douche quotidienne en une expérience de spa aux sources thermales japonaises.',
+                url: 'https://www.enagic.com/pdf/1094/ANESPA_DX_Product_Guide.pdf',
+                name: 'Guide Anespa DX',
+            },
+            {
+                icon: '💰',
+                title: 'Le Plan de Rémunération en 8 Points',
+                desc: 'Comprenez exactement comment vous gagnez en tant que distributeur True Legacy. Le document à maîtriser pour bâtir des revenus solides.',
+                url: 'https://www.enagic.com/pdf/1095/Compensation_Plan_Guide.pdf',
+                name: 'Guide du Plan de Rémunération',
+                badge: 'Essentiel',
+            },
+            {
+                icon: '🌿',
+                title: 'Guide du Curcuma Kangen Ukon',
+                desc: 'Curcuma sauvage d’Okinawa. Les bienfaits pour la santé et pourquoi ce produit se vend pratiquement tout seul.',
+                url: 'https://www.enagic.com/pdf/1097/Kangen_Ukon_Product_Guide.pdf',
+                name: 'Guide Kangen Ukon',
+            },
+            {
+                icon: '🥩',
+                title: 'Guide du Kangen Wagyu Beef',
+                desc: 'Boeuf Wagyu premium sans hormones, élevé à l’eau Kangen. Un produit unique pour vos clients haut de gamme.',
+                url: 'https://www.enagic.com/pdf/1098/Kangen_Wagyu_Product_Guide.pdf',
+                name: 'Guide Kangen Wagyu',
+            },
+            {
+                icon: '🔧',
+                title: 'Entretien & Maintenance des Machines',
+                desc: 'Gardez vos clients satisfaits à vie. Un bon entretien réduit les retours et génère des recommandations naturelles.',
+                url: 'https://www.enagic.com/pdf/1099/Machine_Care_and_Maintenance_Guide.pdf',
+                name: 'Guide d’Entretien',
+            },
+        ],
+    },
+}
+
 function getContent(country: Country, locale: 'en' | 'es' | 'fr') {
     const es = locale === 'es'
     const fr = locale === 'fr'
@@ -630,55 +805,55 @@ export default function CountryPage() {
                 </div>
             </section>
 
-            {/* ===== RESEARCH & PDF LIBRARY CTA ===== */}
+            {/* ===== LOCALIZED PDF RESOURCES (lead magnet) ===== */}
             <section className="py-16 border-t border-white/5" style={{ background: '#050b18' }}>
                 <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-                    <div className="rounded-3xl border border-cyan-500/25 bg-gradient-to-br from-cyan-500/10 via-slate-900/80 to-slate-950/90 p-8 md:p-10 flex flex-col md:flex-row items-start md:items-center gap-6">
-                        <div className="flex-1">
-                            <p className="text-[11px] font-semibold uppercase tracking-[0.3em] text-cyan-300 mb-2">
-                                TRUE LEGACY RESEARCH
-                            </p>
-                            <h2 className="text-2xl md:text-3xl font-display font-bold text-white mb-3">
-                                {locale === 'es'
-                                    ? `Investigación y PDFs para ${country.nativeName}`
-                                    : locale === 'fr'
-                                    ? `Recherche & PDFs pour ${country.nativeName}`
-                                    : `Research & PDFs for ${country.name}`}
-                            </h2>
-                            <p className="text-slate-300 text-sm md:text-base max-w-2xl">
-                                {locale === 'es'
-                                    ? 'Accede a investigaciones, testimonios médicos y guías oficiales de Enagic sobre Agua Kangen® y Anespa DX para compartir información confiable con tu comunidad.'
-                                    : locale === 'fr'
-                                    ? "Accédez aux recherches, avis médicaux et documents officiels Enagic sur l'eau Kangen® et Anespa DX afin de partager des informations fiables avec votre communauté."
-                                    : 'Access research, medical testimonials, and official Enagic guides on Kangen Water® and Anespa DX so you can share credible information with your community.'}
-                            </p>
-                        </div>
-                        <div className="flex flex-col gap-3 w-full md:w-auto">
-                            <Link
-                                to="/library"
-                                onClick={() =>
-                                    trackEvent('pdf_library_entry', {
-                                        countrySlug: country.slug,
-                                        locale,
-                                    })
-                                }
-                                className="inline-flex items-center justify-center rounded-2xl bg-cyan-500 px-6 py-3 text-sm font-semibold text-slate-950 shadow-lg shadow-cyan-500/40 hover:bg-cyan-400 transition-colors"
-                            >
-                                {locale === 'es'
-                                    ? 'Ir a la Biblioteca de PDFs'
-                                    : locale === 'fr'
-                                    ? 'Aller à la bibliothèque de PDFs'
-                                    : 'Go to PDF Library'}
-                            </Link>
-                            <p className="text-[11px] text-slate-400">
-                                {locale === 'es'
-                                    ? 'Requiere crear una cuenta gratuita de miembro de True Legacy.'
-                                    : locale === 'fr'
-                                    ? "Nécessite la création d'un compte membre True Legacy gratuit."
-                                    : 'Requires a free True Legacy member login.'}
-                            </p>
-                        </div>
-                    </div>
+                    {(() => {
+                        const pdfConfig = PDF_SECTION_CONTENT[locale]
+                        return (
+                            <div className="pdf-section-inner rounded-[1.75rem] border border-cyan-500/25 bg-gradient-to-br from-cyan-500/10 via-slate-900/80 to-slate-950/90">
+                                <div className="section-heading px-4 sm:px-8 pt-8 sm:pt-10">
+                                    <p className="text-[11px] font-semibold uppercase tracking-[0.3em] text-cyan-300 mb-2">
+                                        {locale === 'es'
+                                            ? 'Investigación & Recursos'
+                                            : locale === 'fr'
+                                            ? 'Recherche & Ressources'
+                                            : 'Research & Resources'}
+                                    </p>
+                                    <h2 className="section-title">
+                                        {pdfConfig.sectionTitle}
+                                    </h2>
+                                    <p className="section-subtitle">
+                                        {pdfConfig.sectionSubtitle}
+                                    </p>
+                                </div>
+                                <div className="pdf-grid px-4 sm:px-8 pb-8 sm:pb-10 pt-6 sm:pt-8">
+                                    {pdfConfig.pdfs.map((pdf) => (
+                                        <div key={pdf.name} className="pdf-card">
+                                            {pdf.badge && <span className="pdf-badge">{pdf.badge}</span>}
+                                            <div className="pdf-icon">{pdf.icon}</div>
+                                            <h3 className="pdf-card-title">{pdf.title}</h3>
+                                            <p className="pdf-card-desc">{pdf.desc}</p>
+                                            <button
+                                                type="button"
+                                                className="pdf-cta-btn"
+                                                onClick={() => {
+                                                    trackEvent('country_pdf_click', {
+                                                        countrySlug: country.slug,
+                                                        locale,
+                                                        pdfName: pdf.name,
+                                                    })
+                                                    openPdfModal(pdf.url)
+                                                }}
+                                            >
+                                                {pdfConfig.ctaLabel}
+                                            </button>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        )
+                    })()}
                 </div>
             </section>
 
