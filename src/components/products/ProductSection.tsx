@@ -80,9 +80,9 @@ export function ProductSection({ productIds, country, variant = 'country' }: Pro
                 transition={{ delay: index * 0.1 }}
                 className="product-card group block rounded-3xl border border-white/10 p-8 hover:border-white/30 transition-all hover:-translate-y-1"
                 data-product={id}
-                style={{ background: '#0a0a0a', backdropFilter: 'blur(20px)' }}
+                style={{ background: 'transparent', backdropFilter: 'blur(20px)' }}
               >
-                <div className="rounded-2xl overflow-hidden border-2 border-white/15 shadow-2xl shadow-black/50 mb-4 aspect-[4/3] bg-[#05070F] flex items-center justify-center">
+                <div className="rounded-2xl overflow-hidden border-2 border-white/15 shadow-2xl shadow-black/50 mb-4 aspect-[4/3] bg-transparent flex items-center justify-center">
                   <img
                     src={product.imageSrc}
                     alt={product.imageAlt}

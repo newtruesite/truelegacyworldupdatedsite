@@ -1,26 +1,43 @@
 import { useEffect } from 'react'
 import { useNavigate, useLocation, Link } from 'react-router-dom'
+import { getPendingPdf } from '@/lib/openGatedPdf'
 
 export default function LoginPage() {
   const navigate = useNavigate()
   const location = useLocation()
 
   useEffect(() => {
-    if (typeof window === 'undefined' || !window.netlifyIdentity) return
+    if (typeof window === 'undefined') return
+    const params = new URLSearchParams(window.location.search)
+    const redirectPdf = params.get('pdf')
+    if (redirectPdf && params.get('redirect') === 'pdf') {
+      try {
+        sessionStorage.setItem('pending_pdf', redirectPdf)
+      } catch {
+        /* ignore */
+      }
+    }
+    if (!window.netlifyIdentity) return
     const identity = window.netlifyIdentity
 
-    identity.on('login', () => {
+    const handleLogin = () => {
       identity.close?.()
+      const pendingPdf = getPendingPdf()
+      if (pendingPdf) {
+        window.open(pendingPdf, '_blank')
+      }
       const from = (location.state as { from?: Location })?.from
-      if (from && typeof from === 'object' && 'pathname' in from) {
+      if (from && typeof from === 'object' && 'pathname' in from && !pendingPdf) {
         navigate(from as never, { replace: true })
       } else {
         navigate('/training', { replace: true })
       }
-    })
+    }
+
+    identity.on('login', handleLogin)
 
     return () => {
-      identity.off?.('login')
+      identity.off?.('login', handleLogin)
     }
   }, [navigate, location.state])
 

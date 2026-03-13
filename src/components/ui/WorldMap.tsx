@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useLocaleContext } from '@/contexts/LocaleContext'
 
@@ -8,19 +8,33 @@ declare global {
   }
 }
 
+const CONTINENTS = [
+  { id: 'north-america', nameEn: 'N. America', nameEs: 'Norteamérica', nameFr: 'Amérique du Nord', lat: 48.0, lng: -96.0 },
+  { id: 'south-america', nameEn: 'S. America / LATAM', nameEs: 'Sudamérica / LATAM', nameFr: 'Amérique latine', lat: -10.0, lng: -55.0 },
+  { id: 'africa', nameEn: 'Africa', nameEs: 'África', nameFr: 'Afrique', lat: 8.0, lng: 22.0 },
+  { id: 'asia', nameEn: 'Asia', nameEs: 'Asia', nameFr: 'Asie', lat: 30.0, lng: 95.0 },
+]
+
+function latLngToPercent(lat: number, lng: number) {
+  const x = (lng + 180) / 360
+  const latRad = (lat * Math.PI) / 180
+  const mercN = Math.log(Math.tan(Math.PI / 4 + latRad / 2))
+  const mercFull = 0.5 - mercN / (2 * Math.PI)
+  const topBound = 0.5 - Math.log(Math.tan(Math.PI / 4 + (83.5 * Math.PI / 180) / 2)) / (2 * Math.PI)
+  const botBound = 0.5 - Math.log(Math.tan(Math.PI / 4 + (-56 * Math.PI / 180) / 2)) / (2 * Math.PI)
+  const y = (mercFull - topBound) / (botBound - topBound)
+  return { x, y }
+}
+
 export function WorldMap() {
+  const mapContainerRef = useRef<HTMLDivElement>(null)
   const navigate = useNavigate()
   const { locale } = useLocaleContext()
+  const [mapReady, setMapReady] = useState(false)
+  const [hoveredContinent, setHoveredContinent] = useState<string | null>(null)
 
   useEffect(() => {
-    if (typeof window === 'undefined' || !window.jsVectorMap) return
-
-    const regionsMap: Record<number, string> = {
-      0: '/region/north-america',
-      1: '/region/latin-america',
-      2: '/region/africa',
-      3: '/region/asia',
-    }
+    if (typeof window === 'undefined' || !window.jsVectorMap || !mapContainerRef.current) return
 
     const map = new window.jsVectorMap({
       selector: '#world-map',
@@ -28,64 +42,157 @@ export function WorldMap() {
       backgroundColor: 'transparent',
       zoomButtons: false,
       zoomOnScroll: false,
+      draggable: false,
+      showTooltip: false,
+      regionsSelectable: false,
+      regionsSelectableOne: false,
+      selectedRegions: [],
       regionStyle: {
         initial: {
-          fill: '#1a2a3a',
-          stroke: '#0d1f2d',
-          strokeWidth: 0.5,
+          fill: '#0d2535',
+          stroke: '#071824',
+          strokeWidth: 0.4,
+          fillOpacity: 1,
+          cursor: 'default',
         },
         hover: {
-          fill: '#00a896',
-          cursor: 'pointer',
+          fill: '#112d42',
+          fillOpacity: 1,
+          cursor: 'default',
         },
         selected: {
-          fill: '#00a896',
+          fill: '#0d2535',
+          cursor: 'default',
+        },
+        selectedHover: {
+          fill: '#0d2535',
+          cursor: 'default',
         },
       },
-      markers: [
-        { name: locale === 'es' ? 'Norteamérica' : locale === 'fr' ? 'Amérique du Nord' : 'North America', coords: [40.7128, -74.006] },
-        { name: locale === 'es' ? 'Latinoamérica' : locale === 'fr' ? 'Amérique latine' : 'Latin America', coords: [-15.78, -47.9292] },
-        { name: locale === 'es' ? 'África' : locale === 'fr' ? 'Afrique' : 'Africa', coords: [-1.2921, 36.8219] },
-        { name: locale === 'es' ? 'Asia' : locale === 'fr' ? 'Asie' : 'Asia Pacific', coords: [35.6762, 139.6503] },
-      ],
-      markerStyle: {
-        initial: {
-          image: '/assets/icons/tl-pin.png',
-          width: 40,
-          height: 48,
-        },
-        hover: {
-          width: 48,
-          height: 56,
-        },
+      markers: [],
+      onRegionClick(e: Event) {
+        e.preventDefault()
+        ;(e as Event & { stopPropagation?: () => void }).stopPropagation?.()
+        return false
       },
-      onMarkerClick(_: unknown, index: number) {
-        const route = regionsMap[index]
-        if (route) navigate(route)
-      },
-      onRegionClick: () => {
-        // keep behavior simple for now; markers handle navigation
+      onRegionTooltipShow(e: Event) {
+        e.preventDefault()
+        return false
       },
     })
 
+    // Kill jsVectorMap built-in tooltips and make paths non-interactive
+    setTimeout(() => {
+      const wrapper = document.getElementById('world-map')
+      if (wrapper) {
+        wrapper.querySelectorAll('.jvm-tooltip, text, .jvm-marker-label').forEach((el) => el.remove())
+        wrapper.querySelectorAll('path').forEach((p) => {
+          ;(p as SVGElement).style.pointerEvents = 'none'
+          ;(p as SVGElement).style.cursor = 'default'
+        })
+      }
+      if (typeof console !== 'undefined' && console.log) {
+        console.log('Pin positions:')
+        CONTINENTS.forEach((c) => {
+          const pct = latLngToPercent(c.lat, c.lng)
+          console.log(c.nameEn, '→ x:', (pct.x * 100).toFixed(1) + '%', 'y:', (pct.y * 100).toFixed(1) + '%')
+        })
+        const svg = document.querySelector('#world-map svg')
+        if (svg) {
+          const vb = svg.getAttribute('viewBox')
+          if (vb) console.log('SVG viewBox:', vb)
+        }
+      }
+      setMapReady(true)
+    }, 350)
+
     return () => {
-      map && map.destroy && map.destroy()
+      try {
+        map?.destroy?.()
+      } catch {
+        /* ignore */
+      }
     }
-  }, [navigate, locale])
+  }, [])
+
+  const getContinentName = (c: (typeof CONTINENTS)[0]) => {
+    if (locale === 'es') return c.nameEs
+    if (locale === 'fr') return c.nameFr
+    return c.nameEn
+  }
+
+  const handleContinentClick = (continentId: string) => {
+    navigate(`/select-country?continent=${continentId}`)
+  }
 
   return (
-    <div className="relative w-full flex items-center justify-center">
-      <div className="pointer-events-none absolute inset-x-[-40px] top-6 h-64 rounded-[999px] bg-[radial-gradient(circle_at_center,rgba(6,16,56,0.8)_0,rgba(6,11,30,0)_70%)]" />
-      <div className="relative w-full max-w-5xl">
+    <div className="map-section w-full">
+      <div id="map-wrapper" className="map-wrapper relative w-full flex items-center justify-center" style={{ position: 'relative' }}>
         <div
+          ref={mapContainerRef}
           id="world-map"
-          className="w-full rounded-2xl overflow-hidden border border-white/10 bg-[#0a1628]/80"
-          style={{ height: '500px' }}
+          className="w-full rounded-2xl overflow-hidden"
+          style={{ width: '100%', height: '460px' }}
         />
+
+        {mapReady && (
+          <div
+            id="pin-overlay"
+            style={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              width: '100%',
+              height: '100%',
+              pointerEvents: 'none',
+              zIndex: 100,
+            }}
+          >
+            {CONTINENTS.map((c) => {
+              const { x, y } = latLngToPercent(c.lat, c.lng)
+              return (
+                <div
+                  key={c.id}
+                  className={`continent-pin ${hoveredContinent === c.id ? 'pin-hovered' : ''}`}
+                  style={{
+                    position: 'absolute',
+                    left: `${x * 100}%`,
+                    top: `${y * 100}%`,
+                    transform: 'translate(-50%, -50%)',
+                    pointerEvents: 'all',
+                    cursor: 'pointer',
+                    zIndex: 101,
+                  }}
+                  onClick={() => handleContinentClick(c.id)}
+                  onMouseEnter={() => setHoveredContinent(c.id)}
+                  onMouseLeave={() => setHoveredContinent(null)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault()
+                      handleContinentClick(c.id)
+                    }
+                  }}
+                  role="button"
+                  tabIndex={0}
+                  aria-label={getContinentName(c)}
+                >
+                  <div className="pin-pulse-ring" />
+                  <div className="pin-pulse-ring pin-pulse-ring--delay" />
+                  <div className="pin-dot">
+                    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden>
+                      <circle cx="7" cy="7" r="7" fill="#F5A623" />
+                      <circle cx="7" cy="7" r="3.5" fill="#ffffff" fillOpacity="0.9" />
+                    </svg>
+                  </div>
+                  <div className="pin-label">{getContinentName(c)}</div>
+                </div>
+              )
+            })}
+          </div>
+        )}
       </div>
     </div>
   )
 }
 
 export default WorldMap
-

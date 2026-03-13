@@ -13,6 +13,7 @@ import { t } from '@/lib/translations'
 import { useLocaleContext } from '@/contexts/LocaleContext'
 import { ProductSection } from '@/components/products/ProductSection'
 import { trackEvent } from '@/lib/analytics'
+import { openGatedPDF } from '@/lib/openGatedPdf'
 
 // ── Custom SVG Icons (no emojis) ──────────────────────────────
 function IconArrow({ size = 20 }: { size?: number }) {
@@ -474,6 +475,15 @@ export default function CountryPage() {
                             <p className="text-slate-400 text-sm leading-relaxed font-light">{copy.paidSection.card3Body}</p>
                         </motion.div>
                     </div>
+                    <div className="flex flex-col gap-4">
+                        <button
+                            type="button"
+                            onClick={() => openGatedPDF('https://www.enagic.com/pdf/1095/Compensation_Plan_Guide.pdf', 'Compensation Plan')}
+                            className="self-center rounded-xl border border-cyan-500/40 px-4 py-2 text-sm font-medium text-cyan-400 hover:bg-cyan-500/10 transition-colors"
+                        >
+                            {locale === 'es' ? 'Descargar Plan de Compensación (PDF)' : locale === 'fr' ? 'Télécharger le Plan de Compensation (PDF)' : 'Download Compensation Plan (PDF)'}
+                        </button>
+                    </div>
                     <div className="flex flex-col md:flex-row items-center justify-between gap-6 rounded-2xl border border-yellow-500/30 bg-[#0a1628]/90 p-6 md:p-8">
                         <div className="text-center md:text-left max-w-lg">
                             <h3 className="text-white font-black text-2xl mb-2">{copy.paidSection.ctaHeadline}</h3>
@@ -612,9 +622,13 @@ export default function CountryPage() {
                 </div>
             </section>
 
-            {/* ===== FULL PRODUCT CATALOG FOR THIS COUNTRY ===== */}
+            {/* ===== FULL PRODUCT CATALOG FOR THIS COUNTRY (Kangen Air USA/Canada only) ===== */}
             <ProductSection
-                productIds={['k8', 'sd501', 'sd501_super', 'sd501_dx', 'anespa_dx', 'emguarde', 'ukon_sigma', 'kangen_wagyu']}
+                productIds={
+                    country.slug === 'usa' || country.slug === 'canada'
+                        ? ['k8', 'sd501', 'sd501_super', 'sd501_dx', 'anespa_dx', 'emguarde', 'ukon_sigma', 'kangen_wagyu', 'kangen_air']
+                        : ['k8', 'sd501', 'sd501_super', 'sd501_dx', 'anespa_dx', 'emguarde', 'ukon_sigma', 'kangen_wagyu']
+                }
                 country={country}
                 variant="country"
             />

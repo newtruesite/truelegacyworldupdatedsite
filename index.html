@@ -39,6 +39,9 @@
 
   <!-- Canonical -->
   <link rel="canonical" href="https://truelegacyworld.com/" />
+  <!-- Preconnect for performance -->
+  <link rel="preconnect" href="https://flagcdn.com" />
+  <link rel="dns-prefetch" href="https://cdn.jsdelivr.net" />
   <!-- Netlify Identity -->
   <script src="https://identity.netlify.com/v1/netlify-identity-widget.js" defer></script>
   <!-- jsVectorMap for interactive world map -->
@@ -48,6 +51,15 @@
 </head>
 
 <body>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "True Legacy World",
+    "url": "https://truelegacyworld.com",
+    "description": "Global Enagic Kangen Water distributor network"
+  }
+  </script>
   <div id="root"></div>
   <!-- Netlify Forms: hidden form for pdf-lead-capture (discovered at build) -->
   <form name="pdf-lead-capture" method="POST" data-netlify="true" data-netlify-honeypot="bot-field" hidden>

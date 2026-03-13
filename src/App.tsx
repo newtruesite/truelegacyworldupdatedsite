@@ -14,6 +14,7 @@ import EmGuardePage from '@/pages/EmGuardePage'
 import K8Page from '@/pages/K8Page'
 import PdfLibraryPage from '@/pages/PdfLibraryPage'
 import ProductsPage from '@/pages/ProductsPage'
+import SelectCountryPage from '@/pages/SelectCountryPage'
 import { ProtectedRoute } from '@/components/auth/ProtectedRoute'
 
 function PageTransitionWrapper({ children }: { children: React.ReactNode }) {
@@ -91,6 +92,14 @@ function AnimatedRoutes() {
           }
         />
         <Route
+          path="/select-country"
+          element={
+            <PageTransitionWrapper>
+              <SelectCountryPage />
+            </PageTransitionWrapper>
+          }
+        />
+        <Route
           path="/settings"
           element={
             <PageTransitionWrapper>
@@ -153,14 +162,70 @@ function AnimatedRoutes() {
 
 export default function App() {
   useEffect(() => {
-    const imgs = Array.from(document.querySelectorAll('img'))
-    const handleError = (e: Event) => {
-      const target = e.target as HTMLImageElement
-      target.style.display = 'none'
+    if (typeof window === 'undefined' || typeof document === 'undefined') return
+
+    const handleError = (event: Event) => {
+      const target = event.target as HTMLElement | null
+      if (target && target.tagName === 'IMG') {
+        ;(target as HTMLImageElement).style.visibility = 'hidden'
+      }
     }
-    imgs.forEach((img) => img.addEventListener('error', handleError))
+
+    // Capture phase listener to catch all image load errors, including future images
+    document.addEventListener('error', handleError, true)
+
     return () => {
-      imgs.forEach((img) => img.removeEventListener('error', handleError))
+      document.removeEventListener('error', handleError, true)
+    }
+  }, [])
+
+  // Global UX polish: navbar hide-on-scroll, smooth anchor scroll, product img error fallback
+  useEffect(() => {
+    if (typeof window === 'undefined' || typeof document === 'undefined') return
+
+    const navbar = document.querySelector('nav, header, .navbar') as HTMLElement | null
+    let lastScrollY = window.scrollY
+
+    const handleScroll = () => {
+      if (!navbar) return
+      if (window.scrollY > lastScrollY && window.scrollY > 80) {
+        navbar.style.transform = 'translateY(-100%)'
+        navbar.style.transition = 'transform 0.3s ease'
+      } else {
+        navbar.style.transform = 'translateY(0)'
+      }
+      lastScrollY = window.scrollY
+    }
+
+    window.addEventListener('scroll', handleScroll)
+
+    const anchorHandlers: Array<{ el: Element; handler: (e: Event) => void }> = []
+    document.querySelectorAll('a[href^="#"]').forEach((a) => {
+      const handler = (e: Event) => {
+        e.preventDefault()
+        const href = (a as HTMLAnchorElement).getAttribute('href')
+        if (!href) return
+        const target = document.querySelector(href)
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth' })
+        }
+      }
+      a.addEventListener('click', handler)
+      anchorHandlers.push({ el: a, handler })
+    })
+
+    document.querySelectorAll('.product-card img, .product img').forEach((img) => {
+      const image = img as HTMLImageElement
+      image.onerror = function () {
+        this.style.visibility = 'hidden'
+      }
+    })
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll)
+      anchorHandlers.forEach(({ el, handler }) => {
+        el.removeEventListener('click', handler)
+      })
     }
   }, [])
 
