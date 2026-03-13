@@ -13,11 +13,12 @@ export function Footer() {
                 <div className="grid grid-cols-1 gap-12 lg:grid-cols-4">
                     {/* Brand */}
                     <div className="lg:col-span-1">
-                        <Link to="/" className="flex items-center gap-3 group mb-4">
+                        <Link to="/" className="flex items-center gap-3 group mb-4 logo-container" style={{ background: 'transparent', padding: 0 }}>
                             <img
                                 src="/logos/tl-horizontal-white.png"
                                 alt="True Legacy World"
-                                className="h-10 w-auto object-contain"
+                                className="h-10 w-auto object-contain nav-logo logo-img"
+                                style={{ background: 'transparent', backgroundColor: 'transparent', mixBlendMode: 'normal' }}
                             />
                         </Link>
                         <p className="text-sm text-slate-400 leading-relaxed mb-6">

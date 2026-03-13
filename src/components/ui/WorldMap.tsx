@@ -9,10 +9,10 @@ declare global {
 }
 
 const CONTINENTS = [
-  { id: 'north-america', nameEn: 'N. America', nameEs: 'Norteamérica', nameFr: 'Amérique du Nord', lat: 48.0, lng: -96.0 },
-  { id: 'south-america', nameEn: 'S. America / LATAM', nameEs: 'Sudamérica / LATAM', nameFr: 'Amérique latine', lat: -10.0, lng: -55.0 },
-  { id: 'africa', nameEn: 'Africa', nameEs: 'África', nameFr: 'Afrique', lat: 8.0, lng: 22.0 },
-  { id: 'asia', nameEn: 'Asia', nameEs: 'Asia', nameFr: 'Asie', lat: 30.0, lng: 95.0 },
+  { id: 'north-america', nameEn: 'N. America', nameEs: 'Norteamérica', nameFr: 'Amérique du Nord', lat: 46.5, lng: -96.5 },
+  { id: 'south-america', nameEn: 'S. America / LATAM', nameEs: 'Sudamérica / LATAM', nameFr: 'Amérique latine', lat: -12.0, lng: -54.0 },
+  { id: 'africa', nameEn: 'Africa', nameEs: 'África', nameFr: 'Afrique', lat: 6.5, lng: 19.5 },
+  { id: 'asia', nameEn: 'Asia', nameEs: 'Asia', nameFr: 'Asie', lat: 32.0, lng: 96.0 },
 ]
 
 function latLngToPercent(lat: number, lng: number) {
@@ -122,6 +122,12 @@ export function WorldMap() {
   }
 
   const handleContinentClick = (continentId: string) => {
+    try {
+      sessionStorage.setItem('last_page', window.location.href)
+      sessionStorage.setItem('last_page_label', 'World Map')
+    } catch {
+      /* ignore */
+    }
     navigate(`/select-country?continent=${continentId}`)
   }
 

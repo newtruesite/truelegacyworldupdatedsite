@@ -25,6 +25,11 @@ export function PdfLeadCaptureProvider({ children }: { children: ReactNode }) {
   const [productPreset, setProductPreset] = useState<ProductInterest | undefined>()
 
   const openModal = useCallback((url: string, preset?: ProductInterest) => {
+    const alreadySubmitted = typeof localStorage !== 'undefined' && localStorage.getItem('tl_pdf_access')
+    if (alreadySubmitted) {
+      window.open(url, '_blank')
+      return
+    }
     setPdfUrl(url)
     setProductPreset(preset)
     setOpen(true)

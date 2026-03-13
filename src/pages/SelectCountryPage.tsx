@@ -144,7 +144,17 @@ export default function SelectCountryPage() {
         {data.countries.map((country) => (
           <button
             key={country.code}
-            onClick={() => navigate(`/${country.slug}`)}
+            onClick={() => {
+              try {
+                sessionStorage.setItem('last_page', window.location.href)
+                sessionStorage.setItem('last_page_label', 'Select Region')
+                sessionStorage.setItem('last_continent_id', continent)
+                sessionStorage.setItem('last_continent_name', data.name)
+              } catch {
+                /* ignore */
+              }
+              navigate(`/${country.slug}`)
+            }}
             style={{
               background: 'rgba(255,255,255,0.04)',
               border: '1px solid rgba(255,255,255,0.08)',

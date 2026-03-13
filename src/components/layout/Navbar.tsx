@@ -44,13 +44,14 @@ function IconChevron({ className }: { className?: string }) {
 // ── True Legacy Logo + tagline (Creating True Health Around the World) ──────────────────
 function NavLogo() {
     return (
-        <div className="flex flex-col gap-0.5 nav-logo-container">
+        <div className="flex flex-col gap-0.5 nav-logo-container logo-wrapper" style={{ background: 'transparent', padding: 0 }}>
             <img
                 src="/logos/tl-horizontal-white.png"
                 alt="True Legacy"
-                className="nav-logo h-9 md:h-11 w-auto block"
+                className="nav-logo h-9 md:h-11 w-auto block logo-img"
                 loading="eager"
                 fetchPriority="high"
+                style={{ background: 'transparent', backgroundColor: 'transparent', mixBlendMode: 'normal' }}
             />
             <span className="text-[10px] md:text-xs font-medium text-slate-400 tracking-wide hidden sm:block">
                 Creating True Health Around the World
@@ -66,7 +67,26 @@ export function Navbar() {
     const [countriesOpen, setCountriesOpen] = useState(false)
     const [failedFlagSlugs, setFailedFlagSlugs] = useState<Set<string>>(new Set())
     const [navVisible, setNavVisible] = useState(true)
+    const [backInfo, setBackInfo] = useState<{ url: string; label: string } | null>(null)
     const lastScrollY = useRef(0)
+    const navigate = useNavigate()
+    const location = useLocation()
+    const pathname = location.pathname
+    const isHome = pathname === '/'
+    const firstSegment = pathname.slice(1).split('/')[0]
+    const isCountryPage = firstSegment && COUNTRY_SLUGS.includes(firstSegment)
+    const country = isCountryPage ? COUNTRIES.find((c) => c.slug === firstSegment) : null
+
+    useEffect(() => {
+        if (typeof window === 'undefined') return
+        const lastPage = sessionStorage.getItem('last_page')
+        const lastLabel = sessionStorage.getItem('last_page_label') || 'Back'
+        if (lastPage && (isCountryPage || pathname === '/training')) {
+            setBackInfo({ url: lastPage, label: lastLabel })
+        } else {
+            setBackInfo(null)
+        }
+    }, [pathname, isCountryPage])
 
     useEffect(() => {
         const onScroll = () => {
@@ -78,13 +98,7 @@ export function Navbar() {
         window.addEventListener('scroll', onScroll, { passive: true })
         return () => window.removeEventListener('scroll', onScroll)
     }, [])
-    const navigate = useNavigate()
-    const location = useLocation()
-    const pathname = location.pathname
-    const isHome = pathname === '/'
-    const firstSegment = pathname.slice(1).split('/')[0]
-    const isCountryPage = firstSegment && COUNTRY_SLUGS.includes(firstSegment)
-    const country = isCountryPage ? COUNTRIES.find((c) => c.slug === firstSegment) : null
+
     const jotformUrl = country?.jotformUrl ?? null
     const { locale, setLocale: setLocaleOverride } = useLocaleContext()
     const navLabels = {
@@ -111,7 +125,7 @@ export function Navbar() {
             style={{ transform: navVisible ? 'translateY(0)' : 'translateY(-100%)' }}
         >
             <nav
-                className="mx-3 mt-2 pt-2 rounded-2xl px-4 sm:px-5 py-3 flex items-center justify-between min-h-[52px]"
+                className="mx-3 mt-2 pt-2 rounded-2xl px-4 sm:px-5 py-3 flex items-center justify-between min-h-[52px] gap-3"
                 style={{
                     background: 'rgba(5,16,48,0.85)',
                     backdropFilter: 'blur(24px)',
@@ -119,6 +133,17 @@ export function Navbar() {
                     boxShadow: '0 4px 24px rgba(0,0,0,0.4)',
                 }}
             >
+                {/* Smart back button (Section 7) */}
+                {backInfo && (
+                    <button
+                        type="button"
+                        onClick={() => window.location.href = backInfo!.url}
+                        className="smart-back-btn flex items-center gap-1.5 rounded-lg border border-white/10 bg-white/5 px-3.5 py-2 text-[13px] font-semibold text-slate-400 hover:bg-white/10 hover:text-white transition-all whitespace-nowrap"
+                    >
+                        <span className="back-label">← {backInfo.label}</span>
+                    </button>
+                )}
+
                 {/* Logo */}
                 <Link to="/" className="flex-shrink-0">
                     <NavLogo />

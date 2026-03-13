@@ -68,29 +68,48 @@
     border-radius: 3px;
   }
 
-  /* Nav logo hardening – ensure no box or background */
+  /* =============================================
+     LOGO BLACK BOX NUCLEAR KILL — DO NOT REMOVE
+     ============================================= */
   .nav-logo,
-  header img:first-child,
-  nav img:first-child {
+  .logo-img,
+  .logo-container img,
+  nav img,
+  header img,
+  .navbar img,
+  .navbar-brand img,
+  img[alt*="True Legacy"],
+  img[alt*="logo"],
+  img[alt*="Logo"],
+  img[src*="logo"],
+  img[src*="Logo"],
+  img[src*="avif"],
+  img[src*="Logo_final"],
+  img[src*="Mesa"] {
     background: transparent !important;
     background-color: transparent !important;
-    border: none !important;
-    box-shadow: none !important;
-    padding: 0 !important;
-    mix-blend-mode: normal;
-    max-height: 48px;
-    width: auto;
-    object-fit: contain;
+    mix-blend-mode: normal !important;
+    image-rendering: -webkit-optimize-contrast;
   }
 
   .nav-logo-container,
   .logo-container,
-  .logo-wrapper {
+  .logo-wrapper,
+  nav .brand,
+  .navbar-brand {
     background: transparent !important;
     background-color: transparent !important;
+    padding: 0 !important;
     border: none !important;
     box-shadow: none !important;
-    padding: 0 !important;
+  }
+
+  /* Legacy nav logo overrides */
+  header img:first-child,
+  nav img:first-child {
+    max-height: 48px;
+    width: auto;
+    object-fit: contain;
   }
 
   /* Map tooltip – fixed to body, never trapped in stacking contexts */

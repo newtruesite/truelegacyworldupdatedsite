@@ -149,6 +149,22 @@ export function TestimonialsSplit({ testimonials, locale = 'en' }: TestimonialsS
         setActiveIndex((prev) => (prev + 1) % list.length)
     }
 
+    const prevTestimonial = () => {
+        setActiveIndex((prev) => (prev - 1 + list.length) % list.length)
+    }
+
+    const igUrl = (company: string | undefined) => {
+        if (!company) return 'https://www.instagram.com/truelegacyworld/'
+        const latam = ['Colombia', 'Brazil', 'Mexico', 'Paraguay', 'Norteamérica', 'Europa', 'Sudamérica', 'LATAM', 'Latin America']
+        return latam.some((r) => company?.includes(r)) ? 'https://www.instagram.com/truelegacylatam/' : 'https://www.instagram.com/truelegacyworld/'
+    }
+
+    const igHandle = (company: string | undefined) => {
+        if (!company) return '@truelegacyworld'
+        const latam = ['Colombia', 'Brazil', 'Mexico', 'Paraguay', 'Norteamérica', 'Europa', 'Sudamérica', 'LATAM', 'Latin America']
+        return latam.some((r) => company?.includes(r)) ? '@truelegacylatam' : '@truelegacyworld'
+    }
+
     return (
         <div className="w-full max-w-5xl mx-auto px-6 pb-20">
             <div
@@ -225,22 +241,20 @@ export function TestimonialsSplit({ testimonials, locale = 'en' }: TestimonialsS
 
                 {/* Right: Instagram (above photo) + Photo */}
                 <div className="relative w-full md:w-64 md:h-80 flex-shrink-0 flex flex-col items-center">
-                    {active.instagram && (
-                        <a
-                            href={active.instagram}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            onClick={(e) => e.stopPropagation()}
-                            className="inline-flex items-center gap-1.5 text-sm text-amber-400/90 hover:text-amber-300 mb-3"
-                        >
-                            <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
-                                <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
-                                <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
-                                <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
-                            </svg>
-                            <span>{active.instagram.replace(/^https?:\/\/(www\.)?instagram\.com\//i, '@').replace(/\/?$/, '')}</span>
-                        </a>
-                    )}
+                    <a
+                        href={active.instagram ?? igUrl(active.company)}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        onClick={(e) => e.stopPropagation()}
+                        className="testimonial-ig-link inline-flex items-center gap-1.5 text-sm text-[#c13584] hover:opacity-100 opacity-80 font-semibold mb-3 transition-opacity"
+                    >
+                        <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+                            <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
+                            <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+                            <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
+                        </svg>
+                        <span>{active.instagram ? active.instagram.replace(/^https?:\/\/(www\.)?instagram\.com\//i, '@').replace(/\/?$/, '') : igHandle(active.company)}</span>
+                    </a>
                     <AnimatePresence mode="wait">
                         <motion.div
                             key={active.id}
@@ -257,7 +271,8 @@ export function TestimonialsSplit({ testimonials, locale = 'en' }: TestimonialsS
                                     <img
                                         src={active.image}
                                         alt={active.name}
-                                        className="w-full h-full object-cover"
+                                        className="testimonial-avatar w-full h-full object-cover"
+                                        style={{ minWidth: 72, minHeight: 72 }}
                                     />
                                 ) : (
                                     <div className="w-full h-full bg-gradient-to-br from-blue-800 to-navy-900 flex items-center justify-center">
@@ -303,8 +318,18 @@ export function TestimonialsSplit({ testimonials, locale = 'en' }: TestimonialsS
                     </div>
                     <button
                         type="button"
+                        onClick={(e) => { e.stopPropagation(); prevTestimonial() }}
+                        className="testimonial-prev inline-flex items-center gap-1.5 min-h-[44px] px-4 text-sm text-orange-400 hover:text-orange-300 font-medium"
+                    >
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                            <path d="M15 18l-6-6 6-6" />
+                        </svg>
+                        <span>{locale === 'es' ? 'Anterior' : locale === 'fr' ? 'Précédent' : 'Previous'}</span>
+                    </button>
+                    <button
+                        type="button"
                         onClick={(e) => { e.stopPropagation(); nextTestimonial() }}
-                        className="inline-flex items-center gap-1.5 min-h-[44px] px-4 text-sm text-orange-400 hover:text-orange-300 font-medium"
+                        className="testimonial-next inline-flex items-center gap-1.5 min-h-[44px] px-4 text-sm text-orange-400 hover:text-orange-300 font-medium"
                     >
                         <span>{locale === 'es' ? 'Siguiente' : locale === 'fr' ? 'Suivant' : 'Next'}</span>
                         <ArrowUpRight className="w-4 h-4" />

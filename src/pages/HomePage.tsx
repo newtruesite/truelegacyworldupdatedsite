@@ -83,7 +83,7 @@ export default function HomePage() {
             <main className="flex-grow">
 
                 {/* ===== HERO + MAP ===== */}
-                <div ref={heroRef}>
+                <section ref={heroRef} className="map-section">
                 <TLBackground className="relative min-h-screen flex flex-col items-center justify-start pt-32 pb-0">
 
                     {/* Hero Text — extra top margin for spacing from navbar / "top categories" */}
@@ -91,7 +91,7 @@ export default function HomePage() {
                         initial={{ opacity: 0, y: 24 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
-                        className="relative z-10 w-full max-w-5xl mx-auto text-center px-6 mt-8 mb-10"
+                        className="map-heading relative z-10 w-full max-w-5xl mx-auto text-center px-6 mt-8 mb-10"
                     >
                         {/* Eyebrow */}
                         <p className="mb-3 text-xs font-semibold tracking-[0.3em] uppercase text-tl-gold opacity-80">
@@ -149,7 +149,7 @@ export default function HomePage() {
                         <div className="w-px h-10 bg-gradient-to-b from-slate-500 to-transparent" />
                     </motion.div>
                 </TLBackground>
-                </div>
+                </section>
 
                 {/* ===== LEADERS CAROUSEL ===== */}
                 <section className="relative py-24" style={{ background: '#060b1e' }}>

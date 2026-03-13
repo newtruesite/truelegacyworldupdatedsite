@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useParams, Navigate, Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { TLBackground } from '@/components/ui/TLBackground'
@@ -13,7 +13,7 @@ import { t } from '@/lib/translations'
 import { useLocaleContext } from '@/contexts/LocaleContext'
 import { ProductSection } from '@/components/products/ProductSection'
 import { trackEvent } from '@/lib/analytics'
-import { openGatedPDF } from '@/lib/openGatedPdf'
+import { usePdfLeadCapture } from '@/contexts/PdfLeadCaptureContext'
 
 // ── Custom SVG Icons (no emojis) ──────────────────────────────
 function IconArrow({ size = 20 }: { size?: number }) {
@@ -295,6 +295,20 @@ function getContent(country: Country, locale: 'en' | 'es' | 'fr') {
 
 const DEFAULT_JOTFORM = 'https://form.jotform.com/260232994952060'
 
+const COUNTRY_TO_CONTINENT: Record<string, { id: string; nameEn: string; nameEs: string; nameFr: string }> = {
+    usa: { id: 'north-america', nameEn: 'N. America', nameEs: 'Norteamérica', nameFr: 'Amérique du Nord' },
+    canada: { id: 'north-america', nameEn: 'N. America', nameEs: 'Norteamérica', nameFr: 'Amérique du Nord' },
+    colombia: { id: 'south-america', nameEn: 'S. America / LATAM', nameEs: 'Sudamérica / LATAM', nameFr: 'Amérique latine' },
+    paraguay: { id: 'south-america', nameEn: 'S. America / LATAM', nameEs: 'Sudamérica / LATAM', nameFr: 'Amérique latine' },
+    mexico: { id: 'south-america', nameEn: 'S. America / LATAM', nameEs: 'Sudamérica / LATAM', nameFr: 'Amérique latine' },
+    brazil: { id: 'south-america', nameEn: 'S. America / LATAM', nameEs: 'Sudamérica / LATAM', nameFr: 'Amérique latine' },
+    morocco: { id: 'africa', nameEn: 'Africa', nameEs: 'África', nameFr: 'Afrique' },
+    nigeria: { id: 'africa', nameEn: 'Africa', nameEs: 'África', nameFr: 'Afrique' },
+    india: { id: 'asia', nameEn: 'Asia', nameEs: 'Asia', nameFr: 'Asie' },
+    uae: { id: 'asia', nameEn: 'Asia', nameEs: 'Asia', nameFr: 'Asie' },
+    malaysia: { id: 'asia', nameEn: 'Asia', nameEs: 'Asia', nameFr: 'Asie' },
+}
+
 export default function CountryPage() {
     const { country: slug } = useParams<{ country: string }>()
     const [k8ImgError, setK8ImgError] = useState(false)
@@ -304,15 +318,51 @@ export default function CountryPage() {
     if (!country) return <Navigate to="/" replace />
 
     const { locale } = useLocaleContext()
+    const { openModal: openPdfModal } = usePdfLeadCapture()
     const jotformUrl = country.jotformUrl ?? DEFAULT_JOTFORM
     const copy = t[locale]
     const c = getContent(country, locale)
+
+    useEffect(() => {
+        const hero = document.getElementById('hero')
+        const stickyBar = document.getElementById('sticky-cta')
+        const onScroll = () => {
+            if (!stickyBar || !hero) return
+            const heroBottom = hero.getBoundingClientRect().bottom
+            stickyBar.style.transform = heroBottom > 0 ? 'translateY(100%)' : 'translateY(0)'
+        }
+        window.addEventListener('scroll', onScroll)
+        onScroll()
+        return () => window.removeEventListener('scroll', onScroll)
+    }, [])
+
+    const continentInfo = COUNTRY_TO_CONTINENT[country.slug]
+    const continentName = continentInfo
+        ? (locale === 'es' ? continentInfo.nameEs : locale === 'fr' ? continentInfo.nameFr : continentInfo.nameEn)
+        : 'Region'
+    const continentId = continentInfo?.id ?? ''
 
     return (
         <div className="min-h-screen overflow-x-hidden" style={{ background: '#060b1e' }}>
             <Navbar />
 
+            {/* Breadcrumb (Section 7) */}
+            <nav className="breadcrumb flex items-center gap-2 px-4 sm:px-6 lg:px-8 py-3 text-xs text-slate-500" aria-label="Breadcrumb">
+                <Link to="/" className="text-slate-500 hover:text-[#00a896] transition-colors">{locale === 'es' ? 'Inicio' : locale === 'fr' ? 'Accueil' : 'Home'}</Link>
+                <span>/</span>
+                <Link to="/" className="text-slate-500 hover:text-[#00a896] transition-colors">{locale === 'es' ? 'Mapa Mundial' : locale === 'fr' ? 'Carte du monde' : 'World Map'}</Link>
+                {continentId && (
+                    <>
+                        <span>/</span>
+                        <Link to={`/select-country?continent=${continentId}`} className="text-slate-500 hover:text-[#00a896] transition-colors">{continentName}</Link>
+                    </>
+                )}
+                <span>/</span>
+                <span className="text-slate-400 font-medium">{country.nativeName || country.name}</span>
+            </nav>
+
             {/* ===== HERO (TL background style) ===== */}
+            <div id="hero">
             <TLBackground className="min-h-screen pt-20 pb-0 scroll-mt-20">
                 <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-10">
                     <FlagIntro country={country} />
@@ -417,6 +467,27 @@ export default function CountryPage() {
                     </div>
                 </div>
             </TLBackground>
+            </div>
+
+            {/* ===== PROOF STRIP (Section 11 CRO) ===== */}
+            <section className="proof-strip flex flex-col sm:flex-row justify-center items-center gap-8 sm:gap-12 py-8 px-4 sm:px-6 border-t border-white/5 border-b border-white/5">
+                <div className="proof-item text-center">
+                    <strong className="block text-2xl sm:text-3xl font-extrabold text-[#00a896]">50+</strong>
+                    <span className="text-xs sm:text-sm text-slate-500 mt-1 block">{locale === 'es' ? 'Años de Innovación' : locale === 'fr' ? "Années d'innovation" : 'Years of Innovation'}</span>
+                </div>
+                <div className="proof-item text-center">
+                    <strong className="block text-2xl sm:text-3xl font-extrabold text-[#00a896]">23+</strong>
+                    <span className="text-xs sm:text-sm text-slate-500 mt-1 block">{locale === 'es' ? 'Países' : locale === 'fr' ? 'Pays' : 'Countries'}</span>
+                </div>
+                <div className="proof-item text-center">
+                    <strong className="block text-2xl sm:text-3xl font-extrabold text-[#00a896]">Millions</strong>
+                    <span className="text-xs sm:text-sm text-slate-500 mt-1 block">{locale === 'es' ? 'Servidos en el Mundo' : locale === 'fr' ? 'Servis dans le monde' : 'Served Worldwide'}</span>
+                </div>
+                <div className="proof-item text-center">
+                    <strong className="block text-2xl sm:text-3xl font-extrabold text-[#00a896]">8-Level</strong>
+                    <span className="text-xs sm:text-sm text-slate-500 mt-1 block">{locale === 'es' ? 'Sistema de Ingresos' : locale === 'fr' ? "Système de revenus" : 'Income System'}</span>
+                </div>
+            </section>
 
             {/* ===== PRODUCTS SECTION ===== */}
             <ProductSection productIds={['emguarde', 'k8']} country={country} variant="country" />
@@ -478,8 +549,8 @@ export default function CountryPage() {
                     <div className="flex flex-col gap-4">
                         <button
                             type="button"
-                            onClick={() => openGatedPDF('https://www.enagic.com/pdf/1095/Compensation_Plan_Guide.pdf', 'Compensation Plan')}
-                            className="self-center rounded-xl border border-cyan-500/40 px-4 py-2 text-sm font-medium text-cyan-400 hover:bg-cyan-500/10 transition-colors"
+                            onClick={() => openPdfModal('https://www.enagic.com/pdf/1095/Compensation_Plan_Guide.pdf')}
+                            className="self-center rounded-xl border border-[rgba(201,168,76,0.5)] px-4 py-2 text-sm font-medium text-amber-300 hover:bg-amber-500/10 transition-colors"
                         >
                             {locale === 'es' ? 'Descargar Plan de Compensación (PDF)' : locale === 'fr' ? 'Télécharger le Plan de Compensation (PDF)' : 'Download Compensation Plan (PDF)'}
                         </button>
@@ -544,6 +615,18 @@ export default function CountryPage() {
                         <h2 className="text-3xl md:text-4xl font-bold text-white font-display">{c.testimonialsLabel}</h2>
                     </motion.div>
                     <TestimonialsSplit locale={locale} />
+                    <div className="ig-follow-strip flex justify-center gap-4 mt-8 flex-wrap">
+                        <a href="https://www.instagram.com/truelegacyworld/" target="_blank" rel="noopener noreferrer" className="ig-follow-btn inline-flex items-center gap-2.5 text-white py-3 px-6 rounded-full font-bold text-sm no-underline transition-all hover:-translate-y-0.5" style={{ background: 'linear-gradient(135deg, #833ab4, #fd1d1d, #fcb045)', boxShadow: '0 4px 20px rgba(131,58,180,0.3)' }}>
+                            <IconInstagram size={18} />
+                            Follow @truelegacyworld
+                        </a>
+                        {['colombia', 'brazil', 'mexico', 'paraguay'].includes(country.slug) && (
+                            <a href="https://www.instagram.com/truelegacylatam/" target="_blank" rel="noopener noreferrer" className="ig-follow-btn ig-latam inline-flex items-center gap-2.5 text-white py-3 px-6 rounded-full font-bold text-sm no-underline transition-all hover:-translate-y-0.5" style={{ background: 'linear-gradient(135deg, #833ab4, #fd1d1d, #fcb045)', boxShadow: '0 4px 20px rgba(131,58,180,0.3)' }}>
+                                <IconInstagram size={18} />
+                                Follow @truelegacylatam
+                            </a>
+                        )}
+                    </div>
                 </div>
             </section>
 
@@ -634,6 +717,31 @@ export default function CountryPage() {
             />
 
             <Footer />
+
+            {/* ===== STICKY CTA BAR (Section 11 CRO) ===== */}
+            <div
+                id="sticky-cta"
+                className="sticky-cta-bar fixed bottom-0 left-0 right-0 z-[999] flex items-center justify-between gap-4 px-4 sm:px-6 py-3.5 -translate-y-full transition-transform duration-300"
+                style={{
+                    background: 'linear-gradient(90deg, #020d16 0%, #041824 100%)',
+                    borderTop: '1px solid rgba(0,168,150,0.3)',
+                    backdropFilter: 'blur(10px)',
+                }}
+            >
+                <p className="sticky-cta-text text-sm text-slate-400 m-0 font-medium">
+                    {locale === 'es' ? '¿Listo para construir tu True Legacy?' : locale === 'fr' ? 'Prêt à construire votre True Legacy ?' : 'Ready to build your True Legacy?'}
+                </p>
+                <a
+                    href={jotformUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={() => trackEvent('join_click', { location: 'sticky_cta', countrySlug: country.slug, locale })}
+                    className="sticky-cta-btn rounded-lg px-5 py-2.5 text-sm font-bold text-white whitespace-nowrap transition-colors"
+                    style={{ background: '#00a896' }}
+                >
+                    {locale === 'es' ? 'Únete al Equipo →' : locale === 'fr' ? "Rejoindre l'Équipe →" : 'Join the Team →'}
+                </a>
+            </div>
         </div>
     )
 }

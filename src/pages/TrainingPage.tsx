@@ -57,15 +57,25 @@ export default function TrainingPage() {
   const [activeModule, setActiveModule] = useState(MODULES[0].id)
 
   useEffect(() => {
-    if (typeof window === 'undefined' || !window.netlifyIdentity) return
+    if (typeof window === 'undefined') return
+    const leadCaptured = localStorage.getItem('tl_pdf_access')
+    if (leadCaptured) {
+      setIsAuthed(true)
+      return
+    }
     const identity = window.netlifyIdentity
+    if (!identity) {
+      navigate('/login', { replace: true, state: { from: { pathname: '/training' } } })
+      return
+    }
 
     const checkUser = () => {
       const user = identity.currentUser()
-      if (!user) {
-        navigate('/login', { replace: true, state: { from: { pathname: '/training' } } })
-      } else {
+      const leadCaptured = typeof localStorage !== 'undefined' && localStorage.getItem('tl_pdf_access')
+      if (user || leadCaptured) {
         setIsAuthed(true)
+      } else {
+        navigate('/login', { replace: true, state: { from: { pathname: '/training' } } })
       }
     }
 

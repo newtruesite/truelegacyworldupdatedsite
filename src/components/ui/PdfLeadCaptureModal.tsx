@@ -62,10 +62,9 @@ export function PdfLeadCaptureModal({ isOpen, onClose, pdfUrl, productPreset, co
     if (!form.fullName.trim()) next.fullName = t.required
     if (!form.email.trim()) next.email = t.required
     else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) next.email = isSpanish ? 'Correo no válido' : 'Invalid email'
-    if (!form.country) next.country = t.required
     setErrors(next)
     return Object.keys(next).length === 0
-  }, [form.fullName, form.email, form.country, t, isSpanish])
+  }, [form.fullName, form.email, t, isSpanish])
 
   const handleSubmit = useCallback(
     async (e: React.FormEvent) => {
@@ -81,6 +80,8 @@ export function PdfLeadCaptureModal({ isOpen, onClose, pdfUrl, productPreset, co
       formData.append('phone', form.phone)
       formData.append('country', form.country)
       formData.append('product-interest', form.productInterest)
+      formData.append('pdf_requested', pdfUrl ? new URL(pdfUrl).pathname.split('/').pop() || 'Resource' : '')
+      formData.append('pdf_url', pdfUrl || '')
       if (form.botField) formData.append('bot-field', form.botField)
 
       try {
@@ -92,11 +93,17 @@ export function PdfLeadCaptureModal({ isOpen, onClose, pdfUrl, productPreset, co
           body: params.toString(),
         })
         if (!res.ok) throw new Error('Submit failed')
+        try {
+          localStorage.setItem('tl_pdf_access', JSON.stringify({ name: form.fullName, email: form.email, ts: Date.now() }))
+        } catch {
+          /* ignore */
+        }
         setSubmitted(true)
         setTimeout(() => {
           if (pdfUrl) window.open(pdfUrl, '_blank')
           setSubmitted(false)
           onClose()
+          window.location.href = '/training'
         }, 1500)
       } catch {
         setErrors({ email: isSpanish ? 'Error al enviar. Intenta de nuevo.' : 'Submit failed. Please try again.' })

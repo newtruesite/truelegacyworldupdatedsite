@@ -69,9 +69,7 @@ function AnimatedRoutes() {
           path="/training"
           element={
             <PageTransitionWrapper>
-              <ProtectedRoute>
-                <TrainingPage />
-              </ProtectedRoute>
+              <TrainingPage />
             </PageTransitionWrapper>
           }
         />
