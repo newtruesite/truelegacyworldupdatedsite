@@ -42,6 +42,44 @@
   <!-- Preconnect for performance -->
   <link rel="preconnect" href="https://flagcdn.com" />
   <link rel="dns-prefetch" href="https://cdn.jsdelivr.net" />
+
+  <!-- Hard language defaults by country slug (runs before React) -->
+  <script>
+    (function () {
+      try {
+        var LANG_MAP = {
+          colombia: 'es',
+          mexico: 'es',
+          paraguay: 'es',
+          brazil: 'es',
+          morocco: 'fr',
+          usa: 'en',
+          canada: 'en',
+          nigeria: 'en',
+          india: 'en',
+          uae: 'en',
+          malaysia: 'en'
+        };
+
+        var path = window.location.pathname.replace(/\/+$/, '');
+        var parts = path.split('/');
+        var slug = parts[1] || '';
+        var lang = LANG_MAP[slug];
+
+        if (lang) {
+          window.__PAGE_LANG__ = lang;
+          document.documentElement.lang = lang;
+          document.documentElement.setAttribute('data-lang', lang);
+          if (!window.localStorage.getItem('tl_lang')) {
+            window.localStorage.setItem('tl_lang', lang);
+          }
+        }
+      } catch (e) {
+        // Fail silently — never block page load
+      }
+    })();
+  </script>
+
   <!-- Netlify Identity -->
   <script src="https://identity.netlify.com/v1/netlify-identity-widget.js" defer></script>
   <!-- jsVectorMap for interactive world map -->

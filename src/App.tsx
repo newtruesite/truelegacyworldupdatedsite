@@ -39,6 +39,42 @@ function ScrollToTop() {
   return null
 }
 
+function LanguageReset() {
+  const location = useLocation()
+
+  useEffect(() => {
+    if (typeof window === 'undefined' || typeof document === 'undefined') return
+
+    const path = location.pathname.replace(/\/+$/, '')
+    const parts = path.split('/')
+    const slug = parts[1] || ''
+
+    const LANG_MAP: Record<string, 'en' | 'es' | 'fr'> = {
+      colombia: 'es',
+      mexico: 'es',
+      paraguay: 'es',
+      brazil: 'es',
+      morocco: 'fr',
+      usa: 'en',
+      canada: 'en',
+      nigeria: 'en',
+      india: 'en',
+      uae: 'en',
+      malaysia: 'en',
+    }
+
+    const pageLang = LANG_MAP[slug]
+    if (pageLang) {
+      window.localStorage.setItem('tl_lang', pageLang)
+      ;(window as any).__PAGE_LANG__ = pageLang
+      document.documentElement.lang = pageLang
+      document.documentElement.setAttribute('data-lang', pageLang)
+    }
+  }, [location.pathname])
+
+  return null
+}
+
 function AnimatedRoutes() {
   const location = useLocation()
 
@@ -229,6 +265,7 @@ export default function App() {
 
   return (
     <BrowserRouter>
+      <LanguageReset />
       <LocaleProvider>
         <PdfLeadCaptureProvider>
           <AnimatedRoutes />
