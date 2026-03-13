@@ -49,7 +49,8 @@ export function ProductSection({ productIds, country, variant = 'country' }: Pro
         ? 'Parler à un distributeur'
         : 'Talk to a distributor'
 
-  const jotformUrl = country?.jotformUrl
+  /** Enagic intro URL for purchase inquiries (NOT JotForm). */
+  const enagicIntroBase = 'https://information.enagic.com/en/introduction?company_id=2&h=65c8bc2eba9f21e83eb4b6aae8ae3fd4&enroller_id=37000004828&sponsor_id=37000004829&representative_id=37000004828&line_rank=0&product_id=1016'
 
   return (
     <section className={variant === 'home' ? 'py-20' : 'py-20'} style={{ background: variant === 'home' ? '#060b1e' : '#070c1a' }}>
@@ -123,12 +124,12 @@ export function ProductSection({ productIds, country, variant = 'country' }: Pro
                       {pCopy?.downloadGuide}
                     </a>
                   )}
-                  {jotformUrl && (
+                  {(product.enagicProductUrl || enagicIntroBase) && (
                     <a
-                      href={jotformUrl}
+                      href={product.enagicProductUrl || enagicIntroBase}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1.5 rounded-2xl bg-yellow-500 text-black px-4 py-2 text-xs font-bold hover:bg-yellow-400 transition-all"
+                      className="inline-flex items-center gap-1.5 rounded-2xl border border-white/20 bg-transparent px-4 py-2 text-xs font-semibold text-white hover:bg-white/10 transition-all"
                     >
                       {contactLabel}
                     </a>
