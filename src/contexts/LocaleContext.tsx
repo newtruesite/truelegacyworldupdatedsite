@@ -2,13 +2,13 @@ import { createContext, useContext, useMemo, useState, useCallback, useEffect } 
 import { useLocation } from 'react-router-dom'
 import { COUNTRIES } from '@/lib/countries'
 
-const STORAGE_KEY = 'truelegacy-locale'
+const STORAGE_KEY = 'tl_lang'
 type Locale = 'en' | 'es' | 'fr'
 
 function getStored(): Locale | null {
     if (typeof window === 'undefined') return null
-    const v = localStorage.getItem(STORAGE_KEY)
-    if (v === 'en' || v === 'es' || v === 'fr') return v
+    const raw = localStorage.getItem(STORAGE_KEY) ?? localStorage.getItem('truelegacy-locale')
+    if (raw === 'en' || raw === 'es' || raw === 'fr') return raw
     return null
 }
 
@@ -38,6 +38,25 @@ export function LocaleProvider({ children }: { children: React.ReactNode }) {
     const [override, setOverrideState] = useState<Locale | null>(getStored)
 
     useEffect(() => {
+        if (typeof window === 'undefined') {
+            setOverrideState(getStored())
+            return
+        }
+
+        const first = pathname.slice(1).split('/')[0]
+        const isCountryRoute = COUNTRY_SLUGS.has(first)
+        const thisCountrySlug = isCountryRoute ? first : ''
+        const lastCountry = window.sessionStorage.getItem('tl_last_country') || ''
+
+        // If navigating between different country pages, clear stored language
+        if (thisCountrySlug && lastCountry && thisCountrySlug !== lastCountry) {
+            window.localStorage.removeItem(STORAGE_KEY)
+        }
+
+        if (thisCountrySlug) {
+            window.sessionStorage.setItem('tl_last_country', thisCountrySlug)
+        }
+
         const stored = getStored()
         setOverrideState(stored)
     }, [pathname])
