@@ -21,6 +21,17 @@ export function AuroraBackground({
     const [mouse, setMouse] = useState<MousePosition>({ x: 50, y: 50 })
 
     useEffect(() => {
+        if (typeof window === 'undefined') return
+
+        // Disable cursor-follow behavior on touch / coarse pointer devices
+        const isCoarsePointer =
+            (window.matchMedia && window.matchMedia('(pointer: coarse)').matches) ||
+            'ontouchstart' in window
+
+        if (isCoarsePointer) {
+            return
+        }
+
         const handleMouseMove = (e: MouseEvent) => {
             if (!containerRef.current) return
             const rect = containerRef.current.getBoundingClientRect()

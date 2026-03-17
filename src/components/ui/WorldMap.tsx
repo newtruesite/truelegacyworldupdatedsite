@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useLocaleContext } from '@/contexts/LocaleContext'
+import TrueLegacyLogo from '@/components/ui/TrueLegacyLogo'
 
 declare global {
   interface Window {
@@ -9,10 +10,10 @@ declare global {
 }
 
 const CONTINENTS = [
-  { id: 'north-america', nameEn: 'N. America', nameEs: 'Norteamérica', nameFr: 'Amérique du Nord', lat: 46.5, lng: -96.5 },
-  { id: 'south-america', nameEn: 'S. America / LATAM', nameEs: 'Sudamérica / LATAM', nameFr: 'Amérique latine', lat: -12.0, lng: -54.0 },
-  { id: 'africa', nameEn: 'Africa', nameEs: 'África', nameFr: 'Afrique', lat: 6.5, lng: 19.5 },
-  { id: 'asia', nameEn: 'Asia', nameEs: 'Asia', nameFr: 'Asie', lat: 32.0, lng: 96.0 },
+  { id: 'north-america', nameEn: 'N. America', nameEs: 'Norteamérica', nameFr: 'Amérique du Nord', namePt: 'N. América', lat: 46.5, lng: -96.5 },
+  { id: 'south-america', nameEn: 'S. America / LATAM', nameEs: 'Sudamérica / LATAM', nameFr: 'Amérique latine', namePt: 'América do Sul / LATAM', lat: -12.0, lng: -58.0 },
+  { id: 'africa', nameEn: 'Africa', nameEs: 'África', nameFr: 'Afrique', namePt: 'África', lat: 6.5, lng: 12.0 },
+  { id: 'asia', nameEn: 'Asia', nameEs: 'Asia', nameFr: 'Asie', namePt: 'Ásia', lat: 48.0, lng: 88.0 },
 ]
 
 function latLngToPercent(lat: number, lng: number) {
@@ -85,22 +86,17 @@ export function WorldMap() {
     setTimeout(() => {
       const wrapper = document.getElementById('world-map')
       if (wrapper) {
+        wrapper.style.touchAction = 'pan-y'
+        
         wrapper.querySelectorAll('.jvm-tooltip, text, .jvm-marker-label').forEach((el) => el.remove())
         wrapper.querySelectorAll('path').forEach((p) => {
           ;(p as SVGElement).style.pointerEvents = 'none'
           ;(p as SVGElement).style.cursor = 'default'
         })
-      }
-      if (typeof console !== 'undefined' && console.log) {
-        console.log('Pin positions:')
-        CONTINENTS.forEach((c) => {
-          const pct = latLngToPercent(c.lat, c.lng)
-          console.log(c.nameEn, '→ x:', (pct.x * 100).toFixed(1) + '%', 'y:', (pct.y * 100).toFixed(1) + '%')
-        })
-        const svg = document.querySelector('#world-map svg')
+        
+        const svg = wrapper.querySelector('svg')
         if (svg) {
-          const vb = svg.getAttribute('viewBox')
-          if (vb) console.log('SVG viewBox:', vb)
+          svg.style.touchAction = 'pan-y'
         }
       }
       setMapReady(true)
@@ -118,6 +114,7 @@ export function WorldMap() {
   const getContinentName = (c: (typeof CONTINENTS)[0]) => {
     if (locale === 'es') return c.nameEs
     if (locale === 'fr') return c.nameFr
+    if (locale === 'pt') return (c as { namePt?: string }).namePt ?? c.nameEs
     return c.nameEn
   }
 
@@ -131,15 +128,35 @@ export function WorldMap() {
     navigate(`/select-country?continent=${continentId}`)
   }
 
+  /** True Legacy World logo — top of map, matches Navbar/Footer, subtle shadow for contrast */
+  const MapLogo = () => (
+    <div
+      className="map-logo-overlay"
+      style={{
+        position: 'absolute',
+        top: 12,
+        left: '50%',
+        transform: 'translateX(-50%)',
+        pointerEvents: 'none',
+        zIndex: 50,
+        filter: 'drop-shadow(0 1px 2px rgba(0,0,0,0.4))',
+      }}
+      aria-hidden
+    >
+      <TrueLegacyLogo variant="mapOverlay" />
+    </div>
+  )
+
   return (
-    <div className="map-section w-full">
-      <div id="map-wrapper" className="map-wrapper relative w-full flex items-center justify-center" style={{ position: 'relative' }}>
+    <div className="map-section w-full" style={{ touchAction: 'pan-y' }}>
+      <div id="map-wrapper" className="map-wrapper relative w-full flex items-center justify-center" style={{ position: 'relative', touchAction: 'pan-y' }}>
         <div
           ref={mapContainerRef}
           id="world-map"
           className="w-full rounded-2xl overflow-hidden"
-          style={{ width: '100%', height: '460px' }}
+          style={{ width: '100%', height: '460px', touchAction: 'pan-y' }}
         />
+        <MapLogo />
 
         {mapReady && (
           <div

@@ -1,118 +1,80 @@
+import { useEffect } from 'react'
+import { Navigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { PDF_DOCUMENTS, type PdfCategory } from '@/lib/pdfs'
+import { Link } from 'react-router-dom'
 import { useLocaleContext } from '@/contexts/LocaleContext'
-import { t } from '@/lib/translations'
-import { trackEvent } from '@/lib/analytics'
-import { usePdfLeadCapture } from '@/contexts/PdfLeadCaptureContext'
-
-const CATEGORY_ORDER: PdfCategory[] = ['research', 'experts', 'home', 'product']
-
-const CATEGORY_TITLE_KEY: Record<PdfCategory, keyof (typeof t)['en']['pdfLibrary']> = {
-  research: 'researchSection',
-  experts: 'expertsSection',
-  home: 'homeSection',
-  product: 'productSection',
-}
+import { Navbar } from '@/components/layout/Navbar'
+import { Footer } from '@/components/layout/Footer'
 
 export default function PdfLibraryPage() {
   const { locale } = useLocaleContext()
-  const copy = t[locale].pdfLibrary
-  const { openModal } = usePdfLeadCapture()
 
-  const grouped = CATEGORY_ORDER.map((category) => ({
-    category,
-    title: copy[CATEGORY_TITLE_KEY[category]],
-    items: PDF_DOCUMENTS.filter((doc) => doc.category === category),
-  })).filter((group) => group.items.length > 0)
+  // Redirect after a brief moment to show the message
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      window.location.href = '/training#pdf-guides'
+    }, 3000)
+    return () => clearTimeout(timer)
+  }, [])
 
   return (
-    <div className="min-h-screen flex flex-col" style={{ background: '#050b18' }}>
-      <main className="flex-1">
-        <section className="relative py-20 md:py-24 overflow-hidden">
-          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(56,189,248,0.2)_0,transparent_55%),radial-gradient(circle_at_bottom,rgba(59,130,246,0.25)_0,transparent_60%)]" />
-          <div className="relative mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+    <div className="flex flex-col" style={{ background: '#050b18', minHeight: '100dvh' }}>
+      <Navbar />
+      <main className="flex-1 flex items-center justify-center">
+        <section className="relative py-20 md:py-24">
+          <div className="relative mx-auto max-w-2xl px-4 sm:px-6 lg:px-8 text-center">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4 }}
-              className="text-center max-w-3xl mx-auto mb-12"
+              transition={{ duration: 0.6 }}
+              className="glass rounded-2xl border border-cyan-500/25 p-8 md:p-12"
+              style={{ background: 'linear-gradient(135deg, rgba(6,182,212,0.05), rgba(15,23,42,0.8))' }}
             >
-              <p className="text-xs font-semibold uppercase tracking-[0.35em] text-cyan-300 mb-3">
-                TRUE LEGACY WORLD
-              </p>
-              <h1 className="text-3xl md:text-4xl lg:text-5xl font-display font-bold text-white mb-4">
-                {copy.title}
+              <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-cyan-500/20 text-cyan-400 mb-6">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                  <polyline points="14,2 14,8 20,8" />
+                  <line x1="16" y1="13" x2="8" y2="13" />
+                  <line x1="16" y1="17" x2="8" y2="17" />
+                  <polyline points="10,9 9,9 8,9" />
+                </svg>
+              </div>
+              <h1 className="text-2xl md:text-3xl font-bold text-white mb-4">
+                {locale === 'es' ? 'Biblioteca Movida' : 
+                 locale === 'fr' ? 'Bibliothèque Déplacée' :
+                 locale === 'pt' ? 'Biblioteca Movida' : 
+                 'Library Moved'}
               </h1>
-              <p className="text-slate-300 text-sm md:text-base leading-relaxed">{copy.intro}</p>
+              <p className="text-slate-300 text-base leading-relaxed mb-8">
+                {locale === 'es' ? 'Nuestra biblioteca de PDFs ahora está integrada en la página de entrenamiento para una mejor experiencia. Serás redirigido automáticamente...' :
+                 locale === 'fr' ? 'Notre bibliothèque PDF est maintenant intégrée dans la page de formation pour une meilleure expérience. Vous serez redirigé automatiquement...' :
+                 locale === 'pt' ? 'Nossa biblioteca de PDFs agora está integrada na página de treinamento para uma melhor experiência. Você será redirecionado automaticamente...' :
+                 'Our PDF library is now integrated into the training page for a better experience. You\'ll be redirected automatically...'}
+              </p>
+              <Link
+                to="/training#pdf-guides"
+                className="inline-flex items-center justify-center min-h-[44px] px-6 py-3 rounded-md font-semibold text-white transition-all hover:scale-[1.02]"
+                style={{
+                  background: 'linear-gradient(135deg, #1B5A8C, #1e88e5)',
+                  boxShadow: '0 2px 8px rgba(27, 90, 140, 0.2)',
+                }}
+              >
+                {locale === 'es' ? 'Ir a Entrenamiento →' :
+                 locale === 'fr' ? 'Aller à la Formation →' :
+                 locale === 'pt' ? 'Ir para Treinamento →' :
+                 'Go to Training →'}
+              </Link>
+              <p className="mt-4 text-slate-400 text-sm">
+                {locale === 'es' ? 'Redirigiendo en 3 segundos...' :
+                 locale === 'fr' ? 'Redirection dans 3 secondes...' :
+                 locale === 'pt' ? 'Redirecionando em 3 segundos...' :
+                 'Redirecting in 3 seconds...'}
+              </p>
             </motion.div>
-
-            <div className="space-y-10">
-              {grouped.map((group, groupIndex) => (
-                <motion.section
-                  key={group.category}
-                  initial={{ opacity: 0, y: 24 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.4, delay: 0.1 + groupIndex * 0.05 }}
-                  className="relative"
-                >
-                  <div className="mb-4 flex items-center gap-3">
-                    <div className="h-px flex-1 bg-gradient-to-r from-transparent via-cyan-500/60 to-transparent" />
-                    <h2 className="text-sm md:text-base font-semibold uppercase tracking-[0.3em] text-slate-300">
-                      {group.title}
-                    </h2>
-                    <div className="h-px flex-1 bg-gradient-to-r from-transparent via-cyan-500/60 to-transparent" />
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
-                    {group.items.map((doc, index) => (
-                      <motion.article
-                        key={doc.id}
-                        initial={{ opacity: 0, y: 18 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 0.35, delay: 0.05 + index * 0.04 }}
-                        className="relative overflow-hidden rounded-2xl border border-white/8 bg-gradient-to-br from-slate-900/80 via-slate-900/60 to-slate-950/80 shadow-xl"
-                      >
-                        <div className="absolute inset-0 opacity-60 mix-blend-screen bg-[radial-gradient(circle_at_top_left,rgba(56,189,248,0.25)_0,transparent_55%),radial-gradient(circle_at_bottom_right,rgba(251,191,36,0.35)_0,transparent_60%)]" />
-                        <div className="relative p-6 md:p-7 flex flex-col gap-3">
-                          <h3 className="text-base md:text-lg font-semibold text-white">{doc.title}</h3>
-                          <p className="text-xs text-slate-300/90">
-                            {group.category === 'research' &&
-                              'Peer-referenced information to help you understand why Kangen Water® is taken seriously by health professionals.'}
-                            {group.category === 'experts' &&
-                              'Hear directly from doctors, scientists, and nutritionists on how they view Kangen Water®.'}
-                            {group.category === 'home' &&
-                              'Practical guides for creating a safer, lower-chemical home using Enagic water.'}
-                            {group.category === 'product' &&
-                              'Official Enagic product literature so you can confidently present the technology.'}
-                          </p>
-                          <div className="mt-2">
-                            <button
-                              type="button"
-                              onClick={() => {
-                                trackEvent('pdf_open', {
-                                  id: doc.id,
-                                  category: group.category,
-                                  path: doc.path,
-                                  locale,
-                                })
-                                openModal(doc.path)
-                              }}
-                              className="inline-flex items-center justify-center rounded-full bg-cyan-500 px-4 py-2 text-xs font-semibold text-slate-950 shadow-lg shadow-cyan-500/40 hover:bg-cyan-400 transition-colors"
-                            >
-                              {copy.openPdf}
-                            </button>
-                          </div>
-                        </div>
-                      </motion.article>
-                    ))}
-                  </div>
-                </motion.section>
-              ))}
-            </div>
           </div>
         </section>
       </main>
+      <Footer />
     </div>
   )
 }

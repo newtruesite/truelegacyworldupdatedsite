@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion'
+import { Link, useParams } from 'react-router-dom'
 import { Navbar } from '@/components/layout/Navbar'
 import { Footer } from '@/components/layout/Footer'
 import { TLBackground } from '@/components/ui/TLBackground'
@@ -8,7 +9,7 @@ import { trackEvent } from '@/lib/analytics'
 
 const CATEGORY_ORDER: ProductCategory[] = ['ionizer', 'shower', 'supplement', 'meat', 'air', 'accessory']
 
-function getCategoryLabel(category: ProductCategory, locale: 'en' | 'es' | 'fr'): string {
+function getCategoryLabel(category: ProductCategory, locale: 'en' | 'es' | 'fr' | 'pt'): string {
   if (locale === 'es') {
     switch (category) {
       case 'ionizer':
@@ -45,6 +46,24 @@ function getCategoryLabel(category: ProductCategory, locale: 'en' | 'es' | 'fr')
         return 'Produits'
     }
   }
+  if (locale === 'pt') {
+    switch (category) {
+      case 'ionizer':
+        return 'Ionizadores Kangen Water®'
+      case 'shower':
+        return 'Chuveiro e Spa em Casa'
+      case 'supplement':
+        return 'Suplementos Kangen Ukon®'
+      case 'meat':
+        return 'Kangen Beef Set'
+      case 'air':
+        return 'Purificação do Ar'
+      case 'accessory':
+        return 'Proteção e Acessórios'
+      default:
+        return 'Produtos'
+    }
+  }
 
   switch (category) {
     case 'ionizer':
@@ -65,7 +84,9 @@ function getCategoryLabel(category: ProductCategory, locale: 'en' | 'es' | 'fr')
 }
 
 export default function ProductsPage() {
+  const { countrySlug } = useParams<{ countrySlug?: string }>()
   const { locale } = useLocaleContext()
+  const trainingTo = countrySlug ? `/${countrySlug}/training` : '/training'
 
   const allProducts = Object.values(PRODUCTS)
 
@@ -74,34 +95,42 @@ export default function ProductsPage() {
       ? 'Todos los Productos Enagic que Representamos'
       : locale === 'fr'
         ? 'Tous les Produits Enagic que Nous Représentons'
-        : 'All Enagic Products We Represent'
+        : locale === 'pt'
+          ? 'Todos os Produtos Enagic que Representamos'
+          : 'All Enagic Products We Represent'
 
   const subtitle =
     locale === 'es'
       ? 'Explora cada máquina, suplemento y tecnología que utilizamos para construir True Health y True Wealth.'
       : locale === 'fr'
         ? "Découvrez chaque machine, complément et technologie que nous utilisons pour créer la vraie santé et la vraie richesse."
-        : 'Explore every machine, supplement and technology we use to build True Health and True Wealth.'
+        : locale === 'pt'
+          ? 'Explore cada máquina, suplemento e tecnologia que usamos para construir True Health e True Wealth.'
+          : 'Explore every machine, supplement and technology we use to build True Health and True Wealth.'
 
   const learnMoreLabel =
     locale === 'es'
       ? 'Ver detalles oficiales'
       : locale === 'fr'
         ? 'Voir les détails officiels'
-        : 'View official details'
+        : locale === 'pt'
+          ? 'Ver detalhes oficiais'
+          : 'View official details'
 
   const downloadGuideLabel =
     locale === 'es'
       ? 'Descargar guía'
       : locale === 'fr'
         ? 'Télécharger le guide'
-        : 'Download guide'
+        : locale === 'pt'
+          ? 'Baixar guia'
+          : 'Download guide'
 
   return (
-    <div className="min-h-screen flex flex-col overflow-x-hidden" style={{ background: '#060b1e' }}>
+    <div className="page-wrapper" style={{ background: '#060b1e' }}>
       <Navbar />
 
-      <main className="flex-grow">
+      <main className="content-wrapper">
         <TLBackground className="pt-28 pb-16">
           <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 text-center">
             <motion.p
@@ -132,6 +161,27 @@ export default function ProductsPage() {
           </div>
         </TLBackground>
 
+        {/* Dual package hero: K8 + emGuarde */}
+        <section className="py-8 px-4" style={{ background: 'linear-gradient(135deg, rgba(6,182,212,0.12) 0%, rgba(139,92,246,0.1) 100%)' }}>
+          <div className="mx-auto max-w-4xl rounded-2xl border border-cyan-500/30 bg-[#0a1628]/90 backdrop-blur p-6 md:p-8">
+            <p className="text-xs font-semibold uppercase tracking-wider text-cyan-300 mb-2">
+              {locale === 'es' ? 'Recomendado' : locale === 'fr' ? 'Recommandé' : locale === 'pt' ? 'Recomendado' : 'Recommended'}
+            </p>
+            <h2 className="text-2xl md:text-3xl font-bold text-white mb-3">
+              {locale === 'es' ? 'Sistema dual: Kangen K8 + emGuarde' : locale === 'fr' ? 'Pack dual : Kangen K8 + emGuarde' : locale === 'pt' ? 'Sistema dual: Kangen K8 + emGuarde' : 'Dual package: Kangen K8 + emGuarde'}
+            </h2>
+            <p className="text-slate-300 text-sm md:text-base mb-6 max-w-2xl">
+              {locale === 'es' ? 'La mejor agua alcalina en casa con el K8 y protección EMF 24/7 con emGuarde. El combo que más recomendamos para salud y negocio.' : locale === 'fr' ? "La meilleure eau alcaline à la maison avec le K8 et une protection EMF 24/7 avec emGuarde. Le combo que nous recommandons le plus." : locale === 'pt' ? 'A melhor água alcalina em casa com o K8 e proteção EMF 24/7 com emGuarde. O combo que mais recomendamos.' : 'Best-in-class alkaline water at home with the K8 and 24/7 EMF protection with emGuarde. The combo we recommend most for health and business.'}
+            </p>
+            <Link
+              to="/distributors"
+              className="inline-flex items-center gap-2 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-white font-semibold px-5 py-2.5 text-sm transition-colors"
+            >
+              {locale === 'es' ? 'Hablar con un distribuidor' : locale === 'fr' ? 'Parler à un distributeur' : locale === 'pt' ? 'Falar com um distribuidor' : 'Talk to a distributor'}
+            </Link>
+          </div>
+        </section>
+
         <section className="py-12 md:py-16" style={{ background: '#070c1a' }}>
           <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 space-y-12 md:space-y-16">
             {CATEGORY_ORDER.map((category) => {
@@ -144,10 +194,6 @@ export default function ProductsPage() {
                 <div key={category}>
                   <div className="flex items-center justify-between mb-6">
                     <h2 className="text-xl md:text-2xl font-bold text-white font-display">{categoryLabel}</h2>
-                    <span className="text-[11px] uppercase tracking-[0.25em] text-slate-500">
-                      {productsInCategory.length.toString().padStart(2, '0')}{' '}
-                      {locale === 'fr' ? 'produits' : locale === 'es' ? 'productos' : 'products'}
-                    </span>
                   </div>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
                     {productsInCategory.map((product) => {
@@ -159,13 +205,13 @@ export default function ProductsPage() {
                           whileInView={{ opacity: 1, y: 0 }}
                           viewport={{ once: true }}
                           transition={{ duration: 0.4 }}
-                          className="group block rounded-3xl border border-white/10 p-7 md:p-8 bg-[rgba(5,16,48,0.8)] backdrop-blur-xl hover:border-white/30 hover:-translate-y-1 transition-all"
+                          className="group block rounded-3xl border border-white/10 p-5 md:p-8 bg-[rgba(5,16,48,0.8)] backdrop-blur-xl hover:border-white/30 hover:-translate-y-1 transition-all"
                         >
-                          <div className="rounded-2xl overflow-hidden border-2 border-white/15 shadow-2xl shadow-black/50 mb-4 aspect-[4/3] bg-[#0a1628] relative flex items-center justify-center">
+                          <div className="rounded-2xl overflow-hidden border-2 border-white/5 shadow-2xl shadow-black/50 mb-4 aspect-[4/3] bg-gradient-to-b from-[#0a1628] to-[#050b14] relative flex items-center justify-center p-4">
                             <img
                               src={product.imageSrc}
                               alt={product.imageAlt}
-                              className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-500"
+                              className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-500 drop-shadow-2xl"
                               loading="lazy"
                               decoding="async"
                             />
@@ -180,6 +226,12 @@ export default function ProductsPage() {
                                 : 'Speak with your True Legacy leader to understand how this product fits into your health and income strategy.'}
                           </p>
                           <div className="flex flex-wrap gap-3">
+                            <Link
+                              to="/distributors"
+                              className="inline-flex items-center gap-1.5 rounded-2xl bg-cyan-500 hover:bg-cyan-400 px-4 py-2 text-xs font-semibold text-white transition-all min-h-[44px]"
+                            >
+                              {locale === 'es' ? 'Hablar con distribuidor' : locale === 'fr' ? 'Parler à un distributeur' : locale === 'pt' ? 'Falar com distribuidor' : 'Talk to distributor'}
+                            </Link>
                             {product.enagicProductUrl && (
                               <a
                                 href={product.enagicProductUrl}
@@ -191,28 +243,24 @@ export default function ProductsPage() {
                                     locale,
                                   })
                                 }
-                                className="inline-flex items-center gap-1.5 rounded-2xl border border-white/15 bg-white/5 px-4 py-2 text-xs font-semibold text-slate-100 hover:bg-white/10 transition-all"
+                                className="inline-flex items-center gap-1.5 rounded-2xl border border-white/15 bg-white/5 px-4 py-2 text-xs font-semibold text-slate-100 hover:bg-white/10 transition-all min-h-[44px]"
                               >
                                 {learnMoreLabel}
                               </a>
                             )}
-                            {product.pdfGuideUrl && (
-                              <a
-                                href={product.pdfGuideUrl}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                onClick={() =>
-                                  trackEvent('product_download_pdf', {
-                                    productId: id,
-                                    locale,
-                                    url: product.pdfGuideUrl,
-                                  })
-                                }
-                                className="inline-flex items-center gap-1.5 rounded-2xl border border-cyan-500/30 px-4 py-2 text-xs font-semibold text-cyan-300 hover:bg-cyan-500/10 transition-all"
-                              >
-                                {downloadGuideLabel}
-                              </a>
-                            )}
+                            <Link
+                              to={trainingTo}
+                              onClick={() =>
+                                trackEvent('product_download_pdf', {
+                                  productId: id,
+                                  locale,
+                                  url: trainingTo,
+                                })
+                              }
+                              className="inline-flex items-center gap-1.5 rounded-2xl border border-cyan-500/30 px-4 py-2 text-xs font-semibold text-cyan-300 hover:bg-cyan-500/10 transition-all min-h-[44px]"
+                            >
+                              {downloadGuideLabel}
+                            </Link>
                           </div>
                         </motion.article>
                       )

@@ -57,7 +57,7 @@ export interface Country {
     flagEmoji: string
     youtubeUrl: string
     youtubeId: string
-    locale: 'en' | 'es' | 'fr'
+    locale: 'en' | 'es' | 'fr' | 'pt'
     jotformUrl: string
     youtube: string
     instagram: string
@@ -201,8 +201,8 @@ export const COUNTRIES: Country[] = [
         nativeName: 'الإمارات العربية المتحدة',
         flag: '🇦🇪',
         flagEmoji: '🇦🇪',
-        youtubeUrl: 'https://youtube.com/@TrueLegacyWorld',
-        youtubeId: 'erTkubfkt9o',
+        youtubeUrl: 'https://youtu.be/z2SDWaSQ6mk',
+        youtubeId: 'z2SDWaSQ6mk',
         locale: 'en',
         jotformUrl: JOTFORM_EN,
         youtube: 'https://youtube.com/@TrueLegacyWorld',
@@ -217,8 +217,8 @@ export const COUNTRIES: Country[] = [
         nativeName: 'भारत',
         flag: '🇮🇳',
         flagEmoji: '🇮🇳',
-        youtubeUrl: 'https://youtube.com/@TrueLegacyWorld',
-        youtubeId: 'erTkubfkt9o',
+        youtubeUrl: 'https://youtu.be/O4uCeHhB8Us?si=ev8QSM59HASWSMdN',
+        youtubeId: 'O4uCeHhB8Us',
         locale: 'en',
         jotformUrl: JOTFORM_EN,
         youtube: 'https://youtube.com/@TrueLegacyWorld',

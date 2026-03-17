@@ -1,5 +1,7 @@
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import { Link, useNavigate, useSearchParams } from 'react-router-dom'
+import { Navbar } from '@/components/layout/Navbar'
+import { COUNTRIES, getFlagSrcSet } from '@/lib/countries'
 
 const CONTINENT_DATA: Record<
   string,
@@ -50,106 +52,114 @@ export default function SelectCountryPage() {
   const [params] = useSearchParams()
   const navigate = useNavigate()
   const continent = params.get('continent') || ''
+  const [failedFlagSlugs, setFailedFlagSlugs] = useState<Set<string>>(new Set())
 
-  const data = useMemo(() => CONTINENT_DATA[continent] ?? null, [continent])
+  const isInvalidContinent = continent && !CONTINENT_DATA[continent]
+  const isAllCountries = !continent || isInvalidContinent
 
-  if (!data) {
+  if (isInvalidContinent) {
     return (
-      <div className="min-h-screen flex items-center justify-center px-6" style={{ background: 'linear-gradient(160deg, #020d16 0%, #041824 60%, #021018 100%)' }}>
-        <div className="text-center">
-          <p className="text-slate-200 mb-4">Invalid continent selection.</p>
-          <Link to="/" className="inline-flex items-center rounded-lg px-4 py-2 text-sm font-semibold text-white border border-white/20 hover:bg-white/10">
-            Back to Map
-          </Link>
+      <div className="page-wrapper min-h-screen flex flex-col" style={{ background: 'linear-gradient(160deg, #020d16 0%, #041824 60%, #021018 100%)' }}>
+        <Navbar />
+        <div className="content-wrapper flex-1 flex items-center justify-center px-4 py-20">
+          <div className="text-center max-w-md w-full bg-white/5 border border-white/10 rounded-2xl p-6 md:p-8 backdrop-blur-sm shadow-2xl mx-auto">
+            <div className="text-5xl mb-4">🌍</div>
+            <h1 className="text-2xl md:text-3xl font-bold text-white mb-3 tracking-tight break-words">
+              Let's get you to the right region
+            </h1>
+            <p className="text-slate-400 mb-8 text-sm md:text-base leading-relaxed">
+              We couldn't find the region you're looking for. Please try selecting a region from the world map or view all available countries.
+            </p>
+            <div className="flex flex-col gap-3 justify-center">
+              <Link
+                to="/"
+                className="w-full inline-flex items-center justify-center rounded-xl px-5 py-3.5 text-sm font-semibold text-white bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 transition-all shadow-lg"
+              >
+                Back to World Map
+              </Link>
+              <Link
+                to="/select-country"
+                className="w-full inline-flex items-center justify-center rounded-xl px-5 py-3.5 text-sm font-semibold text-slate-300 border border-white/10 hover:text-white hover:bg-white/5 transition-all"
+              >
+                Browse all countries
+              </Link>
+            </div>
+          </div>
         </div>
       </div>
     )
   }
 
+  const displayData = useMemo(() => {
+    if (isAllCountries) {
+      return {
+        name: 'All Countries',
+        emoji: '🌍',
+        countries: COUNTRIES.map((c) => ({
+          slug: c.slug,
+          name: c.name,
+          flagEmoji: c.flagEmoji,
+        })),
+      }
+    }
+    
+    // Map the continent data to include the properties we need for rendering
+    const contData = CONTINENT_DATA[continent]
+    return {
+      name: contData.name,
+      emoji: contData.emoji,
+      countries: contData.countries.map((c) => {
+        // Find the full country object from COUNTRIES to get the flagEmoji
+        const fullCountry = COUNTRIES.find((country) => country.slug === c.slug)
+        return {
+          slug: c.slug,
+          name: fullCountry?.name || c.name,
+          flagEmoji: fullCountry?.flagEmoji || '🌍',
+        }
+      })
+    }
+  }, [continent, isAllCountries])
+
   return (
     <div
+      className="page-wrapper min-h-screen flex flex-col"
       style={{
-        minHeight: '100vh',
         background: 'linear-gradient(160deg, #020d16 0%, #041824 60%, #021018 100%)',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        padding: '48px 24px',
       }}
     >
-      <button
-        onClick={() => navigate('/')}
-        style={{
-          position: 'fixed',
-          top: '24px',
-          left: '24px',
-          background: 'rgba(255,255,255,0.06)',
-          border: '1px solid rgba(255,255,255,0.1)',
-          borderRadius: '10px',
-          color: '#ffffff',
-          padding: '10px 18px',
-          fontSize: '14px',
-          fontWeight: '600',
-          cursor: 'pointer',
-          display: 'flex',
-          alignItems: 'center',
-          gap: '8px',
-          backdropFilter: 'blur(10px)',
-          transition: 'background 0.2s',
-          zIndex: 10,
-        }}
-      >
-        ← Back to Map
-      </button>
+      <Navbar />
+      <div className="content-wrapper flex-1 flex flex-col items-center justify-center px-4 md:px-8 py-12 relative w-full">
+      <div className="w-full max-w-6xl mx-auto flex justify-start mb-4">
+        <button
+          onClick={() => navigate('/')}
+          className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-white/5 border border-white/10 rounded-xl backdrop-blur-md hover:bg-white/10 transition-colors"
+        >
+          ← Back to Map
+        </button>
+      </div>
 
-      <div style={{ textAlign: 'center', marginBottom: '56px' }}>
-        <div style={{ fontSize: '48px', marginBottom: '16px' }}>{data.emoji}</div>
-        <h1
-          style={{
-            fontSize: 'clamp(2rem, 6vw, 3.5rem)',
-            fontWeight: '800',
-            background: 'linear-gradient(135deg, #ffffff 0%, #90cce0 100%)',
-            WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent',
-            backgroundClip: 'text',
-            margin: '0 0 14px',
-            letterSpacing: '-0.5px',
-          }}
-        >
-          {data.name}
+      <div className="text-center mb-10 w-full max-w-2xl mx-auto px-2">
+        <div className="text-5xl md:text-6xl mb-4">{displayData.emoji}</div>
+        <h1 className="page-hero-title mb-4 gradient-text text-3xl md:text-5xl font-bold break-words leading-tight">
+          {displayData.name}
         </h1>
-        <p
-          style={{
-            fontSize: '17px',
-            color: '#5a8595',
-            maxWidth: '420px',
-            margin: '0 auto',
-            lineHeight: '1.6',
-          }}
-        >
+        <p className="text-slate-300 text-base md:text-lg leading-relaxed max-w-lg mx-auto">
           Select your country to explore products and join the True Legacy team near you
         </p>
       </div>
 
       <div
-        style={{
-          display: 'grid',
-          gridTemplateColumns: `repeat(${Math.min(data.countries.length, 3)}, 1fr)`,
-          gap: '20px',
-          width: '100%',
-          maxWidth: `${Math.min(data.countries.length, 3) * 220}px`,
-        }}
+        className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-5 w-full max-w-6xl mx-auto pb-12"
       >
-        {data.countries.map((country) => (
+        {displayData.countries.map((country) => (
           <button
-            key={country.code}
+            key={country.slug}
             onClick={() => {
               try {
                 sessionStorage.setItem('last_page', window.location.href)
                 sessionStorage.setItem('last_page_label', 'Select Region')
                 sessionStorage.setItem('last_continent_id', continent)
-                sessionStorage.setItem('last_continent_name', data.name)
+                sessionStorage.setItem('last_continent_name', displayData.name)
               } catch {
                 /* ignore */
               }
@@ -185,21 +195,13 @@ export default function SelectCountryPage() {
               if (cta) cta.style.color = '#4a7a8a'
             }}
           >
-            <img
-              src={`https://flagcdn.com/w160/${country.code}.png`}
-              srcSet={`https://flagcdn.com/w320/${country.code}.png 2x`}
-              alt={country.name}
-              loading="lazy"
-              style={{
-                width: '96px',
-                height: '64px',
-                objectFit: 'cover',
-                borderRadius: '8px',
-                border: '2px solid rgba(255,255,255,0.15)',
-                boxShadow: '0 4px 20px rgba(0,0,0,0.4)',
-                display: 'block',
-              }}
-            />
+            <span className="inline-flex overflow-hidden rounded border-2 border-white/15 bg-[#0a2060] shadow-xl" style={{ width: '96px', height: '64px' }}>
+              {failedFlagSlugs.has(country.slug) ? (
+                <span className="flex h-full w-full items-center justify-center text-3xl leading-none">{country.flagEmoji}</span>
+              ) : (
+                <img {...getFlagSrcSet(country.slug)} alt={country.name} className="h-full w-full object-cover" loading="lazy" onError={() => setFailedFlagSlugs((prev) => new Set(prev).add(country.slug))} />
+              )}
+            </span>
             <div>
               <div
                 style={{
@@ -228,6 +230,7 @@ export default function SelectCountryPage() {
             </div>
           </button>
         ))}
+      </div>
       </div>
     </div>
   )

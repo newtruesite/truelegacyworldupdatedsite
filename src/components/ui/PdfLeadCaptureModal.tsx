@@ -4,6 +4,18 @@ import { X } from 'lucide-react'
 import type { ProductInterest } from '@/contexts/PdfLeadCaptureContext'
 
 const FORM_NAME = 'pdf-lead-capture'
+const SUBMIT_COOLDOWN_MS = 30_000 // 30 seconds
+
+function sanitize(str: string): string {
+  return str.trim().replace(/<[^>]*>/g, '').slice(0, 200)
+}
+
+function canSubmit(): boolean {
+  if (typeof window === 'undefined') return true
+  const last = localStorage.getItem('tl_last_submit')
+  if (!last) return true
+  return Date.now() - parseInt(last, 10) > SUBMIT_COOLDOWN_MS
+}
 
 type Option = { value: string; label: string }
 
@@ -65,16 +77,25 @@ export function PdfLeadCaptureModal({ isOpen, onClose, pdfUrl, productPreset, co
   const handleSubmit = useCallback(
     async (e: React.FormEvent) => {
       e.preventDefault()
+      if (!canSubmit()) {
+        setErrors({ email: isSpanish ? 'Espere unos segundos antes de enviar de nuevo.' : 'Please wait before submitting again.' })
+        return
+      }
       if (!validate()) return
       setSubmitting(true)
       setErrors({})
 
+      const fullName = sanitize(form.fullName)
+      const email = sanitize(form.email)
+      const phone = sanitize(form.phone)
+      const country = sanitize(form.country)
+
       const formData = new FormData()
       formData.append('form-name', FORM_NAME)
-      formData.append('full-name', form.fullName)
-      formData.append('email', form.email)
-      formData.append('phone', form.phone)
-      formData.append('country', form.country)
+      formData.append('full-name', fullName)
+      formData.append('email', email)
+      formData.append('phone', phone)
+      formData.append('country', country)
       formData.append('pdf_requested', pdfUrl ? new URL(pdfUrl).pathname.split('/').pop() || 'Resource' : '')
       formData.append('pdf_url', pdfUrl || '')
       if (form.botField) formData.append('bot-field', form.botField)
@@ -89,7 +110,8 @@ export function PdfLeadCaptureModal({ isOpen, onClose, pdfUrl, productPreset, co
         })
         if (!res.ok) throw new Error('Submit failed')
         try {
-          localStorage.setItem('tl_pdf_access', JSON.stringify({ name: form.fullName, email: form.email, ts: Date.now() }))
+          localStorage.setItem('tl_last_submit', Date.now().toString())
+          localStorage.setItem('tl_pdf_access', JSON.stringify({ name: fullName, email, ts: Date.now() }))
         } catch {
           /* ignore */
         }

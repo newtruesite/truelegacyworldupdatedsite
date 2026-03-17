@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 496" fill="none">
+  <g fill="white">
+    <!-- TRUE LEGACY WORLD text in white -->
+    <text x="512" y="120" font-family="Arial, sans-serif" font-size="48" font-weight="bold" text-anchor="middle" fill="white">TRUE LEGACY</text>
+    <text x="512" y="180" font-family="Arial, sans-serif" font-size="36" font-weight="normal" text-anchor="middle" fill="white">WORLD</text>
+    
+    <!-- Simple world/globe icon -->
+    <circle cx="512" cy="300" r="80" stroke="white" stroke-width="3" fill="none"/>
+    <path d="M432 300 Q472 260 512 300 Q552 340 592 300" stroke="white" stroke-width="2" fill="none"/>
+    <path d="M432 300 Q472 340 512 300 Q552 260 592 300" stroke="white" stroke-width="2" fill="none"/>
+    <line x1="512" y1="220" x2="512" y2="380" stroke="white" stroke-width="2"/>
+    <line x1="432" y1="300" x2="592" y2="300" stroke="white" stroke-width="2"/>
+  </g>
+</svg>

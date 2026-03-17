@@ -16,6 +16,17 @@ export function TLBackground({ children, className, variant = 'dark' }: TLBackgr
     const [mouse, setMouse] = useState({ x: 30, y: 50 })
 
     useEffect(() => {
+        if (typeof window === 'undefined') return
+
+        // Disable cursor-follow behavior on touch / coarse pointer devices
+        const isCoarsePointer =
+            (window.matchMedia && window.matchMedia('(pointer: coarse)').matches) ||
+            'ontouchstart' in window
+
+        if (isCoarsePointer) {
+            return
+        }
+
         const handleMove = (e: MouseEvent) => {
             if (!containerRef.current) return
             const r = containerRef.current.getBoundingClientRect()
@@ -24,6 +35,7 @@ export function TLBackground({ children, className, variant = 'dark' }: TLBackgr
                 y: ((e.clientY - r.top) / r.height) * 100,
             })
         }
+
         window.addEventListener('mousemove', handleMove, { passive: true })
         return () => window.removeEventListener('mousemove', handleMove)
     }, [])

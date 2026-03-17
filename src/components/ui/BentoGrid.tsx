@@ -103,9 +103,9 @@ interface BentoItemProps {
 function BentoItem({ icon: Icon, title, description, color, bg, span = 'col-span-1' }: BentoItemProps) {
     return (
         <motion.div
-            whileHover={{ scale: 1.02, y: -2 }}
+            whileHover={{ y: -2 }}
             className={cn(
-                'glass rounded-2xl border border-white/10 p-6 group cursor-default transition-all duration-300 hover:border-white/20',
+                'glass rounded-2xl border border-white/10 border-t-2 border-t-[#F5A623] p-6 group cursor-default hover:border-white/20 hover:shadow-lg transition-all duration-150',
                 span
             )}
         >
@@ -132,7 +132,7 @@ export function BentoGrid() {
                 >
                     <div className="mb-3">
                         <span className="inline-block rounded-full border border-blue-500/30 bg-blue-500/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-widest text-blue-400">
-                            🌊 Kangen Water by Enagic
+                            Kangen Water by Enagic
                         </span>
                     </div>
                     <h2 className="text-3xl font-bold text-white sm:text-4xl mb-4">
@@ -169,7 +169,7 @@ export function BentoGrid() {
                 >
                     <div className="mb-3">
                         <span className="inline-block rounded-full border border-orange-500/30 bg-orange-500/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-widest text-orange-400">
-                            🛡️ emGuarde Technology
+                            emGuarde Technology
                         </span>
                     </div>
                     <h2 className="text-3xl font-bold text-white sm:text-4xl mb-4">

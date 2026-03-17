@@ -15,14 +15,17 @@ import K8Page from '@/pages/K8Page'
 import PdfLibraryPage from '@/pages/PdfLibraryPage'
 import ProductsPage from '@/pages/ProductsPage'
 import SelectCountryPage from '@/pages/SelectCountryPage'
+import EventsPage from '@/pages/EventsPage'
+import DistributorsPage from '@/pages/DistributorsPage'
 import { ProtectedRoute } from '@/components/auth/ProtectedRoute'
+import { LanguageReset } from '@/components/LanguageReset'
 
 function PageTransitionWrapper({ children }: { children: React.ReactNode }) {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -10 }}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
       transition={{ duration: 0.3 }}
     >
       {children}
@@ -36,42 +39,6 @@ function ScrollToTop() {
     window.scrollTo(0, 0)
     trackPageView(pathname)
   }, [pathname])
-  return null
-}
-
-function LanguageReset() {
-  const location = useLocation()
-
-  useEffect(() => {
-    if (typeof window === 'undefined' || typeof document === 'undefined') return
-
-    const path = location.pathname.replace(/\/+$/, '')
-    const parts = path.split('/')
-    const slug = parts[1] || ''
-
-    const LANG_MAP: Record<string, 'en' | 'es' | 'fr'> = {
-      colombia: 'es',
-      mexico: 'es',
-      paraguay: 'es',
-      brazil: 'es',
-      morocco: 'fr',
-      usa: 'en',
-      canada: 'en',
-      nigeria: 'en',
-      india: 'en',
-      uae: 'en',
-      malaysia: 'en',
-    }
-
-    const pageLang = LANG_MAP[slug]
-    if (pageLang) {
-      window.localStorage.setItem('tl_lang', pageLang)
-      ;(window as any).__PAGE_LANG__ = pageLang
-      document.documentElement.lang = pageLang
-      document.documentElement.setAttribute('data-lang', pageLang)
-    }
-  }, [location.pathname])
-
   return null
 }
 
@@ -126,10 +93,26 @@ function AnimatedRoutes() {
           }
         />
         <Route
+          path="/distributors"
+          element={
+            <PageTransitionWrapper>
+              <DistributorsPage />
+            </PageTransitionWrapper>
+          }
+        />
+        <Route
           path="/select-country"
           element={
             <PageTransitionWrapper>
               <SelectCountryPage />
+            </PageTransitionWrapper>
+          }
+        />
+        <Route
+          path="/events/:country"
+          element={
+            <PageTransitionWrapper>
+              <EventsPage />
             </PageTransitionWrapper>
           }
         />
@@ -164,6 +147,23 @@ function AnimatedRoutes() {
           element={
             <PageTransitionWrapper>
               <EmGuardePage />
+            </PageTransitionWrapper>
+          }
+        />
+        {/* Country-scoped training and products — keeps locale (LATAM/Morocco) */}
+        <Route
+          path="/:countrySlug/training"
+          element={
+            <PageTransitionWrapper>
+              <TrainingPage />
+            </PageTransitionWrapper>
+          }
+        />
+        <Route
+          path="/:countrySlug/products"
+          element={
+            <PageTransitionWrapper>
+              <ProductsPage />
             </PageTransitionWrapper>
           }
         />
@@ -213,25 +213,9 @@ export default function App() {
     }
   }, [])
 
-  // Global UX polish: navbar hide-on-scroll, smooth anchor scroll, product img error fallback
+  // Global UX: smooth anchor scroll, product img error fallback (navbar stays visible — V20)
   useEffect(() => {
     if (typeof window === 'undefined' || typeof document === 'undefined') return
-
-    const navbar = document.querySelector('nav, header, .navbar') as HTMLElement | null
-    let lastScrollY = window.scrollY
-
-    const handleScroll = () => {
-      if (!navbar) return
-      if (window.scrollY > lastScrollY && window.scrollY > 80) {
-        navbar.style.transform = 'translateY(-100%)'
-        navbar.style.transition = 'transform 0.3s ease'
-      } else {
-        navbar.style.transform = 'translateY(0)'
-      }
-      lastScrollY = window.scrollY
-    }
-
-    window.addEventListener('scroll', handleScroll)
 
     const anchorHandlers: Array<{ el: Element; handler: (e: Event) => void }> = []
     document.querySelectorAll('a[href^="#"]').forEach((a) => {
@@ -256,7 +240,6 @@ export default function App() {
     })
 
     return () => {
-      window.removeEventListener('scroll', handleScroll)
       anchorHandlers.forEach(({ el, handler }) => {
         el.removeEventListener('click', handler)
       })

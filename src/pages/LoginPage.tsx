@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
 import { useNavigate, useLocation, Link } from 'react-router-dom'
 import { getPendingPdf } from '@/lib/openGatedPdf'
+import { Navbar } from '@/components/layout/Navbar'
 
 export default function LoginPage() {
   const navigate = useNavigate()
@@ -47,7 +48,9 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4" style={{ background: '#060b1e' }}>
+    <div className="flex flex-col px-4" style={{ background: '#060b1e', minHeight: '100dvh' }}>
+      <Navbar />
+      <div className="flex-1 flex items-center justify-center py-8">
       <div className="max-w-md w-full rounded-2xl border border-white/10 bg-[#050b18]/95 px-6 py-8 shadow-2xl">
         <h1 className="text-xl font-semibold text-white mb-2 text-center">Member Login</h1>
         <p className="text-sm text-slate-400 mb-6 text-center">
@@ -78,6 +81,7 @@ export default function LoginPage() {
           </Link>
           .
         </p>
+      </div>
       </div>
     </div>
   )

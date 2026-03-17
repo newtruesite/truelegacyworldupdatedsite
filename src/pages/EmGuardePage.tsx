@@ -5,12 +5,10 @@ import { Shield, ExternalLink, Download, Play, CheckCircle, Zap, Battery, Globe 
 import { Navbar } from '@/components/layout/Navbar'
 import { Footer } from '@/components/layout/Footer'
 import { AuroraBackground } from '@/components/ui/AuroraBackground'
+import { YouTubeEmbed } from '@/components/ui/YouTubeEmbed'
 import { COUNTRIES } from '@/lib/countries'
 import { t } from '@/lib/translations'
 import { useLocaleContext } from '@/contexts/LocaleContext'
-import { usePdfLeadCapture } from '@/contexts/PdfLeadCaptureContext'
-
-const PDF_URL = 'https://www.truelegacyworld.com/_files/ugd/7b12be_ff7cba88b07d461890527e0d74fcea43.pdf'
 
 const FEATURES_EN = [
     { icon: Shield, text: '26 FT diameter EMF coverage' },
@@ -44,10 +42,9 @@ export default function EmGuardePage() {
     const FEATURES = isSpanish ? FEATURES_ES : FEATURES_EN
 
     const [heroImgError, setHeroImgError] = useState(false)
-    const { openModal: openPdfModal } = usePdfLeadCapture()
 
     return (
-        <div className="min-h-screen bg-[#070b16] overflow-x-hidden">
+        <div className="page-wrapper bg-[#070b16]">
             <Navbar />
 
             <AuroraBackground className="pt-28 pb-0">
@@ -63,13 +60,26 @@ export default function EmGuardePage() {
                         <span className="inline-block mb-4 rounded-full border border-purple-500/30 bg-purple-500/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-widest text-purple-400">
                             {copy.emguarde.badge}
                         </span>
-                        <h1 className="text-4xl md:text-6xl lg:text-7xl font-black text-white mb-6 leading-tight">
+                        <h1 className="page-hero-title mb-6">
                             {copy.emguarde.headline}<br />
                             <span className="gradient-text">{copy.emguarde.headlineAccent}</span>
                         </h1>
-                        <p className="mx-auto max-w-3xl text-lg md:text-xl text-slate-400 leading-relaxed">
+                        <p className="mx-auto max-w-3xl text-lg md:text-xl text-slate-400 leading-relaxed mb-8">
                             {copy.emguarde.sub}
                         </p>
+                        
+                        {/* VSL-style video embed */}
+                        <motion.div
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.6, delay: 0.3 }}
+                            className="max-w-4xl mx-auto mb-8"
+                        >
+                            <YouTubeEmbed 
+                                url="https://youtu.be/I8fFj7-FaPw?si=Jy98ry_y3WNR0QuA"
+                                title="emGuarde EMF Protection Technology"
+                            />
+                        </motion.div>
                     </motion.div>
 
                     {/* Product Visual + Features Grid */}
@@ -143,7 +153,7 @@ export default function EmGuardePage() {
                         <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
                             {EMF_STATS.map(({ pct, labelEn, labelEs }) => (
                                 <div key={pct} className="text-center p-6 rounded-2xl bg-white/5 border border-white/5">
-                                    <div className="text-3xl md:text-4xl font-black text-orange-400 mb-2">{pct}</div>
+                                    <div className="text-3xl md:text-4xl font-bold text-orange-400 mb-2">{pct}</div>
                                     <div className="text-sm text-slate-400">{isSpanish ? labelEs : labelEn}</div>
                                 </div>
                             ))}
@@ -170,7 +180,7 @@ export default function EmGuardePage() {
                             href="https://youtu.be/I8fFj7-FaPw?si=Jy98ry_y3WNR0QuA"
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="flex items-center justify-center gap-2 rounded-2xl bg-red-600/80 hover:bg-red-600 px-6 py-4 text-sm font-semibold text-white transition-all"
+                            className="flex items-center justify-center gap-2 rounded-2xl border border-transparent bg-red-600/80 hover:bg-red-600 px-6 py-4 text-sm font-semibold text-white transition-all"
                         >
                             <Play className="w-4 h-4" /> {copy.emguarde.watchVideo}
                         </a>
@@ -182,13 +192,12 @@ export default function EmGuardePage() {
                         >
                             <ExternalLink className="w-4 h-4" /> {copy.emguarde.learnMore}
                         </a>
-                        <button
-                            type="button"
-                            onClick={() => openPdfModal(PDF_URL, 'emguarde')}
+                        <Link
+                            to={countrySlug ? `/${countrySlug}/training` : '/training'}
                             className="flex items-center justify-center gap-2 rounded-2xl border border-white/10 bg-white/5 px-6 py-4 text-sm font-semibold text-white hover:bg-white/10 transition-all min-h-[48px] hover:scale-[1.02]"
                         >
                             <Download className="w-4 h-4 text-cyan-400" /> {copy.emguarde.downloadPdf}
-                        </button>
+                        </Link>
                     </motion.div>
 
                     {/* CTA button above back link */}

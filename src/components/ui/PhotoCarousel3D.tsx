@@ -142,7 +142,7 @@ export function PhotoCarousel3D() {
     const Icon = activeLeader.icon
 
     return (
-        <div className="w-full px-4 md:px-8 pb-12 overflow-visible">
+        <div className="w-full px-4 md:px-8 pb-12 overflow-visible" style={{ touchAction: 'pan-y' }}>
             {/* 3D Stage */}
             <div
                 className="relative mx-auto overflow-hidden"
@@ -244,25 +244,25 @@ export function PhotoCarousel3D() {
                 </motion.div>
             </AnimatePresence>
 
-            {/* Controls — min-h and padding so arrows are not cut off on mobile */}
-            <div className="mt-6 min-h-[52px] flex items-center justify-center gap-4 pb-4">
+            {/* Controls — single row on mobile, no wrap */}
+            <div className="mt-6 min-h-[52px] flex flex-nowrap items-center justify-center gap-3 sm:gap-4 pb-4 px-2">
                 <button
                     onClick={prev}
                     aria-label="Previous leader"
-                    className="flex h-11 w-11 items-center justify-center rounded-full border border-white/10 bg-white/5 text-slate-300 transition-all hover:bg-white/10 hover:text-white"
+                    className="flex h-10 w-10 sm:h-11 sm:w-11 flex-shrink-0 items-center justify-center rounded-full border border-white/10 bg-white/5 text-slate-300 transition-all hover:bg-white/10 hover:text-white"
                 >
                     <ChevronLeft className="h-5 w-5" />
                 </button>
 
-                {/* Dots */}
-                <div className="flex gap-2">
+                {/* Dots — same size so layout doesn't shift */}
+                <div className="flex flex-shrink-0 flex-wrap justify-center gap-1.5 sm:gap-2">
                     {LEADERS.map((_, idx) => (
                         <button
                             key={idx}
                             onClick={() => setActive(idx)}
                             aria-label={`Go to leader ${idx + 1}`}
-                            className={`transition-all duration-300 rounded-full ${idx === active
-                                ? 'w-6 h-2.5 bg-orange-500'
+                            className={`transition-all duration-300 rounded-full flex-shrink-0 ${idx === active
+                                ? 'w-5 h-2.5 sm:w-6 bg-orange-500'
                                 : 'w-2.5 h-2.5 bg-white/20 hover:bg-white/40'
                                 }`}
                         />
@@ -272,7 +272,7 @@ export function PhotoCarousel3D() {
                 <button
                     onClick={next}
                     aria-label="Next leader"
-                    className="flex h-11 w-11 items-center justify-center rounded-full border border-white/10 bg-white/5 text-slate-300 transition-all hover:bg-white/10 hover:text-white"
+                    className="flex h-10 w-10 sm:h-11 sm:w-11 flex-shrink-0 items-center justify-center rounded-full border border-white/10 bg-white/5 text-slate-300 transition-all hover:bg-white/10 hover:text-white"
                 >
                     <ChevronRight className="h-5 w-5" />
                 </button>

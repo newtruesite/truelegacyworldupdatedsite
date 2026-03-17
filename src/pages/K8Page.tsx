@@ -5,12 +5,10 @@ import { Droplets, ExternalLink, Download, Play, CheckCircle, Layers, Cpu, Globe
 import { Navbar } from '@/components/layout/Navbar'
 import { Footer } from '@/components/layout/Footer'
 import { AuroraBackground } from '@/components/ui/AuroraBackground'
+import { YouTubeEmbed } from '@/components/ui/YouTubeEmbed'
 import { COUNTRIES } from '@/lib/countries'
 import { t } from '@/lib/translations'
 import { useLocaleContext } from '@/contexts/LocaleContext'
-import { usePdfLeadCapture } from '@/contexts/PdfLeadCaptureContext'
-
-const K8_PDF_URL = 'https://www.truelegacyworld.com/_files/ugd/7b12be_e690ffee275f44b887f409eac751f9dc.pdf'
 
 const FEATURES_EN = [
     { icon: Layers, text: '8 Platinum-Coated Titanium Plates' },
@@ -37,10 +35,9 @@ export default function K8Page() {
     const FEATURES = isSpanish ? FEATURES_ES : FEATURES_EN
 
     const [heroImgError, setHeroImgError] = useState(false)
-    const { openModal: openPdfModal } = usePdfLeadCapture()
 
     return (
-        <div className="min-h-screen bg-[#070b16] overflow-x-hidden">
+        <div className="page-wrapper bg-[#070b16]">
             <Navbar />
 
             <AuroraBackground className="pt-28 pb-0">
@@ -56,13 +53,26 @@ export default function K8Page() {
                         <span className="inline-block mb-4 rounded-full border border-cyan-500/30 bg-cyan-500/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-widest text-cyan-400">
                             {copy.k8.badge}
                         </span>
-                        <h1 className="text-4xl md:text-6xl lg:text-7xl font-black text-white mb-6 leading-tight">
+                        <h1 className="page-hero-title mb-6">
                             {copy.k8.headline}<br />
                             <span className="gradient-text">{copy.k8.headlineAccent}</span>
                         </h1>
-                        <p className="mx-auto max-w-3xl text-lg md:text-xl text-slate-400 leading-relaxed">
+                        <p className="mx-auto max-w-3xl text-lg md:text-xl text-slate-400 leading-relaxed mb-8">
                             {copy.k8.sub}
                         </p>
+                        
+                        {/* VSL-style video embed */}
+                        <motion.div
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.6, delay: 0.3 }}
+                            className="max-w-4xl mx-auto mb-8"
+                        >
+                            <YouTubeEmbed 
+                                url="https://youtu.be/Lm2DYOwU2rc?si=qSI-i8XX8EOv6ZUC"
+                                title="Leveluk K8 Kangen Water Machine"
+                            />
+                        </motion.div>
                     </motion.div>
 
                     {/* Product Visual + Features Grid */}
@@ -149,7 +159,7 @@ export default function K8Page() {
                         viewport={{ once: true }}
                         className="glass rounded-3xl border border-cyan-500/20 p-8 md:p-12 mb-16 text-center"
                     >
-                        <div className="text-6xl font-black gradient-text mb-4">8</div>
+                        <div className="text-6xl font-bold gradient-text mb-4">8</div>
                         <h3 className="text-xl md:text-2xl font-bold text-white mb-4">{copy.k8.titaniumTitle}</h3>
                         <p className="text-slate-400 max-w-2xl mx-auto text-lg leading-relaxed">
                             {copy.k8.titaniumSub}
@@ -175,7 +185,7 @@ export default function K8Page() {
                             href="https://youtu.be/Lm2DYOwU2rc?si=qSI-i8XX8EOv6ZUC"
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="flex items-center justify-center gap-2 rounded-2xl bg-red-600/80 hover:bg-red-600 px-6 py-4 text-sm font-semibold text-white transition-all"
+                            className="flex items-center justify-center gap-2 rounded-2xl border border-transparent bg-red-600/80 hover:bg-red-600 px-6 py-4 text-sm font-semibold text-white transition-all"
                         >
                             <Play className="w-4 h-4" /> {copy.k8.watchVideo}
                         </a>
@@ -187,13 +197,12 @@ export default function K8Page() {
                         >
                             <ExternalLink className="w-4 h-4" /> {copy.k8.learnMore}
                         </a>
-                        <button
-                            type="button"
-                            onClick={() => openPdfModal(K8_PDF_URL, 'kangen')}
+                        <Link
+                            to={countrySlug ? `/${countrySlug}/training` : '/training'}
                             className="flex items-center justify-center gap-2 rounded-2xl border border-white/10 bg-white/5 px-6 py-4 text-sm font-semibold text-white hover:bg-white/10 transition-all min-h-[48px] hover:scale-[1.02]"
                         >
                             <Download className="w-4 h-4 text-cyan-400" /> {copy.k8.downloadPdf}
-                        </button>
+                        </Link>
                     </motion.div>
 
                     {/* CTA button above back link */}

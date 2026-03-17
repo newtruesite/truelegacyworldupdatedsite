@@ -46,10 +46,10 @@ export default function SettingsPage() {
     const countryObj = COUNTRIES.find((c) => c.slug === MOCK_USER.country)
 
     return (
-        <div className="min-h-screen">
+        <div style={{ minHeight: '100dvh' }}>
             <Navbar />
 
-            <AuroraBackground className="min-h-screen pt-24 pb-16">
+            <AuroraBackground className="pt-24 pb-16">
                 <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}

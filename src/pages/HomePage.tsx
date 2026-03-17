@@ -70,21 +70,39 @@ export default function HomePage() {
             { threshold: 0 }
         )
         footerObserver.observe(footer)
+        
+        // Section entrance animations
+        const sectionObserver = new IntersectionObserver(
+            (entries) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('section-visible')
+                    }
+                })
+            },
+            { threshold: 0.1 }
+        )
+        
+        document.querySelectorAll('.section-animate').forEach((section) => {
+            sectionObserver.observe(section)
+        })
+        
         return () => {
             heroObserver.disconnect()
             footerObserver.disconnect()
+            sectionObserver.disconnect()
         }
     }, [])
 
     return (
-        <div className="min-h-screen flex flex-col overflow-x-hidden" style={{ background: '#060b1e' }}>
+        <div className="page-wrapper" style={{ background: '#060b1e' }}>
             <Navbar />
 
-            <main className="flex-grow">
+            <main className="content-wrapper">
 
                 {/* ===== HERO + MAP ===== */}
                 <section ref={heroRef} className="map-section">
-                <TLBackground className="relative min-h-screen flex flex-col items-center justify-start pt-32 pb-0">
+                <TLBackground className="relative flex flex-col items-center justify-start pt-20 pb-8 md:pt-32 md:pb-0">
 
                     {/* Hero Text — extra top margin for spacing from navbar / "top categories" */}
                     <motion.div
@@ -94,25 +112,40 @@ export default function HomePage() {
                         className="map-heading relative z-10 w-full max-w-5xl mx-auto text-center px-6 mt-8 mb-10"
                     >
                         {/* Eyebrow */}
-                        <p className="mb-3 text-xs font-semibold tracking-[0.3em] uppercase text-tl-gold opacity-80">
+                        <motion.p 
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+                            className="mb-3 text-xs font-semibold tracking-[0.3em] uppercase text-tl-gold opacity-80"
+                        >
                             {locale === 'es'
                                 ? 'Ubica tu región en el mapa'
                                 : locale === 'fr'
                                 ? 'Trouvez votre région sur la carte'
                                 : 'Find your region on the map'}
-                        </p>
+                        </motion.p>
 
-                        {/* Main heading — fluid on mobile */}
-                        <h1 className="text-white leading-[1.1] mb-5 font-display font-bold px-1" style={{ fontSize: 'clamp(2rem, 8vw, 4rem)' }}>
+                        {/* Main heading — fluid on mobile, larger and more confident */}
+                        <motion.h1 
+                            initial={{ opacity: 0, y: 30 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.8, delay: 0.06, ease: [0.16, 1, 0.3, 1] }}
+                            className="hero-title mb-6 px-1"
+                        >
                             {copy.hero_heading}
                             <br />
                             <span className="gradient-text">{copy.hero_around}</span>
-                        </h1>
+                        </motion.h1>
 
-                        <p className="text-base md:text-lg text-slate-400 font-light max-w-2xl mx-auto leading-relaxed min-[480px]:text-base">
+                        <motion.p 
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.7, delay: 0.12, ease: [0.16, 1, 0.3, 1] }}
+                            className="hero-subtitle"
+                        >
                             {copy.heroSub}
-                        </p>
-                        <p className="mt-4 text-sm md:text-base text-slate-500 font-light max-w-xl mx-auto min-[480px]:text-base">
+                        </motion.p>
+                        <p className="mt-4 hero-subtitle opacity-75 max-w-xl">
                             {locale === 'es'
                                 ? 'Únete a una comunidad de emprendedores que ganan compartiendo productos que cambian el mundo — como la máquina de Agua Kangen y emGuarde. Elige tu región en el mapa y comienza tu camino.'
                                 : locale === 'fr'
@@ -122,7 +155,7 @@ export default function HomePage() {
                         <SocialProofStrip />
                     </motion.div>
 
-                    {/* World Map — seamless continent selector, no boxed \"screen\" */}
+                    {/* World Map — logo is inbuilt inside WorldMap */}
                     <motion.div
                         id="map"
                         initial={{ opacity: 0, y: 24 }}
@@ -184,10 +217,7 @@ export default function HomePage() {
                     <PhotoCarousel3D />
                 </section>
 
-                {/* ===== ENAGIC PRODUCTS (GLOBAL TEASER) ===== */}
-                <ProductSection productIds={['k8', 'sd501', 'anespa_dx', 'emguarde']} variant="home" />
-
-                {/* ===== JOIN THE TEAM ===== */}
+                {/* ===== JOIN THE TEAM (below leaders) ===== */}
                 <section id="join" className="relative py-20 md:py-24" style={{ background: '#060b1e' }}>
                     <div className="absolute inset-x-0 top-0 h-px section-divider" />
                     <div className="max-w-6xl mx-auto px-4 sm:px-6">
@@ -256,25 +286,88 @@ export default function HomePage() {
                             viewport={{ once: true }}
                             className="text-center mt-12"
                         >
-                            <Link
-                                to="/#map"
+                            <a
+                                href="https://form.jotform.com/260232994952060"
+                                target="_blank"
+                                rel="noopener noreferrer"
                                 onClick={() =>
                                     trackEvent('join_click', {
                                         location: 'home_join',
                                         locale,
                                     })
                                 }
-                                className="inline-flex items-center justify-center min-h-[48px] px-8 py-4 rounded-2xl font-bold text-white transition-all hover:scale-[1.02]"
-                                style={{
-                                    background: 'linear-gradient(135deg, #1B3A8C 0%, #1e6fc0 100%)',
-                                    boxShadow: '0 4px 24px rgba(27,58,140,0.4)',
-                                }}
+                                className="btn-primary inline-flex items-center justify-center"
                             >
                                 {copy.join_cta}
-                            </Link>
+                            </a>
                         </motion.div>
                     </div>
                 </section>
+
+                {/* ===== TRAINING LIBRARY TEASER ===== */}
+                <section className="relative py-16 border-t border-white/5" style={{ background: '#060b1e' }}>
+                    <div className="max-w-6xl mx-auto px-4 sm:px-6">
+                        <motion.div
+                            initial={{ opacity: 0, y: 20 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true }}
+                            className="glass rounded-2xl border border-cyan-500/25 p-8 md:p-12 text-center"
+                            style={{ background: 'linear-gradient(135deg, rgba(6,182,212,0.05), rgba(15,23,42,0.8))' }}
+                        >
+                            <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-cyan-500/20 text-cyan-400 mb-6">
+                                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                                    <polyline points="14,2 14,8 20,8" />
+                                    <line x1="16" y1="13" x2="8" y2="13" />
+                                    <line x1="16" y1="17" x2="8" y2="17" />
+                                    <polyline points="10,9 9,9 8,9" />
+                                </svg>
+                            </div>
+                            <h3 className="text-2xl md:text-3xl font-bold text-white mb-4">
+                                {locale === 'es' ? 'Biblioteca de Entrenamiento' : 
+                                 locale === 'fr' ? 'Bibliothèque de Formation' :
+                                 locale === 'pt' ? 'Biblioteca de Treinamento' : 
+                                 'Training Library'}
+                            </h3>
+                            <p className="text-slate-400 text-base md:text-lg max-w-2xl mx-auto leading-relaxed mb-8">
+                                {locale === 'es' ? 'Accede a guías exclusivas, entrenamientos de productos y recursos para distribuidores que te ayudarán a construir tu negocio True Legacy.' :
+                                 locale === 'fr' ? 'Accédez à des guides exclusifs, des formations produits et des ressources distributeurs qui vous aideront à construire votre entreprise True Legacy.' :
+                                 locale === 'pt' ? 'Acesse guias exclusivos, treinamentos de produtos e recursos para distribuidores que ajudarão você a construir seu negócio True Legacy.' :
+                                 'Access exclusive guides, product trainings, and distributor resources that will help you build your True Legacy business.'}
+                            </p>
+                            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                                <Link
+                                    to="/training"
+                                    className="inline-flex items-center justify-center min-h-[44px] px-6 py-3 rounded-md font-semibold text-white transition-all hover:scale-[1.02] hover:-translate-y-0.5"
+                                    style={{
+                                        background: 'linear-gradient(135deg, #1B5A8C, #1e88e5)',
+                                        boxShadow: '0 2px 8px rgba(27, 90, 140, 0.2)',
+                                    }}
+                                >
+                                    {locale === 'es' ? 'Entrenamiento de Distribuidores' :
+                                     locale === 'fr' ? 'Formation des Distributeurs' :
+                                     locale === 'pt' ? 'Treinamento de Distribuidores' :
+                                     'Distributor Training'}
+                                </Link>
+                                <Link
+                                    to="/training#pdf-guides"
+                                    className="inline-flex items-center justify-center min-h-[44px] px-6 py-3 rounded-md font-semibold text-cyan-300 border border-cyan-500/30 transition-all hover:bg-cyan-500/10 hover:-translate-y-0.5"
+                                >
+                                    {locale === 'es' ? 'Guías de Productos' :
+                                     locale === 'fr' ? 'Guides Produits' :
+                                     locale === 'pt' ? 'Guias de Produtos' :
+                                     'Product Guides'}
+                                </Link>
+                            </div>
+                        </motion.div>
+                    </div>
+                </section>
+
+                {/* ===== ALL PRODUCTS ===== */}
+                <ProductSection
+                    productIds={['k8', 'sd501', 'sd501_super', 'sd501_dx', 'anespa_dx', 'emguarde', 'ukon_sigma', 'kangen_wagyu', 'kangen_air']}
+                    variant="homeAll"
+                />
 
             </main>
 
@@ -285,22 +378,20 @@ export default function HomePage() {
                 }`}
                 style={{ background: 'linear-gradient(to top, rgba(6,11,30,0.98), transparent)' }}
             >
-                <Link
-                    to="/#map"
+                <a
+                    href="https://form.jotform.com/260232994952060"
+                    target="_blank"
+                    rel="noopener noreferrer"
                     onClick={() =>
                         trackEvent('join_click', {
                             location: 'home_join_sticky',
                             locale,
                         })
                     }
-                    className="flex items-center justify-center min-h-[48px] w-full rounded-2xl font-bold text-white"
-                    style={{
-                        background: 'linear-gradient(135deg, #1B3A8C 0%, #1e6fc0 100%)',
-                        boxShadow: '0 4px 24px rgba(27,58,140,0.4)',
-                    }}
+                    className="btn-primary flex items-center justify-center w-full"
                 >
                     {copy.join_cta}
-                </Link>
+                </a>
             </div>
 
             <div ref={footerRef}><Footer /></div>

@@ -3,15 +3,16 @@ import { useLocation } from 'react-router-dom'
 import { COUNTRIES } from '@/lib/countries'
 
 const STORAGE_KEY = 'tl_lang'
-type Locale = 'en' | 'es' | 'fr'
+export type Locale = 'en' | 'es' | 'fr' | 'pt'
 
 function getStored(): Locale | null {
     if (typeof window === 'undefined') return null
     const raw = localStorage.getItem(STORAGE_KEY) ?? localStorage.getItem('truelegacy-locale')
-    if (raw === 'en' || raw === 'es' || raw === 'fr') return raw
+    if (raw === 'en' || raw === 'es' || raw === 'fr' || raw === 'pt') return raw
     return null
 }
 
+// V20: Morocco is always French — brute force
 function pathAndNavigatorLocale(pathname: string): Locale {
     if (pathname.includes('/morocco')) return 'fr'
     if (pathname.includes('/es/') || pathname.includes('/latam/') || pathname.includes('/south-america/')) return 'es'
@@ -48,20 +49,34 @@ export function LocaleProvider({ children }: { children: React.ReactNode }) {
         const thisCountrySlug = isCountryRoute ? first : ''
         const lastCountry = window.sessionStorage.getItem('tl_last_country') || ''
 
-        // If navigating between different country pages, clear stored language
+        // If navigating between different country pages, clear stored language (except when landing on Morocco — keep fr)
         if (thisCountrySlug && lastCountry && thisCountrySlug !== lastCountry) {
-            window.localStorage.removeItem(STORAGE_KEY)
+            if (thisCountrySlug !== 'morocco') window.localStorage.removeItem(STORAGE_KEY)
+            else window.localStorage.setItem(STORAGE_KEY, 'fr')
         }
 
         if (thisCountrySlug) {
             window.sessionStorage.setItem('tl_last_country', thisCountrySlug)
         }
 
-        const stored = getStored()
-        setOverrideState(stored)
+        // Brute-force LATAM to Spanish on first arrival so ES is selected in top bar (unless user already chose a language)
+        const LATAM_SLUGS = ['brazil', 'mexico', 'paraguay', 'colombia']
+        const userChoseLang = window.sessionStorage.getItem('tl_user_chose_lang')
+        if (LATAM_SLUGS.includes(thisCountrySlug) && !userChoseLang) {
+            window.localStorage.setItem(STORAGE_KEY, 'es')
+            setOverrideState('es')
+        } else {
+            const stored = getStored()
+            setOverrideState(stored)
+        }
     }, [pathname])
 
     const setLocale = useCallback((locale: Locale) => {
+        try {
+            sessionStorage.setItem('tl_user_chose_lang', 'true')
+        } catch {
+            /* ignore */
+        }
         localStorage.setItem(STORAGE_KEY, locale)
         setOverrideState(locale)
     }, [])

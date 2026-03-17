@@ -21,7 +21,7 @@ function useCountUp(end: number, duration: number, run: boolean) {
 export function SocialProofStrip() {
   const ref = useRef<HTMLDivElement>(null)
   const [inView, setInView] = useState(false)
-  const countries = useCountUp(45, 1500, inView)
+  const countries = useCountUp(51, 1500, inView)
   const members = useCountUp(8, 1500, inView)
 
   useEffect(() => {
@@ -42,6 +42,7 @@ export function SocialProofStrip() {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       className="flex flex-wrap items-center justify-center gap-8 sm:gap-12 py-6 text-center"
+      style={{ touchAction: 'pan-y' }}
     >
       <div>
         <span className="block text-2xl md:text-3xl font-bold text-white tabular-nums">{countries}+</span>

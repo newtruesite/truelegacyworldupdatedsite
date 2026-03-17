@@ -5,6 +5,9 @@
   <meta charset="UTF-8" />
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 
   <!-- Primary Meta Tags -->
   <title>True Legacy World — Health, Wealth & Global Legacy Building</title>
@@ -18,11 +21,12 @@
 
   <!-- Open Graph / Facebook -->
   <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="True Legacy World" />
+  <meta property="og:image" content="https://truelegacyworld.com/true-legacy-world-logo-CLEAN.svg" />
   <meta property="og:url" content="https://truelegacyworld.com/" />
   <meta property="og:title" content="True Legacy World — Health, Wealth & Global Legacy Building" />
   <meta property="og:description"
-    content="A global movement transforming lives through Kangen water, emGuarde technology, and entrepreneurship. 100,000+ leaders. 45+ countries. Your legacy starts here." />
-  <meta property="og:site_name" content="True Legacy World" />
+    content="A global movement transforming lives through Kangen water, emGuarde technology, and entrepreneurship. 45+ countries. Your legacy starts here." />
 
   <!-- Twitter -->
   <meta property="twitter:card" content="summary_large_image" />
@@ -43,43 +47,6 @@
   <link rel="preconnect" href="https://flagcdn.com" />
   <link rel="dns-prefetch" href="https://cdn.jsdelivr.net" />
 
-  <!-- Hard language defaults by country slug (runs before React) -->
-  <script>
-    (function () {
-      try {
-        var LANG_MAP = {
-          colombia: 'es',
-          mexico: 'es',
-          paraguay: 'es',
-          brazil: 'es',
-          morocco: 'fr',
-          usa: 'en',
-          canada: 'en',
-          nigeria: 'en',
-          india: 'en',
-          uae: 'en',
-          malaysia: 'en'
-        };
-
-        var path = window.location.pathname.replace(/\/+$/, '');
-        var parts = path.split('/');
-        var slug = parts[1] || '';
-        var lang = LANG_MAP[slug];
-
-        if (lang) {
-          window.__PAGE_LANG__ = lang;
-          document.documentElement.lang = lang;
-          document.documentElement.setAttribute('data-lang', lang);
-          if (!window.localStorage.getItem('tl_lang')) {
-            window.localStorage.setItem('tl_lang', lang);
-          }
-        }
-      } catch (e) {
-        // Fail silently — never block page load
-      }
-    })();
-  </script>
-
   <!-- Netlify Identity -->
   <script src="https://identity.netlify.com/v1/netlify-identity-widget.js" defer></script>
   <!-- jsVectorMap for interactive world map -->
@@ -95,7 +62,12 @@
     "@type": "Organization",
     "name": "True Legacy World",
     "url": "https://truelegacyworld.com",
-    "description": "Global Enagic Kangen Water distributor network"
+    "logo": "https://truelegacyworld.com/true-legacy-world-logo-CLEAN.svg",
+    "description": "Global Enagic Kangen Water distributor network. Health, wealth and legacy building in 29+ countries.",
+    "sameAs": [
+      "https://www.instagram.com/truelegacyworld/",
+      "https://www.tiktok.com/@mehdi_cohen"
+    ]
   }
   </script>
   <div id="root"></div>

@@ -34,7 +34,7 @@ export default function RegionPage() {
     const regionCountries = COUNTRIES.filter(c => c.region === regionName)
 
     return (
-        <div className="min-h-screen bg-[#070b16] flex flex-col overflow-x-hidden">
+        <div className="page-wrapper bg-[#070b16]">
             <Navbar />
 
             <main className="flex-grow pt-28 pb-16">

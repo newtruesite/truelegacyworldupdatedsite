@@ -11,7 +11,7 @@ interface FlagIntroProps {
 export function FlagIntro({ country }: FlagIntroProps) {
     const [flagFailed, setFlagFailed] = useState(false)
     const { locale } = useLocaleContext()
-    const welcomeText = locale === 'es' ? `Bienvenido a ${country.nativeName}` : locale === 'fr' ? `Bienvenue au ${country.nativeName}` : `Welcome to ${country.name}`
+    const welcomeText = locale === 'es' ? `Bienvenido a ${country.nativeName}` : locale === 'fr' ? `Bienvenue au ${country.nativeName}` : locale === 'pt' ? `Bem-vindo ao ${country.nativeName}` : `Welcome to ${country.name}`
     return (
         <div className="flex flex-col items-center justify-center py-16 text-center scroll-mt-20">
             {/* Animated flag: moves to final position (subtle translateY from below) */}
