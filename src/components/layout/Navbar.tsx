@@ -171,8 +171,8 @@ export function Navbar() {
                                         <button
                                             onClick={() => setCountriesOpen(!countriesOpen)}
                                             className={cn(
-                                                'px-3 py-2 text-sm font-medium rounded-md transition-colors flex items-center gap-1.5',
-                                                (pathname.startsWith('/select-country') || isCountryPage || countriesOpen)
+                                                'px-3 py-2 text-sm font-medium rounded-md transition-colors flex items-center justify-center gap-1.5',
+                                                (pathname === '/select-country' || isCountryPage || countriesOpen)
                                                     ? 'text-white bg-white/10'
                                                     : 'text-slate-300 hover:text-white hover:bg-white/5'
                                             )}
@@ -180,7 +180,7 @@ export function Navbar() {
                                             aria-expanded={countriesOpen}
                                             aria-controls="desktop-countries-dropdown"
                                         >
-                                            <span className="relative -top-[1px] leading-none">{link.label}</span>
+                                            <span className="relative leading-none">{link.label}</span>
                                             <svg className={cn("w-3.5 h-3.5 transition-transform duration-200", countriesOpen && "rotate-180")} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M19 9l-7 7-7-7" /></svg>
                                         </button>
                                         

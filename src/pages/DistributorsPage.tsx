@@ -4,16 +4,18 @@ import { Navbar } from '@/components/layout/Navbar'
 import { Footer } from '@/components/layout/Footer'
 import { TLBackground } from '@/components/ui/TLBackground'
 import { useLocaleContext } from '@/contexts/LocaleContext'
-import { MessageCircle, Globe, Instagram } from 'lucide-react'
+import { Calendar, MessageCircle, Globe, Instagram } from 'lucide-react'
 
 const DISTRIBUTORS = [
   {
     name: 'Mehdi Cohen',
     title: 'True Legacy World Founder',
-    photo: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?w=120&h=120&fit=crop&crop=face',
+    photo: '/leaders/mehdi-hero.png',
     fallbackInitial: 'M',
     website: 'https://mehdicohen.com',
-    whatsapp: 'https://wa.me/1234567890',
+    whatsapp: 'https://api.whatsapp.com/send/?phone=18649072149&text&type=phone_number&app_absent=0',
+    latamWhatsapp: 'https://wa.me/+573001844049',
+    calendly: 'https://calendly.com/aquacharged/true-legacy-one-on-one',
     telegram: 'https://t.me/mehdicohen',
     instagram: 'https://www.instagram.com/mehdicohen/',
     region: 'Global',
@@ -23,10 +25,11 @@ const DISTRIBUTORS = [
     title: 'True Legacy Leader',
     photo: '/leaders/zah-hero.png',
     fallbackInitial: 'Z',
-    whatsapp: 'https://wa.me/1234567890',
+    whatsapp: 'https://wa.me/+573001844049',
+    calendly: '',
     telegram: 'https://t.me/zahnaderi',
     instagram: 'https://www.instagram.com/zahnaderi/',
-    region: 'Global',
+    region: 'Global & LATAM',
   },
 ]
 
@@ -126,7 +129,7 @@ function DistributorCard({
       transition={{ delay: 0.1 + index * 0.1 }}
       className="rounded-2xl border border-white/10 bg-[rgba(5,16,48,0.8)] p-4 sm:p-6 md:p-8 flex flex-col sm:flex-row gap-5 sm:gap-6 items-start"
     >
-      <div className="flex-shrink-0 w-24 h-24 rounded-full border-2 border-white/10 overflow-hidden bg-cyan-500/10 flex items-center justify-center">
+      <div className="flex-shrink-0 w-40 sm:w-48 h-40 sm:h-48 rounded-2xl border-2 border-white/10 overflow-hidden bg-cyan-500/10 flex items-center justify-center">
                   {!imgError ? (
                     <img src={dist.photo} alt={dist.name} className="w-full h-full object-cover" onError={() => setImgError(true)} />
                   ) : null}
@@ -145,6 +148,12 @@ function DistributorCard({
               {whatsappLabel}
             </a>
           )}
+          {(dist as any).latamWhatsapp && (
+            <a href={(dist as any).latamWhatsapp} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#25D366] hover:bg-[#20BD5A] text-white font-semibold px-4 py-3 text-sm min-h-[44px] transition-colors">
+              <IconWhatsApp className="w-5 h-5 flex-shrink-0" />
+              LATAM WhatsApp
+            </a>
+          )}
           {dist.website && (
             <a href={dist.website} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/20 bg-white/5 hover:bg-white/10 text-white font-semibold px-4 py-3 text-sm min-h-[44px] transition-colors">
               <Globe className="w-5 h-5 flex-shrink-0" />
@@ -161,6 +170,12 @@ function DistributorCard({
             <a href={dist.instagram} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/20 bg-white/5 hover:bg-white/10 text-white font-semibold px-4 py-3 text-sm min-h-[44px] transition-colors">
               <Instagram className="w-5 h-5 flex-shrink-0" />
               Instagram
+            </a>
+          )}
+          {dist.calendly && (
+            <a href={dist.calendly} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center gap-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-3 text-sm min-h-[44px] transition-colors">
+              <Calendar className="w-5 h-5 flex-shrink-0" />
+              Book a Call
             </a>
           )}
         </div>

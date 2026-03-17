@@ -786,11 +786,11 @@
     cursor: pointer;
     display: flex;
     flex-direction: column;
-    justify-content: flex-start;
-    align-items: flex-start;
-    gap: 6px;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 2px;
     padding: 0;
-    margin: 0 19px;
+    margin: 0 10px;
   }
 
   .pin-pulse-ring {

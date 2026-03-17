@@ -30,7 +30,7 @@ function latLngToPercent(lat: number, lng: number) {
 export function WorldMap() {
   const mapContainerRef = useRef<HTMLDivElement>(null)
   const navigate = useNavigate()
-  const { locale } = useLocaleContext()
+  const { locale, setLocale } = useLocaleContext()
   const [mapReady, setMapReady] = useState(false)
   const [hoveredContinent, setHoveredContinent] = useState<string | null>(null)
 
@@ -122,6 +122,10 @@ export function WorldMap() {
     try {
       sessionStorage.setItem('last_page', window.location.href)
       sessionStorage.setItem('last_page_label', 'World Map')
+      if (continentId === 'south-america') {
+        const { setLocale } = useLocaleContext();
+        setLocale('es');
+      }
     } catch {
       /* ignore */
     }
@@ -173,14 +177,33 @@ export function WorldMap() {
           >
             {CONTINENTS.map((c) => {
               const { x, y } = latLngToPercent(c.lat, c.lng)
+
+              // Default percentage-based positions from lat/lng
+              let left: string | number = `${x * 100}%`
+              let top: string | number = `${y * 100}%`
+
+              // Apply manual tuning based on browser tweaks
+              const isMobile = typeof window !== 'undefined' && window.innerWidth <= 767;
+
+              if (c.id === 'north-america') {
+                left = isMobile ? '16%' : 83
+                top = isMobile ? '40%' : 196
+              } else if (c.id === 'south-america') {
+                left = isMobile ? '25%' : 150
+                top = isMobile ? '70%' : 305
+              } else if (c.id === 'africa') {
+                left = isMobile ? '48%' : 260
+                top = isMobile ? '60%' : 280
+              }
+
               return (
                 <div
                   key={c.id}
                   className={`continent-pin ${hoveredContinent === c.id ? 'pin-hovered' : ''}`}
                   style={{
                     position: 'absolute',
-                    left: `${x * 100}%`,
-                    top: `${y * 100}%`,
+                    left,
+                    top,
                     transform: 'translate(-50%, -50%)',
                     pointerEvents: 'all',
                     cursor: 'pointer',

@@ -1,12 +1,14 @@
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { useParams } from 'react-router-dom'
-import { CheckCircle, FileText, ExternalLink, Download, Play, Users, Target, Lightbulb } from 'lucide-react'
+import { CheckCircle, FileText, ExternalLink, Download, Play, Users, Target, Lightbulb, LogOut } from 'lucide-react'
 import { AuroraBackground } from '@/components/ui/AuroraBackground'
 import { Navbar } from '@/components/layout/Navbar'
 import { Footer } from '@/components/layout/Footer'
 import { useLocaleContext } from '@/contexts/LocaleContext'
 import { t } from '@/lib/translations'
+import { useAuth } from '@/contexts/AuthContext'
+import { supabase } from '@/lib/supabaseClient'
 
 // Training Module Types
 type TrainingModule = {
@@ -29,16 +31,16 @@ const TRAINING_MODULES: TrainingModule[] = [
   // 1. Foundation & Purpose
   {
     id: 'purpose-vision',
-    title: 'The Power of Your Purpose in Enagic',
+    title: 'El Poder de tu Propósito en Enagic',
     description:
-      'In this session, your Enagic journey gets personal. We\'ll rediscover your Why, uncover your deeper purpose, and craft your 3-Year Vision alongside a letter from your future self. Expect guided reflection, a vision exercise, and steps to shape your path to leadership.',
+      'En esta sesión, tu viaje en Enagic se vuelve personal. Redescubriremos tu Porqué, descubriremos tu propósito más profundo y elaboraremos tu Visión a 3 Años junto con una carta de tu yo del futuro. Espera una reflexión guiada, un ejercicio de visión y pasos para dar forma a tu camino hacia el liderazgo.',
     category: 'foundation',
     videoUrl: 'https://www.youtube.com/watch?v=2O7DboiJBdE&source_ve_path=MjM4NTE&embeds_referring_euri=https%3A%2F%2Fwww.truelegacyworld.com%2F&embeds_referring_origin=https%3A%2F%2Fwww.truelegacyworld.com',
     level: 'beginner',
     duration: '45 min',
     resources: [
       {
-        title: 'Future Self Letter Template',
+        title: 'Plantilla: Carta de tu Yo del Futuro',
         url: 'https://drive.google.com/file/d/1_yOHfNqi2pomD28jeqSWjpjnFy4xIlY0/view?fbclid=IwY2xjawPwpb5leHRuA2FlbQIxMABicmlkETFDWTEzdmFua3U1Wkt2Tkdoc3J0YwZhcHBfaWQQMjIyMDM5MTc4ODIwMDg5MgABHptWaiPgIwt2Fz2sMptJMUjbiZqUUdZdvmXzDchAE23zyzbS5updXJAD-v2G_aem_GM5pTxCd9ro80xVn66pbGQ',
         type: 'pdf',
       },
@@ -47,21 +49,21 @@ const TRAINING_MODULES: TrainingModule[] = [
   // 2. Product Mastery
   {
     id: 'kangen-science',
-    title: 'Mastering the $10 Billion Products: LeveLuk & emGuarde',
+    title: 'Dominando los Productos de $10 Billones: LeveLuk y emGuarde',
     description:
-      'This session equips you to position the LeveLuk series against competitors and highlights why emGuarde stands out. You\'ll gain confidence in Enagic\'s technology, certifications, and learn how emGuarde\'s unique advantages—like improving sleep and mood—can transform your closing power.',
+      'Esta sesión te prepara para posicionar la serie LeveLuk frente a la competencia y destaca por qué emGuarde es único. Ganarás confianza en la tecnología de Enagic, sus certificaciones y aprenderás cómo las ventajas únicas de emGuarde (como mejorar el sueño y el estado de ánimo) pueden transformar tu poder de cierre.',
     category: 'product',
     videoUrl: 'https://youtu.be/_LcCVpKnVxk?si=1UTiKWXvUP0MHjhm',
     level: 'beginner',
     duration: '60 min',
     resources: [
       {
-        title: 'Kangen Water Ionizers Product Guide',
+        title: 'Guía de Productos de Ionizadores Kangen',
         url: 'https://www.enagic.com/pdf/1096/Kangen_Water_Ionizers_Product_Guide.pdf',
         type: 'pdf',
       },
       {
-        title: 'Machine Care & Maintenance Guide',
+        title: 'Guía de Mantenimiento de Máquina',
         url: 'https://www.enagic.com/pdf/1099/Machine_Care_and_Maintenance_Guide.pdf',
         type: 'pdf',
       },
@@ -69,9 +71,9 @@ const TRAINING_MODULES: TrainingModule[] = [
   },
   {
     id: 'product-lineup',
-    title: 'The 8-Point Program & Massive Action Blueprint',
+    title: 'El Sistema de 8 Puntos y Plan de Acción',
     description:
-      'Break down Enagic’s patented 8-Point Program and see how top leaders use it to duplicate fast, rank up, and build sustainable income. This is the core blueprint for scaling your organization globally.',
+      'Analiza el programa patentado de 8 Puntos de Enagic y descubre cómo los principales líderes lo utilizan para duplicar rápido, subir de rango y construir ingresos sostenibles. Esta es la base central para expandir tu organización globalmente.',
     category: 'product',
     videoUrl:
       'https://www.youtube.com/watch?v=FndRvUtZXL0&source_ve_path=MjM4NTE&embeds_referring_euri=https%3A%2F%2Fwww.truelegacyworld.com%2F&embeds_referring_origin=https%3A%2F%2Fwww.truelegacyworld.com',
@@ -79,12 +81,12 @@ const TRAINING_MODULES: TrainingModule[] = [
     duration: '60 min',
     resources: [
       {
-        title: '8-Point Compensation Plan Guide',
+        title: 'Guía del Plan de Compensación 8-Puntos',
         url: 'https://www.enagic.com/pdf/1095/Compensation_Plan_Guide.pdf',
         type: 'pdf',
       },
       {
-        title: '6-Month Projection Sheet',
+        title: 'Hoja de Proyección a 6 Meses',
         url: 'https://docs.google.com/spreadsheets/d/1zvfw-oBtkKLdSfVTquQw8J3g0ptTvBGT68weJF93MzA/edit#gid=1905539002',
         type: 'doc',
       },
@@ -93,16 +95,16 @@ const TRAINING_MODULES: TrainingModule[] = [
   // 4. Leadership & Structure
   {
     id: 'leadership-structure',
-    title: 'The Blueprint to Building a Legacy with Enagic',
+    title: 'El Plan para Construir tu Legado con Enagic',
     description:
-      'This session is a game-changer. You\'ll learn why 8 Points is just the start, 6A2 is the gateway, and true legacy begins beyond that. We break down how to structure for exponential growth, engineer long-term stability, and set the stage for generational income. This is your must-watch if you\'re serious about building real legacy.',
+      'Esta sesión cambia todo. Aprenderás por qué los 8 Puntos son solo el comienzo, 6A2 es la entrada, y el verdadero legado empieza más allá. Desglosamos cómo estructurar para un crecimiento exponencial, planificar estabilidad a largo plazo y preparar el escenario para un ingreso generacional. Indispensable si buscas construir un verdadero legado.',
     category: 'leadership',
     videoUrl: 'https://youtu.be/Jz1LFvYTonI?si=fAbyqC4dChuIMn6t',
     level: 'intermediate',
     duration: '75 min',
     resources: [
       {
-        title: 'Compensation Plan Guide',
+        title: 'Guía del Plan de Compensación',
         url: 'https://www.enagic.com/pdf/1095/Compensation_Plan_Guide.pdf',
         type: 'pdf',
       },
@@ -111,26 +113,26 @@ const TRAINING_MODULES: TrainingModule[] = [
   // 5. Systems & Funnels
   {
     id: 'systems-funnels',
-    title: 'The System to Hit 6A Faster—Without Burning Out',
+    title: 'El Sistema para Alcanzar 6A Más Rápido (Sin Agotarte)',
     description:
-      'In this session, we break down the True Legacy funnel system—how to attract the right people, turn them into leaders, and scale without overwhelm. You\'ll master the steps from first contact to duplication—building a team that grows even when you rest. Learn how to attract the right prospects, exact steps from contact to duplication, how to automate and avoid burnout, and why this system accelerates 6A success.',
+      'Desglosamos el sistema True Legacy: cómo atraer a las personas adecuadas, convertirlas en líderes y escalar sin saturarte. Dominarás los pasos desde el primer contacto hasta la duplicación, construyendo un equipo que crece incluso cuando descansas.',
     category: 'systems',
     videoUrl: 'https://youtu.be/tL5KtgzCB74?si=C-P3B8IRwfQG32B5',
     level: 'advanced',
     duration: '90 min',
     resources: [
       {
-        title: 'Conversation & Invitation Script',
+        title: 'Guion de Conversación e Invitación',
         url: 'https://drive.google.com/file/d/1EePq-zNaNgUPnPBdnsg_FKyUelYXZJKR/view?usp=drive_link',
         type: 'doc',
       },
       {
-        title: 'Invitation Variations by Prospect Type',
+        title: 'Variaciones de Invitación por Prospecto',
         url: 'https://drive.google.com/file/d/1g3k3cyhxwaKMC0a1hGSnIsXTf_U8F0op/view?usp=drive_link',
         type: 'doc',
       },
       {
-        title: 'Duo Presentation Lead Template',
+        title: 'Plantilla de Presentación Duo',
         url: 'https://drive.google.com/file/d/1983E6d1pi6GW0bKZi_6KNkaDBf7zyyNd/view?usp=drive_link',
         type: 'doc',
       },
@@ -140,16 +142,16 @@ const TRAINING_MODULES: TrainingModule[] = [
   // 6. Prospecting & Invitations
   {
     id: 'prospecting-basics',
-    title: '99% of Distributors Prospect the Wrong People — Fix This in 20 Min',
+    title: 'El 99% Prospecta a la Persona Equivocada (Soluciónalo en 20 Min)',
     description:
-      'This is where everything shifts. If your pipeline feels stuck or you\'re talking to the wrong people—this training changes the game. Inside this breakthrough session, you\'ll learn: The PRIME 6™ – six target groups naturally aligned with Enagic, The 4 Archetypes – how people think, decide, and take action, The True Legacy Quadrants – instantly identify who\'s ready and who\'s not, The Prospect List Framework – build a high-quality, duplicatable list, The 48-Hour Rule – create momentum immediately after building your list. This isn\'t about collecting contacts. This is about identifying future leaders.',
+      'Si tu embudo se siente estancado, este entrenamiento es para ti. Aprenderás: Los 6 grupos objetivo, los 4 arquetipos de decisión, los Cuadrantes True Legacy para identificar quién está listo, y la Regla de las 48 Horas para crear impulso. No se trata de coleccionar contactos, sino de identificar líderes.',
     category: 'prospecting',
     videoUrl: 'https://www.youtube.com/watch?v=OAKaQqLIwmg&source_ve_path=MjM4NTE&embeds_referring_euri=https%3A%2F%2Fwww.truelegacyworld.com%2F&embeds_referring_origin=https%3A%2F%2Fwww.truelegacyworld.com',
     level: 'beginner',
     duration: '20 min',
     resources: [
       {
-        title: 'True Legacy Prospect List Mastery',
+        title: 'Dominio de la Lista de Prospectos True Legacy',
         url: 'https://docs.google.com/document/d/18JD9AseUR_7gmdSbsrHXge5WqdfQhXTuvTfXOxk5hLA/edit?usp=sharing',
         type: 'doc',
       },
@@ -158,16 +160,16 @@ const TRAINING_MODULES: TrainingModule[] = [
   // 7. Turn Every Presentation Into a Builder Magnet
   {
     id: 'social-media-prospecting',
-    title: 'Turn Every Presentation Into a Builder Magnet — Here\'s How',
+    title: 'Convierte Cada Presentación en un Imán de Líderes',
     description:
-      'Your Language Determines the People You Invite. This isn\'t just about giving a great demo—it\'s about using intentional language to attract the right people from the start. In this True Legacy Masterclass, you\'ll learn: The 3 Types of People who join Enagic, How to invite using the 4 Archetypes: Seeker, Builder, Protector, Architect, The psychology of high-conversion invitations, How the DUO Presentation activates each archetype, Product Demo vs Business Demo — what really closes, How to turn every demo into a duplication machine, How to attract your future 6A, 6A2, and 6A2-3 leaders. Your words shape your team. Your team shapes your future.',
+      'Tu lenguaje determina a quién invitas. No es solo dar una gran demostración, es usar el lenguaje correcto. Aprende los 3 tipos de personas que se unen, cómo invitar según los 4 arquetipos, la psicología de alta conversión, y cómo la presentación DUO activa a los prospectos clave.',
     category: 'prospecting',
     videoUrl: 'https://www.youtube.com/watch?v=l8Uk9Mbegsk',
     level: 'intermediate',
     duration: '90 min',
     resources: [
       {
-        title: 'Business Builder Invitation & Archetypes Profile',
+        title: 'Perfil de Arquetipos e Invitación',
         url: 'https://docs.google.com/document/d/1V6WPSTj3jBQ5Ja3frJ2sZGAcOEmlm-uXpzC4JzUwqnE/edit?usp=sharing',
         type: 'doc',
       },
@@ -176,16 +178,16 @@ const TRAINING_MODULES: TrainingModule[] = [
   // 8. Closing & Business Media
   {
     id: 'closing-techniques',
-    title: 'STOP TALKING. START CLOSING.',
+    title: 'DEJA DE HABLAR. EMPIEZA A CERRAR.',
     description:
-      'The 15-Minute System That Closes. This session unlocks one of the most powerful skills every Enagic leader must master: how to guide prospects into clarity and action using expert-level questions and strategic closing psychology. Most talk too much. Top leaders ask with precision. In this masterclass, you\'ll learn: The 14-Minute True Legacy Closing Framework, How to open your Zoom call with presence & authority, The 11-Question Diagnostic System to reveal pain, desire & readiness, How to identify the 4 Archetypes and tailor your close, The Precision 20% Close — the only part that really matters, How to ask for the decision without pressure, How to develop tonality, posture, and trusted advisor energy. This will shift how you close, lead, and duplicate.',
+      'El Sistema de 15 Minutos que Cierra. Desbloquea cómo guiar a los prospectos a la claridad mediante preguntas expertas y psicología de cierre. La mayoría habla demasiado, los líderes preguntan con precisión. Domina el marco de 14 minutos, las 11 preguntas clave y el cierre del 20%.',
     category: 'closing',
     videoUrl: 'https://www.youtube.com/watch?v=ie-tFol7F4Q&source_ve_path=MjM4NTE&embeds_referring_euri=https%3A%2F%2Fwww.truelegacyworld.com%2F&embeds_referring_origin=https%3A%2F%2Fwww.truelegacyworld.com',
     level: 'advanced',
     duration: '15 min',
     resources: [
       {
-        title: 'Closing Framework Notes (external site)',
+        title: 'Notas del Marco de Cierre',
         url: 'https://www.truelegacyworld.com/true-legacy-leadership-training',
         type: 'doc',
       },
@@ -193,16 +195,16 @@ const TRAINING_MODULES: TrainingModule[] = [
   },
   {
     id: 'business-media',
-    title: 'Why Objections Are a Good Sign — And How to Turn Them into WINS',
+    title: 'Por Qué las Objeciones Son Buenas y Cómo Convertirlas en Éxitos',
     description:
-      'Turn resistance into clarity. Learn the 4 core objection categories and exactly how to address money, spouse, timing, fear, and “I need to research” in a way that builds trust and momentum.',
+      'Convierte la resistencia en claridad. Aprende las 4 categorías principales de objeciones y exactamente cómo manejar el dinero, cónyuge, tiempo, miedo y el "necesito investigar" para construir confianza.',
     category: 'closing',
     videoUrl: 'https://www.youtube.com/watch?v=ut9H9n9dE70',
     level: 'intermediate',
     duration: '60 min',
     resources: [
       {
-        title: 'Objection Handling Notes (external site)',
+        title: 'Notas para Manejo de Objeciones',
         url: 'https://www.truelegacyworld.com/true-legacy-leadership-training',
         type: 'doc',
       },
@@ -211,16 +213,16 @@ const TRAINING_MODULES: TrainingModule[] = [
   // 10. Business Media Training
   {
     id: 'income-projection',
-    title: '❌ Forget Social Media — This Is Real Business Media',
+    title: '❌ Olvida las Redes Sociales — Esto es Negocio Real',
     description:
-      'Training with Eunice Seet (6A2). This session is your wake-up call to stop chasing likes and start using media to build a real business. Eunice breaks down how to turn your online presence into a powerful digital storefront that builds trust, attracts the right people, and works for you 24/7. Here\'s what you\'ll learn: Digital Storefront – Position yourself online like a pro, Target Audience & Bio – Speak directly to who you want to attract, Three-Pillar Magnetic Content – Combine Lifestyle, Educational, and Business posts to naturally draw in your ideal prospects. This training will shift how you show up online and how you attract your next team leaders. Don\'t just post—position. This is Business Media.',
+      'Entrenamiento con Eunice Seet (6A2). Deja de perseguir likes y empieza a usar los medios para construir tu negocio. Convierte tu presencia en línea en un escaparate que genera confianza, atrae a la gente correcta y trabaja 24/7. Domina tu perfil y los 3 pilares del contenido magnético.',
     category: 'systems',
     videoUrl: 'https://www.youtube.com/watch?v=fjD6atjMN2g',
     level: 'beginner',
     duration: '45 min',
     resources: [
       {
-        title: 'True Legacy Leadership Training Overview',
+        title: 'Resumen de Liderazgo True Legacy',
         url: 'https://www.truelegacyworld.com/true-legacy-leadership-training',
         type: 'doc',
       },
@@ -386,6 +388,21 @@ export default function TrainingPage() {
   const params = useParams()
   const countrySlug = params.countrySlug
   
+  const { user, loading } = useAuth()
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [authError, setAuthError] = useState('')
+  const [isLoggingIn, setIsLoggingIn] = useState(false)
+
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setIsLoggingIn(true)
+    setAuthError('')
+    const { error } = await supabase.auth.signInWithPassword({ email, password })
+    if (error) setAuthError(error.message)
+    setIsLoggingIn(false)
+  }
+
   const [activeView, setActiveView] = useState<'sessions' | 'guides'>('sessions')
   const [selectedCategory, setSelectedCategory] = useState<string>('all')
   const [expandedModules, setExpandedModules] = useState<Set<string>>(new Set())
@@ -425,8 +442,66 @@ export default function TrainingPage() {
       <main className="content-wrapper">
         <AuroraBackground className="pt-24 pb-16">
           <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-            {/* Hero Section */}
-            <div className="text-center mb-12">
+            {loading ? (
+              <div className="flex items-center justify-center min-h-[400px]">
+                <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-cyan-500"></div>
+              </div>
+            ) : !user ? (
+              <div className="max-w-md mx-auto mt-12 bg-white/5 border border-white/10 rounded-2xl p-8 backdrop-blur-sm">
+                <div className="text-center mb-8">
+                  <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-cyan-500/20 text-cyan-400 mb-4">
+                    <Target className="w-8 h-8" />
+                  </div>
+                  <h2 className="text-2xl font-bold text-white mb-2">Distributor Login</h2>
+                  <p className="text-slate-400 text-sm">Access the True Legacy training library.</p>
+                </div>
+                <form onSubmit={handleLogin} className="space-y-4">
+                  <div>
+                    <input
+                      type="email"
+                      placeholder="Email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      className="w-full px-4 py-3 rounded-xl bg-black/40 border border-white/10 text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500 transition-colors"
+                      required
+                    />
+                  </div>
+                  <div>
+                    <input
+                      type="password"
+                      placeholder="Password"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      className="w-full px-4 py-3 rounded-xl bg-black/40 border border-white/10 text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500 transition-colors"
+                      required
+                    />
+                  </div>
+                  {authError && (
+                    <div className="p-3 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 text-sm">
+                      {authError}
+                    </div>
+                  )}
+                  <button
+                    type="submit"
+                    disabled={isLoggingIn}
+                    className="w-full min-h-[52px] flex items-center justify-center px-6 py-3 text-base font-semibold text-white bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 rounded-xl transition-all disabled:opacity-50"
+                  >
+                    {isLoggingIn ? 'Logging in...' : 'Login'}
+                  </button>
+                </form>
+              </div>
+            ) : (
+              <>
+                <div className="flex justify-end mb-4">
+                  <button
+                    onClick={() => supabase.auth.signOut()}
+                    className="flex items-center gap-2 text-sm text-slate-400 hover:text-white transition-colors px-4 py-2 rounded-lg bg-white/5 hover:bg-white/10"
+                  >
+                    <LogOut className="w-4 h-4" /> Sign Out
+                  </button>
+                </div>
+                {/* Hero Section */}
+                <div className="text-center mb-12">
               <motion.p
                 initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -584,7 +659,9 @@ export default function TrainingPage() {
               </div>
             </section>
             )}
-
+            
+            </>
+            )}
           </div>
         </AuroraBackground>
       </main>

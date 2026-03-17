@@ -1,7 +1,8 @@
-import { useMemo, useState } from 'react'
+import { useMemo, useState, useEffect } from 'react'
 import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import { Navbar } from '@/components/layout/Navbar'
 import { COUNTRIES, getFlagSrcSet } from '@/lib/countries'
+import { useLocaleContext } from '@/contexts/LocaleContext'
 
 const CONTINENT_DATA: Record<
   string,
@@ -53,6 +54,14 @@ export default function SelectCountryPage() {
   const navigate = useNavigate()
   const continent = params.get('continent') || ''
   const [failedFlagSlugs, setFailedFlagSlugs] = useState<Set<string>>(new Set())
+
+  // Ensure Spanish locale if LATAM/South America is selected directly
+  const { setLocale } = useLocaleContext()
+  useEffect(() => {
+    if (continent === 'south-america') {
+      setLocale('es')
+    }
+  }, [continent, setLocale])
 
   const isInvalidContinent = continent && !CONTINENT_DATA[continent]
   const isAllCountries = !continent || isInvalidContinent

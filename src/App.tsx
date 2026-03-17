@@ -2,6 +2,7 @@ import { useEffect } from 'react'
 import { BrowserRouter, Routes, Route, useLocation, Navigate } from 'react-router-dom'
 import { PdfLeadCaptureProvider } from '@/contexts/PdfLeadCaptureContext'
 import { LocaleProvider } from '@/contexts/LocaleContext'
+import { AuthProvider } from '@/contexts/AuthContext'
 import { AnimatePresence, motion } from 'framer-motion'
 import { trackPageView } from '@/lib/analytics'
 import HomePage from '@/pages/HomePage'
@@ -248,12 +249,14 @@ export default function App() {
 
   return (
     <BrowserRouter>
-      <LanguageReset />
-      <LocaleProvider>
-        <PdfLeadCaptureProvider>
-          <AnimatedRoutes />
-        </PdfLeadCaptureProvider>
-      </LocaleProvider>
+      <AuthProvider>
+        <LanguageReset />
+        <LocaleProvider>
+          <PdfLeadCaptureProvider>
+            <AnimatedRoutes />
+          </PdfLeadCaptureProvider>
+        </LocaleProvider>
+      </AuthProvider>
     </BrowserRouter>
   )
 }

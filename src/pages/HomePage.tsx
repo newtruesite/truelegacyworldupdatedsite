@@ -344,10 +344,10 @@ export default function HomePage() {
                                         boxShadow: '0 2px 8px rgba(27, 90, 140, 0.2)',
                                     }}
                                 >
-                                    {locale === 'es' ? 'Entrenamiento de Distribuidores' :
-                                     locale === 'fr' ? 'Formation des Distributeurs' :
-                                     locale === 'pt' ? 'Treinamento de Distribuidores' :
-                                     'Distributor Training'}
+                                    {locale === 'es' ? 'Acceso a Distribuidores' :
+                                     locale === 'fr' ? 'Accès Distributeurs' :
+                                     locale === 'pt' ? 'Acesso a Distribuidores' :
+                                     'Distributor Login'}
                                 </Link>
                                 <Link
                                     to="/training#pdf-guides"
