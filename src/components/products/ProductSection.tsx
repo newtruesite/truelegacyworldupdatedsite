@@ -146,7 +146,7 @@ export function ProductSection({ productIds, country, variant = 'country' }: Pro
                 data-product={id}
                 style={{ background: 'transparent', backdropFilter: 'blur(20px)' }}
               >
-                <div className="rounded-2xl overflow-hidden border-2 border-white/5 shadow-2xl shadow-black/50 mb-4 aspect-[4/3] bg-gradient-to-b from-[#0a1628] to-[#050b14] flex items-center justify-center p-4 relative">
+                <div className="rounded-2xl overflow-hidden border border-white/10 shadow-lg mb-4 aspect-[4/3] bg-white/5 flex items-center justify-center p-4 relative">
                   <img
                     src={product.imageSrc}
                     alt={product.imageAlt}

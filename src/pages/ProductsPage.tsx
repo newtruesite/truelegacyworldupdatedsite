@@ -207,7 +207,7 @@ export default function ProductsPage() {
                           transition={{ duration: 0.4 }}
                           className="group block rounded-3xl border border-white/10 p-5 md:p-8 bg-[rgba(5,16,48,0.8)] backdrop-blur-xl hover:border-white/30 hover:-translate-y-1 transition-all"
                         >
-                          <div className="rounded-2xl overflow-hidden border-2 border-white/5 shadow-2xl shadow-black/50 mb-4 aspect-[4/3] bg-gradient-to-b from-[#0a1628] to-[#050b14] relative flex items-center justify-center p-4">
+                          <div className="rounded-2xl overflow-hidden border border-white/10 shadow-lg mb-4 aspect-[4/3] bg-white/5 relative flex items-center justify-center p-4">
                             <img
                               src={product.imageSrc}
                               alt={product.imageAlt}

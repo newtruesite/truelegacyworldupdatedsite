@@ -71,7 +71,7 @@ export const PRODUCTS: Record<ProductId, ProductDefinition> = {
     pdfGuideUrl: 'https://www.enagic.com/pdf/1096/Kangen_Water_Ionizers_Product_Guide.pdf?v=1767139619',
     secondaryPdfUrl: 'https://www.enagic.com/pdf/1099/Machine_Care_and_Maintenance_Guide.pdf?v=1767139562',
     imageSrc: '/products/sd501-dx.png',
-    imageAlt: 'Leveluk SD501 DX platinum Kangen Water® ionizer by Enagic',
+    imageAlt: 'Leveluk SD501 DX Kangen Water® ionizer by Enagic',
   },
   anespa_dx: {
     id: 'anespa_dx',

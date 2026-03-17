@@ -93,14 +93,14 @@ export default function EmGuardePage() {
                             <div className="text-center w-full">
                                 {!heroImgError ? (
                                     <img
-                                        src="/assets/images/emguarde-product.png"
+                                        src="/products/emguarde.png"
                                         alt="Emguarde EMF protection device — Enagic technology"
                                         className="max-h-[280px] w-auto max-w-[600px] object-contain mx-auto mb-4 w-full md:max-w-[600px]"
                                         style={{ filter: 'drop-shadow(0 20px 40px rgba(0,0,0,0.3))' }}
                                         loading="lazy"
                                         onError={(e) => {
                                             const t = e.currentTarget
-                                            if (t.src.includes('emguarde-product')) {
+                                            if (t.src.includes('emguarde')) {
                                                 t.src = '/products/emguarde.png'
                                                 t.onerror = () => setHeroImgError(true)
                                             } else setHeroImgError(true)
