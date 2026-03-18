@@ -526,9 +526,21 @@ export default function TrainingPage() {
 
   return (
     <div className="page-wrapper" style={{ background: '#060b1e' }}>
-      <SEO 
-        title="True Legacy Leadership Academy | Enagic Training Portal"
-        description="Access the exclusive True Legacy Leadership Academy for Enagic distributors. Learn the 8-point system, product mastery, and legacy building strategies."
+      <SEO
+        title={
+          locale === 'es'
+            ? 'Academia de Liderazgo True Legacy | Portal de Entrenamiento'
+            : locale === 'fr'
+              ? 'Académie de Leadership True Legacy | Portail de Formation'
+              : 'True Legacy Leadership Academy | Enagic Training Portal'
+        }
+        description={
+          locale === 'es'
+            ? 'Accede a la exclusiva Academia de Liderazgo True Legacy para distribuidores Enagic. Aprende el sistema de 8 puntos, dominio de productos y estrategias para construir tu legado.'
+            : locale === 'fr'
+              ? "Accédez à l'académie de leadership True Legacy pour distributeurs Enagic. Apprenez le système des 8 points, la maîtrise des produits et les stratégies de développement de votre héritage."
+              : 'Access the exclusive True Legacy Leadership Academy for Enagic distributors. Learn the 8-point system, product mastery, and legacy building strategies.'
+        }
       />
       <Navbar />
       <main className="content-wrapper">

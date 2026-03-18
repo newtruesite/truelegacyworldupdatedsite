@@ -1,16 +1,16 @@
-import { useState } from 'react'
-import { motion } from 'framer-motion'
-import { useParams, Link } from 'react-router-dom'
-import { Droplets, ExternalLink, Download, Play, CheckCircle, Layers, Cpu, Globe } from 'lucide-react'
-import { Navbar } from '@/components/layout/Navbar'
 import { Footer } from '@/components/layout/Footer'
+import { Navbar } from '@/components/layout/Navbar'
+import { SEO } from '@/components/SEO'
 import { AuroraBackground } from '@/components/ui/AuroraBackground'
 import { YouTubeEmbed } from '@/components/ui/YouTubeEmbed'
+import { getWhatsAppLink } from '@/config/contactLinks'
+import { useLocaleContext } from '@/contexts/LocaleContext'
 import { COUNTRIES } from '@/lib/countries'
 import { t } from '@/lib/translations'
-import { useLocaleContext } from '@/contexts/LocaleContext'
-import { getWhatsAppLink } from '@/config/contactLinks'
-import { SEO } from '@/components/SEO'
+import { motion } from 'framer-motion'
+import { CheckCircle, Cpu, Download, Droplets, ExternalLink, Globe, Layers, Play } from 'lucide-react'
+import { useState } from 'react'
+import { Link, useParams } from 'react-router-dom'
 
 const FEATURES_EN = [
     { icon: Layers, text: '8 Platinum-Coated Titanium Plates' },
@@ -40,9 +40,21 @@ export default function K8Page() {
 
     return (
         <div className="page-wrapper bg-[#070b16]">
-            <SEO 
-                title={`Leveluk K8 Kangen Water Machine | True Legacy ${country.name}`}
-                description="The Leveluk K8 is Enagic's most powerful antioxidant water machine featuring 8 platinum-dipped titanium plates. Discover the power of Kangen Water."
+            <SEO
+                title={
+                    locale === 'es'
+                        ? `Leveluk K8 Máquina de Agua Kangen | True Legacy ${country.name}`
+                        : locale === 'fr'
+                            ? `Leveluk K8 Machine à Eau Kangen | True Legacy ${country.name}`
+                            : `Leveluk K8 Kangen Water Machine | True Legacy ${country.name}`
+                }
+                description={
+                    locale === 'es'
+                        ? 'El Leveluk K8 es la máquina de agua antioxidante más potente de Enagic, con 8 placas de titanio bañadas en platino. Descubre el poder del Agua Kangen.'
+                        : locale === 'fr'
+                            ? "Le Leveluk K8 est la machine à eau antioxydante la plus puissante d'Enagic, avec 8 plaques en titane plaqué platine. Découvrez le pouvoir de l'eau Kangen."
+                            : "The Leveluk K8 is Enagic's most powerful antioxidant water machine featuring 8 platinum-dipped titanium plates. Discover the power of Kangen Water."
+                }
                 image="/products/k8.png"
             />
             <Navbar />

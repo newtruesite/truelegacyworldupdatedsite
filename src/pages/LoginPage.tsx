@@ -117,8 +117,20 @@ export default function LoginPage() {
   return (
     <>
       <SEO
-        title="Member Login — True Legacy World"
-        description="Sign in to access the True Legacy Leadership Academy training portal."
+        title={
+          locale === 'es'
+            ? 'Inicio de sesión — True Legacy World'
+            : locale === 'fr'
+              ? 'Connexion — True Legacy World'
+              : 'Member Login — True Legacy World'
+        }
+        description={
+          locale === 'es'
+            ? 'Inicia sesión para acceder al portal de entrenamiento de True Legacy Leadership Academy.'
+            : locale === 'fr'
+              ? "Connectez-vous pour accéder au portail de formation True Legacy Leadership Academy."
+              : 'Sign in to access the True Legacy Leadership Academy training portal.'
+        }
       />
       <div
         className="relative flex min-h-dvh flex-col overflow-hidden"

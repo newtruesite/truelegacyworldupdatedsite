@@ -27,6 +27,11 @@ export const t = {
     navProductEmguarde: 'emGuarde',
     heroSub:
       "True Legacy is a global team of coaches sharing Kangen Water and emGuarde — two of the most talked-about wellness technologies on the market. We don't just sell products. We build leaders.",
+    homeScrollToExplore: 'Scroll to Explore',
+    homeLeadersTitle: 'The Leaders',
+    homeLeadersHeadline: 'A Movement Across Every Continent',
+    homeLeadersTagline:
+      'Connecting visionary leaders from Morocco to Miami, Lagos to Bogotá — each building a True Legacy.',
     paidSection: {
       headline: 'Get Paid to Share World-Healing Products',
       sub: "This isn't just wellness. It's a business built on products that actually change lives.",
@@ -277,6 +282,11 @@ export const t = {
     navProductEmguarde: 'emGuarde',
     heroSub:
       'True Legacy es un equipo global de mentores que comparten Kangen Water y emGuarde — dos de las tecnologías de bienestar más reconocidas del mercado. No solo vendemos productos. Formamos líderes.',
+    homeScrollToExplore: 'Desplázate para explorar',
+    homeLeadersTitle: 'Los Líderes',
+    homeLeadersHeadline: 'Un movimiento en todos los continentes',
+    homeLeadersTagline:
+      'Conectando líderes visionarios de Marruecos a Miami, Lagos a Bogotá — cada uno construyendo un Verdadero Legado.',
     paidSection: {
       headline: 'Gana Dinero Compartiendo Productos que Sanan el Mundo',
       sub: 'Esto no es solo bienestar. Es un negocio construido sobre productos que realmente cambian vidas.',
@@ -527,6 +537,11 @@ export const t = {
     navProductEmguarde: 'emGuarde',
     heroSub:
       'True Legacy est une équipe mondiale de coachs qui partagent l\'eau Kangen et emGuarde — deux des technologies bien-être les plus reconnues. Nous ne vendons pas que des produits. Nous formons des leaders.',
+    homeScrollToExplore: 'Faites défiler pour explorer',
+    homeLeadersTitle: 'Les leaders',
+    homeLeadersHeadline: 'Un mouvement sur chaque continent',
+    homeLeadersTagline:
+      'Connecter des leaders visionnaires de Maroc à Miami, Lagos à Bogotá — chacun construisant un héritage True Legacy.',
     paidSection: {
       headline: 'Gagnez en Partageant des Produits qui Soignent le Monde',
       sub: "Ce n'est pas que du bien-être. C'est une entreprise construite sur des produits qui changent vraiment des vies.",
@@ -777,6 +792,11 @@ export const t = {
     navProductEmguarde: 'emGuarde',
     heroSub:
       'True Legacy é uma equipe global de mentores que compartilham Kangen Water e emGuarde — duas das tecnologias de bem-estar mais reconhecidas do mercado. Não apenas vendemos produtos. Formamos líderes.',
+    homeScrollToExplore: 'Role para explorar',
+    homeLeadersTitle: 'Os Líderes',
+    homeLeadersHeadline: 'Um movimento em todos os continentes',
+    homeLeadersTagline:
+      'Conectando líderes visionários de Marrocos a Miami, Lagos a Bogotá — cada um construindo um Legado Verdadeiro.',
     paidSection: {
       headline: 'Ganhe Dinheiro Compartilhando Produtos que Curam o Mundo',
       sub: 'Não é apenas bem-estar. É um negócio construído sobre produtos que realmente mudam vidas.',

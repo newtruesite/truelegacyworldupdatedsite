@@ -1,6 +1,6 @@
-import { createContext, useContext, useMemo, useState, useCallback, useEffect } from 'react'
-import { useLocation } from 'react-router-dom'
 import { COUNTRIES } from '@/lib/countries'
+import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react'
+import { useLocation } from 'react-router-dom'
 
 const STORAGE_KEY = 'tl_lang'
 export type Locale = 'en' | 'es' | 'fr' | 'pt'
@@ -27,6 +27,7 @@ const LocaleContext = createContext<{
 } | null>(null)
 
 const COUNTRY_SLUGS = new Set(COUNTRIES.map((c) => c.slug))
+const LATAM_SLUGS = ['brazil', 'mexico', 'paraguay', 'colombia'] as const
 
 export function LocaleProvider({ children }: { children: React.ReactNode }) {
     const location = useLocation()
@@ -59,10 +60,16 @@ export function LocaleProvider({ children }: { children: React.ReactNode }) {
             window.sessionStorage.setItem('tl_last_country', thisCountrySlug)
         }
 
+        // Force LATAM countries to Spanish (so all SA pages use Spanish even if user previously chose another locale)
+        if (LATAM_SLUGS.includes(thisCountrySlug as (typeof LATAM_SLUGS)[number])) {
+            window.localStorage.setItem(STORAGE_KEY, 'es')
+            setOverrideState('es')
+            return
+        }
+
         // Brute-force LATAM to Spanish on first arrival so ES is selected in top bar (unless user already chose a language)
-        const LATAM_SLUGS = ['brazil', 'mexico', 'paraguay', 'colombia']
         const userChoseLang = window.sessionStorage.getItem('tl_user_chose_lang')
-        if (LATAM_SLUGS.includes(thisCountrySlug) && !userChoseLang) {
+        if (LATAM_SLUGS.includes(thisCountrySlug as (typeof LATAM_SLUGS)[number]) && !userChoseLang) {
             window.localStorage.setItem(STORAGE_KEY, 'es')
             setOverrideState('es')
         } else {

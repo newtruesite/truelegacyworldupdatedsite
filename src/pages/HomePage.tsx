@@ -1,17 +1,17 @@
-import { useState, useEffect, useRef } from 'react'
-import { motion } from 'framer-motion'
-import { Link } from 'react-router-dom'
-import { t } from '@/lib/translations'
-import { useLocaleContext } from '@/contexts/LocaleContext'
-import { TLBackground } from '@/components/ui/TLBackground'
-import WorldMap from '@/components/ui/WorldMap'
+import { Footer } from '@/components/layout/Footer'
+import { Navbar } from '@/components/layout/Navbar'
+import { ProductSection } from '@/components/products/ProductSection'
+import { SEO } from '@/components/SEO'
 import { PhotoCarousel3D } from '@/components/ui/PhotoCarousel3D'
 import { SocialProofStrip } from '@/components/ui/SocialProofStrip'
-import { Navbar } from '@/components/layout/Navbar'
-import { Footer } from '@/components/layout/Footer'
-import { ProductSection } from '@/components/products/ProductSection'
+import { TLBackground } from '@/components/ui/TLBackground'
+import WorldMap from '@/components/ui/WorldMap'
+import { useLocaleContext } from '@/contexts/LocaleContext'
 import { trackEvent } from '@/lib/analytics'
-import { SEO } from '@/components/SEO'
+import { t } from '@/lib/translations'
+import { motion } from 'framer-motion'
+import { useEffect, useRef, useState } from 'react'
+import { Link } from 'react-router-dom'
 
 function IconGlobe() {
     return (
@@ -98,8 +98,20 @@ export default function HomePage() {
     return (
         <div className="page-wrapper" style={{ background: '#060b1e' }}>
             <SEO
-                title="True Legacy | World Class Enagic Distributors"
-                description="Join a community of entrepreneurs who make money by sharing world-changing products like the Kangen water machine and emGuarde."
+                title={
+                    locale === 'es'
+                        ? 'True Legacy | Distribuidores Enagic de clase mundial'
+                        : locale === 'fr'
+                            ? 'True Legacy | Distributeurs Enagic de classe mondiale'
+                            : 'True Legacy | World Class Enagic Distributors'
+                }
+                description={
+                    locale === 'es'
+                        ? 'Únete a una comunidad de emprendedores que ganan dinero compartiendo productos que cambian vidas como Kangen Water y emGuarde.'
+                        : locale === 'fr'
+                            ? "Rejoignez une communauté d'entrepreneurs qui gagnent de l'argent en partageant des produits qui changent la vie comme Kangen Water et emGuarde."
+                            : 'Join a community of entrepreneurs who make money by sharing world-changing products like the Kangen water machine and emGuarde.'
+                }
             />
             <Navbar />
 
@@ -183,7 +195,7 @@ export default function HomePage() {
                         transition={{ delay: 1.5, duration: 1 }}
                         className="absolute bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
                     >
-                        <span className="text-[9px] uppercase tracking-[0.35em] font-semibold text-slate-500">Scroll to Explore</span>
+                        <span className="text-[9px] uppercase tracking-[0.35em] font-semibold text-slate-500">{copy.homeScrollToExplore}</span>
                         <div className="w-px h-10 bg-gradient-to-b from-slate-500 to-transparent" />
                     </motion.div>
                 </TLBackground>
@@ -203,15 +215,14 @@ export default function HomePage() {
                         >
                             <div className="max-w-xl">
                                 <p className="text-xs font-semibold uppercase tracking-[0.3em] text-tl-gold mb-3">
-                                    The Leaders
-                                </p>
-                                <h2 className="text-3xl md:text-5xl text-white mb-4 leading-tight font-display font-bold">
-                                    A Movement Across<br />
-                                    <span className="gradient-text-blue">Every Continent</span>
-                                </h2>
-                                <p className="text-slate-400 text-base leading-relaxed font-light">
-                                    Connecting visionary leaders from Morocco to Miami, Lagos to Bogotá — each building a True Legacy.
-                                </p>
+                                {copy.homeLeadersTitle}
+                            </p>
+                            <h2 className="text-3xl md:text-5xl text-white mb-4 leading-tight font-display font-bold">
+                                {copy.homeLeadersHeadline}
+                            </h2>
+                            <p className="text-slate-400 text-base leading-relaxed font-light">
+                                {copy.homeLeadersTagline}
+                            </p>
                             </div>
                             <div className="flex items-center justify-center w-14 h-14 rounded-full border border-white/10 bg-tl-blue/10 text-slate-400">
                                 <IconGlobe />

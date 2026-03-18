@@ -1,16 +1,16 @@
-import { useState } from 'react'
-import { motion } from 'framer-motion'
-import { useParams, Link } from 'react-router-dom'
-import { Shield, ExternalLink, Download, Play, CheckCircle, Zap, Battery, Globe } from 'lucide-react'
-import { Navbar } from '@/components/layout/Navbar'
 import { Footer } from '@/components/layout/Footer'
+import { Navbar } from '@/components/layout/Navbar'
+import { SEO } from '@/components/SEO'
 import { AuroraBackground } from '@/components/ui/AuroraBackground'
 import { YouTubeEmbed } from '@/components/ui/YouTubeEmbed'
+import { getWhatsAppLink } from '@/config/contactLinks'
+import { useLocaleContext } from '@/contexts/LocaleContext'
 import { COUNTRIES } from '@/lib/countries'
 import { t } from '@/lib/translations'
-import { useLocaleContext } from '@/contexts/LocaleContext'
-import { getWhatsAppLink } from '@/config/contactLinks'
-import { SEO } from '@/components/SEO'
+import { motion } from 'framer-motion'
+import { Battery, CheckCircle, Download, ExternalLink, Globe, Play, Shield, Zap } from 'lucide-react'
+import { useState } from 'react'
+import { Link, useParams } from 'react-router-dom'
 
 const FEATURES_EN = [
     { icon: Shield, text: '26 FT diameter EMF coverage' },
@@ -48,9 +48,21 @@ export default function EmGuardePage() {
 
     return (
         <div className="page-wrapper bg-[#070b16]">
-            <SEO 
-                title={`emGuarde EMF Protection Technology | True Legacy ${country.name}`}
-                description="emGuarde by Enagic neutralizes harmful EMF radiation up to 1000 MHz within a 26-foot radius. Protect your home and office today."
+            <SEO
+                title={
+                    locale === 'es'
+                        ? `emGuarde Tecnología de Protección EMF | True Legacy ${country.name}`
+                        : locale === 'fr'
+                            ? `emGuarde Technologie de Protection EMF | True Legacy ${country.name}`
+                            : `emGuarde EMF Protection Technology | True Legacy ${country.name}`
+                }
+                description={
+                    locale === 'es'
+                        ? 'emGuarde de Enagic neutraliza la radiación EMF dañina hasta 1000 MHz en un radio de 26 pies. Protege tu hogar y oficina hoy.'
+                        : locale === 'fr'
+                            ? "emGuarde d'Enagic neutralise les radiations EMF nocives jusqu'à 1000 MHz dans un rayon de 26 pieds. Protégez votre maison et votre bureau dès aujourd'hui."
+                            : 'emGuarde by Enagic neutralizes harmful EMF radiation up to 1000 MHz within a 26-foot radius. Protect your home and office today.'
+                }
                 image="/products/emguarde.png"
             />
             <Navbar />
