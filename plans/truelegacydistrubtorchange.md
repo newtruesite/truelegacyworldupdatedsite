@@ -47,7 +47,7 @@
 
 ### 5) Localized "Book a Call" and "WhatsApp (LATAM)" on Distributors page
 
-- `src/pages/DistributorsPage.tsx`: 
+- `src/pages/DistributorsPage.tsx`:
   - Spanish: **`Agendar llamada`** / **`WhatsApp (LATAM)`**
   - French: **`Réserver un appel`** / **`WhatsApp (LATAM)`**
   - English: **`Book a Call`** / **`WhatsApp (LATAM)`**
