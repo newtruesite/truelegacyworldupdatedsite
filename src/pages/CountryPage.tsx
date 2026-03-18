@@ -376,6 +376,24 @@ const COUNTRY_LEADERS: Record<
       instagram: "https://www.instagram.com/mcardonita/",
     },
   ],
+  turkey: [
+    {
+      name: "Coach Mehdi",
+      role: "Global Founder & Market Builder",
+      image: "/leaders/mehdi-hero.png",
+      intro:
+        "Expanding True Legacy into Turkey and Europe — mentoring leaders who want to build intentional, flexible lives with Enagic.",
+      instagram: "https://www.instagram.com/mehdicohen_/",
+    },
+    {
+      name: "Coach Zah",
+      role: "Elite Performance & Leadership Coach",
+      image: "/leaders/zah-hero.png",
+      intro:
+        "Bringing high-performance coaching to Turkish entrepreneurs who want to combine wellness and long-term financial freedom.",
+      instagram: "https://www.instagram.com/zahphysique/",
+    },
+  ],
 };
 
 type PdfConfig = {
@@ -1271,6 +1289,13 @@ const COUNTRY_TO_CONTINENT: Record<
     nameEs: "Asia",
     nameFr: "Asie",
     namePt: "Ásia",
+  },
+  turkey: {
+    id: "europe",
+    nameEn: "Europe",
+    nameEs: "Europa",
+    nameFr: "Europe",
+    namePt: "Europa",
   },
 };
 

@@ -215,7 +215,7 @@ export function WorldMap() {
             width: "100%",
             height:
               typeof window !== "undefined" && window.innerWidth <= 767
-                ? "540px"
+                ? "580px"
                 : "460px",
             touchAction: "pan-y",
           }}
@@ -251,7 +251,7 @@ export function WorldMap() {
                 top = isMobile ? "75%" : 305;
               } else if (c.id === "europe") {
                 left = isMobile ? "52%" : 320;
-                top = isMobile ? "25%" : 210;
+                top = isMobile ? "28%" : 210;
               } else if (c.id === "asia") {
                 left = isMobile ? "75%" : 370;
                 top = isMobile ? "45%" : 235;

@@ -38,7 +38,7 @@ const CONTINENT_DATA: Record<
   },
   europe: {
     name: "Europe",
-    countries: [],
+    countries: [{ code: "tr", name: "Turkey", slug: "turkey" }],
   },
   asia: {
     name: "Asia",
@@ -191,125 +191,111 @@ export default function SelectCountryPage() {
           </p>
         </div>
 
-        {continent === "europe" ? (
-          <div className="w-full max-w-3xl mx-auto py-16 text-center">
-            <p className="text-2xl font-semibold text-white mb-2">
-              Countries coming soon
-            </p>
-            <p className="text-slate-400 max-w-2xl mx-auto">
-              We’re working to bring True Legacy to Europe — stay tuned for
-              updates and reach out if you'd like to get early access.
-            </p>
-          </div>
-        ) : (
-          <div className="grid grid-cols-[repeat(auto-fit,minmax(260px,1fr))] gap-4 md:gap-5 pb-12 justify-items-center place-content-center w-full max-w-6xl mx-auto">
-            {displayData.countries.map((country) => (
-              <button
-                key={country.slug}
-                onClick={() => {
-                  try {
-                    sessionStorage.setItem("last_page", window.location.href);
-                    sessionStorage.setItem("last_page_label", "Select Region");
-                    sessionStorage.setItem("last_continent_id", continent);
-                    sessionStorage.setItem(
-                      "last_continent_name",
-                      displayData.name,
-                    );
-                  } catch {
-                    /* ignore */
-                  }
-                  navigate(`/${country.slug}`);
-                }}
-                style={{
-                  background: "rgba(255,255,255,0.04)",
-                  border: "1px solid rgba(255,255,255,0.08)",
-                  borderRadius: "18px",
-                  padding: "32px 24px",
-                  cursor: "pointer",
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                  gap: "16px",
-                  transition: "all 0.25s ease",
-                  boxShadow: "0 4px 24px rgba(0,0,0,0.2)",
-                  minWidth: "260px",
-                  maxWidth: "320px",
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.background = "rgba(0,168,150,0.1)";
-                  e.currentTarget.style.borderColor = "rgba(0,168,150,0.5)";
-                  e.currentTarget.style.transform = "translateY(-6px)";
-                  e.currentTarget.style.boxShadow =
-                    "0 20px 60px rgba(0,0,0,0.4)";
-                  const cta = e.currentTarget.querySelector(
-                    "[data-cta]",
-                  ) as HTMLElement | null;
-                  if (cta) cta.style.color = "#00a896";
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.background = "rgba(255,255,255,0.04)";
-                  e.currentTarget.style.borderColor = "rgba(255,255,255,0.08)";
-                  e.currentTarget.style.transform = "translateY(0)";
-                  e.currentTarget.style.boxShadow =
-                    "0 4px 24px rgba(0,0,0,0.2)";
-                  const cta = e.currentTarget.querySelector(
-                    "[data-cta]",
-                  ) as HTMLElement | null;
-                  if (cta) cta.style.color = "#4a7a8a";
-                }}
+        <div className="grid grid-cols-[repeat(auto-fit,minmax(260px,1fr))] gap-4 md:gap-5 pb-12 justify-items-center place-content-center w-full max-w-6xl mx-auto">
+          {displayData.countries.map((country) => (
+            <button
+              key={country.slug}
+              onClick={() => {
+                try {
+                  sessionStorage.setItem("last_page", window.location.href);
+                  sessionStorage.setItem("last_page_label", "Select Region");
+                  sessionStorage.setItem("last_continent_id", continent);
+                  sessionStorage.setItem(
+                    "last_continent_name",
+                    displayData.name,
+                  );
+                } catch {
+                  /* ignore */
+                }
+                navigate(`/${country.slug}`);
+              }}
+              style={{
+                background: "rgba(255,255,255,0.04)",
+                border: "1px solid rgba(255,255,255,0.08)",
+                borderRadius: "18px",
+                padding: "32px 24px",
+                cursor: "pointer",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                gap: "16px",
+                transition: "all 0.25s ease",
+                boxShadow: "0 4px 24px rgba(0,0,0,0.2)",
+                minWidth: "260px",
+                maxWidth: "320px",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = "rgba(0,168,150,0.1)";
+                e.currentTarget.style.borderColor = "rgba(0,168,150,0.5)";
+                e.currentTarget.style.transform = "translateY(-6px)";
+                e.currentTarget.style.boxShadow = "0 20px 60px rgba(0,0,0,0.4)";
+                const cta = e.currentTarget.querySelector(
+                  "[data-cta]",
+                ) as HTMLElement | null;
+                if (cta) cta.style.color = "#00a896";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = "rgba(255,255,255,0.04)";
+                e.currentTarget.style.borderColor = "rgba(255,255,255,0.08)";
+                e.currentTarget.style.transform = "translateY(0)";
+                e.currentTarget.style.boxShadow = "0 4px 24px rgba(0,0,0,0.2)";
+                const cta = e.currentTarget.querySelector(
+                  "[data-cta]",
+                ) as HTMLElement | null;
+                if (cta) cta.style.color = "#4a7a8a";
+              }}
+            >
+              <span
+                className="inline-flex overflow-hidden rounded border-2 border-white/15 bg-[#0a2060] shadow-xl"
+                style={{ width: "96px", height: "64px" }}
               >
-                <span
-                  className="inline-flex overflow-hidden rounded border-2 border-white/15 bg-[#0a2060] shadow-xl"
-                  style={{ width: "96px", height: "64px" }}
+                {failedFlagSlugs.has(country.slug) ? (
+                  <span className="flex h-full w-full items-center justify-center text-3xl leading-none">
+                    {country.flagEmoji}
+                  </span>
+                ) : (
+                  <img
+                    {...getFlagSrcSet(country.slug)}
+                    alt={country.name}
+                    className="h-full w-full object-cover"
+                    loading="lazy"
+                    onError={() =>
+                      setFailedFlagSlugs((prev) =>
+                        new Set(prev).add(country.slug),
+                      )
+                    }
+                  />
+                )}
+              </span>
+              <div>
+                <div
+                  style={{
+                    fontSize: "17px",
+                    fontWeight: "700",
+                    color: "#ffffff",
+                    letterSpacing: "-0.2px",
+                    marginBottom: "4px",
+                  }}
                 >
-                  {failedFlagSlugs.has(country.slug) ? (
-                    <span className="flex h-full w-full items-center justify-center text-3xl leading-none">
-                      {country.flagEmoji}
-                    </span>
-                  ) : (
-                    <img
-                      {...getFlagSrcSet(country.slug)}
-                      alt={country.name}
-                      className="h-full w-full object-cover"
-                      loading="lazy"
-                      onError={() =>
-                        setFailedFlagSlugs((prev) =>
-                          new Set(prev).add(country.slug),
-                        )
-                      }
-                    />
-                  )}
-                </span>
-                <div>
-                  <div
-                    style={{
-                      fontSize: "17px",
-                      fontWeight: "700",
-                      color: "#ffffff",
-                      letterSpacing: "-0.2px",
-                      marginBottom: "4px",
-                    }}
-                  >
-                    {country.name}
-                  </div>
-                  <div
-                    data-cta
-                    style={{
-                      fontSize: "12px",
-                      color: "#4a7a8a",
-                      fontWeight: "600",
-                      letterSpacing: "0.06em",
-                      textTransform: "uppercase",
-                      transition: "color 0.2s",
-                    }}
-                  >
-                    {locale === "es" ? "VER PRODUCTOS →" : "View Products →"}
-                  </div>
+                  {country.name}
                 </div>
-              </button>
-            ))}
-          </div>
-        )}
+                <div
+                  data-cta
+                  style={{
+                    fontSize: "12px",
+                    color: "#4a7a8a",
+                    fontWeight: "600",
+                    letterSpacing: "0.06em",
+                    textTransform: "uppercase",
+                    transition: "color 0.2s",
+                  }}
+                >
+                  {locale === "es" ? "VER PRODUCTOS →" : "View Products →"}
+                </div>
+              </div>
+            </button>
+          ))}
+        </div>
 
         <div className="w-full max-w-6xl mx-auto mt-12 mb-8 text-center bg-white/5 border border-white/10 rounded-2xl p-8 backdrop-blur-sm">
           <h3 className="text-xl font-bold text-white mb-2">
