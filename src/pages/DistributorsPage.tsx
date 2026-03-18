@@ -26,6 +26,7 @@ const DISTRIBUTORS = [
     title: "True Legacy Leader",
     photo: "/leaders/zah-hero.png",
     fallbackInitial: "Z",
+    website: "https://zahphysique.com",
     instagram: "https://www.instagram.com/zahphysique/",
     region: "Global",
   },
@@ -139,7 +140,7 @@ function DistributorCard({
       transition={{ delay: 0.1 + index * 0.1 }}
       className="rounded-2xl border border-white/10 bg-[rgba(5,16,48,0.8)] p-4 sm:p-6 md:p-8 flex flex-col sm:flex-row gap-5 sm:gap-6 items-start"
     >
-      <div className="flex-shrink-0 w-32 sm:w-48 h-32 sm:h-76 rounded-2xl border-2 border-white/10 overflow-hidden bg-cyan-500/10 flex items-center justify-center">
+      <div className="shrink-0 w-32 sm:w-48 h-32 sm:h-76 rounded-2xl border-2 border-white/10 overflow-hidden bg-cyan-500/10 flex items-center justify-center">
         {!imgError ? (
           <img
             src={dist.photo}
@@ -164,9 +165,9 @@ function DistributorCard({
               href={dist.whatsapp}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#25D366] hover:bg-[#20BD5A] text-white font-semibold px-4 py-3 text-sm min-h-[44px] transition-colors"
+              className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#25D366] hover:bg-[#20BD5A] text-white font-semibold px-4 py-3 text-sm min-h-11 transition-colors"
             >
-              <IconWhatsApp className="w-5 h-5 flex-shrink-0" />
+              <IconWhatsApp className="w-5 h-5 shrink-0" />
               {whatsappLabel}
             </a>
           )}
@@ -175,9 +176,9 @@ function DistributorCard({
               href={(dist as any).latamWhatsapp}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#25D366] hover:bg-[#20BD5A] text-white font-semibold px-4 py-3 text-sm min-h-[44px] transition-colors"
+              className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#25D366] hover:bg-[#20BD5A] text-white font-semibold px-4 py-3 text-sm min-h-11 transition-colors"
             >
-              <IconWhatsApp className="w-5 h-5 flex-shrink-0" />
+              <IconWhatsApp className="w-5 h-5 shrink-0" />
               WhatsApp (LATAM)
             </a>
           )}
@@ -186,9 +187,9 @@ function DistributorCard({
               href={dist.calendly}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center justify-center gap-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-3 text-sm min-h-[44px] transition-colors"
+              className="inline-flex items-center justify-center gap-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-3 text-sm min-h-11 transition-colors"
             >
-              <Calendar className="w-5 h-5 flex-shrink-0" />
+              <Calendar className="w-5 h-5 shrink-0" />
               Book a Call
             </a>
           )}
@@ -197,9 +198,9 @@ function DistributorCard({
               href={dist.website}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/20 bg-white/5 hover:bg-white/10 text-white font-semibold px-4 py-3 text-sm min-h-[44px] transition-colors"
+              className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#25D366] hover:bg-[#20BD5A] text-white font-semibold px-4 py-3 text-sm min-h-11 transition-colors"
             >
-              <Globe className="w-5 h-5 flex-shrink-0" />
+              <Globe className="w-5 h-5 shrink-0" />
               {websiteLabel}
             </a>
           )}
@@ -208,9 +209,9 @@ function DistributorCard({
               href={dist.telegram}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#229ED9] hover:bg-[#1E8BC7] text-white font-semibold px-4 py-3 text-sm min-h-[44px] transition-colors"
+              className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#229ED9] hover:bg-[#1E8BC7] text-white font-semibold px-4 py-3 text-sm min-h-11 transition-colors"
             >
-              <MessageCircle className="w-5 h-5 flex-shrink-0" />
+              <MessageCircle className="w-5 h-5 shrink-0" />
               Telegram
             </a>
           )}
@@ -219,9 +220,9 @@ function DistributorCard({
               href={dist.instagram}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/20 bg-white/5 hover:bg-white/10 text-white font-semibold px-4 py-3 text-sm min-h-[44px] transition-colors"
+              className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/20 bg-white/5 hover:bg-white/10 text-white font-semibold px-4 py-3 text-sm min-h-11 transition-colors"
             >
-              <Instagram className="w-5 h-5 flex-shrink-0" />
+              <Instagram className="w-5 h-5 shrink-0" />
               Instagram
             </a>
           )}

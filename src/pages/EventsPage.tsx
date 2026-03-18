@@ -208,7 +208,9 @@ export default function EventsPage() {
                   </div>
                   <div className="p-5 sm:p-8">
                     <h2 className="text-xl sm:text-2xl font-bold text-white mb-2">
-                      {event.title}
+                      {region === "latam"
+                        ? "CLASE MAGISTRAL SOBRE EL VERDADERO LEGADO"
+                        : event.title}
                     </h2>
                     <p className="text-[#00a896] font-semibold text-base mb-5">
                       {event.date}
