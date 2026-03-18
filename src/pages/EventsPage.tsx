@@ -142,7 +142,6 @@ export default function EventsPage() {
   const isSpanish = lang === "es";
 
   const [leadCaptureOpen, setLeadCaptureOpen] = useState(false);
-  const [joinedEvent, setJoinedEvent] = useState(false);
 
   // Redirect old country-slug URLs to region URLs once
   useEffect(() => {
@@ -158,12 +157,10 @@ export default function EventsPage() {
   };
 
   const handleFirstTimeNo = (joinUrl: string) => {
-    setJoinedEvent(true);
     window.open(joinUrl, "_blank");
   };
 
   const handleLeadCaptureSuccess = () => {
-    setJoinedEvent(true);
     setLeadCaptureOpen(false);
   };
 
@@ -232,33 +229,15 @@ export default function EventsPage() {
                       {desc}
                     </div>
 
-                    {/* First Time Prompt */}
-                    {!joinedEvent && (
-                      <div className="mb-6">
-                        <EventsFirstTimePrompt
-                          onYes={handleFirstTimeYes}
-                          onNo={handleFirstTimeNo}
-                          joinUrl={joinUrl}
-                          isSpanish={isSpanish}
-                        />
-                      </div>
-                    )}
-
-                    {/* Join Button (visible after first-time prompt is answered) */}
-                    {joinedEvent && (
-                      <a
-                        href={joinUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="event-register-btn inline-flex items-center justify-center w-full min-h-[56px] px-6 py-4 rounded-xl font-bold text-base text-white transition-all hover:opacity-95 hover:scale-[1.01]"
-                        style={{
-                          background:
-                            "linear-gradient(135deg, #00a896, #00c4ae)",
-                        }}
-                      >
-                        {isSpanish ? "Unirse ahora" : "Join now"}
-                      </a>
-                    )}
+                    {/* First Time Prompt - Always Visible */}
+                    <div className="mb-6">
+                      <EventsFirstTimePrompt
+                        onYes={handleFirstTimeYes}
+                        onNo={handleFirstTimeNo}
+                        joinUrl={joinUrl}
+                        isSpanish={isSpanish}
+                      />
+                    </div>
                   </div>
                 </article>
               );
