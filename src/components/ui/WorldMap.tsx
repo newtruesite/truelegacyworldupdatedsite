@@ -187,7 +187,7 @@ export function WorldMap() {
       className="map-logo-overlay"
       style={{
         position: "absolute",
-        top: 18,
+        top: 14,
         left: "50%",
         transform: "translateX(-50%)",
         pointerEvents: "none",
@@ -237,20 +237,20 @@ export function WorldMap() {
                 typeof window !== "undefined" && window.innerWidth <= 767;
 
               if (c.id === "north-america") {
-                left = isMobile ? "16%" : 83;
-                top = isMobile ? "40%" : 196;
+                left = isMobile ? "18%" : 83;
+                top = isMobile ? "45%" : 196;
               } else if (c.id === "south-america") {
-                left = isMobile ? "28%" : 150;
-                top = isMobile ? "70%" : 305;
+                left = isMobile ? "30%" : 150;
+                top = isMobile ? "75%" : 305;
               } else if (c.id === "europe") {
-                left = isMobile ? "48%" : 320;
-                top = isMobile ? "28%" : 210;
+                left = isMobile ? "52%" : 320;
+                top = isMobile ? "25%" : 210;
               } else if (c.id === "asia") {
-                left = isMobile ? "72%" : 370;
-                top = isMobile ? "43%" : 235;
+                left = isMobile ? "75%" : 370;
+                top = isMobile ? "45%" : 235;
               } else if (c.id === "africa") {
-                left = isMobile ? "47%" : 260;
-                top = isMobile ? "60%" : 280;
+                left = isMobile ? "50%" : 260;
+                top = isMobile ? "65%" : 280;
               }
 
               return (

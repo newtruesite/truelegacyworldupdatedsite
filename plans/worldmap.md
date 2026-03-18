@@ -12,13 +12,13 @@ This is the definitive specification for the world map component with interactiv
 
 ## Pin Coordinates & Offsets
 
-| Region        | Lat/Lng     | Desktop (px)            | Mobile (%)              | Notes                                    |
-| ------------- | ----------- | ----------------------- | ----------------------- | ---------------------------------------- |
-| North America | 46.5, -96.5 | left: 83, top: 196      | left: 16%, top: 40%     | Stable position, no overlap risk         |
-| South America | -12, -58    | left: 150, top: 305     | left: 28%, top: 70%     | Lower south, unique position             |
-| **Europe**    | **60, 100** | **left: 320, top: 230** | **left: 48%, top: 35%** | **Moved up on mobile to clear logo**     |
-| **Asia**      | **48, 88**  | **left: 370, top: 235** | **left: 72%, top: 43%** | **Shifted right & down to avoid Europe** |
-| Africa        | 6.5, 12     | left: 260, top: 280     | left: 47%, top: 60%     | Central position, no collision           |
+| Region        | Lat/Lng     | Desktop (px)            | Mobile (%) (Optimized)  | Notes                                       |
+| ------------- | ----------- | ----------------------- | ----------------------- | ------------------------------------------- |
+| North America | 46.5, -96.5 | left: 83, top: 196      | left: 18%, top: 45%     | Top-left on mobile, fully visible           |
+| South America | -12, -58    | left: 150, top: 305     | left: 30%, top: 75%     | Bottom-left on mobile, clear separation     |
+| **Europe**    | **60, 100** | **left: 320, top: 210** | **left: 52%, top: 25%** | **Upper-middle on mobile, no logo overlap** |
+| **Asia**      | **48, 88**  | **left: 370, top: 235** | **left: 75%, top: 45%** | **Right side on mobile, clear from Europe** |
+| Africa        | 6.5, 12     | left: 260, top: 280     | left: 50%, top: 65%     | Center-bottom on mobile, balanced position  |
 
 ## Implementation Details
 
@@ -52,9 +52,11 @@ This is the definitive specification for the world map component with interactiv
 
 ### Mobile Offset Strategy
 
-- **Europe**: Moves up (35% on mobile vs 230px desktop) to clear logo and avoid Asia
-- **Asia**: Shifts right and down (72% left, 43% top) to provide clear horizontal/vertical spacing from Europe
-- **Other continents**: Use fixed offsets without mobile changes (stable positions)
+- **North America**: Top-left position (18% left, 45% top) — fully visible on mobile
+- **South America**: Bottom-left position (30% left, 75% top) — clear separation from North America
+- **Europe**: Upper-middle position (52% left, 25% top) — well above Asia, clear of logo
+- **Asia**: Right position (75% left, 45% top) — far from Europe, balanced on right side
+- **Africa**: Center-bottom position (50% left, 65% top) — stable central position
 
 ## CSS Pin Styling
 
