@@ -131,6 +131,7 @@ html {
     font-size: var(--text-base);
     line-height: var(--text-base-lh);
     padding-bottom: 68px;
+    text-align: center !important;
   }
 
   /* Consolidated with main html/body rules below */
