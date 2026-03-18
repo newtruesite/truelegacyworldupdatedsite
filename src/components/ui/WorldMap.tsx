@@ -244,7 +244,7 @@ export function WorldMap() {
                 top = isMobile ? "70%" : 305;
               } else if (c.id === "europe") {
                 left = isMobile ? "48%" : 320;
-                top = isMobile ? "35%" : 230;
+                top = isMobile ? "28%" : 210;
               } else if (c.id === "asia") {
                 left = isMobile ? "72%" : 370;
                 top = isMobile ? "43%" : 235;
