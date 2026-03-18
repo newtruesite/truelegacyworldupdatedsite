@@ -129,8 +129,7 @@ export function LeadersModal({ isOpen, onClose, country, title = 'Connect With a
                   {(leader as { whatsapp?: string }).whatsapp && (
                     <a
                       href={(leader as { whatsapp?: string }).whatsapp}
-                      target="_blank"
-                      rel="noopener noreferrer"
+                      target="_blank" rel="noopener noreferrer"
                       className="inline-flex items-center gap-2 min-h-[44px] px-4 py-2.5 rounded-lg font-bold text-white no-underline text-sm transition-opacity hover:opacity-90"
                       style={{ background: '#25D366' }}
                     >
@@ -141,8 +140,7 @@ export function LeadersModal({ isOpen, onClose, country, title = 'Connect With a
                   {(leader as { website?: string }).website && (
                     <a
                       href={(leader as { website?: string }).website}
-                      target="_blank"
-                      rel="noopener noreferrer"
+                      target="_blank" rel="noopener noreferrer"
                       className="inline-flex items-center gap-2 min-h-[44px] px-4 py-2.5 rounded-lg font-bold text-white no-underline text-sm border border-white/20 bg-white/5 hover:bg-white/10"
                     >
                       Website
@@ -151,8 +149,7 @@ export function LeadersModal({ isOpen, onClose, country, title = 'Connect With a
                   {leader.telegram && (
                     <a
                       href={leader.telegram}
-                      target="_blank"
-                      rel="noopener noreferrer"
+                      target="_blank" rel="noopener noreferrer"
                       className="inline-flex items-center gap-2 min-h-[44px] px-4 py-2.5 rounded-lg font-bold text-white no-underline text-sm transition-opacity hover:opacity-90"
                       style={{ background: '#229ED9' }}
                     >
@@ -163,8 +160,7 @@ export function LeadersModal({ isOpen, onClose, country, title = 'Connect With a
                   {isLATAM && !(leader as { whatsapp?: string }).whatsapp && (
                     <a
                       href={WHATSAPP_LATAM}
-                      target="_blank"
-                      rel="noopener noreferrer"
+                      target="_blank" rel="noopener noreferrer"
                       className="inline-flex items-center gap-2 min-h-[44px] px-4 py-2.5 rounded-lg font-bold text-white no-underline text-sm transition-opacity hover:opacity-90"
                       style={{ background: '#25D366' }}
                     >

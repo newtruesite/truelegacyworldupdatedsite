@@ -3,8 +3,8 @@ import { motion } from 'framer-motion'
 import { Navbar } from '@/components/layout/Navbar'
 import { Footer } from '@/components/layout/Footer'
 import { TLBackground } from '@/components/ui/TLBackground'
-import { useLocaleContext } from '@/contexts/LocaleContext'
 import { Calendar, MessageCircle, Globe, Instagram } from 'lucide-react'
+import { SEO } from '@/components/SEO'
 
 const DISTRIBUTORS = [
   {
@@ -18,15 +18,15 @@ const DISTRIBUTORS = [
     calendly: 'https://calendly.com/aquacharged/true-legacy-one-on-one',
     telegram: 'https://t.me/mehdicohen',
     instagram: 'https://www.instagram.com/mehdicohen/',
-    region: 'Global & LATAM',
+    region: 'Global y LATAM',
   },
   {
     name: 'Zah Naderi',
-    title: 'True Legacy Leader',
+    title: 'Líder True Legacy',
     photo: '/leaders/zah-hero.png',
     fallbackInitial: 'Z',
     instagram: 'https://www.instagram.com/zahphysique/',
-    region: 'Global',
+    region: 'Solo Global',
   },
 ]
 
@@ -38,32 +38,19 @@ function IconWhatsApp({ className }: { className?: string }) {
   )
 }
 
-export default function DistributorsPage() {
-  const { locale } = useLocaleContext()
+export default function LatamDistributorsPage() {
+  const title = 'Distribuidores True Legacy'
+  const subtitle = 'Conecta con un líder cerca de ti. WhatsApp, sitio web y redes para comenzar tu camino.'
 
-  const title =
-    locale === 'es'
-      ? 'Distribuidores True Legacy'
-      : locale === 'fr'
-        ? 'Distributeurs True Legacy'
-        : locale === 'pt'
-          ? 'Distribuidores True Legacy'
-          : 'True Legacy Distributors'
-
-  const subtitle =
-    locale === 'es'
-      ? 'Conecta con un líder cerca de ti. WhatsApp, sitio web y redes para comenzar tu camino.'
-      : locale === 'fr'
-        ? 'Connectez-vous avec un leader près de chez vous. WhatsApp, site web et réseaux pour commencer.'
-        : locale === 'pt'
-          ? 'Conecte-se com um líder perto de você. WhatsApp, site e redes para começar.'
-          : 'Connect with a leader near you. WhatsApp, website and socials to start your journey.'
-
-  const whatsappLabel = locale === 'es' ? 'WhatsApp' : locale === 'fr' ? 'WhatsApp' : locale === 'pt' ? 'WhatsApp' : 'WhatsApp'
-  const websiteLabel = locale === 'es' ? 'Sitio web' : locale === 'fr' ? 'Site web' : locale === 'pt' ? 'Site' : 'Website'
+  const whatsappLabel = 'WhatsApp'
+  const websiteLabel = 'Sitio web'
 
   return (
     <div className="page-wrapper" style={{ background: '#060b1e' }}>
+      <SEO 
+        title="Distribuidores LATAM | True Legacy Enagic"
+        description="Conecta con un líder de True Legacy en tu región. Encuentra distribuidores en Latinoamérica."
+      />
       <Navbar />
       <main className="content-wrapper">
         <TLBackground className="pt-28 pb-16">
@@ -73,7 +60,7 @@ export default function DistributorsPage() {
               animate={{ opacity: 1, y: 0 }}
               className="mb-3 text-xs font-semibold tracking-[0.3em] uppercase text-tl-gold opacity-80"
             >
-              True Legacy World
+              True Legacy World LATAM
             </motion.p>
             <motion.h1
               initial={{ opacity: 0, y: 12 }}
@@ -121,18 +108,18 @@ function DistributorCard({
   const [imgError, setImgError] = useState(false)
   return (
     <motion.article
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.1 + index * 0.1 }}
       className="rounded-2xl border border-white/10 bg-[rgba(5,16,48,0.8)] p-4 sm:p-6 md:p-8 flex flex-col sm:flex-row gap-5 sm:gap-6 items-start"
     >
       <div className="flex-shrink-0 w-32 sm:w-48 h-32 sm:h-48 rounded-2xl border-2 border-white/10 overflow-hidden bg-cyan-500/10 flex items-center justify-center">
-                  {!imgError ? (
-                    <img src={dist.photo} alt={dist.name} className="w-full h-full object-cover" onError={() => setImgError(true)} />
-                  ) : null}
-      {(imgError || !dist.photo) && (
-        <span className="text-cyan-400 font-bold text-2xl">{dist.fallbackInitial}</span>
-      )}
+        {!imgError ? (
+          <img src={dist.photo} alt={dist.name} className="w-full h-full object-cover" onError={() => setImgError(true)} />
+        ) : null}
+        {(imgError || !dist.photo) && (
+          <span className="text-cyan-400 font-bold text-2xl">{dist.fallbackInitial}</span>
+        )}
       </div>
       <div className="flex-1 min-w-0">
         <h2 className="text-xl font-bold text-white mb-1">{dist.name}</h2>
@@ -148,13 +135,13 @@ function DistributorCard({
           {(dist as any).latamWhatsapp && (
             <a href={(dist as any).latamWhatsapp} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#25D366] hover:bg-[#20BD5A] text-white font-semibold px-4 py-3 text-sm min-h-[44px] transition-colors">
               <IconWhatsApp className="w-5 h-5 flex-shrink-0" />
-              WhatsApp (LATAM)
+              WhatsApp (LATAM en español)
             </a>
           )}
           {dist.calendly && (
             <a href={dist.calendly} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center gap-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-3 text-sm min-h-[44px] transition-colors">
               <Calendar className="w-5 h-5 flex-shrink-0" />
-              Book a Call
+              Agendar llamada
             </a>
           )}
           {dist.website && (

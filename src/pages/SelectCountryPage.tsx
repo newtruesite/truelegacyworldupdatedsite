@@ -3,26 +3,25 @@ import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import { Navbar } from '@/components/layout/Navbar'
 import { COUNTRIES, getFlagSrcSet } from '@/lib/countries'
 import { useLocaleContext } from '@/contexts/LocaleContext'
+import { MessageCircle } from 'lucide-react'
+import { GlobeIcon } from '@/components/ui/GlobeIcon'
 
 const CONTINENT_DATA: Record<
   string,
   {
     name: string
-    emoji: string
     countries: Array<{ code: string; name: string; slug: string }>
   }
 > = {
   'north-america': {
     name: 'North America',
-    emoji: '🌎',
     countries: [
       { code: 'us', name: 'United States', slug: 'usa' },
       { code: 'ca', name: 'Canada', slug: 'canada' },
     ],
   },
   'south-america': {
-    name: 'South America',
-    emoji: '🌎',
+    name: 'Sudamérica',
     countries: [
       { code: 'co', name: 'Colombia', slug: 'colombia' },
       { code: 'py', name: 'Paraguay', slug: 'paraguay' },
@@ -32,7 +31,6 @@ const CONTINENT_DATA: Record<
   },
   africa: {
     name: 'Africa',
-    emoji: '🌍',
     countries: [
       { code: 'ma', name: 'Morocco', slug: 'morocco' },
       { code: 'ng', name: 'Nigeria', slug: 'nigeria' },
@@ -40,7 +38,6 @@ const CONTINENT_DATA: Record<
   },
   asia: {
     name: 'Asia',
-    emoji: '🌏',
     countries: [
       { code: 'in', name: 'India', slug: 'india' },
       { code: 'ae', name: 'UAE', slug: 'uae' },
@@ -55,8 +52,7 @@ export default function SelectCountryPage() {
   const continent = params.get('continent') || ''
   const [failedFlagSlugs, setFailedFlagSlugs] = useState<Set<string>>(new Set())
 
-  // Ensure Spanish locale if LATAM/South America is selected directly
-  const { setLocale } = useLocaleContext()
+  const { locale, setLocale } = useLocaleContext()
   useEffect(() => {
     if (continent === 'south-america') {
       setLocale('es')
@@ -72,7 +68,9 @@ export default function SelectCountryPage() {
         <Navbar />
         <div className="content-wrapper flex-1 flex items-center justify-center px-4 py-20">
           <div className="text-center max-w-md w-full bg-white/5 border border-white/10 rounded-2xl p-6 md:p-8 backdrop-blur-sm shadow-2xl mx-auto">
-            <div className="text-5xl mb-4">🌍</div>
+            <div className="flex justify-center mb-6">
+                <GlobeIcon className="w-16 h-16 text-cyan-400 opacity-80" />
+            </div>
             <h1 className="text-2xl md:text-3xl font-bold text-white mb-3 tracking-tight break-words">
               Let's get you to the right region
             </h1>
@@ -99,11 +97,10 @@ export default function SelectCountryPage() {
     )
   }
 
-  const displayData = useMemo(() => {
+    const displayData = useMemo(() => {
     if (isAllCountries) {
       return {
         name: 'All Countries',
-        emoji: '🌍',
         countries: COUNTRIES.map((c) => ({
           slug: c.slug,
           name: c.name,
@@ -115,8 +112,7 @@ export default function SelectCountryPage() {
     // Map the continent data to include the properties we need for rendering
     const contData = CONTINENT_DATA[continent]
     return {
-      name: contData.name,
-      emoji: contData.emoji,
+      name: locale === 'es' && continent === 'south-america' ? 'Sudamérica / LATAM' : contData.name,
       countries: contData.countries.map((c) => {
         // Find the full country object from COUNTRIES to get the flagEmoji
         const fullCountry = COUNTRIES.find((country) => country.slug === c.slug)
@@ -143,17 +139,21 @@ export default function SelectCountryPage() {
           onClick={() => navigate('/')}
           className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-white/5 border border-white/10 rounded-xl backdrop-blur-md hover:bg-white/10 transition-colors"
         >
-          ← Back to Map
+          ← {locale === 'es' && continent === 'south-america' ? 'Volver al Mapa' : 'Back to Map'}
         </button>
       </div>
 
       <div className="text-center mb-10 w-full max-w-2xl mx-auto px-2">
-        <div className="text-5xl md:text-6xl mb-4">{displayData.emoji}</div>
+        <div className="flex justify-center mb-6">
+            <GlobeIcon className="w-16 h-16 md:w-20 md:h-20 text-cyan-400 opacity-80" />
+        </div>
         <h1 className="page-hero-title mb-4 gradient-text text-3xl md:text-5xl font-bold break-words leading-tight">
           {displayData.name}
         </h1>
         <p className="text-slate-300 text-base md:text-lg leading-relaxed max-w-lg mx-auto">
-          Select your country to explore products and join the True Legacy team near you
+          {locale === 'es' && continent === 'south-america'
+            ? 'Selecciona tu país para explorar los productos y unirte al equipo True Legacy cerca de ti'
+            : 'Select your country to explore products and join the True Legacy team near you'}
         </p>
       </div>
 
@@ -234,11 +234,30 @@ export default function SelectCountryPage() {
                   transition: 'color 0.2s',
                 }}
               >
-                View Products →
+                {locale === 'es' ? 'VER PRODUCTOS →' : 'View Products →'}
               </div>
             </div>
           </button>
         ))}
+      </div>
+
+      <div className="w-full max-w-6xl mx-auto mt-12 mb-8 text-center bg-white/5 border border-white/10 rounded-2xl p-8 backdrop-blur-sm">
+        <h3 className="text-xl font-bold text-white mb-2">
+          {locale === 'es' && continent === 'south-america' ? '¿No ves tu país?' : "Don't see your country?"}
+        </h3>
+        <p className="text-slate-400 mb-6 max-w-2xl mx-auto">
+          {locale === 'es' && continent === 'south-america'
+            ? 'Contáctanos por WhatsApp para más información. Más países se agregarán pronto.'
+            : 'Contact us via WhatsApp for more information. More countries will be added soon.'}
+        </p>
+        <a
+          href={continent === 'south-america' ? "https://wa.me/5213327464016" : "https://wa.me/19495726207"}
+          target="_blank" rel="noopener noreferrer"
+          className="inline-flex items-center gap-2 px-6 py-3 bg-green-600 hover:bg-green-500 text-white font-semibold rounded-xl transition-all"
+        >
+          <MessageCircle className="w-5 h-5" />
+          {locale === 'es' && continent === 'south-america' ? 'Contactar por WhatsApp' : 'Contact via WhatsApp'}
+        </a>
       </div>
       </div>
     </div>

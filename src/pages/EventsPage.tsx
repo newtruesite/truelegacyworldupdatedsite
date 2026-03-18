@@ -40,6 +40,7 @@ const UPCOMING_EVENTS = [
     title: 'TRUE LEGACY MASTERCLASS',
     date: 'March 29th, 2026',
     image: '/assets/event-masterclass.png',
+    latamImage: '/assets/event-latam-flyer-DkOd8-Qj-0d566419-1e76-4a4e-9c79-e242f47c70d7.png',
     registerUrl: 'https://tr.ee/8yBqHZ',
     timezones: [
       { region: 'Malaysia', time: '8:00 PM' },
@@ -113,13 +114,7 @@ export default function EventsPage() {
   return (
     <div className="page-wrapper bg-[#060b1e] text-white">
       <Navbar />
-      <div className="content-wrapper mx-auto max-w-4xl px-4 py-8 sm:px-6">
-        {/* Breadcrumb */}
-        <nav className="mb-8 flex items-center gap-2 text-sm text-slate-400">
-          <Link to="/" className="text-slate-500 hover:text-[#00a896] transition-colors">{t.breadcrumbHome}</Link>
-          <span>/</span>
-          <span className="text-white">{t.breadcrumbEvents} — {regionLabel}</span>
-        </nav>
+      <div className="content-wrapper mx-auto max-w-4xl px-4 py-16 sm:px-6">
 
         <h1 className="section-title text-center mb-10">{t.hero} — {regionLabel}</h1>
 
@@ -133,7 +128,7 @@ export default function EventsPage() {
                 <article key={event.id} className="event-card rounded-2xl overflow-hidden border border-white/10 bg-white/5 max-w-3xl mx-auto">
                   <div className="relative w-full bg-white/5 flex items-center justify-center p-4">
                     <img
-                      src={event.image}
+                      src={region === 'latam' && event.latamImage ? event.latamImage : event.image}
                       alt={event.title}
                       className="event-image max-w-full max-h-[500px] w-auto h-auto object-contain"
                     />
@@ -152,8 +147,7 @@ export default function EventsPage() {
                     <div className="whitespace-pre-line text-slate-300 text-sm leading-relaxed mb-6">{desc}</div>
                     <a
                       href={event.registerUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
+                      target="_blank" rel="noopener noreferrer"
                       className="event-register-btn inline-flex items-center justify-center w-full min-h-[56px] px-6 py-4 rounded-xl font-bold text-base text-white transition-all hover:opacity-95 hover:scale-[1.01]"
                       style={{ background: 'linear-gradient(135deg, #00a896, #00c4ae)' }}
                     >

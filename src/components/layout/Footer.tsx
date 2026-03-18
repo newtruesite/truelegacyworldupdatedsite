@@ -61,8 +61,7 @@ export function Footer() {
                         {/* Community CTA */}
                         <a
                             href="https://www.facebook.com/groups/truelegacycommunity"
-                            target="_blank"
-                            rel="noopener noreferrer"
+                            target="_blank" rel="noopener noreferrer"
                             className="inline-flex items-center gap-2 rounded-xl bg-[#1877F2] px-5 py-3 text-sm font-semibold text-white transition-all hover:bg-[#166FE5] hover:scale-105 shadow-lg"
                         >
                             <Facebook className="h-4 w-4" />
@@ -131,8 +130,7 @@ export function Footer() {
                             {isLATAM && (
                                 <a
                                     href="https://www.instagram.com/truelegacylatam?igsh=MTgxZW9yMTMxd2FpbQ=="
-                                    target="_blank"
-                                    rel="noopener noreferrer"
+                                    target="_blank" rel="noopener noreferrer"
                                     className="footer-social-link inline-flex items-center gap-2 text-sm font-semibold no-underline transition-colors hover:text-white min-h-[44px]"
                                     style={{ color: '#c13584' }}
                                 >
@@ -142,8 +140,7 @@ export function Footer() {
                             )}
                             <a
                                 href="https://www.instagram.com/truelegacyworld/"
-                                target="_blank"
-                                rel="noopener noreferrer"
+                                target="_blank" rel="noopener noreferrer"
                                 className="footer-social-link inline-flex items-center gap-2 text-sm font-semibold text-slate-400 no-underline transition-colors hover:text-white min-h-[44px]"
                             >
                                 <IconInstagram />
@@ -152,8 +149,7 @@ export function Footer() {
                             {!isLATAM && (
                                 <a
                                     href="https://www.instagram.com/truelegacylatam?igsh=MTgxZW9yMTMxd2FpbQ=="
-                                    target="_blank"
-                                    rel="noopener noreferrer"
+                                    target="_blank" rel="noopener noreferrer"
                                     className="footer-social-link inline-flex items-center gap-2 text-sm font-semibold text-slate-400 no-underline transition-colors hover:text-white min-h-[44px]"
                                 >
                                     <IconInstagram />
@@ -164,8 +160,7 @@ export function Footer() {
                         <div className="space-y-3">
                             <a
                                 href="https://youtube.com/@TrueLegacyWorld"
-                                target="_blank"
-                                rel="noopener noreferrer"
+                                target="_blank" rel="noopener noreferrer"
                                 className="flex items-center gap-3 text-sm text-slate-400 transition-colors hover:text-white group min-h-[44px]"
                             >
                                 <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-white/5 transition-colors group-hover:bg-red-500/20">
@@ -175,8 +170,7 @@ export function Footer() {
                             </a>
                             <a
                                 href="https://youtube.com/@TrueLegacyLATAM"
-                                target="_blank"
-                                rel="noopener noreferrer"
+                                target="_blank" rel="noopener noreferrer"
                                 className="flex items-center gap-3 text-sm text-slate-400 transition-colors hover:text-white group min-h-[44px]"
                             >
                                 <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-white/5 transition-colors group-hover:bg-red-500/20">

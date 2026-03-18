@@ -178,8 +178,7 @@ function TestimonialCard({ testimonial: t }: { testimonial: (typeof TESTIMONIALS
                 </div>
                 <a
                     href={t.instagram}
-                    target="_blank"
-                    rel="noopener noreferrer"
+                    target="_blank" rel="noopener noreferrer"
                     className="flex items-center gap-1 text-xs text-cyan-400 transition-colors hover:text-cyan-300 opacity-0 group-hover:opacity-100"
                 >
                     <ExternalLink className="h-3 w-3" />

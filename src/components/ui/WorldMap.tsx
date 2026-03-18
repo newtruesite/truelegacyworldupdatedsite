@@ -82,18 +82,15 @@ export function WorldMap() {
       },
     })
 
-    // Kill jsVectorMap built-in tooltips and make paths non-interactive
     setTimeout(() => {
       const wrapper = document.getElementById('world-map')
       if (wrapper) {
         wrapper.style.touchAction = 'pan-y'
-        
         wrapper.querySelectorAll('.jvm-tooltip, text, .jvm-marker-label').forEach((el) => el.remove())
         wrapper.querySelectorAll('path').forEach((p) => {
           ;(p as SVGElement).style.pointerEvents = 'none'
           ;(p as SVGElement).style.cursor = 'default'
         })
-        
         const svg = wrapper.querySelector('svg')
         if (svg) {
           svg.style.touchAction = 'pan-y'
@@ -123,8 +120,7 @@ export function WorldMap() {
       sessionStorage.setItem('last_page', window.location.href)
       sessionStorage.setItem('last_page_label', 'World Map')
       if (continentId === 'south-america') {
-        const { setLocale } = useLocaleContext();
-        setLocale('es');
+        setLocale('es')
       }
     } catch {
       /* ignore */
@@ -132,7 +128,6 @@ export function WorldMap() {
     navigate(`/select-country?continent=${continentId}`)
   }
 
-  /** True Legacy World logo — top of map, matches Navbar/Footer, subtle shadow for contrast */
   const MapLogo = () => (
     <div
       className="map-logo-overlay"
@@ -153,7 +148,11 @@ export function WorldMap() {
 
   return (
     <div className="map-section w-full" style={{ touchAction: 'pan-y' }}>
-      <div id="map-wrapper" className="map-wrapper relative w-full flex items-center justify-center" style={{ position: 'relative', touchAction: 'pan-y' }}>
+      <div
+        id="map-wrapper"
+        className="map-wrapper relative w-full flex items-center justify-center"
+        style={{ position: 'relative', touchAction: 'pan-y' }}
+      >
         <div
           ref={mapContainerRef}
           id="world-map"
@@ -177,22 +176,19 @@ export function WorldMap() {
           >
             {CONTINENTS.map((c) => {
               const { x, y } = latLngToPercent(c.lat, c.lng)
-
-              // Default percentage-based positions from lat/lng
               let left: string | number = `${x * 100}%`
               let top: string | number = `${y * 100}%`
 
-              // Apply manual tuning based on browser tweaks
-              const isMobile = typeof window !== 'undefined' && window.innerWidth <= 767;
+              const isMobile = typeof window !== 'undefined' && window.innerWidth <= 767
 
               if (c.id === 'north-america') {
                 left = isMobile ? '16%' : 83
                 top = isMobile ? '40%' : 196
               } else if (c.id === 'south-america') {
-                left = isMobile ? '25%' : 150
+                left = isMobile ? '28%' : 150
                 top = isMobile ? '70%' : 305
               } else if (c.id === 'africa') {
-                left = isMobile ? '48%' : 260
+                left = isMobile ? '47%' : 260
                 top = isMobile ? '60%' : 280
               }
 

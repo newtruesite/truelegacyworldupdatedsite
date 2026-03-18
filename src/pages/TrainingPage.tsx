@@ -1,14 +1,15 @@
-import { useState, useEffect } from 'react'
-import { motion } from 'framer-motion'
-import { useParams } from 'react-router-dom'
-import { CheckCircle, FileText, ExternalLink, Download, Play, Users, Target, Lightbulb, LogOut } from 'lucide-react'
-import { AuroraBackground } from '@/components/ui/AuroraBackground'
-import { Navbar } from '@/components/layout/Navbar'
 import { Footer } from '@/components/layout/Footer'
-import { useLocaleContext } from '@/contexts/LocaleContext'
-import { t } from '@/lib/translations'
+import { Navbar } from '@/components/layout/Navbar'
+import { SEO } from '@/components/SEO'
+import { AuroraBackground } from '@/components/ui/AuroraBackground'
 import { useAuth } from '@/contexts/AuthContext'
-import { supabase } from '@/lib/supabaseClient'
+import { useLocaleContext } from '@/contexts/LocaleContext'
+import { isSupabaseConfigured, supabase } from '@/lib/supabaseClient'
+import { t } from '@/lib/translations'
+import { motion } from 'framer-motion'
+import { CheckCircle, Download, ExternalLink, FileText, Key, Lightbulb, LogOut, Target, Users } from 'lucide-react'
+import { useEffect, useRef, useState } from 'react'
+import { useParams } from 'react-router-dom'
 
 // Training Module Types
 type TrainingModule = {
@@ -357,8 +358,7 @@ const TrainingModuleCard: React.FC<TrainingModuleCardProps> = ({ module, isExpan
               <a
                 key={index}
                 href={resource.url}
-                target="_blank"
-                rel="noopener noreferrer"
+                target="_blank" rel="noopener noreferrer"
                 className="flex items-center gap-3 p-3 rounded-lg bg-white/5 hover:bg-white/10 transition-colors text-sm"
               >
                 <FileText className="w-4 h-4 text-slate-400 flex-shrink-0" />
@@ -391,19 +391,107 @@ export default function TrainingPage() {
   const { user, loading } = useAuth()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [confirmPassword, setConfirmPassword] = useState('')
   const [authError, setAuthError] = useState('')
+  const [authSuccess, setAuthSuccess] = useState('')
   const [isLoggingIn, setIsLoggingIn] = useState(false)
+  const [authMode, setAuthMode] = useState<'signup' | 'login'>('signup')
+  const [secretCode, setSecretCode] = useState('')
+  const [isSecretCodeValid, setIsSecretCodeValid] = useState(false)
+  const [secretCodeError, setSecretCodeError] = useState('')
+  
+  const contentRef = useRef<HTMLDivElement>(null)
 
-  const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setIsLoggingIn(true)
-    setAuthError('')
-    const { error } = await supabase.auth.signInWithPassword({ email, password })
-    if (error) setAuthError(error.message)
-    setIsLoggingIn(false)
+  // Retrieve saved secret code state
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+        const saved = sessionStorage.getItem('tl_secret_code_valid')
+        if (saved === 'true') {
+            setIsSecretCodeValid(true)
+        }
+    }
+  }, [])
+
+  useEffect(() => {
+    if (user && isSecretCodeValid && contentRef.current) {
+        contentRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    }
+  }, [user, isSecretCodeValid])
+
+  const handleSecretCodeSubmit = (e: React.FormEvent) => {
+      e.preventDefault()
+      if (secretCode === 'truelegacyworld1!') {
+          setIsSecretCodeValid(true)
+          setSecretCodeError('')
+          sessionStorage.setItem('tl_secret_code_valid', 'true')
+      } else {
+          setSecretCodeError(locale === 'es' ? 'Código incorrecto. Únete al grupo de Facebook para obtener el código.' : 'Incorrect code. Join the Facebook group to get the code.')
+      }
   }
 
-  const [activeView, setActiveView] = useState<'sessions' | 'guides'>('sessions')
+  const getFriendlyErrorMessage = (errorMsg: string, isSpanish: boolean) => {
+    const msg = errorMsg.toLowerCase()
+    if (msg.includes('invalid login credentials')) return isSpanish ? 'Correo o contraseña incorrectos.' : 'Incorrect email or password.'
+    if (msg.includes('already registered')) return isSpanish ? 'Este correo ya está registrado.' : 'Email already registered.'
+    if (msg.includes('password should be')) return isSpanish ? 'La contraseña debe tener al menos 6 caracteres.' : 'Password should be at least 6 characters.'
+    return isSpanish ? 'Ocurrió un error. Inténtalo de nuevo.' : errorMsg
+  }
+
+  const handleAuth = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (isLoggingIn) return
+
+    setIsLoggingIn(true)
+    setAuthError('')
+    setAuthSuccess('')
+    
+    const isSpanish = locale === 'es'
+
+    if (!isSupabaseConfigured) {
+      setAuthError(isSpanish 
+        ? 'El acceso de entrenamiento está temporalmente deshabilitado; la configuración del servidor no está completa.' 
+        : 'Training login is temporarily unavailable; server configuration is incomplete.')
+      setIsLoggingIn(false)
+      return
+    }
+
+    if (authMode === 'signup' && password !== confirmPassword) {
+      setAuthError(isSpanish ? 'Las contraseñas no coinciden.' : 'Passwords do not match.')
+      setIsLoggingIn(false)
+      return
+    }
+
+    try {
+      if (authMode === 'signup') {
+          const { error } = await supabase.auth.signUp({ email, password })
+          if (error) {
+              setAuthError(getFriendlyErrorMessage(error.message, isSpanish))
+          } else {
+              setAuthSuccess(isSpanish ? '¡Cuenta creada! Revisa tu correo para confirmar.' : 'Account created! Please check your email to confirm.')
+              setAuthMode('login')
+              setPassword('')
+              setConfirmPassword('')
+          }
+      } else {
+          const { error } = await supabase.auth.signInWithPassword({ email, password })
+          if (error) setAuthError(getFriendlyErrorMessage(error.message, isSpanish))
+      }
+    } catch (err: any) {
+      console.error('Supabase auth unexpected error:', { context: 'training-auth', mode: authMode, email, error: err?.message })
+      const errorMsg = err?.message?.toLowerCase() || ''
+      if (err?.name === 'TypeError' || errorMsg.includes('failed to fetch') || errorMsg.includes('networkerror')) {
+         setAuthError(isSpanish 
+           ? 'No pudimos conectar con el servidor de entrenamiento. Revisa tu conexión e inténtalo de nuevo en unos minutos.' 
+           : 'We couldn’t reach the training server. Check your connection and try again in a moment.')
+      } else {
+         setAuthError(isSpanish ? 'Ocurrió un error inesperado.' : 'An unexpected error occurred.')
+      }
+    } finally {
+      setIsLoggingIn(false)
+    }
+  }
+
+  const [activeView, setActiveView] = useState<'sessions' | 'guides' | 'slides'>('sessions')
   const [selectedCategory, setSelectedCategory] = useState<string>('all')
   const [expandedModules, setExpandedModules] = useState<Set<string>>(new Set())
 
@@ -438,6 +526,10 @@ export default function TrainingPage() {
 
   return (
     <div className="page-wrapper" style={{ background: '#060b1e' }}>
+      <SEO 
+        title="True Legacy Leadership Academy | Enagic Training Portal"
+        description="Access the exclusive True Legacy Leadership Academy for Enagic distributors. Learn the 8-point system, product mastery, and legacy building strategies."
+      />
       <Navbar />
       <main className="content-wrapper">
         <AuroraBackground className="pt-24 pb-16">
@@ -447,19 +539,39 @@ export default function TrainingPage() {
                 <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-cyan-500"></div>
               </div>
             ) : !user ? (
-              <div className="max-w-md mx-auto mt-12 bg-white/5 border border-white/10 rounded-2xl p-8 backdrop-blur-sm">
+              <div className="max-w-md mx-auto mt-12 min-h-[500px] rounded-2xl border border-white/10 bg-white/[0.04] backdrop-blur-xl p-8 shadow-[0_24px_80px_rgba(0,0,0,0.6)]">
                 <div className="text-center mb-8">
-                  <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-cyan-500/20 text-cyan-400 mb-4">
+                  <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-cyan-500/20 to-blue-600/20 border border-cyan-500/30 text-cyan-400 mb-4 shadow-[0_0_30px_rgba(6,182,212,0.15)]">
                     <Target className="w-8 h-8" />
                   </div>
-                  <h2 className="text-2xl font-bold text-white mb-2">Distributor Login</h2>
-                  <p className="text-slate-400 text-sm">Access the True Legacy training library.</p>
+                  <h2 className="text-2xl font-bold text-white mb-2">
+                    {locale === 'es' ? 'Portal de Entrenamiento' : 'Training Portal'}
+                  </h2>
+                  <p className="text-slate-400 text-sm">
+                    {locale === 'es' ? 'Accede a la academia de liderazgo True Legacy.' : 'Access the True Legacy leadership academy.'}
+                  </p>
                 </div>
-                <form onSubmit={handleLogin} className="space-y-4">
+                
+                <div className="flex bg-black/30 p-1 rounded-xl mb-6 border border-white/10">
+                    <button
+                        onClick={() => setAuthMode('signup')}
+                        className={`flex-1 py-2.5 text-sm font-semibold rounded-lg transition-all ${authMode === 'signup' ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow-sm' : 'text-slate-400 hover:text-white'}`}
+                    >
+                        {locale === 'es' ? 'Crear cuenta' : 'Create account'}
+                    </button>
+                    <button
+                        onClick={() => setAuthMode('login')}
+                        className={`flex-1 py-2.5 text-sm font-semibold rounded-lg transition-all ${authMode === 'login' ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow-sm' : 'text-slate-400 hover:text-white'}`}
+                    >
+                        {locale === 'es' ? 'Iniciar sesión' : 'Sign in'}
+                    </button>
+                </div>
+
+                <form onSubmit={handleAuth} className="space-y-4">
                   <div>
                     <input
                       type="email"
-                      placeholder="Email"
+                      placeholder={locale === 'es' ? 'Correo electrónico' : 'Email'}
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       className="w-full px-4 py-3 rounded-xl bg-black/40 border border-white/10 text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500 transition-colors"
@@ -469,35 +581,126 @@ export default function TrainingPage() {
                   <div>
                     <input
                       type="password"
-                      placeholder="Password"
+                      placeholder={locale === 'es' ? 'Contraseña' : 'Password'}
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                       className="w-full px-4 py-3 rounded-xl bg-black/40 border border-white/10 text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500 transition-colors"
                       required
                     />
                   </div>
+                  {authMode === 'signup' && (
+                    <div>
+                        <input
+                        type="password"
+                        placeholder={locale === 'es' ? 'Confirmar contraseña' : 'Confirm Password'}
+                        value={confirmPassword}
+                        onChange={(e) => setConfirmPassword(e.target.value)}
+                        className="w-full px-4 py-3 rounded-xl bg-black/40 border border-white/10 text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500 transition-colors"
+                        required
+                        />
+                    </div>
+                  )}
                   {authError && (
                     <div className="p-3 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 text-sm">
                       {authError}
                     </div>
                   )}
+                {authSuccess && (
+                    <div className="p-3 rounded-lg bg-green-500/10 border border-green-500/20 text-green-400 text-sm">
+                        {authSuccess}
+                    </div>
+                )}
+                {authMode === 'signup' && authSuccess && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setAuthMode('login')
+                      setAuthSuccess('')
+                    }}
+                    className="w-full min-h-[52px] flex items-center justify-center px-6 py-3 text-base font-semibold text-white/70 border border-white/10 hover:border-white/20 hover:text-white rounded-xl transition-all"
+                  >
+                    {locale === 'es' ? 'Ir a Iniciar sesión' : 'Go to Sign in'}
+                  </button>
+                )}
+                {!(authMode === 'signup' && authSuccess) && (
                   <button
                     type="submit"
                     disabled={isLoggingIn}
-                    className="w-full min-h-[52px] flex items-center justify-center px-6 py-3 text-base font-semibold text-white bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 rounded-xl transition-all disabled:opacity-50"
+                    className="w-full min-h-[52px] flex items-center justify-center gap-2 px-6 py-3 text-base font-semibold text-white bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 hover:shadow-lg hover:shadow-cyan-500/20 hover:-translate-y-0.5 rounded-xl transition-all disabled:opacity-50"
                   >
-                    {isLoggingIn ? 'Logging in...' : 'Login'}
+                    {isLoggingIn 
+                        ? (locale === 'es' ? 'Procesando...' : 'Processing...') 
+                        : authMode === 'signup' 
+                            ? (locale === 'es' ? 'Crear cuenta' : 'Create account')
+                            : (locale === 'es' ? 'Iniciar sesión' : 'Sign in')
+                    }
                   </button>
+                )}
                 </form>
               </div>
-            ) : (
-              <>
+            ) : !isSecretCodeValid ? (
+              <div className="max-w-md mx-auto mt-12 min-h-[400px] rounded-2xl border border-white/10 bg-white/[0.04] backdrop-blur-xl p-8 shadow-[0_24px_80px_rgba(0,0,0,0.6)]">
                 <div className="flex justify-end mb-4">
                   <button
                     onClick={() => supabase.auth.signOut()}
                     className="flex items-center gap-2 text-sm text-slate-400 hover:text-white transition-colors px-4 py-2 rounded-lg bg-white/5 hover:bg-white/10"
                   >
-                    <LogOut className="w-4 h-4" /> Sign Out
+                    <LogOut className="w-4 h-4" /> {locale === 'es' ? 'Cerrar Sesión' : 'Sign Out'}
+                  </button>
+                </div>
+                <div className="text-center mb-8">
+                  <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-cyan-500/20 to-indigo-600/20 border border-cyan-500/30 text-cyan-400 mb-4 shadow-[0_0_30px_rgba(6,182,212,0.15)]">
+                    <Key className="w-8 h-8" />
+                  </div>
+                  <h2 className="text-2xl font-bold text-white mb-2">
+                    {locale === 'es' ? 'Código de Acceso Requerido' : 'Access Code Required'}
+                  </h2>
+                  <p className="text-slate-400 text-sm mb-6">
+                    {locale === 'es' 
+                        ? 'Ingresa el código secreto para acceder al entrenamiento. Únete a nuestra comunidad de Facebook para obtener el código.' 
+                        : 'Enter the secret code to access training. Join our Facebook community to get the code.'}
+                  </p>
+                  <a
+                    href="https://www.facebook.com/groups/truelegacycommunity"
+                    target="_blank" rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 px-4 py-2 bg-[#1877F2] hover:bg-[#1864D9] text-white text-sm font-semibold rounded-lg transition-colors mb-8"
+                  >
+                    {locale === 'es' ? 'Únete al Grupo de Facebook' : 'Join Facebook Group'}
+                  </a>
+                </div>
+
+                <form onSubmit={handleSecretCodeSubmit} className="space-y-4">
+                  <div>
+                    <input
+                      type="password"
+                      placeholder={locale === 'es' ? 'Código Secreto' : 'Secret Code'}
+                      value={secretCode}
+                      onChange={(e) => setSecretCode(e.target.value)}
+                      className="w-full px-4 py-3 rounded-xl bg-black/40 border border-white/10 text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500 transition-colors"
+                      required
+                    />
+                  </div>
+                  {secretCodeError && (
+                    <div className="p-3 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 text-sm text-center">
+                      {secretCodeError}
+                    </div>
+                  )}
+                  <button
+                    type="submit"
+                    className="w-full min-h-[52px] flex items-center justify-center gap-2 px-6 py-3 text-base font-semibold text-white bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 hover:shadow-lg hover:shadow-cyan-500/20 hover:-translate-y-0.5 rounded-xl transition-all"
+                  >
+                    {locale === 'es' ? 'Desbloquear Entrenamiento' : 'Unlock Training'}
+                  </button>
+                </form>
+              </div>
+            ) : (
+              <div ref={contentRef}>
+                <div className="flex justify-end mb-4">
+                  <button
+                    onClick={() => supabase.auth.signOut()}
+                    className="flex items-center gap-2 text-sm text-slate-400 hover:text-white transition-colors px-4 py-2 rounded-lg bg-white/5 hover:bg-white/10"
+                  >
+                    <LogOut className="w-4 h-4" /> {locale === 'es' ? 'Cerrar Sesión' : 'Sign Out'}
                   </button>
                 </div>
                 {/* Hero Section */}
@@ -532,7 +735,7 @@ export default function TrainingPage() {
               </motion.p>
             </div>
 
-            {/* Sessions/Guides Toggle */}
+            {/* Sessions/Guides/Spanish Slides Toggle */}
             <div className="mb-8">
               <div className="flex justify-center">
                 <div className="inline-flex rounded-xl border border-white/10 bg-white/5 p-1">
@@ -556,6 +759,18 @@ export default function TrainingPage() {
                   >
                     {copy.training?.guides_tab || 'Informational Guides'}
                   </button>
+                  {locale === 'es' && (
+                    <button
+                      onClick={() => setActiveView('slides')}
+                      className={`px-6 py-3 rounded-lg text-sm font-medium transition-all ${
+                        activeView === 'slides'
+                          ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 shadow-lg'
+                          : 'text-slate-400 hover:text-white hover:bg-white/5'
+                      }`}
+                    >
+                      Presentación True Legacy
+                    </button>
+                  )}
                 </div>
               </div>
             </div>
@@ -631,8 +846,7 @@ export default function TrainingPage() {
                     <motion.a
                       key={pdf.id}
                       href={pdf.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
+                      target="_blank" rel="noopener noreferrer"
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: i * 0.1 }}
@@ -659,8 +873,225 @@ export default function TrainingPage() {
               </div>
             </section>
             )}
+
+            {/* Spanish Slides View */}
+            {activeView === 'slides' && locale === 'es' && (
+              <div className="space-y-12">
+                {/* 8-Point System */}
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="rounded-2xl border border-cyan-500/30 bg-black/40 backdrop-blur-sm p-8"
+                >
+                  <h3 className="text-2xl font-bold text-white mb-6 border-b border-white/10 pb-4">Sistema de 8 Puntos</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div>
+                      <h4 className="text-lg font-semibold text-cyan-400 mb-3">¿Cómo funciona?</h4>
+                      <p className="text-slate-300 mb-4">Enagic utiliza un sistema único de 8 puntos para el pago de comisiones, donde "1A" significa "1 Punto". Cada venta genera un pago de hasta 8 puntos hacia arriba en la estructura de la organización.</p>
+                      <ul className="space-y-2 text-slate-300">
+                        <li className="flex items-start gap-2"><CheckCircle className="w-5 h-5 text-cyan-400 flex-shrink-0" /> <span className="pt-0.5">Sin cuota mensual de inscripción o mantenimiento</span></li>
+                        <li className="flex items-start gap-2"><CheckCircle className="w-5 h-5 text-cyan-400 flex-shrink-0" /> <span className="pt-0.5">Sin inventario que mantener</span></li>
+                        <li className="flex items-start gap-2"><CheckCircle className="w-5 h-5 text-cyan-400 flex-shrink-0" /> <span className="pt-0.5">Pagos diarios directos a tu cuenta</span></li>
+                      </ul>
+                    </div>
+                    <div className="bg-white/5 rounded-xl p-6 border border-white/10">
+                      <h4 className="text-lg font-semibold text-white mb-4">Valor de 1 Punto (Comisión Base)</h4>
+                      <div className="space-y-4">
+                        <div className="flex justify-between items-center border-b border-white/10 pb-2">
+                          <span className="text-slate-300 font-medium">Kangen K8</span>
+                          <span className="text-xl font-bold text-cyan-400">$340 USD</span>
+                        </div>
+                        <div className="flex justify-between items-center pb-2">
+                          <span className="text-slate-300 font-medium">emGuarde</span>
+                          <span className="text-xl font-bold text-purple-400">$130 USD</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </motion.div>
+
+                {/* Ranks */}
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="rounded-2xl border border-white/10 bg-black/40 backdrop-blur-sm p-8"
+                >
+                  <h3 className="text-2xl font-bold text-white mb-6 border-b border-white/10 pb-4">Rangos 1A a 6A (Comisión por K8)</h3>
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-left border-collapse">
+                      <thead>
+                        <tr>
+                          <th className="py-4 px-6 bg-white/5 text-white font-semibold rounded-tl-xl border-b border-white/10">Rango</th>
+                          <th className="py-4 px-6 bg-white/5 text-white font-semibold border-b border-white/10">Ventas (Directas/Equipo)</th>
+                          <th className="py-4 px-6 bg-white/5 text-white font-semibold rounded-tr-xl border-b border-white/10">Comisión por Venta</th>
+                        </tr>
+                      </thead>
+                      <tbody className="text-slate-300">
+                        <tr>
+                          <td className="py-4 px-6 border-b border-white/5 font-bold text-cyan-400">1A</td>
+                          <td className="py-4 px-6 border-b border-white/5">0-2</td>
+                          <td className="py-4 px-6 border-b border-white/5">$340 USD (1 Pto)</td>
+                        </tr>
+                        <tr>
+                          <td className="py-4 px-6 border-b border-white/5 font-bold text-cyan-400">2A</td>
+                          <td className="py-4 px-6 border-b border-white/5">3-10</td>
+                          <td className="py-4 px-6 border-b border-white/5">$680 USD (2 Ptos)</td>
+                        </tr>
+                        <tr>
+                          <td className="py-4 px-6 border-b border-white/5 font-bold text-cyan-400">3A</td>
+                          <td className="py-4 px-6 border-b border-white/5">11-20</td>
+                          <td className="py-4 px-6 border-b border-white/5">$1,020 USD (3 Ptos)</td>
+                        </tr>
+                        <tr>
+                          <td className="py-4 px-6 border-b border-white/5 font-bold text-cyan-400">4A</td>
+                          <td className="py-4 px-6 border-b border-white/5">21-50</td>
+                          <td className="py-4 px-6 border-b border-white/5">$1,360 USD (4 Ptos)</td>
+                        </tr>
+                        <tr>
+                          <td className="py-4 px-6 border-b border-white/5 font-bold text-cyan-400">5A</td>
+                          <td className="py-4 px-6 border-b border-white/5">51-100</td>
+                          <td className="py-4 px-6 border-b border-white/5">$1,700 USD (5 Ptos)</td>
+                        </tr>
+                        <tr>
+                          <td className="py-4 px-6 font-bold text-tl-gold">6A</td>
+                          <td className="py-4 px-6">101+</td>
+                          <td className="py-4 px-6 font-bold text-tl-gold">$2,040 USD (6 Ptos)</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </motion.div>
+
+                {/* Fast Track & Why 6A */}
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="rounded-2xl border border-white/10 bg-black/40 backdrop-blur-sm p-8"
+                  >
+                    <h3 className="text-2xl font-bold text-white mb-6 border-b border-white/10 pb-4">Vía Rápida a 6A</h3>
+                    <p className="text-slate-300 mb-6">Para alcanzar las 101 ventas requeridas para 6A, el enfoque del paquete que promueves hace una gran diferencia en la velocidad de tu crecimiento:</p>
+                    
+                    <div className="space-y-4">
+                      <div className="bg-white/5 rounded-xl p-5 border border-white/10">
+                        <div className="flex justify-between items-center mb-2">
+                          <span className="font-semibold text-white">Vendiendo solo K8</span>
+                          <span className="text-cyan-400 font-bold">101 Personas</span>
+                        </div>
+                        <p className="text-sm text-slate-400">Necesitas encontrar 101 compradores individuales de la máquina K8.</p>
+                      </div>
+                      
+                      <div className="bg-gradient-to-r from-cyan-900/40 to-blue-900/40 rounded-xl p-5 border border-cyan-500/30">
+                        <div className="flex justify-between items-center mb-2">
+                          <span className="font-semibold text-white">Vendiendo Paquete DUO</span>
+                          <span className="text-tl-gold font-bold text-xl">51 Personas</span>
+                        </div>
+                        <p className="text-sm text-slate-300">Cada paquete DUO (K8 + emGuarde) cuenta como 2 ventas. Cortas el tiempo y esfuerzo a la mitad.</p>
+                      </div>
+                    </div>
+                  </motion.div>
+
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="rounded-2xl border border-tl-gold/30 bg-black/40 backdrop-blur-sm p-8"
+                  >
+                    <h3 className="text-2xl font-bold text-white mb-6 border-b border-white/10 pb-4">Por qué 6A es la meta</h3>
+                    <ul className="space-y-4 text-slate-300">
+                      <li className="flex items-start gap-3">
+                        <Target className="w-6 h-6 text-tl-gold flex-shrink-0" />
+                        <div>
+                          <strong className="text-white block mb-1">Máxima Comisión</strong>
+                          Ganas 6 puntos por cada venta directa (ej. $2,040 USD por un K8).
+                        </div>
+                      </li>
+                      <li className="flex items-start gap-3">
+                        <Target className="w-6 h-6 text-tl-gold flex-shrink-0" />
+                        <div>
+                          <strong className="text-white block mb-1">Bono de Título</strong>
+                          Recibes un bono único de $3,000 USD al alcanzar el rango 6A.
+                        </div>
+                      </li>
+                      <li className="flex items-start gap-3">
+                        <Target className="w-6 h-6 text-tl-gold flex-shrink-0" />
+                        <div>
+                          <strong className="text-white block mb-1">Bono Educativo</strong>
+                          Incluso si la venta ocurre por debajo de tus 8 puntos, recibes un bono educativo infinito.
+                        </div>
+                      </li>
+                      <li className="flex items-start gap-3">
+                        <Target className="w-6 h-6 text-tl-gold flex-shrink-0" />
+                        <div>
+                          <strong className="text-white block mb-1">Fundación para el Legado</strong>
+                          6A es el primer gran paso hacia la creación de ingresos residuales y generacionales (rango 6A2-3 y superior).
+                        </div>
+                      </li>
+                    </ul>
+                  </motion.div>
+                </div>
+                
+                {/* Paquetes & Opciones de Pago */}
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="rounded-2xl border border-white/10 bg-black/40 backdrop-blur-sm p-8"
+                  >
+                    <h3 className="text-2xl font-bold text-white mb-6 border-b border-white/10 pb-4">Opciones de Pago</h3>
+                    <div className="space-y-6">
+                      <div>
+                        <h4 className="text-lg font-semibold text-white mb-2 flex items-center gap-2"><CheckCircle className="w-5 h-5 text-cyan-400" /> Pago de Contado</h4>
+                        <p className="text-slate-300 text-sm">Tarjeta de crédito, débito o transferencia bancaria. La forma más rápida de obtener tus productos y comenzar.</p>
+                      </div>
+                      <div>
+                        <h4 className="text-lg font-semibold text-white mb-2 flex items-center gap-2"><CheckCircle className="w-5 h-5 text-cyan-400" /> Financiamiento Externo</h4>
+                        <p className="text-slate-300 text-sm">Tarjetas de crédito a meses (varía por país) o préstamos personales. Ideal para no descapitalizarse e invertir las ganancias en pagar la deuda.</p>
+                      </div>
+                      <div>
+                        <h4 className="text-lg font-semibold text-white mb-2 flex items-center gap-2"><CheckCircle className="w-5 h-5 text-cyan-400" /> Plan Enagic (In-house)</h4>
+                        <p className="text-slate-300 text-sm">Pago inicial (enganche) y mensualidades directamente con Enagic sin revisión de crédito severa. Una opción accesible para todos.</p>
+                      </div>
+                      <div className="bg-yellow-500/10 border border-yellow-500/20 rounded-xl p-4 mt-4">
+                        <p className="text-yellow-200/80 text-xs italic">
+                          Aviso: Los productos pueden ser deducibles de impuestos como gasto de negocio o equipo médico en muchos países. Consulta a tu contador local para estrategias fiscales específicas.
+                        </p>
+                      </div>
+                    </div>
+                  </motion.div>
+
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="rounded-2xl border border-white/10 bg-black/40 backdrop-blur-sm p-8"
+                  >
+                    <h3 className="text-2xl font-bold text-white mb-6 border-b border-white/10 pb-4">Nuestro Acuerdo</h3>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                      <div>
+                        <h4 className="text-lg font-semibold text-cyan-400 mb-4">Qué Necesitamos de Ti</h4>
+                        <ul className="space-y-3 text-slate-300 text-sm">
+                          <li className="flex items-start gap-2"><div className="mt-1 w-1.5 h-1.5 rounded-full bg-cyan-400 flex-shrink-0" /> Ganas de aprender y ser enseñable</li>
+                          <li className="flex items-start gap-2"><div className="mt-1 w-1.5 h-1.5 rounded-full bg-cyan-400 flex-shrink-0" /> Compromiso con tu propia visión</li>
+                          <li className="flex items-start gap-2"><div className="mt-1 w-1.5 h-1.5 rounded-full bg-cyan-400 flex-shrink-0" /> Acción consistente</li>
+                          <li className="flex items-start gap-2"><div className="mt-1 w-1.5 h-1.5 rounded-full bg-cyan-400 flex-shrink-0" /> Inversión inicial en tu negocio (tu franquicia global)</li>
+                        </ul>
+                      </div>
+                      <div>
+                        <h4 className="text-lg font-semibold text-tl-gold mb-4">Qué Ofrecemos</h4>
+                        <ul className="space-y-3 text-slate-300 text-sm">
+                          <li className="flex items-start gap-2"><div className="mt-1 w-1.5 h-1.5 rounded-full bg-tl-gold flex-shrink-0" /> Mentoría uno a uno de líderes 6A+</li>
+                          <li className="flex items-start gap-2"><div className="mt-1 w-1.5 h-1.5 rounded-full bg-tl-gold flex-shrink-0" /> Sistemas de duplicación probados</li>
+                          <li className="flex items-start gap-2"><div className="mt-1 w-1.5 h-1.5 rounded-full bg-tl-gold flex-shrink-0" /> Entrenamiento en cierre y prospección</li>
+                          <li className="flex items-start gap-2"><div className="mt-1 w-1.5 h-1.5 rounded-full bg-tl-gold flex-shrink-0" /> Comunidad global de apoyo</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </motion.div>
+                </div>
+
+              </div>
+            )}
             
-            </>
+              </div>
             )}
           </div>
         </AuroraBackground>

@@ -607,9 +607,19 @@ export default function CountryPage() {
     const [emguardeImgError, setEmguardeImgError] = useState(false)
     const [failedFlagSlugs, setFailedFlagSlugs] = useState<Set<string>>(new Set())
     const country = getCountryBySlug(slug || '')
+    const { locale, setLocale } = useLocaleContext()
+
+    // Ensure LATAM pages default to Spanish
+    useEffect(() => {
+        if (country && ['mexico', 'brazil', 'colombia', 'paraguay'].includes(country.slug)) {
+            if (locale !== 'es' && locale !== 'pt') {
+               setLocale('es')
+            }
+        }
+    }, [country?.slug])
+
     if (!country) return <Navigate to="/" replace />
 
-    const { locale } = useLocaleContext()
     const jotformUrl = country.jotformUrl ?? DEFAULT_JOTFORM
     const copy = t[locale]
     const c = getContent(country, locale)
@@ -719,16 +729,14 @@ export default function CountryPage() {
                             <div className="mt-5 pt-4 border-t border-white/10 flex gap-5">
                                 <a
                                     href={country.youtube}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
+                                    target="_blank" rel="noopener noreferrer"
                                     className="flex items-center gap-1.5 text-xs text-slate-400 hover:text-red-400 transition-colors"
                                 >
                                     <IconYoutube size={14} /> {c.ytHandle}
                                 </a>
                                 <a
                                     href={country.instagram}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
+                                    target="_blank" rel="noopener noreferrer"
                                     className="flex items-center gap-1.5 text-xs text-slate-400 hover:text-pink-400 transition-colors"
                                 >
                                     <IconInstagram size={14} /> {['colombia', 'mexico', 'paraguay', 'brazil'].includes(country.slug) ? '@truelegacylatam' : '@truelegacyworld'}
@@ -902,8 +910,7 @@ export default function CountryPage() {
                         </div>
                         <a
                             href={jotformUrl}
-                            target="_blank"
-                            rel="noopener noreferrer"
+                            target="_blank" rel="noopener noreferrer"
                             onClick={() =>
                                 trackEvent('join_click', {
                                     location: 'country_get_paid',
@@ -1082,8 +1089,7 @@ export default function CountryPage() {
                 </p>
                 <a
                     href={jotformUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
+                    target="_blank" rel="noopener noreferrer"
                     onClick={() => trackEvent('join_click', { location: 'sticky_cta', countrySlug: country.slug, locale })}
                     className="sticky-cta-btn rounded-lg px-5 py-2.5 text-sm font-bold text-white whitespace-nowrap transition-colors"
                     style={{ background: '#00a896' }}

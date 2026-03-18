@@ -116,6 +116,10 @@ export function Navbar() {
                     : '/events/global')
         : '/events/global'
 
+    const distributorsPath = country && ['brazil', 'mexico', 'colombia', 'paraguay'].includes(country.slug)
+        ? '/latam/distributors'
+        : '/distributors'
+
     // Navigation labels
     const navLabels = {
         home: t[locale].nav_home,
@@ -135,7 +139,7 @@ export function Navbar() {
         { label: navLabels.home, to: '/' },
         { label: navLabels.training, to: trainingPath },
         { label: navLabels.events, to: eventsPath },
-        { label: navLabels.distributors, to: '/distributors' },
+        { label: navLabels.distributors, to: distributorsPath },
         { label: navLabels.products, to: productsPath },
         { label: navLabels.countries, to: '/select-country' },
         { label: navLabels.community, to: 'https://www.facebook.com/groups/truelegacycommunity', external: true },
@@ -171,7 +175,7 @@ export function Navbar() {
                                         <button
                                             onClick={() => setCountriesOpen(!countriesOpen)}
                                             className={cn(
-                                                'px-3 py-2 text-sm font-medium rounded-md transition-colors flex items-center justify-center gap-1.5',
+                                                'px-3 py-2 text-sm font-medium rounded-md transition-colors inline-flex items-center gap-1',
                                                 (pathname === '/select-country' || isCountryPage || countriesOpen)
                                                     ? 'text-white bg-white/10'
                                                     : 'text-slate-300 hover:text-white hover:bg-white/5'
@@ -180,8 +184,15 @@ export function Navbar() {
                                             aria-expanded={countriesOpen}
                                             aria-controls="desktop-countries-dropdown"
                                         >
-                                            <span className="relative leading-none">{link.label}</span>
-                                            <svg className={cn("w-3.5 h-3.5 transition-transform duration-200", countriesOpen && "rotate-180")} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M19 9l-7 7-7-7" /></svg>
+                                            <span>{link.label}</span>
+                                            <svg
+                                                className={cn('w-3.5 h-3.5 transition-transform duration-200', countriesOpen && 'rotate-180')}
+                                                fill="none"
+                                                stroke="currentColor"
+                                                viewBox="0 0 24 24"
+                                            >
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M19 9l-7 7-7-7" />
+                                            </svg>
                                         </button>
                                         
                                         <AnimatePresence>
@@ -239,27 +250,26 @@ export function Navbar() {
                                 <a
                                     key={link.to}
                                     href={link.to}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
+                                    target="_blank" rel="noopener noreferrer"
                                     className={cn(
-                                        'px-3 py-2 text-sm font-medium rounded-md transition-colors',
+                                        'px-3 py-2 text-sm font-medium rounded-md transition-colors inline-flex items-center',
                                         'text-slate-300 hover:text-white hover:bg-white/5'
                                     )}
                                 >
-                                    {link.label}
+                                    <span>{link.label}</span>
                                 </a>
                             ) : (
                                 <Link
                                     key={link.to}
                                     to={link.to}
                                     className={cn(
-                                        'px-3 py-2 text-sm font-medium rounded-md transition-colors',
+                                        'px-3 py-2 text-sm font-medium rounded-md transition-colors inline-flex items-center',
                                         pathname === link.to 
                                             ? 'text-white bg-white/10' 
                                             : 'text-slate-300 hover:text-white hover:bg-white/5'
                                     )}
                                 >
-                                    {link.label}
+                                    <span>{link.label}</span>
                                 </Link>
                             )
                         })}
@@ -288,8 +298,7 @@ export function Navbar() {
                         {/* CTA Button - Desktop Only */}
                         <a
                             href={jotformUrl}
-                            target="_blank"
-                            rel="noopener noreferrer"
+                            target="_blank" rel="noopener noreferrer"
                             onClick={() =>
                                 trackEvent('join_click', {
                                     location: 'navbar_desktop',
@@ -329,8 +338,7 @@ export function Navbar() {
                                 <a
                                     key={link.to}
                                     href={link.to}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
+                                    target="_blank" rel="noopener noreferrer"
                                     onClick={() => setMenuOpen(false)}
                                     className="flex items-center min-h-[48px] px-4 py-3 text-base font-medium text-slate-300 hover:text-white hover:bg-white/5 rounded-xl transition-colors"
                                 >
@@ -420,8 +428,7 @@ export function Navbar() {
                 <div className="flex flex-col gap-2 pt-4">
                     <a
                         href={jotformUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
+                        target="_blank" rel="noopener noreferrer"
                         onClick={() => {
                             trackEvent('join_click', {
                                 location: 'navbar_mobile',

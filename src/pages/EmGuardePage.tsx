@@ -9,6 +9,8 @@ import { YouTubeEmbed } from '@/components/ui/YouTubeEmbed'
 import { COUNTRIES } from '@/lib/countries'
 import { t } from '@/lib/translations'
 import { useLocaleContext } from '@/contexts/LocaleContext'
+import { getWhatsAppLink } from '@/config/contactLinks'
+import { SEO } from '@/components/SEO'
 
 const FEATURES_EN = [
     { icon: Shield, text: '26 FT diameter EMF coverage' },
@@ -39,12 +41,18 @@ export default function EmGuardePage() {
     const copy = t[locale]
     const jotformUrl = country.jotformUrl ?? 'https://form.jotform.com/260232994952060'
     const isSpanish = locale === 'es'
+    const isLatamCountry = ['mexico', 'brazil', 'colombia', 'paraguay'].includes(countrySlug ?? '')
     const FEATURES = isSpanish ? FEATURES_ES : FEATURES_EN
 
     const [heroImgError, setHeroImgError] = useState(false)
 
     return (
         <div className="page-wrapper bg-[#070b16]">
+            <SEO 
+                title={`emGuarde EMF Protection Technology | True Legacy ${country.name}`}
+                description="emGuarde by Enagic neutralizes harmful EMF radiation up to 1000 MHz within a 26-foot radius. Protect your home and office today."
+                image="/products/emguarde.png"
+            />
             <Navbar />
 
             <AuroraBackground className="pt-28 pb-0">
@@ -76,7 +84,7 @@ export default function EmGuardePage() {
                             className="max-w-4xl mx-auto mb-8"
                         >
                             <YouTubeEmbed 
-                                url="https://youtu.be/I8fFj7-FaPw?si=Jy98ry_y3WNR0QuA"
+                                url={isLatamCountry ? "https://www.youtube.com/watch?v=VFjtegRuzfQ" : "https://youtu.be/I8fFj7-FaPw?si=Rw9aEsxSN9iiy1iq"}
                                 title="emGuarde EMF Protection Technology"
                             />
                         </motion.div>
@@ -170,24 +178,21 @@ export default function EmGuardePage() {
                     >
                         <a
                             href="https://www.enagic.com/en_US/product-certifications"
-                            target="_blank"
-                            rel="noopener noreferrer"
+                            target="_blank" rel="noopener noreferrer"
                             className="flex items-center justify-center gap-2 rounded-2xl border border-white/10 bg-white/5 px-6 py-4 text-sm font-semibold text-white hover:bg-white/10 transition-all"
                         >
                             <CheckCircle className="w-4 h-4 text-green-400" /> {copy.emguarde.certifications}
                         </a>
                         <a
-                            href="https://youtu.be/I8fFj7-FaPw?si=Jy98ry_y3WNR0QuA"
-                            target="_blank"
-                            rel="noopener noreferrer"
+                            href={isLatamCountry ? "https://www.youtube.com/watch?v=VFjtegRuzfQ" : "https://youtu.be/I8fFj7-FaPw?si=Rw9aEsxSN9iiy1iq"}
+                            target="_blank" rel="noopener noreferrer"
                             className="flex items-center justify-center gap-2 rounded-2xl border border-transparent bg-red-600/80 hover:bg-red-600 px-6 py-4 text-sm font-semibold text-white transition-all"
                         >
                             <Play className="w-4 h-4" /> {copy.emguarde.watchVideo}
                         </a>
                         <a
                             href="https://emguarde.com/"
-                            target="_blank"
-                            rel="noopener noreferrer"
+                            target="_blank" rel="noopener noreferrer"
                             className="flex items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-purple-600 to-blue-600 px-6 py-4 text-sm font-semibold text-white hover:scale-105 transition-all"
                         >
                             <ExternalLink className="w-4 h-4" /> {copy.emguarde.learnMore}
@@ -198,14 +203,20 @@ export default function EmGuardePage() {
                         >
                             <Download className="w-4 h-4 text-cyan-400" /> {copy.emguarde.downloadPdf}
                         </Link>
+                        <a
+                            href={getWhatsAppLink(countrySlug, "Hi! I'm interested in the emGuarde EMF protection.")}
+                            target="_blank" rel="noopener noreferrer"
+                            className="flex items-center justify-center gap-2 rounded-2xl border border-white/20 bg-transparent px-6 py-4 text-sm font-semibold text-white hover:bg-white/10 transition-all min-h-[48px] hover:scale-[1.02] col-span-1 sm:col-span-2 lg:col-span-1"
+                        >
+                            {isSpanish ? 'Hablar con distribuidor' : locale === 'fr' ? 'Parler à un distributeur' : locale === 'pt' ? 'Falar com distribuidor' : 'Talk to a distributor'}
+                        </a>
                     </motion.div>
 
                     {/* CTA button above back link */}
                     <div className="text-center mb-8">
                         <a
                             href={jotformUrl}
-                            target="_blank"
-                            rel="noopener noreferrer"
+                            target="_blank" rel="noopener noreferrer"
                             className="inline-flex items-center gap-2 bg-yellow-500 hover:bg-yellow-400 text-black font-bold px-8 py-4 rounded-2xl transition-all hover:scale-105"
                         >
                             {copy.unlockLegacy}

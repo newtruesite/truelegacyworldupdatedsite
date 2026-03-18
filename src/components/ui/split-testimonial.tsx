@@ -269,8 +269,7 @@ export function TestimonialsSplit({ testimonials, locale = 'en' }: TestimonialsS
                     <div className="flex flex-col items-center gap-2 mb-3">
                         <a
                             href={active.instagramUrl ?? active.instagram ?? igUrl(active.company)}
-                            target="_blank"
-                            rel="noopener noreferrer"
+                            target="_blank" rel="noopener noreferrer"
                             onClick={(e) => e.stopPropagation()}
                             style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#c13584', fontWeight: 700, textDecoration: 'none', fontSize: '14px' }}
                             className="testimonial-ig-link hover:opacity-90 transition-opacity"
@@ -286,8 +285,7 @@ export function TestimonialsSplit({ testimonials, locale = 'en' }: TestimonialsS
                         {active.tiktok && (
                             <a
                                 href={active.tiktok}
-                                target="_blank"
-                                rel="noopener noreferrer"
+                                target="_blank" rel="noopener noreferrer"
                                 onClick={(e) => e.stopPropagation()}
                                 className="inline-flex items-center gap-1.5 text-xs text-slate-300 hover:text-white opacity-80 hover:opacity-100 transition-opacity"
                             >

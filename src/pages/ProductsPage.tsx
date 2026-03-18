@@ -163,18 +163,18 @@ export default function ProductsPage() {
 
         {/* Dual package hero: K8 + emGuarde */}
         <section className="py-8 px-4" style={{ background: 'linear-gradient(135deg, rgba(6,182,212,0.12) 0%, rgba(139,92,246,0.1) 100%)' }}>
-          <div className="mx-auto max-w-4xl rounded-2xl border border-cyan-500/30 bg-[#0a1628]/90 backdrop-blur p-6 md:p-8">
+          <div className="mx-auto max-w-4xl rounded-2xl border border-cyan-500/30 bg-[#0a1628]/90 backdrop-blur p-6 md:p-8 text-center md:text-left">
             <p className="text-xs font-semibold uppercase tracking-wider text-cyan-300 mb-2">
               {locale === 'es' ? 'Recomendado' : locale === 'fr' ? 'Recommandé' : locale === 'pt' ? 'Recomendado' : 'Recommended'}
             </p>
             <h2 className="text-2xl md:text-3xl font-bold text-white mb-3">
               {locale === 'es' ? 'Sistema dual: Kangen K8 + emGuarde' : locale === 'fr' ? 'Pack dual : Kangen K8 + emGuarde' : locale === 'pt' ? 'Sistema dual: Kangen K8 + emGuarde' : 'Dual package: Kangen K8 + emGuarde'}
             </h2>
-            <p className="text-slate-300 text-sm md:text-base mb-6 max-w-2xl">
+            <p className="text-slate-300 text-sm md:text-base mb-6 max-w-2xl mx-auto md:mx-0">
               {locale === 'es' ? 'La mejor agua alcalina en casa con el K8 y protección EMF 24/7 con emGuarde. El combo que más recomendamos para salud y negocio.' : locale === 'fr' ? "La meilleure eau alcaline à la maison avec le K8 et une protection EMF 24/7 avec emGuarde. Le combo que nous recommandons le plus." : locale === 'pt' ? 'A melhor água alcalina em casa com o K8 e proteção EMF 24/7 com emGuarde. O combo que mais recomendamos.' : 'Best-in-class alkaline water at home with the K8 and 24/7 EMF protection with emGuarde. The combo we recommend most for health and business.'}
             </p>
             <Link
-              to="/distributors"
+              to={['mexico', 'colombia', 'brazil', 'paraguay'].includes(countrySlug ?? '') ? "/latam/distributors" : "/distributors"}
               className="inline-flex items-center gap-2 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-white font-semibold px-5 py-2.5 text-sm transition-colors"
             >
               {locale === 'es' ? 'Hablar con un distribuidor' : locale === 'fr' ? 'Parler à un distributeur' : locale === 'pt' ? 'Falar com um distribuidor' : 'Talk to a distributor'}
@@ -207,7 +207,7 @@ export default function ProductsPage() {
                           transition={{ duration: 0.4 }}
                           className="group block rounded-3xl border border-white/10 p-5 md:p-8 bg-[rgba(5,16,48,0.8)] backdrop-blur-xl hover:border-white/30 hover:-translate-y-1 transition-all"
                         >
-                          <div className="rounded-2xl overflow-hidden border border-white/10 shadow-lg mb-4 aspect-[4/3] bg-white/5 relative flex items-center justify-center p-4">
+                          <div className="rounded-2xl overflow-hidden border border-white/10 shadow-lg mb-4 aspect-[4/3] md:aspect-square bg-white/5 relative flex items-center justify-center p-8 md:p-10">
                             <img
                               src={product.imageSrc}
                               alt={product.imageAlt}
@@ -216,8 +216,8 @@ export default function ProductsPage() {
                               decoding="async"
                             />
                           </div>
-                          <h3 className="font-bold text-white text-lg md:text-xl mb-2">{product.name}</h3>
-                          <p className="text-slate-400 text-sm leading-relaxed mb-4">
+                          <h3 className="font-bold text-white text-lg md:text-xl mb-2 text-center md:text-left">{product.name}</h3>
+                          <p className="text-slate-400 text-sm leading-relaxed mb-4 text-center md:text-left">
                             {/* Short description is handled by per-language marketing copy on country pages; keep this concise here. */}
                             {locale === 'es'
                               ? 'Habla con tu líder True Legacy para entender cómo este producto encaja en tu estrategia de salud y de ingresos.'
@@ -225,18 +225,45 @@ export default function ProductsPage() {
                                 ? "Discutez avec votre leader True Legacy pour comprendre comment ce produit s'intègre dans votre stratégie de santé et de revenus."
                                 : 'Speak with your True Legacy leader to understand how this product fits into your health and income strategy.'}
                           </p>
-                          <div className="flex flex-wrap gap-3">
-                            <Link
-                              to="/distributors"
-                              className="inline-flex items-center gap-1.5 rounded-2xl bg-cyan-500 hover:bg-cyan-400 px-4 py-2 text-xs font-semibold text-white transition-all min-h-[44px]"
-                            >
-                              {locale === 'es' ? 'Hablar con distribuidor' : locale === 'fr' ? 'Parler à un distributeur' : locale === 'pt' ? 'Falar com distribuidor' : 'Talk to distributor'}
-                            </Link>
-                            {product.enagicProductUrl && (
+                          <div className="flex flex-wrap gap-3 justify-center md:justify-start">
+                            {id === 'k8' ? (
+                                <Link
+                                    to="/k8"
+                                    onClick={() =>
+                                        trackEvent('product_view_internal', {
+                                            productId: id,
+                                            locale,
+                                        })
+                                    }
+                                    className="inline-flex items-center gap-1.5 rounded-2xl bg-cyan-500 hover:bg-cyan-400 px-4 py-2 text-xs font-semibold text-white transition-all min-h-[44px]"
+                                >
+                                    {learnMoreLabel}
+                                </Link>
+                            ) : id === 'emguarde' ? (
+                                <Link
+                                    to="/emguarde"
+                                    onClick={() =>
+                                        trackEvent('product_view_internal', {
+                                            productId: id,
+                                            locale,
+                                        })
+                                    }
+                                    className="inline-flex items-center gap-1.5 rounded-2xl bg-purple-500 hover:bg-purple-400 px-4 py-2 text-xs font-semibold text-white transition-all min-h-[44px]"
+                                >
+                                    {learnMoreLabel}
+                                </Link>
+                            ) : (
+                                <Link
+                                    to={['mexico', 'colombia', 'brazil', 'paraguay'].includes(countrySlug ?? '') ? "/latam/distributors" : "/distributors"}
+                                    className="inline-flex items-center gap-1.5 rounded-2xl bg-cyan-500 hover:bg-cyan-400 px-4 py-2 text-xs font-semibold text-white transition-all min-h-[44px]"
+                                >
+                                    {locale === 'es' ? 'Hablar con distribuidor' : locale === 'fr' ? 'Parler à un distributeur' : locale === 'pt' ? 'Falar com distribuidor' : 'Talk to distributor'}
+                                </Link>
+                            )}
+                            {product.enagicProductUrl && id !== 'k8' && id !== 'emguarde' && (
                               <a
                                 href={product.enagicProductUrl}
-                                target="_blank"
-                                rel="noopener noreferrer"
+                                target="_blank" rel="noopener noreferrer"
                                 onClick={() =>
                                   trackEvent('product_view_enagic', {
                                     productId: id,
@@ -261,6 +288,14 @@ export default function ProductsPage() {
                             >
                               {downloadGuideLabel}
                             </Link>
+                            {(id === 'k8' || id === 'emguarde') && (
+                              <Link
+                                to={['mexico', 'colombia', 'brazil', 'paraguay'].includes(countrySlug ?? '') ? "/latam/distributors" : "/distributors"}
+                                className="inline-flex items-center gap-1.5 rounded-2xl border border-white/20 bg-transparent px-4 py-2 text-xs font-semibold text-white hover:bg-white/10 transition-all min-h-[44px]"
+                              >
+                                {locale === 'es' ? 'Hablar con distribuidor' : locale === 'fr' ? 'Parler à un distributeur' : locale === 'pt' ? 'Falar com distribuidor' : 'Talk to a distributor'}
+                              </Link>
+                            )}
                           </div>
                         </motion.article>
                       )

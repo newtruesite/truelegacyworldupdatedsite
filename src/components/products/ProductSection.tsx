@@ -109,7 +109,7 @@ export function ProductSection({ productIds, country, variant = 'country' }: Pro
           </p>
           {/* Dual package: K8 + emGuarde — recommended combo (hidden for homeAll) */}
           {variant !== 'homeAll' && (
-          <div className="mt-8 mx-auto max-w-2xl rounded-2xl border border-cyan-500/30 bg-gradient-to-br from-cyan-500/10 to-purple-500/10 p-6 text-left">
+          <div className="mt-8 mx-auto max-w-2xl rounded-2xl border border-cyan-500/30 bg-gradient-to-br from-cyan-500/10 to-purple-500/10 p-6 text-center md:text-left">
             <p className="text-xs font-semibold uppercase tracking-wider text-cyan-300 mb-2">
               {locale === 'es' ? 'Recomendado' : locale === 'fr' ? 'Recommandé' : locale === 'pt' ? 'Recomendado' : 'Recommended'}
             </p>
@@ -146,7 +146,7 @@ export function ProductSection({ productIds, country, variant = 'country' }: Pro
                 data-product={id}
                 style={{ background: 'transparent', backdropFilter: 'blur(20px)' }}
               >
-                <div className="rounded-2xl overflow-hidden border border-white/10 shadow-lg mb-4 aspect-[4/3] bg-white/5 flex items-center justify-center p-4 relative">
+                <div className="rounded-2xl overflow-hidden border border-white/10 shadow-lg mb-4 aspect-[4/3] md:aspect-square bg-white/5 flex items-center justify-center p-8 md:p-10 relative">
                   <img
                     src={product.imageSrc}
                     alt={product.imageAlt}
@@ -160,18 +160,17 @@ export function ProductSection({ productIds, country, variant = 'country' }: Pro
                     </span>
                   )}
                 </div>
-                <h3 className="font-bold text-white text-xl mb-2">
+                <h3 className="font-bold text-white text-xl mb-2 text-center md:text-left">
                   {pCopy?.label ?? product.name}
                 </h3>
-                <p className="text-slate-400 text-sm leading-relaxed mb-4">
+                <p className="text-slate-400 text-sm leading-relaxed mb-4 text-center md:text-left">
                   {pCopy?.short}
                 </p>
-                <div className="flex flex-wrap gap-3">
+                <div className="flex flex-wrap gap-3 justify-center md:justify-start">
                   {product.enagicProductUrl && (
                     <a
                       href={product.enagicProductUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
+                      target="_blank" rel="noopener noreferrer"
                       className="inline-flex items-center gap-1.5 rounded-md border border-white/15 bg-white/5 px-4 py-2 text-xs font-semibold text-slate-100 hover:bg-white/10 hover:-translate-y-0.5 hover:shadow-md transition-all duration-150"
                     >
                       {pCopy?.learnMore}
@@ -185,13 +184,15 @@ export function ProductSection({ productIds, country, variant = 'country' }: Pro
                       {pCopy?.downloadGuide ?? (locale === 'es' ? 'Guías en Capacitación' : locale === 'fr' ? 'Guides en Formation' : locale === 'pt' ? 'Guias no Treinamento' : 'Guides in Training')}
                     </Link>
                   )}
-                  <button
-                    type="button"
-                    onClick={() => setLeadersOpen(true)}
-                    className="inline-flex items-center gap-1.5 rounded-md border border-white/20 bg-transparent px-4 py-2 text-xs font-semibold text-white hover:bg-white/10 hover:-translate-y-0.5 hover:shadow-md transition-all duration-150 min-h-[44px]"
-                  >
-                    {contactLabel}
-                  </button>
+                            {(id === 'k8' || id === 'emguarde') && (
+                              <button
+                                type="button"
+                                onClick={() => setLeadersOpen(true)}
+                                className="inline-flex items-center gap-1.5 rounded-md border border-white/20 bg-transparent px-4 py-2 text-xs font-semibold text-white hover:bg-white/10 hover:-translate-y-0.5 hover:shadow-md transition-all duration-150 min-h-[44px]"
+                              >
+                                {contactLabel}
+                              </button>
+                            )}
                 </div>
               </motion.article>
             )

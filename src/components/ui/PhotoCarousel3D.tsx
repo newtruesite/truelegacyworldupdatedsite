@@ -225,8 +225,7 @@ export function PhotoCarousel3D() {
                     <h3 className="text-xl font-black text-white mb-0.5">{activeLeader.name}</h3>
                     <a
                         href={activeLeader.instagramUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
+                        target="_blank" rel="noopener noreferrer"
                         className="inline-flex items-center justify-center gap-1.5 text-sm text-tl-gold hover:text-white transition-colors mb-3"
                     >
                         <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">

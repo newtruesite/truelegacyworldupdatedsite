@@ -11,6 +11,7 @@ import { Navbar } from '@/components/layout/Navbar'
 import { Footer } from '@/components/layout/Footer'
 import { ProductSection } from '@/components/products/ProductSection'
 import { trackEvent } from '@/lib/analytics'
+import { SEO } from '@/components/SEO'
 
 function IconGlobe() {
     return (
@@ -96,6 +97,10 @@ export default function HomePage() {
 
     return (
         <div className="page-wrapper" style={{ background: '#060b1e' }}>
+            <SEO
+                title="True Legacy | World Class Enagic Distributors"
+                description="Join a community of entrepreneurs who make money by sharing world-changing products like the Kangen water machine and emGuarde."
+            />
             <Navbar />
 
             <main className="content-wrapper">
@@ -288,8 +293,7 @@ export default function HomePage() {
                         >
                             <a
                                 href="https://form.jotform.com/260232994952060"
-                                target="_blank"
-                                rel="noopener noreferrer"
+                                target="_blank" rel="noopener noreferrer"
                                 onClick={() =>
                                     trackEvent('join_click', {
                                         location: 'home_join',
@@ -380,8 +384,7 @@ export default function HomePage() {
             >
                 <a
                     href="https://form.jotform.com/260232994952060"
-                    target="_blank"
-                    rel="noopener noreferrer"
+                    target="_blank" rel="noopener noreferrer"
                     onClick={() =>
                         trackEvent('join_click', {
                             location: 'home_join_sticky',

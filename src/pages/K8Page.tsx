@@ -9,6 +9,8 @@ import { YouTubeEmbed } from '@/components/ui/YouTubeEmbed'
 import { COUNTRIES } from '@/lib/countries'
 import { t } from '@/lib/translations'
 import { useLocaleContext } from '@/contexts/LocaleContext'
+import { getWhatsAppLink } from '@/config/contactLinks'
+import { SEO } from '@/components/SEO'
 
 const FEATURES_EN = [
     { icon: Layers, text: '8 Platinum-Coated Titanium Plates' },
@@ -38,6 +40,11 @@ export default function K8Page() {
 
     return (
         <div className="page-wrapper bg-[#070b16]">
+            <SEO 
+                title={`Leveluk K8 Kangen Water Machine | True Legacy ${country.name}`}
+                description="The Leveluk K8 is Enagic's most powerful antioxidant water machine featuring 8 platinum-dipped titanium plates. Discover the power of Kangen Water."
+                image="/products/k8.png"
+            />
             <Navbar />
 
             <AuroraBackground className="pt-28 pb-0">
@@ -175,24 +182,21 @@ export default function K8Page() {
                     >
                         <a
                             href="https://www.enagic.com/en_US/product-certifications"
-                            target="_blank"
-                            rel="noopener noreferrer"
+                            target="_blank" rel="noopener noreferrer"
                             className="flex items-center justify-center gap-2 rounded-2xl border border-white/10 bg-white/5 px-6 py-4 text-sm font-semibold text-white hover:bg-white/10 transition-all"
                         >
                             <CheckCircle className="w-4 h-4 text-green-400" /> {copy.k8.certifications}
                         </a>
                         <a
                             href="https://youtu.be/Lm2DYOwU2rc?si=qSI-i8XX8EOv6ZUC"
-                            target="_blank"
-                            rel="noopener noreferrer"
+                            target="_blank" rel="noopener noreferrer"
                             className="flex items-center justify-center gap-2 rounded-2xl border border-transparent bg-red-600/80 hover:bg-red-600 px-6 py-4 text-sm font-semibold text-white transition-all"
                         >
                             <Play className="w-4 h-4" /> {copy.k8.watchVideo}
                         </a>
                         <a
                             href="https://www.enagic.com/en_US/products/leveluk-k8"
-                            target="_blank"
-                            rel="noopener noreferrer"
+                            target="_blank" rel="noopener noreferrer"
                             className="flex items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-cyan-600 to-blue-600 px-6 py-4 text-sm font-semibold text-white hover:scale-105 transition-all"
                         >
                             <ExternalLink className="w-4 h-4" /> {copy.k8.learnMore}
@@ -203,14 +207,20 @@ export default function K8Page() {
                         >
                             <Download className="w-4 h-4 text-cyan-400" /> {copy.k8.downloadPdf}
                         </Link>
+                        <a
+                            href={getWhatsAppLink(countrySlug, "Hi! I'm interested in the Leveluk K8.")}
+                            target="_blank" rel="noopener noreferrer"
+                            className="flex items-center justify-center gap-2 rounded-2xl border border-white/20 bg-transparent px-6 py-4 text-sm font-semibold text-white hover:bg-white/10 transition-all min-h-[48px] hover:scale-[1.02] col-span-1 sm:col-span-2 lg:col-span-1"
+                        >
+                            {isSpanish ? 'Hablar con distribuidor' : locale === 'fr' ? 'Parler à un distributeur' : locale === 'pt' ? 'Falar com distribuidor' : 'Talk to a distributor'}
+                        </a>
                     </motion.div>
 
                     {/* CTA button above back link */}
                     <div className="text-center mb-8">
                         <a
                             href={jotformUrl}
-                            target="_blank"
-                            rel="noopener noreferrer"
+                            target="_blank" rel="noopener noreferrer"
                             className="inline-flex items-center gap-2 bg-yellow-500 hover:bg-yellow-400 text-black font-bold px-8 py-4 rounded-2xl transition-all hover:scale-105"
                         >
                             {copy.unlockLegacy}

@@ -18,6 +18,7 @@ import ProductsPage from '@/pages/ProductsPage'
 import SelectCountryPage from '@/pages/SelectCountryPage'
 import EventsPage from '@/pages/EventsPage'
 import DistributorsPage from '@/pages/DistributorsPage'
+import LatamDistributorsPage from '@/pages/LatamDistributorsPage'
 import { ProtectedRoute } from '@/components/auth/ProtectedRoute'
 import { LanguageReset } from '@/components/LanguageReset'
 
@@ -98,6 +99,14 @@ function AnimatedRoutes() {
           element={
             <PageTransitionWrapper>
               <DistributorsPage />
+            </PageTransitionWrapper>
+          }
+        />
+        <Route
+          path="/latam/distributors"
+          element={
+            <PageTransitionWrapper>
+              <LatamDistributorsPage />
             </PageTransitionWrapper>
           }
         />
