@@ -288,7 +288,7 @@ export function EventsLeadCaptureModal({
                   disabled={submitting || submitted}
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
-                  className="w-full py-3 mt-6 rounded-lg font-bold text-white transition disabled:opacity-50"
+                  className="w-full flex items-center justify-center py-3 mt-6 rounded-lg font-bold text-white transition disabled:opacity-50 min-h-[48px]"
                   style={{
                     background:
                       submitting || submitted

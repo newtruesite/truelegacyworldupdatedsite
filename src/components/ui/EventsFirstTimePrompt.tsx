@@ -40,7 +40,7 @@ export function EventsFirstTimePrompt({
           onClick={onYes}
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
-          className="flex-1 sm:flex-none px-8 py-3 rounded-xl font-bold text-white text-base transition"
+          className="flex-1 sm:flex-none flex items-center justify-center px-8 py-3 rounded-xl font-bold text-white text-base transition min-h-[48px]"
           style={{
             background: "linear-gradient(135deg, #00a896, #00c4ae)",
           }}
@@ -52,7 +52,7 @@ export function EventsFirstTimePrompt({
           onClick={() => onNo(joinUrl)}
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
-          className="flex-1 sm:flex-none px-8 py-3 rounded-xl font-bold text-white text-base border border-white/30 hover:border-white/50 transition bg-white/5"
+          className="flex-1 sm:flex-none flex items-center justify-center px-8 py-3 rounded-xl font-bold text-white text-base border border-white/30 hover:border-white/50 transition bg-white/5 min-h-[48px]"
         >
           {t.no}
         </motion.button>

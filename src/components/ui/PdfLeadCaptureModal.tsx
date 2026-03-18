@@ -1,142 +1,181 @@
-import { useState, useCallback, useEffect } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
-import { X } from 'lucide-react'
-import type { ProductInterest } from '@/contexts/PdfLeadCaptureContext'
+import type { ProductInterest } from "@/contexts/PdfLeadCaptureContext";
+import { AnimatePresence, motion } from "framer-motion";
+import { X } from "lucide-react";
+import { useCallback, useEffect, useState } from "react";
 
-const FORM_NAME = 'pdf-lead-capture'
-const SUBMIT_COOLDOWN_MS = 30_000 // 30 seconds
+const FORM_NAME = "pdf-lead-capture";
+const SUBMIT_COOLDOWN_MS = 30_000; // 30 seconds
 
 function sanitize(str: string): string {
-  return str.trim().replace(/<[^>]*>/g, '').slice(0, 200)
+  return str
+    .trim()
+    .replace(/<[^>]*>/g, "")
+    .slice(0, 200);
 }
 
 function canSubmit(): boolean {
-  if (typeof window === 'undefined') return true
-  const last = localStorage.getItem('tl_last_submit')
-  if (!last) return true
-  return Date.now() - parseInt(last, 10) > SUBMIT_COOLDOWN_MS
+  if (typeof window === "undefined") return true;
+  const last = localStorage.getItem("tl_last_submit");
+  if (!last) return true;
+  return Date.now() - parseInt(last, 10) > SUBMIT_COOLDOWN_MS;
 }
 
-type Option = { value: string; label: string }
+type Option = { value: string; label: string };
 
 type Props = {
-  isOpen: boolean
-  onClose: () => void
-  pdfUrl: string
-  productPreset?: ProductInterest
-  countryOptions: Option[]
-}
+  isOpen: boolean;
+  onClose: () => void;
+  pdfUrl: string;
+  productPreset?: ProductInterest;
+  countryOptions: Option[];
+};
 
-const PRODUCT_OPTIONS: { value: ProductInterest; labelEn: string; labelEs: string }[] = [
-  { value: 'emguarde', labelEn: 'Emguarde', labelEs: 'Emguarde' },
-  { value: 'kangen', labelEn: 'Kangen Water', labelEs: 'Agua Kangen' },
-  { value: 'both', labelEn: 'Both', labelEs: 'Ambos' },
-]
+const PRODUCT_OPTIONS: {
+  value: ProductInterest;
+  labelEn: string;
+  labelEs: string;
+}[] = [
+  { value: "emguarde", labelEn: "Emguarde", labelEs: "Emguarde" },
+  { value: "kangen", labelEn: "Kangen Water", labelEs: "Agua Kangen" },
+  { value: "both", labelEn: "Both", labelEs: "Ambos" },
+];
 
-export function PdfLeadCaptureModal({ isOpen, onClose, pdfUrl, productPreset, countryOptions }: Props) {
-  const [submitted, setSubmitted] = useState(false)
-  const [submitting, setSubmitting] = useState(false)
-  const [errors, setErrors] = useState<Record<string, string>>({})
+export function PdfLeadCaptureModal({
+  isOpen,
+  onClose,
+  pdfUrl,
+  productPreset,
+  countryOptions,
+}: Props) {
+  const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [errors, setErrors] = useState<Record<string, string>>({});
   const [form, setForm] = useState({
-    fullName: '',
-    email: '',
-    phone: '',
-    country: '',
-    botField: '',
-  })
+    fullName: "",
+    email: "",
+    phone: "",
+    country: "",
+    botField: "",
+  });
 
   useEffect(() => {
     if (!isOpen) {
-      setForm({ fullName: '', email: '', phone: '', country: '', botField: '' })
-      setSubmitted(false)
+      setForm({
+        fullName: "",
+        email: "",
+        phone: "",
+        country: "",
+        botField: "",
+      });
+      setSubmitted(false);
     }
-  }, [isOpen, productPreset])
+  }, [isOpen, productPreset]);
 
-  const isSpanish = typeof navigator !== 'undefined' && navigator.language.startsWith('es')
+  const isSpanish =
+    typeof navigator !== "undefined" && navigator.language.startsWith("es");
   const t = {
-    heading: isSpanish ? 'Obtén Tu Guía Gratuita' : 'Get Your Free Guide',
-    fullName: isSpanish ? 'Nombre Completo' : 'Full Name',
-    email: isSpanish ? 'Correo Electrónico' : 'Email Address',
-    phone: isSpanish ? 'Teléfono' : 'Phone Number',
-    country: isSpanish ? 'País' : 'Country',
-    productInterest: isSpanish ? '¿Qué producto te interesa?' : 'Which product interests you?',
-    submit: isSpanish ? 'Envíame el PDF' : 'Send Me the PDF',
-    thankYou: isSpanish ? '¡Gracias! Revisa tu correo y tu descarga comenzará en un momento.' : 'Thank you! Check your email and your download will start in a moment.',
-    required: isSpanish ? 'Requerido' : 'Required',
-  }
+    heading: isSpanish ? "Obtén Tu Guía Gratuita" : "Get Your Free Guide",
+    fullName: isSpanish ? "Nombre Completo" : "Full Name",
+    email: isSpanish ? "Correo Electrónico" : "Email Address",
+    phone: isSpanish ? "Teléfono" : "Phone Number",
+    country: isSpanish ? "País" : "Country",
+    productInterest: isSpanish
+      ? "¿Qué producto te interesa?"
+      : "Which product interests you?",
+    submit: isSpanish ? "Envíame el PDF" : "Send Me the PDF",
+    thankYou: isSpanish
+      ? "¡Gracias! Revisa tu correo y tu descarga comenzará en un momento."
+      : "Thank you! Check your email and your download will start in a moment.",
+    required: isSpanish ? "Requerido" : "Required",
+  };
 
   const validate = useCallback(() => {
-    const next: Record<string, string> = {}
-    if (!form.fullName.trim()) next.fullName = t.required
-    if (!form.email.trim()) next.email = t.required
-    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) next.email = isSpanish ? 'Correo no válido' : 'Invalid email'
-    setErrors(next)
-    return Object.keys(next).length === 0
-  }, [form.fullName, form.email, t, isSpanish])
+    const next: Record<string, string> = {};
+    if (!form.fullName.trim()) next.fullName = t.required;
+    if (!form.email.trim()) next.email = t.required;
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email))
+      next.email = isSpanish ? "Correo no válido" : "Invalid email";
+    setErrors(next);
+    return Object.keys(next).length === 0;
+  }, [form.fullName, form.email, t, isSpanish]);
 
   const handleSubmit = useCallback(
     async (e: React.FormEvent) => {
-      e.preventDefault()
+      e.preventDefault();
       if (!canSubmit()) {
-        setErrors({ email: isSpanish ? 'Espere unos segundos antes de enviar de nuevo.' : 'Please wait before submitting again.' })
-        return
+        setErrors({
+          email: isSpanish
+            ? "Espere unos segundos antes de enviar de nuevo."
+            : "Please wait before submitting again.",
+        });
+        return;
       }
-      if (!validate()) return
-      setSubmitting(true)
-      setErrors({})
+      if (!validate()) return;
+      setSubmitting(true);
+      setErrors({});
 
-      const fullName = sanitize(form.fullName)
-      const email = sanitize(form.email)
-      const phone = sanitize(form.phone)
-      const country = sanitize(form.country)
+      const fullName = sanitize(form.fullName);
+      const email = sanitize(form.email);
+      const phone = sanitize(form.phone);
+      const country = sanitize(form.country);
 
-      const formData = new FormData()
-      formData.append('form-name', FORM_NAME)
-      formData.append('full-name', fullName)
-      formData.append('email', email)
-      formData.append('phone', phone)
-      formData.append('country', country)
-      formData.append('pdf_requested', pdfUrl ? new URL(pdfUrl).pathname.split('/').pop() || 'Resource' : '')
-      formData.append('pdf_url', pdfUrl || '')
-      if (form.botField) formData.append('bot-field', form.botField)
+      const formData = new FormData();
+      formData.append("form-name", FORM_NAME);
+      formData.append("full-name", fullName);
+      formData.append("email", email);
+      formData.append("phone", phone);
+      formData.append("country", country);
+      formData.append(
+        "pdf_requested",
+        pdfUrl ? new URL(pdfUrl).pathname.split("/").pop() || "Resource" : "",
+      );
+      formData.append("pdf_url", pdfUrl || "");
+      if (form.botField) formData.append("bot-field", form.botField);
 
       try {
-        const params = new URLSearchParams()
-        formData.forEach((value, key) => params.append(key, value.toString()))
-        const res = await fetch('/', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        const params = new URLSearchParams();
+        formData.forEach((value, key) => params.append(key, value.toString()));
+        const res = await fetch("/", {
+          method: "POST",
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
           body: params.toString(),
-        })
-        if (!res.ok) throw new Error('Submit failed')
+        });
+        if (!res.ok) throw new Error("Submit failed");
         try {
-          localStorage.setItem('tl_last_submit', Date.now().toString())
-          localStorage.setItem('tl_pdf_access', JSON.stringify({ name: fullName, email, ts: Date.now() }))
+          localStorage.setItem("tl_last_submit", Date.now().toString());
+          localStorage.setItem(
+            "tl_pdf_access",
+            JSON.stringify({ name: fullName, email, ts: Date.now() }),
+          );
         } catch {
           /* ignore */
         }
-        setSubmitted(true)
+        setSubmitted(true);
         setTimeout(() => {
-          if (pdfUrl) window.open(pdfUrl, '_blank')
-          setSubmitted(false)
-          onClose()
-          window.location.href = '/training'
-        }, 1500)
+          if (pdfUrl) window.open(pdfUrl, "_blank");
+          setSubmitted(false);
+          onClose();
+          window.location.href = "/training";
+        }, 1500);
       } catch {
-        setErrors({ email: isSpanish ? 'Error al enviar. Intenta de nuevo.' : 'Submit failed. Please try again.' })
+        setErrors({
+          email: isSpanish
+            ? "Error al enviar. Intenta de nuevo."
+            : "Submit failed. Please try again.",
+        });
       } finally {
-        setSubmitting(false)
+        setSubmitting(false);
       }
     },
-    [form, validate, pdfUrl, onClose, isSpanish]
-  )
+    [form, validate, pdfUrl, onClose, isSpanish],
+  );
 
   const handleChange = useCallback((field: string, value: string) => {
-    setForm((prev) => ({ ...prev, [field]: value }))
-    setErrors((prev) => ({ ...prev, [field]: '' }))
-  }, [])
+    setForm((prev) => ({ ...prev, [field]: value }));
+    setErrors((prev) => ({ ...prev, [field]: "" }));
+  }, []);
 
-  if (!isOpen) return null
+  if (!isOpen) return null;
 
   return (
     <AnimatePresence>
@@ -173,65 +212,92 @@ export function PdfLeadCaptureModal({ isOpen, onClose, pdfUrl, productPreset, co
               <form onSubmit={handleSubmit} name={FORM_NAME} method="post">
                 <input type="hidden" name="form-name" value={FORM_NAME} />
 
-
                 <div className="space-y-4">
                   <div>
-                    <label className="block text-sm font-medium text-slate-300 mb-1">{t.fullName} *</label>
+                    <label className="block text-sm font-medium text-slate-300 mb-1">
+                      {t.fullName} *
+                    </label>
                     <input
                       type="text"
                       name="full-name"
                       value={form.fullName}
-                      onChange={(e) => handleChange('fullName', e.target.value)}
+                      onChange={(e) => handleChange("fullName", e.target.value)}
                       className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white placeholder-slate-500 focus:border-cyan-500 focus:outline-none focus:ring-1 focus:ring-cyan-500/30"
                       placeholder={t.fullName}
                     />
-                    {errors.fullName && <p className="mt-1 text-xs text-red-400">{errors.fullName}</p>}
+                    {errors.fullName && (
+                      <p className="mt-1 text-xs text-red-400">
+                        {errors.fullName}
+                      </p>
+                    )}
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-slate-300 mb-1">{t.email} *</label>
+                    <label className="block text-sm font-medium text-slate-300 mb-1">
+                      {t.email} *
+                    </label>
                     <input
                       type="email"
                       name="email"
                       value={form.email}
-                      onChange={(e) => handleChange('email', e.target.value)}
+                      onChange={(e) => handleChange("email", e.target.value)}
                       className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white placeholder-slate-500 focus:border-cyan-500 focus:outline-none focus:ring-1 focus:ring-cyan-500/30"
                       placeholder={t.email}
                     />
-                    {errors.email && <p className="mt-1 text-xs text-red-400">{errors.email}</p>}
+                    {errors.email && (
+                      <p className="mt-1 text-xs text-red-400">
+                        {errors.email}
+                      </p>
+                    )}
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-slate-300 mb-1">{t.phone}</label>
+                    <label className="block text-sm font-medium text-slate-300 mb-1">
+                      {t.phone}
+                    </label>
                     <input
                       type="tel"
                       name="phone"
                       value={form.phone}
-                      onChange={(e) => handleChange('phone', e.target.value)}
+                      onChange={(e) => handleChange("phone", e.target.value)}
                       className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white placeholder-slate-500 focus:border-cyan-500 focus:outline-none focus:ring-1 focus:ring-cyan-500/30"
                       placeholder={t.phone}
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-slate-300 mb-1">{t.country} *</label>
+                    <label className="block text-sm font-medium text-slate-300 mb-1">
+                      {t.country} *
+                    </label>
                     <select
                       name="country"
                       value={form.country}
-                      onChange={(e) => handleChange('country', e.target.value)}
+                      onChange={(e) => handleChange("country", e.target.value)}
                       className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white focus:border-cyan-500 focus:outline-none focus:ring-1 focus:ring-cyan-500/30"
                     >
-                      <option value="">{isSpanish ? 'Selecciona' : 'Select'}</option>
+                      <option value="">
+                        {isSpanish ? "Selecciona" : "Select"}
+                      </option>
                       {countryOptions.map((opt) => (
-                        <option key={opt.value} value={opt.value}>{opt.label}</option>
+                        <option key={opt.value} value={opt.value}>
+                          {opt.label}
+                        </option>
                       ))}
                     </select>
-                    {errors.country && <p className="mt-1 text-xs text-red-400">{errors.country}</p>}
+                    {errors.country && (
+                      <p className="mt-1 text-xs text-red-400">
+                        {errors.country}
+                      </p>
+                    )}
                   </div>
                 </div>
                 <button
                   type="submit"
                   disabled={submitting}
-                  className="mt-6 w-full min-h-[48px] rounded-xl bg-gradient-to-r from-blue-600 to-cyan-500 font-bold text-white py-3 px-4 transition-all hover:opacity-90 disabled:opacity-50"
+                  className="mt-6 w-full min-h-[48px] flex items-center justify-center rounded-xl bg-gradient-to-r from-blue-600 to-cyan-500 font-bold text-white py-3 px-4 transition-all hover:opacity-90 disabled:opacity-50"
                 >
-                  {submitting ? (isSpanish ? 'Enviando…' : 'Sending…') : t.submit}
+                  {submitting
+                    ? isSpanish
+                      ? "Enviando…"
+                      : "Sending…"
+                    : t.submit}
                 </button>
               </form>
             )}
@@ -239,5 +305,5 @@ export function PdfLeadCaptureModal({ isOpen, onClose, pdfUrl, productPreset, co
         </motion.div>
       </div>
     </AnimatePresence>
-  )
+  );
 }
