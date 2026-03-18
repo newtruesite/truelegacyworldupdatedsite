@@ -181,7 +181,7 @@ export function ProductSection({
                   backdropFilter: "blur(20px)",
                 }}
               >
-                <div className="rounded-2xl overflow-hidden border border-white/10 shadow-lg mb-4 aspect-[4/3] md:aspect-square bg-white/5 flex items-center justify-center p-8 md:p-10 relative">
+                <div className="rounded-2xl overflow-hidden border border-white/10 shadow-lg mb-4 aspect-square md:aspect-[4/3] bg-white/5 flex items-center justify-center p-8 md:p-10 relative">
                   <img
                     src={product.imageSrc}
                     alt={product.imageAlt}
