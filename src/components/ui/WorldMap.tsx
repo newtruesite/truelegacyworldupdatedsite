@@ -187,7 +187,7 @@ export function WorldMap() {
       className="map-logo-overlay"
       style={{
         position: "absolute",
-        top: 12,
+        top: 18,
         left: "50%",
         transform: "translateX(-50%)",
         pointerEvents: "none",
@@ -210,8 +210,8 @@ export function WorldMap() {
         <div
           ref={mapContainerRef}
           id="world-map"
-          className="w-full rounded-2xl overflow-hidden h-[520px] sm:h-[460px]"
-          style={{ touchAction: "pan-y" }}
+          className="w-full rounded-2xl overflow-hidden"
+          style={{ width: "100%", height: "460px", touchAction: "pan-y" }}
         />
         <MapLogo />
 
@@ -242,6 +242,12 @@ export function WorldMap() {
               } else if (c.id === "south-america") {
                 left = isMobile ? "28%" : 150;
                 top = isMobile ? "70%" : 305;
+              } else if (c.id === "europe") {
+                left = isMobile ? "48%" : 320;
+                top = isMobile ? "35%" : 230;
+              } else if (c.id === "asia") {
+                left = isMobile ? "72%" : 370;
+                top = isMobile ? "43%" : 235;
               } else if (c.id === "africa") {
                 left = isMobile ? "47%" : 260;
                 top = isMobile ? "60%" : 280;
