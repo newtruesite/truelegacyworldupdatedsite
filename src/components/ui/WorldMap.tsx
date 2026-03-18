@@ -39,6 +39,15 @@ const CONTINENTS = [
     lng: 100.0,
   },
   {
+    id: "middle-east",
+    nameEn: "Middle East",
+    nameEs: "Medio Oriente",
+    nameFr: "Moyen-Orient",
+    namePt: "Oriente Médio",
+    lat: 24.0,
+    lng: 54.0,
+  },
+  {
     id: "africa",
     nameEn: "Africa",
     nameEs: "África",
@@ -215,7 +224,7 @@ export function WorldMap() {
             width: "100%",
             height:
               typeof window !== "undefined" && window.innerWidth <= 767
-                ? "580px"
+                ? "650px"
                 : "460px",
             touchAction: "pan-y",
           }}
@@ -245,19 +254,22 @@ export function WorldMap() {
 
               if (c.id === "north-america") {
                 left = isMobile ? "18%" : 83;
-                top = isMobile ? "45%" : 196;
+                top = isMobile ? "38%" : 196;
               } else if (c.id === "south-america") {
-                left = isMobile ? "30%" : 150;
-                top = isMobile ? "75%" : 305;
+                left = isMobile ? "28%" : 150;
+                top = isMobile ? "72%" : 305;
               } else if (c.id === "europe") {
                 left = isMobile ? "52%" : 320;
-                top = isMobile ? "28%" : 210;
+                top = isMobile ? "22%" : 210;
+              } else if (c.id === "middle-east") {
+                left = isMobile ? "62%" : 365;
+                top = isMobile ? "48%" : 265;
               } else if (c.id === "asia") {
                 left = isMobile ? "75%" : 370;
-                top = isMobile ? "45%" : 235;
+                top = isMobile ? "38%" : 235;
               } else if (c.id === "africa") {
                 left = isMobile ? "50%" : 260;
-                top = isMobile ? "65%" : 280;
+                top = isMobile ? "62%" : 280;
               }
 
               return (

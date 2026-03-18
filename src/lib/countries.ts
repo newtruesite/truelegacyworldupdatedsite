@@ -15,6 +15,8 @@ export const SLUG_TO_ISO2: Record<string, string> = {
   india: "in",
   malaysia: "my",
   turkey: "tr",
+  spain: "es",
+  eu: "eu",
 };
 
 /** flagcdn.com: w80 default, w160 for retina. Use getFlagImageUrl(slug, 80) and (slug, 160) for srcset. */
@@ -32,7 +34,7 @@ export function getFlagImageUrl(
 }
 
 /** Asia slugs that use local high-res flag assets under /assets/flags/asia/ */
-const ASIA_FLAG_SLUGS = ["uae", "india", "malaysia"] as const;
+const ASIA_FLAG_SLUGS = ["india", "malaysia"] as const;
 
 /** Returns { src, srcSet } — local high-res for Asia (UAE, India, Malaysia), else flagcdn.com */
 export function getFlagSrcSet(slug: string): { src: string; srcSet: string } {
@@ -211,7 +213,7 @@ export const COUNTRIES: Country[] = [
     jotformUrl: JOTFORM_EN,
     youtube: "https://youtube.com/@TrueLegacyWorld",
     instagram: "https://instagram.com/truelegacyworld",
-    region: "Asia",
+    region: "Middle East",
     mapX: 58,
     mapY: 42,
   },
@@ -262,6 +264,38 @@ export const COUNTRIES: Country[] = [
     region: "Europe",
     mapX: 54,
     mapY: 36,
+  },
+  {
+    slug: "spain",
+    name: "Spain",
+    nativeName: "España",
+    flag: "🇪🇸",
+    flagEmoji: "🇪🇸",
+    youtubeUrl: "https://youtube.com/@TrueLegacyWorld",
+    youtubeId: "",
+    locale: "es",
+    jotformUrl: JOTFORM_ES,
+    youtube: "https://youtube.com/@TrueLegacyWorld",
+    instagram: "https://instagram.com/truelegacyworld",
+    region: "Europe",
+    mapX: 44,
+    mapY: 27,
+  },
+  {
+    slug: "eu",
+    name: "European Union",
+    nativeName: "European Union",
+    flag: "🇪🇺",
+    flagEmoji: "🇪🇺",
+    youtubeUrl: "https://youtube.com/@TrueLegacyWorld",
+    youtubeId: "",
+    locale: "en",
+    jotformUrl: JOTFORM_EN,
+    youtube: "https://youtube.com/@TrueLegacyWorld",
+    instagram: "https://instagram.com/truelegacyworld",
+    region: "Europe",
+    mapX: 50,
+    mapY: 28,
   },
 ];
 

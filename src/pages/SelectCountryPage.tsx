@@ -38,13 +38,20 @@ const CONTINENT_DATA: Record<
   },
   europe: {
     name: "Europe",
-    countries: [{ code: "tr", name: "Turkey", slug: "turkey" }],
+    countries: [
+      { code: "tr", name: "Turkey", slug: "turkey" },
+      { code: "es", name: "Spain", slug: "spain" },
+      { code: "eu", name: "European Union", slug: "eu" },
+    ],
+  },
+  "middle-east": {
+    name: "Middle East",
+    countries: [{ code: "ae", name: "UAE", slug: "uae" }],
   },
   asia: {
     name: "Asia",
     countries: [
       { code: "in", name: "India", slug: "india" },
-      { code: "ae", name: "UAE", slug: "uae" },
       { code: "my", name: "Malaysia", slug: "malaysia" },
     ],
   },

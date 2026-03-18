@@ -1,5 +1,5 @@
-import { isSupabaseConfigured, supabase } from "@/lib/supabaseClient";
-import type { Session, User } from "@supabase/supabase-js";
+import { goTrue } from "@/lib/netlifyAuth";
+import type { User } from "gotrue-js";
 import {
   createContext,
   useContext,
@@ -9,84 +9,54 @@ import {
 } from "react";
 
 type AuthContextType = {
-  session: Session | null;
   user: User | null;
   loading: boolean;
+  setUser: (u: User | null) => void;
 };
 
 const AuthContext = createContext<AuthContextType>({
-  session: null,
   user: null,
   loading: true,
+  setUser: () => {},
 });
 
 export const useAuth = () => useContext(AuthContext);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [session, setSession] = useState<Session | null>(null);
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const isDev = import.meta.env.DEV;
 
   useEffect(() => {
     let isMounted = true;
-
-    // Check configuration first
-    if (!isSupabaseConfigured) {
-      setLoading(false);
-      return;
-    }
-
-    // Wrap in try-catch to catch extreme network errors that bypass the promise rejection
-    try {
-      supabase.auth
-        .getSession()
-        .then((result: { data: { session: Session | null } }) => {
-          if (!isMounted) return;
-          const currentSession = result.data.session;
-          setSession(currentSession);
-          setUser(currentSession?.user ?? null);
-
-          if (isDev) {
-            if (currentSession?.user) {
-              console.log("[AuthContext] Session loaded successfully for user");
-            } else {
-              console.log("[AuthContext] No active session found");
-            }
-          }
-
-          setLoading(false);
-        })
-        .catch((error: unknown) => {
-          if (!isMounted) return;
+    const validate = async () => {
+      const stored = goTrue.currentUser();
+      if (!stored) {
+        if (isMounted) setLoading(false);
+        return;
+      }
+      // Validate token (refreshes if needed); clear if expired
+      try {
+        await stored.jwt(false);
+        if (isMounted) {
+          setUser(stored);
+          if (isDev) console.log("[AuthContext] Session restored");
+        }
+      } catch {
+        if (isMounted) {
           if (isDev)
-            console.error("[AuthContext] Supabase getSession error:", error);
-          setLoading(false);
-        });
-
-      const subscriptionResult: {
-        data: { subscription: { unsubscribe: () => void } };
-      } = supabase.auth.onAuthStateChange(
-        (_event: string, nextSession: Session | null) => {
-          if (!isMounted) return;
-          if (isDev) console.log(`[AuthContext] Auth state changed: ${_event}`);
-          setSession(nextSession);
-          setUser(nextSession?.user ?? null);
-          setLoading(false); // just in case it fires while still loading
-        },
-      );
-
-      return () => {
-        isMounted = false;
-        subscriptionResult.data.subscription.unsubscribe();
-      };
-    } catch (err) {
-      if (!isMounted) return;
-      if (isDev)
-        console.error("[AuthContext] Supabase initialization failed:", err);
-      setLoading(false);
-    }
-  }, []);
+            console.log("[AuthContext] Stored session expired, clearing");
+          setUser(null);
+        }
+      } finally {
+        if (isMounted) setLoading(false);
+      }
+    };
+    validate();
+    return () => {
+      isMounted = false;
+    };
+  }, [isDev]);
 
   // The UI contract for consumers (e.g. TrainingPage):
   // 1. loading === true: Show a spinner, don't assume logged out yet.
@@ -94,7 +64,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   // 3. loading === false && user !== null: User is logged in, show protected content.
 
   return (
-    <AuthContext.Provider value={{ session, user, loading }}>
+    <AuthContext.Provider value={{ user, loading, setUser }}>
       {children}
     </AuthContext.Provider>
   );

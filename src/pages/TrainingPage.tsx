@@ -4,7 +4,7 @@ import { SEO } from "@/components/SEO";
 import { AuroraBackground } from "@/components/ui/AuroraBackground";
 import { useAuth } from "@/contexts/AuthContext";
 import { useLocaleContext } from "@/contexts/LocaleContext";
-import { isSupabaseConfigured, supabase } from "@/lib/supabaseClient";
+import { goTrue } from "@/lib/netlifyAuth";
 import { t } from "@/lib/translations";
 import { motion } from "framer-motion";
 import {
@@ -472,7 +472,7 @@ export default function TrainingPage() {
   const params = useParams();
   const countrySlug = params.countrySlug;
 
-  const { user, loading } = useAuth();
+  const { user, loading, setUser } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -502,9 +502,20 @@ export default function TrainingPage() {
     }
   }, [user, isSecretCodeValid]);
 
+  const handleSignOut = async () => {
+    try {
+      const currentUser = goTrue.currentUser();
+      if (currentUser) await currentUser.logout();
+    } catch {
+      /* ignore logout errors */
+    }
+    setUser(null);
+  };
+
   const handleSecretCodeSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (secretCode === "truelegacyworld1!") {
+    const expected = import.meta.env.VITE_SECRET_CODE ?? "truelegacyworld1!";
+    if (secretCode === expected) {
       setIsSecretCodeValid(true);
       setSecretCodeError("");
       sessionStorage.setItem("tl_secret_code_valid", "true");
@@ -517,23 +528,6 @@ export default function TrainingPage() {
     }
   };
 
-  const getFriendlyErrorMessage = (errorMsg: string, isSpanish: boolean) => {
-    const msg = errorMsg.toLowerCase();
-    if (msg.includes("invalid login credentials"))
-      return isSpanish
-        ? "Correo o contraseña incorrectos."
-        : "Incorrect email or password.";
-    if (msg.includes("already registered"))
-      return isSpanish
-        ? "Este correo ya está registrado."
-        : "Email already registered.";
-    if (msg.includes("password should be"))
-      return isSpanish
-        ? "La contraseña debe tener al menos 6 caracteres."
-        : "Password should be at least 6 characters.";
-    return isSpanish ? "Ocurrió un error. Inténtalo de nuevo." : errorMsg;
-  };
-
   const handleAuth = async (e: React.FormEvent) => {
     e.preventDefault();
     if (isLoggingIn) return;
@@ -543,16 +537,6 @@ export default function TrainingPage() {
     setAuthSuccess("");
 
     const isSpanish = locale === "es";
-
-    if (!isSupabaseConfigured) {
-      setAuthError(
-        isSpanish
-          ? "El acceso de entrenamiento está temporalmente deshabilitado; la configuración del servidor no está completa."
-          : "Training login is temporarily unavailable; server configuration is incomplete.",
-      );
-      setIsLoggingIn(false);
-      return;
-    }
 
     if (authMode === "signup" && password !== confirmPassword) {
       setAuthError(
@@ -564,44 +548,36 @@ export default function TrainingPage() {
 
     try {
       if (authMode === "signup") {
-        const { error } = await supabase.auth.signUp({ email, password });
-        if (error) {
-          setAuthError(getFriendlyErrorMessage(error.message, isSpanish));
-        } else {
-          setAuthSuccess(
-            isSpanish
-              ? "¡Cuenta creada! Revisa tu correo para confirmar."
-              : "Account created! Please check your email to confirm.",
-          );
-          setAuthMode("login");
-          setPassword("");
-          setConfirmPassword("");
-        }
+        await goTrue.signup(email, password);
+        setAuthSuccess(
+          isSpanish
+            ? "¡Cuenta creada! Revisa tu correo para confirmar."
+            : "Account created! Please check your email to confirm.",
+        );
+        setAuthMode("login");
+        setPassword("");
+        setConfirmPassword("");
       } else {
-        const { error } = await supabase.auth.signInWithPassword({
-          email,
-          password,
-        });
-        if (error)
-          setAuthError(getFriendlyErrorMessage(error.message, isSpanish));
+        const loggedInUser = await goTrue.login(email, password, true);
+        setUser(loggedInUser);
       }
-    } catch (err: any) {
-      console.error("Supabase auth unexpected error:", {
-        context: "training-auth",
-        mode: authMode,
-        email,
-        error: err?.message,
-      });
-      const errorMsg = err?.message?.toLowerCase() || "";
+    } catch (err: unknown) {
+      const raw = err instanceof Error ? err.message : "";
+      const errorMsg = raw.toLowerCase();
       if (
-        err?.name === "TypeError" ||
         errorMsg.includes("failed to fetch") ||
         errorMsg.includes("networkerror")
       ) {
         setAuthError(
           isSpanish
-            ? "No pudimos conectar con el servidor de entrenamiento. Revisa tu conexión e inténtalo de nuevo en unos minutos."
-            : "We couldn’t reach the training server. Check your connection and try again in a moment.",
+            ? "No pudimos conectar con el servidor. Revisa tu conexión."
+            : "We couldn't reach the server. Check your connection.",
+        );
+      } else if (errorMsg.includes("invalid") || errorMsg.includes("grant")) {
+        setAuthError(
+          isSpanish
+            ? "Correo o contraseña incorrectos."
+            : "Incorrect email or password.",
         );
       } else {
         setAuthError(
@@ -806,7 +782,7 @@ export default function TrainingPage() {
               <div className="max-w-md mx-auto mt-12 min-h-[400px] rounded-2xl border border-white/10 bg-white/[0.04] backdrop-blur-xl p-8 shadow-[0_24px_80px_rgba(0,0,0,0.6)]">
                 <div className="flex justify-end mb-4">
                   <button
-                    onClick={() => supabase.auth.signOut()}
+                    onClick={handleSignOut}
                     className="flex items-center gap-2 text-sm text-slate-400 hover:text-white transition-colors px-4 py-2 rounded-lg bg-white/5 hover:bg-white/10"
                   >
                     <LogOut className="w-4 h-4" />{" "}
@@ -871,7 +847,7 @@ export default function TrainingPage() {
               <div ref={contentRef}>
                 <div className="flex justify-end mb-4">
                   <button
-                    onClick={() => supabase.auth.signOut()}
+                    onClick={handleSignOut}
                     className="flex items-center gap-2 text-sm text-slate-400 hover:text-white transition-colors px-4 py-2 rounded-lg bg-white/5 hover:bg-white/10"
                   >
                     <LogOut className="w-4 h-4" />{" "}
