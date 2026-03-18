@@ -1314,6 +1314,15 @@ export default function CountryPage() {
     : "Region";
   const continentId = continentInfo?.id ?? "";
 
+  const followLabel =
+    locale === "es"
+      ? "Seguir"
+      : locale === "fr"
+        ? "Suivre"
+        : locale === "pt"
+          ? "Seguir"
+          : "Follow";
+
   return (
     <>
       <Navbar />
@@ -1577,8 +1586,8 @@ export default function CountryPage() {
         >
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <motion.div
-              initial={{ opacity: 0, y: 16 }}
-              whileInView={{ opacity: 1, y: 0 }}
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
               viewport={{ once: true }}
               className="mb-14"
             >
@@ -1609,7 +1618,7 @@ export default function CountryPage() {
                 }}
               >
                 <IconInstagram size={18} />
-                Follow @truelegacyworld
+                {followLabel} @truelegacyworld
               </a>
               {["colombia", "brazil", "mexico", "paraguay"].includes(
                 country.slug,
@@ -1626,7 +1635,7 @@ export default function CountryPage() {
                   }}
                 >
                   <IconInstagram size={18} />
-                  Follow @truelegacylatam
+                  {followLabel} @truelegacylatam
                 </a>
               )}
             </div>
@@ -1695,8 +1704,8 @@ export default function CountryPage() {
 
         {/* ===== GET PAID TO SHARE WORLD-HEALING PRODUCTS ===== */}
         <motion.section
-          initial={{ opacity: 0, y: 24 }}
-          whileInView={{ opacity: 1, y: 0 }}
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
           className="py-16 px-4 sm:px-6"

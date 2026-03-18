@@ -64,11 +64,21 @@ export default function DistributorsPage() {
       : "Connect with a leader near you. WhatsApp, website and socials to start your journey.";
 
   const whatsappLabel = "WhatsApp";
+  const latamWhatsappLabel = isSpanish
+    ? "WhatsApp (LATAM)"
+    : locale === "fr"
+      ? "WhatsApp (LATAM)"
+      : "WhatsApp (LATAM)";
   const websiteLabel = isSpanish
     ? "Sitio web"
     : locale === "fr"
       ? "Site web"
       : "Website";
+  const bookCallLabel = isSpanish
+    ? "Agendar llamada"
+    : locale === "fr"
+      ? "Réserver un appel"
+      : "Book a Call";
 
   return (
     <div className="page-wrapper" style={{ background: "#060b1e" }}>
@@ -110,7 +120,9 @@ export default function DistributorsPage() {
                 dist={dist}
                 index={index}
                 whatsappLabel={whatsappLabel}
+                latamWhatsappLabel={latamWhatsappLabel}
                 websiteLabel={websiteLabel}
+                bookCallLabel={bookCallLabel}
               />
             ))}
           </div>
@@ -125,12 +137,16 @@ function DistributorCard({
   dist,
   index,
   whatsappLabel,
+  latamWhatsappLabel,
   websiteLabel,
+  bookCallLabel,
 }: {
   dist: (typeof DISTRIBUTORS)[0];
   index: number;
   whatsappLabel: string;
+  latamWhatsappLabel: string;
   websiteLabel: string;
+  bookCallLabel: string;
 }) {
   const [imgError, setImgError] = useState(false);
   return (
@@ -179,7 +195,7 @@ function DistributorCard({
               className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#25D366] hover:bg-[#20BD5A] text-white font-semibold px-4 py-3 text-sm min-h-11 transition-colors"
             >
               <IconWhatsApp className="w-5 h-5 shrink-0" />
-              WhatsApp (LATAM)
+              {latamWhatsappLabel}
             </a>
           )}
           {dist.calendly && (
@@ -190,7 +206,7 @@ function DistributorCard({
               className="inline-flex items-center justify-center gap-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-3 text-sm min-h-11 transition-colors"
             >
               <Calendar className="w-5 h-5 shrink-0" />
-              Book a Call
+              {bookCallLabel}
             </a>
           )}
           {dist.website && (
