@@ -232,15 +232,17 @@ export default function EventsPage() {
                       {desc}
                     </div>
 
-                    {/* First Time Prompt - Always Visible */}
-                    <div className="mb-6">
-                      <EventsFirstTimePrompt
-                        onYes={handleFirstTimeYes}
-                        onNo={handleFirstTimeNo}
-                        joinUrl={joinUrl}
-                        isSpanish={isSpanish}
-                      />
-                    </div>
+                    {/* First Time Prompt */}
+                    {!joinedEvent && (
+                      <div className="mb-6">
+                        <EventsFirstTimePrompt
+                          onYes={handleFirstTimeYes}
+                          onNo={handleFirstTimeNo}
+                          joinUrl={joinUrl}
+                          isSpanish={isSpanish}
+                        />
+                      </div>
+                    )}
 
                     {/* Join Button (visible after first-time prompt is answered) */}
                     {joinedEvent && (
