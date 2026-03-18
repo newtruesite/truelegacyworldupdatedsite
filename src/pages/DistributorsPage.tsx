@@ -48,26 +48,26 @@ function IconWhatsApp({ className }: { className?: string }) {
 export default function DistributorsPage() {
   const { locale } = useLocaleContext();
 
-  const isSpanish = locale === 'es' || locale === 'pt'
+  const isSpanish = locale === "es" || locale === "pt";
 
   const title = isSpanish
-    ? 'Distribuidores True Legacy'
-    : locale === 'fr'
-      ? 'Distributeurs True Legacy'
-      : 'True Legacy Distributors'
+    ? "Distribuidores True Legacy"
+    : locale === "fr"
+      ? "Distributeurs True Legacy"
+      : "True Legacy Distributors";
 
   const subtitle = isSpanish
-    ? 'Conecta con un líder cerca de ti. WhatsApp, sitio web y redes para comenzar tu camino.'
-    : locale === 'fr'
-      ? 'Connectez-vous avec un leader près de chez vous. WhatsApp, site web et réseaux pour commencer.'
-      : 'Connect with a leader near you. WhatsApp, website and socials to start your journey.'
+    ? "Conecta con un líder cerca de ti. WhatsApp, sitio web y redes para comenzar tu camino."
+    : locale === "fr"
+      ? "Connectez-vous avec un leader près de chez vous. WhatsApp, site web et réseaux pour commencer."
+      : "Connect with a leader near you. WhatsApp, website and socials to start your journey.";
 
-  const whatsappLabel = 'WhatsApp'
+  const whatsappLabel = "WhatsApp";
   const websiteLabel = isSpanish
-    ? 'Sitio web'
-    : locale === 'fr'
-      ? 'Site web'
-      : 'Website'
+    ? "Sitio web"
+    : locale === "fr"
+      ? "Site web"
+      : "Website";
 
   return (
     <div className="page-wrapper" style={{ background: "#060b1e" }}>
@@ -139,7 +139,7 @@ function DistributorCard({
       transition={{ delay: 0.1 + index * 0.1 }}
       className="rounded-2xl border border-white/10 bg-[rgba(5,16,48,0.8)] p-4 sm:p-6 md:p-8 flex flex-col sm:flex-row gap-5 sm:gap-6 items-start"
     >
-      <div className="flex-shrink-0 w-32 sm:w-48 h-32 sm:h-48 rounded-2xl border-2 border-white/10 overflow-hidden bg-cyan-500/10 flex items-center justify-center">
+      <div className="flex-shrink-0 w-32 sm:w-48 h-32 sm:h-55 rounded-2xl border-2 border-white/10 overflow-hidden bg-cyan-500/10 flex items-center justify-center">
         {!imgError ? (
           <img
             src={dist.photo}

@@ -19,15 +19,15 @@ Push to GitHub → Netlify will auto-deploy on every push to `main`.
 
 ## 2. Netlify setup (one-time)
 
-1. **Import repo** — Netlify Dashboard → *Add new site → Import an existing project*
+1. **Import repo** — Netlify Dashboard → _Add new site → Import an existing project_
 2. **Build settings** (auto-detected from `netlify.toml`):
    - Build command: `npm run build`
    - Publish directory: `dist`
-3. **Environment variables** — Site → *Build & deploy → Environment variables*:
+3. **Environment variables** — Site → _Build & deploy → Environment variables_:
 
-| Variable              | Where to find it                                              |
-|-----------------------|---------------------------------------------------------------|
-| `VITE_SUPABASE_URL`   | Supabase Dashboard → Project Settings → API → Project URL    |
+| Variable                 | Where to find it                                              |
+| ------------------------ | ------------------------------------------------------------- |
+| `VITE_SUPABASE_URL`      | Supabase Dashboard → Project Settings → API → Project URL     |
 | `VITE_SUPABASE_ANON_KEY` | Supabase Dashboard → Project Settings → API → anon public key |
 
 4. **Deploy** — trigger a new deploy after adding env vars.
@@ -65,9 +65,9 @@ No additional config needed.
 
 ## 6. Troubleshooting
 
-| Symptom | Fix |
-|---------|-----|
-| Blank page on deploy | Check build log — usually a TypeScript error caught by `tsc -b` |
-| Login returns 400 | Verify Supabase env vars are set and redeploy |
-| 404 on direct URL | Confirm `netlify.toml` redirect rule is present |
-| Auth works locally but not on Netlify | Add site URL to Supabase → Auth → URL Configuration |
+| Symptom                               | Fix                                                             |
+| ------------------------------------- | --------------------------------------------------------------- |
+| Blank page on deploy                  | Check build log — usually a TypeScript error caught by `tsc -b` |
+| Login returns 400                     | Verify Supabase env vars are set and redeploy                   |
+| 404 on direct URL                     | Confirm `netlify.toml` redirect rule is present                 |
+| Auth works locally but not on Netlify | Add site URL to Supabase → Auth → URL Configuration             |
