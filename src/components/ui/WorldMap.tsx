@@ -187,7 +187,7 @@ export function WorldMap() {
       className="map-logo-overlay"
       style={{
         position: "absolute",
-        top: 14,
+        top: 8,
         left: "50%",
         transform: "translateX(-50%)",
         pointerEvents: "none",
@@ -211,7 +211,14 @@ export function WorldMap() {
           ref={mapContainerRef}
           id="world-map"
           className="w-full rounded-2xl overflow-hidden"
-          style={{ width: "100%", height: "460px", touchAction: "pan-y" }}
+          style={{
+            width: "100%",
+            height:
+              typeof window !== "undefined" && window.innerWidth <= 767
+                ? "540px"
+                : "460px",
+            touchAction: "pan-y",
+          }}
         />
         <MapLogo />
 
