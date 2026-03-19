@@ -23,8 +23,8 @@ export const t = {
     seeMore: 'Explore the Technology',
     healthWealth: 'Health = Wealth',
     pillarsSub: 'Three pillars that create a life of freedom.',
-    navProductK8: 'Kangen K8',
-    navProductEmguarde: 'emGuarde',
+    navProductK8: 'Dual package',
+    navProductEmguarde: 'Dual package',
     heroSub:
       "True Legacy is a global team of coaches sharing Kangen Water and emGuarde — two of the most talked-about wellness technologies on the market. We don't just sell products. We build leaders.",
     homeScrollToExplore: 'Scroll to Explore',
@@ -99,7 +99,7 @@ export const t = {
     },
     products: {
       k8: {
-        label: 'Leveluk K8',
+        label: 'Dual package',
         badge: 'Flagship Kangen Water® ionizer',
         short: 'Eight platinum-coated titanium plates deliver antioxidant-rich Kangen Water® for drinking, cooking, skincare, and cleaning.',
         learnMore: 'View K8 details',
@@ -134,7 +134,7 @@ export const t = {
         downloadGuide: 'Anespa DX guide (PDF)',
       },
       emguarde: {
-        label: 'emGuarde™',
+        label: 'Dual package',
         badge: 'EMF harmonizer',
         short: 'Patented Enagic technology designed to harmonize high-frequency electromagnetic fields in your home, office, or travel.',
         learnMore: 'What is emGuarde?',
@@ -279,8 +279,8 @@ export const t = {
     seeMore: 'Explorar la Tecnología',
     healthWealth: 'Salud = Riqueza',
     pillarsSub: 'Tres pilares que crean una vida de libertad.',
-    navProductK8: 'Agua Kangen K8',
-    navProductEmguarde: 'emGuarde',
+    navProductK8: 'Dual package',
+    navProductEmguarde: 'Dual package',
     heroSub:
       'True Legacy es un equipo global de mentores que comparten Kangen Water y emGuarde — dos de las tecnologías de bienestar más reconocidas del mercado. No solo vendemos productos. Formamos líderes.',
     homeScrollToExplore: 'Desplázate para explorar',
@@ -447,7 +447,7 @@ export const t = {
     },
     products: {
       k8: {
-        label: 'Leveluk K8',
+        label: 'Dual package',
         badge: 'Ionizadora insignia Kangen Water®',
         short: 'Ocho placas de titanio recubiertas de platino producen Agua Kangen® rica en antioxidantes para beber, cocinar y limpiar.',
         learnMore: 'Ver detalles de la K8',
@@ -482,7 +482,7 @@ export const t = {
         downloadGuide: 'Guía Anespa DX (PDF)',
       },
       emguarde: {
-        label: 'emGuarde™',
+        label: 'Dual package',
         badge: 'Armonizador EMF',
         short: 'Tecnología patentada de Enagic diseñada para armonizar los campos electromagnéticos de alta frecuencia en tu entorno.',
         learnMore: '¿Qué es emGuarde?',
@@ -535,8 +535,8 @@ export const t = {
     seeMore: 'Explorer la Technologie',
     healthWealth: 'Santé = Richesse',
     pillarsSub: 'Trois piliers qui créent une vie de liberté.',
-    navProductK8: 'Kangen K8',
-    navProductEmguarde: 'emGuarde',
+    navProductK8: 'Dual package',
+    navProductEmguarde: 'Dual package',
     heroSub:
       'True Legacy est une équipe mondiale de coachs qui partagent l\'eau Kangen et emGuarde — deux des technologies bien-être les plus reconnues. Nous ne vendons pas que des produits. Nous formons des leaders.',
     homeScrollToExplore: 'Faites défiler pour explorer',
@@ -703,7 +703,7 @@ export const t = {
     },
     products: {
       k8: {
-        label: 'Leveluk K8',
+        label: 'Dual package',
         badge: 'Ioniseur Kangen Water® phare',
         short: "Huit plaques en titane plaqué platine pour une eau Kangen® antioxydante destinée à l'hydratation, la cuisine et le nettoyage.",
         learnMore: 'Voir les détails de la K8',
@@ -738,7 +738,7 @@ export const t = {
         downloadGuide: 'Guide Anespa DX (PDF)',
       },
       emguarde: {
-        label: 'emGuarde™',
+        label: 'Dual package',
         badge: 'Harmonisateur EMF',
         short: 'Technologie brevetée Enagic conçue pour harmoniser les champs électromagnétiques haute fréquence dans votre environnement.',
         learnMore: 'Qu’est-ce que emGuarde ?',
@@ -791,8 +791,8 @@ export const t = {
     seeMore: 'Explore a Tecnologia',
     healthWealth: 'Saúde = Riqueza',
     pillarsSub: 'Três pilares que criam uma vida de liberdade.',
-    navProductK8: 'Kangen K8',
-    navProductEmguarde: 'emGuarde',
+    navProductK8: 'Dual package',
+    navProductEmguarde: 'Dual package',
     heroSub:
       'True Legacy é uma equipe global de mentores que compartilham Kangen Water e emGuarde — duas das tecnologias de bem-estar mais reconhecidas do mercado. Não apenas vendemos produtos. Formamos líderes.',
     homeScrollToExplore: 'Role para explorar',
@@ -959,7 +959,7 @@ export const t = {
     },
     products: {
       k8: {
-        label: 'Leveluk K8',
+        label: 'Dual package',
         badge: 'Ionizador Kangen Water® carro-chefe',
         short: 'Oito placas de titânio revestidas de platina para Água Kangen® rica em antioxidantes.',
         learnMore: 'Ver detalhes da K8',
@@ -994,7 +994,7 @@ export const t = {
         downloadGuide: 'Guia Anespa DX (PDF)',
       },
       emguarde: {
-        label: 'emGuarde™',
+        label: 'Dual package',
         badge: 'Armonizador EMF',
         short: 'Tecnologia patenteada Enagic para harmonizar campos eletromagnéticos de alta frequência.',
         learnMore: 'O que é emGuarde?',
