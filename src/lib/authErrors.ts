@@ -18,7 +18,7 @@ const AUTH_MESSAGES: Record<"en" | "es" | "fr", MessageSet> = {
   en: {
     authDisabled:
       "Authentication is currently unavailable on this environment. Missing Supabase configuration.",
-    invalidCredentials: "Incorrect email or password. If you just signed up, confirm your email first.",
+    invalidCredentials: "Incorrect email or password.",
     emailAlreadyRegistered: "Email already registered. Try signing in instead.",
     passwordPolicy:
       "Password does not meet security requirements (minimum 6 characters).",
@@ -34,7 +34,7 @@ const AUTH_MESSAGES: Record<"en" | "es" | "fr", MessageSet> = {
   es: {
     authDisabled:
       "La autenticacion no esta disponible en este entorno. Falta la configuracion de Supabase.",
-    invalidCredentials: "Correo o contrasena incorrectos. Si acabas de registrarte, confirma tu correo primero.",
+    invalidCredentials: "Correo o contrasena incorrectos.",
     emailAlreadyRegistered:
       "Este correo ya esta registrado. Intenta iniciar sesion.",
     passwordPolicy:
@@ -51,7 +51,7 @@ const AUTH_MESSAGES: Record<"en" | "es" | "fr", MessageSet> = {
   fr: {
     authDisabled:
       "L'authentification n'est pas disponible sur cet environnement. La configuration Supabase est manquante.",
-    invalidCredentials: "E-mail ou mot de passe incorrect. Si vous venez de vous inscrire, confirmez d'abord votre e-mail.",
+    invalidCredentials: "E-mail ou mot de passe incorrect.",
     emailAlreadyRegistered:
       "Cet e-mail est deja enregistre. Essayez de vous connecter.",
     passwordPolicy:

@@ -70,12 +70,11 @@ export default function LoginPage() {
         await signUp(email, password);
         setAuthSuccess(
           isEs
-            ? "¡Cuenta creada! Revisa tu correo para confirmar."
-            : "Account created! Check your email to confirm.",
+            ? "¡Cuenta creada exitosamente!"
+            : isFr
+              ? "Compte créé avec succès !"
+              : "Account created successfully!",
         );
-        setAuthMode("login");
-        setPassword("");
-        setConfirmPassword("");
       } else {
         await signIn(email, password);
       }

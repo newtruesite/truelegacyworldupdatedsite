@@ -86,6 +86,7 @@ export default function EventsPage() {
   const isSpanish = lang === "es";
 
   const [leadCaptureOpen, setLeadCaptureOpen] = useState(false);
+  const [selectedEventTitle, setSelectedEventTitle] = useState("");
 
   // Redirect old country-slug URLs to region URLs once
   useEffect(() => {
@@ -96,7 +97,8 @@ export default function EventsPage() {
     navigate(`/events/${targetRegion}`, { replace: true });
   }, [param, navigate]);
 
-  const handleFirstTimeYes = () => {
+  const handleFirstTimeYes = (eventTitle: string) => {
+    setSelectedEventTitle(eventTitle);
     setLeadCaptureOpen(true);
   };
 
@@ -178,7 +180,7 @@ export default function EventsPage() {
                     {/* First Time Prompt - Always Visible */}
                     <div className="mb-6">
                       <EventsFirstTimePrompt
-                        onYes={handleFirstTimeYes}
+                        onYes={() => handleFirstTimeYes(event.title)}
                         onNo={handleFirstTimeNo}
                         joinUrl={joinUrl}
                         isSpanish={isSpanish}
@@ -198,7 +200,7 @@ export default function EventsPage() {
         onClose={() => setLeadCaptureOpen(false)}
         onSuccess={handleLeadCaptureSuccess}
         region={region}
-        eventTitle={events[0]?.title || "Event"}
+        eventTitle={selectedEventTitle || events[0]?.title || "Event"}
         isSpanish={isSpanish}
       />
     </div>
