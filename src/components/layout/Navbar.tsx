@@ -439,6 +439,39 @@ export function Navbar() {
       {/* Mobile Menu Overlay */}
       <MobileMenu open={menuOpen} onClose={() => setMenuOpen(false)}>
         <div className="flex w-full flex-col gap-y-4">
+          {/* Language Selection */}
+          <div className="space-y-2">
+            <span className="px-2 text-xs font-semibold uppercase tracking-wider text-slate-500">
+              {locale === "es"
+                ? "Idioma"
+                : locale === "fr"
+                  ? "Langue"
+                  : locale === "pt"
+                    ? "Idioma"
+                    : "Language"}
+            </span>
+            <div className="flex gap-2">
+              {(["en", "es", "fr"] as const).map((loc) => (
+                <button
+                  key={loc}
+                  onClick={() => setLocaleOverride(loc)}
+                  className={cn(
+                    "flex-1 min-h-[44px] flex items-center justify-center px-4 py-2 rounded-xl transition-colors font-medium text-sm",
+                    locale === loc || (locale === "pt" && loc === "es")
+                      ? "text-white bg-white/10"
+                      : "text-slate-300 hover:text-white hover:bg-white/5",
+                  )}
+                >
+                  {loc === "en"
+                    ? "English"
+                    : loc === "es"
+                      ? "Español"
+                      : "Français"}
+                </button>
+              ))}
+            </div>
+          </div>
+
           {/* Main Navigation */}
           <div className="space-y-1">
             <span className="px-2 text-xs font-semibold uppercase tracking-wider text-slate-500">
@@ -555,38 +588,6 @@ export function Navbar() {
             </div>
           </div>
 
-          {/* Language Selection */}
-          <div className="space-y-2">
-            <span className="px-2 text-xs font-semibold uppercase tracking-wider text-slate-500">
-              {locale === "es"
-                ? "Idioma"
-                : locale === "fr"
-                  ? "Langue"
-                  : locale === "pt"
-                    ? "Idioma"
-                    : "Language"}
-            </span>
-            <div className="flex gap-2">
-              {(["en", "es", "fr"] as const).map((loc) => (
-                <button
-                  key={loc}
-                  onClick={() => setLocaleOverride(loc)}
-                  className={cn(
-                    "flex-1 min-h-[44px] flex items-center justify-center px-4 py-2 rounded-xl transition-colors font-medium text-sm",
-                    locale === loc || (locale === "pt" && loc === "es")
-                      ? "text-white bg-white/10"
-                      : "text-slate-300 hover:text-white hover:bg-white/5",
-                  )}
-                >
-                  {loc === "en"
-                    ? "English"
-                    : loc === "es"
-                      ? "Español"
-                      : "Français"}
-                </button>
-              ))}
-            </div>
-          </div>
         </div>
 
         {/* Bottom CTA */}
