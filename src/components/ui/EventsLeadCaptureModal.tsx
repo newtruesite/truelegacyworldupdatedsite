@@ -1,8 +1,8 @@
+import { isSupabaseConfigured, supabase } from "@/lib/supabaseClient";
 import { AnimatePresence, motion } from "framer-motion";
 import { X } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 
-const FORM_NAME = "events-lead-capture";
 const SUBMIT_COOLDOWN_MS = 30_000;
 
 function sanitize(str: string): string {
@@ -119,25 +119,26 @@ export function EventsLeadCaptureModal({
       const email = sanitize(form.email);
       const phone = sanitize(form.phone);
 
-      const formData = new FormData();
-      formData.append("form-name", FORM_NAME);
-      formData.append("first-name", firstName);
-      formData.append("last-name", lastName);
-      formData.append("email", email);
-      formData.append("phone", phone);
-      formData.append("region", region);
-      formData.append("event_title", eventTitle);
-      if (form.botField) formData.append("bot-field", form.botField);
+      // Honeypot: silently drop bot submissions
+      if (form.botField) {
+        setSubmitted(true);
+        setTimeout(() => { onSuccess(); }, 1500);
+        return;
+      }
 
       try {
-        const params = new URLSearchParams();
-        formData.forEach((value, key) => params.append(key, value.toString()));
-        const res = await fetch("/", {
-          method: "POST",
-          headers: { "Content-Type": "application/x-www-form-urlencoded" },
-          body: params.toString(),
-        });
-        if (!res.ok) throw new Error("Submit failed");
+        if (isSupabaseConfigured) {
+          const { error } = await supabase.from("event_rsvps").insert({
+            first_name: firstName,
+            last_name: lastName,
+            email,
+            phone,
+            region,
+            event_title: eventTitle,
+            source: "website",
+          });
+          if (error) throw new Error(error.message);
+        }
         try {
           localStorage.setItem("tl_last_events_submit", Date.now().toString());
         } catch {
@@ -211,15 +212,9 @@ export function EventsLeadCaptureModal({
                 {t.heading}
               </h2>
               <form
-                name={FORM_NAME}
-                method="POST"
-                action="/"
-                data-netlify="true"
-                data-netlify-honeypot="bot-field"
                 onSubmit={handleSubmit}
                 className="space-y-4"
               >
-                <input type="hidden" name="form-name" value={FORM_NAME} />
                 <div className="hidden">
                   <label>
                     Don’t fill this out if you’re human: 

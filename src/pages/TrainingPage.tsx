@@ -5,7 +5,6 @@ import { SEO } from "@/components/SEO";
 import { AuroraBackground } from "@/components/ui/AuroraBackground";
 import { useAuth } from "@/contexts/AuthContext";
 import { useLocaleContext } from "@/contexts/LocaleContext";
-import { goTrue } from "@/lib/netlifyAuth";
 import { t } from "@/lib/translations";
 import { motion } from "framer-motion";
 import {
@@ -473,7 +472,7 @@ export default function TrainingPage() {
   const params = useParams();
   const countrySlug = params.countrySlug;
 
-  const { user, loading, setUser } = useAuth();
+  const { user, loading, setUser, signIn, signUp, signOut } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -505,8 +504,7 @@ export default function TrainingPage() {
 
   const handleSignOut = async () => {
     try {
-      const currentUser = goTrue.currentUser();
-      if (currentUser) await currentUser.logout();
+      await signOut();
     } catch {
       /* ignore logout errors */
     }
@@ -549,7 +547,7 @@ export default function TrainingPage() {
 
     try {
       if (authMode === "signup") {
-        await goTrue.signup(email, password);
+        await signUp(email, password);
         setAuthSuccess(
           isSpanish
             ? "¡Cuenta creada! Revisa tu correo para confirmar."
@@ -559,8 +557,7 @@ export default function TrainingPage() {
         setPassword("");
         setConfirmPassword("");
       } else {
-        const loggedInUser = await goTrue.login(email, password, true);
-        setUser(loggedInUser);
+        await signIn(email, password);
       }
     } catch (err: unknown) {
       const raw = err instanceof Error ? err.message : "";

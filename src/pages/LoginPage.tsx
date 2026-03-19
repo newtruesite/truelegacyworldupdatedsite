@@ -2,17 +2,16 @@ import { Navbar } from "@/components/layout/Navbar";
 import { SEO } from "@/components/SEO";
 import { useAuth } from "@/contexts/AuthContext";
 import { useLocaleContext } from "@/contexts/LocaleContext";
-import { goTrue } from "@/lib/netlifyAuth";
 import { AnimatePresence, motion } from "framer-motion";
 import {
-  AlertCircle,
-  ArrowRight,
-  CheckCircle,
-  Eye,
-  EyeOff,
-  Loader2,
-  Lock,
-  Shield,
+    AlertCircle,
+    ArrowRight,
+    CheckCircle,
+    Eye,
+    EyeOff,
+    Loader2,
+    Lock,
+    Shield,
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
@@ -20,7 +19,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 export default function LoginPage() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { user, loading, setUser } = useAuth();
+  const { user, loading, signIn, signUp } = useAuth();
   const { locale } = useLocaleContext();
 
   const [authMode, setAuthMode] = useState<"login" | "signup">("login");
@@ -80,7 +79,7 @@ export default function LoginPage() {
 
     try {
       if (authMode === "signup") {
-        await goTrue.signup(email, password);
+        await signUp(email, password);
         setAuthSuccess(
           isEs
             ? "¡Cuenta creada! Revisa tu correo para confirmar."
@@ -90,8 +89,7 @@ export default function LoginPage() {
         setPassword("");
         setConfirmPassword("");
       } else {
-        const loggedInUser = await goTrue.login(email, password, true);
-        setUser(loggedInUser);
+        await signIn(email, password);
       }
     } catch (err: unknown) {
       const raw = err instanceof Error ? err.message : "";

@@ -1,9 +1,9 @@
 import type { ProductInterest } from "@/contexts/PdfLeadCaptureContext";
+import { isSupabaseConfigured, supabase } from "@/lib/supabaseClient";
 import { AnimatePresence, motion } from "framer-motion";
 import { X } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 
-const FORM_NAME = "pdf-lead-capture";
 const SUBMIT_COOLDOWN_MS = 30_000; // 30 seconds
 
 function sanitize(str: string): string {
@@ -119,28 +119,29 @@ export function PdfLeadCaptureModal({
       const phone = sanitize(form.phone);
       const country = sanitize(form.country);
 
-      const formData = new FormData();
-      formData.append("form-name", FORM_NAME);
-      formData.append("full-name", fullName);
-      formData.append("email", email);
-      formData.append("phone", phone);
-      formData.append("country", country);
-      formData.append(
-        "pdf_requested",
-        pdfUrl ? new URL(pdfUrl).pathname.split("/").pop() || "Resource" : "",
-      );
-      formData.append("pdf_url", pdfUrl || "");
-      if (form.botField) formData.append("bot-field", form.botField);
+      // Honeypot: silently drop bot submissions
+      if (form.botField) {
+        setSubmitted(true);
+        setTimeout(() => {
+          if (pdfUrl) window.open(pdfUrl, "_blank");
+          setSubmitted(false);
+          onClose();
+        }, 1500);
+        return;
+      }
 
       try {
-        const params = new URLSearchParams();
-        formData.forEach((value, key) => params.append(key, value.toString()));
-        const res = await fetch("/", {
-          method: "POST",
-          headers: { "Content-Type": "application/x-www-form-urlencoded" },
-          body: params.toString(),
-        });
-        if (!res.ok) throw new Error("Submit failed");
+        if (isSupabaseConfigured) {
+          const { error } = await supabase.from("pdf_leads").insert({
+            full_name: fullName,
+            email,
+            phone,
+            country,
+            pdf_url: pdfUrl || null,
+            source: "website",
+          });
+          if (error) throw new Error(error.message);
+        }
         try {
           localStorage.setItem("tl_last_submit", Date.now().toString());
           localStorage.setItem(
@@ -210,14 +211,8 @@ export function PdfLeadCaptureModal({
               <p className="text-slate-300 text-center py-8">{t.thankYou}</p>
             ) : (
               <form
-                name={FORM_NAME}
-                method="post"
-                action="/"
-                data-netlify="true"
-                data-netlify-honeypot="bot-field"
                 onSubmit={handleSubmit}
               >
-                <input type="hidden" name="form-name" value={FORM_NAME} />
                 <div hidden>
                   <label>
                     Don’t fill this out if you’re human: <input name="bot-field" value={form.botField} onChange={(e) => handleChange("botField", e.target.value)} />
