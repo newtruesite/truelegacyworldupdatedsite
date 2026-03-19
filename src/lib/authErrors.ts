@@ -10,6 +10,7 @@ type MessageSet = {
   network: string
   emailNotConfirmed: string
   rateLimited: string
+  invalidApiKey: string
   generic: string
 }
 
@@ -17,21 +18,23 @@ const AUTH_MESSAGES: Record<"en" | "es" | "fr", MessageSet> = {
   en: {
     authDisabled:
       "Authentication is currently unavailable on this environment. Missing Supabase configuration.",
-    invalidCredentials: "Incorrect email or password.",
-    emailAlreadyRegistered: "Email already registered. Try signing in.",
+    invalidCredentials: "Incorrect email or password. If you just signed up, confirm your email first.",
+    emailAlreadyRegistered: "Email already registered. Try signing in instead.",
     passwordPolicy:
       "Password does not meet security requirements (minimum 6 characters).",
     network:
       "Connection failed. Check your internet and try again.",
     emailNotConfirmed:
-      "Please confirm your email before signing in.",
+      "Please confirm your email before signing in. Check your inbox for a confirmation link.",
     rateLimited: "Too many attempts. Please wait a moment and try again.",
+    invalidApiKey:
+      "Server configuration error: invalid API key. Contact the site administrator.",
     generic: "We could not complete authentication. Please try again.",
   },
   es: {
     authDisabled:
       "La autenticacion no esta disponible en este entorno. Falta la configuracion de Supabase.",
-    invalidCredentials: "Correo o contrasena incorrectos.",
+    invalidCredentials: "Correo o contrasena incorrectos. Si acabas de registrarte, confirma tu correo primero.",
     emailAlreadyRegistered:
       "Este correo ya esta registrado. Intenta iniciar sesion.",
     passwordPolicy:
@@ -39,14 +42,16 @@ const AUTH_MESSAGES: Record<"en" | "es" | "fr", MessageSet> = {
     network:
       "No pudimos conectar con el servidor. Revisa tu conexion e intentalo de nuevo.",
     emailNotConfirmed:
-      "Confirma tu correo antes de iniciar sesion.",
+      "Confirma tu correo antes de iniciar sesion. Revisa tu bandeja de entrada.",
     rateLimited: "Demasiados intentos. Espera un momento e intentalo otra vez.",
+    invalidApiKey:
+      "Error de configuracion del servidor: clave de API invalida. Contacta al administrador.",
     generic: "No pudimos completar la autenticacion. Intentalo de nuevo.",
   },
   fr: {
     authDisabled:
       "L'authentification n'est pas disponible sur cet environnement. La configuration Supabase est manquante.",
-    invalidCredentials: "E-mail ou mot de passe incorrect.",
+    invalidCredentials: "E-mail ou mot de passe incorrect. Si vous venez de vous inscrire, confirmez d'abord votre e-mail.",
     emailAlreadyRegistered:
       "Cet e-mail est deja enregistre. Essayez de vous connecter.",
     passwordPolicy:
@@ -54,8 +59,10 @@ const AUTH_MESSAGES: Record<"en" | "es" | "fr", MessageSet> = {
     network:
       "Connexion impossible. Verifiez votre connexion internet puis reessayez.",
     emailNotConfirmed:
-      "Veuillez confirmer votre e-mail avant de vous connecter.",
+      "Veuillez confirmer votre e-mail avant de vous connecter. Verifiez votre boite de reception.",
     rateLimited: "Trop de tentatives. Veuillez patienter puis reessayer.",
+    invalidApiKey:
+      "Erreur de configuration du serveur: cle API invalide. Contactez l'administrateur.",
     generic: "Impossible de terminer l'authentification. Veuillez reessayer.",
   },
 }
@@ -155,7 +162,29 @@ export function mapAuthErrorToMessage(
     return messages.passwordPolicy
   }
 
-  if (includesAny(normalized, ["email not confirmed", "confirm your email"])) {
+  if (
+    includesAny(normalized, [
+      "invalid api key",
+      "invalid_api_key",
+      "apikey is invalid",
+      "missing_api_key",
+      "no api key",
+      "invalid jwt",
+      "jwt expired",
+      "bad_jwt",
+    ])
+  ) {
+    return messages.invalidApiKey
+  }
+
+  if (
+    includesAny(normalized, [
+      "email not confirmed",
+      "confirm your email",
+      "email_not_confirmed",
+      "signup requires a valid password",
+    ])
+  ) {
     return messages.emailNotConfirmed
   }
 
