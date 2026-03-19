@@ -5,6 +5,8 @@ import { SEO } from "@/components/SEO";
 import { AuroraBackground } from "@/components/ui/AuroraBackground";
 import { useAuth } from "@/contexts/AuthContext";
 import { useLocaleContext } from "@/contexts/LocaleContext";
+import { getAuthDisabledMessage, mapAuthErrorToMessage } from "@/lib/authErrors";
+import { isSupabaseConfigured } from "@/lib/supabaseClient";
 import { t } from "@/lib/translations";
 import { motion } from "framer-motion";
 import {
@@ -472,7 +474,7 @@ export default function TrainingPage() {
   const params = useParams();
   const countrySlug = params.countrySlug;
 
-  const { user, loading, setUser, signIn, signUp, signOut } = useAuth();
+  const { user, loading, setUser, signIn, signUp, signOut, isAuthEnabled } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -485,6 +487,7 @@ export default function TrainingPage() {
   const [secretCodeError, setSecretCodeError] = useState("");
 
   const contentRef = useRef<HTMLDivElement>(null);
+  const authDisabledMessage = getAuthDisabledMessage(locale);
 
   // Retrieve saved secret code state
   useEffect(() => {
@@ -545,6 +548,12 @@ export default function TrainingPage() {
       return;
     }
 
+    if (!isSupabaseConfigured) {
+      setAuthError(authDisabledMessage);
+      setIsLoggingIn(false);
+      return;
+    }
+
     try {
       if (authMode === "signup") {
         await signUp(email, password);
@@ -559,30 +568,7 @@ export default function TrainingPage() {
         await signIn(email, password);
       }
     } catch (err: unknown) {
-      const raw = err instanceof Error ? err.message : "";
-      const errorMsg = raw.toLowerCase();
-      if (
-        errorMsg.includes("failed to fetch") ||
-        errorMsg.includes("networkerror")
-      ) {
-        setAuthError(
-          isSpanish
-            ? "No pudimos conectar con el servidor. Revisa tu conexión."
-            : "We couldn't reach the server. Check your connection.",
-        );
-      } else if (errorMsg.includes("invalid") || errorMsg.includes("grant")) {
-        setAuthError(
-          isSpanish
-            ? "Correo o contraseña incorrectos."
-            : "Incorrect email or password.",
-        );
-      } else {
-        setAuthError(
-          isSpanish
-            ? "Ocurrió un error inesperado."
-            : "An unexpected error occurred.",
-        );
-      }
+      setAuthError(mapAuthErrorToMessage(err, locale, authMode));
     } finally {
       setIsLoggingIn(false);
     }
@@ -692,6 +678,12 @@ export default function TrainingPage() {
                 </div>
 
                 <form onSubmit={handleAuth} className="space-y-4">
+                  {!isAuthEnabled && (
+                    <div className="p-3 rounded-lg bg-amber-500/10 border border-amber-500/20 text-amber-300 text-sm">
+                      {authDisabledMessage}
+                    </div>
+                  )}
+
                   <div>
                     <input
                       type="email"
@@ -757,7 +749,7 @@ export default function TrainingPage() {
                   {!(authMode === "signup" && authSuccess) && (
                     <button
                       type="submit"
-                      disabled={isLoggingIn}
+                      disabled={isLoggingIn || !isAuthEnabled}
                       className="w-full min-h-[52px] flex items-center justify-center gap-2 px-6 py-3 text-base font-semibold text-white bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 hover:shadow-lg hover:shadow-cyan-500/20 hover:-translate-y-0.5 rounded-xl transition-all disabled:opacity-50"
                     >
                       {isLoggingIn

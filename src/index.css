@@ -2106,9 +2106,6 @@ p {
   .testimonial-card {
     min-width: 90vw !important;
   }
-  .testimonial-card img {
-    height: 200px !important;
-  }
 }
 #sticky-cta {
   position: fixed !important;

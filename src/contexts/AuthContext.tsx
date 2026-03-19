@@ -1,4 +1,9 @@
-import { isSupabaseConfigured, supabase } from "@/lib/supabaseClient"
+import {
+    AUTH_DISABLED_ERROR_CODE,
+    isSupabaseConfigured,
+    supabase,
+    supabaseConfigIssue,
+} from "@/lib/supabaseClient"
 import type { User } from "@supabase/supabase-js"
 import {
     createContext,
@@ -11,6 +16,8 @@ import {
 type AuthContextType = {
   user: User | null
   loading: boolean
+  isAuthEnabled: boolean
+  authDisabledReason: string | null
   setUser: (u: User | null) => void
   signIn: (email: string, password: string) => Promise<void>
   signUp: (email: string, password: string) => Promise<void>
@@ -20,6 +27,8 @@ type AuthContextType = {
 const AuthContext = createContext<AuthContextType>({
   user: null,
   loading: true,
+  isAuthEnabled: isSupabaseConfigured,
+  authDisabledReason: supabaseConfigIssue,
   setUser: () => {},
   signIn: async () => {},
   signUp: async () => {},
@@ -40,15 +49,25 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
 
     // Hydrate from existing session
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setUser(session?.user ?? null)
-      setLoading(false)
-      if (isDev) console.log("[AuthContext] Session hydrated", session?.user?.email ?? "none")
-    })
+    supabase.auth
+      .getSession()
+      .then(({ data: { session } }) => {
+        setUser(session?.user ?? null)
+        if (isDev)
+          console.log("[AuthContext] Session hydrated", session?.user?.email ?? "none")
+      })
+      .catch((error: unknown) => {
+        setUser(null)
+        if (isDev) console.error("[AuthContext] Session hydration failed", error)
+      })
+      .finally(() => {
+        setLoading(false)
+      })
 
     // Subscribe to future auth state changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       setUser(session?.user ?? null)
+      setLoading(false)
       if (isDev) console.log("[AuthContext] Auth state change", _event)
     })
 
@@ -56,13 +75,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [isDev])
 
   const signIn = async (email: string, password: string) => {
-    if (!isSupabaseConfigured) throw new Error("Auth not configured")
+    if (!isSupabaseConfigured) throw new Error(AUTH_DISABLED_ERROR_CODE)
     const { error } = await supabase.auth.signInWithPassword({ email, password })
     if (error) throw error
   }
 
   const signUp = async (email: string, password: string) => {
-    if (!isSupabaseConfigured) throw new Error("Auth not configured")
+    if (!isSupabaseConfigured) throw new Error(AUTH_DISABLED_ERROR_CODE)
     const { error } = await supabase.auth.signUp({ email, password })
     if (error) throw error
   }
@@ -77,7 +96,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }
 
   return (
-    <AuthContext.Provider value={{ user, loading, setUser, signIn, signUp, signOut }}>
+    <AuthContext.Provider
+      value={{
+        user,
+        loading,
+        isAuthEnabled: isSupabaseConfigured,
+        authDisabledReason: supabaseConfigIssue,
+        setUser,
+        signIn,
+        signUp,
+        signOut,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   )

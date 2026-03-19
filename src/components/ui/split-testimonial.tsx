@@ -472,7 +472,7 @@ export function TestimonialsSplit({
               animate={{ opacity: 1, filter: "blur(0px)", scale: 1 }}
               exit={{ opacity: 0, filter: "blur(20px)", scale: 0.95 }}
               transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-              className="w-full h-[300px] md:h-[380px] overflow-hidden"
+              className="w-full h-[480px] md:h-[400px] overflow-hidden"
             >
               <div className="w-full h-full rounded-[1.5rem] overflow-hidden border-[2px] border-white/[0.15] shadow-[0_8px_32px_rgba(0,0,0,0.4),0_0_0_1px_rgba(255,255,255,0.05)] bg-slate-900 flex items-center justify-center">
                 {(active.image ?? active.photo) ? (

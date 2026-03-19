@@ -2,6 +2,8 @@ import { Navbar } from "@/components/layout/Navbar";
 import { SEO } from "@/components/SEO";
 import { useAuth } from "@/contexts/AuthContext";
 import { useLocaleContext } from "@/contexts/LocaleContext";
+import { getAuthDisabledMessage, mapAuthErrorToMessage } from "@/lib/authErrors";
+import { isSupabaseConfigured } from "@/lib/supabaseClient";
 import { AnimatePresence, motion } from "framer-motion";
 import {
     AlertCircle,
@@ -19,7 +21,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 export default function LoginPage() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { user, loading, signIn, signUp } = useAuth();
+  const { user, loading, signIn, signUp, isAuthEnabled } = useAuth();
   const { locale } = useLocaleContext();
 
   const [authMode, setAuthMode] = useState<"login" | "signup">("login");
@@ -33,6 +35,7 @@ export default function LoginPage() {
 
   const isEs = locale === "es";
   const isFr = locale === "fr";
+  const authDisabledMessage = getAuthDisabledMessage(locale);
 
   useEffect(() => {
     if (!loading && user) {
@@ -40,27 +43,6 @@ export default function LoginPage() {
       navigate(from?.pathname ?? "/training", { replace: true });
     }
   }, [user, loading, navigate, location.state]);
-
-  const getFriendlyError = (msg: string) => {
-    const m = msg.toLowerCase();
-    if (
-      m.includes("invalid") ||
-      m.includes("no user found") ||
-      m.includes("invalid_grant")
-    )
-      return isEs
-        ? "Correo o contraseña incorrectos."
-        : "Incorrect email or password.";
-    if (m.includes("already registered") || m.includes("user_already_exists"))
-      return isEs
-        ? "Este correo ya está registrado. Intenta iniciar sesión."
-        : "Email already registered. Try signing in.";
-    if (m.includes("password"))
-      return isEs
-        ? "La contraseña debe tener al menos 6 caracteres."
-        : "Password must be at least 6 characters.";
-    return isEs ? "Ocurrió un error. Inténtalo de nuevo." : msg;
-  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -73,6 +55,12 @@ export default function LoginPage() {
       setAuthError(
         isEs ? "Las contraseñas no coinciden." : "Passwords do not match.",
       );
+      setIsSubmitting(false);
+      return;
+    }
+
+    if (!isSupabaseConfigured) {
+      setAuthError(authDisabledMessage);
       setIsSubmitting(false);
       return;
     }
@@ -92,17 +80,7 @@ export default function LoginPage() {
         await signIn(email, password);
       }
     } catch (err: unknown) {
-      const raw = err instanceof Error ? err.message : "";
-      const msg = raw.toLowerCase();
-      if (msg.includes("failed to fetch") || msg.includes("networkerror")) {
-        setAuthError(
-          isEs
-            ? "No pudimos conectar con el servidor. Revisa tu conexión e inténtalo de nuevo."
-            : "Connection failed. Check your internet and try again.",
-        );
-      } else {
-        setAuthError(getFriendlyError(raw));
-      }
+      setAuthError(mapAuthErrorToMessage(err, locale, authMode));
     } finally {
       setIsSubmitting(false);
     }
@@ -221,6 +199,13 @@ export default function LoginPage() {
               </div>
 
               <form onSubmit={handleSubmit} className="space-y-4">
+                {!isAuthEnabled && (
+                  <div className="flex items-start gap-2.5 rounded-xl bg-amber-500/10 border border-amber-500/30 px-4 py-3">
+                    <AlertCircle className="w-4 h-4 text-amber-300 shrink-0 mt-0.5" />
+                    <p className="text-amber-200 text-sm">{authDisabledMessage}</p>
+                  </div>
+                )}
+
                 {/* Email */}
                 <div>
                   <label className="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1.5">
@@ -349,7 +334,7 @@ export default function LoginPage() {
                 {/* Submit */}
                 <button
                   type="submit"
-                  disabled={isSubmitting}
+                  disabled={isSubmitting || !isAuthEnabled}
                   className="w-full flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white font-bold py-3.5 text-sm transition-all duration-200 disabled:opacity-60 disabled:cursor-not-allowed shadow-lg hover:shadow-cyan-500/30 hover:-translate-y-0.5 mt-2"
                 >
                   {isSubmitting ? (
