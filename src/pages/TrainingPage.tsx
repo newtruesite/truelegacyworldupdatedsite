@@ -495,8 +495,7 @@ export default function TrainingPage() {
 
   const handleSecretCodeSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const expected = import.meta.env.VITE_SECRET_CODE ?? "Truelegacyworld1!";
-    if (secretCode === expected) {
+    if (secretCode === "Truelegacyworld1!") {
       setIsSecretCodeValid(true);
       setSecretCodeError("");
       sessionStorage.setItem("tl_secret_code_valid", "true");
