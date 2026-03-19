@@ -5,7 +5,7 @@
 # Enable Netlify Identity (set via Netlify dashboard: Site settings > Identity)
 [context.production.environment]
   # VITE_NETLIFY_IDENTITY_URL = "https://<your-site>.netlify.app/.netlify/identity"
-  # VITE_SECRET_CODE = "your-secret-training-code"
+  VITE_SECRET_CODE = "Truelegacyworld1!"
 
 # ─── Security headers ───────────────────────────────────────────────────────
 [[headers]]
