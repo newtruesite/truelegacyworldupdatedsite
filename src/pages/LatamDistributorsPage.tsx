@@ -6,7 +6,13 @@ import { motion } from "framer-motion";
 import { Calendar, Globe, Instagram, MessageCircle } from "lucide-react";
 import { useState } from "react";
 
-const DISTRIBUTORS = [
+type Distributor = {
+  name: string; title: string; photo: string; fallbackInitial: string; region: string;
+  whatsapp?: string; latamWhatsapp?: string; website?: string;
+  calendly?: string; telegram?: string; instagram?: string;
+};
+
+const DISTRIBUTORS: Distributor[] = [
   {
     name: "Mehdi Cohen",
     title: "True Legacy World",
@@ -159,9 +165,9 @@ function DistributorCard({
               {whatsappLabel}
             </a>
           )}
-          {(dist as any).latamWhatsapp && (
+          {dist.latamWhatsapp && (
             <a
-              href={(dist as any).latamWhatsapp}
+              href={dist.latamWhatsapp}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#25D366] hover:bg-[#20BD5A] text-white font-semibold px-4 py-3 text-sm min-h-[44px] transition-colors"

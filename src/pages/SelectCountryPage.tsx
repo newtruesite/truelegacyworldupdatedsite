@@ -75,49 +75,6 @@ export default function SelectCountryPage() {
   const isInvalidContinent = continent && !CONTINENT_DATA[continent];
   const isAllCountries = !continent || isInvalidContinent;
 
-  if (isInvalidContinent) {
-    return (
-      <div
-        className="page-wrapper min-h-screen flex flex-col"
-        style={{
-          background:
-            "linear-gradient(160deg, #020d16 0%, #041824 60%, #021018 100%)",
-        }}
-      >
-        <Navbar />
-        <div className="content-wrapper flex-1 flex items-center justify-center px-4 py-20">
-          <div className="text-center max-w-md w-full bg-white/5 border border-white/10 rounded-2xl p-6 md:p-8 backdrop-blur-sm shadow-2xl mx-auto">
-            <div className="flex justify-center mb-6">
-              <GlobeIcon className="w-16 h-16 text-cyan-400 opacity-80" />
-            </div>
-            <h1 className="text-2xl md:text-3xl font-bold text-white mb-3 tracking-tight break-words">
-              Let's get you to the right region
-            </h1>
-            <p className="text-slate-400 mb-8 text-sm md:text-base leading-relaxed">
-              We couldn't find the region you're looking for. Please try
-              selecting a region from the world map or view all available
-              countries.
-            </p>
-            <div className="flex flex-col gap-3 justify-center">
-              <Link
-                to="/"
-                className="w-full inline-flex items-center justify-center rounded-xl px-5 py-3.5 text-sm font-semibold text-white bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 transition-all shadow-lg"
-              >
-                Back to World Map
-              </Link>
-              <Link
-                to="/select-country"
-                className="w-full inline-flex items-center justify-center rounded-xl px-5 py-3.5 text-sm font-semibold text-slate-300 border border-white/10 hover:text-white hover:bg-white/5 transition-all"
-              >
-                Browse all countries
-              </Link>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
   const displayData = useMemo(() => {
     if (isAllCountries) {
       return {
@@ -160,7 +117,50 @@ export default function SelectCountryPage() {
         };
       }),
     };
-  }, [continent, isAllCountries]);
+  }, [continent, isAllCountries, locale]);
+
+  if (isInvalidContinent) {
+    return (
+      <div
+        className="page-wrapper min-h-screen flex flex-col"
+        style={{
+          background:
+            "linear-gradient(160deg, #020d16 0%, #041824 60%, #021018 100%)",
+        }}
+      >
+        <Navbar />
+        <div className="content-wrapper flex-1 flex items-center justify-center px-4 py-20">
+          <div className="text-center max-w-md w-full bg-white/5 border border-white/10 rounded-2xl p-6 md:p-8 backdrop-blur-sm shadow-2xl mx-auto">
+            <div className="flex justify-center mb-6">
+              <GlobeIcon className="w-16 h-16 text-cyan-400 opacity-80" />
+            </div>
+            <h1 className="text-2xl md:text-3xl font-bold text-white mb-3 tracking-tight break-words">
+              Let's get you to the right region
+            </h1>
+            <p className="text-slate-400 mb-8 text-sm md:text-base leading-relaxed">
+              We couldn't find the region you're looking for. Please try
+              selecting a region from the world map or view all available
+              countries.
+            </p>
+            <div className="flex flex-col gap-3 justify-center">
+              <Link
+                to="/"
+                className="w-full inline-flex items-center justify-center rounded-xl px-5 py-3.5 text-sm font-semibold text-white bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 transition-all shadow-lg"
+              >
+                Back to World Map
+              </Link>
+              <Link
+                to="/select-country"
+                className="w-full inline-flex items-center justify-center rounded-xl px-5 py-3.5 text-sm font-semibold text-slate-300 border border-white/10 hover:text-white hover:bg-white/5 transition-all"
+              >
+                Browse all countries
+              </Link>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div

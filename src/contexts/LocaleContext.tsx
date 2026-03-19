@@ -1,11 +1,11 @@
 import { COUNTRIES } from "@/lib/countries";
 import {
-  createContext,
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useState,
+    createContext,
+    useCallback,
+    useContext,
+    useEffect,
+    useMemo,
+    useState,
 } from "react";
 import { useLocation } from "react-router-dom";
 
@@ -57,11 +57,6 @@ export function LocaleProvider({ children }: { children: React.ReactNode }) {
   const [override, setOverrideState] = useState<Locale | null>(getStored);
 
   useEffect(() => {
-    if (typeof window === "undefined") {
-      setOverrideState(getStored());
-      return;
-    }
-
     const first = pathname.slice(1).split("/")[0];
     const isCountryRoute = COUNTRY_SLUGS.has(first);
     const thisCountrySlug = isCountryRoute ? first : "";
@@ -81,6 +76,7 @@ export function LocaleProvider({ children }: { children: React.ReactNode }) {
     // Force LATAM countries to Spanish (so all SA pages use Spanish even if user previously chose another locale)
     if (LATAM_SLUGS.includes(thisCountrySlug as (typeof LATAM_SLUGS)[number])) {
       window.localStorage.setItem(STORAGE_KEY, "es");
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setOverrideState("es");
       return;
     }
@@ -128,6 +124,7 @@ export function LocaleProvider({ children }: { children: React.ReactNode }) {
   );
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export function useLocaleContext(): {
   locale: Locale;
   setLocale: (locale: Locale) => void;

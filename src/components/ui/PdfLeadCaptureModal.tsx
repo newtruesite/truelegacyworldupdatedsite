@@ -30,16 +30,6 @@ type Props = {
   countryOptions: Option[];
 };
 
-const PRODUCT_OPTIONS: {
-  value: ProductInterest;
-  labelEn: string;
-  labelEs: string;
-}[] = [
-  { value: "emguarde", labelEn: "Emguarde", labelEs: "Emguarde" },
-  { value: "kangen", labelEn: "Kangen Water", labelEs: "Agua Kangen" },
-  { value: "both", labelEn: "Both", labelEs: "Ambos" },
-];
-
 export function PdfLeadCaptureModal({
   isOpen,
   onClose,

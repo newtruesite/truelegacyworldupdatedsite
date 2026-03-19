@@ -1,10 +1,9 @@
-import { useEffect } from 'react'
-import { Navigate } from 'react-router-dom'
-import { motion } from 'framer-motion'
-import { Link } from 'react-router-dom'
-import { useLocaleContext } from '@/contexts/LocaleContext'
-import { Navbar } from '@/components/layout/Navbar'
 import { Footer } from '@/components/layout/Footer'
+import { Navbar } from '@/components/layout/Navbar'
+import { useLocaleContext } from '@/contexts/LocaleContext'
+import { motion } from 'framer-motion'
+import { useEffect } from 'react'
+import { Link } from 'react-router-dom'
 
 export default function PdfLibraryPage() {
   const { locale } = useLocaleContext()

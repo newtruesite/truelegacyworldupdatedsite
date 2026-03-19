@@ -1,7 +1,7 @@
-import { createContext, useContext, useState, useCallback } from 'react'
-import type { ReactNode } from 'react'
 import { PdfLeadCaptureModal } from '@/components/ui/PdfLeadCaptureModal'
 import { COUNTRIES } from '@/lib/countries'
+import type { ReactNode } from 'react'
+import { createContext, useCallback, useContext, useState } from 'react'
 
 export type ProductInterest = 'emguarde' | 'kangen' | 'both'
 
@@ -11,6 +11,7 @@ type PdfLeadCaptureContextValue = {
 
 const Context = createContext<PdfLeadCaptureContextValue | null>(null)
 
+// eslint-disable-next-line react-refresh/only-export-components
 export function usePdfLeadCapture() {
   const ctx = useContext(Context)
   if (!ctx) throw new Error('usePdfLeadCapture must be used within PdfLeadCaptureProvider')

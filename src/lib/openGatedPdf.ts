@@ -1,7 +1,7 @@
 /**
  * Opens a PDF in a new tab. No login required — training resources are open to all.
  */
-export function openGatedPDF(pdfUrl: string, _pdfName?: string): void {
+export function openGatedPDF(pdfUrl: string): void {
   if (typeof window === 'undefined') return
   window.open(pdfUrl, '_blank')
 }

@@ -1,7 +1,7 @@
 import { Footer } from "@/components/layout/Footer";
 import { Navbar } from "@/components/layout/Navbar";
 import { AuroraBackground } from "@/components/ui/AuroraBackground";
-import { REGIONS } from "@/components/ui/RegionMap";
+
 import { useLocaleContext } from "@/contexts/LocaleContext";
 import { COUNTRIES, getFlagSrcSet } from "@/lib/countries";
 import { motion } from "framer-motion";
@@ -32,7 +32,6 @@ export default function RegionPage() {
   }
 
   const regionName = regionIdToName[regionId];
-  const regionInfo = REGIONS.find((r) => r.id === regionId);
 
   // Filter countries to only show those in the selected region
   const regionCountries = COUNTRIES.filter((c) => c.region === regionName);

@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
-import { ChevronLeft, ChevronRight, Globe, Users, Trophy, Zap, Heart, Star } from 'lucide-react'
+import { AnimatePresence, motion } from 'framer-motion'
+import { ChevronLeft, ChevronRight, Globe, Star, Trophy, Users, Zap } from 'lucide-react'
+import { useEffect, useState } from 'react'
 
 const LEADERS = [
     {
@@ -97,22 +97,20 @@ const LEADERS = [
 
 export function PhotoCarousel3D() {
     const [active, setActive] = useState(0)
-    const [direction, setDirection] = useState(0)
     const count = LEADERS.length
 
     const prev = () => {
-        setDirection(-1)
         setActive((a) => (a - 1 + count) % count)
     }
 
     const next = () => {
-        setDirection(1)
         setActive((a) => (a + 1) % count)
     }
 
     useEffect(() => {
         const t = setInterval(next, 5000)
         return () => clearInterval(t)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     const getCardStyle = (idx: number) => {
@@ -139,7 +137,6 @@ export function PhotoCarousel3D() {
     }
 
     const activeLeader = LEADERS[active]
-    const Icon = activeLeader.icon
 
     return (
         <div className="w-full px-4 md:px-8 pb-12 overflow-visible" style={{ touchAction: 'pan-y' }}>
@@ -165,7 +162,6 @@ export function PhotoCarousel3D() {
                             className="absolute top-0 left-1/2 w-[280px] sm:w-[320px] -translate-x-1/2 cursor-pointer"
                             onClick={() => {
                                 if (idx !== active) {
-                                    setDirection(idx > active ? 1 : -1)
                                     setActive(idx)
                                 }
                             }}

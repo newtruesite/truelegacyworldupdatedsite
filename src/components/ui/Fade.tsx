@@ -37,7 +37,7 @@ export function Fade({
       transition={{
         duration,
         delay,
-        ...(transition as any),
+        ...(transition ?? {}),
       }}
       {...props}
     >
@@ -67,7 +67,7 @@ export function FadeInUp({
       transition={{
         duration,
         delay,
-        ...(transition as any),
+        ...(transition ?? {}),
       }}
       {...props}
     >

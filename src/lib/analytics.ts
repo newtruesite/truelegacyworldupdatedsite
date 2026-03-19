@@ -13,7 +13,6 @@ declare global {
 
 function safeConsoleInfo(...args: unknown[]) {
   if (typeof window !== 'undefined') {
-    // eslint-disable-next-line no-console
     console.info('[analytics]', ...args)
   }
 }

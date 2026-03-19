@@ -1,11 +1,10 @@
-import { useState, useEffect, useRef } from 'react'
 import { motion } from 'framer-motion'
+import { useEffect, useRef, useState } from 'react'
 
 function useCountUp(end: number, duration: number, run: boolean) {
   const [value, setValue] = useState(0)
   useEffect(() => {
     if (!run) return
-    let start = 0
     const startTime = performance.now()
     const step = (now: number) => {
       const elapsed = now - startTime

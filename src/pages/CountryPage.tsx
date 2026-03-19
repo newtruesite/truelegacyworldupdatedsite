@@ -70,34 +70,6 @@ function IconWhatsapp({ size = 16 }: { size?: number }) {
     </svg>
   );
 }
-function IconShield({ size = 22 }: { size?: number }) {
-  return (
-    <svg
-      width={size}
-      height={size}
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.8"
-    >
-      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-    </svg>
-  );
-}
-function IconDroplet({ size = 22 }: { size?: number }) {
-  return (
-    <svg
-      width={size}
-      height={size}
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.8"
-    >
-      <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z" />
-    </svg>
-  );
-}
 function IconUsers({ size = 20 }: { size?: number }) {
   return (
     <svg
@@ -116,15 +88,7 @@ function IconUsers({ size = 20 }: { size?: number }) {
   );
 }
 // PDF section icons (high-quality SVG, no emojis)
-const PDF_ICON_KEYS = [
-  "water",
-  "shower",
-  "money",
-  "leaf",
-  "meat",
-  "wrench",
-] as const;
-type PdfIconKey = (typeof PDF_ICON_KEYS)[number];
+type PdfIconKey = "water" | "shower" | "money" | "leaf" | "meat" | "wrench";
 
 function PdfIcon({
   name,
@@ -269,7 +233,7 @@ function IconTrendingUp({ size = 24 }: { size?: number }) {
 const IMG_WRAPPER_CLASS =
   "rounded-[1.5rem] overflow-hidden border-[2px] border-white/[0.15] shadow-[0_8px_32px_rgba(0,0,0,0.4),0_0_0_1px_rgba(255,255,255,0.05)]";
 
-// ── Per-country leaders ─────────────────────────────────────
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const COUNTRY_LEADERS: Record<
   string,
   Array<{
@@ -1209,6 +1173,7 @@ function getContent(country: Country, locale: "en" | "es" | "fr" | "pt") {
 
 const DEFAULT_JOTFORM = "https://form.jotform.com/260232994952060";
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const COUNTRY_TO_CONTINENT: Record<
   string,
   { id: string; nameEn: string; nameEs: string; nameFr: string; namePt: string }
@@ -1301,8 +1266,6 @@ const COUNTRY_TO_CONTINENT: Record<
 
 export default function CountryPage() {
   const { country: slug } = useParams<{ country: string }>();
-  const [k8ImgError, setK8ImgError] = useState(false);
-  const [emguardeImgError, setEmguardeImgError] = useState(false);
   const [failedFlagSlugs, setFailedFlagSlugs] = useState<Set<string>>(
     new Set(),
   );
@@ -1326,18 +1289,6 @@ export default function CountryPage() {
   const jotformUrl = country.jotformUrl ?? DEFAULT_JOTFORM;
   const copy = t[locale];
   const c = getContent(country, locale);
-
-  const continentInfo = COUNTRY_TO_CONTINENT[country.slug];
-  const continentName = continentInfo
-    ? locale === "es"
-      ? continentInfo.nameEs
-      : locale === "fr"
-        ? continentInfo.nameFr
-        : locale === "pt"
-          ? continentInfo.namePt
-          : continentInfo.nameEn
-    : "Region";
-  const continentId = continentInfo?.id ?? "";
 
   const followLabel =
     locale === "es"

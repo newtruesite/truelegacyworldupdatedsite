@@ -21,7 +21,7 @@ export function ProductSection({
 }: Props) {
   const { locale } = useLocaleContext();
 
-  const copy = t[locale as "en"] as any;
+  const copy = t[locale];
 
   const title =
     variant === "homeAll"
@@ -90,10 +90,6 @@ export function ProductSection({
         : locale === "pt"
           ? "Enagic fabrica 9 produtos de classe mundial que você usa em casa E vende para ganhar comissões. Cada produto tem um benefício de saúde único — e cada venda gera receita direta através do sistema de 8 pontos."
           : "Enagic manufactures 9 world-class products that you both use at home AND sell to earn commissions. Every product below has a unique health benefit — and every sale earns you direct income through the 8-point system.";
-
-  /** Enagic intro URL for purchase inquiries (NOT JotForm). */
-  const enagicIntroBase =
-    "https://information.enagic.com/en/introduction?company_id=2&h=65c8bc2eba9f21e83eb4b6aae8ae3fd4&enroller_id=37000004828&sponsor_id=37000004829&representative_id=37000004828&line_rank=0&product_id=1016";
 
   return (
     <section
@@ -212,7 +208,7 @@ export function ProductSection({
                       {pCopy?.learnMore}
                     </a>
                   )}
-                  {(product.pdfGuideUrl || true) && (
+                  {product.pdfGuideUrl && (
                     <Link
                       to={country ? `/${country.slug}/training` : "/training"}
                       className="inline-flex items-center gap-1.5 rounded-md border border-cyan-500/30 px-4 py-2 text-xs font-semibold text-cyan-300 hover:bg-cyan-500/10 hover:-translate-y-0.5 hover:shadow-md transition-all duration-150"

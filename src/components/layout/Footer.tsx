@@ -1,9 +1,9 @@
+import TrueLegacyLogo from '@/components/ui/TrueLegacyLogo'
+import { useLocaleContext } from '@/contexts/LocaleContext'
+import { COUNTRIES, getFlagSrcSet } from '@/lib/countries'
+import { Facebook, Youtube } from 'lucide-react'
 import { useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
-import { Youtube, Instagram, Facebook, Heart } from 'lucide-react'
-import { COUNTRIES, getFlagSrcSet } from '@/lib/countries'
-import { useLocaleContext } from '@/contexts/LocaleContext'
-import TrueLegacyLogo from '@/components/ui/TrueLegacyLogo'
 
 const LATAM_SLUGS = ['colombia', 'mexico', 'paraguay', 'brazil']
 const COUNTRY_SLUGS = COUNTRIES.map((c) => c.slug)

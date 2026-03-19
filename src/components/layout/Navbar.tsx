@@ -628,7 +628,7 @@ type MobileMenuProps = {
   children: React.ReactNode;
 };
 
-function MobileMenu({ open, onClose, children }: MobileMenuProps) {
+function MobileMenu({ open, children }: MobileMenuProps) {
   if (!open || typeof window === "undefined") return null;
 
   return createPortal(

@@ -11,18 +11,13 @@ function toSVGCoords(lonPct: number, latPct: number): Point {
   return { x: lonPct * 8, y: latPct * 5 };
 }
 
-function getCubicPath(p1: Point, p2: Point): string {
-  const mx = (p1.x + p2.x) / 2;
-  const my = Math.min(p1.y, p2.y) - 30;
-  return `M ${p1.x} ${p1.y} Q ${mx} ${my} ${p2.x} ${p2.y}`;
-}
-
 const countryMap: Record<string, Point> = {};
 COUNTRIES.forEach((c) => {
   countryMap[c.slug] = toSVGCoords(c.mapX, c.mapY);
 });
 
 // Define regions and their coordinates on the map
+// eslint-disable-next-line react-refresh/only-export-components
 export const REGIONS = [
   { id: "north-america", name: "North America", mapX: 20, mapY: 28 },
   { id: "latin-america", name: "Latin America", mapX: 25, mapY: 60 },
