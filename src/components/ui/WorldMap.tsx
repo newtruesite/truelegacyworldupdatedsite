@@ -18,7 +18,7 @@ const CONTINENTS = [
     nameFr: "Amérique du Nord",
     namePt: "N. América",
     lat: 46.5,
-    lng: -96.5,
+    lng: -106.0,
   },
   {
     id: "south-america",
@@ -27,7 +27,7 @@ const CONTINENTS = [
     nameFr: "Amérique latine",
     namePt: "América do Sul / LATAM",
     lat: -12.0,
-    lng: -58.0,
+    lng: -68.0,
   },
   {
     id: "europe",
@@ -45,7 +45,7 @@ const CONTINENTS = [
     nameFr: "Moyen-Orient",
     namePt: "Oriente Médio",
     lat: 24.0,
-    lng: 54.0,
+    lng: 48.0,
   },
   {
     id: "africa",

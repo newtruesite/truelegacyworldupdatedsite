@@ -1,8 +1,8 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
-import { ArrowUpRight, Star } from "lucide-react";
-import { useState } from "react";
+import { Star } from "lucide-react";
+import { useEffect, useState } from "react";
 
 export interface Testimonial {
   id: number;
@@ -277,9 +277,14 @@ export function TestimonialsSplit({
     setActiveIndex((prev) => (prev + 1) % list.length);
   };
 
-  const prevTestimonial = () => {
-    setActiveIndex((prev) => (prev - 1 + list.length) % list.length);
-  };
+  // Auto-advance every 5 seconds, pauses on hover
+  useEffect(() => {
+    if (isHovering) return;
+    const t = setInterval(() => {
+      setActiveIndex((prev) => (prev + 1) % list.length);
+    }, 5000);
+    return () => clearInterval(t);
+  }, [isHovering, list.length]);
 
   const igUrl = (company: string | undefined) => {
     if (!company) return "https://www.instagram.com/truelegacyworld/";
@@ -484,85 +489,24 @@ export function TestimonialsSplit({
         </div>
       </div>
 
-      {/* Dots and Next in their own row below the card so they don't overlap CTAs */}
-      <div className="mt-8 mb-6 flex flex-col items-center gap-4">
-        <div className="flex flex-row items-center justify-center gap-3 sm:gap-4 flex-nowrap testimonial-nav-row w-full overflow-x-auto custom-scrollbar px-4">
-          {/* Progress Dots */}
-          <div className="flex items-center gap-2">
-            {list.map((_, index) => (
-              <button
-                key={index}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setActiveIndex(index);
-                }}
-                className="relative p-1 min-h-[44px] min-w-[44px] flex items-center justify-center"
-                aria-label={`Testimonial ${index + 1}`}
-              >
-                <span
-                  className={`block w-2 h-2 rounded-full transition-all duration-300 ${
-                    index === activeIndex
-                      ? "bg-orange-500 scale-100"
-                      : "bg-white/20 scale-75 hover:bg-white/40 hover:scale-100"
-                  }`}
-                />
-                {index === activeIndex && (
-                  <motion.span
-                    layoutId="activeDot"
-                    className="absolute inset-0 border border-orange-500/50 rounded-full"
-                    transition={{ duration: 0.3 }}
-                  />
-                )}
-              </button>
-            ))}
-          </div>
-          <button
-            type="button"
-            onClick={(e) => {
-              e.stopPropagation();
-              prevTestimonial();
-            }}
-            className="testimonial-prev inline-flex items-center gap-1.5 min-h-[44px] px-4 text-sm text-orange-400 hover:text-orange-300 font-medium"
-          >
-            <svg
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-            >
-              <path d="M15 18l-6-6 6-6" />
-            </svg>
-            <span>
-              {locale === "es"
-                ? "Anterior"
-                : locale === "fr"
-                  ? "Précédent"
-                  : locale === "pt"
-                    ? "Anterior"
-                    : "Previous"}
-            </span>
-          </button>
-          <button
-            type="button"
-            onClick={(e) => {
-              e.stopPropagation();
-              nextTestimonial();
-            }}
-            className="testimonial-next inline-flex items-center gap-1.5 min-h-[44px] px-4 text-sm text-orange-400 hover:text-orange-300 font-medium"
-          >
-            <span>
-              {locale === "es"
-                ? "Siguiente"
-                : locale === "fr"
-                  ? "Suivant"
-                  : locale === "pt"
-                    ? "Seguinte"
-                    : "Next"}
-            </span>
-            <ArrowUpRight className="w-4 h-4" />
-          </button>
+      {/* Dots Navigation */}
+      <div className="mt-8 mb-6 flex justify-center">
+        <div className="flex items-center gap-2">
+          {list.map((_, index) => (
+            <button
+              key={index}
+              onClick={(e) => {
+                e.stopPropagation();
+                setActiveIndex(index);
+              }}
+              aria-label={`Testimonial ${index + 1}`}
+              className={`transition-all duration-300 rounded-full shrink-0 ${
+                index === activeIndex
+                  ? "w-5 h-2.5 sm:w-6 bg-orange-500"
+                  : "w-2.5 h-2.5 bg-white/20 hover:bg-white/40"
+              }`}
+            />
+          ))}
         </div>
       </div>
     </div>
