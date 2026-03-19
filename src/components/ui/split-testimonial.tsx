@@ -1,7 +1,7 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
-import { Star } from "lucide-react";
+import { ChevronLeft, ChevronRight, Star } from "lucide-react";
 import { useEffect, useState } from "react";
 
 export interface Testimonial {
@@ -273,7 +273,13 @@ export function TestimonialsSplit({
 
   const active = listWithLocaleRole[activeIndex];
 
-  const nextTestimonial = () => {
+  const prevTestimonial = (e?: React.MouseEvent) => {
+    e?.stopPropagation();
+    setActiveIndex((prev) => (prev - 1 + list.length) % list.length);
+  };
+
+  const nextTestimonial = (e?: React.MouseEvent) => {
+    e?.stopPropagation();
     setActiveIndex((prev) => (prev + 1) % list.length);
   };
 
@@ -466,14 +472,14 @@ export function TestimonialsSplit({
               animate={{ opacity: 1, filter: "blur(0px)", scale: 1 }}
               exit={{ opacity: 0, filter: "blur(20px)", scale: 0.95 }}
               transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-              className="w-full h-full min-h-[300px] md:min-h-[380px]"
+              className="w-full h-[300px] md:h-[380px]"
             >
               <div className="w-full h-full rounded-[1.5rem] overflow-hidden border-[2px] border-white/[0.15] shadow-[0_8px_32px_rgba(0,0,0,0.4),0_0_0_1px_rgba(255,255,255,0.05)] bg-slate-900 flex items-center justify-center">
                 {(active.image ?? active.photo) ? (
                   <img
                     src={active.image ?? active.photo}
                     alt={active.name}
-                    className="testimonial-avatar w-full h-full object-contain rounded-2xl"
+                    className="testimonial-avatar w-full h-full object-cover object-top rounded-2xl"
                     style={{ minWidth: 72, minHeight: 72 }}
                   />
                 ) : (
@@ -489,9 +495,17 @@ export function TestimonialsSplit({
         </div>
       </div>
 
-      {/* Dots Navigation */}
-      <div className="mt-5 mb-4 flex justify-center">
-        <div className="flex items-center gap-1">
+      {/* Controls — arrows + dots */}
+      <div className="mt-5 mb-4 min-h-[52px] flex flex-nowrap items-center justify-center gap-3 sm:gap-4 px-2">
+        <button
+          onClick={prevTestimonial}
+          aria-label="Previous testimonial"
+          className="flex h-10 w-10 sm:h-11 sm:w-11 shrink-0 items-center justify-center rounded-full border border-white/10 bg-white/5 text-slate-300 transition-all hover:bg-white/10 hover:text-white"
+        >
+          <ChevronLeft className="h-5 w-5" />
+        </button>
+
+        <div className="flex shrink-0 flex-wrap justify-center gap-1.5 sm:gap-2">
           {list.map((_, index) => (
             <button
               key={index}
@@ -508,6 +522,14 @@ export function TestimonialsSplit({
             />
           ))}
         </div>
+
+        <button
+          onClick={nextTestimonial}
+          aria-label="Next testimonial"
+          className="flex h-10 w-10 sm:h-11 sm:w-11 shrink-0 items-center justify-center rounded-full border border-white/10 bg-white/5 text-slate-300 transition-all hover:bg-white/10 hover:text-white"
+        >
+          <ChevronRight className="h-5 w-5" />
+        </button>
       </div>
     </div>
   );

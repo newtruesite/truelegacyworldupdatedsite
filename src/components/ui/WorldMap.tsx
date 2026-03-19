@@ -45,7 +45,7 @@ const CONTINENTS = [
     nameFr: "Moyen-Orient",
     namePt: "Oriente Médio",
     lat: 20.0,
-    lng: 54.0,
+    lng: 44.0,
   },
   {
     id: "africa",

@@ -135,7 +135,7 @@ export default function HomePage() {
         }
         description={
           locale === "es"
-            ? "Únete a una comunidad de emprendedores que ganan dinero compartiendo productos que cambian vidas como Kangen Water y emGuarde."
+            ? "Únete a una comunidad de emprendedores que ganan dinero compartiendo productos que cambian vidas como el Agua Kangen y emGuarde."
             : locale === "fr"
               ? "Rejoignez une communauté d'entrepreneurs qui gagnent de l'argent en partageant des produits qui changent la vie comme Kangen Water et emGuarde."
               : "Join a community of entrepreneurs who make money by sharing world-changing products like the Kangen water machine and emGuarde."

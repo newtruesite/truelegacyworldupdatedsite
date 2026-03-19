@@ -1149,7 +1149,7 @@ function getContent(country: Country, locale: "en" | "es" | "fr" | "pt") {
           ? "Renda real. Produtos reais."
           : "Real Income. Real Products.",
     getPaidCard1Desc: es
-      ? "Ganas compartiendo máquinas Kangen Water y dispositivos emGuarde — productos que la gente recompra, recomienda y recomienda. Sin ventas frías. Solo bienestar genuino que se vende solo."
+      ? "Ganas compartiendo máquinas de Agua Kangen y dispositivos emGuarde — productos que la gente recompra, recomienda y recomienda. Sin ventas frías. Solo bienestar genuino que se vende solo."
       : fr
         ? "Vous gagnez en partageant les machines Kangen et les appareils emGuarde — des produits que les gens recommandent et rachètent. Pas de ventes forcées. Juste du bien‑être authentique."
         : pt
