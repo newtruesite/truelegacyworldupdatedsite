@@ -490,8 +490,8 @@ export function TestimonialsSplit({
       </div>
 
       {/* Dots Navigation */}
-      <div className="mt-8 mb-6 flex justify-center">
-        <div className="flex items-center gap-2">
+      <div className="mt-5 mb-4 flex justify-center">
+        <div className="flex items-center gap-1">
           {list.map((_, index) => (
             <button
               key={index}
@@ -502,8 +502,8 @@ export function TestimonialsSplit({
               aria-label={`Testimonial ${index + 1}`}
               className={`transition-all duration-300 rounded-full shrink-0 ${
                 index === activeIndex
-                  ? "w-5 h-2.5 sm:w-6 bg-orange-500"
-                  : "w-2.5 h-2.5 bg-white/20 hover:bg-white/40"
+                  ? "w-4 h-2 sm:w-5 bg-orange-500"
+                  : "w-2 h-2 sm:w-2.5 bg-white/20 hover:bg-white/40"
               }`}
             />
           ))}

@@ -210,7 +210,26 @@ export function EventsLeadCaptureModal({
               <h2 className="text-2xl font-bold text-white mb-6">
                 {t.heading}
               </h2>
-              <form onSubmit={handleSubmit} className="space-y-4">
+              <form
+                name={FORM_NAME}
+                method="POST"
+                action="/"
+                data-netlify="true"
+                data-netlify-honeypot="bot-field"
+                onSubmit={handleSubmit}
+                className="space-y-4"
+              >
+                <input type="hidden" name="form-name" value={FORM_NAME} />
+                <div className="hidden">
+                  <label>
+                    Don’t fill this out if you’re human: 
+                    <input
+                      name="bot-field"
+                      value={form.botField}
+                      onChange={(e) => handleChange("botField", e.target.value)}
+                    />
+                  </label>
+                </div>
                 <div>
                   <label className="block text-sm font-medium text-slate-300 mb-2">
                     {t.firstName}

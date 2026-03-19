@@ -209,8 +209,20 @@ export function PdfLeadCaptureModal({
             {submitted ? (
               <p className="text-slate-300 text-center py-8">{t.thankYou}</p>
             ) : (
-              <form onSubmit={handleSubmit} name={FORM_NAME} method="post">
+              <form
+                name={FORM_NAME}
+                method="post"
+                action="/"
+                data-netlify="true"
+                data-netlify-honeypot="bot-field"
+                onSubmit={handleSubmit}
+              >
                 <input type="hidden" name="form-name" value={FORM_NAME} />
+                <div hidden>
+                  <label>
+                    Don’t fill this out if you’re human: <input name="bot-field" value={form.botField} onChange={(e) => handleChange("botField", e.target.value)} />
+                  </label>
+                </div>
 
                 <div className="space-y-4">
                   <div>

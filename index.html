@@ -103,7 +103,13 @@
     </script>
     <div id="root"></div>
     <!-- Form for pdf-lead-capture (handled by Netlify Functions + Supabase; keeping HTML structure for progressive enhancement) -->
-    <form name="pdf-lead-capture" method="POST" hidden>
+    <form name="pdf-lead-capture" method="POST" action="/" data-netlify="true" data-netlify-honeypot="bot-field" hidden>
+      <input type="hidden" name="form-name" value="pdf-lead-capture" />
+      <div hidden>
+        <label>
+          Don’t fill this out if you’re human: <input name="bot-field" />
+        </label>
+      </div>
       <input type="text" name="full-name" />
       <input type="email" name="email" />
       <input type="tel" name="phone" />
@@ -117,7 +123,13 @@
       <input type="radio" name="product-interest" value="both" />
     </form>
     <!-- Form for events-lead-capture -->
-    <form name="events-lead-capture" method="POST" hidden>
+    <form name="events-lead-capture" method="POST" action="/" data-netlify="true" data-netlify-honeypot="bot-field" hidden>
+      <input type="hidden" name="form-name" value="events-lead-capture" />
+      <div hidden>
+        <label>
+          Don’t fill this out if you’re human: <input name="bot-field" />
+        </label>
+      </div>
       <input type="text" name="first-name" />
       <input type="text" name="last-name" />
       <input type="email" name="email" />
