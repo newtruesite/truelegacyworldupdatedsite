@@ -10,6 +10,7 @@ type MessageSet = {
   network: string
   rateLimited: string
   invalidApiKey: string
+  emailConfirmationEnabled: string
   generic: string
 }
 
@@ -26,6 +27,8 @@ const AUTH_MESSAGES: Record<"en" | "es" | "fr", MessageSet> = {
     rateLimited: "Too many attempts. Please wait a moment and try again.",
     invalidApiKey:
       "Server configuration error: invalid API key. Contact the site administrator.",
+    emailConfirmationEnabled:
+      "Account created but email confirmation is required. Go to Supabase Dashboard → Authentication → Settings and disable \"Enable email confirmations\", then try again.",
     generic: "We could not complete authentication. Please try again.",
   },
   es: {
@@ -41,6 +44,8 @@ const AUTH_MESSAGES: Record<"en" | "es" | "fr", MessageSet> = {
     rateLimited: "Demasiados intentos. Espera un momento e intentalo otra vez.",
     invalidApiKey:
       "Error de configuracion del servidor: clave de API invalida. Contacta al administrador.",
+    emailConfirmationEnabled:
+      "Cuenta creada pero se requiere confirmacion de correo. Ve a Supabase Dashboard → Authentication → Settings y desactiva \"Enable email confirmations\", luego intenta de nuevo.",
     generic: "No pudimos completar la autenticacion. Intentalo de nuevo.",
   },
   fr: {
@@ -56,6 +61,8 @@ const AUTH_MESSAGES: Record<"en" | "es" | "fr", MessageSet> = {
     rateLimited: "Trop de tentatives. Veuillez patienter puis reessayer.",
     invalidApiKey:
       "Erreur de configuration du serveur: cle API invalide. Contactez l'administrateur.",
+    emailConfirmationEnabled:
+      "Compte cree mais confirmation par e-mail requise. Allez dans Supabase Dashboard → Authentication → Settings et desactivez \"Enable email confirmations\", puis reessayez.",
     generic: "Impossible de terminer l'authentification. Veuillez reessayer.",
   },
 }
@@ -138,6 +145,7 @@ export function mapAuthErrorToMessage(
       "user_already_exists",
       "already exists",
       "email address already",
+      "awaiting email confirmation",
     ])
   ) {
     return messages.emailAlreadyRegistered
@@ -168,6 +176,16 @@ export function mapAuthErrorToMessage(
     ])
   ) {
     return messages.invalidApiKey
+  }
+
+  if (
+    includesAny(normalized, [
+      "supabase_email_confirmation_enabled",
+      "email confirmation is required",
+      "awaiting email confirmation",
+    ])
+  ) {
+    return messages.emailConfirmationEnabled
   }
 
   if (

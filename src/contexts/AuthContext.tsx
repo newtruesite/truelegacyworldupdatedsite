@@ -84,11 +84,31 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     if (!isSupabaseConfigured) throw new Error(AUTH_DISABLED_ERROR_CODE)
     const { data, error } = await supabase.auth.signUp({ email, password })
     if (error) throw error
-    // Email confirmation is disabled — session is returned immediately.
-    // Explicitly set user so the UI updates even if onAuthStateChange fires late.
+
+    // Session returned immediately → email confirmation is disabled, user is in.
     if (data.session) {
       setUser(data.session.user)
+      return
     }
+
+    // No session returned. This happens when:
+    //   a) Email confirmation is still enabled in Supabase (Dashboard → Auth → Settings → disable it), OR
+    //   b) The email already exists (Supabase silently returns no-session to prevent enumeration).
+    // Attempt signIn as a fallback — succeeds for case (b) with correct password.
+    const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({ email, password })
+    if (!signInError && signInData.session) {
+      setUser(signInData.session.user)
+      return
+    }
+
+    // Both signup and signin failed to produce a session — most likely email
+    // confirmation is still enabled in Supabase.
+    // Go to: Supabase Dashboard → Authentication → Settings → disable "Enable email confirmations"
+    const signInMsg = (signInError as { message?: string } | null)?.message?.toLowerCase() ?? ""
+    if (signInMsg.includes("not confirmed") || signInMsg.includes("email_not_confirmed")) {
+      throw new Error("SUPABASE_EMAIL_CONFIRMATION_ENABLED")
+    }
+    throw new Error("email already registered or awaiting email confirmation")
   }
 
   const signOut = async () => {
