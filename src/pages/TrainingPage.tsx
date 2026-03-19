@@ -3,10 +3,7 @@ import { Footer } from "@/components/layout/Footer";
 import { Navbar } from "@/components/layout/Navbar";
 import { SEO } from "@/components/SEO";
 import { AuroraBackground } from "@/components/ui/AuroraBackground";
-import { useAuth } from "@/contexts/AuthContext";
 import { useLocaleContext } from "@/contexts/LocaleContext";
-import { getAuthDisabledMessage, isRateLimitError, mapAuthErrorToMessage } from "@/lib/authErrors";
-import { isSupabaseConfigured } from "@/lib/supabaseClient";
 import { t } from "@/lib/translations";
 import { motion } from "framer-motion";
 import {
@@ -474,31 +471,11 @@ export default function TrainingPage() {
   const params = useParams();
   const countrySlug = params.countrySlug;
 
-  const { user, loading, setUser, signIn, signUp, signOut, isAuthEnabled } = useAuth();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [authError, setAuthError] = useState("");
-  const [authSuccess, setAuthSuccess] = useState("");
-  const [isLoggingIn, setIsLoggingIn] = useState(false);
-  const [cooldownSecs, setCooldownSecs] = useState(0);
-  const [failCount, setFailCount] = useState(0);
-  const [authMode, setAuthMode] = useState<"signup" | "login">("signup");
   const [secretCode, setSecretCode] = useState("");
   const [isSecretCodeValid, setIsSecretCodeValid] = useState(false);
   const [secretCodeError, setSecretCodeError] = useState("");
 
   const contentRef = useRef<HTMLDivElement>(null);
-  const authDisabledMessage = getAuthDisabledMessage(locale);
-
-  // Countdown timer for rate-limit cooldown
-  useEffect(() => {
-    if (cooldownSecs <= 0) return;
-    const timer = window.setTimeout(() => {
-      setCooldownSecs((s) => Math.max(0, s - 1));
-    }, 1000);
-    return () => clearTimeout(timer);
-  }, [cooldownSecs]);
 
   // Retrieve saved secret code state
   useEffect(() => {
@@ -510,24 +487,15 @@ export default function TrainingPage() {
     }
   }, []);
 
-  useEffect(() => {
-    if (user && isSecretCodeValid) {
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    }
-  }, [user, isSecretCodeValid]);
-
-  const handleSignOut = async () => {
-    try {
-      await signOut();
-    } catch {
-      /* ignore logout errors */
-    }
-    setUser(null);
+  const handleResetAccess = () => {
+    sessionStorage.removeItem("tl_secret_code_valid");
+    setIsSecretCodeValid(false);
+    setSecretCode("");
   };
 
   const handleSecretCodeSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const expected = import.meta.env.VITE_SECRET_CODE ?? "truelegacyworld1!";
+    const expected = import.meta.env.VITE_SECRET_CODE ?? "Truelegacyworld1!";
     if (secretCode === expected) {
       setIsSecretCodeValid(true);
       setSecretCodeError("");
@@ -538,55 +506,6 @@ export default function TrainingPage() {
           ? "Código incorrecto. Únete al grupo de Facebook para obtener el código."
           : "Incorrect code. Join the Facebook group to get the code.",
       );
-    }
-  };
-
-  const handleAuth = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (isLoggingIn || cooldownSecs > 0) return;
-
-    setIsLoggingIn(true);
-    setAuthError("");
-    setAuthSuccess("");
-
-    const isSpanish = locale === "es";
-
-    if (authMode === "signup" && password !== confirmPassword) {
-      setAuthError(
-        isSpanish ? "Las contraseñas no coinciden." : "Passwords do not match.",
-      );
-      setIsLoggingIn(false);
-      return;
-    }
-
-    if (!isSupabaseConfigured) {
-      setAuthError(authDisabledMessage);
-      setIsLoggingIn(false);
-      return;
-    }
-
-    try {
-      if (authMode === "signup") {
-        await signUp(email, password);
-        setFailCount(0);
-        setAuthSuccess(
-          isSpanish
-            ? "¡Cuenta creada e iniciada sesión exitosamente!"
-            : "Account created and logged in successfully!",
-        );
-      } else {
-        await signIn(email, password);
-        setFailCount(0);
-      }
-    } catch (err: unknown) {
-      const newFail = failCount + 1;
-      setFailCount(newFail);
-      setAuthError(mapAuthErrorToMessage(err, locale, authMode));
-      if (isRateLimitError(err) || newFail >= 3) {
-        setCooldownSecs(30);
-      }
-    } finally {
-      setIsLoggingIn(false);
     }
   };
 
@@ -656,132 +575,8 @@ export default function TrainingPage() {
       <main className="content-wrapper">
         <AuroraBackground className="pt-24 pb-16">
           <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-            {loading ? (
-              <div className="flex items-center justify-center min-h-[400px]">
-                <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-cyan-500"></div>
-              </div>
-            ) : !user ? (
-              <div className="max-w-md mx-auto mt-12 min-h-[500px] rounded-2xl border border-white/10 bg-white/[0.04] backdrop-blur-xl p-8 shadow-[0_24px_80px_rgba(0,0,0,0.6)]">
-                <div className="text-center mb-8">
-                  <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-cyan-500/20 to-blue-600/20 border border-cyan-500/30 text-cyan-400 mb-4 shadow-[0_0_30px_rgba(6,182,212,0.15)]">
-                    <Target className="w-8 h-8" />
-                  </div>
-                  <h2 className="text-2xl font-bold text-white mb-2">
-                    {locale === "es"
-                      ? "Portal de Entrenamiento"
-                      : "Training Portal"}
-                  </h2>
-                  <p className="text-slate-400 text-sm">
-                    {locale === "es"
-                      ? "Accede a la academia de liderazgo True Legacy."
-                      : "Access the True Legacy leadership academy."}
-                  </p>
-                </div>
-
-                <div className="flex bg-black/30 p-1 rounded-xl mb-6 border border-white/10">
-                  <button
-                    onClick={() => setAuthMode("signup")}
-                    className={`flex-1 py-2.5 text-sm font-semibold rounded-lg transition-all ${authMode === "signup" ? "bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow-sm" : "text-slate-400 hover:text-white"}`}
-                  >
-                    {locale === "es" ? "Crear cuenta" : "Create account"}
-                  </button>
-                  <button
-                    onClick={() => setAuthMode("login")}
-                    className={`flex-1 py-2.5 text-sm font-semibold rounded-lg transition-all ${authMode === "login" ? "bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow-sm" : "text-slate-400 hover:text-white"}`}
-                  >
-                    {locale === "es" ? "Iniciar sesión" : "Sign in"}
-                  </button>
-                </div>
-
-                <form onSubmit={handleAuth} className="space-y-4">
-                  {!isAuthEnabled && (
-                    <div className="p-3 rounded-lg bg-amber-500/10 border border-amber-500/20 text-amber-300 text-sm">
-                      {authDisabledMessage}
-                    </div>
-                  )}
-
-                  <div>
-                    <input
-                      type="email"
-                      placeholder={
-                        locale === "es" ? "Correo electrónico" : "Email"
-                      }
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      className="w-full px-4 py-3 rounded-xl bg-black/40 border border-white/10 text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500 transition-colors"
-                      required
-                    />
-                  </div>
-                  <div>
-                    <input
-                      type="password"
-                      placeholder={locale === "es" ? "Contraseña" : "Password"}
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      className="w-full px-4 py-3 rounded-xl bg-black/40 border border-white/10 text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500 transition-colors"
-                      required
-                    />
-                  </div>
-                  {authMode === "signup" && (
-                    <div>
-                      <input
-                        type="password"
-                        placeholder={
-                          locale === "es"
-                            ? "Confirmar contraseña"
-                            : "Confirm Password"
-                        }
-                        value={confirmPassword}
-                        onChange={(e) => setConfirmPassword(e.target.value)}
-                        className="w-full px-4 py-3 rounded-xl bg-black/40 border border-white/10 text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500 transition-colors"
-                        required
-                      />
-                    </div>
-                  )}
-                  {authError && (
-                    <div className="p-3 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 text-sm">
-                      {authError}
-                    </div>
-                  )}
-                  {authSuccess && (
-                    <div className="p-3 rounded-lg bg-green-500/10 border border-green-500/20 text-green-400 text-sm">
-                      {authSuccess}
-                    </div>
-                  )}
-                  <button
-                    type="submit"
-                    disabled={isLoggingIn || !isAuthEnabled || cooldownSecs > 0}
-                    className="w-full min-h-[52px] flex items-center justify-center gap-2 px-6 py-3 text-base font-semibold text-white bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 hover:shadow-lg hover:shadow-cyan-500/20 hover:-translate-y-0.5 rounded-xl transition-all disabled:opacity-50"
-                  >
-                      {cooldownSecs > 0
-                        ? locale === "es"
-                          ? `Espera ${cooldownSecs}s…`
-                          : `Wait ${cooldownSecs}s…`
-                        : isLoggingIn
-                          ? locale === "es"
-                            ? "Procesando..."
-                            : "Processing..."
-                          : authMode === "signup"
-                            ? locale === "es"
-                              ? "Crear cuenta"
-                              : "Create account"
-                            : locale === "es"
-                              ? "Iniciar sesión"
-                              : "Sign in"}
-                  </button>
-                </form>
-              </div>
-            ) : !isSecretCodeValid ? (
+            {!isSecretCodeValid ? (
               <div className="max-w-md mx-auto mt-12 min-h-[400px] rounded-2xl border border-white/10 bg-white/[0.04] backdrop-blur-xl p-8 shadow-[0_24px_80px_rgba(0,0,0,0.6)]">
-                <div className="flex justify-end mb-4">
-                  <button
-                    onClick={handleSignOut}
-                    className="flex items-center gap-2 text-sm text-slate-400 hover:text-white transition-colors px-4 py-2 rounded-lg bg-white/5 hover:bg-white/10"
-                  >
-                    <LogOut className="w-4 h-4" />{" "}
-                    {locale === "es" ? "Cerrar Sesión" : "Sign Out"}
-                  </button>
-                </div>
                 <div className="text-center mb-8">
                   <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-cyan-500/20 to-indigo-600/20 border border-cyan-500/30 text-cyan-400 mb-4 shadow-[0_0_30px_rgba(6,182,212,0.15)]">
                     <Key className="w-8 h-8" />
@@ -840,11 +635,11 @@ export default function TrainingPage() {
               <div ref={contentRef}>
                 <div className="flex justify-end mb-4">
                   <button
-                    onClick={handleSignOut}
+                    onClick={handleResetAccess}
                     className="flex items-center gap-2 text-sm text-slate-400 hover:text-white transition-colors px-4 py-2 rounded-lg bg-white/5 hover:bg-white/10"
                   >
                     <LogOut className="w-4 h-4" />{" "}
-                    {locale === "es" ? "Cerrar Sesión" : "Sign Out"}
+                    {locale === "es" ? "Reiniciar acceso" : "Reset access"}
                   </button>
                 </div>
                 {/* Hero Section */}

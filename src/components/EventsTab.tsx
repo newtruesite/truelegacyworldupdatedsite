@@ -1,8 +1,5 @@
-import { EventsLeadCaptureModal } from "@/components/ui/EventsLeadCaptureModal"
-import { useAuth } from "@/contexts/AuthContext"
-import { getEventRegion, getEventsByRegion } from "@/lib/events"
+import { EVENTS_FORM_URL, getEventRegion, getEventsByRegion } from "@/lib/events"
 import { motion } from "framer-motion"
-import { useState } from "react"
 
 type Props = {
   locale: string
@@ -10,66 +7,34 @@ type Props = {
 }
 
 export function EventsTab({ locale, countrySlug }: Props) {
-  const { user } = useAuth()
   const events = getEventsByRegion()
   const region = getEventRegion(countrySlug)
   const isLatam = region === "latam"
   const isSpanish = locale === "es"
   const isFrench = locale === "fr"
 
-  const [modalOpen, setModalOpen] = useState(false)
-  const [selectedEventTitle, setSelectedEventTitle] = useState("")
-
-  const t = {
-    heading: isSpanish
-      ? "Próximos Eventos"
-      : isFrench
-        ? "Événements à Venir"
-        : "Upcoming Events",
-    noEvents: isSpanish
-      ? "No hay eventos próximos para tu región."
-      : isFrench
-        ? "Aucun événement à venir pour votre région."
-        : "No upcoming events for your region.",
-    register: isSpanish
-      ? "Regístrate Ahora"
-      : isFrench
-        ? "S'inscrire Maintenant"
-        : "Register Now",
-    joinNow: isSpanish
-      ? "Unirse Ahora"
-      : isFrench
-        ? "Rejoindre Maintenant"
-        : "Join Now",
-  }
-
-  // Extract user email and name if available
-  const userEmail = user?.email ?? ""
-  // gotrue-js stores extra metadata in user_metadata
-  const meta = (user as { user_metadata?: { full_name?: string; first_name?: string; last_name?: string } } | null)
-    ?.user_metadata ?? {}
-  const initialFirstName = meta.first_name ?? (meta.full_name?.split(" ")[0] ?? "")
-  const initialLastName = meta.last_name ?? (meta.full_name?.split(" ").slice(1).join(" ") ?? "")
-
-  const handleRegister = (eventTitle: string) => {
-    setSelectedEventTitle(eventTitle)
-    setModalOpen(true)
-  }
-
-  const handleJoinDirect = (joinUrl: string) => {
-    window.open(joinUrl, "_blank", "noopener,noreferrer")
+  const handleOpenForm = () => {
+    window.open(EVENTS_FORM_URL, '_blank', 'noopener,noreferrer')
   }
 
   if (events.length === 0) {
     return (
-      <div className="text-center text-slate-400 py-12">{t.noEvents}</div>
+      <div className="text-center text-slate-400 py-12">
+        {isSpanish
+          ? "No hay eventos próximos para tu región."
+          : isFrench
+            ? "Aucun événement à venir pour votre région."
+            : "No upcoming events for your region."}
+      </div>
     )
   }
 
   return (
     <div className="space-y-10">
       <div className="text-center mb-6">
-        <h2 className="section-title">{t.heading}</h2>
+        <h2 className="section-title">
+          {isSpanish ? "Próximos Eventos" : isFrench ? "Événements à Venir" : "Upcoming Events"}
+        </h2>
       </div>
 
       {events.map((event) => {
@@ -81,7 +46,6 @@ export function EventsTab({ locale, countrySlug }: Props) {
               : event.description_en
 
         const timezones = isLatam ? event.latamTimezones : event.timezones
-        const joinUrl = isLatam ? event.latamZoomUrl : event.registerUrl
         const displayTitle = isLatam
           ? "CLASE MAGISTRAL SOBRE EL VERDADERO LEGADO"
           : event.title
@@ -127,24 +91,24 @@ export function EventsTab({ locale, countrySlug }: Props) {
                 {desc}
               </div>
 
-              {/* CTA buttons — authenticated users skip the "first time?" prompt */}
+              {/* CTA buttons */}
               <div className="flex flex-col sm:flex-row gap-3">
                 <motion.button
-                  onClick={() => handleRegister(event.title)}
+                  onClick={handleOpenForm}
                   whileHover={{ scale: 1.03 }}
                   whileTap={{ scale: 0.97 }}
                   className="flex-1 flex items-center justify-center px-8 py-3 rounded-xl font-bold text-white text-base transition min-h-12"
                   style={{ background: "linear-gradient(135deg, #00a896, #00c4ae)" }}
                 >
-                  {t.register}
+                  {isSpanish ? "Regístrate Ahora" : isFrench ? "S'inscrire Maintenant" : "Register Now"}
                 </motion.button>
                 <motion.button
-                  onClick={() => handleJoinDirect(joinUrl)}
+                  onClick={handleOpenForm}
                   whileHover={{ scale: 1.03 }}
                   whileTap={{ scale: 0.97 }}
                   className="flex-1 flex items-center justify-center px-8 py-3 rounded-xl font-bold text-white text-base border border-white/30 hover:border-white/50 transition bg-white/5 min-h-12"
                 >
-                  {t.joinNow}
+                  {isSpanish ? "Unirse Ahora" : isFrench ? "Rejoindre Maintenant" : "Join Now"}
                 </motion.button>
               </div>
             </div>
@@ -152,17 +116,6 @@ export function EventsTab({ locale, countrySlug }: Props) {
         )
       })}
 
-      <EventsLeadCaptureModal
-        isOpen={modalOpen}
-        onClose={() => setModalOpen(false)}
-        onSuccess={() => setModalOpen(false)}
-        region={region}
-        eventTitle={selectedEventTitle}
-        isSpanish={isSpanish}
-        initialEmail={userEmail}
-        initialFirstName={initialFirstName}
-        initialLastName={initialLastName}
-      />
     </div>
   )
 }

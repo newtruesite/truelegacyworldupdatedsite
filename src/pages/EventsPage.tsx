@@ -1,8 +1,7 @@
 import { Navbar } from "@/components/layout/Navbar";
 import { EventsFirstTimePrompt } from "@/components/ui/EventsFirstTimePrompt";
-import { EventsLeadCaptureModal } from "@/components/ui/EventsLeadCaptureModal";
-import { UPCOMING_EVENTS } from "@/lib/events";
-import { useEffect, useState } from "react";
+import { EVENTS_FORM_URL, UPCOMING_EVENTS } from "@/lib/events";
+import { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
 const REGIONS = ["latam", "global", "asia", "africa"] as const;
@@ -85,9 +84,6 @@ export default function EventsPage() {
   const regionLabel = getRegionBreadcrumbLabel(region, lang);
   const isSpanish = lang === "es";
 
-  const [leadCaptureOpen, setLeadCaptureOpen] = useState(false);
-  const [selectedEventTitle, setSelectedEventTitle] = useState("");
-
   // Redirect old country-slug URLs to region URLs once
   useEffect(() => {
     if (!param) return;
@@ -97,17 +93,12 @@ export default function EventsPage() {
     navigate(`/events/${targetRegion}`, { replace: true });
   }, [param, navigate]);
 
-  const handleFirstTimeYes = (eventTitle: string) => {
-    setSelectedEventTitle(eventTitle);
-    setLeadCaptureOpen(true);
+  const handleFirstTimeYes = () => {
+    window.open(EVENTS_FORM_URL, '_blank', 'noopener,noreferrer');
   };
 
-  const handleFirstTimeNo = (joinUrl: string) => {
-    window.open(joinUrl, "_blank");
-  };
-
-  const handleLeadCaptureSuccess = () => {
-    setLeadCaptureOpen(false);
+  const handleFirstTimeNo = () => {
+    window.open(EVENTS_FORM_URL, '_blank', 'noopener,noreferrer');
   };
 
   return (
@@ -134,7 +125,6 @@ export default function EventsPage() {
               const timezones = isLatam
                 ? event.latamTimezones
                 : event.timezones;
-              const joinUrl = isLatam ? event.latamZoomUrl : event.registerUrl;
 
               return (
                 <article
@@ -180,9 +170,9 @@ export default function EventsPage() {
                     {/* First Time Prompt - Always Visible */}
                     <div className="mb-6">
                       <EventsFirstTimePrompt
-                        onYes={() => handleFirstTimeYes(event.title)}
+                        onYes={handleFirstTimeYes}
                         onNo={handleFirstTimeNo}
-                        joinUrl={joinUrl}
+                        joinUrl={EVENTS_FORM_URL}
                         isSpanish={isSpanish}
                       />
                     </div>
@@ -193,16 +183,6 @@ export default function EventsPage() {
           </div>
         )}
       </div>
-
-      {/* Lead Capture Modal */}
-      <EventsLeadCaptureModal
-        isOpen={leadCaptureOpen}
-        onClose={() => setLeadCaptureOpen(false)}
-        onSuccess={handleLeadCaptureSuccess}
-        region={region}
-        eventTitle={selectedEventTitle || events[0]?.title || "Event"}
-        isSpanish={isSpanish}
-      />
     </div>
   );
 }

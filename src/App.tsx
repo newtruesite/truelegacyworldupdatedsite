@@ -1,6 +1,4 @@
 import { LanguageReset } from "@/components/LanguageReset";
-import { AuthProvider } from "@/contexts/AuthContext";
-import { EventsLeadCaptureProvider } from "@/contexts/EventsLeadCaptureContext";
 import { LocaleProvider } from "@/contexts/LocaleContext";
 import { PdfLeadCaptureProvider } from "@/contexts/PdfLeadCaptureContext";
 import { trackPageView } from "@/lib/analytics";
@@ -11,7 +9,6 @@ import EventsPage from "@/pages/EventsPage";
 import HomePage from "@/pages/HomePage";
 import K8Page from "@/pages/K8Page";
 import LatamDistributorsPage from "@/pages/LatamDistributorsPage";
-import LoginPage from "@/pages/LoginPage";
 import PdfLibraryPage from "@/pages/PdfLibraryPage";
 import ProductsPage from "@/pages/ProductsPage";
 import RegionPage from "@/pages/RegionPage";
@@ -68,14 +65,6 @@ function AnimatedRoutes() {
             }
           />
           {/* Static pages first — so they don't get matched by /:country */}
-          <Route
-            path="/login"
-            element={
-              <PageTransitionWrapper>
-                <LoginPage />
-              </PageTransitionWrapper>
-            }
-          />
           <Route
             path="/training"
             element={
@@ -282,16 +271,12 @@ export default function App() {
 
   return (
     <BrowserRouter>
-      <AuthProvider>
-        <LanguageReset />
-        <LocaleProvider>
-          <PdfLeadCaptureProvider>
-            <EventsLeadCaptureProvider>
-              <AnimatedRoutes />
-            </EventsLeadCaptureProvider>
-          </PdfLeadCaptureProvider>
-        </LocaleProvider>
-      </AuthProvider>
+      <LanguageReset />
+      <LocaleProvider>
+        <PdfLeadCaptureProvider>
+          <AnimatedRoutes />
+        </PdfLeadCaptureProvider>
+      </LocaleProvider>
     </BrowserRouter>
   );
 }

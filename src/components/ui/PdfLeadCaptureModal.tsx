@@ -1,5 +1,4 @@
 import type { ProductInterest } from "@/contexts/PdfLeadCaptureContext";
-import { isSupabaseConfigured, supabase } from "@/lib/supabaseClient";
 import { AnimatePresence, motion } from "framer-motion";
 import { X } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
@@ -106,8 +105,6 @@ export function PdfLeadCaptureModal({
 
       const fullName = sanitize(form.fullName);
       const email = sanitize(form.email);
-      const phone = sanitize(form.phone);
-      const country = sanitize(form.country);
 
       // Honeypot: silently drop bot submissions
       if (form.botField) {
@@ -121,17 +118,6 @@ export function PdfLeadCaptureModal({
       }
 
       try {
-        if (isSupabaseConfigured) {
-          const { error } = await supabase.from("pdf_leads").insert({
-            full_name: fullName,
-            email,
-            phone,
-            country,
-            pdf_url: pdfUrl || null,
-            source: "website",
-          });
-          if (error) throw new Error(error.message);
-        }
         try {
           localStorage.setItem("tl_last_submit", Date.now().toString());
           localStorage.setItem(

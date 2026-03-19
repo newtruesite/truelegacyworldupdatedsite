@@ -1,3 +1,6 @@
+// Placeholder Google Form URL — update this single constant when the real form is ready
+export const EVENTS_FORM_URL = 'https://forms.gle/placeholder'
+
 export type EventRegion = 'latam' | 'global' | 'asia' | 'africa'
 
 export interface EventTimezone {
