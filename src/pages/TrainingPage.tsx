@@ -5,7 +5,7 @@ import { SEO } from "@/components/SEO";
 import { AuroraBackground } from "@/components/ui/AuroraBackground";
 import { useAuth } from "@/contexts/AuthContext";
 import { useLocaleContext } from "@/contexts/LocaleContext";
-import { getAuthDisabledMessage, mapAuthErrorToMessage } from "@/lib/authErrors";
+import { getAuthDisabledMessage, isRateLimitError, mapAuthErrorToMessage } from "@/lib/authErrors";
 import { isSupabaseConfigured } from "@/lib/supabaseClient";
 import { t } from "@/lib/translations";
 import { motion } from "framer-motion";
@@ -481,6 +481,8 @@ export default function TrainingPage() {
   const [authError, setAuthError] = useState("");
   const [authSuccess, setAuthSuccess] = useState("");
   const [isLoggingIn, setIsLoggingIn] = useState(false);
+  const [cooldownSecs, setCooldownSecs] = useState(0);
+  const [failCount, setFailCount] = useState(0);
   const [authMode, setAuthMode] = useState<"signup" | "login">("signup");
   const [secretCode, setSecretCode] = useState("");
   const [isSecretCodeValid, setIsSecretCodeValid] = useState(false);
@@ -488,6 +490,15 @@ export default function TrainingPage() {
 
   const contentRef = useRef<HTMLDivElement>(null);
   const authDisabledMessage = getAuthDisabledMessage(locale);
+
+  // Countdown timer for rate-limit cooldown
+  useEffect(() => {
+    if (cooldownSecs <= 0) return;
+    const timer = window.setTimeout(() => {
+      setCooldownSecs((s) => Math.max(0, s - 1));
+    }, 1000);
+    return () => clearTimeout(timer);
+  }, [cooldownSecs]);
 
   // Retrieve saved secret code state
   useEffect(() => {
@@ -532,7 +543,7 @@ export default function TrainingPage() {
 
   const handleAuth = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (isLoggingIn) return;
+    if (isLoggingIn || cooldownSecs > 0) return;
 
     setIsLoggingIn(true);
     setAuthError("");
@@ -557,8 +568,7 @@ export default function TrainingPage() {
     try {
       if (authMode === "signup") {
         await signUp(email, password);
-        // Email confirmation is disabled — session is returned immediately;
-        // user state will update and this form will unmount automatically.
+        setFailCount(0);
         setAuthSuccess(
           isSpanish
             ? "¡Cuenta creada e iniciada sesión exitosamente!"
@@ -566,9 +576,15 @@ export default function TrainingPage() {
         );
       } else {
         await signIn(email, password);
+        setFailCount(0);
       }
     } catch (err: unknown) {
+      const newFail = failCount + 1;
+      setFailCount(newFail);
       setAuthError(mapAuthErrorToMessage(err, locale, authMode));
+      if (isRateLimitError(err) || newFail >= 3) {
+        setCooldownSecs(30);
+      }
     } finally {
       setIsLoggingIn(false);
     }
@@ -734,20 +750,24 @@ export default function TrainingPage() {
                   )}
                   <button
                     type="submit"
-                    disabled={isLoggingIn || !isAuthEnabled}
+                    disabled={isLoggingIn || !isAuthEnabled || cooldownSecs > 0}
                     className="w-full min-h-[52px] flex items-center justify-center gap-2 px-6 py-3 text-base font-semibold text-white bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 hover:shadow-lg hover:shadow-cyan-500/20 hover:-translate-y-0.5 rounded-xl transition-all disabled:opacity-50"
                   >
-                      {isLoggingIn
+                      {cooldownSecs > 0
                         ? locale === "es"
-                          ? "Procesando..."
-                          : "Processing..."
-                        : authMode === "signup"
+                          ? `Espera ${cooldownSecs}s…`
+                          : `Wait ${cooldownSecs}s…`
+                        : isLoggingIn
                           ? locale === "es"
-                            ? "Crear cuenta"
-                            : "Create account"
-                          : locale === "es"
-                            ? "Iniciar sesión"
-                            : "Sign in"}
+                            ? "Procesando..."
+                            : "Processing..."
+                          : authMode === "signup"
+                            ? locale === "es"
+                              ? "Crear cuenta"
+                              : "Create account"
+                            : locale === "es"
+                              ? "Iniciar sesión"
+                              : "Sign in"}
                   </button>
                 </form>
               </div>

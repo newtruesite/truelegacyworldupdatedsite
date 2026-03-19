@@ -24,7 +24,7 @@ const AUTH_MESSAGES: Record<"en" | "es" | "fr", MessageSet> = {
       "Password does not meet security requirements (minimum 6 characters).",
     network:
       "Connection failed. Check your internet and try again.",
-    rateLimited: "Too many attempts. Please wait a moment and try again.",
+    rateLimited: "Too many attempts. Please wait 30 seconds before trying again.",
     invalidApiKey:
       "Server configuration error: invalid API key. Contact the site administrator.",
     emailConfirmationEnabled:
@@ -41,7 +41,7 @@ const AUTH_MESSAGES: Record<"en" | "es" | "fr", MessageSet> = {
       "La contrasena no cumple los requisitos de seguridad (minimo 6 caracteres).",
     network:
       "No pudimos conectar con el servidor. Revisa tu conexion e intentalo de nuevo.",
-    rateLimited: "Demasiados intentos. Espera un momento e intentalo otra vez.",
+    rateLimited: "Demasiados intentos. Espera 30 segundos antes de intentarlo de nuevo.",
     invalidApiKey:
       "Error de configuracion del servidor: clave de API invalida. Contacta al administrador.",
     emailConfirmationEnabled:
@@ -58,7 +58,7 @@ const AUTH_MESSAGES: Record<"en" | "es" | "fr", MessageSet> = {
       "Le mot de passe ne respecte pas les exigences de securite (minimum 6 caracteres).",
     network:
       "Connexion impossible. Verifiez votre connexion internet puis reessayez.",
-    rateLimited: "Trop de tentatives. Veuillez patienter puis reessayer.",
+    rateLimited: "Trop de tentatives. Veuillez patienter 30 secondes avant de reessayer.",
     invalidApiKey:
       "Erreur de configuration du serveur: cle API invalide. Contactez l'administrateur.",
     emailConfirmationEnabled:
@@ -84,6 +84,25 @@ function extractErrorText(error: unknown): string {
 
 function includesAny(haystack: string, needles: string[]): boolean {
   return needles.some((needle) => haystack.includes(needle))
+}
+
+const RATE_LIMIT_PATTERNS = [
+  "too many requests",
+  "too many auth attempts",
+  "too many failed",
+  "over_email_send_rate_limit",
+  "email rate limit",
+  "rate limit",
+  "rate_limit",
+  "for security purposes",
+  "request rate limit",
+  "slow_down",
+  "429",
+]
+
+export function isRateLimitError(error: unknown): boolean {
+  const raw = extractErrorText(error).toLowerCase()
+  return includesAny(raw, RATE_LIMIT_PATTERNS)
 }
 
 export function getAuthDisabledMessage(locale: string): string {
@@ -188,15 +207,12 @@ export function mapAuthErrorToMessage(
     return messages.emailConfirmationEnabled
   }
 
-  if (
-    includesAny(normalized, [
-      "too many requests",
-      "over_email_send_rate_limit",
-      "rate limit",
-      "429",
-    ])
-  ) {
+  if (includesAny(normalized, RATE_LIMIT_PATTERNS)) {
     return messages.rateLimited
+  }
+
+  if (import.meta.env.DEV && raw) {
+    console.debug("[AuthError] Unrecognized Supabase error payload:", error)
   }
 
   return raw || messages.generic

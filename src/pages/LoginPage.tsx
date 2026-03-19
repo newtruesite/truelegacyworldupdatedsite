@@ -2,7 +2,7 @@ import { Navbar } from "@/components/layout/Navbar";
 import { SEO } from "@/components/SEO";
 import { useAuth } from "@/contexts/AuthContext";
 import { useLocaleContext } from "@/contexts/LocaleContext";
-import { getAuthDisabledMessage, mapAuthErrorToMessage } from "@/lib/authErrors";
+import { getAuthDisabledMessage, isRateLimitError, mapAuthErrorToMessage } from "@/lib/authErrors";
 import { isSupabaseConfigured } from "@/lib/supabaseClient";
 import { AnimatePresence, motion } from "framer-motion";
 import {
@@ -32,6 +32,17 @@ export default function LoginPage() {
   const [authError, setAuthError] = useState("");
   const [authSuccess, setAuthSuccess] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [cooldownSecs, setCooldownSecs] = useState(0);
+  const [failCount, setFailCount] = useState(0);
+
+  // Countdown timer for rate-limit cooldown
+  useEffect(() => {
+    if (cooldownSecs <= 0) return;
+    const timer = window.setTimeout(() => {
+      setCooldownSecs((s) => Math.max(0, s - 1));
+    }, 1000);
+    return () => clearTimeout(timer);
+  }, [cooldownSecs]);
 
   const isEs = locale === "es";
   const isFr = locale === "fr";
@@ -46,7 +57,7 @@ export default function LoginPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (isSubmitting) return;
+    if (isSubmitting || cooldownSecs > 0) return;
     setAuthError("");
     setAuthSuccess("");
     setIsSubmitting(true);
@@ -68,6 +79,7 @@ export default function LoginPage() {
     try {
       if (authMode === "signup") {
         await signUp(email, password);
+        setFailCount(0);
         setAuthSuccess(
           isEs
             ? "¡Cuenta creada e iniciada sesión exitosamente!"
@@ -77,9 +89,15 @@ export default function LoginPage() {
         );
       } else {
         await signIn(email, password);
+        setFailCount(0);
       }
     } catch (err: unknown) {
+      const newFail = failCount + 1;
+      setFailCount(newFail);
       setAuthError(mapAuthErrorToMessage(err, locale, authMode));
+      if (isRateLimitError(err) || newFail >= 3) {
+        setCooldownSecs(30);
+      }
     } finally {
       setIsSubmitting(false);
     }
@@ -333,10 +351,19 @@ export default function LoginPage() {
                 {/* Submit */}
                 <button
                   type="submit"
-                  disabled={isSubmitting || !isAuthEnabled}
+                  disabled={isSubmitting || !isAuthEnabled || cooldownSecs > 0}
                   className="w-full flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white font-bold py-3.5 text-sm transition-all duration-200 disabled:opacity-60 disabled:cursor-not-allowed shadow-lg hover:shadow-cyan-500/30 hover:-translate-y-0.5 mt-2"
                 >
-                  {isSubmitting ? (
+                  {cooldownSecs > 0 ? (
+                    <>
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                      {isEs
+                        ? `Espera ${cooldownSecs}s…`
+                        : isFr
+                          ? `Patientez ${cooldownSecs}s…`
+                          : `Wait ${cooldownSecs}s…`}
+                    </>
+                  ) : isSubmitting ? (
                     <>
                       <Loader2 className="w-4 h-4 animate-spin" />
                       {isEs
