@@ -337,7 +337,7 @@ export function TestimonialsSplit({
         onMouseLeave={() => setIsHovering(false)}
       >
         {/* Left: Quote Content */}
-        <div className="space-y-6">
+        <div className="space-y-6 min-h-[420px] md:min-h-0">
           {/* Company Tag */}
           <AnimatePresence mode="wait">
             <motion.div
@@ -371,8 +371,8 @@ export function TestimonialsSplit({
           )}
 
           {/* Quote */}
-          <div className="relative overflow-hidden">
-            <AnimatePresence mode="wait">
+          <div className="relative overflow-hidden min-h-[220px]">
+            <AnimatePresence mode="sync">
               <motion.blockquote
                 key={active.id}
                 initial={{ opacity: 0 }}
@@ -472,7 +472,7 @@ export function TestimonialsSplit({
               animate={{ opacity: 1, filter: "blur(0px)", scale: 1 }}
               exit={{ opacity: 0, filter: "blur(20px)", scale: 0.95 }}
               transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-              className="w-full h-[300px] md:h-[380px]"
+              className="w-full h-[300px] md:h-[380px] overflow-hidden"
             >
               <div className="w-full h-full rounded-[1.5rem] overflow-hidden border-[2px] border-white/[0.15] shadow-[0_8px_32px_rgba(0,0,0,0.4),0_0_0_1px_rgba(255,255,255,0.05)] bg-slate-900 flex items-center justify-center">
                 {(active.image ?? active.photo) ? (
