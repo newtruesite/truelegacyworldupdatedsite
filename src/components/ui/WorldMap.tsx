@@ -62,7 +62,7 @@ const CONTINENTS = [
     nameEs: "Asia",
     nameFr: "Asie",
     namePt: "Ásia",
-    lat: 55.0,
+    lat: 45.0,
     lng: 88.0,
   },
 ];
