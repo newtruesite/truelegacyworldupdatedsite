@@ -268,7 +268,7 @@ export const t = {
     join_global: 'Alcance Global',
     join_global_body: 'Construye un negocio sin fronteras. Nuestro equipo opera en Norteamérica, Sudamérica, Europa, Asia, África y más.',
     join_healing: 'Productos que Sanan',
-    join_healing_body: 'Representa Enagic Kangen Water y Emguarde — tecnología de salud respetada clínicamente, usada por millones.',
+    join_healing_body: 'Representa Enagic Aqua Kangen y emGuarde — tecnología de salud respetada clínicamente, usada por millones.',
     join_income: 'Ingresos Reales',
     join_income_body: 'Gana mediante ventas directas y construcción de equipo. Cuanto más crezca tu red, más se compone tu ingreso.',
     unlockLegacy: 'Desbloquea Tu Legado',
@@ -279,10 +279,10 @@ export const t = {
     seeMore: 'Explorar la Tecnología',
     healthWealth: 'Salud = Riqueza',
     pillarsSub: 'Tres pilares que crean una vida de libertad.',
-    navProductK8: 'Dual package',
-    navProductEmguarde: 'Dual package',
+    navProductK8: 'Kangen K8',
+    navProductEmguarde: 'emGuarde',
     heroSub:
-      'True Legacy es un equipo global de mentores que comparten Kangen Water y emGuarde — dos de las tecnologías de bienestar más reconocidas del mercado. No solo vendemos productos. Formamos líderes.',
+      'True Legacy es un equipo global de mentores que comparten Aqua Kangen y emGuarde — dos de las tecnologías de bienestar más reconocidas del mercado. No solo vendemos productos. Formamos líderes.',
     homeScrollToExplore: 'Desplázate para explorar',
     homeLeadersTitle: 'Los Líderes',
     homeLeadersHeadline: 'Un movimiento en todos los continentes',
@@ -293,7 +293,7 @@ export const t = {
       sub: 'Esto no es solo bienestar. Es un negocio construido sobre productos que realmente cambian vidas.',
       card1Title: 'Ingresos Reales. Productos Reales.',
       card1Body:
-        'Ganas compartiendo máquinas Kangen Water y dispositivos emGuarde — productos que la gente repite, recomienda y elogia. Sin llamadas en frío. Sin exageración. Solo bienestar genuino que se vende solo.',
+        'Ganas compartiendo máquinas Aqua Kangen y dispositivos emGuarde — productos que la gente repite, recomienda y elogia. Sin llamadas en frío. Sin exageración. Solo bienestar genuino que se vende solo.',
       card2Title: 'Mercado Global. Alcance Ilimitado.',
       card2Body:
         'True Legacy opera en Norteamérica, Latinoamérica y África. Al unirte, te conectas a una red internacional con sistemas probados — tu potencial de ingresos no tiene fronteras.',
@@ -403,8 +403,8 @@ export const t = {
     },
     trainingPdfs: {
       'kangen_ionizers_guide': {
-        title: 'Guía de Ionizadores Kangen Water',
-        desc: 'Guía completa de productos para todas las máquinas Kangen Water. Lectura esencial para cada distribuidor.'
+        title: 'Guía de Ionizadores Aqua Kangen',
+        desc: 'Guía completa de productos para todas las máquinas Aqua Kangen. Lectura esencial para cada distribuidor.'
       },
       'anespa_dx_guide': {
         title: 'Guía Anespa DX',
@@ -428,8 +428,8 @@ export const t = {
       }
     },
     waterTypes: [
-      { name: 'Agua Kangen Fuerte', use: 'Preparación de alimentos y limpieza', color: 'from-blue-600 to-cyan-500' },
-      { name: 'Agua Kangen®', use: 'Bebida diaria — rica en antioxidantes', color: 'from-cyan-500 to-teal-500' },
+      { name: 'Aqua Kangen Fuerte', use: 'Preparación de alimentos y limpieza', color: 'from-blue-600 to-cyan-500' },
+      { name: 'Aqua Kangen®', use: 'Bebida diaria — rica en antioxidantes', color: 'from-cyan-500 to-teal-500' },
       { name: 'Agua Neutra', use: 'Fórmula para bebés y medicamentos', color: 'from-slate-500 to-slate-400' },
       { name: 'Agua de Belleza', use: 'Tónico y limpieza de piel', color: 'from-pink-500 to-rose-400' },
       { name: 'Agua Fuertemente Ácida', use: 'Desinfección de superficies', color: 'from-amber-500 to-orange-400' },
@@ -447,9 +447,9 @@ export const t = {
     },
     products: {
       k8: {
-        label: 'Dual package',
-        badge: 'Ionizadora insignia Kangen Water®',
-        short: 'Ocho placas de titanio recubiertas de platino producen Agua Kangen® rica en antioxidantes para beber, cocinar y limpiar.',
+        label: 'Kangen K8',
+        badge: 'Ionizadora insignia Aqua Kangen®',
+        short: 'Ocho placas de titanio recubiertas de platino producen Aqua Kangen® rica en antioxidantes para beber, cocinar y limpiar.',
         learnMore: 'Ver detalles de la K8',
         downloadGuide: 'Guía de ionizadoras Kangen (PDF)',
       },

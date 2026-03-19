@@ -147,7 +147,7 @@ const SPANISH_TESTIMONIALS: Testimonial[] = [
   {
     ...DEFAULT_TESTIMONIALS[0],
     quote:
-      "Me llamo Doina, y el Agua Kangen ha transformado por completo mi día a día como madre soltera que vive con fibromialgia. Durante años viví con dolor constante, especialmente en las manos, y nada parecía ayudar con la inflamación de mi cuerpo. Una amiga me presentó el Agua Kangen y, aunque no podía permitirme la máquina al principio, decidí invertir en mi salud y en el futuro de mis hijos. Después de unos meses de constancia empecé a notar cambios reales: menos dolor, más energía, piel más clara y una mejora general en cómo me sentía. Incluso pude dejar mis medicamentos para los nervios. Hoy, después de dos años con mi máquina Kangen, puedo decir que ha sido una de las mejores inversiones que he hecho para mi salud, mis hijos y mi vida.",
+      "Me llamo Doina, y Aqua Kangen ha transformado por completo mi día a día como madre soltera que vive con fibromialgia. Durante años viví con dolor constante, especialmente en las manos, y nada parecía ayudar con la inflamación de mi cuerpo. Una amiga me presentó Aqua Kangen y, aunque no podía permitirme la máquina al principio, decidí invertir en mi salud y en el futuro de mis hijos. Después de unos meses de constancia empecé a notar cambios reales: menos dolor, más energía, piel más clara y una mejora general en cómo me sentía. Incluso pude dejar mis medicamentos para los nervios. Hoy, después de dos años con mi máquina Aqua Kangen, puedo decir que ha sido una de las mejores inversiones que he hecho para mi salud, mis hijos y mi vida.",
   },
   {
     ...DEFAULT_TESTIMONIALS[1],
@@ -167,12 +167,12 @@ const SPANISH_TESTIMONIALS: Testimonial[] = [
   {
     ...DEFAULT_TESTIMONIALS[4],
     quote:
-      "Mi camino con el Agua Kangen comenzó buscando mejor salud y decisiones más inteligentes. Estaba cansado de pagar de más por agua que no me hacía sentir mejor. Después de ser constante, vi cambios reales: mejor estado de ánimo, más energía, menos fatiga y menos inflamación. Lo que empezó como una decisión de salud se convirtió en una oportunidad más grande, y confié en el proceso sabiendo que estaba entrando en algo alineado y con propósito.",
+      "Mi camino con Aqua Kangen comenzó buscando mejor salud y decisiones más inteligentes. Estaba cansado de pagar de más por agua que no me hacía sentir mejor. Después de ser constante, vi cambios reales: mejor estado de ánimo, más energía, menos fatiga y menos inflamación. Lo que empezó como una decisión de salud se convirtió en una oportunidad más grande, y confié en el proceso sabiendo que estaba entrando en algo alineado y con propósito.",
   },
   {
     ...DEFAULT_TESTIMONIALS[5],
     quote:
-      "Me llamo Sofía, y hace nueve años tomé una decisión que cambió mi vida. Comprar mi máquina de Agua Kangen se convirtió en parte de mi proceso de sanación. Después de años de inflamación, problemas digestivos y de piel, beber Agua Kangen a diario me ayudó a notar cambios reales: menos inflamación, mejor digestión y la sensación de que mi cuerpo por fin estaba siendo apoyado. Esta agua se volvió parte de mi estilo de vida y sigue apoyando mi sanación, consciencia y crecimiento.",
+      "Me llamo Sofía, y hace nueve años tomé una decisión que cambió mi vida. Comprar mi máquina de Aqua Kangen se convirtió en parte de mi proceso de sanación. Después de años de inflamación, problemas digestivos y de piel, beber Aqua Kangen a diario me ayudó a notar cambios reales: menos inflamación, mejor digestión y la sensación de que mi cuerpo por fin estaba siendo apoyado. Esta agua se volvió parte de mi estilo de vida y sigue apoyando mi sanación, consciencia y crecimiento.",
   },
   {
     ...DEFAULT_TESTIMONIALS[6],
@@ -187,7 +187,7 @@ const SPANISH_TESTIMONIALS: Testimonial[] = [
   {
     ...DEFAULT_TESTIMONIALS[8],
     quote:
-      "Estoy muy agradecida de haber descubierto el Agua Kangen. Al principio no le presté mucha atención porque no entendía bien qué era, pero dos meses después asistí a una demostración y todo hizo clic, así que decidí comprar la máquina en ese mismo momento. Después de unos meses bebiendo Agua Kangen de forma constante, empecé a notar cambios reales: mente más clara, más energía y una sensación general de bienestar. Ahí entendí que no solo había comprado una máquina, sino una nueva forma de cuidar mi salud desde adentro hacia afuera.",
+      "Estoy muy agradecida de haber descubierto Aqua Kangen. Al principio no le presté mucha atención porque no entendía bien qué era, pero dos meses después asistí a una demostración y todo hizo clic, así que decidí comprar la máquina en ese mismo momento. Después de unos meses bebiendo Aqua Kangen de forma constante, empecé a notar cambios reales: mente más clara, más energía y una sensación general de bienestar. Ahí entendí que no solo había comprado una máquina, sino una nueva forma de cuidar mi salud desde adentro hacia afuera.",
   },
 ];
 

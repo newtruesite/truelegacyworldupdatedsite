@@ -135,7 +135,7 @@ export default function HomePage() {
         }
         description={
           locale === "es"
-            ? "Únete a una comunidad de emprendedores que ganan dinero compartiendo productos que cambian vidas como el Agua Kangen y emGuarde."
+            ? "Únete a una comunidad de emprendedores que ganan dinero compartiendo productos que cambian vidas como Aqua Kangen y emGuarde."
             : locale === "fr"
               ? "Rejoignez une communauté d'entrepreneurs qui gagnent de l'argent en partageant des produits qui changent la vie comme Kangen Water et emGuarde."
               : "Join a community of entrepreneurs who make money by sharing world-changing products like the Kangen water machine and emGuarde."
@@ -198,7 +198,7 @@ export default function HomePage() {
               </motion.p>
               <p className="mt-4 hero-subtitle opacity-75 max-w-xl">
                 {locale === "es"
-                  ? "Únete a una comunidad de emprendedores que ganan compartiendo productos que cambian el mundo — como la máquina de Agua Kangen y emGuarde. Elige tu región en el mapa y comienza tu camino."
+                  ? "Únete a una comunidad de emprendedores que ganan compartiendo productos que cambian el mundo — como la máquina de Aqua Kangen y emGuarde. Elige tu región en el mapa y comienza tu camino."
                   : locale === "fr"
                     ? "Rejoignez une communauté d’entrepreneurs qui gagnent en partageant des produits qui changent le monde — comme la machine d’eau Kangen et emGuarde. Choisissez votre région sur la carte et commencez votre parcours."
                     : "Join a community of entrepreneurs who make money by sharing world‑changing products — like the Kangen water machine and emGuarde. Pick your region on the map and start your journey."}

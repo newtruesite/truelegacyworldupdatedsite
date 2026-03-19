@@ -56,14 +56,14 @@ export default function K8Page() {
       <SEO
         title={
           locale === "es"
-            ? `Leveluk K8 Máquina de Agua Kangen${countrySlug ? ` en ${country.name}` : ""} | True Legacy`
+            ? `Leveluk K8 Máquina de Aqua Kangen${countrySlug ? ` en ${country.name}` : ""} | True Legacy`
             : locale === "fr"
               ? `Leveluk K8 Machine à Eau Kangen${countrySlug ? ` en ${country.name}` : ""} | True Legacy`
               : `Leveluk K8 Kangen Water Machine${countrySlug ? ` in ${country.name}` : ""} | True Legacy`
         }
         description={
           locale === "es"
-            ? `El Leveluk K8 es la máquina de agua ionizada más potente de Enagic con 8 placas de titanio bañadas en platino. ${countrySlug ? `Disponible en ${country.name}. ` : ""}Descubre el poder del Agua Kangen hoy.`
+            ? `El Leveluk K8 es la máquina de agua ionizada más potente de Enagic con 8 placas de titanio bañadas en platino. ${countrySlug ? `Disponible en ${country.name}. ` : ""}Descubre el poder de Aqua Kangen hoy.`
             : locale === "fr"
               ? `Le Leveluk K8 est la machine à eau ionisée la plus puissante d'Enagic avec 8 plaques en titane plaqué platine. ${countrySlug ? `Disponible en ${country.name}. ` : ""}Découvrez la puissance de l'eau Kangen aujourd'hui.`
               : `The Leveluk K8 is Enagic's most powerful ionized water machine featuring 8 platinum-dipped titanium plates. ${countrySlug ? `Available in ${country.name}. ` : ""}Experience premium antioxidant water today.`

@@ -438,7 +438,7 @@ const PDF_SECTION_CONTENT: Record<"en" | "es" | "fr" | "pt", PdfSectionConfig> =
       pdfs: [
         {
           icon: "water",
-          title: "Guía Completa de Máquinas Kangen Water",
+          title: "Guía Completa de Máquinas Aqua Kangen",
           desc: "Todo lo que necesitas saber sobre las 6 máquinas Kangen — especificaciones, beneficios, precios y cuál es la ideal para cada cliente.",
           url: "https://www.enagic.com/pdf/1096/Kangen_Water_Ionizers_Product_Guide.pdf",
           name: "Guía de Ionizadores Kangen",
@@ -469,7 +469,7 @@ const PDF_SECTION_CONTENT: Record<"en" | "es" | "fr" | "pt", PdfSectionConfig> =
         {
           icon: "meat",
           title: "Guía de Kangen Wagyu Beef",
-          desc: "Carne Wagyu premium libre de hormonas, criada con agua Kangen. Perfecta para clientes que aman el lujo y la salud.",
+          desc: "Carne Wagyu premium libre de hormonas, criada con Aqua Kangen. Perfecta para clientes que aman el lujo y la salud.",
           url: "https://www.enagic.com/pdf/1098/Kangen_Wagyu_Product_Guide.pdf",
           name: "Guía Kangen Wagyu",
         },
@@ -840,7 +840,7 @@ const PILLARS = {
     {
       icon: "water" as PillarIconKey,
       title: "Salud",
-      subtitle: "El Agua Kangen Transforma Tu Cuerpo",
+      subtitle: "Aqua Kangen Transforma Tu Cuerpo",
       description:
         "El agua alcalina ionizada a pH 8.5–9.5 ayuda a neutralizar la acidez, potenciar la hidratación a nivel celular y apoyar tu sistema inmune. Usada por atletas, médicos y familias en 29+ países. No es un filtro — es un ionizador de grado médico fabricado en Japón.",
       color: "#00a896",
@@ -939,7 +939,7 @@ function getContent(country: Country, locale: "en" | "es" | "fr" | "pt") {
           ? `Saúde Verdadeira. Riqueza Real. ${country.nativeName}.`
           : `True Health. Real Wealth. ${country.name}.`,
     sub: es
-      ? "True Legacy es un equipo global de coaches que comparten Agua Kangen y emGuarde — dos de las tecnologías de bienestar más comentadas. No solo vendemos productos; construimos líderes."
+      ? "True Legacy es un equipo global de coaches que comparten Aqua Kangen y emGuarde — dos de las tecnologías de bienestar más comentadas. No solo vendemos productos; construimos líderes."
       : fr
         ? "True Legacy est une équipe mondiale de coachs qui partagent l’eau Kangen et emGuarde — deux des technologies bien‑être les plus reconnues. Nous ne faisons pas que vendre des produits. Nous formons des leaders."
         : pt
@@ -975,7 +975,7 @@ function getContent(country: Country, locale: "en" | "es" | "fr" | "pt") {
           : "Thousands of leaders worldwide are already building their legacy. Your opportunity starts here.",
     points: es
       ? [
-          "Agua Kangen de grado médico para tu salud",
+          "Aqua Kangen de grado médico para tu salud",
           "Protección EMF con emGuarde 24/7",
           "Plan de compensación de 8 niveles",
           "Comunidad global de líderes y mentores",
@@ -1113,7 +1113,7 @@ function getContent(country: Country, locale: "en" | "es" | "fr" | "pt") {
           ? "Renda real. Produtos reais."
           : "Real Income. Real Products.",
     getPaidCard1Desc: es
-      ? "Ganas compartiendo máquinas de Agua Kangen y dispositivos emGuarde — productos que la gente recompra, recomienda y recomienda. Sin ventas frías. Solo bienestar genuino que se vende solo."
+      ? "Ganas compartiendo máquinas de Aqua Kangen y dispositivos emGuarde — productos que la gente recompra, recomienda y recomienda. Sin ventas frías. Solo bienestar genuino que se vende solo."
       : fr
         ? "Vous gagnez en partageant les machines Kangen et les appareils emGuarde — des produits que les gens recommandent et rachètent. Pas de ventes forcées. Juste du bien‑être authentique."
         : pt
