@@ -557,12 +557,12 @@ export default function TrainingPage() {
     try {
       if (authMode === "signup") {
         await signUp(email, password);
-        // Email confirmation is disabled in Supabase — user is logged in immediately
-        // via onAuthStateChange; just show a success message.
+        // Email confirmation is disabled — session is returned immediately;
+        // user state will update and this form will unmount automatically.
         setAuthSuccess(
           isSpanish
-            ? "¡Cuenta creada exitosamente!"
-            : "Account successfully created!",
+            ? "¡Cuenta creada e iniciada sesión exitosamente!"
+            : "Account created and logged in successfully!",
         );
       } else {
         await signIn(email, password);
@@ -732,26 +732,11 @@ export default function TrainingPage() {
                       {authSuccess}
                     </div>
                   )}
-                  {authMode === "signup" && authSuccess && (
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setAuthMode("login");
-                        setAuthSuccess("");
-                      }}
-                      className="w-full min-h-[52px] flex items-center justify-center px-6 py-3 text-base font-semibold text-white/70 border border-white/10 hover:border-white/20 hover:text-white rounded-xl transition-all"
-                    >
-                      {locale === "es"
-                        ? "Ir a Iniciar sesión"
-                        : "Go to Sign in"}
-                    </button>
-                  )}
-                  {!(authMode === "signup" && authSuccess) && (
-                    <button
-                      type="submit"
-                      disabled={isLoggingIn || !isAuthEnabled}
-                      className="w-full min-h-[52px] flex items-center justify-center gap-2 px-6 py-3 text-base font-semibold text-white bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 hover:shadow-lg hover:shadow-cyan-500/20 hover:-translate-y-0.5 rounded-xl transition-all disabled:opacity-50"
-                    >
+                  <button
+                    type="submit"
+                    disabled={isLoggingIn || !isAuthEnabled}
+                    className="w-full min-h-[52px] flex items-center justify-center gap-2 px-6 py-3 text-base font-semibold text-white bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 hover:shadow-lg hover:shadow-cyan-500/20 hover:-translate-y-0.5 rounded-xl transition-all disabled:opacity-50"
+                  >
                       {isLoggingIn
                         ? locale === "es"
                           ? "Procesando..."
@@ -763,8 +748,7 @@ export default function TrainingPage() {
                           : locale === "es"
                             ? "Iniciar sesión"
                             : "Sign in"}
-                    </button>
-                  )}
+                  </button>
                 </form>
               </div>
             ) : !isSecretCodeValid ? (

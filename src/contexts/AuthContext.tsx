@@ -82,8 +82,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const signUp = async (email: string, password: string) => {
     if (!isSupabaseConfigured) throw new Error(AUTH_DISABLED_ERROR_CODE)
-    const { error } = await supabase.auth.signUp({ email, password })
+    const { data, error } = await supabase.auth.signUp({ email, password })
     if (error) throw error
+    // Email confirmation is disabled — session is returned immediately.
+    // Explicitly set user so the UI updates even if onAuthStateChange fires late.
+    if (data.session) {
+      setUser(data.session.user)
+    }
   }
 
   const signOut = async () => {

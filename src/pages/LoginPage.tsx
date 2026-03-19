@@ -70,10 +70,10 @@ export default function LoginPage() {
         await signUp(email, password);
         setAuthSuccess(
           isEs
-            ? "¡Cuenta creada exitosamente!"
+            ? "¡Cuenta creada e iniciada sesión exitosamente!"
             : isFr
-              ? "Compte créé avec succès !"
-              : "Account created successfully!",
+              ? "Compte créé et connecté avec succès !"
+              : "Account created and logged in successfully!",
         );
       } else {
         await signIn(email, password);
