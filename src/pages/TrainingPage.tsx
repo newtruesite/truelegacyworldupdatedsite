@@ -548,14 +548,13 @@ export default function TrainingPage() {
     try {
       if (authMode === "signup") {
         await signUp(email, password);
+        // Email confirmation is disabled in Supabase — user is logged in immediately
+        // via onAuthStateChange; just show a success message.
         setAuthSuccess(
           isSpanish
-            ? "¡Cuenta creada! Revisa tu correo para confirmar."
-            : "Account created! Please check your email to confirm.",
+            ? "¡Cuenta creada exitosamente!"
+            : "Account successfully created!",
         );
-        setAuthMode("login");
-        setPassword("");
-        setConfirmPassword("");
       } else {
         await signIn(email, password);
       }

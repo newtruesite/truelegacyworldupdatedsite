@@ -134,7 +134,7 @@ function DistributorCard({
       transition={{ delay: 0.1 + index * 0.1 }}
       className="rounded-2xl border border-white/10 bg-[rgba(5,16,48,0.8)] p-4 sm:p-6 md:p-8 flex flex-col sm:flex-row gap-5 sm:gap-6 items-start"
     >
-      <div className="shrink-0 w-full sm:w-48 h-48 sm:h-80 rounded-2xl border-4 border-white/20 overflow-hidden bg-cyan-500/10 flex items-center justify-center">
+      <div className="shrink-0 w-full sm:w-56 h-[280px] sm:h-[350px] md:h-[420px] rounded-2xl border-4 border-white/20 overflow-hidden bg-cyan-500/10 flex items-center justify-center">
         {!imgError ? (
           <img
             src={dist.photo}

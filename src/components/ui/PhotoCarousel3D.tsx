@@ -142,8 +142,8 @@ export function PhotoCarousel3D() {
         <div className="w-full px-4 md:px-8 pb-12 overflow-visible" style={{ touchAction: 'pan-y' }}>
             {/* 3D Stage */}
             <div
-                className="relative mx-auto overflow-hidden"
-                style={{ perspective: '1200px', height: 380 }}
+                className="relative mx-auto overflow-hidden h-[380px] sm:h-[440px]"
+                style={{ perspective: '1200px' }}
             >
                 {LEADERS.map((leader, idx) => {
                     const style = getCardStyle(idx)
@@ -168,7 +168,7 @@ export function PhotoCarousel3D() {
                             style={{ zIndex: style.zIndex, transformStyle: 'preserve-3d' }}
                         >
                             <div
-                                className={`relative h-[340px] rounded-3xl overflow-hidden bg-gradient-to-br ${leader.gradient} border border-white/15 shadow-2xl`}
+                                className={`relative h-[360px] sm:h-[420px] rounded-3xl overflow-hidden bg-gradient-to-br ${leader.gradient} border border-white/15 shadow-2xl`}
                                 style={{ boxShadow: `0 25px 60px ${leader.glow}` }}
                             >
                                 {/* Leader Photo (if available) or Icon background */}

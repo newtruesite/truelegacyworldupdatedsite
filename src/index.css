@@ -1957,6 +1957,8 @@ body {
   position: relative;
   margin: 0;
   padding-bottom: 74px;
+  /* Reserve scrollbar space to prevent layout shift on carousel transitions */
+  scrollbar-gutter: stable;
 }
 body.menu-open {
   overflow: hidden !important;
