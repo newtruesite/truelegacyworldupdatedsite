@@ -45,7 +45,8 @@ const CONTINENTS = [
     nameFr: "Moyen-Orient",
     namePt: "Oriente Médio",
     lat: 24.0,
-    lng: 51.0,
+    lng: 53.0,
+    mobileLng: 63.0,
   },
   {
     id: "africa",
@@ -89,6 +90,15 @@ export function WorldMap() {
   const { locale, setLocale } = useLocaleContext();
   const [mapReady, setMapReady] = useState(false);
   const [hoveredContinent, setHoveredContinent] = useState<string | null>(null);
+  const [isMobile, setIsMobile] = useState(
+    () => typeof window !== "undefined" && window.innerWidth < 768
+  );
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   useEffect(() => {
     if (
@@ -234,7 +244,11 @@ export function WorldMap() {
             }}
           >
             {CONTINENTS.map((c) => {
-              const { x, y } = latLngToPercent(c.lat, c.lng);
+              const effectiveLng =
+                isMobile && "mobileLng" in c && typeof c.mobileLng === "number"
+                  ? c.mobileLng
+                  : c.lng;
+              const { x, y } = latLngToPercent(c.lat, effectiveLng);
               const left = `${(x * 100).toFixed(2)}%`;
               const top = `${(y * 100).toFixed(2)}%`;
 
