@@ -1,5 +1,6 @@
 import { LanguageReset } from "@/components/LanguageReset";
 import { AuthProvider } from "@/contexts/AuthContext";
+import { EventsLeadCaptureProvider } from "@/contexts/EventsLeadCaptureContext";
 import { LocaleProvider } from "@/contexts/LocaleContext";
 import { PdfLeadCaptureProvider } from "@/contexts/PdfLeadCaptureContext";
 import { trackPageView } from "@/lib/analytics";
@@ -20,11 +21,11 @@ import TrainingPage from "@/pages/TrainingPage";
 import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useLayoutEffect } from "react";
 import {
-  BrowserRouter,
-  Navigate,
-  Route,
-  Routes,
-  useLocation,
+    BrowserRouter,
+    Navigate,
+    Route,
+    Routes,
+    useLocation,
 } from "react-router-dom";
 
 function PageTransitionWrapper({ children }: { children: React.ReactNode }) {
@@ -285,7 +286,9 @@ export default function App() {
         <LanguageReset />
         <LocaleProvider>
           <PdfLeadCaptureProvider>
-            <AnimatedRoutes />
+            <EventsLeadCaptureProvider>
+              <AnimatedRoutes />
+            </EventsLeadCaptureProvider>
           </PdfLeadCaptureProvider>
         </LocaleProvider>
       </AuthProvider>

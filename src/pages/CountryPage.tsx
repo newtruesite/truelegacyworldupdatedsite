@@ -34,8 +34,8 @@ function IconArrow({ size = 20 }: { size?: number }) {
 }
 function IconYoutube({ size = 16 }: { size?: number }) {
   return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor">
-      <path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46a2.78 2.78 0 0 0-1.95 1.96A29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58A2.78 2.78 0 0 0 3.41 19.6C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 0 0 1.95-1.95A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z" />
+    <svg width={size} height={size} viewBox="0 0 24 24">
+      <path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46a2.78 2.78 0 0 0-1.95 1.96A29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58A2.78 2.78 0 0 0 3.41 19.6C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 0 0 1.95-1.95A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z" fill="#FF0000" />
       <polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02" fill="white" />
     </svg>
   );
@@ -1486,100 +1486,6 @@ export default function CountryPage() {
           </TLBackground>
         </div>
 
-        {/* ===== TURKEY: Discover True Legacy Story Video ===== */}
-        {country.slug === "turkey" && (
-          <section
-            className="relative py-16 border-t border-white/5"
-            style={{ background: "#060b1e" }}
-          >
-            <div className="max-w-4xl mx-auto px-4 sm:px-6">
-              <motion.div
-                initial={{ opacity: 0, y: 24 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                className="text-center mb-8"
-              >
-                <p className="text-xs font-semibold uppercase tracking-[0.3em] text-tl-gold mb-3">
-                  {locale === "es"
-                    ? "Mira nuestra historia"
-                    : locale === "fr"
-                      ? "Regardez notre histoire"
-                      : "Watch Our Story"}
-                </p>
-                <h2 className="text-2xl md:text-4xl font-bold text-white mb-3">
-                  {locale === "es"
-                    ? "Descubre True Legacy"
-                    : locale === "fr"
-                      ? "Découvrez True Legacy"
-                      : "Discover True Legacy"}
-                </h2>
-                <p className="text-slate-400 max-w-xl mx-auto text-sm md:text-base leading-relaxed">
-                  {locale === "es"
-                    ? "Aprende qué es True Legacy, por qué nuestros distribuidores prosperan y cómo puedes unirte al movimiento."
-                    : locale === "fr"
-                      ? "Découvrez ce qu'est True Legacy, pourquoi nos distributeurs prospèrent et comment vous pouvez rejoindre le mouvement."
-                      : "Learn what True Legacy is, why our distributors thrive, and how you can join the movement."}
-                </p>
-              </motion.div>
-              <motion.div
-                initial={{ opacity: 0, y: 16 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: 0.1 }}
-              >
-                <VSLPlayer
-                  youtubeId={country.youtubeId}
-                  title="Turkey | True Legacy Story"
-                />
-              </motion.div>
-            </div>
-          </section>
-        )}
-
-        {/* ===== EU: True Legacy Europe Story Video ===== */}
-        {country.slug === "eu" && (
-          <section
-            className="relative py-16 border-t border-white/5"
-            style={{ background: "#060b1e" }}
-          >
-            <div className="max-w-4xl mx-auto px-4 sm:px-6">
-              <motion.div
-                initial={{ opacity: 0, y: 24 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                className="text-center mb-8"
-              >
-                <p className="text-xs font-semibold uppercase tracking-[0.3em] text-tl-gold mb-3">
-                  {locale === "fr"
-                    ? "Regardez notre histoire"
-                    : "Watch Our Story"}
-                </p>
-                <h2 className="text-2xl md:text-4xl font-bold text-white mb-3">
-                  {locale === "fr"
-                    ? "True Legacy en Europe"
-                    : "True Legacy in Europe"}
-                </h2>
-                <p className="text-slate-400 max-w-xl mx-auto text-sm md:text-base leading-relaxed">
-                  {locale === "fr"
-                    ? "Découvrez comment True Legacy transforme des vies à travers l'Europe avec Kangen Water et emGuarde."
-                    : "See how True Legacy is transforming lives across Europe with Kangen Water and emGuarde."}
-                </p>
-              </motion.div>
-              <motion.div
-                initial={{ opacity: 0, y: 16 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: 0.1 }}
-              >
-                <VSLPlayer
-                  youtubeId="e-qng7hTmM0"
-                  title="European Union | True Legacy Story"
-                />
-              </motion.div>
-            </div>
-          </section>
-        )}
-
         {/* Trust strip — 51+ Years | 29+ Countries | 3M+ Lives | #1 Water Ionizer */}
         <section
           className="trust-strip flex flex-wrap justify-center items-center gap-8 md:gap-10 py-5 px-6 border-t border-[rgba(0,168,150,0.1)] border-b border-[rgba(0,168,150,0.1)] my-8"
@@ -1724,12 +1630,12 @@ export default function CountryPage() {
               </h2>
             </motion.div>
             <TestimonialsSplit locale={locale} />
-            <div className="ig-follow-strip flex justify-center gap-4 mt-8 flex-wrap">
+            <div className="ig-follow-strip flex justify-center gap-2 sm:gap-3 md:gap-4 mt-8 flex-wrap">
               <a
                 href="https://www.instagram.com/truelegacyworld/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="ig-follow-btn inline-flex items-center gap-2.5 text-white py-3 px-6 rounded-full font-bold text-sm no-underline transition-all hover:-translate-y-0.5"
+                className="ig-follow-btn inline-flex items-center gap-2.5 text-white py-2 px-4 sm:py-2.5 sm:px-5 md:py-3 md:px-6 rounded-full font-bold text-xs sm:text-sm no-underline transition-all hover:-translate-y-0.5"
                 style={{
                   background:
                     "linear-gradient(135deg, #833ab4, #fd1d1d, #fcb045)",
@@ -1746,7 +1652,7 @@ export default function CountryPage() {
                   href="https://www.instagram.com/truelegacylatam/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="ig-follow-btn ig-latam inline-flex items-center gap-2.5 text-white py-3 px-6 rounded-full font-bold text-sm no-underline transition-all hover:-translate-y-0.5"
+                  className="ig-follow-btn ig-latam inline-flex items-center gap-2.5 text-white py-2 px-4 sm:py-2.5 sm:px-5 md:py-3 md:px-6 rounded-full font-bold text-xs sm:text-sm no-underline transition-all hover:-translate-y-0.5"
                   style={{
                     background:
                       "linear-gradient(135deg, #833ab4, #fd1d1d, #fcb045)",
@@ -1765,7 +1671,7 @@ export default function CountryPage() {
                   href="https://www.youtube.com/@TrueLegacyLATAM"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2.5 text-white py-3 px-6 rounded-full font-bold text-sm no-underline transition-all hover:-translate-y-0.5"
+                  className="inline-flex items-center gap-2.5 text-white py-2 px-4 sm:py-2.5 sm:px-5 md:py-3 md:px-6 rounded-full font-bold text-xs sm:text-sm no-underline transition-all hover:-translate-y-0.5"
                   style={{
                     background: "linear-gradient(135deg, #c4302b, #ff0000)",
                     boxShadow: "0 4px 20px rgba(196,48,43,0.3)",
@@ -1780,7 +1686,7 @@ export default function CountryPage() {
                   href="https://www.youtube.com/@TrueLegacyWorld"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2.5 text-white py-3 px-6 rounded-full font-bold text-sm no-underline transition-all hover:-translate-y-0.5"
+                  className="inline-flex items-center gap-2.5 text-white py-2 px-4 sm:py-2.5 sm:px-5 md:py-3 md:px-6 rounded-full font-bold text-xs sm:text-sm no-underline transition-all hover:-translate-y-0.5"
                   style={{
                     background: "linear-gradient(135deg, #c4302b, #ff0000)",
                     boxShadow: "0 4px 20px rgba(196,48,43,0.3)",

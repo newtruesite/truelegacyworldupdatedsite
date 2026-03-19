@@ -1,3 +1,4 @@
+import { EventsTab } from "@/components/EventsTab";
 import { Footer } from "@/components/layout/Footer";
 import { Navbar } from "@/components/layout/Navbar";
 import { SEO } from "@/components/SEO";
@@ -8,15 +9,15 @@ import { goTrue } from "@/lib/netlifyAuth";
 import { t } from "@/lib/translations";
 import { motion } from "framer-motion";
 import {
-  CheckCircle,
-  Download,
-  ExternalLink,
-  FileText,
-  Key,
-  Lightbulb,
-  LogOut,
-  Target,
-  Users,
+    CheckCircle,
+    Download,
+    ExternalLink,
+    FileText,
+    Key,
+    Lightbulb,
+    LogOut,
+    Target,
+    Users,
 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
@@ -592,7 +593,7 @@ export default function TrainingPage() {
   };
 
   const [activeView, setActiveView] = useState<
-    "sessions" | "guides" | "slides"
+    "sessions" | "guides" | "slides" | "events"
   >("sessions");
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [expandedModules, setExpandedModules] = useState<Set<string>>(
@@ -923,6 +924,16 @@ export default function TrainingPage() {
                           Presentación True Legacy
                         </button>
                       )}
+                      <button
+                        onClick={() => setActiveView("events")}
+                        className={`px-6 py-3 rounded-lg text-sm font-medium transition-all ${
+                          activeView === "events"
+                            ? "bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 shadow-lg"
+                            : "text-slate-400 hover:text-white hover:bg-white/5"
+                        }`}
+                      >
+                        {copy.training?.events_tab || "Upcoming Events"}
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -1425,6 +1436,11 @@ export default function TrainingPage() {
                       </motion.div>
                     </div>
                   </div>
+                )}
+
+                {/* Upcoming Events View */}
+                {activeView === "events" && (
+                  <EventsTab locale={locale} countrySlug={countrySlug} />
                 )}
               </div>
             )}

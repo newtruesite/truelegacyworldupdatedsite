@@ -26,6 +26,9 @@ type Props = {
   region: string;
   eventTitle: string;
   isSpanish: boolean;
+  initialEmail?: string;
+  initialFirstName?: string;
+  initialLastName?: string;
 };
 
 export function EventsLeadCaptureModal({
@@ -35,6 +38,9 @@ export function EventsLeadCaptureModal({
   region,
   eventTitle,
   isSpanish,
+  initialEmail,
+  initialFirstName,
+  initialLastName,
 }: Props) {
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
@@ -48,7 +54,15 @@ export function EventsLeadCaptureModal({
   });
 
   useEffect(() => {
-    if (!isOpen) {
+    if (isOpen) {
+      setForm({
+        firstName: initialFirstName ?? "",
+        lastName: initialLastName ?? "",
+        email: initialEmail ?? "",
+        phone: "",
+        botField: "",
+      });
+    } else {
       setForm({
         firstName: "",
         lastName: "",
@@ -58,7 +72,7 @@ export function EventsLeadCaptureModal({
       });
       setSubmitted(false);
     }
-  }, [isOpen]);
+  }, [isOpen, initialEmail, initialFirstName, initialLastName]);
 
   const t = {
     heading: isSpanish ? "Regístrate para el Evento" : "Sign Up for the Event",
