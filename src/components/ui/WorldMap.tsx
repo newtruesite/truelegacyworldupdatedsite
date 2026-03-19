@@ -17,8 +17,8 @@ const CONTINENTS = [
     nameEs: "Norteamérica",
     nameFr: "Amérique du Nord",
     namePt: "N. América",
-    lat: 46.5,
-    lng: -106.0,
+    lat: 45.5,
+    lng: -125.0,
   },
   {
     id: "south-america",
@@ -26,8 +26,8 @@ const CONTINENTS = [
     nameEs: "Sudamérica / LATAM",
     nameFr: "Amérique latine",
     namePt: "América do Sul / LATAM",
-    lat: -12.0,
-    lng: -68.0,
+    lat: -10.0,
+    lng: -80.0,
   },
   {
     id: "europe",
@@ -35,8 +35,8 @@ const CONTINENTS = [
     nameEs: "Europa",
     nameFr: "Europe",
     namePt: "Europa",
-    lat: 54.5,
-    lng: 25.0,
+    lat: 57.5,
+    lng: 2.0,
   },
   {
     id: "middle-east",
@@ -44,8 +44,8 @@ const CONTINENTS = [
     nameEs: "Medio Oriente",
     nameFr: "Moyen-Orient",
     namePt: "Oriente Médio",
-    lat: 24.0,
-    lng: 48.0,
+    lat: 20.0,
+    lng: 54.0,
   },
   {
     id: "africa",
@@ -53,8 +53,8 @@ const CONTINENTS = [
     nameEs: "África",
     nameFr: "Afrique",
     namePt: "África",
-    lat: 6.5,
-    lng: 12.0,
+    lat: 12.5,
+    lng: -8.0,
   },
   {
     id: "asia",
@@ -62,7 +62,7 @@ const CONTINENTS = [
     nameEs: "Asia",
     nameFr: "Asie",
     namePt: "Ásia",
-    lat: 48.0,
+    lat: 60.0,
     lng: 88.0,
   },
 ];
@@ -202,7 +202,7 @@ export function WorldMap() {
           ref={mapContainerRef}
           id="world-map"
           className="w-full rounded-2xl overflow-hidden"
-          style={{ width: "100%", height: "460px", touchAction: "pan-y" }}
+          style={{ width: "100%", height: "300px", touchAction: "pan-y" }}
         />
         <div
           className="map-logo-overlay"
