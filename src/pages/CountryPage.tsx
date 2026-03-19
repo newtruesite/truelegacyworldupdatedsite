@@ -1825,7 +1825,7 @@ export default function CountryPage() {
                     locale,
                   })
                 }
-                className="shrink-0 rounded-2xl bg-yellow-500 hover:bg-yellow-400 text-black font-bold px-8 py-4 transition-all hover:scale-105 whitespace-nowrap"
+                className="shrink-0 rounded-2xl bg-yellow-500 hover:bg-yellow-400 text-black font-bold px-6 py-3 sm:px-8 sm:py-4 transition-all hover:scale-105 w-full sm:w-auto text-center"
               >
                 {copy.startJourney}
               </a>

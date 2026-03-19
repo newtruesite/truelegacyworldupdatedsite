@@ -9,14 +9,14 @@ import { getDistributorLink } from "@/lib/distributorRouter";
 import { t } from "@/lib/translations";
 import { motion } from "framer-motion";
 import {
-  CheckCircle,
-  Cpu,
-  Download,
-  Droplets,
-  ExternalLink,
-  Globe,
-  Layers,
-  Play,
+    CheckCircle,
+    Cpu,
+    Download,
+    Droplets,
+    ExternalLink,
+    Globe,
+    Layers,
+    Play,
 } from "lucide-react";
 import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
@@ -268,12 +268,12 @@ export default function K8Page() {
           </motion.div>
 
           {/* CTA button above back link */}
-          <div className="text-center mb-8">
+          <div className="flex justify-center mb-8 px-4">
             <a
               href={jotformUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 bg-yellow-500 hover:bg-yellow-400 text-black font-bold px-8 py-4 rounded-2xl transition-all hover:scale-105"
+              className="inline-flex items-center justify-center gap-2 bg-yellow-500 hover:bg-yellow-400 text-black font-bold px-6 py-3 sm:px-8 sm:py-4 rounded-2xl transition-all hover:scale-105 w-full sm:w-auto text-sm sm:text-base"
             >
               {copy.unlockLegacy}
               <svg
