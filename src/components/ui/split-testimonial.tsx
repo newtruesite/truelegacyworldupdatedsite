@@ -400,7 +400,7 @@ export function TestimonialsSplit({
         </div>
 
         {/* Right: Instagram (above photo) + Photo */}
-        <div className="relative w-full md:w-72 md:h-[400px] flex-shrink-0 flex flex-col items-center">
+        <div className="relative w-full md:w-72 md:h-[400px] shrink-0 flex flex-col items-center">
           <div className="flex flex-col items-center gap-2 mb-3">
             <a
               href={
@@ -421,7 +421,7 @@ export function TestimonialsSplit({
               className="testimonial-ig-link hover:opacity-90 transition-opacity"
             >
               <svg
-                className="w-4 h-4 flex-shrink-0"
+                className="w-4 h-4 shrink-0"
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"

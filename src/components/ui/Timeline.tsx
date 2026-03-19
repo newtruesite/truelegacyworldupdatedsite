@@ -109,7 +109,7 @@ export function Timeline() {
                                         <div className="flex flex-wrap items-center gap-x-1 gap-y-1">
                                             {step.detail.split('→').map((d, di) => (
                                                 <span key={di} className="flex items-center gap-1">
-                                                    <CheckCircle className="h-3.5 w-3.5 flex-shrink-0 text-cyan-400" />
+                                                    <CheckCircle className="h-3.5 w-3.5 shrink-0 text-cyan-400" />
                                                     <span className="text-xs text-slate-500">{d.trim()}</span>
                                                     {di < step.detail.split('→').length - 1 && (
                                                         <ArrowRight className="h-3 w-3 text-slate-600" />

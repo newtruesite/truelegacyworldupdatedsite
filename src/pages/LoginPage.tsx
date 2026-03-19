@@ -188,7 +188,7 @@ export default function LoginPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.45, delay: 0.1 }}
-              className="rounded-2xl border border-white/10 bg-white/[0.04] backdrop-blur-xl p-8 shadow-[0_24px_80px_rgba(0,0,0,0.6)]"
+              className="rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl p-8 shadow-[0_24px_80px_rgba(0,0,0,0.6)]"
             >
               {/* Toggle */}
               <div className="flex bg-black/30 p-1 rounded-xl mb-6 border border-white/10">
@@ -330,7 +330,7 @@ export default function LoginPage() {
                       exit={{ opacity: 0 }}
                       className="flex items-start gap-2.5 rounded-xl bg-red-500/10 border border-red-500/30 px-4 py-3"
                     >
-                      <AlertCircle className="w-4 h-4 text-red-400 flex-shrink-0 mt-0.5" />
+                      <AlertCircle className="w-4 h-4 text-red-400 shrink-0 mt-0.5" />
                       <p className="text-red-300 text-sm">{authError}</p>
                     </motion.div>
                   )}
@@ -342,7 +342,7 @@ export default function LoginPage() {
                       exit={{ opacity: 0 }}
                       className="flex items-start gap-2.5 rounded-xl bg-green-500/10 border border-green-500/30 px-4 py-3"
                     >
-                      <CheckCircle className="w-4 h-4 text-green-400 flex-shrink-0 mt-0.5" />
+                      <CheckCircle className="w-4 h-4 text-green-400 shrink-0 mt-0.5" />
                       <p className="text-green-300 text-sm">{authSuccess}</p>
                     </motion.div>
                   )}

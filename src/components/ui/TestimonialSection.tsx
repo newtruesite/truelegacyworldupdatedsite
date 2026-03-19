@@ -159,7 +159,7 @@ export function TestimonialSection() {
 
 function TestimonialCard({ testimonial: t }: { testimonial: (typeof TESTIMONIALS)[0] }) {
     return (
-        <div className="glass flex-shrink-0 w-80 rounded-2xl border border-white/10 p-6 hover:border-cyan-500/30 transition-all duration-300 group">
+        <div className="glass shrink-0 w-80 rounded-2xl border border-white/10 p-6 hover:border-cyan-500/30 transition-all duration-300 group">
             <Quote className="mb-3 h-5 w-5 text-cyan-400/60" />
             <p className="text-sm text-slate-300 leading-relaxed mb-6 line-clamp-4">
                 "{t.quote}"
@@ -167,7 +167,7 @@ function TestimonialCard({ testimonial: t }: { testimonial: (typeof TESTIMONIALS
             <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
                     <div
-                        className={`flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br ${t.gradient} text-white text-sm font-bold flex-shrink-0`}
+                        className={`flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br ${t.gradient} text-white text-sm font-bold shrink-0`}
                     >
                         {t.initials}
                     </div>

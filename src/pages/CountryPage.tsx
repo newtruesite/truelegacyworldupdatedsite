@@ -1406,7 +1406,7 @@ export default function CountryPage() {
                         key={point}
                         className="flex items-start gap-3 text-sm text-slate-300"
                       >
-                        <span className="flex-shrink-0 mt-0.5 w-5 h-5 rounded-full bg-[#1B3A8C]/30 flex items-center justify-center text-blue-400">
+                        <span className="shrink-0 mt-0.5 w-5 h-5 rounded-full bg-[#1B3A8C]/30 flex items-center justify-center text-blue-400">
                           <IconCheck size={11} />
                         </span>
                         <span>{point}</span>
@@ -1886,7 +1886,7 @@ export default function CountryPage() {
                     locale,
                   })
                 }
-                className="flex-shrink-0 rounded-2xl bg-yellow-500 hover:bg-yellow-400 text-black font-bold px-8 py-4 transition-all hover:scale-105 whitespace-nowrap"
+                className="shrink-0 rounded-2xl bg-yellow-500 hover:bg-yellow-400 text-black font-bold px-8 py-4 transition-all hover:scale-105 whitespace-nowrap"
               >
                 {copy.startJourney}
               </a>
@@ -2013,7 +2013,7 @@ export default function CountryPage() {
                   className="flex items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-sm text-slate-300 hover:border-blue-500/30 hover:bg-blue-500/10 hover:text-white transition-all"
                 >
                   <span
-                    className="inline-flex h-6 w-8 flex-shrink-0 overflow-hidden rounded border border-white/20 bg-[#0a2060]"
+                    className="inline-flex h-6 w-8 shrink-0 overflow-hidden rounded border border-white/20 bg-[#0a2060]"
                     role="img"
                     aria-label={`Flag of ${cx.name}`}
                   >

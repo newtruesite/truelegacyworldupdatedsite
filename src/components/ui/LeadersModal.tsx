@@ -115,9 +115,9 @@ export function LeadersModal({ isOpen, onClose, country, title = 'Connect With a
           {LEADERS.map((leader) => (
             <div key={leader.name} className="rounded-xl border border-white/10 bg-white/5 p-4 flex gap-4">
               {leader.photo ? (
-                <img src={leader.photo} alt="" className="w-14 h-14 rounded-full object-cover flex-shrink-0" />
+                <img src={leader.photo} alt="" className="w-14 h-14 rounded-full object-cover shrink-0" />
               ) : (
-                <div className="w-14 h-14 rounded-full bg-[#00a896]/20 flex items-center justify-center text-[#00a896] font-bold text-lg flex-shrink-0">
+                <div className="w-14 h-14 rounded-full bg-[#00a896]/20 flex items-center justify-center text-[#00a896] font-bold text-lg shrink-0">
                   {leader.name.slice(0, 1)}
                 </div>
               )}

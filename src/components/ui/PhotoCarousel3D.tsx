@@ -248,19 +248,19 @@ export function PhotoCarousel3D() {
                 <button
                     onClick={prev}
                     aria-label="Previous leader"
-                    className="flex h-10 w-10 sm:h-11 sm:w-11 flex-shrink-0 items-center justify-center rounded-full border border-white/10 bg-white/5 text-slate-300 transition-all hover:bg-white/10 hover:text-white"
+                    className="flex h-10 w-10 sm:h-11 sm:w-11 shrink-0 items-center justify-center rounded-full border border-white/10 bg-white/5 text-slate-300 transition-all hover:bg-white/10 hover:text-white"
                 >
                     <ChevronLeft className="h-5 w-5" />
                 </button>
 
                 {/* Dots — same size so layout doesn't shift */}
-                <div className="flex flex-shrink-0 flex-wrap justify-center gap-1.5 sm:gap-2">
+                <div className="flex shrink-0 flex-wrap justify-center gap-1.5 sm:gap-2">
                     {LEADERS.map((_, idx) => (
                         <button
                             key={idx}
                             onClick={() => setActive(idx)}
                             aria-label={`Go to leader ${idx + 1}`}
-                            className={`transition-all duration-300 rounded-full flex-shrink-0 ${idx === active
+                            className={`transition-all duration-300 rounded-full shrink-0 ${idx === active
                                 ? 'w-5 h-2.5 sm:w-6 bg-orange-500'
                                 : 'w-2.5 h-2.5 bg-white/20 hover:bg-white/40'
                                 }`}
@@ -271,7 +271,7 @@ export function PhotoCarousel3D() {
                 <button
                     onClick={next}
                     aria-label="Next leader"
-                    className="flex h-10 w-10 sm:h-11 sm:w-11 flex-shrink-0 items-center justify-center rounded-full border border-white/10 bg-white/5 text-slate-300 transition-all hover:bg-white/10 hover:text-white"
+                    className="flex h-10 w-10 sm:h-11 sm:w-11 shrink-0 items-center justify-center rounded-full border border-white/10 bg-white/5 text-slate-300 transition-all hover:bg-white/10 hover:text-white"
                 >
                     <ChevronRight className="h-5 w-5" />
                 </button>

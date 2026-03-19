@@ -155,7 +155,7 @@ export function EventsLeadCaptureModal({
 
   return (
     <AnimatePresence>
-      <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+      <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -167,7 +167,7 @@ export function EventsLeadCaptureModal({
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 0.9 }}
-          className="relative z-[101] w-full max-w-md bg-[#0a1428] rounded-2xl p-6 border border-white/10 shadow-2xl"
+          className="relative z-50 w-full max-w-md bg-[#0a1428] rounded-2xl p-6 border border-white/10 shadow-2xl"
         >
           <button
             onClick={onClose}

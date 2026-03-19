@@ -143,7 +143,7 @@ export default function RegionPage() {
                           {country.nativeName}
                         </span>
                       </div>
-                      <div className="h-9 w-9 rounded-full bg-white/5 flex items-center justify-center border border-white/10 group-hover:bg-cyan-500 group-hover:border-cyan-400 transition-all flex-shrink-0">
+                      <div className="h-9 w-9 rounded-full bg-white/5 flex items-center justify-center border border-white/10 group-hover:bg-cyan-500 group-hover:border-cyan-400 transition-all shrink-0">
                         <svg
                           className="w-4 h-4 text-slate-400 group-hover:text-white transition-colors"
                           fill="none"

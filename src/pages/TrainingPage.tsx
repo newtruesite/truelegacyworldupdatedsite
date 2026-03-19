@@ -280,7 +280,7 @@ type TrainingModuleCardProps = {
   module: TrainingModule;
   isExpanded?: boolean;
   onToggle?: () => void;
-  copy: any;
+  copy: (typeof t)[keyof typeof t];
 };
 
 const TrainingModuleCard: React.FC<TrainingModuleCardProps> = ({
@@ -352,7 +352,7 @@ const TrainingModuleCard: React.FC<TrainingModuleCardProps> = ({
       <div className="p-6">
         <div className="flex items-start gap-4 mb-4">
           <div
-            className={`p-3 rounded-xl bg-${categoryInfo.color}-500/20 flex-shrink-0`}
+            className={`p-3 rounded-xl bg-${categoryInfo.color}-500/20 shrink-0`}
           >
             <IconComponent
               className={`w-6 h-6 text-${categoryInfo.color}-400`}
@@ -419,7 +419,7 @@ const TrainingModuleCard: React.FC<TrainingModuleCardProps> = ({
                 rel="noopener noreferrer"
                 className="flex items-center gap-3 p-3 rounded-lg bg-white/5 hover:bg-white/10 transition-colors text-sm"
               >
-                <FileText className="w-4 h-4 text-slate-400 flex-shrink-0" />
+                <FileText className="w-4 h-4 text-slate-400 shrink-0" />
                 <span className="text-slate-200 flex-1">{resource.title}</span>
                 <span className="text-slate-500 text-xs uppercase">
                   {resource.type}
@@ -970,7 +970,7 @@ export default function TrainingPage() {
                 {/* Training Sessions View */}
                 {activeView === "sessions" && (
                   <div className="space-y-6">
-                    {filteredModules.map((module, index) => (
+                    {filteredModules.map((module) => (
                       <TrainingModuleCard
                         key={module.id}
                         module={module}
@@ -1017,7 +1017,7 @@ export default function TrainingPage() {
                             className="pdf-card flex flex-col p-6 rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 hover:border-white/20 transition-all group"
                           >
                             <div className="flex items-start gap-3 mb-4">
-                              <div className="p-3 rounded-lg bg-cyan-500/20 flex-shrink-0">
+                              <div className="p-3 rounded-lg bg-cyan-500/20 shrink-0">
                                 <FileText className="w-6 h-6 text-cyan-400" />
                               </div>
                               <div className="flex-1 min-w-0">
@@ -1067,19 +1067,19 @@ export default function TrainingPage() {
                           </p>
                           <ul className="space-y-2 text-slate-300">
                             <li className="flex items-start gap-2">
-                              <CheckCircle className="w-5 h-5 text-cyan-400 flex-shrink-0" />{" "}
+                              <CheckCircle className="w-5 h-5 text-cyan-400 shrink-0" />{" "}
                               <span className="pt-0.5">
                                 Sin cuota mensual de inscripción o mantenimiento
                               </span>
                             </li>
                             <li className="flex items-start gap-2">
-                              <CheckCircle className="w-5 h-5 text-cyan-400 flex-shrink-0" />{" "}
+                              <CheckCircle className="w-5 h-5 text-cyan-400 shrink-0" />{" "}
                               <span className="pt-0.5">
                                 Sin inventario que mantener
                               </span>
                             </li>
                             <li className="flex items-start gap-2">
-                              <CheckCircle className="w-5 h-5 text-cyan-400 flex-shrink-0" />{" "}
+                              <CheckCircle className="w-5 h-5 text-cyan-400 shrink-0" />{" "}
                               <span className="pt-0.5">
                                 Pagos diarios directos a tu cuenta
                               </span>
@@ -1265,7 +1265,7 @@ export default function TrainingPage() {
                         </h3>
                         <ul className="space-y-4 text-slate-300">
                           <li className="flex items-start gap-3">
-                            <Target className="w-6 h-6 text-tl-gold flex-shrink-0" />
+                            <Target className="w-6 h-6 text-tl-gold shrink-0" />
                             <div>
                               <strong className="text-white block mb-1">
                                 Máxima Comisión
@@ -1275,7 +1275,7 @@ export default function TrainingPage() {
                             </div>
                           </li>
                           <li className="flex items-start gap-3">
-                            <Target className="w-6 h-6 text-tl-gold flex-shrink-0" />
+                            <Target className="w-6 h-6 text-tl-gold shrink-0" />
                             <div>
                               <strong className="text-white block mb-1">
                                 Bono de Título
@@ -1285,7 +1285,7 @@ export default function TrainingPage() {
                             </div>
                           </li>
                           <li className="flex items-start gap-3">
-                            <Target className="w-6 h-6 text-tl-gold flex-shrink-0" />
+                            <Target className="w-6 h-6 text-tl-gold shrink-0" />
                             <div>
                               <strong className="text-white block mb-1">
                                 Bono Educativo
@@ -1295,7 +1295,7 @@ export default function TrainingPage() {
                             </div>
                           </li>
                           <li className="flex items-start gap-3">
-                            <Target className="w-6 h-6 text-tl-gold flex-shrink-0" />
+                            <Target className="w-6 h-6 text-tl-gold shrink-0" />
                             <div>
                               <strong className="text-white block mb-1">
                                 Fundación para el Legado
@@ -1380,19 +1380,19 @@ export default function TrainingPage() {
                             </h4>
                             <ul className="space-y-3 text-slate-300 text-sm">
                               <li className="flex items-start gap-2">
-                                <div className="mt-1 w-1.5 h-1.5 rounded-full bg-cyan-400 flex-shrink-0" />{" "}
+                                <div className="mt-1 w-1.5 h-1.5 rounded-full bg-cyan-400 shrink-0" />{" "}
                                 Ganas de aprender y ser enseñable
                               </li>
                               <li className="flex items-start gap-2">
-                                <div className="mt-1 w-1.5 h-1.5 rounded-full bg-cyan-400 flex-shrink-0" />{" "}
+                                <div className="mt-1 w-1.5 h-1.5 rounded-full bg-cyan-400 shrink-0" />{" "}
                                 Compromiso con tu propia visión
                               </li>
                               <li className="flex items-start gap-2">
-                                <div className="mt-1 w-1.5 h-1.5 rounded-full bg-cyan-400 flex-shrink-0" />{" "}
+                                <div className="mt-1 w-1.5 h-1.5 rounded-full bg-cyan-400 shrink-0" />{" "}
                                 Acción consistente
                               </li>
                               <li className="flex items-start gap-2">
-                                <div className="mt-1 w-1.5 h-1.5 rounded-full bg-cyan-400 flex-shrink-0" />{" "}
+                                <div className="mt-1 w-1.5 h-1.5 rounded-full bg-cyan-400 shrink-0" />{" "}
                                 Inversión inicial en tu negocio (tu franquicia
                                 global)
                               </li>
@@ -1404,19 +1404,19 @@ export default function TrainingPage() {
                             </h4>
                             <ul className="space-y-3 text-slate-300 text-sm">
                               <li className="flex items-start gap-2">
-                                <div className="mt-1 w-1.5 h-1.5 rounded-full bg-tl-gold flex-shrink-0" />{" "}
+                                <div className="mt-1 w-1.5 h-1.5 rounded-full bg-tl-gold shrink-0" />{" "}
                                 Mentoría uno a uno de líderes 6A+
                               </li>
                               <li className="flex items-start gap-2">
-                                <div className="mt-1 w-1.5 h-1.5 rounded-full bg-tl-gold flex-shrink-0" />{" "}
+                                <div className="mt-1 w-1.5 h-1.5 rounded-full bg-tl-gold shrink-0" />{" "}
                                 Sistemas de duplicación probados
                               </li>
                               <li className="flex items-start gap-2">
-                                <div className="mt-1 w-1.5 h-1.5 rounded-full bg-tl-gold flex-shrink-0" />{" "}
+                                <div className="mt-1 w-1.5 h-1.5 rounded-full bg-tl-gold shrink-0" />{" "}
                                 Entrenamiento en cierre y prospección
                               </li>
                               <li className="flex items-start gap-2">
-                                <div className="mt-1 w-1.5 h-1.5 rounded-full bg-tl-gold flex-shrink-0" />{" "}
+                                <div className="mt-1 w-1.5 h-1.5 rounded-full bg-tl-gold shrink-0" />{" "}
                                 Comunidad global de apoyo
                               </li>
                             </ul>

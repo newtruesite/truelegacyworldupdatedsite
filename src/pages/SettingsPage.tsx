@@ -198,7 +198,7 @@ export default function SettingsPage() {
                                             ) : (
                                                 <div className="flex items-center gap-2 rounded-xl border border-white/5 bg-white/3 px-4 py-2.5">
                                                     {countryObj && (
-                                                        <span className="inline-flex h-5 w-7 flex-shrink-0 overflow-hidden rounded border border-white/20 bg-[#0a2060]">
+                                                        <span className="inline-flex h-5 w-7 shrink-0 overflow-hidden rounded border border-white/20 bg-[#0a2060]">
                                                             {failedFlagSlugs.has(countryObj.slug) ? (
                                                                 <span className="flex h-full w-full items-center justify-center text-base leading-none">{countryObj.flagEmoji}</span>
                                                             ) : (

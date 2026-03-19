@@ -5,7 +5,8 @@ import { useNavigate } from "react-router-dom";
 
 declare global {
   interface Window {
-    jsVectorMap?: any;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    jsVectorMap?: { new (...args: any[]): { destroy?: () => void } };
   }
 }
 
@@ -34,9 +35,8 @@ const CONTINENTS = [
     nameEs: "Europa",
     nameFr: "Europe",
     namePt: "Europa",
-    // Position pin over western Russia (acts as the Europe region pin)
-    lat: 60.0,
-    lng: 100.0,
+    lat: 54.5,
+    lng: 25.0,
   },
   {
     id: "middle-east",
@@ -191,24 +191,6 @@ export function WorldMap() {
     navigate(`/select-country?continent=${continentId}`);
   };
 
-  const MapLogo = () => (
-    <div
-      className="map-logo-overlay"
-      style={{
-        position: "absolute",
-        top: 8,
-        left: "50%",
-        transform: "translateX(-50%)",
-        pointerEvents: "none",
-        zIndex: 50,
-        filter: "drop-shadow(0 1px 2px rgba(0,0,0,0.4))",
-      }}
-      aria-hidden
-    >
-      <TrueLegacyLogo variant="mapOverlay" />
-    </div>
-  );
-
   return (
     <div className="map-section w-full" style={{ touchAction: "pan-y" }}>
       <div
@@ -220,16 +202,23 @@ export function WorldMap() {
           ref={mapContainerRef}
           id="world-map"
           className="w-full rounded-2xl overflow-hidden"
-          style={{
-            width: "100%",
-            height:
-              typeof window !== "undefined" && window.innerWidth <= 767
-                ? "750px"
-                : "460px",
-            touchAction: "pan-y",
-          }}
+          style={{ width: "100%", height: "460px", touchAction: "pan-y" }}
         />
-        <MapLogo />
+        <div
+          className="map-logo-overlay"
+          style={{
+            position: "absolute",
+            top: 8,
+            left: "50%",
+            transform: "translateX(-50%)",
+            pointerEvents: "none",
+            zIndex: 50,
+            filter: "drop-shadow(0 1px 2px rgba(0,0,0,0.4))",
+          }}
+          aria-hidden
+        >
+          <TrueLegacyLogo variant="mapOverlay" />
+        </div>
 
         {mapReady && (
           <div
@@ -246,31 +235,8 @@ export function WorldMap() {
           >
             {CONTINENTS.map((c) => {
               const { x, y } = latLngToPercent(c.lat, c.lng);
-              let left: string | number = `${x * 100}%`;
-              let top: string | number = `${y * 100}%`;
-
-              const isMobile =
-                typeof window !== "undefined" && window.innerWidth <= 767;
-
-              if (c.id === "north-america") {
-                left = isMobile ? "18%" : 83;
-                top = isMobile ? "38%" : 196;
-              } else if (c.id === "south-america") {
-                left = isMobile ? "28%" : 150;
-                top = isMobile ? "72%" : 305;
-              } else if (c.id === "europe") {
-                left = isMobile ? "52%" : 320;
-                top = isMobile ? "22%" : 210;
-              } else if (c.id === "middle-east") {
-                left = isMobile ? "65%" : 400;
-                top = isMobile ? "48%" : 265;
-              } else if (c.id === "asia") {
-                left = isMobile ? "78%" : 390;
-                top = isMobile ? "42%" : 260;
-              } else if (c.id === "africa") {
-                left = isMobile ? "50%" : 260;
-                top = isMobile ? "62%" : 280;
-              }
+              const left = `${(x * 100).toFixed(2)}%`;
+              const top = `${(y * 100).toFixed(2)}%`;
 
               return (
                 <div

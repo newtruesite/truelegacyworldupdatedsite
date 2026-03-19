@@ -81,7 +81,7 @@ export function Footer() {
                                         to={`/${country.slug}`}
                                         className="flex items-center gap-2 text-sm text-slate-400 transition-colors hover:text-white"
                                     >
-                                        <span className="inline-flex h-4 w-6 flex-shrink-0 overflow-hidden rounded border border-white/20 bg-[#0a2060]">
+                                        <span className="inline-flex h-4 w-6 shrink-0 overflow-hidden rounded border border-white/20 bg-[#0a2060]">
                                             {failedFlagSlugs.has(country.slug) ? (
                                                 <span className="flex h-full w-full items-center justify-center text-xs leading-none">{country.flagEmoji}</span>
                                             ) : (

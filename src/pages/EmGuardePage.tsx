@@ -148,7 +148,7 @@ export default function EmGuardePage() {
                   <img
                     src="/products/emguarde.png"
                     alt="Emguarde EMF protection device — Enagic technology"
-                    className="max-h-[280px] w-auto max-w-[600px] object-contain mx-auto mb-4 w-full md:max-w-[600px]"
+                    className="max-h-[280px] w-full max-w-[600px] object-contain mx-auto mb-4"
                     style={{
                       filter: "drop-shadow(0 20px 40px rgba(0,0,0,0.3))",
                     }}
@@ -196,7 +196,7 @@ export default function EmGuardePage() {
                   key={text}
                   className="flex items-center gap-4 glass rounded-xl border border-white/10 p-4"
                 >
-                  <div className="w-10 h-10 rounded-xl bg-purple-500/20 flex items-center justify-center flex-shrink-0">
+                  <div className="w-10 h-10 rounded-xl bg-purple-500/20 flex items-center justify-center shrink-0">
                     <Icon className="w-5 h-5 text-purple-400" />
                   </div>
                   <span className="text-slate-200 font-medium">{text}</span>

@@ -1022,8 +1022,7 @@ html {
   }
   @media (max-width: 767px) {
     #world-map {
-      height: 220px !important;
-      max-height: 300px;
+      height: clamp(280px, 52vw, 500px) !important;
     }
     .continent-pin .pin-dot {
       width: 18px;
@@ -2081,6 +2080,13 @@ p {
     font-size: 14px !important;
   }
 
+  .testimonial-nav-row {
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+  }
+}
+
+@media (max-width: 767px) {
   .testimonial-nav-row {
     flex-direction: row !important;
     flex-wrap: nowrap !important;

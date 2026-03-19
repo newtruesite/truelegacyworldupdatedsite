@@ -311,7 +311,7 @@ export function Navbar() {
                                   role="option"
                                   aria-selected={country?.slug === c.slug}
                                 >
-                                  <span className="inline-flex h-5 w-7 flex-shrink-0 overflow-hidden rounded border border-white/20 bg-[#0a2060]">
+                                  <span className="inline-flex h-5 w-7 shrink-0 overflow-hidden rounded border border-white/20 bg-[#0a2060]">
                                     {failedFlagSlugs.has(c.slug) ? (
                                       <span className="flex h-full w-full items-center justify-center text-[10px] leading-none">
                                         {c.flagEmoji}
@@ -496,7 +496,7 @@ export function Navbar() {
               onClick={() => setMenuOpen(false)}
               className="flex items-center min-h-[48px] gap-3 px-4 py-3 text-base font-medium text-purple-300 hover:bg-purple-500/10 rounded-xl transition-colors"
             >
-              <IconShield className="text-purple-400 flex-shrink-0" />{" "}
+              <IconShield className="text-purple-400 shrink-0" />{" "}
               {navLabels.navProductEmguarde}
             </Link>
             <Link
@@ -504,7 +504,7 @@ export function Navbar() {
               onClick={() => setMenuOpen(false)}
               className="flex items-center min-h-[48px] gap-3 px-4 py-3 text-base font-medium text-cyan-300 hover:bg-cyan-500/10 rounded-xl transition-colors"
             >
-              <IconDroplets className="text-cyan-400 flex-shrink-0" />{" "}
+              <IconDroplets className="text-cyan-400 shrink-0" />{" "}
               {navLabels.navProductK8}
             </Link>
           </div>
@@ -527,7 +527,7 @@ export function Navbar() {
                   onClick={() => goToCountry(c.slug)}
                   className="flex items-start min-h-[44px] gap-3 rounded-xl px-2 py-2.5 text-sm text-slate-300 hover:bg-white/5 hover:text-white transition-colors text-left"
                 >
-                  <span className="inline-flex mt-0.5 h-4 w-6 flex-shrink-0 overflow-hidden rounded border border-white/20 bg-[#0a2060]">
+                  <span className="inline-flex mt-0.5 h-4 w-6 shrink-0 overflow-hidden rounded border border-white/20 bg-[#0a2060]">
                     {failedFlagSlugs.has(c.slug) ? (
                       <span className="flex h-full w-full items-center justify-center text-[10px] leading-none">
                         {c.flagEmoji}
