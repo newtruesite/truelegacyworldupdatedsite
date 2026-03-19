@@ -19,6 +19,8 @@ const CONTINENTS = [
     namePt: "N. América",
     lat: 45.5,
     lng: -125.0,
+    mobileLat: 45.5,
+    mobileLng: -120.0,
   },
   {
     id: "south-america",
@@ -28,6 +30,8 @@ const CONTINENTS = [
     namePt: "América do Sul / LATAM",
     lat: -10.0,
     lng: -80.0,
+    mobileLat: -10.0,
+    mobileLng: -75.0,
   },
   {
     id: "europe",
@@ -37,6 +41,8 @@ const CONTINENTS = [
     namePt: "Europa",
     lat: 57.5,
     lng: 2.0,
+    mobileLat: 57.5,
+    mobileLng: 5.0,
   },
   {
     id: "middle-east",
@@ -46,7 +52,8 @@ const CONTINENTS = [
     namePt: "Oriente Médio",
     lat: 24.0,
     lng: 53.0,
-    mobileLng: 57.0,
+    mobileLat: 24.0,
+    mobileLng: 49.0,
   },
   {
     id: "africa",
@@ -56,6 +63,8 @@ const CONTINENTS = [
     namePt: "África",
     lat: 12.5,
     lng: -13.0,
+    mobileLat: 12.5,
+    mobileLng: -10.0,
   },
   {
     id: "asia",
@@ -65,6 +74,8 @@ const CONTINENTS = [
     namePt: "Ásia",
     lat: 45.0,
     lng: 88.0,
+    mobileLat: 45.0,
+    mobileLng: 90.0,
   },
 ];
 
@@ -248,7 +259,11 @@ export function WorldMap() {
                 isMobile && "mobileLng" in c && typeof c.mobileLng === "number"
                   ? c.mobileLng
                   : c.lng;
-              const { x, y } = latLngToPercent(c.lat, effectiveLng);
+              const effectiveLat =
+                isMobile && "mobileLat" in c && typeof c.mobileLat === "number"
+                  ? c.mobileLat
+                  : c.lat;
+              const { x, y } = latLngToPercent(effectiveLat, effectiveLng);
               const left = `${(x * 100).toFixed(2)}%`;
               const top = `${(y * 100).toFixed(2)}%`;
 
