@@ -260,9 +260,10 @@ export const t = {
     nav_products: 'Productos',
     nav_training: 'Capacitación',
     nav_join: 'Únete',
-    hero_heading: 'Construye Tu Legado',
-    hero_around: 'En Todo el Mundo.',
+    hero_heading: 'Creando verdadera salud',
+    hero_around: 'en todo el mundo.',
     join_heading: 'Construye Tu Legado Con Nosotros',
+
     join_sub: 'True Legacy World es más que un negocio — es un movimiento de personas comprometidas con la salud, la riqueza y el impacto generacional. Únete a un equipo que vende productos que cambian vidas en 6 continentes.',
     join_cta: 'Únete al Equipo True Legacy',
     join_global: 'Alcance Global',
