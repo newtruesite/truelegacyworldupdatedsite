@@ -518,12 +518,12 @@ export function Navbar() {
           <div className="space-y-1">
             <span className="px-2 text-xs font-semibold uppercase tracking-wider text-slate-500">
               {locale === "es"
-                ? "Productos"
+                ? "Paquete Dual"
                 : locale === "fr"
-                  ? "Produits"
+                  ? "Pack Dual"
                   : locale === "pt"
-                    ? "Produtos"
-                    : "Products"}
+                    ? "Pacote Dual"
+                    : "Dual Package"}
             </span>
             <Link
               to={country ? `/${country.slug}/emguarde` : "/emguarde"}

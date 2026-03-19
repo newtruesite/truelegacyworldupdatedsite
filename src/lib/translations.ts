@@ -23,8 +23,8 @@ export const t = {
     seeMore: 'Explore the Technology',
     healthWealth: 'Health = Wealth',
     pillarsSub: 'Three pillars that create a life of freedom.',
-    navProductK8: 'Dual package',
-    navProductEmguarde: 'Dual package',
+    navProductK8: 'Kangen K8',
+    navProductEmguarde: 'emGuarde',
     heroSub:
       "True Legacy is a global team of coaches sharing Kangen Water and emGuarde — two of the most talked-about wellness technologies on the market. We don't just sell products. We build leaders.",
     homeScrollToExplore: 'Scroll to Explore',
@@ -99,7 +99,7 @@ export const t = {
     },
     products: {
       k8: {
-        label: 'Dual package',
+        label: 'Kangen K8',
         badge: 'Flagship Kangen Water® ionizer',
         short: 'Eight platinum-coated titanium plates deliver antioxidant-rich Kangen Water® for drinking, cooking, skincare, and cleaning.',
         learnMore: 'View K8 details',
@@ -134,7 +134,7 @@ export const t = {
         downloadGuide: 'Anespa DX guide (PDF)',
       },
       emguarde: {
-        label: 'Dual package',
+        label: 'emGuarde',
         badge: 'EMF harmonizer',
         short: 'Patented Enagic technology designed to harmonize high-frequency electromagnetic fields in your home, office, or travel.',
         learnMore: 'What is emGuarde?',
@@ -482,7 +482,7 @@ export const t = {
         downloadGuide: 'Guía Anespa DX (PDF)',
       },
       emguarde: {
-        label: 'Dual package',
+        label: 'emGuarde',
         badge: 'Armonizador EMF',
         short: 'Tecnología patentada de Enagic diseñada para armonizar los campos electromagnéticos de alta frecuencia en tu entorno.',
         learnMore: '¿Qué es emGuarde?',
@@ -535,8 +535,8 @@ export const t = {
     seeMore: 'Explorer la Technologie',
     healthWealth: 'Santé = Richesse',
     pillarsSub: 'Trois piliers qui créent une vie de liberté.',
-    navProductK8: 'Dual package',
-    navProductEmguarde: 'Dual package',
+    navProductK8: 'Kangen K8',
+    navProductEmguarde: 'emGuarde',
     heroSub:
       'True Legacy est une équipe mondiale de coachs qui partagent l\'eau Kangen et emGuarde — deux des technologies bien-être les plus reconnues. Nous ne vendons pas que des produits. Nous formons des leaders.',
     homeScrollToExplore: 'Faites défiler pour explorer',
@@ -703,7 +703,7 @@ export const t = {
     },
     products: {
       k8: {
-        label: 'Dual package',
+        label: 'Kangen K8',
         badge: 'Ioniseur Kangen Water® phare',
         short: "Huit plaques en titane plaqué platine pour une eau Kangen® antioxydante destinée à l'hydratation, la cuisine et le nettoyage.",
         learnMore: 'Voir les détails de la K8',
@@ -738,7 +738,7 @@ export const t = {
         downloadGuide: 'Guide Anespa DX (PDF)',
       },
       emguarde: {
-        label: 'Dual package',
+        label: 'emGuarde',
         badge: 'Harmonisateur EMF',
         short: 'Technologie brevetée Enagic conçue pour harmoniser les champs électromagnétiques haute fréquence dans votre environnement.',
         learnMore: 'Qu’est-ce que emGuarde ?',
@@ -791,8 +791,8 @@ export const t = {
     seeMore: 'Explore a Tecnologia',
     healthWealth: 'Saúde = Riqueza',
     pillarsSub: 'Três pilares que criam uma vida de liberdade.',
-    navProductK8: 'Dual package',
-    navProductEmguarde: 'Dual package',
+    navProductK8: 'Kangen K8',
+    navProductEmguarde: 'emGuarde',
     heroSub:
       'True Legacy é uma equipe global de mentores que compartilham Kangen Water e emGuarde — duas das tecnologias de bem-estar mais reconhecidas do mercado. Não apenas vendemos produtos. Formamos líderes.',
     homeScrollToExplore: 'Role para explorar',
@@ -959,7 +959,7 @@ export const t = {
     },
     products: {
       k8: {
-        label: 'Dual package',
+        label: 'Kangen K8',
         badge: 'Ionizador Kangen Water® carro-chefe',
         short: 'Oito placas de titânio revestidas de platina para Água Kangen® rica em antioxidantes.',
         learnMore: 'Ver detalhes da K8',
@@ -994,7 +994,7 @@ export const t = {
         downloadGuide: 'Guia Anespa DX (PDF)',
       },
       emguarde: {
-        label: 'Dual package',
+        label: 'emGuarde',
         badge: 'Armonizador EMF',
         short: 'Tecnologia patenteada Enagic para harmonizar campos eletromagnéticos de alta frequência.',
         learnMore: 'O que é emGuarde?',
