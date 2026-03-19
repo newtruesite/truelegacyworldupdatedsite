@@ -101,14 +101,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       return
     }
 
-    // Both signup and signin failed to produce a session — most likely email
-    // confirmation is still enabled in Supabase.
-    // Go to: Supabase Dashboard → Authentication → Settings → disable "Enable email confirmations"
+    // Both signup and signin failed to produce a session.
+    // If signIn says "not confirmed", email confirmation is still enabled on the server.
+    // Go to: Supabase Dashboard → Authentication → Settings → disable "Enable email confirmations" → Save changes
     const signInMsg = (signInError as { message?: string } | null)?.message?.toLowerCase() ?? ""
     if (signInMsg.includes("not confirmed") || signInMsg.includes("email_not_confirmed")) {
       throw new Error("SUPABASE_EMAIL_CONFIRMATION_ENABLED")
     }
-    throw new Error("email already registered or awaiting email confirmation")
+    // Otherwise the email already exists — surface that directly.
+    throw new Error("user_already_exists")
   }
 
   const signOut = async () => {
