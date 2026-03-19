@@ -224,7 +224,7 @@ export function WorldMap() {
             width: "100%",
             height:
               typeof window !== "undefined" && window.innerWidth <= 767
-                ? "650px"
+                ? "750px"
                 : "460px",
             touchAction: "pan-y",
           }}
@@ -262,11 +262,11 @@ export function WorldMap() {
                 left = isMobile ? "52%" : 320;
                 top = isMobile ? "22%" : 210;
               } else if (c.id === "middle-east") {
-                left = isMobile ? "62%" : 365;
+                left = isMobile ? "65%" : 400;
                 top = isMobile ? "48%" : 265;
               } else if (c.id === "asia") {
-                left = isMobile ? "75%" : 370;
-                top = isMobile ? "38%" : 235;
+                left = isMobile ? "78%" : 390;
+                top = isMobile ? "42%" : 260;
               } else if (c.id === "africa") {
                 left = isMobile ? "50%" : 260;
                 top = isMobile ? "62%" : 280;

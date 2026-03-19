@@ -400,7 +400,7 @@ export function TestimonialsSplit({
         </div>
 
         {/* Right: Instagram (above photo) + Photo */}
-        <div className="relative w-full md:w-72 md:h-[340px] flex-shrink-0 flex flex-col items-center">
+        <div className="relative w-full md:w-72 md:h-[400px] flex-shrink-0 flex flex-col items-center">
           <div className="flex flex-col items-center gap-2 mb-3">
             <a
               href={
@@ -461,14 +461,14 @@ export function TestimonialsSplit({
               animate={{ opacity: 1, filter: "blur(0px)", scale: 1 }}
               exit={{ opacity: 0, filter: "blur(20px)", scale: 0.95 }}
               transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-              className="w-full h-full min-h-[240px] md:min-h-[320px]"
+              className="w-full h-full min-h-[300px] md:min-h-[380px]"
             >
-              <div className="w-full h-full rounded-[1.5rem] overflow-hidden border-[2px] border-white/[0.15] shadow-[0_8px_32px_rgba(0,0,0,0.4),0_0_0_1px_rgba(255,255,255,0.05)] bg-[#0a1628] flex items-center justify-center">
+              <div className="w-full h-full rounded-[1.5rem] overflow-hidden border-[2px] border-white/[0.15] shadow-[0_8px_32px_rgba(0,0,0,0.4),0_0_0_1px_rgba(255,255,255,0.05)] bg-slate-900 flex items-center justify-center">
                 {(active.image ?? active.photo) ? (
                   <img
                     src={active.image ?? active.photo}
                     alt={active.name}
-                    className="testimonial-avatar w-full h-full object-cover rounded-2xl"
+                    className="testimonial-avatar w-full h-full object-contain rounded-2xl"
                     style={{ minWidth: 72, minHeight: 72 }}
                   />
                 ) : (

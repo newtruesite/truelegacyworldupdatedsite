@@ -5,7 +5,6 @@ import { SEO } from "@/components/SEO";
 import { PhotoCarousel3D } from "@/components/ui/PhotoCarousel3D";
 import { SocialProofStrip } from "@/components/ui/SocialProofStrip";
 import { TLBackground } from "@/components/ui/TLBackground";
-import { VSLPlayer } from "@/components/ui/VSLPlayer";
 import WorldMap from "@/components/ui/WorldMap";
 import { useLocaleContext } from "@/contexts/LocaleContext";
 import { trackEvent } from "@/lib/analytics";
@@ -236,60 +235,6 @@ export default function HomePage() {
               <div className="w-px h-10 bg-gradient-to-b from-slate-500 to-transparent" />
             </motion.div>
           </TLBackground>
-        </section>
-
-        {/* ===== LANDING PAGE VIDEO ===== */}
-        <section
-          className="relative py-16 border-t border-white/5"
-          style={{ background: "#060b1e" }}
-        >
-          <div className="max-w-4xl mx-auto px-4 sm:px-6">
-            <motion.div
-              initial={{ opacity: 0, y: 24 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              className="text-center mb-8"
-            >
-              <p className="text-xs font-semibold uppercase tracking-[0.3em] text-tl-gold mb-3">
-                {locale === "es"
-                  ? "Mira nuestra historia"
-                  : locale === "fr"
-                    ? "Regardez notre histoire"
-                    : "Watch Our Story"}
-              </p>
-              <h2 className="text-2xl md:text-4xl font-bold text-white mb-3">
-                {locale === "es"
-                  ? "Descubre True Legacy"
-                  : locale === "fr"
-                    ? "Découvrez True Legacy"
-                    : "Discover True Legacy"}
-              </h2>
-              <p className="text-slate-400 max-w-xl mx-auto text-sm md:text-base leading-relaxed">
-                {locale === "es"
-                  ? "Aprende qué es True Legacy, por qué nuestros distribuidores prosperan y cómo puedes unirte al movimiento."
-                  : locale === "fr"
-                    ? "Découvrez ce qu'est True Legacy, pourquoi nos distributeurs prospèrent et comment vous pouvez rejoindre le mouvement."
-                    : "Learn what True Legacy is, why our distributors thrive, and how you can join the movement."}
-              </p>
-            </motion.div>
-            <motion.div
-              initial={{ opacity: 0, y: 16 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.1 }}
-            >
-              <VSLPlayer
-                youtubeId="k38vdhY-oM0"
-                title={
-                  locale === "es"
-                    ? "Historia de True Legacy"
-                    : locale === "fr"
-                      ? "Histoire de True Legacy"
-                      : "True Legacy Story"
-                }
-              />
-            </motion.div>
-          </div>
         </section>
 
         {/* ===== LEADERS CAROUSEL ===== */}

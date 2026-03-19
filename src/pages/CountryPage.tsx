@@ -1486,6 +1486,56 @@ export default function CountryPage() {
           </TLBackground>
         </div>
 
+        {/* ===== TURKEY: Discover True Legacy Story Video ===== */}
+        {country.slug === "turkey" && (
+          <section
+            className="relative py-16 border-t border-white/5"
+            style={{ background: "#060b1e" }}
+          >
+            <div className="max-w-4xl mx-auto px-4 sm:px-6">
+              <motion.div
+                initial={{ opacity: 0, y: 24 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                className="text-center mb-8"
+              >
+                <p className="text-xs font-semibold uppercase tracking-[0.3em] text-tl-gold mb-3">
+                  {locale === "es"
+                    ? "Mira nuestra historia"
+                    : locale === "fr"
+                      ? "Regardez notre histoire"
+                      : "Watch Our Story"}
+                </p>
+                <h2 className="text-2xl md:text-4xl font-bold text-white mb-3">
+                  {locale === "es"
+                    ? "Descubre True Legacy"
+                    : locale === "fr"
+                      ? "Découvrez True Legacy"
+                      : "Discover True Legacy"}
+                </h2>
+                <p className="text-slate-400 max-w-xl mx-auto text-sm md:text-base leading-relaxed">
+                  {locale === "es"
+                    ? "Aprende qué es True Legacy, por qué nuestros distribuidores prosperan y cómo puedes unirte al movimiento."
+                    : locale === "fr"
+                      ? "Découvrez ce qu'est True Legacy, pourquoi nos distributeurs prospèrent et comment vous pouvez rejoindre le mouvement."
+                      : "Learn what True Legacy is, why our distributors thrive, and how you can join the movement."}
+                </p>
+              </motion.div>
+              <motion.div
+                initial={{ opacity: 0, y: 16 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.1 }}
+              >
+                <VSLPlayer
+                  youtubeId={country.youtubeId}
+                  title="Turkey | True Legacy Story"
+                />
+              </motion.div>
+            </div>
+          </section>
+        )}
+
         {/* Trust strip — 51+ Years | 29+ Countries | 3M+ Lives | #1 Water Ionizer */}
         <section
           className="trust-strip flex flex-wrap justify-center items-center gap-8 md:gap-10 py-5 px-6 border-t border-[rgba(0,168,150,0.1)] border-b border-[rgba(0,168,150,0.1)] my-8"
