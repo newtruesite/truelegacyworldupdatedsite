@@ -713,12 +713,6 @@ html {
     mix-blend-mode: normal !important;
   }
 
-  [data-product="emguarde"] img,
-  .product-card[data-product="emguarde"] img {
-    filter: drop-shadow(0 0 24px rgba(201, 168, 76, 0.4))
-      drop-shadow(0 0 8px rgba(201, 168, 76, 0.2));
-  }
-
   [data-product="k8"] img,
   [data-product="sd501dx"] img,
   [data-product="sd501-dx"] img,
