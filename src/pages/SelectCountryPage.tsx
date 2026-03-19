@@ -198,7 +198,7 @@ export default function SelectCountryPage() {
           </p>
         </div>
 
-        <div className="grid grid-cols-[repeat(auto-fit,minmax(220px,1fr))] gap-4 md:gap-5 pb-12 justify-items-center place-content-center w-full max-w-6xl mx-auto">
+        <div className="grid grid-cols-1 sm:grid-cols-[repeat(auto-fit,minmax(220px,1fr))] gap-4 md:gap-5 pb-12 justify-items-center place-content-center w-full max-w-6xl mx-auto">
           {displayData.countries.map((country) => (
             <button
               key={country.slug}
@@ -228,8 +228,7 @@ export default function SelectCountryPage() {
                 gap: "16px",
                 transition: "all 0.25s ease",
                 boxShadow: "0 4px 24px rgba(0,0,0,0.2)",
-                minWidth: "260px",
-                maxWidth: "320px",
+                width: "100%",
               }}
               onMouseEnter={(e) => {
                 e.currentTarget.style.background = "rgba(0,168,150,0.1)";

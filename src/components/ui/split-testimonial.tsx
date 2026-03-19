@@ -329,7 +329,7 @@ export function TestimonialsSplit({
   };
 
   return (
-    <div className="w-full max-w-5xl mx-auto px-6 pb-20">
+    <div className="w-full max-w-5xl mx-auto px-3 sm:px-6 pb-20">
       <div
         className="relative grid grid-cols-1 md:grid-cols-[1fr_auto] gap-8 md:gap-12 items-center cursor-pointer group"
         onClick={nextTestimonial}
@@ -496,16 +496,16 @@ export function TestimonialsSplit({
       </div>
 
       {/* Controls — arrows + dots */}
-      <div className="mt-5 mb-4 min-h-[52px] flex flex-nowrap items-center justify-center gap-3 sm:gap-4 px-2">
+      <div className="mt-5 mb-4 flex flex-wrap items-center justify-center gap-3 sm:gap-4 px-2">
         <button
           onClick={prevTestimonial}
           aria-label="Previous testimonial"
-          className="flex h-10 w-10 sm:h-11 sm:w-11 shrink-0 items-center justify-center rounded-full border border-white/10 bg-white/5 text-slate-300 transition-all hover:bg-white/10 hover:text-white"
+          className="flex h-9 w-9 sm:h-10 sm:w-10 shrink-0 items-center justify-center rounded-full border border-white/10 bg-white/5 text-slate-300 transition-all hover:bg-white/10 hover:text-white"
         >
-          <ChevronLeft className="h-5 w-5" />
+          <ChevronLeft className="h-4 w-4 sm:h-5 sm:w-5" />
         </button>
 
-        <div className="flex shrink-0 flex-wrap justify-center gap-1.5 sm:gap-2">
+        <div className="flex shrink-0 flex-wrap justify-center gap-1 sm:gap-1.5">
           {list.map((_, index) => (
             <button
               key={index}
@@ -516,8 +516,8 @@ export function TestimonialsSplit({
               aria-label={`Testimonial ${index + 1}`}
               className={`transition-all duration-300 rounded-full shrink-0 ${
                 index === activeIndex
-                  ? "w-4 h-2 sm:w-5 bg-orange-500"
-                  : "w-2 h-2 sm:w-2.5 bg-white/20 hover:bg-white/40"
+                  ? "w-3 h-1.5 sm:w-4 sm:h-2 bg-orange-500"
+                  : "w-1.5 h-1.5 sm:w-2 sm:h-2 bg-white/20 hover:bg-white/40"
               }`}
             />
           ))}
@@ -526,9 +526,9 @@ export function TestimonialsSplit({
         <button
           onClick={nextTestimonial}
           aria-label="Next testimonial"
-          className="flex h-10 w-10 sm:h-11 sm:w-11 shrink-0 items-center justify-center rounded-full border border-white/10 bg-white/5 text-slate-300 transition-all hover:bg-white/10 hover:text-white"
+          className="flex h-9 w-9 sm:h-10 sm:w-10 shrink-0 items-center justify-center rounded-full border border-white/10 bg-white/5 text-slate-300 transition-all hover:bg-white/10 hover:text-white"
         >
-          <ChevronRight className="h-5 w-5" />
+          <ChevronRight className="h-4 w-4 sm:h-5 sm:w-5" />
         </button>
       </div>
     </div>

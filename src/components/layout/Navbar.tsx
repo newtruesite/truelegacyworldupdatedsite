@@ -450,8 +450,9 @@ export function Navbar() {
                     ? "Navegação"
                     : "Navigation"}
             </span>
-            {mainNavLinks.map((link) =>
-              link.external ? (
+            {mainNavLinks.map((link) => {
+              if (link.to === "/select-country") return null;
+              return link.external ? (
                 <a
                   key={link.to}
                   href={link.to}
@@ -476,8 +477,8 @@ export function Navbar() {
                 >
                   {link.label}
                 </Link>
-              ),
-            )}
+              );
+            })}
           </div>
 
           {/* Products Section */}
