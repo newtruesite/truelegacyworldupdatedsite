@@ -62,34 +62,35 @@ export function LocaleProvider({ children }: { children: React.ReactNode }) {
     const thisCountrySlug = isCountryRoute ? first : "";
     const lastCountry = window.sessionStorage.getItem("tl_last_country") || "";
 
-    // If navigating between different country pages, clear stored language (except when landing on Morocco — keep fr)
+    // When switching between different country pages, clear user language choice
+    // so the new country's default takes effect
     if (thisCountrySlug && lastCountry && thisCountrySlug !== lastCountry) {
-      if (thisCountrySlug !== "morocco")
-        window.localStorage.removeItem(STORAGE_KEY);
-      else window.localStorage.setItem(STORAGE_KEY, "fr");
+      window.sessionStorage.removeItem("tl_user_chose_lang");
+      window.localStorage.removeItem(STORAGE_KEY);
     }
 
     if (thisCountrySlug) {
       window.sessionStorage.setItem("tl_last_country", thisCountrySlug);
     }
 
-    // Force LATAM countries to Spanish (so all SA pages use Spanish even if user previously chose another locale)
-    if (LATAM_SLUGS.includes(thisCountrySlug as (typeof LATAM_SLUGS)[number])) {
-      window.localStorage.setItem(STORAGE_KEY, "es");
-      // eslint-disable-next-line react-hooks/set-state-in-effect
-      setOverrideState("es");
-      return;
-    }
-
-    // Brute-force LATAM to Spanish on first arrival so ES is selected in top bar (unless user already chose a language)
+    // Read user choice AFTER potential clear above
     const userChoseLang = window.sessionStorage.getItem("tl_user_chose_lang");
-    if (
-      LATAM_SLUGS.includes(thisCountrySlug as (typeof LATAM_SLUGS)[number]) &&
-      !userChoseLang
-    ) {
-      window.localStorage.setItem(STORAGE_KEY, "es");
-      setOverrideState("es");
+
+    if (isCountryRoute && !userChoseLang) {
+      // No explicit user choice on a country page — apply country default
+      const isLatam = LATAM_SLUGS.includes(thisCountrySlug as (typeof LATAM_SLUGS)[number]);
+      const isMorocco = thisCountrySlug === "morocco";
+      const defaultLocale: Locale = isLatam
+        ? "es"
+        : isMorocco
+          ? "fr"
+          : (COUNTRIES.find((c) => c.slug === thisCountrySlug)?.locale ?? "en") as Locale;
+      window.localStorage.setItem(STORAGE_KEY, defaultLocale);
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setOverrideState(defaultLocale);
     } else {
+      // Either user explicitly chose a language, or this is a non-country route
+      // In both cases, keep whatever is stored
       const stored = getStored();
       setOverrideState(stored);
     }

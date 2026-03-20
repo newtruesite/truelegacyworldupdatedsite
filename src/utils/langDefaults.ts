@@ -4,13 +4,19 @@ const SPANISH_ROUTES = new Set([
   '/paraguay',
   '/brazil',
   '/events/latam',
+  '/latam/distributors',
 ])
-const FRENCH_ROUTES = new Set(['/morocco', '/events/morocco'])
+const FRENCH_ROUTES = new Set(['/morocco'])
+
+const LATAM_PREFIXES = ['/colombia', '/mexico', '/brazil', '/paraguay', '/latam']
+const FRENCH_PREFIXES = ['/morocco']
 
 export function getPageLang(pathname: string): string {
   const p = pathname.toLowerCase().replace(/\/$/, '') || '/'
   if (SPANISH_ROUTES.has(p)) return 'es'
   if (FRENCH_ROUTES.has(p)) return 'fr'
+  if (LATAM_PREFIXES.some(prefix => p.startsWith(prefix + '/'))) return 'es'
+  if (FRENCH_PREFIXES.some(prefix => p.startsWith(prefix + '/'))) return 'fr'
   return 'en'
 }
 

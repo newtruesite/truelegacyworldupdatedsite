@@ -11,7 +11,7 @@ import type { Country } from "@/lib/countries";
 import { COUNTRIES, getCountryBySlug, getFlagSrcSet } from "@/lib/countries";
 import { t } from "@/lib/translations";
 import { motion } from "framer-motion";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Link, Navigate, useParams } from "react-router-dom";
 
 // ── Custom SVG Icons (no emojis) ──────────────────────────────
@@ -1270,19 +1270,7 @@ export default function CountryPage() {
     new Set(),
   );
   const country = getCountryBySlug(slug || "");
-  const { locale, setLocale } = useLocaleContext();
-
-  // Ensure LATAM pages default to Spanish
-  useEffect(() => {
-    if (
-      country &&
-      ["mexico", "brazil", "colombia", "paraguay"].includes(country.slug)
-    ) {
-      if (locale !== "es" && locale !== "pt") {
-        setLocale("es");
-      }
-    }
-  }, [country?.slug]);
+  const { locale } = useLocaleContext();
 
   if (!country) return <Navigate to="/" replace />;
 
