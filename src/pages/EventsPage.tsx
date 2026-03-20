@@ -1,6 +1,7 @@
 import { Navbar } from "@/components/layout/Navbar";
+import { SEO } from "@/components/SEO";
 import { EventsFirstTimePrompt } from "@/components/ui/EventsFirstTimePrompt";
-import { EVENTS_FORM_URL, UPCOMING_EVENTS } from "@/lib/events";
+import { EVENTS_FORM_URL, getEventsByRegion } from "@/lib/events";
 import { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
@@ -41,8 +42,6 @@ function getRegionBreadcrumbLabel(region: RegionSlug, locale: string): string {
   return "Events";
 }
 
-// UPCOMING_EVENTS is imported from @/lib/events
-
 const LABELS = {
   en: {
     breadcrumbHome: "Home",
@@ -80,7 +79,7 @@ export default function EventsPage() {
   const region = paramToRegion(param);
   const lang = getRegionLocale(region) as keyof typeof LABELS;
   const t = LABELS[lang] ?? LABELS.en;
-  const events = UPCOMING_EVENTS;
+  const events = getEventsByRegion(region);
   const regionLabel = getRegionBreadcrumbLabel(region, lang);
 
   // Redirect old country-slug URLs to region URLs once
@@ -96,12 +95,29 @@ export default function EventsPage() {
     window.open(EVENTS_FORM_URL, '_blank', 'noopener,noreferrer');
   };
 
-  const handleFirstTimeNo = () => {
-    window.open(EVENTS_FORM_URL, '_blank', 'noopener,noreferrer');
+  const handleFirstTimeNo = (url: string) => {
+    window.open(url, '_blank', 'noopener,noreferrer');
   };
 
   return (
     <div className="page-wrapper bg-[#060b1e] text-white">
+      <SEO
+        title={
+          lang === "es"
+            ? "True Legacy — Próximos Eventos | LATAM"
+            : lang === "fr"
+              ? "True Legacy — Événements à Venir"
+              : "True Legacy — Upcoming Events in 51+ Countries"
+        }
+        description={
+          lang === "es"
+            ? "Uúnete a los eventos semanales de True Legacy — presentaciones en vivo cada jueves y martes para comunidades en más de 51 países."
+            : lang === "fr"
+              ? "Rejoignez les événements hebdomadaires de True Legacy — présentations en direct chaque jeudi et mardi dans plus de 51 pays."
+              : "Join True Legacy's weekly live events — Thursday global presentations and Tuesday LATAM sessions for Enagic distributors across 51+ countries."
+        }
+        image="/logos/tl-square-white.png"
+      />
       <Navbar />
       <div className="content-wrapper mx-auto max-w-4xl px-4 py-16 sm:px-6">
         <h1 className="section-title text-center mb-10">
@@ -113,42 +129,67 @@ export default function EventsPage() {
         ) : (
           <div className="space-y-10">
             {events.map((event) => {
+              const isLatam = region === "latam";
+
               const desc =
                 lang === "es"
                   ? event.description_es
                   : lang === "fr"
                     ? event.description_fr
-                    : event.description_en;
+                    : lang === "pt"
+                      ? (event.description_pt ?? event.description_en)
+                      : event.description_en;
 
-              const isLatam = region === "latam";
+              const displayTitle =
+                lang === "es" && event.title_es
+                  ? event.title_es
+                  : lang === "fr" && event.title_fr
+                    ? event.title_fr
+                    : lang === "pt" && event.title_pt
+                      ? event.title_pt
+                      : event.title;
+
+              const displayDate =
+                lang === "es" && event.date_es
+                  ? event.date_es
+                  : lang === "fr" && event.date_fr
+                    ? event.date_fr
+                    : lang === "pt" && event.date_pt
+                      ? event.date_pt
+                      : event.date;
+
               const timezones = isLatam
                 ? event.latamTimezones
                 : event.timezones;
+
+              const joinUrl = isLatam
+                ? event.latamZoomUrl
+                : (event.joinUrl ?? event.registerUrl);
+
+              const eventImage = isLatam && event.latamImage
+                ? event.latamImage
+                : event.image;
 
               return (
                 <article
                   key={event.id}
                   className="event-card rounded-2xl overflow-hidden border border-white/10 bg-white/5 max-w-3xl mx-auto"
                 >
-                  <div className="relative w-full bg-white/5 flex items-center justify-center p-4">
-                    <img
-                      src={
-                        isLatam && event.latamImage
-                          ? event.latamImage
-                          : event.image
-                      }
-                      alt={event.title}
-                      className="event-image max-w-full max-h-[500px] w-auto h-auto object-contain"
-                    />
-                  </div>
+                  {eventImage && (
+                    <div className="relative w-full bg-white/5 flex items-center justify-center p-4">
+                      <img
+                        src={eventImage}
+                        alt={displayTitle}
+                        className="event-image max-w-full max-h-[500px] w-auto h-auto object-contain"
+                      />
+                    </div>
+                  )}
                   <div className="p-5 sm:p-8">
                     <h2 className="text-xl sm:text-2xl font-bold text-white mb-2">
-                      {region === "latam"
-                        ? "CLASE MAGISTRAL SOBRE EL VERDADERO LEGADO"
-                        : event.title}
+                      {displayTitle}
                     </h2>
                     <p className="text-[#00a896] font-semibold text-base mb-5">
-                      {event.date}
+                      {displayDate}
                     </p>
                     <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-5 p-4 rounded-xl bg-white/5 border border-white/5">
                       {timezones.map((tz) => (
@@ -166,15 +207,26 @@ export default function EventsPage() {
                       {desc}
                     </div>
 
-                    {/* First Time Prompt - Always Visible */}
-                    <div className="mb-6">
-                      <EventsFirstTimePrompt
-                        onYes={handleFirstTimeYes}
-                        onNo={handleFirstTimeNo}
-                        joinUrl={EVENTS_FORM_URL}
-                        locale={lang}
-                      />
-                    </div>
+                    {event.hasFirstTimePrompt ? (
+                      <div className="mb-6">
+                        <EventsFirstTimePrompt
+                          onYes={handleFirstTimeYes}
+                          onNo={handleFirstTimeNo}
+                          joinUrl={joinUrl}
+                          locale={lang}
+                        />
+                      </div>
+                    ) : (
+                      <div className="mb-6">
+                        <button
+                          onClick={() => window.open(joinUrl, '_blank', 'noopener,noreferrer')}
+                          className="w-full sm:w-auto flex items-center justify-center px-8 py-3 rounded-xl font-bold text-white text-base transition min-h-12"
+                          style={{ background: "linear-gradient(135deg, #00a896, #00c4ae)" }}
+                        >
+                          {lang === "es" ? "Unirse Ahora" : lang === "fr" ? "Rejoindre Maintenant" : lang === "pt" ? "Entrar Agora" : "Join Now"}
+                        </button>
+                      </div>
+                    )}
                   </div>
                 </article>
               );

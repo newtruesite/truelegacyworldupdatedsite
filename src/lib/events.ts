@@ -11,19 +11,87 @@ export interface EventTimezone {
 export interface TLEvent {
   id: string
   title: string
+  title_es?: string
+  title_fr?: string
+  title_pt?: string
   date: string
-  image: string
+  date_es?: string
+  date_fr?: string
+  date_pt?: string
+  image?: string
   latamImage?: string
   registerUrl: string
   latamZoomUrl: string
+  joinUrl?: string
   timezones: EventTimezone[]
   latamTimezones: EventTimezone[]
   description_en: string
   description_es: string
   description_fr: string
+  description_pt?: string
+  regions?: EventRegion[]
+  countries?: string[]
+  hasFirstTimePrompt?: boolean
 }
 
 export const UPCOMING_EVENTS: TLEvent[] = [
+  {
+    id: 'duo-presentation-thursday',
+    title: 'TRUE LEGACY WEEKLY PRESENTATION',
+    title_es: 'PRESENTACIÓN SEMANAL TRUE LEGACY',
+    title_fr: 'PRÉSENTATION HEBDOMADAIRE TRUE LEGACY',
+    title_pt: 'APRESENTAÇÃO SEMANAL TRUE LEGACY',
+    date: 'Every Thursday',
+    date_es: 'Todos los Jueves',
+    date_fr: 'Chaque Jeudi',
+    date_pt: 'Toda Quinta-feira',
+    image: '/assets/event-masterclass.png',
+    registerUrl: 'https://tr.ee/8yBqHZ',
+    latamZoomUrl: 'https://us02web.zoom.us/j/83000043957?pwd=Truelegacy#success',
+    joinUrl: 'https://us02web.zoom.us/j/83000043957?pwd=Truelegacy#success',
+    timezones: [
+      { region: 'Malaysia', time: '8:00 PM' },
+      { region: 'India', time: '5:30 PM' },
+      { region: 'UAE', time: '4:00 PM' },
+      { region: 'Turkey', time: '3:00 PM' },
+      { region: 'Nigeria', time: '1:00 PM' },
+      { region: 'Miami', time: '7:00 AM' },
+    ],
+    latamTimezones: [
+      { region: 'Colombia', time: '7:00 PM' },
+      { region: 'EST', time: '8:00 PM' },
+      { region: 'PST', time: '5:00 PM' },
+    ],
+    description_en: `Join True Legacy's weekly Zoom presentation every Thursday — an open introduction to the Enagic business and health products available in 51+ countries.
+
+✅ Open to members, prospects, and guests
+✅ Learn about building income across 51+ countries
+✅ Ask questions live
+
+Click "Join Now" to enter the Zoom directly.`,
+    description_es: `Únete a la presentación semanal de True Legacy cada jueves — una introducción abierta al negocio Enagic y productos de salud disponibles en más de 51 países.
+
+✅ Abierto a miembros, prospectos e invitados
+✅ Aprende a construir ingresos en más de 51 países
+✅ Haz preguntas en vivo
+
+Haz clic en "Unirse Ahora" para entrar al Zoom directamente.`,
+    description_fr: `Rejoignez la présentation hebdomadaire de True Legacy chaque jeudi — une introduction ouverte à l'activité Enagic et aux produits de santé disponibles dans plus de 51 pays.
+
+✅ Ouvert aux membres, prospects et invités
+✅ Découvrez comment construire un revenu dans 51+ pays
+✅ Posez des questions en direct
+
+Cliquez sur "Rejoindre" pour accéder directement au Zoom.`,
+    description_pt: `Participe da apresentação semanal da True Legacy toda quinta-feira — uma introdução aberta ao negócio Enagic e produtos de saúde disponíveis em mais de 51 países.
+
+✅ Aberto a membros, prospects e convidados
+✅ Aprenda a construir renda em mais de 51 países
+✅ Faça perguntas ao vivo
+
+Clique em "Entrar Agora" para acessar o Zoom diretamente.`,
+    hasFirstTimePrompt: false,
+  },
   {
     id: 'masterclass-march-2026',
     title: 'TRUE LEGACY MASTERCLASS',
@@ -78,6 +146,66 @@ Si estás serio sobre construir impulso en 2026, aquí es donde debes estar.
 Si vous êtes sérieux au sujet de construire l'élan en 2026, c'est là où vous devez être.
 
 ⏳ Places limitées. Inscrivez-vous maintenant. 💥`,
+    title_es: 'CLASE MAGISTRAL SOBRE EL VERDADERO LEGADO',
+    title_fr: 'CLASSE MAGISTRALE VRAI HÉRITAGE',
+    title_pt: 'AULA MAGISTRAL VERDADEIRO LEGADO',
+    hasFirstTimePrompt: true,
+  },
+  {
+    id: 'latam-tuesday-weekly',
+    title: 'LATAM WEEKLY PRESENTATION',
+    title_es: 'PRESENTACIÓN SEMANAL LATAM',
+    title_fr: 'PRÉSENTATION HEBDOMADAIRE LATAM',
+    title_pt: 'APRESENTAÇÃO SEMANAL LATAM',
+    date: 'Every Tuesday',
+    date_es: 'Todos los Martes',
+    date_fr: 'Chaque Mardi',
+    date_pt: 'Toda Terça-feira',
+    image: '/assets/event-latam-flyer.png',
+    latamImage: '/assets/event-latam-flyer.png',
+    registerUrl: 'https://tr.ee/8yBqHZ',
+    latamZoomUrl: 'https://us02web.zoom.us/j/83000043957?pwd=Truelegacy#success',
+    joinUrl: 'https://us02web.zoom.us/j/83000043957?pwd=Truelegacy#success',
+    timezones: [
+      { region: 'Colombia', time: '7:00 PM' },
+      { region: 'EST', time: '8:00 PM' },
+      { region: 'PST', time: '5:00 PM' },
+    ],
+    latamTimezones: [
+      { region: 'Colombia', time: '7:00 PM' },
+      { region: 'EST', time: '8:00 PM' },
+      { region: 'PST', time: '5:00 PM' },
+    ],
+    description_en: `Join the LATAM weekly Zoom presentation every Tuesday — designed for Spanish and Portuguese-speaking communities across South America.
+
+✅ Share Enagic's life-changing health products
+✅ Build your True Legacy business in South America
+✅ Connect with the regional LATAM community
+
+Click "Join Now" to enter the Zoom directly.`,
+    description_es: `Únete a la presentación semanal LATAM cada martes — diseñada para las comunidades hispanohablantes y lusohablantes de Sudamérica.
+
+✅ Comparte los productos de salud Enagic que cambian vidas
+✅ Construye tu negocio True Legacy en Sudamérica
+✅ Conéctate con la comunidad regional LATAM
+
+Haz clic en "Unirse Ahora" para entrar al Zoom directamente.`,
+    description_fr: `Rejoignez la présentation hebdomadaire LATAM chaque mardi — conçue pour les communautés hispanophones et lusophones d'Amérique du Sud.
+
+✅ Partagez les produits de santé Enagic qui changent la vie
+✅ Développez votre activité True Legacy en Amérique du Sud
+✅ Connectez-vous avec la communauté régionale LATAM
+
+Cliquez sur "Rejoindre" pour accéder directement au Zoom.`,
+    description_pt: `Participe da apresentação semanal LATAM toda terça-feira — projetada para as comunidades de língua espanhola e portuguesa da América do Sul.
+
+✅ Compartilhe os produtos de saúde da Enagic que mudam vidas
+✅ Construa seu negócio True Legacy na América do Sul
+✅ Conecte-se com a comunidade regional LATAM
+
+Clique em "Entrar Agora" para acessar o Zoom diretamente.`,
+    regions: ['latam'],
+    hasFirstTimePrompt: false,
   },
 ]
 
@@ -101,7 +229,10 @@ export function getEventRegion(countrySlug: string | undefined): EventRegion {
   return COUNTRY_TO_REGION[lower] ?? DEFAULT_EVENT_REGION
 }
 
-export function getEventsByRegion(): TLEvent[] {
-  // Currently all events are shown regardless of region; filter can be added later
-  return UPCOMING_EVENTS
+export function getEventsByRegion(region?: EventRegion): TLEvent[] {
+  return UPCOMING_EVENTS.filter(event => {
+    if (!event.regions || event.regions.length === 0) return true
+    if (region && event.regions.includes(region)) return true
+    return false
+  })
 }
