@@ -11,52 +11,56 @@ export function SEO({ title, description, image, canonical }: SEOProps) {
   useEffect(() => {
     document.title = title;
 
-    // Update or create meta description
-    let metaDescription = document.querySelector('meta[name="description"]');
-    if (!metaDescription) {
-      metaDescription = document.createElement("meta");
-      metaDescription.setAttribute("name", "description");
-      document.head.appendChild(metaDescription);
-    }
-    metaDescription.setAttribute("content", description);
+    const canonicalHost = "https://truelegacyworld.com";
+    const host = typeof window !== "undefined" ? window.location.host : "truelegacyworld.com";
+    const protocol = typeof window !== "undefined" ? window.location.protocol : "https:";
+    const currentPath = typeof window !== "undefined" ? window.location.pathname : "/";
+    const siteUrl = `${protocol}//${host}${currentPath}`;
 
-    // Open Graph
-    let ogTitle = document.querySelector('meta[property="og:title"]');
-    if (!ogTitle) {
-      ogTitle = document.createElement("meta");
-      ogTitle.setAttribute("property", "og:title");
-      document.head.appendChild(ogTitle);
-    }
-    ogTitle.setAttribute("content", title);
+    const defaultImage = `${canonicalHost}/logos/tl-square-white.png`;
+    const resolvedImage = image ? new URL(image, canonicalHost).toString() : defaultImage;
+    const effectiveCanonical = canonical || `${canonicalHost}${currentPath}`;
 
-    let ogDesc = document.querySelector('meta[property="og:description"]');
-    if (!ogDesc) {
-      ogDesc = document.createElement("meta");
-      ogDesc.setAttribute("property", "og:description");
-      document.head.appendChild(ogDesc);
-    }
-    ogDesc.setAttribute("content", description);
-
-    if (image) {
-      let ogImage = document.querySelector('meta[property="og:image"]');
-      if (!ogImage) {
-        ogImage = document.createElement("meta");
-        ogImage.setAttribute("property", "og:image");
-        document.head.appendChild(ogImage);
+    const setMeta = (selector: string, attr: string, value: string) => {
+      let tag = document.querySelector(selector);
+      if (!tag) {
+        const elementName = selector.startsWith("link") ? "link" : "meta";
+        tag = document.createElement(elementName);
+        const attrParts = selector.match(/\[(.*)\]/);
+        if (attrParts && attrParts[1]) {
+          const [attrName, attrValue] = attrParts[1].split("=");
+          if (attrName && attrValue) {
+            tag.setAttribute(attrName, attrValue.replace(/"/g, ""));
+          }
+        }
+        document.head.appendChild(tag);
       }
-      ogImage.setAttribute("content", image);
-    }
+      tag.setAttribute(attr, value);
+    };
 
-    // Canonical URL
-    if (canonical) {
-      let canonicalLink = document.querySelector('link[rel="canonical"]');
-      if (!canonicalLink) {
-        canonicalLink = document.createElement("link");
-        canonicalLink.setAttribute("rel", "canonical");
-        document.head.appendChild(canonicalLink);
-      }
-      canonicalLink.setAttribute("href", canonical);
+    setMeta('meta[name="title"]', "content", title);
+    setMeta('meta[name="description"]', "content", description);
+    setMeta('meta[property="og:title"]', "content", title);
+    setMeta('meta[property="og:description"]', "content", description);
+    setMeta('meta[property="og:type"]', "content", "website");
+    setMeta('meta[property="og:site_name"]', "content", "True Legacy World");
+    setMeta('meta[property="og:url"]', "content", siteUrl);
+    setMeta('meta[property="og:image"]', "content", resolvedImage);
+    setMeta('meta[property="og:image:alt"]', "content", "True Legacy World brand logo and landscape");
+
+    setMeta('meta[property="twitter:card"]', "content", "summary_large_image");
+    setMeta('meta[property="twitter:url"]', "content", siteUrl);
+    setMeta('meta[property="twitter:title"]', "content", title);
+    setMeta('meta[property="twitter:description"]', "content", description);
+    setMeta('meta[property="twitter:image"]', "content", resolvedImage);
+
+    let canonicalLink = document.querySelector('link[rel="canonical"]');
+    if (!canonicalLink) {
+      canonicalLink = document.createElement("link");
+      canonicalLink.setAttribute("rel", "canonical");
+      document.head.appendChild(canonicalLink);
     }
+    canonicalLink.setAttribute("href", effectiveCanonical);
   }, [title, description, image, canonical]);
 
   return null;
