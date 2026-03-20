@@ -1,6 +1,7 @@
 import { Navbar } from "@/components/layout/Navbar";
 import { SEO } from "@/components/SEO";
 import { EventsFirstTimePrompt } from "@/components/ui/EventsFirstTimePrompt";
+import type { TLEvent } from "@/lib/events";
 import { EVENTS_FORM_URL, getEventsByRegion } from "@/lib/events";
 import { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
@@ -49,6 +50,8 @@ const LABELS = {
     hero: "Upcoming Events",
     register: "Register now",
     noEvents: "No upcoming events for this region.",
+    weeklySessions: "Weekly Live Sessions",
+    featuredMasterclass: "Featured Masterclass",
   },
   es: {
     breadcrumbHome: "Inicio",
@@ -56,6 +59,8 @@ const LABELS = {
     hero: "Próximos Eventos",
     register: "Regístrate ahora",
     noEvents: "No hay eventos próximos para esta región.",
+    weeklySessions: "Sesiones Semanales en Vivo",
+    featuredMasterclass: "Clase Magistral Destacada",
   },
   fr: {
     breadcrumbHome: "Accueil",
@@ -63,6 +68,8 @@ const LABELS = {
     hero: "Événements à venir",
     register: "S'inscrire maintenant",
     noEvents: "Aucun événement à venir pour cette région.",
+    weeklySessions: "Sessions Hebdomadaires en Direct",
+    featuredMasterclass: "Masterclass en Vedette",
   },
   pt: {
     breadcrumbHome: "Início",
@@ -70,8 +77,106 @@ const LABELS = {
     hero: "Próximos Eventos",
     register: "Registre-se agora",
     noEvents: "Nenhum evento próximo para esta região.",
+    weeklySessions: "Sessões Semanais ao Vivo",
+    featuredMasterclass: "Masterclass em Destaque",
   },
 };
+
+function EventCard({ event, region, lang, onFirstTimeYes, onFirstTimeNo }: {
+  event: TLEvent
+  region: string
+  lang: "en" | "es" | "fr" | "pt"
+  onFirstTimeYes: () => void
+  onFirstTimeNo: (url: string) => void
+}) {
+  const isLatam = region === "latam";
+
+  const desc =
+    lang === "es"
+      ? event.description_es
+      : lang === "fr"
+        ? event.description_fr
+        : lang === "pt"
+          ? (event.description_pt ?? event.description_en)
+          : event.description_en;
+
+  const displayTitle =
+    lang === "es" && event.title_es
+      ? event.title_es
+      : lang === "fr" && event.title_fr
+        ? event.title_fr
+        : lang === "pt" && event.title_pt
+          ? event.title_pt
+          : event.title;
+
+  const displayDate =
+    lang === "es" && event.date_es
+      ? event.date_es
+      : lang === "fr" && event.date_fr
+        ? event.date_fr
+        : lang === "pt" && event.date_pt
+          ? event.date_pt
+          : event.date;
+
+  const timezones = isLatam ? event.latamTimezones : event.timezones;
+  const joinUrl = isLatam ? event.latamZoomUrl : (event.joinUrl ?? event.registerUrl);
+  const eventImage = isLatam && event.latamImage ? event.latamImage : event.image;
+
+  return (
+    <article className="event-card rounded-2xl overflow-hidden border border-white/10 bg-white/5 max-w-3xl mx-auto">
+      {eventImage && (
+        <div className="relative w-full bg-white/5 flex items-center justify-center p-4">
+          <img
+            src={eventImage}
+            alt={displayTitle}
+            className="event-image max-w-full max-h-[500px] w-auto h-auto object-contain"
+          />
+        </div>
+      )}
+      <div className="p-5 sm:p-8">
+        <h3 className="text-xl sm:text-2xl font-bold text-white mb-2">
+          {displayTitle}
+        </h3>
+        <p className="text-[#00a896] font-semibold text-base mb-5">
+          {displayDate}
+        </p>
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-5 p-4 rounded-xl bg-white/5 border border-white/5">
+          {timezones.map((tz) => (
+            <div key={tz.region} className="text-sm text-slate-300">
+              <span className="block text-xs font-semibold uppercase tracking-wide text-slate-500 mb-0.5">
+                {tz.region}
+              </span>
+              <span className="font-bold text-white">{tz.time}</span>
+            </div>
+          ))}
+        </div>
+        <div className="whitespace-pre-line text-slate-300 text-sm leading-relaxed mb-6">
+          {desc}
+        </div>
+        {event.hasFirstTimePrompt ? (
+          <div className="mb-6">
+            <EventsFirstTimePrompt
+              onYes={onFirstTimeYes}
+              onNo={onFirstTimeNo}
+              joinUrl={joinUrl}
+              locale={lang}
+            />
+          </div>
+        ) : (
+          <div className="mb-6">
+            <button
+              onClick={() => window.open(joinUrl, '_blank', 'noopener,noreferrer')}
+              className="w-full sm:w-auto flex items-center justify-center px-8 py-3 rounded-xl font-bold text-white text-base transition min-h-12"
+              style={{ background: "linear-gradient(135deg, #00a896, #00c4ae)" }}
+            >
+              {lang === "es" ? "Unirse Ahora" : lang === "fr" ? "Rejoindre Maintenant" : lang === "pt" ? "Entrar Agora" : "Join Now"}
+            </button>
+          </div>
+        )}
+      </div>
+    </article>
+  );
+}
 
 export default function EventsPage() {
   const { country: param } = useParams<{ country: string }>();
@@ -81,6 +186,10 @@ export default function EventsPage() {
   const t = LABELS[lang] ?? LABELS.en;
   const events = getEventsByRegion(region);
   const regionLabel = getRegionBreadcrumbLabel(region, lang);
+
+  const WEEKLY_IDS = new Set(['latam-tuesday-weekly', 'duo-presentation-thursday']);
+  const weeklyEvents = events.filter(e => WEEKLY_IDS.has(e.id));
+  const featuredEvents = events.filter(e => !WEEKLY_IDS.has(e.id));
 
   // Redirect old country-slug URLs to region URLs once
   useEffect(() => {
@@ -128,109 +237,26 @@ export default function EventsPage() {
           <p className="text-slate-400">{t.noEvents}</p>
         ) : (
           <div className="space-y-10">
-            {events.map((event) => {
-              const isLatam = region === "latam";
-
-              const desc =
-                lang === "es"
-                  ? event.description_es
-                  : lang === "fr"
-                    ? event.description_fr
-                    : lang === "pt"
-                      ? (event.description_pt ?? event.description_en)
-                      : event.description_en;
-
-              const displayTitle =
-                lang === "es" && event.title_es
-                  ? event.title_es
-                  : lang === "fr" && event.title_fr
-                    ? event.title_fr
-                    : lang === "pt" && event.title_pt
-                      ? event.title_pt
-                      : event.title;
-
-              const displayDate =
-                lang === "es" && event.date_es
-                  ? event.date_es
-                  : lang === "fr" && event.date_fr
-                    ? event.date_fr
-                    : lang === "pt" && event.date_pt
-                      ? event.date_pt
-                      : event.date;
-
-              const timezones = isLatam
-                ? event.latamTimezones
-                : event.timezones;
-
-              const joinUrl = isLatam
-                ? event.latamZoomUrl
-                : (event.joinUrl ?? event.registerUrl);
-
-              const eventImage = isLatam && event.latamImage
-                ? event.latamImage
-                : event.image;
-
-              return (
-                <article
-                  key={event.id}
-                  className="event-card rounded-2xl overflow-hidden border border-white/10 bg-white/5 max-w-3xl mx-auto"
-                >
-                  {eventImage && (
-                    <div className="relative w-full bg-white/5 flex items-center justify-center p-4">
-                      <img
-                        src={eventImage}
-                        alt={displayTitle}
-                        className="event-image max-w-full max-h-[500px] w-auto h-auto object-contain"
-                      />
-                    </div>
-                  )}
-                  <div className="p-5 sm:p-8">
-                    <h2 className="text-xl sm:text-2xl font-bold text-white mb-2">
-                      {displayTitle}
-                    </h2>
-                    <p className="text-[#00a896] font-semibold text-base mb-5">
-                      {displayDate}
-                    </p>
-                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-5 p-4 rounded-xl bg-white/5 border border-white/5">
-                      {timezones.map((tz) => (
-                        <div key={tz.region} className="text-sm text-slate-300">
-                          <span className="block text-xs font-semibold uppercase tracking-wide text-slate-500 mb-0.5">
-                            {tz.region}
-                          </span>
-                          <span className="font-bold text-white">
-                            {tz.time}
-                          </span>
-                        </div>
-                      ))}
-                    </div>
-                    <div className="whitespace-pre-line text-slate-300 text-sm leading-relaxed mb-6">
-                      {desc}
-                    </div>
-
-                    {event.hasFirstTimePrompt ? (
-                      <div className="mb-6">
-                        <EventsFirstTimePrompt
-                          onYes={handleFirstTimeYes}
-                          onNo={handleFirstTimeNo}
-                          joinUrl={joinUrl}
-                          locale={lang}
-                        />
-                      </div>
-                    ) : (
-                      <div className="mb-6">
-                        <button
-                          onClick={() => window.open(joinUrl, '_blank', 'noopener,noreferrer')}
-                          className="w-full sm:w-auto flex items-center justify-center px-8 py-3 rounded-xl font-bold text-white text-base transition min-h-12"
-                          style={{ background: "linear-gradient(135deg, #00a896, #00c4ae)" }}
-                        >
-                          {lang === "es" ? "Unirse Ahora" : lang === "fr" ? "Rejoindre Maintenant" : lang === "pt" ? "Entrar Agora" : "Join Now"}
-                        </button>
-                      </div>
-                    )}
-                  </div>
-                </article>
-              );
-            })}
+            {weeklyEvents.length > 0 && (
+              <>
+                <h2 className="text-2xl font-bold text-[#00a896] text-center tracking-wide">
+                  {t.weeklySessions}
+                </h2>
+                {weeklyEvents.map((event) => (
+                  <EventCard key={event.id} event={event} region={region} lang={lang} onFirstTimeYes={handleFirstTimeYes} onFirstTimeNo={handleFirstTimeNo} />
+                ))}
+              </>
+            )}
+            {featuredEvents.length > 0 && (
+              <>
+                <h2 className="text-2xl font-bold text-[#00a896] text-center tracking-wide mt-4">
+                  {t.featuredMasterclass}
+                </h2>
+                {featuredEvents.map((event) => (
+                  <EventCard key={event.id} event={event} region={region} lang={lang} onFirstTimeYes={handleFirstTimeYes} onFirstTimeNo={handleFirstTimeNo} />
+                ))}
+              </>
+            )}
           </div>
         )}
       </div>
