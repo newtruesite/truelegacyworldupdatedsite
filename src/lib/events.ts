@@ -111,10 +111,15 @@ Clique em "Entrar Agora" para acessar o Zoom diretamente.`,
       { region: 'UAE', time: '5:00 AM (Friday)' },
       { region: 'Turkey', time: '4:00 AM (Friday)' },
       { region: 'Nigeria', time: '2:00 AM (Friday)' },
-      { region: 'Miami', time: '8:00 PM' },
+      { region: 'EST', time: '8:00 PM' },
+      { region: 'PST', time: '5:00 PM' },
     ],
     latamTimezones: [
-      { region: 'Colombia', time: '7:00 PM' },
+      { region: 'Malaysia', time: '9:00 AM (Friday)' },
+      { region: 'India', time: '6:30 AM (Friday)' },
+      { region: 'UAE', time: '5:00 AM (Friday)' },
+      { region: 'Turkey', time: '4:00 AM (Friday)' },
+      { region: 'Nigeria', time: '2:00 AM (Friday)' },
       { region: 'EST', time: '8:00 PM' },
       { region: 'PST', time: '5:00 PM' },
     ],
@@ -163,12 +168,17 @@ Clique em "Entrar Agora" para acessar o Zoom diretamente.`,
       { region: 'UAE', time: '4:00 PM' },
       { region: 'Turkey', time: '3:00 PM' },
       { region: 'Nigeria', time: '1:00 PM' },
-      { region: 'Miami', time: '7:00 AM' },
+      { region: 'EST', time: '7:00 AM' },
+      { region: 'PST', time: '4:00 AM' },
     ],
     latamTimezones: [
-      { region: 'Colombia', time: '7:00 PM' },
-      { region: 'EST', time: '8:00 PM' },
-      { region: 'PST', time: '5:00 PM' },
+      { region: 'Malaysia', time: '8:00 PM' },
+      { region: 'India', time: '5:30 PM' },
+      { region: 'UAE', time: '4:00 PM' },
+      { region: 'Turkey', time: '3:00 PM' },
+      { region: 'Nigeria', time: '1:00 PM' },
+      { region: 'EST', time: '7:00 AM' },
+      { region: 'PST', time: '4:00 AM' },
     ],
     description_en: `This is not just another training. This is a 3-hour power-packed Masterclass designed to help you move to the next level in Enagic — with clarity, strategy, and real execution.
 
@@ -244,4 +254,68 @@ export function getEventsByRegion(region?: EventRegion): TLEvent[] {
     seen.add(event.id)
     return true
   })
+}
+
+// Maps "Miami" (legacy) → "EST" and translates known region names by locale.
+export function translateEventTimezoneRegion(region: string, locale: string): string {
+  // Legacy fallback: "Miami" was used before EST
+  const normalized = region === 'Miami' ? 'EST' : region
+  if (locale === 'en') return normalized
+
+  const regionMap: Record<string, Record<string, string>> = {
+    Malaysia: { es: 'Malasia',  fr: 'Malaisie', pt: 'Malásia'  },
+    India:    { es: 'India',    fr: 'Inde',      pt: 'Índia'    },
+    UAE:      { es: 'EAU',      fr: 'EAU',       pt: 'EAU'      },
+    Turkey:   { es: 'Turquía',  fr: 'Turquie',   pt: 'Turquia'  },
+    Nigeria:  { es: 'Nigeria',  fr: 'Nigéria',   pt: 'Nigéria'  },
+    Colombia: { es: 'Colombia', fr: 'Colombie',  pt: 'Colômbia' },
+    Miami:    { es: 'EST',      fr: 'EST',        pt: 'EST'      },
+  }
+
+  const map = regionMap[region]
+  if (!map) return normalized
+  return map[locale] ?? normalized
+}
+
+// Translates AM/PM suffixes and English day names inside a time string to the
+// given locale.  French output uses 24-hour notation; es/pt use a.m./p.m.
+export function translateEventTimezoneTime(time: string, locale: string): string {
+  if (locale === 'en') return time
+
+  const dayNames: Record<string, Record<string, string>> = {
+    Monday:    { es: 'lunes',        fr: 'lundi',    pt: 'segunda-feira' },
+    Tuesday:   { es: 'martes',       fr: 'mardi',    pt: 'terça-feira'   },
+    Wednesday: { es: 'miércoles',    fr: 'mercredi', pt: 'quarta-feira'  },
+    Thursday:  { es: 'jueves',       fr: 'jeudi',    pt: 'quinta-feira'  },
+    Friday:    { es: 'viernes',      fr: 'vendredi', pt: 'sexta-feira'   },
+    Saturday:  { es: 'sábado',       fr: 'samedi',   pt: 'sábado'        },
+    Sunday:    { es: 'domingo',      fr: 'dimanche', pt: 'domingo'       },
+  }
+
+  let result = time
+
+  // Translate day names (appear inside parentheses e.g. "(Friday)")
+  for (const [en, translations] of Object.entries(dayNames)) {
+    if (result.includes(en)) {
+      result = result.replace(en, translations[locale] ?? en)
+    }
+  }
+
+  if (locale === 'fr') {
+    // Convert to 24-hour clock and strip the AM/PM marker
+    result = result.replace(/(\d{1,2}):(\d{2})\s*PM/i, (_, h, m) => {
+      const h24 = parseInt(h, 10) === 12 ? 12 : parseInt(h, 10) + 12
+      return `${String(h24).padStart(2, '0')}:${m}`
+    })
+    result = result.replace(/(\d{1,2}):(\d{2})\s*AM/i, (_, h, m) => {
+      const h24 = parseInt(h, 10) === 12 ? 0 : parseInt(h, 10)
+      return `${String(h24).padStart(2, '0')}:${m}`
+    })
+  } else {
+    // es / pt: lowercase a.m. / p.m. with dots
+    result = result.replace(/\bAM\b/gi, 'a.m.')
+    result = result.replace(/\bPM\b/gi, 'p.m.')
+  }
+
+  return result.trim()
 }

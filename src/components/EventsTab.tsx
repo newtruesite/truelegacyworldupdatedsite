@@ -1,4 +1,4 @@
-import { EVENTS_FORM_URL, getEventRegion, getEventsByRegion } from "@/lib/events"
+import { EVENTS_FORM_URL, getEventRegion, getEventsByRegion, translateEventTimezoneRegion, translateEventTimezoneTime } from "@/lib/events"
 import { motion } from "framer-motion"
 
 type Props = {
@@ -101,9 +101,9 @@ export function EventsTab({ locale, countrySlug }: Props) {
                 {timezones.map((tz) => (
                   <div key={tz.region} className="text-sm text-slate-300">
                     <span className="block text-xs font-semibold uppercase tracking-wide text-slate-500 mb-0.5">
-                      {tz.region}
+                      {translateEventTimezoneRegion(tz.region, locale)}
                     </span>
-                    <span className="font-bold text-white">{tz.time}</span>
+                    <span className="font-bold text-white">{translateEventTimezoneTime(tz.time, locale)}</span>
                   </div>
                 ))}
               </div>

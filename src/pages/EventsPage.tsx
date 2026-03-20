@@ -2,7 +2,7 @@ import { Navbar } from "@/components/layout/Navbar";
 import { SEO } from "@/components/SEO";
 import { EventsFirstTimePrompt } from "@/components/ui/EventsFirstTimePrompt";
 import type { TLEvent } from "@/lib/events";
-import { EVENTS_FORM_URL, getEventsByRegion } from "@/lib/events";
+import { EVENTS_FORM_URL, getEventsByRegion, translateEventTimezoneRegion, translateEventTimezoneTime } from "@/lib/events";
 import { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
@@ -144,9 +144,9 @@ function EventCard({ event, region, lang, onFirstTimeYes, onFirstTimeNo }: {
           {timezones.map((tz) => (
             <div key={tz.region} className="text-sm text-slate-300">
               <span className="block text-xs font-semibold uppercase tracking-wide text-slate-500 mb-0.5">
-                {tz.region}
+                {translateEventTimezoneRegion(tz.region, lang)}
               </span>
-              <span className="font-bold text-white">{tz.time}</span>
+              <span className="font-bold text-white">{translateEventTimezoneTime(tz.time, lang)}</span>
             </div>
           ))}
         </div>
