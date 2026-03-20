@@ -3,7 +3,7 @@ import { SEO } from "@/components/SEO";
 import { EventsFirstTimePrompt } from "@/components/ui/EventsFirstTimePrompt";
 import { useLocaleContext } from "@/contexts/LocaleContext";
 import type { TLEvent } from "@/lib/events";
-import { EVENTS_FORM_URL, getEventsByRegion, translateEventTimezoneRegion, translateEventTimezoneTime } from "@/lib/events";
+import { getEventsByRegion, translateEventTimezoneRegion, translateEventTimezoneTime } from "@/lib/events";
 import { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
@@ -70,11 +70,10 @@ const LABELS = {
   },
 };
 
-function EventCard({ event, region, lang, onFirstTimeYes, onFirstTimeNo }: {
+function EventCard({ event, region, lang, onFirstTimeNo }: {
   event: TLEvent
   region: string
   lang: "en" | "es" | "fr" | "pt"
-  onFirstTimeYes: () => void
   onFirstTimeNo: (url: string) => void
 }) {
   const isLatam = region === "latam";
@@ -143,7 +142,7 @@ function EventCard({ event, region, lang, onFirstTimeYes, onFirstTimeNo }: {
         </div>
         <div className="mb-6">
             <EventsFirstTimePrompt
-              onYes={onFirstTimeYes}
+              onYes={() => { window.open(joinUrl, '_blank', 'noopener,noreferrer') }}
               onNo={onFirstTimeNo}
               joinUrl={joinUrl}
               locale={lang}
@@ -176,10 +175,6 @@ export default function EventsPage() {
     const targetRegion = COUNTRY_TO_REGION[lower] ?? DEFAULT_REGION;
     navigate(`/events/${targetRegion}`, { replace: true });
   }, [param, navigate]);
-
-  const handleFirstTimeYes = () => {
-    window.open(EVENTS_FORM_URL, '_blank', 'noopener,noreferrer');
-  };
 
   const handleFirstTimeNo = (url: string) => {
     window.open(url, '_blank', 'noopener,noreferrer');
@@ -220,7 +215,7 @@ export default function EventsPage() {
                   {t.weeklySessions}
                 </h2>
                 {weeklyEvents.map((event) => (
-                  <EventCard key={event.id} event={event} region={region} lang={lang} onFirstTimeYes={handleFirstTimeYes} onFirstTimeNo={handleFirstTimeNo} />
+                  <EventCard key={event.id} event={event} region={region} lang={lang} onFirstTimeNo={handleFirstTimeNo} />
                 ))}
               </>
             )}
@@ -230,7 +225,7 @@ export default function EventsPage() {
                   {t.featuredMasterclass}
                 </h2>
                 {featuredEvents.map((event) => (
-                  <EventCard key={event.id} event={event} region={region} lang={lang} onFirstTimeYes={handleFirstTimeYes} onFirstTimeNo={handleFirstTimeNo} />
+                  <EventCard key={event.id} event={event} region={region} lang={lang} onFirstTimeNo={handleFirstTimeNo} />
                 ))}
               </>
             )}
