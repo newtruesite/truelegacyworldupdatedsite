@@ -7,17 +7,17 @@ import { useLocaleContext } from "@/contexts/LocaleContext";
 import { t } from "@/lib/translations";
 import { motion } from "framer-motion";
 import {
-    CheckCircle,
-    Download,
-    ExternalLink,
-    FileText,
-    Key,
-    Lightbulb,
-    LogOut,
-    Target,
-    Users,
+  CheckCircle,
+  Download,
+  ExternalLink,
+  FileText,
+  Key,
+  Lightbulb,
+  LogOut,
+  Target,
+  Users,
 } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 
 // Training Module Types
@@ -297,6 +297,7 @@ const TrainingModuleCard: React.FC<TrainingModuleCardProps> = ({
   const localizedTitle = moduleTranslation?.title || module.title;
   const localizedDescription =
     moduleTranslation?.description || module.description;
+  const localizedResourceTitles = (moduleTranslation as { resources?: ReadonlyArray<string> } | undefined)?.resources;
 
   const toEmbedUrl = (url: string) => {
     try {
@@ -419,7 +420,9 @@ const TrainingModuleCard: React.FC<TrainingModuleCardProps> = ({
                 className="flex items-center gap-3 p-3 rounded-lg bg-white/5 hover:bg-white/10 transition-colors text-sm"
               >
                 <FileText className="w-4 h-4 text-slate-400 shrink-0" />
-                <span className="text-slate-200 flex-1">{resource.title}</span>
+                <span className="text-slate-200 flex-1">
+                  {localizedResourceTitles?.[index] ?? resource.title}
+                </span>
                 <span className="text-slate-500 text-xs uppercase">
                   {resource.type}
                 </span>
@@ -472,20 +475,12 @@ export default function TrainingPage() {
   const countrySlug = params.countrySlug;
 
   const [secretCode, setSecretCode] = useState("");
-  const [isSecretCodeValid, setIsSecretCodeValid] = useState(false);
+  const [isSecretCodeValid, setIsSecretCodeValid] = useState(
+    () => typeof window !== "undefined" && sessionStorage.getItem("tl_secret_code_valid") === "true",
+  );
   const [secretCodeError, setSecretCodeError] = useState("");
 
   const contentRef = useRef<HTMLDivElement>(null);
-
-  // Retrieve saved secret code state
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      const saved = sessionStorage.getItem("tl_secret_code_valid");
-      if (saved === "true") {
-        setIsSecretCodeValid(true);
-      }
-    }
-  }, []);
 
   const handleResetAccess = () => {
     sessionStorage.removeItem("tl_secret_code_valid");
@@ -500,17 +495,20 @@ export default function TrainingPage() {
       setSecretCodeError("");
       sessionStorage.setItem("tl_secret_code_valid", "true");
     } else {
+      const copy = t[locale] || t.en;
       setSecretCodeError(
-        locale === "es"
-          ? "Código incorrecto. Únete al grupo de Facebook para obtener el código."
-          : "Incorrect code. Join the Facebook group to get the code.",
+        copy.training?.access_error || "Incorrect code. Join the Facebook group to get the code.",
       );
     }
   };
 
   const [activeView, setActiveView] = useState<
     "sessions" | "guides" | "slides" | "events"
-  >("sessions");
+  >(() =>
+    typeof window !== "undefined" && window.location.hash === "#pdf-guides"
+      ? "guides"
+      : "sessions",
+  );
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [expandedModules, setExpandedModules] = useState<Set<string>>(
     new Set(),
@@ -520,13 +518,6 @@ export default function TrainingPage() {
   const isLatamTraining =
     countrySlug &&
     ["colombia", "brazil", "mexico", "paraguay"].includes(countrySlug);
-
-  // Handle URL anchor for guides section
-  useEffect(() => {
-    if (window.location.hash === "#pdf-guides") {
-      setActiveView("guides");
-    }
-  }, []);
 
   // Get translations for current locale
   const copy = t[locale] || t.en;
@@ -581,14 +572,10 @@ export default function TrainingPage() {
                     <Key className="w-8 h-8" />
                   </div>
                   <h2 className="text-2xl font-bold text-white mb-2">
-                    {locale === "es"
-                      ? "Código de Acceso Requerido"
-                      : "Access Code Required"}
+                    {copy.training?.access_required || "Access Code Required"}
                   </h2>
                   <p className="text-slate-400 text-sm mb-6">
-                    {locale === "es"
-                      ? "Ingresa el código secreto para acceder al entrenamiento. Únete a nuestra comunidad de Facebook para obtener el código."
-                      : "Enter the secret code to access training. Join our Facebook community to get the code."}
+                    {copy.training?.access_desc || "Enter the secret code to access training. Join our Facebook community to get the code."}
                   </p>
                   <a
                     href="https://www.facebook.com/groups/truelegacycommunity"
@@ -596,9 +583,7 @@ export default function TrainingPage() {
                     rel="noopener noreferrer"
                     className="inline-flex items-center gap-2 px-4 py-2 bg-[#1877F2] hover:bg-[#1864D9] text-white text-sm font-semibold rounded-lg transition-colors mb-8"
                   >
-                    {locale === "es"
-                      ? "Únete al Grupo de Facebook"
-                      : "Join Facebook Group"}
+                    {copy.training?.access_join_fb || "Join Facebook Group"}
                   </a>
                 </div>
 
@@ -606,9 +591,7 @@ export default function TrainingPage() {
                   <div>
                     <input
                       type="password"
-                      placeholder={
-                        locale === "es" ? "Código Secreto" : "Secret Code"
-                      }
+                      placeholder={copy.training?.access_placeholder || "Secret Code"}
                       value={secretCode}
                       onChange={(e) => setSecretCode(e.target.value)}
                       className="w-full px-4 py-3 rounded-xl bg-black/40 border border-white/10 text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500 transition-colors"
@@ -624,9 +607,7 @@ export default function TrainingPage() {
                     type="submit"
                     className="w-full min-h-[52px] flex items-center justify-center gap-2 px-6 py-3 text-base font-semibold text-white bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 hover:shadow-lg hover:shadow-cyan-500/20 hover:-translate-y-0.5 rounded-xl transition-all"
                   >
-                    {locale === "es"
-                      ? "Desbloquear Entrenamiento"
-                      : "Unlock Training"}
+                    {copy.training?.access_unlock || "Unlock Training"}
                   </button>
                 </form>
               </div>
@@ -638,7 +619,7 @@ export default function TrainingPage() {
                     className="flex items-center gap-2 text-sm text-slate-400 hover:text-white transition-colors px-4 py-2 rounded-lg bg-white/5 hover:bg-white/10"
                   >
                     <LogOut className="w-4 h-4" />{" "}
-                    {locale === "es" ? "Reiniciar acceso" : "Reset access"}
+                    {copy.training?.access_reset || "Reset access"}
                   </button>
                 </div>
                 {/* Hero Section */}

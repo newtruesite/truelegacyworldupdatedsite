@@ -82,7 +82,6 @@ export default function EventsPage() {
   const t = LABELS[lang] ?? LABELS.en;
   const events = UPCOMING_EVENTS;
   const regionLabel = getRegionBreadcrumbLabel(region, lang);
-  const isSpanish = lang === "es";
 
   // Redirect old country-slug URLs to region URLs once
   useEffect(() => {
@@ -173,7 +172,7 @@ export default function EventsPage() {
                         onYes={handleFirstTimeYes}
                         onNo={handleFirstTimeNo}
                         joinUrl={EVENTS_FORM_URL}
-                        isSpanish={isSpanish}
+                        locale={lang}
                       />
                     </div>
                   </div>

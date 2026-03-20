@@ -175,8 +175,15 @@ export const t = {
       resources: 'Resources',
       duration: 'Duration',
       level_beginner: 'Beginner',
-      level_intermediate: 'Intermediate', 
+      level_intermediate: 'Intermediate',
       level_advanced: 'Advanced',
+      access_required: 'Access Code Required',
+      access_desc: 'Enter the secret code to access training. Join our Facebook community to get the code.',
+      access_join_fb: 'Join Facebook Group',
+      access_placeholder: 'Secret Code',
+      access_unlock: 'Unlock Training',
+      access_error: 'Incorrect code. Join the Facebook group to get the code.',
+      access_reset: 'Reset access',
       categories: {
         foundation: 'Purpose & Vision',
         product: 'Product & Program Mastery',
@@ -189,43 +196,53 @@ export const t = {
     trainingModules: {
       'purpose-vision': {
         title: 'The Power of Your Purpose in Enagic',
-        description: 'In this session, your Enagic journey gets personal. We\'ll rediscover your Why, uncover your deeper purpose, and craft your 3-Year Vision alongside a letter from your future self. Expect guided reflection, a vision exercise, and steps to shape your path to leadership.'
+        description: 'In this session, your Enagic journey gets personal. We\'ll rediscover your Why, uncover your deeper purpose, and craft your 3-Year Vision alongside a letter from your future self. Expect guided reflection, a vision exercise, and steps to shape your path to leadership.',
+        resources: ['Future Self Letter Template']
       },
       'kangen-science': {
         title: 'Mastering the $10 Billion Products: LeveLuk & emGuarde',
-        description: 'This session equips you to position the LeveLuk series against competitors and highlights why emGuarde stands out. You\'ll gain confidence in Enagic\'s technology, certifications, and learn how emGuarde\'s unique advantages—like improving sleep and mood—can transform your closing power.'
+        description: 'This session equips you to position the LeveLuk series against competitors and highlights why emGuarde stands out. You\'ll gain confidence in Enagic\'s technology, certifications, and learn how emGuarde\'s unique advantages—like improving sleep and mood—can transform your closing power.',
+        resources: ['Kangen Water Ionizers Product Guide', 'Machine Care & Maintenance Guide']
       },
       'product-lineup': {
         title: 'The 8-Point Program & Massive Action Blueprint',
-        description: 'Break down Enagic\'s patented 8-Point Program and see how top leaders use it to duplicate fast, rank up, and build sustainable income. This is the core blueprint for scaling your organization globally.'
+        description: 'Break down Enagic\'s patented 8-Point Program and see how top leaders use it to duplicate fast, rank up, and build sustainable income. This is the core blueprint for scaling your organization globally.',
+        resources: ['8-Point Compensation Plan Guide', '6-Month Income Projection Sheet']
       },
       'leadership-structure': {
         title: 'The Blueprint to Building a Legacy with Enagic',
-        description: 'This session is a game-changer. You\'ll learn why 8 Points is just the start, 6A2 is the gateway, and true legacy begins beyond that. We break down how to structure for exponential growth, engineer long-term stability, and set the stage for generational income. This is your must-watch if you\'re serious about building real legacy.'
+        description: 'This session is a game-changer. You\'ll learn why 8 Points is just the start, 6A2 is the gateway, and true legacy begins beyond that. We break down how to structure for exponential growth, engineer long-term stability, and set the stage for generational income. This is your must-watch if you\'re serious about building real legacy.',
+        resources: ['Compensation Plan Guide']
       },
       'systems-funnels': {
         title: 'The System to Hit 6A Faster—Without Burning Out',
-        description: 'In this session, we break down the True Legacy funnel system—how to attract the right people, turn them into leaders, and scale without overwhelm. You\'ll master the steps from first contact to duplication—building a team that grows even when you rest. Learn how to attract the right prospects, exact steps from contact to duplication, how to automate and avoid burnout, and why this system accelerates 6A success.'
+        description: 'In this session, we break down the True Legacy funnel system—how to attract the right people, turn them into leaders, and scale without overwhelm. You\'ll master the steps from first contact to duplication—building a team that grows even when you rest. Learn how to attract the right prospects, exact steps from contact to duplication, how to automate and avoid burnout, and why this system accelerates 6A success.',
+        resources: ['Conversation & Invitation Script', 'Prospect Invitation Variations', 'Duo Presentation Template']
       },
       'prospecting-basics': {
         title: '99% of Distributors Prospect the Wrong People — Fix This in 20 Min',
-        description: 'This is where everything shifts. If your pipeline feels stuck or you\'re talking to the wrong people—this training changes the game. Inside this breakthrough session, you\'ll learn: The PRIME 6™ – six target groups naturally aligned with Enagic, The 4 Archetypes – how people think, decide, and take action, The True Legacy Quadrants – instantly identify who\'s ready and who\'s not, The Prospect List Framework – build a high-quality, duplicatable list, The 48-Hour Rule – create momentum immediately after building your list. This isn\'t about collecting contacts. This is about identifying future leaders.'
+        description: 'This is where everything shifts. If your pipeline feels stuck or you\'re talking to the wrong people—this training changes the game. Inside this breakthrough session, you\'ll learn: The PRIME 6™ – six target groups naturally aligned with Enagic, The 4 Archetypes – how people think, decide, and take action, The True Legacy Quadrants – instantly identify who\'s ready and who\'s not, The Prospect List Framework – build a high-quality, duplicatable list, The 48-Hour Rule – create momentum immediately after building your list. This isn\'t about collecting contacts. This is about identifying future leaders.',
+        resources: ['True Legacy Prospect List Mastery Doc']
       },
       'social-media-prospecting': {
         title: 'Turn Every Presentation Into a Builder Magnet — Here\'s How',
-        description: 'Your Language Determines the People You Invite. This isn\'t just about giving a great demo—it\'s about using intentional language to attract the right people from the start. In this True Legacy Masterclass, you\'ll learn: The 3 Types of People who join Enagic, How to invite using the 4 Archetypes: Seeker, Builder, Protector, Architect, The psychology of high-conversion invitations, How the DUO Presentation activates each archetype, Product Demo vs Business Demo — what really closes, How to turn every demo into a duplication machine, How to attract your future 6A, 6A2, and 6A2-3 leaders. Your words shape your team. Your team shapes your future.'
+        description: 'Your Language Determines the People You Invite. This isn\'t just about giving a great demo—it\'s about using intentional language to attract the right people from the start. In this True Legacy Masterclass, you\'ll learn: The 3 Types of People who join Enagic, How to invite using the 4 Archetypes: Seeker, Builder, Protector, Architect, The psychology of high-conversion invitations, How the DUO Presentation activates each archetype, Product Demo vs Business Demo — what really closes, How to turn every demo into a duplication machine, How to attract your future 6A, 6A2, and 6A2-3 leaders. Your words shape your team. Your team shapes your future.',
+        resources: ['Archetypes & Invitation Profile']
       },
       'closing-techniques': {
         title: 'STOP TALKING. START CLOSING.',
-        description: 'The 15-Minute System That Closes. This session unlocks one of the most powerful skills every Enagic leader must master: how to guide prospects into clarity and action using expert-level questions and strategic closing psychology. Most talk too much. Top leaders ask with precision. In this masterclass, you\'ll learn: The 14-Minute True Legacy Closing Framework, How to open your Zoom call with presence & authority, The 11-Question Diagnostic System to reveal pain, desire & readiness, How to identify the 4 Archetypes and tailor your close, The Precision 20% Close — the only part that really matters, How to ask for the decision without pressure, How to develop tonality, posture, and trusted advisor energy. This will shift how you close, lead, and duplicate.'
+        description: 'The 15-Minute System That Closes. This session unlocks one of the most powerful skills every Enagic leader must master: how to guide prospects into clarity and action using expert-level questions and strategic closing psychology. Most talk too much. Top leaders ask with precision. In this masterclass, you\'ll learn: The 14-Minute True Legacy Closing Framework, How to open your Zoom call with presence & authority, The 11-Question Diagnostic System to reveal pain, desire & readiness, How to identify the 4 Archetypes and tailor your close, The Precision 20% Close — the only part that really matters, How to ask for the decision without pressure, How to develop tonality, posture, and trusted advisor energy. This will shift how you close, lead, and duplicate.',
+        resources: ['Closing Framework Notes']
       },
       'business-media': {
         title: 'Why Objections Are a Good Sign — And How to Turn Them into WINS',
-        description: 'Turn resistance into clarity. Learn the 4 core objection categories and exactly how to address money, spouse, timing, fear, and "I need to research" in a way that builds trust and momentum.'
+        description: 'Turn resistance into clarity. Learn the 4 core objection categories and exactly how to address money, spouse, timing, fear, and "I need to research" in a way that builds trust and momentum.',
+        resources: ['Objections Handling Notes']
       },
       'income-projection': {
         title: '❌ Forget Social Media — This Is Real Business Media',
-        description: 'Training with Eunice Seet (6A2). This session is your wake-up call to stop chasing likes and start using media to build a real business. Eunice breaks down how to turn your online presence into a powerful digital storefront that builds trust, attracts the right people, and works for you 24/7. Here\'s what you\'ll learn: Digital Storefront – Position yourself online like a pro, Target Audience & Bio – Speak directly to who you want to attract, Three-Pillar Magnetic Content – Combine Lifestyle, Educational, and Business posts to naturally draw in your ideal prospects. This training will shift how you show up online and how you attract your next team leaders. Don\'t just post—position. This is Business Media.'
+        description: 'Training with Eunice Seet (6A2). This session is your wake-up call to stop chasing likes and start using media to build a real business. Eunice breaks down how to turn your online presence into a powerful digital storefront that builds trust, attracts the right people, and works for you 24/7. Here\'s what you\'ll learn: Digital Storefront – Position yourself online like a pro, Target Audience & Bio – Speak directly to who you want to attract, Three-Pillar Magnetic Content – Combine Lifestyle, Educational, and Business posts to naturally draw in your ideal prospects. This training will shift how you show up online and how you attract your next team leaders. Don\'t just post—position. This is Business Media.',
+        resources: ['True Legacy Leadership Summary']
       }
     },
     trainingPdfs: {
@@ -351,6 +368,13 @@ export const t = {
       level_beginner: 'Principiante',
       level_intermediate: 'Intermedio',
       level_advanced: 'Avanzado',
+      access_required: 'Código de Acceso Requerido',
+      access_desc: 'Ingresa el código secreto para acceder al entrenamiento. Únete a nuestra comunidad de Facebook para obtener el código.',
+      access_join_fb: 'Únete al Grupo de Facebook',
+      access_placeholder: 'Código Secreto',
+      access_unlock: 'Desbloquear Entrenamiento',
+      access_error: 'Código incorrecto. Únete al grupo de Facebook para obtener el código.',
+      access_reset: 'Reiniciar acceso',
       categories: {
         foundation: 'Propósito y Visión',
         product: 'Dominio de Productos y Programas',
@@ -363,43 +387,53 @@ export const t = {
     trainingModules: {
       'purpose-vision': {
         title: 'El Poder de Tu Propósito en Enagic',
-        description: 'En esta sesión, tu viaje con Enagic se vuelve personal. Redescubriremos tu Porqué, descubriremos tu propósito más profundo y crearemos tu Visión a 3 Años junto con una carta de tu yo del futuro. Espera una reflexión guiada, un ejercicio de visión y pasos para moldear tu camino hacia el liderazgo.'
+        description: 'En esta sesión, tu viaje con Enagic se vuelve personal. Redescubriremos tu Porqué, descubriremos tu propósito más profundo y crearemos tu Visión a 3 Años junto con una carta de tu yo del futuro. Espera una reflexión guiada, un ejercicio de visión y pasos para moldear tu camino hacia el liderazgo.',
+        resources: ['Plantilla: Carta de tu Yo del Futuro']
       },
       'kangen-science': {
         title: 'Dominando los Productos de $10 Billones: LeveLuk y emGuarde',
-        description: 'Esta sesión te capacita para posicionar la serie LeveLuk contra la competencia y destaca por qué emGuarde sobresale. Ganarás confianza en la tecnología de Enagic, sus certificaciones, y aprenderás cómo las ventajas únicas de emGuarde —como mejorar el sueño y el estado de ánimo— pueden transformar tu poder de cierre.'
+        description: 'Esta sesión te capacita para posicionar la serie LeveLuk contra la competencia y destaca por qué emGuarde sobresale. Ganarás confianza en la tecnología de Enagic, sus certificaciones, y aprenderás cómo las ventajas únicas de emGuarde —como mejorar el sueño y el estado de ánimo— pueden transformar tu poder de cierre.',
+        resources: ['Guía de Productos de Ionizadores Kangen', 'Guía de Mantenimiento de Máquina']
       },
       'product-lineup': {
         title: 'El Sistema de 8 Puntos y Plan de Acción Masiva',
-        description: 'Desglosamos el programa patentado de 8 Puntos de Enagic y vemos cómo los principales líderes lo usan para duplicar rápido, subir de rango y construir ingresos sostenibles. Este es el plan central para expandir tu organización globalmente.'
+        description: 'Desglosamos el programa patentado de 8 Puntos de Enagic y vemos cómo los principales líderes lo usan para duplicar rápido, subir de rango y construir ingresos sostenibles. Este es el plan central para expandir tu organización globalmente.',
+        resources: ['Guía del Plan de Compensación 8-Puntos', 'Hoja de Proyección a 6 Meses']
       },
       'leadership-structure': {
         title: 'El Plan para Construir un Legado con Enagic',
-        description: 'Esta sesión lo cambia todo. Aprenderás por qué los 8 Puntos son solo el comienzo, 6A2 es la puerta de entrada, y el verdadero legado comienza más allá. Desglosamos cómo estructurar para un crecimiento exponencial, diseñar estabilidad a largo plazo y preparar el escenario para un ingreso generacional. Indispensable si buscas construir un verdadero legado.'
+        description: 'Esta sesión lo cambia todo. Aprenderás por qué los 8 Puntos son solo el comienzo, 6A2 es la puerta de entrada, y el verdadero legado comienza más allá. Desglosamos cómo estructurar para un crecimiento exponencial, diseñar estabilidad a largo plazo y preparar el escenario para un ingreso generacional. Indispensable si buscas construir un verdadero legado.',
+        resources: ['Guía del Plan de Compensación']
       },
       'systems-funnels': {
         title: 'El Sistema para Alcanzar 6A Más Rápido (Sin Agotarte)',
-        description: 'En esta sesión, desglosamos el sistema True Legacy: cómo atraer a las personas correctas, convertirlas en líderes y escalar sin abrumarte. Dominarás los pasos desde el primer contacto hasta la duplicación, construyendo un equipo que crece incluso cuando descansas. Aprende cómo atraer los prospectos adecuados, los pasos exactos del contacto a la duplicación, cómo automatizar y evitar el agotamiento, y por qué este sistema acelera el éxito 6A.'
+        description: 'En esta sesión, desglosamos el sistema True Legacy: cómo atraer a las personas correctas, convertirlas en líderes y escalar sin abrumarte. Dominarás los pasos desde el primer contacto hasta la duplicación, construyendo un equipo que crece incluso cuando descansas. Aprende cómo atraer los prospectos adecuados, los pasos exactos del contacto a la duplicación, cómo automatizar y evitar el agotamiento, y por qué este sistema acelera el éxito 6A.',
+        resources: ['Guion de Conversación e Invitación', 'Variaciones de Invitación por Prospecto', 'Plantilla de Presentación Duo']
       },
       'prospecting-basics': {
         title: 'El 99% Prospecta a las Personas Incorrectas (Soluciónalo en 20 Min)',
-        description: 'Aquí es donde todo cambia. Si tu embudo se siente estancado o estás hablando con las personas incorrectas, este entrenamiento cambia el juego. Aprenderás: Los PRIME 6™ – seis grupos objetivo naturalmente alineados con Enagic, Los 4 Arquetipos – cómo la gente piensa, decide y actúa, Los Cuadrantes True Legacy – identifica instantáneamente quién está listo y quién no, El Marco de Lista de Prospectos – construye una lista de alta calidad y duplicable, La Regla de las 48 Horas – crea impulso inmediatamente después de construir tu lista. No se trata de coleccionar contactos. Se trata de identificar futuros líderes.'
+        description: 'Aquí es donde todo cambia. Si tu embudo se siente estancado o estás hablando con las personas incorrectas, este entrenamiento cambia el juego. Aprenderás: Los PRIME 6™ – seis grupos objetivo naturalmente alineados con Enagic, Los 4 Arquetipos – cómo la gente piensa, decide y actúa, Los Cuadrantes True Legacy – identifica instantáneamente quién está listo y quién no, El Marco de Lista de Prospectos – construye una lista de alta calidad y duplicable, La Regla de las 48 Horas – crea impulso inmediatamente después de construir tu lista. No se trata de coleccionar contactos. Se trata de identificar futuros líderes.',
+        resources: ['Dominio de la Lista de Prospectos True Legacy']
       },
       'social-media-prospecting': {
         title: 'Convierte Cada Presentación en un Imán de Líderes — Así es Como',
-        description: 'Tu lenguaje determina a las personas que invitas. No es solo dar una gran demostración, es usar un lenguaje intencional para atraer a las personas correctas desde el inicio. En esta Masterclass True Legacy, aprenderás: Los 3 tipos de personas que se unen a Enagic, Cómo invitar usando los 4 Arquetipos: Buscador, Constructor, Protector, Arquitecto, La psicología de las invitaciones de alta conversión, Cómo la Presentación DUO activa cada arquetipo, Demo de Producto vs Demo de Negocio — qué realmente cierra, Cómo convertir cada demo en una máquina de duplicación, Cómo atraer a tus futuros líderes 6A, 6A2 y 6A2-3. Tus palabras moldean tu equipo. Tu equipo moldea tu futuro.'
+        description: 'Tu lenguaje determina a las personas que invitas. No es solo dar una gran demostración, es usar un lenguaje intencional para atraer a las personas correctas desde el inicio. En esta Masterclass True Legacy, aprenderás: Los 3 tipos de personas que se unen a Enagic, Cómo invitar usando los 4 Arquetipos: Buscador, Constructor, Protector, Arquitecto, La psicología de las invitaciones de alta conversión, Cómo la Presentación DUO activa cada arquetipo, Demo de Producto vs Demo de Negocio — qué realmente cierra, Cómo convertir cada demo en una máquina de duplicación, Cómo atraer a tus futuros líderes 6A, 6A2 y 6A2-3. Tus palabras moldean tu equipo. Tu equipo moldea tu futuro.',
+        resources: ['Perfil de Arquetipos e Invitación']
       },
       'closing-techniques': {
         title: 'DEJA DE HABLAR. EMPIEZA A CERRAR.',
-        description: 'El Sistema de 15 Minutos que Cierra. Esta sesión desbloquea una de las habilidades más poderosas que todo líder de Enagic debe dominar: cómo guiar a los prospectos hacia la claridad y la acción usando preguntas expertas y psicología de cierre estratégica. La mayoría habla demasiado. Los líderes preguntan con precisión. En esta masterclass aprenderás: El Marco de Cierre True Legacy de 14 Minutos, Cómo abrir tu llamada de Zoom con presencia y autoridad, El Sistema de Diagnóstico de 11 Preguntas para revelar dolor, deseo y preparación, Cómo identificar los 4 Arquetipos y adaptar tu cierre, El Cierre de Precisión del 20% — la única parte que realmente importa, Cómo pedir la decisión sin presión, Cómo desarrollar tu tonalidad, postura y energía de asesor de confianza. Esto cambiará cómo cierras, lideras y duplicas.'
+        description: 'El Sistema de 15 Minutos que Cierra. Esta sesión desbloquea una de las habilidades más poderosas que todo líder de Enagic debe dominar: cómo guiar a los prospectos hacia la claridad y la acción usando preguntas expertas y psicología de cierre estratégica. La mayoría habla demasiado. Los líderes preguntan con precisión. En esta masterclass aprenderás: El Marco de Cierre True Legacy de 14 Minutos, Cómo abrir tu llamada de Zoom con presencia y autoridad, El Sistema de Diagnóstico de 11 Preguntas para revelar dolor, deseo y preparación, Cómo identificar los 4 Arquetipos y adaptar tu cierre, El Cierre de Precisión del 20% — la única parte que realmente importa, Cómo pedir la decisión sin presión, Cómo desarrollar tu tonalidad, postura y energía de asesor de confianza. Esto cambiará cómo cierras, lideras y duplicas.',
+        resources: ['Notas del Marco de Cierre']
       },
       'business-media': {
         title: 'Por Qué las Objeciones Son una Buena Señal — Y Cómo Convertirlas en VICTORIAS',
-        description: 'Convierte la resistencia en claridad. Aprende las 4 categorías principales de objeciones y exactamente cómo abordar el dinero, cónyuge, tiempo, miedo y "necesito investigar" de una manera que construya confianza e impulso.'
+        description: 'Convierte la resistencia en claridad. Aprende las 4 categorías principales de objeciones y exactamente cómo abordar el dinero, cónyuge, tiempo, miedo y "necesito investigar" de una manera que construya confianza e impulso.',
+        resources: ['Notas para Manejo de Objeciones']
       },
       'income-projection': {
         title: '❌ Olvida las Redes Sociales — Esto es Negocio Real',
-        description: 'Entrenamiento con Eunice Seet (6A2). Esta sesión es tu llamada de atención para dejar de perseguir "likes" y empezar a usar los medios para construir un negocio real. Eunice desglosa cómo convertir tu presencia en línea en un escaparate digital poderoso que construye confianza, atrae a las personas correctas y trabaja para ti 24/7. Esto es lo que aprenderás: Escaparate Digital – Posiciónate en línea como un profesional, Audiencia Objetivo y Bio – Habla directamente a quien quieres atraer, Contenido Magnético de 3 Pilares – Combina publicaciones de estilo de vida, educación y negocios para atraer naturalmente a tus prospectos ideales. Este entrenamiento cambiará cómo te presentas en línea y cómo atraes a tus próximos líderes. No solo publiques, posiciónate.'
+        description: 'Entrenamiento con Eunice Seet (6A2). Esta sesión es tu llamada de atención para dejar de perseguir "likes" y empezar a usar los medios para construir un negocio real. Eunice desglosa cómo convertir tu presencia en línea en un escaparate digital poderoso que construye confianza, atrae a las personas correctas y trabaja para ti 24/7. Esto es lo que aprenderás: Escaparate Digital – Posiciónate en línea como un profesional, Audiencia Objetivo y Bio – Habla directamente a quien quieres atraer, Contenido Magnético de 3 Pilares – Combina publicaciones de estilo de vida, educación y negocios para atraer naturalmente a tus prospectos ideales. Este entrenamiento cambiará cómo te presentas en línea y cómo atraes a tus próximos líderes. No solo publiques, posiciónate.',
+        resources: ['Resumen de Liderazgo True Legacy']
       }
     },
     trainingPdfs: {
@@ -607,6 +641,13 @@ export const t = {
       level_beginner: 'Débutant',
       level_intermediate: 'Intermédiaire',
       level_advanced: 'Avancé',
+      access_required: 'Code d\'Accès Requis',
+      access_desc: 'Entrez le code secret pour accéder à la formation. Rejoignez notre communauté Facebook pour obtenir le code.',
+      access_join_fb: 'Rejoindre le Groupe Facebook',
+      access_placeholder: 'Code Secret',
+      access_unlock: 'Débloquer la Formation',
+      access_error: 'Code incorrect. Rejoignez le groupe Facebook pour obtenir le code.',
+      access_reset: 'Réinitialiser l\'accès',
       categories: {
         foundation: 'Objectif et Vision',
         product: 'Maîtrise des Produits et Programmes',
@@ -619,43 +660,53 @@ export const t = {
     trainingModules: {
       'purpose-vision': {
         title: 'Le Pouvoir de Votre Objectif dans Enagic',
-        description: 'Dans cette session, votre voyage Enagic devient personnel. Nous redécouvrirons votre Pourquoi, découvrirons votre objectif plus profond et créerons votre Vision à 3 Ans avec une lettre de votre futur moi. Attendez-vous à une réflexion guidée, un exercice de vision et des étapes pour façonner votre chemin vers le leadership.'
+        description: 'Dans cette session, votre voyage Enagic devient personnel. Nous redécouvrirons votre Pourquoi, découvrirons votre objectif plus profond et créerons votre Vision à 3 Ans avec une lettre de votre futur moi. Attendez-vous à une réflexion guidée, un exercice de vision et des étapes pour façonner votre chemin vers le leadership.',
+        resources: ['Modèle : Lettre de Votre Futur Moi']
       },
       'kangen-science': {
         title: 'Maîtriser les Produits de 10 Milliards de Dollars : LeveLuk et emGuarde',
-        description: 'Cette session vous équipe pour positionner la série LeveLuk contre les concurrents et met en évidence pourquoi emGuarde se démarque. Vous gagnerez en confiance dans la technologie Enagic, les certifications, et apprendrez comment les avantages uniques d\'emGuarde—comme améliorer le sommeil et l\'humeur—peuvent transformer votre pouvoir de clôture.'
+        description: 'Cette session vous équipe pour positionner la série LeveLuk contre les concurrents et met en évidence pourquoi emGuarde se démarque. Vous gagnerez en confiance dans la technologie Enagic, les certifications, et apprendrez comment les avantages uniques d\'emGuarde—comme améliorer le sommeil et l\'humeur—peuvent transformer votre pouvoir de clôture.',
+        resources: ['Guide des Produits Ioniseurs Kangen Water', 'Guide de Soin et Maintenance des Machines']
       },
       'product-lineup': {
         title: 'Le Programme à 8 Points et Plan d\'Action Massive',
-        description: 'Décomposez le Programme breveté à 8 Points d\'Enagic et voyez comment les leaders principaux l\'utilisent pour dupliquer rapidement, monter en grade et construire des revenus durables. C\'est le plan central pour faire évoluer votre organisation globalement.'
+        description: 'Décomposez le Programme breveté à 8 Points d\'Enagic et voyez comment les leaders principaux l\'utilisent pour dupliquer rapidement, monter en grade et construire des revenus durables. C\'est le plan central pour faire évoluer votre organisation globalement.',
+        resources: ['Guide du Plan de Compensation à 8 Points', 'Feuille de Projection de Revenus sur 6 Mois']
       },
       'leadership-structure': {
         title: 'Le Plan pour Construire un Héritage avec Enagic',
-        description: 'Cette session change la donne. Vous apprendrez pourquoi 8 Points n\'est que le début, 6A2 est la passerelle, et le vrai héritage commence au-delà. Nous décomposons comment structurer pour une croissance exponentielle, concevoir la stabilité à long terme et préparer le terrain pour des revenus générationnels. C\'est votre visionnage obligatoire si vous êtes sérieux sur la construction d\'un vrai héritage.'
+        description: 'Cette session change la donne. Vous apprendrez pourquoi 8 Points n\'est que le début, 6A2 est la passerelle, et le vrai héritage commence au-delà. Nous décomposons comment structurer pour une croissance exponentielle, concevoir la stabilité à long terme et préparer le terrain pour des revenus générationnels. C\'est votre visionnage obligatoire si vous êtes sérieux sur la construction d\'un vrai héritage.',
+        resources: ['Guide du Plan de Compensation']
       },
       'systems-funnels': {
         title: 'Le Système pour Atteindre 6A Plus Rapidement—Sans S\'Épuiser',
-        description: 'Dans cette session, nous décomposons le système d\'entonnoir True Legacy—comment attirer les bonnes personnes, les transformer en leaders et évoluer sans surcharge. Vous maîtriserez les étapes du premier contact à la duplication—construisant une équipe qui grandit même quand vous vous reposez. Apprenez comment attirer les bons prospects, les étapes exactes du contact à la duplication, comment automatiser et éviter l\'épuisement, et pourquoi ce système accélère le succès 6A.'
+        description: 'Dans cette session, nous décomposons le système d\'entonnoir True Legacy—comment attirer les bonnes personnes, les transformer en leaders et évoluer sans surcharge. Vous maîtriserez les étapes du premier contact à la duplication—construisant une équipe qui grandit même quand vous vous reposez. Apprenez comment attirer les bons prospects, les étapes exactes du contact à la duplication, comment automatiser et éviter l\'épuisement, et pourquoi ce système accélère le succès 6A.',
+        resources: ['Script de Conversation et d\'Invitation', 'Variations d\'Invitation par Prospect', 'Modèle de Présentation Duo']
       },
       'prospecting-basics': {
         title: '99% des Distributeurs Prospectent les Mauvaises Personnes — Corrigez Ceci en 20 Min',
-        description: 'C\'est là que tout change. Si votre pipeline semble bloqué ou vous parlez aux mauvaises personnes—cette formation change la donne. Dans cette session révolutionnaire, vous apprendrez : Les PRIME 6™ – six groupes cibles naturellement alignés avec Enagic, Les 4 Archétypes – comment les gens pensent, décident et agissent, Les Quadrants True Legacy – identifiez instantanément qui est prêt et qui ne l\'est pas, Le Cadre de Liste de Prospects – construisez une liste de haute qualité et duplicable, La Règle des 48 Heures – créez de l\'élan immédiatement après avoir construit votre liste. Il ne s\'agit pas de collecter des contacts. Il s\'agit d\'identifier de futurs leaders.'
+        description: 'C\'est là que tout change. Si votre pipeline semble bloqué ou vous parlez aux mauvaises personnes—cette formation change la donne. Dans cette session révolutionnaire, vous apprendrez : Les PRIME 6™ – six groupes cibles naturellement alignés avec Enagic, Les 4 Archétypes – comment les gens pensent, décident et agissent, Les Quadrants True Legacy – identifiez instantanément qui est prêt et qui ne l\'est pas, Le Cadre de Liste de Prospects – construisez une liste de haute qualité et duplicable, La Règle des 48 Heures – créez de l\'élan immédiatement après avoir construit votre liste. Il ne s\'agit pas de collecter des contacts. Il s\'agit d\'identifier de futurs leaders.',
+        resources: ['Document de Maîtrise de la Liste de Prospects True Legacy']
       },
       'social-media-prospecting': {
         title: 'Transformez Chaque Présentation en Aimant à Constructeurs — Voici Comment',
-        description: 'Votre Langage Détermine les Personnes que Vous Invitez. Il ne s\'agit pas seulement de faire une excellente démonstration—il s\'agit d\'utiliser un langage intentionnel pour attirer les bonnes personnes dès le début. Dans cette Masterclass True Legacy, vous apprendrez : Les 3 Types de Personnes qui rejoignent Enagic, Comment inviter en utilisant les 4 Archétypes : Chercheur, Constructeur, Protecteur, Architecte, La psychologie des invitations à haute conversion, Comment la Présentation DUO active chaque archétype, Démo Produit vs Démo Business — ce qui ferme vraiment, Comment transformer chaque démo en machine de duplication, Comment attirer vos futurs leaders 6A, 6A2 et 6A2-3. Vos mots façonnent votre équipe. Votre équipe façonne votre futur.'
+        description: 'Votre Langage Détermine les Personnes que Vous Invitez. Il ne s\'agit pas seulement de faire une excellente démonstration—il s\'agit d\'utiliser un langage intentionnel pour attirer les bonnes personnes dès le début. Dans cette Masterclass True Legacy, vous apprendrez : Les 3 Types de Personnes qui rejoignent Enagic, Comment inviter en utilisant les 4 Archétypes : Chercheur, Constructeur, Protecteur, Architecte, La psychologie des invitations à haute conversion, Comment la Présentation DUO active chaque archétype, Démo Produit vs Démo Business — ce qui ferme vraiment, Comment transformer chaque démo en machine de duplication, Comment attirer vos futurs leaders 6A, 6A2 et 6A2-3. Vos mots façonnent votre équipe. Votre équipe façonne votre futur.',
+        resources: ['Profil d\'Archétypes et d\'Invitation']
       },
       'closing-techniques': {
         title: 'ARRÊTEZ DE PARLER. COMMENCEZ À FERMER.',
-        description: 'Le Système de 15 Minutes qui Ferme. Cette session déverrouille l\'une des compétences les plus puissantes que chaque leader Enagic doit maîtriser : comment guider les prospects vers la clarté et l\'action en utilisant des questions de niveau expert et une psychologie de fermeture stratégique. La plupart parlent trop. Les leaders principaux demandent avec précision. Dans cette masterclass, vous apprendrez : Le Cadre de Fermeture True Legacy de 14 Minutes, Comment ouvrir votre appel Zoom avec présence et autorité, Le Système de Diagnostic à 11 Questions pour révéler la douleur, le désir et la préparation, Comment identifier les 4 Archétypes et adapter votre fermeture, La Fermeture de Précision à 20% — la seule partie qui compte vraiment, Comment demander la décision sans pression, Comment développer la tonalité, la posture et l\'énergie de conseiller de confiance. Cela changera comment vous fermez, dirigez et dupliquez.'
+        description: 'Le Système de 15 Minutes qui Ferme. Cette session déverrouille l\'une des compétences les plus puissantes que chaque leader Enagic doit maîtriser : comment guider les prospects vers la clarté et l\'action en utilisant des questions de niveau expert et une psychologie de fermeture stratégique. La plupart parlent trop. Les leaders principaux demandent avec précision. Dans cette masterclass, vous apprendrez : Le Cadre de Fermeture True Legacy de 14 Minutes, Comment ouvrir votre appel Zoom avec présence et autorité, Le Système de Diagnostic à 11 Questions pour révéler la douleur, le désir et la préparation, Comment identifier les 4 Archétypes et adapter votre fermeture, La Fermeture de Précision à 20% — la seule partie qui compte vraiment, Comment demander la décision sans pression, Comment développer la tonalité, la posture et l\'énergie de conseiller de confiance. Cela changera comment vous fermez, dirigez et dupliquez.',
+        resources: ['Notes du Cadre de Fermeture']
       },
       'business-media': {
         title: 'Pourquoi les Objections Sont un Bon Signe — Et Comment les Transformer en VICTOIRES',
-        description: 'Transformez la résistance en clarté. Apprenez les 4 catégories centrales d\'objections et exactement comment aborder l\'argent, le conjoint, le timing, la peur et "j\'ai besoin de rechercher" d\'une manière qui construit la confiance et l\'élan.'
+        description: 'Transformez la résistance en clarté. Apprenez les 4 catégories centrales d\'objections et exactement comment aborder l\'argent, le conjoint, le timing, la peur et "j\'ai besoin de rechercher" d\'une manière qui construit la confiance et l\'élan.',
+        resources: ['Notes de Gestion des Objections']
       },
       'income-projection': {
         title: '❌ Oubliez les Réseaux Sociaux — Ceci Est de Vrais Médias d\'Affaires',
-        description: 'Formation avec Eunice Seet (6A2). Cette session est votre réveil pour arrêter de chasser les likes et commencer à utiliser les médias pour construire un vrai business. Eunice décompose comment transformer votre présence en ligne en une vitrine digitale puissante qui construit la confiance, attire les bonnes personnes et travaille pour vous 24/7. Voici ce que vous apprendrez : Vitrine Digitale – Positionnez-vous en ligne comme un pro, Audience Cible et Bio – Parlez directement à qui vous voulez attirer, Contenu Magnétique à Trois Piliers – Combinez des posts Lifestyle, Éducatifs et Business pour attirer naturellement vos prospects idéaux. Cette formation changera comment vous vous présentez en ligne et comment vous attirez vos prochains leaders d\'équipe. Ne postez pas juste—positionnez. Ceci est des Médias d\'Affaires.'
+        description: 'Formation avec Eunice Seet (6A2). Cette session est votre réveil pour arrêter de chasser les likes et commencer à utiliser les médias pour construire un vrai business. Eunice décompose comment transformer votre présence en ligne en une vitrine digitale puissante qui construit la confiance, attire les bonnes personnes et travaille pour vous 24/7. Voici ce que vous apprendrez : Vitrine Digitale – Positionnez-vous en ligne comme un pro, Audience Cible et Bio – Parlez directement à qui vous voulez attirer, Contenu Magnétique à Trois Piliers – Combinez des posts Lifestyle, Éducatifs et Business pour attirer naturellement vos prospects idéaux. Cette formation changera comment vous vous présentez en ligne et comment vous attirez vos prochains leaders d\'équipe. Ne postez pas juste—positionnez. Ceci est des Médias d\'Affaires.',
+        resources: ['Résumé de Leadership True Legacy']
       }
     },
     trainingPdfs: {
@@ -863,6 +914,13 @@ export const t = {
       level_beginner: 'Iniciante',
       level_intermediate: 'Intermediário',
       level_advanced: 'Avançado',
+      access_required: 'Código de Acesso Necessário',
+      access_desc: 'Insira o código secreto para acessar o treinamento. Junte-se à nossa comunidade do Facebook para obter o código.',
+      access_join_fb: 'Entrar no Grupo do Facebook',
+      access_placeholder: 'Código Secreto',
+      access_unlock: 'Desbloquear Treinamento',
+      access_error: 'Código incorreto. Entre no grupo do Facebook para obter o código.',
+      access_reset: 'Redefinir acesso',
       categories: {
         foundation: 'Propósito e Visão',
         product: 'Domínio de Produtos e Programas',
@@ -875,43 +933,53 @@ export const t = {
     trainingModules: {
       'purpose-vision': {
         title: 'O Poder do Seu Propósito na Enagic',
-        description: 'Nesta sessão, sua jornada Enagic se torna pessoal. Redescubriremos seu Por Quê, descobriremos seu propósito mais profundo e criaremos sua Visão de 3 Anos junto com uma carta do seu eu futuro. Espere reflexão guiada, um exercício de visão e passos para moldar seu caminho para a liderança.'
+        description: 'Nesta sessão, sua jornada Enagic se torna pessoal. Redescubriremos seu Por Quê, descobriremos seu propósito mais profundo e criaremos sua Visão de 3 Anos junto com uma carta do seu eu futuro. Espere reflexão guiada, um exercício de visão e passos para moldar seu caminho para a liderança.',
+        resources: ['Modelo: Carta do Seu Eu Futuro']
       },
       'kangen-science': {
         title: 'Dominando os Produtos de $10 Bilhões: LeveLuk e emGuarde',
-        description: 'Esta sessão equipa você para posicionar a série LeveLuk contra concorrentes e destaca por que emGuarde se destaca. Você ganhará confiança na tecnologia Enagic, certificações, e aprenderá como as vantagens únicas do emGuarde—como melhorar o sono e humor—podem transformar seu poder de fechamento.'
+        description: 'Esta sessão equipa você para posicionar a série LeveLuk contra concorrentes e destaca por que emGuarde se destaca. Você ganhará confiança na tecnologia Enagic, certificações, e aprenderá como as vantagens únicas do emGuarde—como melhorar o sono e humor—podem transformar seu poder de fechamento.',
+        resources: ['Guia de Produtos Ionizadores Kangen Water', 'Guia de Cuidado e Manutenção de Máquinas']
       },
       'product-lineup': {
         title: 'O Programa de 8 Pontos e Plano de Ação Massiva',
-        description: 'Decomponha o Programa patenteado de 8 Pontos da Enagic e veja como líderes principais o usam para duplicar rápido, subir de posto e construir renda sustentável. Este é o plano central para escalar sua organização globalmente.'
+        description: 'Decomponha o Programa patenteado de 8 Pontos da Enagic e veja como líderes principais o usam para duplicar rápido, subir de posto e construir renda sustentável. Este é o plano central para escalar sua organização globalmente.',
+        resources: ['Guia do Plano de Compensação de 8 Pontos', 'Planilha de Projeção de Renda de 6 Meses']
       },
       'leadership-structure': {
         title: 'O Plano para Construir um Legado com Enagic',
-        description: 'Esta sessão é revolucionária. Você aprenderá por que 8 Pontos é apenas o início, 6A2 é a porta de entrada, e verdadeiro legado começa além disso. Decompõmos como estruturar para crescimento exponencial, projetar estabilidade a longo prazo e preparar o cenário para renda geracional. Este é seu vídeo obrigatório se você está sério sobre construir legado real.'
+        description: 'Esta sessão é revolucionária. Você aprenderá por que 8 Pontos é apenas o início, 6A2 é a porta de entrada, e verdadeiro legado começa além disso. Decompõmos como estruturar para crescimento exponencial, projetar estabilidade a longo prazo e preparar o cenário para renda geracional. Este é seu vídeo obrigatório se você está sério sobre construir legado real.',
+        resources: ['Guia do Plano de Compensação']
       },
       'systems-funnels': {
         title: 'O Sistema para Atingir 6A Mais Rápido—Sem Se Esgotar',
-        description: 'Nesta sessão, decompõmos o sistema de funil True Legacy—como atrair as pessoas certas, transformá-las em líderes e escalar sem sobrecarga. Você dominará os passos do primeiro contato à duplicação—construindo uma equipe que cresce mesmo quando você descansa. Aprenda como atrair os prospects certos, passos exatos do contato à duplicação, como automatizar e evitar esgotamento, e por que este sistema acelera o sucesso 6A.'
+        description: 'Nesta sessão, decompõmos o sistema de funil True Legacy—como atrair as pessoas certas, transformá-las em líderes e escalar sem sobrecarga. Você dominará os passos do primeiro contato à duplicação—construindo uma equipe que cresce mesmo quando você descansa. Aprenda como atrair os prospects certos, passos exatos do contato à duplicação, como automatizar e evitar esgotamento, e por que este sistema acelera o sucesso 6A.',
+        resources: ['Roteiro de Conversa e Convite', 'Variações de Convite por Prospecto', 'Modelo de Apresentação Duo']
       },
       'prospecting-basics': {
         title: '99% dos Distribuidores Prospectam as Pessoas Erradas — Corrija Isso em 20 Min',
-        description: 'É aqui que tudo muda. Se seu pipeline parece travado ou você está falando com as pessoas erradas—este treinamento muda o jogo. Dentro desta sessão revolucionária, você aprenderá: Os PRIME 6™ – seis grupos alvo naturalmente alinhados com Enagic, Os 4 Arquétipos – como as pessoas pensam, decidem e agem, Os Quadrantes True Legacy – identifique instantaneamente quem está pronto e quem não está, A Estrutura de Lista de Prospects – construa uma lista de alta qualidade e duplicável, A Regra de 48 Horas – crie momentum imediatamente após construir sua lista. Isso não é sobre coletar contatos. Isso é sobre identificar futuros líderes.'
+        description: 'É aqui que tudo muda. Se seu pipeline parece travado ou você está falando com as pessoas erradas—este treinamento muda o jogo. Dentro desta sessão revolucionária, você aprenderá: Os PRIME 6™ – seis grupos alvo naturalmente alinhados com Enagic, Os 4 Arquétipos – como as pessoas pensam, decidem e agem, Os Quadrantes True Legacy – identifique instantaneamente quem está pronto e quem não está, A Estrutura de Lista de Prospects – construa uma lista de alta qualidade e duplicável, A Regra de 48 Horas – crie momentum imediatamente após construir sua lista. Isso não é sobre coletar contatos. Isso é sobre identificar futuros líderes.',
+        resources: ['Documento de Domínio da Lista de Prospectos True Legacy']
       },
       'social-media-prospecting': {
         title: 'Transforme Cada Apresentação em um Ímã de Construtores — Veja Como',
-        description: 'Sua Linguagem Determina as Pessoas que Você Convida. Isso não é apenas sobre dar uma ótima demonstração—é sobre usar linguagem intencional para atrair as pessoas certas desde o início. Nesta Masterclass True Legacy, você aprenderá: Os 3 Tipos de Pessoas que se juntam à Enagic, Como convidar usando os 4 Arquétipos: Buscador, Construtor, Protetor, Arquiteto, A psicologia de convites de alta conversão, Como a Apresentação DUO ativa cada arquétipo, Demo de Produto vs Demo de Negócio — o que realmente fecha, Como transformar cada demo em uma máquina de duplicação, Como atrair seus futuros líderes 6A, 6A2 e 6A2-3. Suas palavras moldam sua equipe. Sua equipe molda seu futuro.'
+        description: 'Sua Linguagem Determina as Pessoas que Você Convida. Isso não é apenas sobre dar uma ótima demonstração—é sobre usar linguagem intencional para atrair as pessoas certas desde o início. Nesta Masterclass True Legacy, você aprenderá: Os 3 Tipos de Pessoas que se juntam à Enagic, Como convidar usando os 4 Arquétipos: Buscador, Construtor, Protetor, Arquiteto, A psicologia de convites de alta conversão, Como a Apresentação DUO ativa cada arquétipo, Demo de Produto vs Demo de Negócio — o que realmente fecha, Como transformar cada demo em uma máquina de duplicação, Como atrair seus futuros líderes 6A, 6A2 e 6A2-3. Suas palavras moldam sua equipe. Sua equipe molda seu futuro.',
+        resources: ['Perfil de Arquétipos e Convite']
       },
       'closing-techniques': {
         title: 'PARE DE FALAR. COMECE A FECHAR.',
-        description: 'O Sistema de 15 Minutos que Fecha. Esta sessão desbloqueia uma das habilidades mais poderosas que todo líder Enagic deve dominar: como guiar prospects à clareza e ação usando perguntas de nível especialista e psicologia de fechamento estratégica. A maioria fala demais. Líderes principais perguntam com precisão. Nesta masterclass, você aprenderá: A Estrutura de Fechamento True Legacy de 14 Minutos, Como abrir sua chamada Zoom com presença e autoridade, O Sistema de Diagnóstico de 11 Perguntas para revelar dor, desejo e prontidão, Como identificar os 4 Arquétipos e adaptar seu fechamento, O Fechamento de Precisão de 20% — a única parte que realmente importa, Como pedir a decisão sem pressão, Como desenvolver tonalidade, postura e energia de consultor confiável. Isso mudará como você fecha, lidera e duplica.'
+        description: 'O Sistema de 15 Minutos que Fecha. Esta sessão desbloqueia uma das habilidades mais poderosas que todo líder Enagic deve dominar: como guiar prospects à clareza e ação usando perguntas de nível especialista e psicologia de fechamento estratégica. A maioria fala demais. Líderes principais perguntam com precisão. Nesta masterclass, você aprenderá: A Estrutura de Fechamento True Legacy de 14 Minutos, Como abrir sua chamada Zoom com presença e autoridade, O Sistema de Diagnóstico de 11 Perguntas para revelar dor, desejo e prontidão, Como identificar os 4 Arquétipos e adaptar seu fechamento, O Fechamento de Precisão de 20% — a única parte que realmente importa, Como pedir a decisão sem pressão, Como desenvolver tonalidade, postura e energia de consultor confiável. Isso mudará como você fecha, lidera e duplica.',
+        resources: ['Notas da Estrutura de Fechamento']
       },
       'business-media': {
         title: 'Por Que Objeções São um Bom Sinal — E Como Transformá-las em VITÓRIAS',
-        description: 'Transforme resistência em clareza. Aprenda as 4 categorias centrais de objeções e exatamente como abordar dinheiro, cônjuge, timing, medo e "preciso pesquisar" de uma forma que constrói confiança e momentum.'
+        description: 'Transforme resistência em clareza. Aprenda as 4 categorias centrais de objeções e exatamente como abordar dinheiro, cônjuge, timing, medo e "preciso pesquisar" de uma forma que constrói confiança e momentum.',
+        resources: ['Notas de Tratamento de Objeções']
       },
       'income-projection': {
         title: '❌ Esqueça Redes Sociais — Isso É Mídia de Negócios Real',
-        description: 'Treinamento com Eunice Seet (6A2). Esta sessão é seu despertar para parar de perseguir curtidas e começar a usar mídia para construir um negócio real. Eunice decompõe como transformar sua presença online em uma vitrine digital poderosa que constrói confiança, atrai as pessoas certas e trabalha para você 24/7. Aqui está o que você aprenderá: Vitrine Digital – Posicione-se online como um profissional, Público-Alvo e Bio – Fale diretamente com quem você quer atrair, Conteúdo Magnético de Três Pilares – Combine posts de Estilo de Vida, Educacionais e de Negócios para atrair naturalmente seus prospects ideais. Este treinamento mudará como você se apresenta online e como atrai seus próximos líderes de equipe. Não apenas poste—posicione. Isso é Mídia de Negócios.'
+        description: 'Treinamento com Eunice Seet (6A2). Esta sessão é seu despertar para parar de perseguir curtidas e começar a usar mídia para construir um negócio real. Eunice decompõe como transformar sua presença online em uma vitrine digital poderosa que constrói confiança, atrai as pessoas certas e trabalha para você 24/7. Aqui está o que você aprenderá: Vitrine Digital – Posicione-se online como um profissional, Público-Alvo e Bio – Fale diretamente com quem você quer atrair, Conteúdo Magnético de Três Pilares – Combine posts de Estilo de Vida, Educacionais e de Negócios para atrair naturalmente seus prospects ideais. Este treinamento mudará como você se apresenta online e como atrai seus próximos líderes de equipe. Não apenas poste—posicione. Isso é Mídia de Negócios.',
+        resources: ['Resumo de Liderança True Legacy']
       }
     },
     trainingPdfs: {

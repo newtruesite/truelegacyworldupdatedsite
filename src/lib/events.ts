@@ -1,5 +1,5 @@
-// Placeholder Google Form URL — update this single constant when the real form is ready
-export const EVENTS_FORM_URL = 'https://forms.gle/placeholder'
+// Single source for all event registration/join CTAs
+export const EVENTS_FORM_URL = 'https://tr.ee/8yBqHZ'
 
 export type EventRegion = 'latam' | 'global' | 'asia' | 'africa'
 
