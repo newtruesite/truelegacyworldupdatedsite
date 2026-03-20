@@ -118,7 +118,7 @@ export const PRODUCTS: Record<ProductId, ProductDefinition> = {
     slug: 'kangen-air',
     name: 'Kangen Air',
     category: 'air',
-    enagicProductUrl: 'mailto:kangenair@enagicsg.com',
+    enagicProductUrl: undefined,
     pdfGuideUrl: undefined,
     imageSrc: '/products/kangen-air.png',
     imageAlt: 'Kangen Air purifier by Enagic',

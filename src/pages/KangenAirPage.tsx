@@ -12,7 +12,6 @@ import {
     Download,
     Fan,
     Leaf,
-    Mail,
     Shield,
     Sun,
     Zap,
@@ -205,15 +204,9 @@ export default function KangenAirPage() {
               {copy.kangen_air.orderingSub}
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-              <a
-                href="mailto:kangenair@enagicsg.com"
-                className="flex items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-emerald-600 to-teal-600 px-6 py-4 text-sm font-semibold text-white hover:scale-105 transition-all min-h-[48px] w-full sm:w-auto"
-              >
-                <Mail className="w-4 h-4" /> {copy.kangen_air.contactSupport}
-              </a>
               <Link
                 to={getDistributorLink(countrySlug)}
-                className="flex items-center justify-center gap-2 rounded-2xl border border-white/20 bg-white/5 hover:bg-white/10 text-white font-semibold px-6 py-4 text-sm min-h-[48px] transition-all hover:scale-[1.02] w-full sm:w-auto"
+                className="flex items-center justify-center gap-2 rounded-2xl border border-white/20 bg-emerald-500/70 hover:bg-emerald-400 text-white font-semibold px-6 py-4 text-sm min-h-[48px] transition-all hover:scale-[1.02] w-full sm:w-auto"
               >
                 {copy.kangen_air.talkToDistributor}
               </Link>
