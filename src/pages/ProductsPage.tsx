@@ -1,11 +1,12 @@
-import { motion } from 'framer-motion'
-import { Link, useParams } from 'react-router-dom'
-import { Navbar } from '@/components/layout/Navbar'
 import { Footer } from '@/components/layout/Footer'
+import { Navbar } from '@/components/layout/Navbar'
 import { TLBackground } from '@/components/ui/TLBackground'
-import { PRODUCTS, type ProductCategory, type ProductId } from '@/lib/products'
 import { useLocaleContext } from '@/contexts/LocaleContext'
 import { trackEvent } from '@/lib/analytics'
+import { getDistributorLink } from '@/lib/distributorRouter'
+import { PRODUCTS, type ProductCategory, type ProductId } from '@/lib/products'
+import { motion } from 'framer-motion'
+import { Link, useParams } from 'react-router-dom'
 
 const CATEGORY_ORDER: ProductCategory[] = ['ionizer', 'shower', 'supplement', 'meat', 'air', 'accessory']
 
@@ -252,15 +253,28 @@ export default function ProductsPage() {
                                 >
                                     {learnMoreLabel}
                                 </Link>
+                            ) : id === 'kangen_air' ? (
+                                <Link
+                                    to={countrySlug ? `/${countrySlug}/kangen-air` : '/kangen-air'}
+                                    onClick={() =>
+                                        trackEvent('product_view_internal', {
+                                            productId: id,
+                                            locale,
+                                        })
+                                    }
+                                    className="inline-flex items-center gap-1.5 rounded-2xl bg-emerald-500 hover:bg-emerald-400 px-4 py-2 text-xs font-semibold text-white transition-all min-h-[44px]"
+                                >
+                                    {learnMoreLabel}
+                                </Link>
                             ) : (
                                 <Link
-                                    to={['mexico', 'colombia', 'brazil', 'paraguay'].includes(countrySlug ?? '') ? "/latam/distributors" : "/distributors"}
+                                    to={getDistributorLink(countrySlug)}
                                     className="inline-flex items-center gap-1.5 rounded-2xl bg-cyan-500 hover:bg-cyan-400 px-4 py-2 text-xs font-semibold text-white transition-all min-h-[44px]"
                                 >
                                     {locale === 'es' ? 'Hablar con distribuidor' : locale === 'fr' ? 'Parler à un distributeur' : locale === 'pt' ? 'Falar com distribuidor' : 'Talk to distributor'}
                                 </Link>
                             )}
-                            {product.enagicProductUrl && id !== 'k8' && id !== 'emguarde' && (
+                            {product.enagicProductUrl && id !== 'k8' && id !== 'emguarde' && id !== 'kangen_air' && (
                               <a
                                 href={product.enagicProductUrl}
                                 target="_blank" rel="noopener noreferrer"
@@ -288,9 +302,9 @@ export default function ProductsPage() {
                             >
                               {downloadGuideLabel}
                             </Link>
-                            {(id === 'k8' || id === 'emguarde') && (
+                            {(id === 'k8' || id === 'emguarde' || id === 'kangen_air') && (
                               <Link
-                                to={['mexico', 'colombia', 'brazil', 'paraguay'].includes(countrySlug ?? '') ? "/latam/distributors" : "/distributors"}
+                                to={getDistributorLink(countrySlug)}
                                 className="inline-flex items-center gap-1.5 rounded-2xl border border-white/20 bg-transparent px-4 py-2 text-xs font-semibold text-white hover:bg-white/10 transition-all min-h-[44px]"
                               >
                                 {locale === 'es' ? 'Hablar con distribuidor' : locale === 'fr' ? 'Parler à un distributeur' : locale === 'pt' ? 'Falar com distribuidor' : 'Talk to a distributor'}

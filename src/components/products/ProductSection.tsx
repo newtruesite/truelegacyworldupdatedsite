@@ -198,7 +198,14 @@ export function ProductSection({
                   {pCopy?.short}
                 </p>
                 <div className="flex flex-wrap gap-3 justify-center md:justify-start">
-                  {product.enagicProductUrl && (
+                  {id === 'kangen_air' ? (
+                    <Link
+                      to={country ? `/${country.slug}/kangen-air` : "/kangen-air"}
+                      className="inline-flex items-center gap-1.5 rounded-md bg-emerald-500 hover:bg-emerald-400 px-4 py-2 text-xs font-semibold text-white hover:-translate-y-0.5 hover:shadow-md transition-all duration-150"
+                    >
+                      {pCopy?.learnMore}
+                    </Link>
+                  ) : product.enagicProductUrl && (
                     <a
                       href={product.enagicProductUrl}
                       target="_blank" rel="noopener noreferrer"

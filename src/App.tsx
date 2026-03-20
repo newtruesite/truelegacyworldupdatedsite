@@ -8,6 +8,7 @@ import EmGuardePage from "@/pages/EmGuardePage";
 import EventsPage from "@/pages/EventsPage";
 import HomePage from "@/pages/HomePage";
 import K8Page from "@/pages/K8Page";
+import KangenAirPage from "@/pages/KangenAirPage";
 import LatamDistributorsPage from "@/pages/LatamDistributorsPage";
 import PdfLibraryPage from "@/pages/PdfLibraryPage";
 import ProductsPage from "@/pages/ProductsPage";
@@ -155,6 +156,14 @@ function AnimatedRoutes() {
               </PageTransitionWrapper>
             }
           />
+          <Route
+            path="/:countrySlug/kangen-air"
+            element={
+              <PageTransitionWrapper>
+                <KangenAirPage />
+              </PageTransitionWrapper>
+            }
+          />
           {/* Country-scoped training and products — keeps locale (LATAM/Morocco) */}
           <Route
             path="/:countrySlug/training"
@@ -177,6 +186,10 @@ function AnimatedRoutes() {
           <Route
             path="/emguarde"
             element={<Navigate to="/usa/emguarde" replace />}
+          />
+          <Route
+            path="/kangen-air"
+            element={<Navigate to="/usa/kangen-air" replace />}
           />
           {/* Dynamic country route — matches /usa, /canada, /morocco, etc. */}
           <Route
