@@ -132,11 +132,7 @@ export function Navbar() {
   const eventsPath = country
     ? ["brazil", "mexico", "colombia", "paraguay"].includes(country.slug)
       ? "/events/latam"
-      : ["india", "uae", "malaysia"].includes(country.slug)
-        ? "/events/asia"
-        : ["nigeria", "morocco"].includes(country.slug)
-          ? "/events/africa"
-          : "/events/global"
+      : "/events/global"
     : "/events/global";
 
   const distributorsPath =
@@ -347,8 +343,7 @@ export function Navbar() {
                   <a
                     key={link.to}
                     href={link.to}
-                    target="_blank"
-                    rel="noopener noreferrer"
+                    target="_blank" rel="noopener noreferrer"
                     className={cn(
                       "px-3 py-2 text-sm font-medium rounded-md transition-colors inline-flex items-center",
                       "text-slate-300 hover:text-white hover:bg-white/5",
@@ -382,7 +377,7 @@ export function Navbar() {
                     onClick={() => setLocaleOverride(loc)}
                     className={cn(
                       "px-2 py-1 text-xs font-medium rounded transition-colors",
-                      locale === loc || (locale === "pt" && loc === "es")
+                      locale === loc
                         ? "text-white bg-white/10"
                         : "text-slate-400 hover:text-white hover:bg-white/5",
                     )}
@@ -395,8 +390,7 @@ export function Navbar() {
               {/* CTA Button - Desktop Only */}
               <a
                 href={jotformUrl}
-                target="_blank"
-                rel="noopener noreferrer"
+                target="_blank" rel="noopener noreferrer"
                 onClick={() =>
                   trackEvent("join_click", {
                     location: "navbar_desktop",
@@ -457,7 +451,7 @@ export function Navbar() {
                   onClick={() => setLocaleOverride(loc)}
                   className={cn(
                     "flex-1 min-h-[44px] flex items-center justify-center px-4 py-2 rounded-xl transition-colors font-medium text-sm",
-                    locale === loc || (locale === "pt" && loc === "es")
+                    locale === loc
                       ? "text-white bg-white/10"
                       : "text-slate-300 hover:text-white hover:bg-white/5",
                   )}
@@ -489,8 +483,7 @@ export function Navbar() {
                 <a
                   key={link.to}
                   href={link.to}
-                  target="_blank"
-                  rel="noopener noreferrer"
+                  target="_blank" rel="noopener noreferrer"
                   onClick={() => setMenuOpen(false)}
                   className="flex items-center min-h-[48px] px-4 py-3 text-base font-medium text-slate-300 hover:text-white hover:bg-white/5 rounded-xl transition-colors"
                 >
@@ -594,8 +587,7 @@ export function Navbar() {
         <div className="flex flex-col gap-2 pt-4">
           <a
             href={jotformUrl}
-            target="_blank"
-            rel="noopener noreferrer"
+            target="_blank" rel="noopener noreferrer"
             onClick={() => {
               trackEvent("join_click", {
                 location: "navbar_mobile",

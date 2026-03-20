@@ -110,7 +110,7 @@ export function PdfLeadCaptureModal({
       if (form.botField) {
         setSubmitted(true);
         setTimeout(() => {
-          if (pdfUrl) window.open(pdfUrl, "_blank");
+          if (pdfUrl) window.open(pdfUrl, "_blank", "noopener,noreferrer");
           setSubmitted(false);
           onClose();
         }, 1500);
@@ -129,7 +129,7 @@ export function PdfLeadCaptureModal({
         }
         setSubmitted(true);
         setTimeout(() => {
-          if (pdfUrl) window.open(pdfUrl, "_blank");
+          if (pdfUrl) window.open(pdfUrl, "_blank", "noopener,noreferrer");
           setSubmitted(false);
           onClose();
           window.location.href = "/training";

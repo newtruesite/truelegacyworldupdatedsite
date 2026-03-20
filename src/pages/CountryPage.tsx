@@ -1368,8 +1368,7 @@ export default function CountryPage() {
                   {/* Primary CTA */}
                   <a
                     href={jotformUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
+                    target="_blank" rel="noopener noreferrer"
                     onClick={() =>
                       trackEvent("join_click", {
                         location: "country_hero",
@@ -1390,8 +1389,7 @@ export default function CountryPage() {
                   {/* WhatsApp */}
                   <a
                     href="https://wa.me/18649072149"
-                    target="_blank"
-                    rel="noopener noreferrer"
+                    target="_blank" rel="noopener noreferrer"
                     className="mb-3 flex w-full items-center justify-center gap-2 rounded-2xl border border-green-500/20 px-6 py-3 text-sm font-semibold text-green-400 hover:bg-green-500/10 transition-all"
                   >
                     <IconWhatsapp size={16} /> {copy.getInTouch}
@@ -1400,8 +1398,7 @@ export default function CountryPage() {
                   {/* Facebook */}
                   <a
                     href="https://www.facebook.com/groups/truelegacycommunity"
-                    target="_blank"
-                    rel="noopener noreferrer"
+                    target="_blank" rel="noopener noreferrer"
                     className="flex w-full items-center justify-center gap-2 rounded-2xl border border-white/10 bg-white/5 px-6 py-3 text-sm font-medium text-slate-300 hover:bg-white/10 transition-all"
                   >
                     <IconFacebook size={15} /> {c.communityBtn}
@@ -1411,16 +1408,14 @@ export default function CountryPage() {
                   <div className="mt-5 pt-4 border-t border-white/10 flex gap-5">
                     <a
                       href={country.youtube}
-                      target="_blank"
-                      rel="noopener noreferrer"
+                      target="_blank" rel="noopener noreferrer"
                       className="flex items-center gap-1.5 text-xs text-slate-400 hover:text-red-400 transition-colors"
                     >
                       <IconYoutube size={14} /> {c.ytHandle}
                     </a>
                     <a
                       href={country.instagram}
-                      target="_blank"
-                      rel="noopener noreferrer"
+                      target="_blank" rel="noopener noreferrer"
                       className="flex items-center gap-1.5 text-xs text-slate-400 hover:text-pink-400 transition-colors"
                     >
                       <IconInstagram size={14} />{" "}
@@ -1584,8 +1579,7 @@ export default function CountryPage() {
             <div className="ig-follow-strip flex justify-center gap-2 sm:gap-3 md:gap-4 mt-8 flex-wrap">
               <a
                 href="https://www.instagram.com/truelegacyworld/"
-                target="_blank"
-                rel="noopener noreferrer"
+                target="_blank" rel="noopener noreferrer"
                 className="ig-follow-btn inline-flex items-center gap-2.5 text-white py-2 px-4 sm:py-2.5 sm:px-5 md:py-3 md:px-6 rounded-full font-bold text-xs sm:text-sm no-underline transition-all hover:-translate-y-0.5"
                 style={{
                   background:
@@ -1601,8 +1595,7 @@ export default function CountryPage() {
               ) && (
                 <a
                   href="https://www.instagram.com/truelegacylatam/"
-                  target="_blank"
-                  rel="noopener noreferrer"
+                  target="_blank" rel="noopener noreferrer"
                   className="ig-follow-btn ig-latam inline-flex items-center gap-2.5 text-white py-2 px-4 sm:py-2.5 sm:px-5 md:py-3 md:px-6 rounded-full font-bold text-xs sm:text-sm no-underline transition-all hover:-translate-y-0.5"
                   style={{
                     background:
@@ -1620,8 +1613,7 @@ export default function CountryPage() {
               ) ? (
                 <a
                   href="https://www.youtube.com/@TrueLegacyLATAM"
-                  target="_blank"
-                  rel="noopener noreferrer"
+                  target="_blank" rel="noopener noreferrer"
                   className="inline-flex items-center gap-2.5 text-white py-2 px-4 sm:py-2.5 sm:px-5 md:py-3 md:px-6 rounded-full font-bold text-xs sm:text-sm no-underline transition-all hover:-translate-y-0.5"
                   style={{
                     background: "linear-gradient(135deg, #c4302b, #ff0000)",
@@ -1635,8 +1627,7 @@ export default function CountryPage() {
               ) : (
                 <a
                   href="https://www.youtube.com/@TrueLegacyWorld"
-                  target="_blank"
-                  rel="noopener noreferrer"
+                  target="_blank" rel="noopener noreferrer"
                   className="inline-flex items-center gap-2.5 text-white py-2 px-4 sm:py-2.5 sm:px-5 md:py-3 md:px-6 rounded-full font-bold text-xs sm:text-sm no-underline transition-all hover:-translate-y-0.5"
                   style={{
                     background: "linear-gradient(135deg, #c4302b, #ff0000)",
@@ -1701,8 +1692,7 @@ export default function CountryPage() {
                   </div>
                   <a
                     href={jotformUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
+                    target="_blank" rel="noopener noreferrer"
                     className="inline-flex items-center gap-2 rounded-xl px-6 py-3 font-bold text-white transition-all hover:opacity-90"
                     style={{
                       background: "linear-gradient(135deg, #00a896, #00c4ae)",
@@ -1816,8 +1806,7 @@ export default function CountryPage() {
               </div>
               <a
                 href={jotformUrl}
-                target="_blank"
-                rel="noopener noreferrer"
+                target="_blank" rel="noopener noreferrer"
                 onClick={() =>
                   trackEvent("join_click", {
                     location: "country_get_paid",
@@ -1857,8 +1846,7 @@ export default function CountryPage() {
               </div>
               <a
                 href="https://www.facebook.com/groups/truelegacycommunity"
-                target="_blank"
-                rel="noopener noreferrer"
+                target="_blank" rel="noopener noreferrer"
                 className="flex items-center gap-2 text-sm text-blue-400 hover:text-blue-300 transition-colors font-semibold"
               >
                 <IconFacebook size={16} /> {c.joinCommunity}
@@ -2104,8 +2092,7 @@ export default function CountryPage() {
           </p>
           <a
             href={jotformUrl}
-            target="_blank"
-            rel="noopener noreferrer"
+            target="_blank" rel="noopener noreferrer"
             onClick={() =>
               trackEvent("join_click", {
                 location: "sticky_cta",

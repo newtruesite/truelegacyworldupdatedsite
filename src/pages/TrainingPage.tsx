@@ -415,8 +415,7 @@ const TrainingModuleCard: React.FC<TrainingModuleCardProps> = ({
               <a
                 key={index}
                 href={resource.url}
-                target="_blank"
-                rel="noopener noreferrer"
+                target="_blank" rel="noopener noreferrer"
                 className="flex items-center gap-3 p-3 rounded-lg bg-white/5 hover:bg-white/10 transition-colors text-sm"
               >
                 <FileText className="w-4 h-4 text-slate-400 shrink-0" />
@@ -579,8 +578,7 @@ export default function TrainingPage() {
                   </p>
                   <a
                     href="https://www.facebook.com/groups/truelegacycommunity"
-                    target="_blank"
-                    rel="noopener noreferrer"
+                    target="_blank" rel="noopener noreferrer"
                     className="inline-flex items-center gap-2 px-4 py-2 bg-[#1877F2] hover:bg-[#1864D9] text-white text-sm font-semibold rounded-lg transition-colors mb-8"
                   >
                     {copy.training?.access_join_fb || "Join Facebook Group"}
@@ -787,8 +785,7 @@ export default function TrainingPage() {
                           <motion.a
                             key={pdf.id}
                             href={pdf.url}
-                            target="_blank"
-                            rel="noopener noreferrer"
+                            target="_blank" rel="noopener noreferrer"
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: i * 0.1 }}

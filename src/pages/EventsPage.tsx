@@ -1,12 +1,13 @@
 import { Navbar } from "@/components/layout/Navbar";
 import { SEO } from "@/components/SEO";
 import { EventsFirstTimePrompt } from "@/components/ui/EventsFirstTimePrompt";
+import { useLocaleContext } from "@/contexts/LocaleContext";
 import type { TLEvent } from "@/lib/events";
 import { EVENTS_FORM_URL, getEventsByRegion, translateEventTimezoneRegion, translateEventTimezoneTime } from "@/lib/events";
 import { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
-const REGIONS = ["latam", "global", "asia", "africa"] as const;
+const REGIONS = ["latam", "global"] as const;
 type RegionSlug = (typeof REGIONS)[number];
 
 const COUNTRY_TO_REGION: Record<string, RegionSlug> = {
@@ -14,11 +15,6 @@ const COUNTRY_TO_REGION: Record<string, RegionSlug> = {
   mexico: "latam",
   colombia: "latam",
   paraguay: "latam",
-  india: "asia",
-  uae: "asia",
-  malaysia: "asia",
-  nigeria: "africa",
-  morocco: "africa",
 };
 const DEFAULT_REGION: RegionSlug = "global";
 
@@ -29,17 +25,9 @@ function paramToRegion(param: string | undefined): RegionSlug {
   return (COUNTRY_TO_REGION[lower] as RegionSlug) ?? DEFAULT_REGION;
 }
 
-function getRegionLocale(region: RegionSlug): "en" | "es" | "fr" | "pt" {
-  if (region === "latam") return "es";
-  if (region === "africa") return "en";
-  return "en";
-}
-
 function getRegionBreadcrumbLabel(region: RegionSlug, locale: string): string {
   if (region === "latam") return locale === "es" ? "LATAM" : "Sudamérica";
   if (region === "global") return "Global";
-  if (region === "asia") return "Asia";
-  if (region === "africa") return "Africa";
   return "Events";
 }
 
@@ -153,8 +141,7 @@ function EventCard({ event, region, lang, onFirstTimeYes, onFirstTimeNo }: {
         <div className="whitespace-pre-line text-slate-300 text-sm leading-relaxed mb-6">
           {desc}
         </div>
-        {event.hasFirstTimePrompt ? (
-          <div className="mb-6">
+        <div className="mb-6">
             <EventsFirstTimePrompt
               onYes={onFirstTimeYes}
               onNo={onFirstTimeNo}
@@ -162,17 +149,6 @@ function EventCard({ event, region, lang, onFirstTimeYes, onFirstTimeNo }: {
               locale={lang}
             />
           </div>
-        ) : (
-          <div className="mb-6">
-            <button
-              onClick={() => window.open(joinUrl, '_blank', 'noopener,noreferrer')}
-              className="w-full sm:w-auto flex items-center justify-center px-8 py-3 rounded-xl font-bold text-white text-base transition min-h-12"
-              style={{ background: "linear-gradient(135deg, #00a896, #00c4ae)" }}
-            >
-              {lang === "es" ? "Unirse Ahora" : lang === "fr" ? "Rejoindre Maintenant" : lang === "pt" ? "Entrar Agora" : "Join Now"}
-            </button>
-          </div>
-        )}
       </div>
     </article>
   );
@@ -181,9 +157,10 @@ function EventCard({ event, region, lang, onFirstTimeYes, onFirstTimeNo }: {
 export default function EventsPage() {
   const { country: param } = useParams<{ country: string }>();
   const navigate = useNavigate();
+  const { locale } = useLocaleContext();
   const region = paramToRegion(param);
-  const lang = getRegionLocale(region) as keyof typeof LABELS;
-  const t = LABELS[lang] ?? LABELS.en;
+  const lang = (locale as keyof typeof LABELS) in LABELS ? (locale as keyof typeof LABELS) : "en";
+  const t = LABELS[lang];
   const events = getEventsByRegion(region);
   const regionLabel = getRegionBreadcrumbLabel(region, lang);
 

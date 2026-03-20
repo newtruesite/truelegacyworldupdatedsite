@@ -320,8 +320,7 @@ export default function SelectCountryPage() {
                 ? "https://wa.me/5213327464016"
                 : "https://wa.me/19495726207"
             }
-            target="_blank"
-            rel="noopener noreferrer"
+            target="_blank" rel="noopener noreferrer"
             className="inline-flex items-center gap-2 px-6 py-3 bg-green-600 hover:bg-green-500 text-white font-semibold rounded-xl transition-all"
           >
             <MessageCircle className="w-5 h-5" />

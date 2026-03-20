@@ -351,8 +351,7 @@ export default function HomePage() {
             >
               <a
                 href="https://form.jotform.com/260232994952060"
-                target="_blank"
-                rel="noopener noreferrer"
+                target="_blank" rel="noopener noreferrer"
                 onClick={() =>
                   trackEvent("join_click", {
                     location: "home_join",
@@ -480,8 +479,7 @@ export default function HomePage() {
       >
         <a
           href="https://form.jotform.com/260232994952060"
-          target="_blank"
-          rel="noopener noreferrer"
+          target="_blank" rel="noopener noreferrer"
           onClick={() =>
             trackEvent("join_click", {
               location: "home_join_sticky",

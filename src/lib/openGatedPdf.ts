@@ -3,7 +3,7 @@
  */
 export function openGatedPDF(pdfUrl: string): void {
   if (typeof window === 'undefined') return
-  window.open(pdfUrl, '_blank')
+  window.open(pdfUrl, '_blank', 'noopener,noreferrer')
 }
 
 /** @deprecated No longer used; PDFs are open. */

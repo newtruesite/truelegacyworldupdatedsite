@@ -1,7 +1,7 @@
 // Single source for all event registration/join CTAs
 export const EVENTS_FORM_URL = 'https://tr.ee/8yBqHZ'
 
-export type EventRegion = 'latam' | 'global' | 'asia' | 'africa'
+export type EventRegion = 'latam' | 'global'
 
 export interface EventTimezone {
   region: string
@@ -66,28 +66,28 @@ export const UPCOMING_EVENTS: TLEvent[] = [
 ✅ Build your True Legacy business in South America
 ✅ Connect with the regional LATAM community
 
-Click "Join Now" to enter the Zoom directly.`,
+Click below to join the Zoom directly.`,
     description_es: `Únete a la presentación semanal LATAM cada martes — diseñada para las comunidades hispanohablantes y lusohablantes de Sudamérica.
 
 ✅ Comparte los productos de salud Enagic que cambian vidas
 ✅ Construye tu negocio True Legacy en Sudamérica
 ✅ Conéctate con la comunidad regional LATAM
 
-Haz clic en "Unirse Ahora" para entrar al Zoom directamente.`,
+Haz clic abajo para entrar al Zoom directamente.`,
     description_fr: `Rejoignez la présentation hebdomadaire LATAM chaque mardi — conçue pour les communautés hispanophones et lusophones d'Amérique du Sud.
 
 ✅ Partagez les produits de santé Enagic qui changent la vie
 ✅ Développez votre activité True Legacy en Amérique du Sud
 ✅ Connectez-vous avec la communauté régionale LATAM
 
-Cliquez sur "Rejoindre" pour accéder directement au Zoom.`,
+Cliquez ci-dessous pour accéder directement au Zoom.`,
     description_pt: `Participe da apresentação semanal LATAM toda terça-feira — projetada para as comunidades de língua espanhola e portuguesa da América do Sul.
 
 ✅ Compartilhe os produtos de saúde da Enagic que mudam vidas
 ✅ Construa seu negócio True Legacy na América do Sul
 ✅ Conecte-se com a comunidade regional LATAM
 
-Clique em "Entrar Agora" para acessar o Zoom diretamente.`,
+Clique abaixo para acessar o Zoom diretamente.`,
     regions: ['latam'],
     hasFirstTimePrompt: false,
   },
@@ -129,28 +129,28 @@ Clique em "Entrar Agora" para acessar o Zoom diretamente.`,
 ✅ Learn about building income across 51+ countries
 ✅ Ask questions live
 
-Click "Join Now" to enter the Zoom directly.`,
+Click below to join the Zoom directly.`,
     description_es: `Únete a la presentación semanal de True Legacy cada jueves — una introducción abierta al negocio Enagic y productos de salud disponibles en más de 51 países.
 
 ✅ Abierto a miembros, prospectos e invitados
 ✅ Aprende a construir ingresos en más de 51 países
 ✅ Haz preguntas en vivo
 
-Haz clic en "Unirse Ahora" para entrar al Zoom directamente.`,
+Haz clic abajo para entrar al Zoom directamente.`,
     description_fr: `Rejoignez la présentation hebdomadaire de True Legacy chaque jeudi — une introduction ouverte à l'activité Enagic et aux produits de santé disponibles dans plus de 51 pays.
 
 ✅ Ouvert aux membres, prospects et invités
 ✅ Découvrez comment construire un revenu dans 51+ pays
 ✅ Posez des questions en direct
 
-Cliquez sur "Rejoindre" pour accéder directement au Zoom.`,
+Cliquez ci-dessous pour accéder directement au Zoom.`,
     description_pt: `Participe da apresentação semanal da True Legacy toda quinta-feira — uma introdução aberta ao negócio Enagic e produtos de saúde disponíveis em mais de 51 países.
 
 ✅ Aberto a membros, prospects e convidados
 ✅ Aprenda a construir renda em mais de 51 países
 ✅ Faça perguntas ao vivo
 
-Clique em "Entrar Agora" para acessar o Zoom diretamente.`,
+Clique abaixo para acessar o Zoom diretamente.`,
     regions: ['global', 'latam'],
     hasFirstTimePrompt: false,
   },
@@ -226,11 +226,6 @@ const COUNTRY_TO_REGION: Record<string, EventRegion> = {
   mexico: 'latam',
   colombia: 'latam',
   paraguay: 'latam',
-  india: 'asia',
-  uae: 'asia',
-  malaysia: 'asia',
-  nigeria: 'africa',
-  morocco: 'africa',
 }
 
 const DEFAULT_EVENT_REGION: EventRegion = 'global'

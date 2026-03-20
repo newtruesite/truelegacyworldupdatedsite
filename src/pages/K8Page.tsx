@@ -223,8 +223,7 @@ export default function K8Page() {
           >
             <a
               href="https://www.enagic.com/en_US/product-certifications"
-              target="_blank"
-              rel="noopener noreferrer"
+              target="_blank" rel="noopener noreferrer"
               className="flex items-center justify-center gap-2 rounded-2xl border border-white/10 bg-white/5 px-6 py-4 text-sm font-semibold text-white hover:bg-white/10 transition-all"
             >
               <CheckCircle className="w-4 h-4 text-green-400" />{" "}
@@ -232,16 +231,14 @@ export default function K8Page() {
             </a>
             <a
               href="https://youtu.be/Lm2DYOwU2rc?si=qSI-i8XX8EOv6ZUC"
-              target="_blank"
-              rel="noopener noreferrer"
+              target="_blank" rel="noopener noreferrer"
               className="flex items-center justify-center gap-2 rounded-2xl border border-transparent bg-red-600/80 hover:bg-red-600 px-6 py-4 text-sm font-semibold text-white transition-all"
             >
               <Play className="w-4 h-4" /> {copy.k8.watchVideo}
             </a>
             <a
               href="https://www.enagic.com/en_US/products/leveluk-k8"
-              target="_blank"
-              rel="noopener noreferrer"
+              target="_blank" rel="noopener noreferrer"
               className="flex items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-cyan-600 to-blue-600 px-6 py-4 text-sm font-semibold text-white hover:scale-105 transition-all"
             >
               <ExternalLink className="w-4 h-4" /> {copy.k8.learnMore}
@@ -271,8 +268,7 @@ export default function K8Page() {
           <div className="flex justify-center mb-8 px-4">
             <a
               href={jotformUrl}
-              target="_blank"
-              rel="noopener noreferrer"
+              target="_blank" rel="noopener noreferrer"
               className="inline-flex items-center justify-center gap-2 bg-yellow-500 hover:bg-yellow-400 text-black font-bold px-6 py-3 sm:px-8 sm:py-4 rounded-2xl transition-all hover:scale-105 w-full sm:w-auto text-sm sm:text-base"
             >
               {copy.unlockLegacy}

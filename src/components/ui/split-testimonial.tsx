@@ -417,8 +417,7 @@ export function TestimonialsSplit({
               href={
                 active.instagramUrl ?? active.instagram ?? igUrl(active.company)
               }
-              target="_blank"
-              rel="noopener noreferrer"
+              target="_blank" rel="noopener noreferrer"
               onClick={(e) => e.stopPropagation()}
               style={{
                 display: "flex",
@@ -448,8 +447,7 @@ export function TestimonialsSplit({
             {active.tiktok && (
               <a
                 href={active.tiktok}
-                target="_blank"
-                rel="noopener noreferrer"
+                target="_blank" rel="noopener noreferrer"
                 onClick={(e) => e.stopPropagation()}
                 className="inline-flex items-center gap-1.5 text-xs text-slate-300 hover:text-white opacity-80 hover:opacity-100 transition-opacity"
               >

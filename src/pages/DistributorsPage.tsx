@@ -185,8 +185,7 @@ function DistributorCard({
           {dist.whatsapp && (
             <a
               href={dist.whatsapp}
-              target="_blank"
-              rel="noopener noreferrer"
+              target="_blank" rel="noopener noreferrer"
               className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#25D366] hover:bg-[#20BD5A] text-white font-semibold px-4 py-3 text-sm min-h-11 transition-colors"
             >
               <IconWhatsApp className="w-5 h-5 shrink-0" />
@@ -196,8 +195,7 @@ function DistributorCard({
           {dist.latamWhatsapp && (
             <a
               href={dist.latamWhatsapp}
-              target="_blank"
-              rel="noopener noreferrer"
+              target="_blank" rel="noopener noreferrer"
               className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#25D366] hover:bg-[#20BD5A] text-white font-semibold px-4 py-3 text-sm min-h-11 transition-colors"
             >
               <IconWhatsApp className="w-5 h-5 shrink-0" />
@@ -207,8 +205,7 @@ function DistributorCard({
           {dist.calendly && (
             <a
               href={dist.calendly}
-              target="_blank"
-              rel="noopener noreferrer"
+              target="_blank" rel="noopener noreferrer"
               className="inline-flex items-center justify-center gap-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-3 text-sm min-h-11 transition-colors"
             >
               <Calendar className="w-5 h-5 shrink-0" />
@@ -218,8 +215,7 @@ function DistributorCard({
           {dist.website && (
             <a
               href={dist.website}
-              target="_blank"
-              rel="noopener noreferrer"
+              target="_blank" rel="noopener noreferrer"
               className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#25D366] hover:bg-[#20BD5A] text-white font-semibold px-4 py-3 text-sm min-h-11 transition-colors"
             >
               <Globe className="w-5 h-5 shrink-0" />
@@ -229,8 +225,7 @@ function DistributorCard({
           {dist.telegram && (
             <a
               href={dist.telegram}
-              target="_blank"
-              rel="noopener noreferrer"
+              target="_blank" rel="noopener noreferrer"
               className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#229ED9] hover:bg-[#1E8BC7] text-white font-semibold px-4 py-3 text-sm min-h-11 transition-colors"
             >
               <MessageCircle className="w-5 h-5 shrink-0" />
@@ -240,8 +235,7 @@ function DistributorCard({
           {dist.instagram && (
             <a
               href={dist.instagram}
-              target="_blank"
-              rel="noopener noreferrer"
+              target="_blank" rel="noopener noreferrer"
               className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/20 bg-white/5 hover:bg-white/10 text-white font-semibold px-4 py-3 text-sm min-h-11 transition-colors"
             >
               <Instagram className="w-5 h-5 shrink-0" />
