@@ -151,7 +151,7 @@ Cliquez ci-dessous pour accéder directement au Zoom.`,
 ✅ Faça perguntas ao vivo
 
 Clique abaixo para acessar o Zoom diretamente.`,
-    regions: ['global', 'latam'],
+    regions: ['global'],
     hasFirstTimePrompt: false,
   },
   {
@@ -159,7 +159,6 @@ Clique abaixo para acessar o Zoom diretamente.`,
     title: 'TRUE LEGACY MASTERCLASS',
     date: 'March 29th, 2026',
     image: '/assets/event-masterclass.png',
-    latamImage: '/assets/event-latam-flyer.png',
     registerUrl: 'https://tr.ee/8yBqHZ',
     latamZoomUrl: 'https://tr.ee/8yBqHZ',
     joinUrl: 'https://tr.ee/8yBqHZ',

@@ -209,26 +209,9 @@ export default function EventsPage() {
           <p className="text-slate-400">{t.noEvents}</p>
         ) : (
           <div className="space-y-10">
-            {weeklyEvents.length > 0 && (
-              <>
-                <h2 className="text-2xl font-bold text-[#00a896] text-center tracking-wide">
-                  {t.weeklySessions}
-                </h2>
-                {weeklyEvents.map((event) => (
-                  <EventCard key={event.id} event={event} region={region} lang={lang} onFirstTimeNo={handleFirstTimeNo} />
-                ))}
-              </>
-            )}
-            {featuredEvents.length > 0 && (
-              <>
-                <h2 className="text-2xl font-bold text-[#00a896] text-center tracking-wide mt-4">
-                  {t.featuredMasterclass}
-                </h2>
-                {featuredEvents.map((event) => (
-                  <EventCard key={event.id} event={event} region={region} lang={lang} onFirstTimeNo={handleFirstTimeNo} />
-                ))}
-              </>
-            )}
+            {[...featuredEvents, ...weeklyEvents].map((event) => (
+              <EventCard key={event.id} event={event} region={region} lang={lang} onFirstTimeNo={handleFirstTimeNo} />
+            ))}
           </div>
         )}
       </div>
