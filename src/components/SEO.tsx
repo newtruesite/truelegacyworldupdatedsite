@@ -17,7 +17,7 @@ export function SEO({ title, description, image, canonical }: SEOProps) {
     const currentPath = typeof window !== "undefined" ? window.location.pathname : "/";
     const siteUrl = `${protocol}//${host}${currentPath}`;
 
-    const defaultImage = `${canonicalHost}/logos/tl-square-white.png`;
+    const defaultImage = `${canonicalHost}/world-map-hero.png`;
     const resolvedImage = image ? new URL(image, canonicalHost).toString() : defaultImage;
     const effectiveCanonical = canonical || `${canonicalHost}${currentPath}`;
 
