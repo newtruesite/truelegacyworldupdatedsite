@@ -162,14 +162,14 @@ export default function ProductsPage() {
           </div>
         </TLBackground>
 
-        {/* Dual package hero: K8 + emGuarde */}
+        {/* Duo package hero: K8 + emGuarde */}
         <section className="py-8 px-4" style={{ background: 'linear-gradient(135deg, rgba(6,182,212,0.12) 0%, rgba(139,92,246,0.1) 100%)' }}>
           <div className="mx-auto max-w-4xl rounded-2xl border border-cyan-500/30 bg-[#0a1628]/90 backdrop-blur p-6 md:p-8 text-center md:text-left">
             <p className="text-xs font-semibold uppercase tracking-wider text-cyan-300 mb-2">
               {locale === 'es' ? 'Recomendado' : locale === 'fr' ? 'Recommandé' : locale === 'pt' ? 'Recomendado' : 'Recommended'}
             </p>
             <h2 className="text-2xl md:text-3xl font-bold text-white mb-3">
-              {locale === 'es' ? 'Sistema dual: Kangen K8 + emGuarde' : locale === 'fr' ? 'Pack dual : Kangen K8 + emGuarde' : locale === 'pt' ? 'Sistema dual: Kangen K8 + emGuarde' : 'Dual package: Kangen K8 + emGuarde'}
+              {locale === 'es' ? 'Sistema Duo: Kangen K8 + emGuarde' : locale === 'fr' ? 'Pack Duo : Kangen K8 + emGuarde' : locale === 'pt' ? 'Sistema Duo: Kangen K8 + emGuarde' : 'Duo package: Kangen K8 + emGuarde'}
             </h2>
             <p className="text-slate-300 text-sm md:text-base mb-6 max-w-2xl mx-auto md:mx-0">
               {locale === 'es' ? 'La mejor agua alcalina en casa con el K8 y protección EMF 24/7 con emGuarde. El combo que más recomendamos para salud y negocio.' : locale === 'fr' ? "La meilleure eau alcaline à la maison avec le K8 et une protection EMF 24/7 avec emGuarde. Le combo que nous recommandons le plus." : locale === 'pt' ? 'A melhor água alcalina em casa com o K8 e proteção EMF 24/7 com emGuarde. O combo que mais recomendamos.' : 'Best-in-class alkaline water at home with the K8 and 24/7 EMF protection with emGuarde. The combo we recommend most for health and business.'}

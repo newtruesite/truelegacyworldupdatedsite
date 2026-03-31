@@ -112,7 +112,7 @@ export function ProductSection({
           <p className="text-slate-400 max-w-3xl mx-auto mt-4 text-base leading-relaxed">
             {productsIntro}
           </p>
-          {/* Dual package: K8 + emGuarde — recommended combo (hidden for homeAll) */}
+          {/* Duo package: K8 + emGuarde — recommended combo (hidden for homeAll) */}
           {variant !== "homeAll" && (
             <div className="mt-8 mx-auto max-w-2xl rounded-2xl border border-cyan-500/30 bg-gradient-to-br from-cyan-500/10 to-purple-500/10 p-6 text-center md:text-left">
               <p className="text-xs font-semibold uppercase tracking-wider text-cyan-300 mb-2">
@@ -126,12 +126,12 @@ export function ProductSection({
               </p>
               <h3 className="text-xl font-bold text-white mb-2">
                 {locale === "es"
-                  ? "Sistema dual: Kangen K8 + emGuarde"
+                  ? "Sistema Duo: Kangen K8 + emGuarde"
                   : locale === "fr"
-                    ? "Pack dual : Kangen K8 + emGuarde"
+                    ? "Pack Duo : Kangen K8 + emGuarde"
                     : locale === "pt"
-                      ? "Sistema dual: Kangen K8 + emGuarde"
-                      : "Dual package: Kangen K8 + emGuarde"}
+                      ? "Sistema Duo: Kangen K8 + emGuarde"
+                      : "Duo package: Kangen K8 + emGuarde"}
               </h3>
               <p className="text-slate-300 text-sm mb-4">
                 {locale === "es"
