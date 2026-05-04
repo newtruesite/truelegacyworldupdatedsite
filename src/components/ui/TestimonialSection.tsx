@@ -13,14 +13,14 @@ const TESTIMONIALS = [
         role: 'Health & Wellness Leader',
     },
     {
-        handle: '@zahphysique',
-        name: 'Zah Physique',
-        instagram: 'https://instagram.com/zahphysique',
+        handle: '@mcardonita',
+        name: 'Magaly Cardona',
+        instagram: 'https://instagram.com/mcardonita',
         quote:
-            "As a fitness coach, I've seen nothing like Kangen water. My clients recover faster, perform better — and my True Legacy income is freedom redefined.",
-        initials: 'ZP',
-        gradient: 'from-green-500 to-cyan-400',
-        role: 'Fitness & Wellness Coach',
+            'After years searching for balance, I found a mission that aligns health and entrepreneurship. Guiding leaders to build intentional lives is my calling.',
+        initials: 'MC',
+        gradient: 'from-indigo-500 to-purple-400',
+        role: 'Coach & Impact Entrepreneur',
     },
     {
         handle: '@egbertnah',

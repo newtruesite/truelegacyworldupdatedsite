@@ -1,5 +1,7 @@
 import { motion } from 'framer-motion'
 import { useEffect, useRef, useState } from 'react'
+import { useLocaleContext } from '@/contexts/LocaleContext'
+import { t } from '@/lib/translations'
 
 function useCountUp(end: number, duration: number, run: boolean) {
   const [value, setValue] = useState(0)
@@ -20,6 +22,7 @@ function useCountUp(end: number, duration: number, run: boolean) {
 export function SocialProofStrip() {
   const ref = useRef<HTMLDivElement>(null)
   const [inView, setInView] = useState(false)
+  const { locale } = useLocaleContext()
   const countries = useCountUp(51, 1500, inView)
   const members = useCountUp(8, 1500, inView)
 
@@ -45,12 +48,12 @@ export function SocialProofStrip() {
     >
       <div>
         <span className="block text-2xl md:text-3xl font-bold text-white tabular-nums">{countries}+</span>
-        <span className="text-sm text-slate-400">countries represented</span>
+        <span className="text-sm text-slate-400">{t[locale].stats_countries_label}</span>
       </div>
       <div className="w-px h-10 bg-white/10 hidden sm:block" />
       <div>
         <span className="block text-2xl md:text-3xl font-bold text-white tabular-nums">{members}</span>
-        <span className="text-sm text-slate-400">team regions worldwide</span>
+        <span className="text-sm text-slate-400">{t[locale].stats_regions_label}</span>
       </div>
     </motion.div>
   )

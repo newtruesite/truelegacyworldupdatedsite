@@ -21,27 +21,9 @@ const LEADERS = [
         gradient: 'from-[#1B3A8C] to-blue-600',
         glow: 'rgba(27,58,140,0.5)',
     },
+
     {
         id: 2,
-        name: 'Coach Zah',
-        handle: '@zahphysique',
-        instagramUrl: 'https://www.instagram.com/zahphysique/',
-        region: 'Miami · USA',
-        role: 'Elite Performance & Leadership Coach',
-        intro: 'For more than a decade Zah has coached elite athletes, celebrities, and executives — now channeling that performance mindset into leadership, leverage, and legacy with Enagic.',
-        bio: [
-            "For more than a decade, I've had the privilege of coaching some of the world's top performers — elite athletes, celebrities, and C-suite executives.",
-            "But what I discovered along that journey went beyond just training — it was about mastering leadership, understanding leverage, and embracing a vision that's bigger than yourself.",
-            "I realized true, lasting impact isn't created in isolation. It comes from connecting with the right people and choosing the right vehicle. That's what led me to Enagic — a company built on authenticity, proven systems, and sustainable growth.",
-            "Now, we have a space where like-minded leaders unite, blend their strengths, and leverage our collective expertise to build generational wealth and a lasting legacy.",
-        ],
-        image: '/leaders/zah-hero.png',
-        icon: Users,
-        gradient: 'from-blue-600 to-indigo-600',
-        glow: 'rgba(37,99,235,0.5)',
-    },
-    {
-        id: 3,
         name: 'Coach Magaly',
         handle: '@mcardonita',
         instagramUrl: 'https://www.instagram.com/mcardonita/',
@@ -58,7 +40,7 @@ const LEADERS = [
         glow: 'rgba(99,102,241,0.5)',
     },
     {
-        id: 4,
+        id: 3,
         name: 'Coach Ming Way',
         handle: '@mingwaysia',
         instagramUrl: 'https://www.instagram.com/mingwaysia/',
@@ -76,7 +58,7 @@ const LEADERS = [
         glow: 'rgba(245,158,11,0.5)',
     },
     {
-        id: 5,
+        id: 4,
         name: 'Coach Simon Loh',
         handle: '@simonloh_',
         instagramUrl: 'https://www.instagram.com/simonloh_/',
