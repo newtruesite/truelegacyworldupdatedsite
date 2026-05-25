@@ -254,22 +254,22 @@ const COUNTRY_LEADERS: Record<
       instagram: "https://www.instagram.com/mehdicohen_/",
     },
     {
-      name: "Coach Zah",
-      role: "Elite Performance & Leadership Coach",
-      image: "/leaders/zah-hero.png",
+      name: "Coach Magaly",
+      role: "Coach & Impact-Driven Entrepreneur",
+      image: "/leaders/magaly-hero.png",
       intro:
-        "From coaching elite performers to guiding entrepreneurs, Zah brings performance, leadership, and leverage together to build generational legacy.",
-      instagram: "https://www.instagram.com/zahphysique/",
+        "Magaly helps people design work that aligns with their values — guiding leaders across the U.S. and Latin America to build intentional businesses through Enagic and community.",
+      instagram: "https://www.instagram.com/mcardonita/",
     },
   ],
   canada: [
     {
-      name: "Coach Zah",
-      role: "Elite Performance & Leadership Coach",
-      image: "/leaders/zah-hero.png",
+      name: "Coach Magaly",
+      role: "Coach & Impact-Driven Entrepreneur",
+      image: "/leaders/magaly-hero.png",
       intro:
-        "Supporting Canadian leaders who want to combine world-class performance with long-term financial freedom through True Legacy.",
-      instagram: "https://www.instagram.com/zahphysique/",
+        "Supporting leaders in Canada and beyond who want to build with more intention — whether that's in their health, their work, or the direction of their lives.",
+      instagram: "https://www.instagram.com/mcardonita/",
     },
   ],
   morocco: [
@@ -322,12 +322,12 @@ const COUNTRY_LEADERS: Record<
   ],
   mexico: [
     {
-      name: "Coach Zah",
-      role: "Elite Performance & Leadership Coach",
-      image: "/leaders/zah-hero.png",
+      name: "Coach Magaly",
+      role: "Coach & Impact-Driven Entrepreneur",
+      image: "/leaders/magaly-hero.png",
       intro:
-        "Bringing a decade of high-performance coaching to help leaders in Mexico build strong wellness businesses with Enagic.",
-      instagram: "https://www.instagram.com/zahphysique/",
+        "Guiding leaders in Mexico and across LATAM to build intentional businesses through Enagic and a community centered around growth.",
+      instagram: "https://www.instagram.com/mcardonita/",
     },
   ],
   paraguay: [
@@ -350,12 +350,12 @@ const COUNTRY_LEADERS: Record<
       instagram: "https://www.instagram.com/mehdicohen_/",
     },
     {
-      name: "Coach Zah",
-      role: "Elite Performance & Leadership Coach",
-      image: "/leaders/zah-hero.png",
+      name: "Coach Magaly",
+      role: "Coach & Impact-Driven Entrepreneur",
+      image: "/leaders/magaly-hero.png",
       intro:
-        "Bringing high-performance coaching to Turkish entrepreneurs who want to combine wellness and long-term financial freedom.",
-      instagram: "https://www.instagram.com/zahphysique/",
+        "Supporting global leaders who want to design work that aligns with their values — building intentional businesses through Enagic and community.",
+      instagram: "https://www.instagram.com/mcardonita/",
     },
   ],
 };
