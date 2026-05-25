@@ -254,22 +254,22 @@ const COUNTRY_LEADERS: Record<
       instagram: "https://www.instagram.com/mehdicohen_/",
     },
     {
-      name: "Coach Zah",
+      name: "Coach Ryan",
       role: "Elite Performance & Leadership Coach",
-      image: "/leaders/zah-hero.png",
+      image: "/leaders/ryan-hero.png",
       intro:
-        "From coaching elite performers to guiding entrepreneurs, Zah brings performance, leadership, and leverage together to build generational legacy.",
-      instagram: "https://www.instagram.com/zahphysique/",
+        "From coaching elite performers to guiding entrepreneurs, Ryan brings performance, leadership, and leverage together to build generational legacy.",
+      instagram: "https://www.instagram.com/ryanpool/",
     },
   ],
   canada: [
     {
-      name: "Coach Zah",
+      name: "Coach Ryan",
       role: "Elite Performance & Leadership Coach",
-      image: "/leaders/zah-hero.png",
+      image: "/leaders/ryan-hero.png",
       intro:
         "Supporting Canadian leaders who want to combine world-class performance with long-term financial freedom through True Legacy.",
-      instagram: "https://www.instagram.com/zahphysique/",
+      instagram: "https://www.instagram.com/ryanpool/",
     },
   ],
   morocco: [
@@ -322,12 +322,12 @@ const COUNTRY_LEADERS: Record<
   ],
   mexico: [
     {
-      name: "Coach Zah",
+      name: "Coach Ryan",
       role: "Elite Performance & Leadership Coach",
-      image: "/leaders/zah-hero.png",
+      image: "/leaders/ryan-hero.png",
       intro:
         "Bringing a decade of high-performance coaching to help leaders in Mexico build strong wellness businesses with Enagic.",
-      instagram: "https://www.instagram.com/zahphysique/",
+      instagram: "https://www.instagram.com/ryanpool/",
     },
   ],
   paraguay: [
@@ -350,12 +350,12 @@ const COUNTRY_LEADERS: Record<
       instagram: "https://www.instagram.com/mehdicohen_/",
     },
     {
-      name: "Coach Zah",
+      name: "Coach Ryan",
       role: "Elite Performance & Leadership Coach",
-      image: "/leaders/zah-hero.png",
+      image: "/leaders/ryan-hero.png",
       intro:
         "Bringing high-performance coaching to Turkish entrepreneurs who want to combine wellness and long-term financial freedom.",
-      instagram: "https://www.instagram.com/zahphysique/",
+      instagram: "https://www.instagram.com/ryanpool/",
     },
   ],
 };

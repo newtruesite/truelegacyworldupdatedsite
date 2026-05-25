@@ -104,10 +104,10 @@ const TESTIMONIALS_RAW = [
   },
   {
     id: 8,
-    name: "Zah Naderi",
-    handle: "@zahphysique",
-    instagramUrl: "https://www.instagram.com/zahphysique/",
-    photo: "/assets/testimonials/zah.png",
+    name: "Ryan Pool",
+    handle: "@ryanpool",
+    instagramUrl: "https://www.instagram.com/ryanpool/",
+    photo: "/assets/testimonials/ryan.png",
     quote:
       "Growing up in Pakistan, I had the odds stacked against me from being an out-of-shape kid with big dreams to becoming a refugee. After 11 years of relentless dedication to my health, I transformed my body and mindset. Enagic's K8 technology was the missing piece that elevated my health to the next level. Now, I'm passionate about helping others craft their own wellness legacy.",
     stars: 5,

@@ -13,12 +13,12 @@ const TESTIMONIALS = [
         role: 'Health & Wellness Leader',
     },
     {
-        handle: '@zahphysique',
-        name: 'Zah Physique',
-        instagram: 'https://instagram.com/zahphysique',
+        handle: '@ryanpool',
+        name: 'Ryan Pool',
+        instagram: 'https://instagram.com/ryanpool',
         quote:
             "As a fitness coach, I've seen nothing like Kangen water. My clients recover faster, perform better — and my True Legacy income is freedom redefined.",
-        initials: 'ZP',
+        initials: 'RP',
         gradient: 'from-green-500 to-cyan-400',
         role: 'Fitness & Wellness Coach',
     },

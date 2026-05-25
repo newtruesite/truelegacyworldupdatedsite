@@ -28,12 +28,12 @@ const DISTRIBUTORS: Distributor[] = [
     region: "Global & LATAM",
   },
   {
-    name: "Zah Naderi",
+    name: "Ryan Pool",
     title: "True Legacy Leader",
-    photo: "/leaders/zah-hero.png",
-    fallbackInitial: "Z",
-    website: "https://zahphysique.com",
-    instagram: "https://www.instagram.com/zahphysique/",
+    photo: "/leaders/ryan-hero.png",
+    fallbackInitial: "R",
+    website: "https://ryanpool.com",
+    instagram: "https://www.instagram.com/ryanpool/",
     region: "Global",
   },
 ];

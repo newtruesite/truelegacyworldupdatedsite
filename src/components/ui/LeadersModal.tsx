@@ -14,12 +14,12 @@ const LEADERS = [
     region: 'Global',
   },
   {
-    name: 'Zah Naderi',
+    name: 'Ryan Pool',
     title: 'True Legacy Leader',
-    telegram: 'https://t.me/zahnaderi',
-    instagram: 'https://www.instagram.com/zahnaderi/',
+    telegram: 'https://t.me/ryanpool',
+    instagram: 'https://www.instagram.com/ryanpool/',
     whatsapp: 'https://wa.me/1234567890',
-    photo: '/leaders/zah-hero.png',
+    photo: '/leaders/ryan-hero.png',
     region: 'Global',
   },
   {
