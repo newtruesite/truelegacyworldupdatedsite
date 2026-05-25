@@ -145,11 +145,46 @@ export function Navbar() {
   const navLabels = {
     home: t[locale].nav_home,
     training: t[locale].nav_training,
-    events: t[locale].nav_events,
-    community: t[locale].nav_community,
-    countries: t[locale].nav_countries,
-    products: t[locale].nav_products,
-    distributors: t[locale].nav_distributors,
+    events:
+      locale === "es"
+        ? "Eventos"
+        : locale === "fr"
+          ? "Événements"
+          : locale === "pt"
+            ? "Eventos"
+            : "Events",
+    community:
+      locale === "es"
+        ? "Comunidad"
+        : locale === "fr"
+          ? "Communauté"
+          : locale === "pt"
+            ? "Comunidade"
+            : "Community",
+    countries:
+      locale === "es"
+        ? "Países"
+        : locale === "fr"
+          ? "Pays"
+          : locale === "pt"
+            ? "Países"
+            : "Countries",
+    products:
+      locale === "es"
+        ? "Productos"
+        : locale === "fr"
+          ? "Produits"
+          : locale === "pt"
+            ? "Produtos"
+            : "Products",
+    distributors:
+      locale === "es"
+        ? "Distribuidores"
+        : locale === "fr"
+          ? "Distributeurs"
+          : locale === "pt"
+            ? "Distribuidores"
+            : "Distributors",
     unlockLegacy: t[locale].unlockLegacy,
     navProductK8: t[locale].navProductK8,
     navProductEmguarde: t[locale].navProductEmguarde,
@@ -367,7 +402,13 @@ export function Navbar() {
               >
                 {country
                   ? navLabels.unlockLegacy
-                  : t[locale].nav_join_team}
+                  : locale === "es"
+                    ? "Únete al Equipo"
+                    : locale === "fr"
+                      ? "Rejoindre l'Équipe"
+                      : locale === "pt"
+                        ? "Junte-se à Equipe"
+                        : "Join the Team"}
               </a>
             </div>
           </div>
@@ -395,7 +436,13 @@ export function Navbar() {
           {/* Language Selection */}
           <div className="space-y-2">
             <span className="px-2 text-xs font-semibold uppercase tracking-wider text-slate-500">
-              {t[locale].nav_language}
+              {locale === "es"
+                ? "Idioma"
+                : locale === "fr"
+                  ? "Langue"
+                  : locale === "pt"
+                    ? "Idioma"
+                    : "Language"}
             </span>
             <div className="flex gap-2">
               {(["en", "es", "fr"] as const).map((loc) => (
@@ -422,7 +469,13 @@ export function Navbar() {
           {/* Main Navigation */}
           <div className="space-y-1">
             <span className="px-2 text-xs font-semibold uppercase tracking-wider text-slate-500">
-              {t[locale].nav_navigation}
+              {locale === "es"
+                ? "Navegación"
+                : locale === "fr"
+                  ? "Navigation"
+                  : locale === "pt"
+                    ? "Navegação"
+                    : "Navigation"}
             </span>
             {mainNavLinks.map((link) => {
               if (link.to === "/select-country") return null;
@@ -457,7 +510,13 @@ export function Navbar() {
           {/* Products Section */}
           <div className="space-y-1">
             <span className="px-2 text-xs font-semibold uppercase tracking-wider text-slate-500">
-              {t[locale].nav_duo_package}
+              {locale === "es"
+                ? "Paquete Duo"
+                : locale === "fr"
+                  ? "Pack Duo"
+                  : locale === "pt"
+                    ? "Pacote Duo"
+                    : "Duo Package"}
             </span>
             <Link
               to={country ? `/${country.slug}/emguarde` : "/emguarde"}
@@ -480,7 +539,13 @@ export function Navbar() {
           {/* Countries — all with flags */}
           <div className="space-y-2">
             <span className="px-2 text-xs font-semibold uppercase tracking-wider text-slate-500">
-              {t[locale].nav_countries}
+              {locale === "es"
+                ? "Países"
+                : locale === "fr"
+                  ? "Pays"
+                  : locale === "pt"
+                    ? "Países"
+                    : "Countries"}
             </span>
             <div className="grid grid-cols-2 gap-2 overflow-y-auto max-h-[50vh] min-h-0">
               {COUNTRIES.map((c) => (
@@ -535,7 +600,13 @@ export function Navbar() {
           >
             {country
               ? navLabels.unlockLegacy
-              : t[locale].nav_join_team}
+              : locale === "es"
+                ? "Únete al Equipo"
+                : locale === "fr"
+                  ? "Rejoindre l'Équipe"
+                  : locale === "pt"
+                    ? "Junte-se à Equipe"
+                    : "Join the Team"}
           </a>
         </div>
       </MobileMenu>

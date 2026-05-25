@@ -126,8 +126,20 @@ export default function HomePage() {
   return (
     <div className="page-wrapper" style={{ background: "#060b1e" }}>
       <SEO
-        title={copy.home_seo_title}
-        description={copy.home_seo_description}
+        title={
+          locale === "es"
+            ? "True Legacy | Distribuidores Enagic de clase mundial"
+            : locale === "fr"
+              ? "True Legacy | Distributeurs Enagic de classe mondiale"
+              : "True Legacy | World Class Enagic Distributors"
+        }
+        description={
+          locale === "es"
+            ? "Únete a una comunidad de emprendedores en más de 51 países que ganan dinero compartiendo productos que cambian vidas como Aqua Kangen y emGuarde."
+            : locale === "fr"
+              ? "Rejoignez une communauté d'entrepreneurs dans plus de 51 pays qui gagnent de l'argent en partageant des produits qui changent la vie comme Kangen Water et emGuarde."
+              : "Join a community of entrepreneurs across 51+ countries who make money by sharing world-changing products like the Kangen water machine and emGuarde."
+        }
         image="/logos/tl-square-white.png"
       />
       <Navbar />
@@ -150,7 +162,11 @@ export default function HomePage() {
                 transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
                 className="mb-3 text-xs font-semibold tracking-[0.3em] uppercase text-tl-gold opacity-80"
               >
-                {copy.home_map_eyebrow}
+                {locale === "es"
+                  ? "Ubica tu región en el mapa"
+                  : locale === "fr"
+                    ? "Trouvez votre région sur la carte"
+                    : "Find your region on the map"}
               </motion.p>
 
               {/* Main heading — fluid on mobile, larger and more confident */}
@@ -182,7 +198,11 @@ export default function HomePage() {
                 {copy.heroSub}
               </motion.p>
               <p className="mt-4 hero-subtitle opacity-75 max-w-xl">
-                {copy.home_map_sub}
+                {locale === "es"
+                  ? "Únete a una comunidad de emprendedores que ganan compartiendo productos que cambian el mundo — como la máquina de Aqua Kangen y emGuarde. Elige tu región en el mapa y comienza tu camino."
+                  : locale === "fr"
+                    ? "Rejoignez une communauté d’entrepreneurs qui gagnent en partageant des produits qui changent le monde — comme la machine d’eau Kangen et emGuarde. Choisissez votre région sur la carte et commencez votre parcours."
+                    : "Join a community of entrepreneurs who make money by sharing world‑changing products — like the Kangen water machine and emGuarde. Pick your region on the map and start your journey."}
               </p>
               <SocialProofStrip />
             </motion.div>
@@ -379,10 +399,22 @@ export default function HomePage() {
                 </svg>
               </div>
               <h3 className="text-2xl md:text-3xl font-bold text-white mb-4">
-                {copy.home_training_title}
+                {locale === "es"
+                  ? "Biblioteca de Entrenamiento"
+                  : locale === "fr"
+                    ? "Bibliothèque de Formation"
+                    : locale === "pt"
+                      ? "Biblioteca de Treinamento"
+                      : "Training Library"}
               </h3>
               <p className="text-slate-400 text-base md:text-lg max-w-2xl mx-auto leading-relaxed mb-8">
-                {copy.home_training_body}
+                {locale === "es"
+                  ? "Accede a guías exclusivas, entrenamientos de productos y recursos para distribuidores que te ayudarán a construir tu negocio True Legacy."
+                  : locale === "fr"
+                    ? "Accédez à des guides exclusifs, des formations produits et des ressources distributeurs qui vous aideront à construire votre entreprise True Legacy."
+                    : locale === "pt"
+                      ? "Acesse guias exclusivos, treinamentos de produtos e recursos para distribuidores que ajudarão você a construir seu negócio True Legacy."
+                      : "Access exclusive guides, product trainings, and distributor resources that will help you build your True Legacy business."}
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Link
@@ -393,13 +425,25 @@ export default function HomePage() {
                     boxShadow: "0 2px 8px rgba(27, 90, 140, 0.2)",
                   }}
                 >
-                  {copy.home_training_cta_login}
+                  {locale === "es"
+                    ? "Acceso a Distribuidores"
+                    : locale === "fr"
+                      ? "Accès Distributeurs"
+                      : locale === "pt"
+                        ? "Acesso a Distribuidores"
+                        : "Distributor Login"}
                 </Link>
                 <Link
                   to="/training#pdf-guides"
                   className="inline-flex items-center justify-center min-h-[44px] px-6 py-3 rounded-md font-semibold text-cyan-300 border border-cyan-500/30 transition-all hover:bg-cyan-500/10 hover:-translate-y-0.5"
                 >
-                  {copy.home_training_cta_guides}
+                  {locale === "es"
+                    ? "Guías de Productos"
+                    : locale === "fr"
+                      ? "Guides Produits"
+                      : locale === "pt"
+                        ? "Guias de Produtos"
+                        : "Product Guides"}
                 </Link>
               </div>
             </motion.div>

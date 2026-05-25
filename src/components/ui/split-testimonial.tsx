@@ -104,12 +104,12 @@ const TESTIMONIALS_RAW = [
   },
   {
     id: 8,
-    name: "Magaly Cardona",
-    handle: "@mcardonita",
-    instagramUrl: "https://www.instagram.com/mcardonita/",
-    photo: "/leaders/magaly.png",
+    name: "Zah Naderi",
+    handle: "@zahphysique",
+    instagramUrl: "https://www.instagram.com/zahphysique/",
+    photo: "/assets/testimonials/zah.png",
     quote:
-      "After years of trying to create a life that felt both meaningful and balanced, I realized I wanted a way of working that aligned more deeply with my values. That journey led me to Enagic and a community centered around growth, education, and contribution. Today, as a coach and entrepreneur, I support people who want to build with more intention.",
+      "Growing up in Pakistan, I had the odds stacked against me from being an out-of-shape kid with big dreams to becoming a refugee. After 11 years of relentless dedication to my health, I transformed my body and mindset. Enagic's K8 technology was the missing piece that elevated my health to the next level. Now, I'm passionate about helping others craft their own wellness legacy.",
     stars: 5,
     verified: true,
   },
@@ -182,7 +182,7 @@ const SPANISH_TESTIMONIALS: Testimonial[] = [
   {
     ...DEFAULT_TESTIMONIALS[7],
     quote:
-      "Después de años de intentar crear una vida que se sintiera significativa y equilibrada, me di cuenta de que quería una forma de trabajar que se alineara más profundamente con mis valores. Ese viaje me llevó a Enagic y a una comunidad centrada en el crecimiento, la educación y la contribución. Hoy, como coach y emprendedora, apoyo a personas que desean construir con más intención.",
+      "Crecí en Pakistán con todas las probabilidades en mi contra: de ser un niño con sobrepeso y grandes sueños a convertirme en refugiado. Después de 11 años de dedicación implacable a mi salud, transformé mi cuerpo y mi mentalidad. La tecnología K8 de Enagic fue la pieza que faltaba para llevar mi salud al siguiente nivel. Ahora me apasiona ayudar a otros a construir su propia herencia de bienestar.",
   },
   {
     ...DEFAULT_TESTIMONIALS[8],
@@ -230,7 +230,7 @@ const FRENCH_TESTIMONIALS: Testimonial[] = [
   {
     ...DEFAULT_TESTIMONIALS[7],
     quote:
-      "Après des années passées à essayer de créer une vie qui ait du sens et qui soit équilibrée, j'ai réalisé que je voulais une façon de travailler qui s'aligne plus profondément avec mes valeurs. Ce voyage m'a menée à Enagic et à une communauté centrée sur la croissance, l'éducation et la contribution. Aujourd'hui, en tant que coach et entrepreneure, j'accompagne les personnes qui souhaitent construire avec plus d'intention.",
+      "En grandissant au Pakistan, tout jouait contre moi : j’étais un enfant en surpoids avec de grands rêves, puis je suis devenu réfugié. Après 11 ans de dévouement sans relâche à ma santé, j’ai transformé mon corps et mon état d’esprit. La technologie K8 d’Enagic a été la pièce manquante qui a élevé ma santé à un niveau supérieur. Aujourd’hui, je suis passionné par l’idée d’aider les autres à construire leur propre héritage de bien‑être.",
   },
   {
     ...DEFAULT_TESTIMONIALS[8],

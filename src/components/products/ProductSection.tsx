@@ -25,21 +25,71 @@ export function ProductSection({
 
   const title =
     variant === "homeAll"
-      ? copy.prod_section_title_all
+      ? locale === "es"
+        ? "Línea Completa de Productos"
+        : locale === "fr"
+          ? "Gamme Complète de Produits"
+          : locale === "pt"
+            ? "Linha Completa de Produtos"
+            : "Complete Product Line"
       : variant === "home"
-        ? copy.prod_section_title_home
-        : copy.prod_section_title_default;
+        ? locale === "es"
+          ? "Tecnología Enagic que Representamos"
+          : locale === "fr"
+            ? "Technologie Enagic que Nous Représentons"
+            : locale === "pt"
+              ? "Tecnologia Enagic que Representamos"
+              : "Enagic Technology We Represent"
+        : locale === "es"
+          ? "Nuestros Productos"
+          : locale === "fr"
+            ? "Nos Produits"
+            : locale === "pt"
+              ? "Nossos Produtos"
+              : "Our Products";
 
   const subtitle =
     variant === "homeAll"
-      ? copy.prod_section_sub_all
+      ? locale === "es"
+        ? "Los 9 productos Enagic que puedes usar y vender."
+        : locale === "fr"
+          ? "Les 9 produits Enagic que vous pouvez utiliser et vendre."
+          : locale === "pt"
+            ? "Os 9 produtos Enagic que você pode usar e vender."
+            : "All 9 Enagic products you can use and sell."
       : variant === "home"
-        ? copy.prod_section_sub_home
-        : copy.prod_section_sub_default;
+        ? locale === "es"
+          ? "Una vista rápida de los productos que impulsan el movimiento True Legacy."
+          : locale === "fr"
+            ? "Un aperçu rapide des produits qui alimentent le mouvement True Legacy."
+            : locale === "pt"
+              ? "Uma visão rápida dos produtos que impulsionam o movimento True Legacy."
+              : "A quick look at the products powering the True Legacy movement."
+        : locale === "es"
+          ? "Tecnología de bienestar que funciona"
+          : locale === "fr"
+            ? "Une technologie bien-être qui fonctionne"
+            : locale === "pt"
+              ? "Tecnologia de bem-estar que funciona"
+              : "Wellness Technology That Works";
 
-  const contactLabel = copy.prod_section_talk_distributor;
+  const contactLabel =
+    locale === "es"
+      ? "Hablar con un distribuidor"
+      : locale === "fr"
+        ? "Parler à un distributeur"
+        : locale === "pt"
+          ? "Falar com um distribuidor"
+          : "Talk to a distributor";
 
-  const productsIntro = copy.prod_section_intro;
+  const productsIntro =
+    locale === "es"
+      ? "Enagic fabrica 9 productos de clase mundial que usas en casa Y vendes para ganar comisiones. Cada producto tiene un beneficio de salud único — y cada venta te genera ingresos directos a través del sistema de 8 puntos."
+      : locale === "fr"
+        ? "Enagic fabrique 9 produits de classe mondiale que vous utilisez à la maison ET vendez pour gagner des commissions. Chaque produit a un avantage santé unique — et chaque vente vous génère des revenus directs via le système à 8 points."
+        : locale === "pt"
+          ? "Enagic fabrica 9 produtos de classe mundial que você usa em casa E vende para ganhar comissões. Cada produto tem um benefício de saúde único — e cada venda gera receita direta através do sistema de 8 pontos."
+          : "Enagic manufactures 9 world-class products that you both use at home AND sell to earn commissions. Every product below has a unique health benefit — and every sale earns you direct income through the 8-point system.";
 
   return (
     <section
@@ -66,13 +116,31 @@ export function ProductSection({
           {variant !== "homeAll" && (
             <div className="mt-8 mx-auto max-w-2xl rounded-2xl border border-cyan-500/30 bg-gradient-to-br from-cyan-500/10 to-purple-500/10 p-6 text-center md:text-left">
               <p className="text-xs font-semibold uppercase tracking-wider text-cyan-300 mb-2">
-                {copy.prod_section_recommended}
+                {locale === "es"
+                  ? "Recomendado"
+                  : locale === "fr"
+                    ? "Recommandé"
+                    : locale === "pt"
+                      ? "Recomendado"
+                      : "Recommended"}
               </p>
               <h3 className="text-xl font-bold text-white mb-2">
-                {copy.prod_section_duo_title}
+                {locale === "es"
+                  ? "Sistema Duo: Kangen K8 + emGuarde"
+                  : locale === "fr"
+                    ? "Pack Duo : Kangen K8 + emGuarde"
+                    : locale === "pt"
+                      ? "Sistema Duo: Kangen K8 + emGuarde"
+                      : "Duo package: Kangen K8 + emGuarde"}
               </h3>
               <p className="text-slate-300 text-sm mb-4">
-                {copy.prod_section_duo_body}
+                {locale === "es"
+                  ? "La mejor agua alcalina en casa con el K8 y protección EMF 24/7 con emGuarde. El combo que más recomendamos para salud y negocio."
+                  : locale === "fr"
+                    ? "La meilleure eau alcaline à la maison avec le K8 et une protection EMF 24/7 avec emGuarde. Le combo que nous recommandons le plus."
+                    : locale === "pt"
+                      ? "A melhor água alcalina em casa com o K8 e proteção EMF 24/7 com emGuarde. O combo que mais recomendamos."
+                      : "Best-in-class alkaline water at home with the K8 and 24/7 EMF protection with emGuarde. The combo we recommend most for health and business."}
               </p>
               <Link
                 to={getDistributorLink(country?.slug)}
@@ -151,7 +219,14 @@ export function ProductSection({
                       to={country ? `/${country.slug}/training` : "/training"}
                       className="inline-flex items-center gap-1.5 rounded-md border border-cyan-500/30 px-4 py-2 text-xs font-semibold text-cyan-300 hover:bg-cyan-500/10 hover:-translate-y-0.5 hover:shadow-md transition-all duration-150"
                     >
-                      {pCopy?.downloadGuide ?? copy.prod_section_guides_in_training}
+                      {pCopy?.downloadGuide ??
+                        (locale === "es"
+                          ? "Guías en Capacitación"
+                          : locale === "fr"
+                            ? "Guides en Formation"
+                            : locale === "pt"
+                              ? "Guias no Treinamento"
+                              : "Guides in Training")}
                     </Link>
                   )}
                   <Link
