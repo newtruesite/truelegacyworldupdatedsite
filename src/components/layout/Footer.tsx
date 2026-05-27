@@ -203,6 +203,15 @@ export function Footer() {
                     <p className="text-sm text-slate-500 text-center sm:text-left">
                         © {currentYear} True Legacy World. All rights reserved.
                     </p>
+                    <a
+                        href="https://stackmode.net"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-xs text-slate-600 hover:text-slate-500 transition-colors no-underline"
+                        title="Stackmode Network"
+                    >
+                        This Website Was Created by Stackmodechris - Stackmode Network
+                    </a>
                 </div>
             </div>
         </footer>
