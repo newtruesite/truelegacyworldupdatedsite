@@ -5,7 +5,9 @@ export type ProductId =
   | 'sd501_dx'
   | 'anespa_dx'
   | 'emguarde'
+  | 'emguarde_original'
   | 'ukon_sigma'
+  | 'kangen_beaute'
   | 'kangen_wagyu'
   | 'kangen_air'
 
@@ -93,6 +95,16 @@ export const PRODUCTS: Record<ProductId, ProductDefinition> = {
     imageSrc: '/products/emguarde-go.png',
     imageAlt: 'emGuarde GO portable device set of two by Enagic',
   },
+  emguarde_original: {
+    id: 'emguarde_original',
+    slug: 'emguarde-original',
+    name: 'EmGuarde',
+    category: 'accessory',
+    enagicProductUrl: undefined,
+    pdfGuideUrl: undefined,
+    imageSrc: '/products/emguarde-original.png',
+    imageAlt: 'Original EmGuarde personal EMF support device',
+  },
   ukon_sigma: {
     id: 'ukon_sigma',
     slug: 'ukon-sigma',
@@ -102,6 +114,16 @@ export const PRODUCTS: Record<ProductId, ProductDefinition> = {
     pdfGuideUrl: 'https://www.enagic.com/pdf/1097/Kangen_Ukon_Product_Guide.pdf?v=1767139574',
     imageSrc: '/products/ukon-sigma.png',
     imageAlt: 'Kangen Ukon® Sigma turmeric supplement by Enagic',
+  },
+  kangen_beaute: {
+    id: 'kangen_beaute',
+    slug: 'kangen-beaute',
+    name: 'Kangen Beauté®',
+    category: 'accessory',
+    enagicProductUrl: 'https://www.enagic.com/en_US/product-kangen-beaute',
+    pdfGuideUrl: undefined,
+    imageSrc: '/products/kangen-beaute.png',
+    imageAlt: 'Kangen Beauté luxury three-step skincare collection',
   },
   kangen_wagyu: {
     id: 'kangen_wagyu',
