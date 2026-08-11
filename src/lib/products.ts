@@ -86,12 +86,12 @@ export const PRODUCTS: Record<ProductId, ProductDefinition> = {
   emguarde: {
     id: 'emguarde',
     slug: 'emguarde',
-    name: 'emGuarde™',
+    name: 'emGuarde GO™ (Set of 2)',
     category: 'accessory',
     enagicProductUrl: 'https://EmGuarde.com',
     pdfGuideUrl: 'https://www.truelegacyworld.com/_files/ugd/7b12be_ff7cba88b07d461890527e0d74fcea43.pdf',
-    imageSrc: '/products/emguarde.png',
-    imageAlt: 'emGuarde™ EMF harmonizer by Enagic',
+    imageSrc: '/products/emguarde-go.png',
+    imageAlt: 'emGuarde GO portable device set of two by Enagic',
   },
   ukon_sigma: {
     id: 'ukon_sigma',
@@ -124,4 +124,3 @@ export const PRODUCTS: Record<ProductId, ProductDefinition> = {
     imageAlt: 'Kangen Air purifier by Enagic',
   },
 }
-

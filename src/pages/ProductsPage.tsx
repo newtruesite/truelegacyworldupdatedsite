@@ -162,17 +162,17 @@ export default function ProductsPage() {
           </div>
         </TLBackground>
 
-        {/* Duo package hero: K8 + emGuarde */}
+        {/* Duo package hero: K8 + emGuarde GO */}
         <section className="py-8 px-4" style={{ background: 'linear-gradient(135deg, rgba(6,182,212,0.12) 0%, rgba(139,92,246,0.1) 100%)' }}>
           <div className="mx-auto max-w-4xl rounded-2xl border border-cyan-500/30 bg-[#0a1628]/90 backdrop-blur p-6 md:p-8 text-center md:text-left">
             <p className="text-xs font-semibold uppercase tracking-wider text-cyan-300 mb-2">
               {locale === 'es' ? 'Recomendado' : locale === 'fr' ? 'Recommandé' : locale === 'pt' ? 'Recomendado' : 'Recommended'}
             </p>
             <h2 className="text-2xl md:text-3xl font-bold text-white mb-3">
-              {locale === 'es' ? 'Sistema Duo: Kangen K8 + emGuarde' : locale === 'fr' ? 'Pack Duo : Kangen K8 + emGuarde' : locale === 'pt' ? 'Sistema Duo: Kangen K8 + emGuarde' : 'Duo package: Kangen K8 + emGuarde'}
+              {locale === 'es' ? 'Sistema Duo: Kangen K8 + emGuarde GO' : locale === 'fr' ? 'Pack Duo : Kangen K8 + emGuarde GO' : locale === 'pt' ? 'Sistema Duo: Kangen K8 + emGuarde GO' : 'Duo package: Kangen K8 + emGuarde GO'}
             </h2>
             <p className="text-slate-300 text-sm md:text-base mb-6 max-w-2xl mx-auto md:mx-0">
-              {locale === 'es' ? 'La mejor agua alcalina en casa con el K8 y protección EMF 24/7 con emGuarde. El combo que más recomendamos para salud y negocio.' : locale === 'fr' ? "La meilleure eau alcaline à la maison avec le K8 et une protection EMF 24/7 avec emGuarde. Le combo que nous recommandons le plus." : locale === 'pt' ? 'A melhor água alcalina em casa com o K8 e proteção EMF 24/7 com emGuarde. O combo que mais recomendamos.' : 'Best-in-class alkaline water at home with the K8 and 24/7 EMF protection with emGuarde. The combo we recommend most for health and business.'}
+              {locale === 'es' ? 'Agua Kangen en casa con el K8 y soporte EMF portátil con el nuevo set de dos emGuarde GO.' : locale === 'fr' ? "L’eau Kangen à domicile avec le K8 et un soutien EMF portable grâce au nouveau lot de deux emGuarde GO." : locale === 'pt' ? 'Água Kangen em casa com o K8 e suporte EMF portátil com o novo conjunto de dois emGuarde GO.' : 'Kangen Water at home with the K8 and portable EMF support from the new emGuarde GO set of two.'}
             </p>
             <Link
               to={['mexico', 'colombia', 'brazil', 'paraguay'].includes(countrySlug ?? '') ? "/latam/distributors" : "/distributors"}
@@ -326,4 +326,3 @@ export default function ProductsPage() {
     </div>
   )
 }
-
