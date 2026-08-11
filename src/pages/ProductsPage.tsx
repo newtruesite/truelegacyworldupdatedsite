@@ -9,19 +9,6 @@ import { motion } from 'framer-motion'
 import { PlayCircle, Plus } from 'lucide-react'
 import { Link, useParams } from 'react-router-dom'
 
-const ENAGIC_ORDER_BASE = 'https://information.enagic.com/en/introduction?company_id=2&h=65c8bc2eba9f21e83eb4b6aae8ae3fd4&enroller_id=37000004828&sponsor_id=37000004829&representative_id=37000004828&line_rank=0'
-
-const ORDER_URLS: Partial<Record<ProductId, string>> = {
-  k8: `${ENAGIC_ORDER_BASE}&product_id=1016`,
-  emguarde: `${ENAGIC_ORDER_BASE}&product_id=9026`,
-  ukon_sigma: `${ENAGIC_ORDER_BASE}&product_id=2011`,
-  anespa_dx: `${ENAGIC_ORDER_BASE}&product_id=1041`,
-  sd501_dx: `${ENAGIC_ORDER_BASE}&product_id=1064`,
-  sd501_super: `${ENAGIC_ORDER_BASE}&product_id=1007`,
-  sd501: `${ENAGIC_ORDER_BASE}&product_id=1062`,
-  kangen_wagyu: `${ENAGIC_ORDER_BASE}&product_id=2115`,
-}
-
 const PRODUCT_FLOW: Array<{ key: 'flagship' | 'machines' | 'specialty'; productIds: ProductId[] }> = [
   { key: 'flagship', productIds: ['k8', 'emguarde', 'ukon_sigma'] },
   { key: 'machines', productIds: ['anespa_dx', 'sd501_dx', 'sd501_super', 'sd501'] },
@@ -37,10 +24,10 @@ function getFlowLabel(key: 'flagship' | 'machines' | 'specialty', locale: 'en' |
       pt: 'Essenciais de Bem-estar em Destaque',
     },
     machines: {
-      en: 'Kangen Water® Machines',
-      es: 'Máquinas Kangen Water®',
-      fr: 'Machines Kangen Water®',
-      pt: 'Máquinas Kangen Water®',
+      en: 'Kangen Water® Machines / Shower Systems',
+      es: 'Máquinas Kangen Water® / Sistemas de Ducha',
+      fr: 'Machines Kangen Water® / Systèmes de Douche',
+      pt: 'Máquinas Kangen Water® / Sistemas de Chuveiro',
     },
     specialty: {
       en: 'Specialty & Import Products',
@@ -82,8 +69,7 @@ export default function ProductsPage() {
           ? 'Ver detalhes oficiais'
           : 'View official details'
 
-  const orderLabel = locale === 'es' ? 'Ordenar ahora' : locale === 'fr' ? 'Commander' : locale === 'pt' ? 'Comprar agora' : 'Order Now'
-  const contactLabel = locale === 'es' ? 'Hablar con distribuidor' : locale === 'fr' ? 'Parler à un distributeur' : locale === 'pt' ? 'Falar com distribuidor' : 'Contact Us'
+  const contactLabel = locale === 'es' ? 'Contacta a tu distribuidor' : locale === 'fr' ? 'Contactez votre distributeur' : locale === 'pt' ? 'Fale com seu distribuidor' : 'Contact Your Distributor'
 
   return (
     <div className="page-wrapper" style={{ background: '#060b1e' }}>
@@ -134,41 +120,23 @@ export default function ProductsPage() {
                 {locale === 'es' ? 'Agua Kangen en casa con el K8 y soporte EMF portátil con el nuevo set de dos emGuarde GO.' : locale === 'fr' ? "L’eau Kangen à domicile avec le K8 et un soutien EMF portable grâce au nouveau lot de deux emGuarde GO." : locale === 'pt' ? 'Água Kangen em casa com o K8 e suporte EMF portátil com o novo conjunto de dois emGuarde GO.' : 'Kangen Water at home with the K8 and portable EMF support from the new emGuarde GO set of two.'}
               </p>
               <div className="flex flex-col justify-center gap-3 sm:flex-row lg:justify-start">
-                <a
-                  href={ORDER_URLS.k8}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  onClick={() => trackEvent('product_order_click', { productId: 'k8', locale, source: 'duo_package' })}
-                  className="inline-flex min-h-[44px] items-center justify-center rounded-xl bg-tl-gold px-5 py-2.5 text-sm font-semibold text-slate-950 transition-all hover:-translate-y-0.5 hover:brightness-110"
+                <Link
+                  to={getDistributorLink(countrySlug)}
+                  className="inline-flex min-h-[44px] items-center justify-center rounded-xl bg-cyan-500 px-5 py-2.5 text-sm font-semibold text-white transition-all hover:-translate-y-0.5 hover:bg-cyan-400 hover:shadow-lg hover:shadow-cyan-500/20"
                 >
-                  {locale === 'es' ? 'Ordenar K8' : locale === 'fr' ? 'Commander K8' : locale === 'pt' ? 'Comprar K8' : 'Order K8'}
-                </a>
-                <a
-                  href={ORDER_URLS.emguarde}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  onClick={() => trackEvent('product_order_click', { productId: 'emguarde', locale, source: 'duo_package' })}
-                  className="inline-flex min-h-[44px] items-center justify-center rounded-xl bg-purple-500 px-5 py-2.5 text-sm font-semibold text-white transition-all hover:-translate-y-0.5 hover:bg-purple-400"
-                >
-                  {locale === 'es' ? 'Comprar emGuarde GO' : locale === 'fr' ? 'Acheter emGuarde GO' : locale === 'pt' ? 'Comprar emGuarde GO' : 'Buy emGuarde GO'}
-                </a>
+                  {contactLabel}
+                </Link>
                 <a
                   href="https://youtu.be/lB5fW55DmaI?si=HzPbgiwUup9u5UN-"
                   target="_blank"
                   rel="noopener noreferrer"
                   onClick={() => trackEvent('duo_demo_watch', { locale, source: 'products_page' })}
-                  className="inline-flex min-h-[44px] items-center justify-center gap-2 rounded-xl bg-cyan-500 px-5 py-2.5 text-sm font-semibold text-white transition-all hover:-translate-y-0.5 hover:bg-cyan-400 hover:shadow-lg hover:shadow-cyan-500/20"
+                  className="inline-flex min-h-[44px] items-center justify-center gap-2 rounded-xl border border-white/20 bg-white/5 px-5 py-2.5 text-sm font-semibold text-white transition-all hover:bg-white/10"
                 >
                   <PlayCircle className="h-5 w-5" />
                   {locale === 'es' ? 'Ver demo Duo' : locale === 'fr' ? 'Voir la démo Duo' : locale === 'pt' ? 'Assistir à demo Duo' : 'Watch Duo Demo'}
                 </a>
               </div>
-              <Link
-                to={getDistributorLink(countrySlug)}
-                className="mt-4 inline-flex text-sm font-semibold text-slate-300 underline decoration-white/30 underline-offset-4 transition-colors hover:text-white"
-              >
-                {contactLabel}
-              </Link>
             </div>
 
             <div className="relative mt-8 grid grid-cols-[1fr_auto_1fr] items-center gap-2 lg:mt-0">
@@ -200,7 +168,6 @@ export default function ProductsPage() {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
                     {productsInSection.map((product) => {
                       const id = product.id as ProductId
-                      const orderUrl = ORDER_URLS[id]
                       return (
                         <motion.article
                           key={product.id}
@@ -229,17 +196,6 @@ export default function ProductsPage() {
                                 : 'Speak with your True Legacy leader to understand how this product fits into your health and income strategy.'}
                           </p>
                           <div className="flex flex-wrap gap-3 justify-center md:justify-start">
-                            {orderUrl && (
-                              <a
-                                href={orderUrl}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                onClick={() => trackEvent('product_order_click', { productId: id, locale, source: 'products_page' })}
-                                className="inline-flex min-h-[44px] items-center gap-1.5 rounded-2xl bg-cyan-500 px-4 py-2 text-xs font-semibold text-white transition-all hover:bg-cyan-400"
-                              >
-                                {orderLabel}
-                              </a>
-                            )}
                             {id === 'k8' ? (
                                 <Link
                                     to="/k8"
@@ -279,7 +235,7 @@ export default function ProductsPage() {
                                 >
                                     {learnMoreLabel}
                                 </Link>
-                            ) : product.enagicProductUrl && !orderUrl ? (
+                            ) : product.enagicProductUrl ? (
                               <a
                                 href={product.enagicProductUrl}
                                 target="_blank" rel="noopener noreferrer"
