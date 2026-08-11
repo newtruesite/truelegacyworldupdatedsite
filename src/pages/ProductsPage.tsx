@@ -4,94 +4,57 @@ import { TLBackground } from '@/components/ui/TLBackground'
 import { useLocaleContext } from '@/contexts/LocaleContext'
 import { trackEvent } from '@/lib/analytics'
 import { getDistributorLink } from '@/lib/distributorRouter'
-import { PRODUCTS, type ProductCategory, type ProductId } from '@/lib/products'
+import { PRODUCTS, type ProductId } from '@/lib/products'
 import { motion } from 'framer-motion'
 import { PlayCircle, Plus } from 'lucide-react'
 import { Link, useParams } from 'react-router-dom'
 
-const CATEGORY_ORDER: ProductCategory[] = ['ionizer', 'shower', 'supplement', 'meat', 'air', 'accessory']
+const ENAGIC_ORDER_BASE = 'https://information.enagic.com/en/introduction?company_id=2&h=65c8bc2eba9f21e83eb4b6aae8ae3fd4&enroller_id=37000004828&sponsor_id=37000004829&representative_id=37000004828&line_rank=0'
 
-function getCategoryLabel(category: ProductCategory, locale: 'en' | 'es' | 'fr' | 'pt'): string {
-  if (locale === 'es') {
-    switch (category) {
-      case 'ionizer':
-        return 'Ionizadores Kangen Water®'
-      case 'shower':
-        return 'Ducha y Spa en Casa'
-      case 'supplement':
-        return 'Suplementos Kangen Ukon®'
-      case 'meat':
-        return 'Kangen Beef Set'
-      case 'air':
-        return 'Purificación de Aire'
-      case 'accessory':
-        return 'Protección & Accesorios'
-      default:
-        return 'Productos'
-    }
-  }
-  if (locale === 'fr') {
-    switch (category) {
-      case 'ionizer':
-        return 'Ioniseurs Kangen Water®'
-      case 'shower':
-        return 'Douche & Spa à Domicile'
-      case 'supplement':
-        return 'Compléments Kangen Ukon®'
-      case 'meat':
-        return 'Kangen Beef Set'
-      case 'air':
-        return "Purification de l'Air"
-      case 'accessory':
-        return 'Protection & Accessoires'
-      default:
-        return 'Produits'
-    }
-  }
-  if (locale === 'pt') {
-    switch (category) {
-      case 'ionizer':
-        return 'Ionizadores Kangen Water®'
-      case 'shower':
-        return 'Chuveiro e Spa em Casa'
-      case 'supplement':
-        return 'Suplementos Kangen Ukon®'
-      case 'meat':
-        return 'Kangen Beef Set'
-      case 'air':
-        return 'Purificação do Ar'
-      case 'accessory':
-        return 'Proteção e Acessórios'
-      default:
-        return 'Produtos'
-    }
-  }
+const ORDER_URLS: Partial<Record<ProductId, string>> = {
+  k8: `${ENAGIC_ORDER_BASE}&product_id=1016`,
+  emguarde: `${ENAGIC_ORDER_BASE}&product_id=9026`,
+  ukon_sigma: `${ENAGIC_ORDER_BASE}&product_id=2011`,
+  anespa_dx: `${ENAGIC_ORDER_BASE}&product_id=1041`,
+  sd501_dx: `${ENAGIC_ORDER_BASE}&product_id=1064`,
+  sd501_super: `${ENAGIC_ORDER_BASE}&product_id=1007`,
+  sd501: `${ENAGIC_ORDER_BASE}&product_id=1062`,
+  kangen_wagyu: `${ENAGIC_ORDER_BASE}&product_id=2115`,
+}
 
-  switch (category) {
-    case 'ionizer':
-      return 'Kangen Water® Ionizers'
-    case 'shower':
-      return 'Shower & Home Spa'
-    case 'supplement':
-      return 'Kangen Ukon® Supplements'
-    case 'meat':
-      return 'Kangen Beef Set'
-    case 'air':
-      return 'Air Purification'
-    case 'accessory':
-      return 'Protection & Accessories'
-    default:
-      return 'Products'
+const PRODUCT_FLOW: Array<{ key: 'flagship' | 'machines' | 'specialty'; productIds: ProductId[] }> = [
+  { key: 'flagship', productIds: ['k8', 'emguarde', 'ukon_sigma'] },
+  { key: 'machines', productIds: ['anespa_dx', 'sd501_dx', 'sd501_super', 'sd501'] },
+  { key: 'specialty', productIds: ['kangen_wagyu', 'kangen_air'] },
+]
+
+function getFlowLabel(key: 'flagship' | 'machines' | 'specialty', locale: 'en' | 'es' | 'fr' | 'pt') {
+  const labels = {
+    flagship: {
+      en: 'Flagship Wellness Essentials',
+      es: 'Esenciales de Bienestar Destacados',
+      fr: 'Essentiels Bien-être Phares',
+      pt: 'Essenciais de Bem-estar em Destaque',
+    },
+    machines: {
+      en: 'Kangen Water® Machines',
+      es: 'Máquinas Kangen Water®',
+      fr: 'Machines Kangen Water®',
+      pt: 'Máquinas Kangen Water®',
+    },
+    specialty: {
+      en: 'Specialty & Import Products',
+      es: 'Productos Especiales e Importados',
+      fr: "Produits Spécialisés et d'Importation",
+      pt: 'Produtos Especiais e Importados',
+    },
   }
+  return labels[key][locale]
 }
 
 export default function ProductsPage() {
   const { countrySlug } = useParams<{ countrySlug?: string }>()
   const { locale } = useLocaleContext()
-  const trainingTo = countrySlug ? `/${countrySlug}/training` : '/training'
-
-  const allProducts = Object.values(PRODUCTS)
-
   const title =
     locale === 'es'
       ? 'Todos los Productos Enagic que Representamos'
@@ -119,14 +82,8 @@ export default function ProductsPage() {
           ? 'Ver detalhes oficiais'
           : 'View official details'
 
-  const downloadGuideLabel =
-    locale === 'es'
-      ? 'Descargar guía'
-      : locale === 'fr'
-        ? 'Télécharger le guide'
-        : locale === 'pt'
-          ? 'Baixar guia'
-          : 'Download guide'
+  const orderLabel = locale === 'es' ? 'Ordenar ahora' : locale === 'fr' ? 'Commander' : locale === 'pt' ? 'Comprar agora' : 'Order Now'
+  const contactLabel = locale === 'es' ? 'Hablar con distribuidor' : locale === 'fr' ? 'Parler à un distributeur' : locale === 'pt' ? 'Falar com distribuidor' : 'Contact Us'
 
   return (
     <div className="page-wrapper" style={{ background: '#060b1e' }}>
@@ -178,6 +135,24 @@ export default function ProductsPage() {
               </p>
               <div className="flex flex-col justify-center gap-3 sm:flex-row lg:justify-start">
                 <a
+                  href={ORDER_URLS.k8}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={() => trackEvent('product_order_click', { productId: 'k8', locale, source: 'duo_package' })}
+                  className="inline-flex min-h-[44px] items-center justify-center rounded-xl bg-tl-gold px-5 py-2.5 text-sm font-semibold text-slate-950 transition-all hover:-translate-y-0.5 hover:brightness-110"
+                >
+                  {locale === 'es' ? 'Ordenar K8' : locale === 'fr' ? 'Commander K8' : locale === 'pt' ? 'Comprar K8' : 'Order K8'}
+                </a>
+                <a
+                  href={ORDER_URLS.emguarde}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={() => trackEvent('product_order_click', { productId: 'emguarde', locale, source: 'duo_package' })}
+                  className="inline-flex min-h-[44px] items-center justify-center rounded-xl bg-purple-500 px-5 py-2.5 text-sm font-semibold text-white transition-all hover:-translate-y-0.5 hover:bg-purple-400"
+                >
+                  {locale === 'es' ? 'Comprar emGuarde GO' : locale === 'fr' ? 'Acheter emGuarde GO' : locale === 'pt' ? 'Comprar emGuarde GO' : 'Buy emGuarde GO'}
+                </a>
+                <a
                   href="https://youtu.be/lB5fW55DmaI?si=HzPbgiwUup9u5UN-"
                   target="_blank"
                   rel="noopener noreferrer"
@@ -187,13 +162,13 @@ export default function ProductsPage() {
                   <PlayCircle className="h-5 w-5" />
                   {locale === 'es' ? 'Ver demo Duo' : locale === 'fr' ? 'Voir la démo Duo' : locale === 'pt' ? 'Assistir à demo Duo' : 'Watch Duo Demo'}
                 </a>
-                <Link
-                  to={['mexico', 'colombia', 'brazil', 'paraguay'].includes(countrySlug ?? '') ? "/latam/distributors" : "/distributors"}
-                  className="inline-flex min-h-[44px] items-center justify-center gap-2 rounded-xl border border-white/20 bg-white/5 px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-white/10"
-                >
-                  {locale === 'es' ? 'Hablar con un distribuidor' : locale === 'fr' ? 'Parler à un distributeur' : locale === 'pt' ? 'Falar com um distribuidor' : 'Talk to a distributor'}
-                </Link>
               </div>
+              <Link
+                to={getDistributorLink(countrySlug)}
+                className="mt-4 inline-flex text-sm font-semibold text-slate-300 underline decoration-white/30 underline-offset-4 transition-colors hover:text-white"
+              >
+                {contactLabel}
+              </Link>
             </div>
 
             <div className="relative mt-8 grid grid-cols-[1fr_auto_1fr] items-center gap-2 lg:mt-0">
@@ -214,20 +189,18 @@ export default function ProductsPage() {
 
         <section className="py-12 md:py-16" style={{ background: '#070c1a' }}>
           <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 space-y-12 md:space-y-16">
-            {CATEGORY_ORDER.map((category) => {
-              const productsInCategory = allProducts.filter((p) => p.category === category)
-              if (!productsInCategory.length) return null
-
-              const categoryLabel = getCategoryLabel(category, locale)
+            {PRODUCT_FLOW.map((section) => {
+              const productsInSection = section.productIds.map((id) => PRODUCTS[id])
 
               return (
-                <div key={category}>
-                  <div className="flex items-center justify-between mb-6">
-                    <h2 className="text-xl md:text-2xl font-bold text-white font-display">{categoryLabel}</h2>
+                <div key={section.key}>
+                  <div className="mb-6 flex items-end justify-between border-b border-white/10 pb-4">
+                    <h2 className="text-xl font-bold text-white font-display md:text-2xl">{getFlowLabel(section.key, locale)}</h2>
                   </div>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
-                    {productsInCategory.map((product) => {
+                    {productsInSection.map((product) => {
                       const id = product.id as ProductId
+                      const orderUrl = ORDER_URLS[id]
                       return (
                         <motion.article
                           key={product.id}
@@ -256,6 +229,17 @@ export default function ProductsPage() {
                                 : 'Speak with your True Legacy leader to understand how this product fits into your health and income strategy.'}
                           </p>
                           <div className="flex flex-wrap gap-3 justify-center md:justify-start">
+                            {orderUrl && (
+                              <a
+                                href={orderUrl}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                onClick={() => trackEvent('product_order_click', { productId: id, locale, source: 'products_page' })}
+                                className="inline-flex min-h-[44px] items-center gap-1.5 rounded-2xl bg-cyan-500 px-4 py-2 text-xs font-semibold text-white transition-all hover:bg-cyan-400"
+                              >
+                                {orderLabel}
+                              </a>
+                            )}
                             {id === 'k8' ? (
                                 <Link
                                     to="/k8"
@@ -295,15 +279,7 @@ export default function ProductsPage() {
                                 >
                                     {learnMoreLabel}
                                 </Link>
-                            ) : (
-                                <Link
-                                    to={getDistributorLink(countrySlug)}
-                                    className="inline-flex items-center gap-1.5 rounded-2xl bg-cyan-500 hover:bg-cyan-400 px-4 py-2 text-xs font-semibold text-white transition-all min-h-[44px]"
-                                >
-                                    {locale === 'es' ? 'Hablar con distribuidor' : locale === 'fr' ? 'Parler à un distributeur' : locale === 'pt' ? 'Falar com distribuidor' : 'Talk to distributor'}
-                                </Link>
-                            )}
-                            {product.enagicProductUrl && id !== 'k8' && id !== 'emguarde' && id !== 'kangen_air' && (
+                            ) : product.enagicProductUrl && !orderUrl ? (
                               <a
                                 href={product.enagicProductUrl}
                                 target="_blank" rel="noopener noreferrer"
@@ -317,28 +293,13 @@ export default function ProductsPage() {
                               >
                                 {learnMoreLabel}
                               </a>
-                            )}
+                            ) : null}
                             <Link
-                              to={trainingTo}
-                              onClick={() =>
-                                trackEvent('product_download_pdf', {
-                                  productId: id,
-                                  locale,
-                                  url: trainingTo,
-                                })
-                              }
-                              className="inline-flex items-center gap-1.5 rounded-2xl border border-cyan-500/30 px-4 py-2 text-xs font-semibold text-cyan-300 hover:bg-cyan-500/10 transition-all min-h-[44px]"
+                              to={getDistributorLink(countrySlug)}
+                              className="inline-flex min-h-[44px] items-center gap-1.5 rounded-2xl border border-white/20 bg-transparent px-4 py-2 text-xs font-semibold text-white transition-all hover:bg-white/10"
                             >
-                              {downloadGuideLabel}
+                              {contactLabel}
                             </Link>
-                            {(id === 'k8' || id === 'emguarde' || id === 'kangen_air') && (
-                              <Link
-                                to={getDistributorLink(countrySlug)}
-                                className="inline-flex items-center gap-1.5 rounded-2xl border border-white/20 bg-transparent px-4 py-2 text-xs font-semibold text-white hover:bg-white/10 transition-all min-h-[44px]"
-                              >
-                                {locale === 'es' ? 'Hablar con distribuidor' : locale === 'fr' ? 'Parler à un distributeur' : locale === 'pt' ? 'Falar com distribuidor' : 'Talk to a distributor'}
-                              </Link>
-                            )}
                           </div>
                         </motion.article>
                       )
