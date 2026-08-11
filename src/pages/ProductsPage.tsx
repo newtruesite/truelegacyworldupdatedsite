@@ -185,6 +185,11 @@ export default function ProductsPage() {
                               loading="lazy"
                               decoding="async"
                             />
+                            {id === 'emguarde_original' && (
+                              <span className="absolute right-3 top-3 rounded-full bg-red-600 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.16em] text-white shadow-lg">
+                                Out of Stock
+                              </span>
+                            )}
                           </div>
                           <h3 className="font-bold text-white text-lg md:text-xl mb-2 text-center md:text-left">{product.name}</h3>
                           <p className="text-slate-400 text-sm leading-relaxed mb-4 text-center md:text-left">

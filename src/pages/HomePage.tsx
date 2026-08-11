@@ -460,7 +460,9 @@ export default function HomePage() {
             "anespa_dx",
             "emguarde",
             "ukon_sigma",
+            "kangen_beaute",
             "kangen_wagyu",
+            "emguarde_original",
             "kangen_air",
           ]}
           variant="homeAll"
