@@ -22,19 +22,26 @@ import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
 
 const FEATURES_EN = [
-  { icon: Shield, text: "26 FT diameter EMF coverage" },
-  { icon: Zap, text: "Neutralizes EMF up to 1000 MHz" },
-  { icon: CheckCircle, text: "Measurable effectiveness in real time" },
-  { icon: Battery, text: "No batteries or maintenance required" },
-  { icon: Globe, text: "Safe for homes, offices, cars & airplanes" },
+  { icon: Shield, text: "Set of 2 portable devices" },
+  { icon: Zap, text: "Approximately 10-foot coverage diameter per device" },
+  { icon: Battery, text: "Rechargeable 5,000 mAh battery" },
+  { icon: CheckCircle, text: "Convenient USB-C charging" },
+  { icon: Globe, text: "Designed for home, office, car, and travel" },
 ];
 const FEATURES_ES = [
-  { icon: Shield, text: "Cobertura EMF de 26 pies de diámetro" },
-  { icon: Zap, text: "Neutraliza EMF hasta 1000 MHz" },
-  { icon: CheckCircle, text: "Efectividad medible en tiempo real" },
-  { icon: Battery, text: "Sin pilas ni mantenimiento" },
-  { icon: Globe, text: "Seguro para hogares, oficinas, autos y aviones" },
+  { icon: Shield, text: "Juego de 2 dispositivos portátiles" },
+  { icon: Zap, text: "Aproximadamente 10 pies de cobertura por dispositivo" },
+  { icon: Battery, text: "Batería recargable de 5,000 mAh" },
+  { icon: CheckCircle, text: "Práctica carga USB-C" },
+  { icon: Globe, text: "Diseñado para hogar, oficina, auto y viajes" },
 ];
+
+const GO_COPY = {
+  en: { badge: "New Portable EMF Support", headline: "Protection That Goes", accent: "Where You Go.", sub: "emGuarde GO comes as a set of two compact, rechargeable devices designed to support a more balanced environment wherever life takes you.", detail: "Set of 2 — Compact, rechargeable, and travel-ready" },
+  es: { badge: "Nuevo Soporte EMF Portátil", headline: "Protección Que Va", accent: "Contigo.", sub: "emGuarde GO viene en un juego de dos dispositivos compactos y recargables, diseñados para apoyar un ambiente más equilibrado dondequiera que vayas.", detail: "Juego de 2 — Compacto, recargable y listo para viajar" },
+  fr: { badge: "Nouveau Soutien EMF Portable", headline: "Une Protection Qui Vous", accent: "Accompagne.", sub: "emGuarde GO est proposé en lot de deux appareils compacts et rechargeables, conçus pour favoriser un environnement plus équilibré partout où vous allez.", detail: "Lot de 2 — Compact, rechargeable et prêt à voyager" },
+  pt: { badge: "Novo Suporte EMF Portátil", headline: "Proteção Que Vai", accent: "Com Você.", sub: "O emGuarde GO vem em um conjunto de dois dispositivos compactos e recarregáveis, projetados para apoiar um ambiente mais equilibrado onde você estiver.", detail: "Conjunto de 2 — Compacto, recarregável e pronto para viajar" },
+} as const;
 
 const EMF_STATS = [
   {
@@ -62,6 +69,7 @@ export default function EmGuardePage() {
     COUNTRIES.find((c) => c.slug === "usa")!;
   const { locale } = useLocaleContext();
   const copy = t[locale];
+  const goCopy = GO_COPY[locale];
   const jotformUrl =
     country.jotformUrl ?? "https://form.jotform.com/260232994952060";
   const isSpanish = locale === "es";
@@ -77,19 +85,19 @@ export default function EmGuardePage() {
       <SEO
         title={
           locale === "es"
-            ? `emGuarde Protección EMF${countrySlug ? ` en ${country.name}` : ""} | True Legacy`
+            ? `emGuarde GO Protección EMF Portátil${countrySlug ? ` en ${country.name}` : ""} | True Legacy`
             : locale === "fr"
-              ? `emGuarde Protection EMF${countrySlug ? ` en ${country.name}` : ""} | True Legacy`
-              : `emGuarde EMF Protection${countrySlug ? ` in ${country.name}` : ""} | True Legacy`
+              ? `emGuarde GO Soutien EMF Portable${countrySlug ? ` en ${country.name}` : ""} | True Legacy`
+              : `emGuarde GO Portable EMF Support${countrySlug ? ` in ${country.name}` : ""} | True Legacy`
         }
         description={
           locale === "es"
-            ? `emGuarde de Enagic neutraliza radiación EMF dañina hasta 1000 MHz en un radio de 26 pies. ${countrySlug ? `Disponible en ${country.name}. ` : ""}Protege tu salud hoy mismo.`
+            ? `Descubre el nuevo set de dos emGuarde GO: dispositivos compactos, recargables y portátiles con carga USB-C. ${countrySlug ? `Información para ${country.name}.` : ""}`
             : locale === "fr"
-              ? `emGuarde d'Enagic neutralise les rayonnements EMF nocifs jusqu'à 1000 MHz dans un rayon de 26 pieds. ${countrySlug ? `Disponible en ${country.name}. ` : ""}Protégez votre santé aujourd'hui.`
-              : `emGuarde by Enagic neutralizes harmful EMF radiation up to 1000 MHz within a 26-foot radius. ${countrySlug ? `Available in ${country.name}. ` : ""}Protect your health today.`
+              ? `Découvrez le nouveau lot de deux emGuarde GO : des appareils compacts, rechargeables et portables avec charge USB-C. ${countrySlug ? `Informations pour ${country.name}.` : ""}`
+              : `Discover the new emGuarde GO set of two compact, rechargeable portable devices with USB-C charging. ${countrySlug ? `Information for ${country.name}.` : ""}`
         }
-        image="/products/emguarde.png"
+        image="/products/emguarde-go.png"
         canonical={`https://truelegacyworld.com${countrySlug ? `/${countrySlug}` : ""}/emguarde`}
       />
       <Navbar />
@@ -104,17 +112,17 @@ export default function EmGuardePage() {
             className="text-center mb-16 pt-8"
           >
             <span className="inline-block mb-4 rounded-full border border-purple-500/30 bg-purple-500/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-widest text-purple-400">
-              {copy.emguarde.badge}
+              {goCopy.badge}
             </span>
             <h1 className="page-hero-title mb-6">
-              {copy.emguarde.headline}
+              {goCopy.headline}
               <br />
               <span className="gradient-text">
-                {copy.emguarde.headlineAccent}
+                {goCopy.accent}
               </span>
             </h1>
             <p className="mx-auto max-w-3xl text-lg md:text-xl text-slate-400 leading-relaxed mb-8">
-              {copy.emguarde.sub}
+              {goCopy.sub}
             </p>
 
             {/* VSL-style video embed */}
@@ -130,7 +138,7 @@ export default function EmGuardePage() {
                     ? "https://www.youtube.com/watch?v=VFjtegRuzfQ"
                     : "https://youtu.be/I8fFj7-FaPw?si=Rw9aEsxSN9iiy1iq"
                 }
-                title="emGuarde EMF Protection Technology"
+                title="emGuarde GO portable EMF support"
               />
             </motion.div>
           </motion.div>
@@ -146,8 +154,8 @@ export default function EmGuardePage() {
               <div className="text-center w-full">
                 {!heroImgError ? (
                   <img
-                    src="/products/emguarde.png"
-                    alt="Emguarde EMF protection device — Enagic technology"
+                    src="/products/emguarde-go.png"
+                    alt="emGuarde GO portable device set of two by Enagic"
                     className="max-h-[280px] w-full max-w-[600px] object-contain mx-auto mb-4"
                     style={{
                       filter: "drop-shadow(0 20px 40px rgba(0,0,0,0.3))",
@@ -156,7 +164,7 @@ export default function EmGuardePage() {
                     onError={(e) => {
                       const t = e.currentTarget;
                       if (t.src.includes("emguarde")) {
-                        t.src = "/products/emguarde.png";
+                        t.src = "/products/emguarde-go.png";
                         t.onerror = () => setHeroImgError(true);
                       } else setHeroImgError(true);
                     }}
@@ -167,17 +175,15 @@ export default function EmGuardePage() {
                       <Shield className="w-12 h-12 text-purple-400" />
                     </div>
                     <span className="text-white font-bold text-xl">
-                      emGuarde™
+                      emGuarde GO™
                     </span>
                   </div>
                 )}
                 <h3 className="text-2xl font-bold text-white mb-2">
-                  emGuarde™
+                  emGuarde GO™
                 </h3>
                 <p className="text-slate-400 text-sm">
-                  {isSpanish
-                    ? "Solo 430g — Discreto y potente"
-                    : "Only 430g — Discreet & Powerful"}
+                  {goCopy.detail}
                 </p>
               </div>
             </motion.div>
