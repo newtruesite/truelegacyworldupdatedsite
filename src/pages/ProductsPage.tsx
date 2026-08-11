@@ -178,7 +178,7 @@ export default function ProductsPage() {
               </p>
               <div className="flex flex-col justify-center gap-3 sm:flex-row lg:justify-start">
                 <a
-                  href="https://www.youtube.com/watch?v=l8Uk9Mbegsk"
+                  href="https://youtu.be/lB5fW55DmaI?si=HzPbgiwUup9u5UN-"
                   target="_blank"
                   rel="noopener noreferrer"
                   onClick={() => trackEvent('duo_demo_watch', { locale, source: 'products_page' })}
