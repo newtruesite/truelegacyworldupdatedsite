@@ -10,9 +10,9 @@ import { PlayCircle, Plus } from 'lucide-react'
 import { Link, useParams } from 'react-router-dom'
 
 const PRODUCT_FLOW: Array<{ key: 'flagship' | 'machines' | 'specialty'; productIds: ProductId[] }> = [
-  { key: 'flagship', productIds: ['k8', 'emguarde', 'ukon_sigma'] },
+  { key: 'flagship', productIds: ['k8', 'emguarde', 'ukon_sigma', 'kangen_beaute'] },
   { key: 'machines', productIds: ['anespa_dx', 'sd501_dx', 'sd501_super', 'sd501'] },
-  { key: 'specialty', productIds: ['kangen_wagyu', 'kangen_air'] },
+  { key: 'specialty', productIds: ['kangen_wagyu', 'emguarde_original', 'kangen_air'] },
 ]
 
 function getFlowLabel(key: 'flagship' | 'machines' | 'specialty', locale: 'en' | 'es' | 'fr' | 'pt') {
