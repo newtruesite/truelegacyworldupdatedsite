@@ -6,6 +6,7 @@ import { trackEvent } from '@/lib/analytics'
 import { getDistributorLink } from '@/lib/distributorRouter'
 import { PRODUCTS, type ProductCategory, type ProductId } from '@/lib/products'
 import { motion } from 'framer-motion'
+import { PlayCircle, Plus } from 'lucide-react'
 import { Link, useParams } from 'react-router-dom'
 
 const CATEGORY_ORDER: ProductCategory[] = ['ionizer', 'shower', 'supplement', 'meat', 'air', 'accessory']
@@ -164,22 +165,50 @@ export default function ProductsPage() {
 
         {/* Duo package hero: K8 + emGuarde GO */}
         <section className="py-8 px-4" style={{ background: 'linear-gradient(135deg, rgba(6,182,212,0.12) 0%, rgba(139,92,246,0.1) 100%)' }}>
-          <div className="mx-auto max-w-4xl rounded-2xl border border-cyan-500/30 bg-[#0a1628]/90 backdrop-blur p-6 md:p-8 text-center md:text-left">
-            <p className="text-xs font-semibold uppercase tracking-wider text-cyan-300 mb-2">
-              {locale === 'es' ? 'Recomendado' : locale === 'fr' ? 'Recommandé' : locale === 'pt' ? 'Recomendado' : 'Recommended'}
-            </p>
-            <h2 className="text-2xl md:text-3xl font-bold text-white mb-3">
-              {locale === 'es' ? 'Sistema Duo: Kangen K8 + emGuarde GO' : locale === 'fr' ? 'Pack Duo : Kangen K8 + emGuarde GO' : locale === 'pt' ? 'Sistema Duo: Kangen K8 + emGuarde GO' : 'Duo package: Kangen K8 + emGuarde GO'}
-            </h2>
-            <p className="text-slate-300 text-sm md:text-base mb-6 max-w-2xl mx-auto md:mx-0">
-              {locale === 'es' ? 'Agua Kangen en casa con el K8 y soporte EMF portátil con el nuevo set de dos emGuarde GO.' : locale === 'fr' ? "L’eau Kangen à domicile avec le K8 et un soutien EMF portable grâce au nouveau lot de deux emGuarde GO." : locale === 'pt' ? 'Água Kangen em casa com o K8 e suporte EMF portátil com o novo conjunto de dois emGuarde GO.' : 'Kangen Water at home with the K8 and portable EMF support from the new emGuarde GO set of two.'}
-            </p>
-            <Link
-              to={['mexico', 'colombia', 'brazil', 'paraguay'].includes(countrySlug ?? '') ? "/latam/distributors" : "/distributors"}
-              className="inline-flex items-center gap-2 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-white font-semibold px-5 py-2.5 text-sm transition-colors"
-            >
-              {locale === 'es' ? 'Hablar con un distribuidor' : locale === 'fr' ? 'Parler à un distributeur' : locale === 'pt' ? 'Falar com um distribuidor' : 'Talk to a distributor'}
-            </Link>
+          <div className="mx-auto max-w-5xl overflow-hidden rounded-3xl border border-cyan-500/30 bg-[#0a1628]/90 p-6 text-center shadow-2xl shadow-cyan-950/20 backdrop-blur md:p-8 lg:grid lg:grid-cols-[1.05fr_0.95fr] lg:items-center lg:gap-10 lg:text-left">
+            <div>
+              <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-cyan-300">
+                {locale === 'es' ? 'Recomendado' : locale === 'fr' ? 'Recommandé' : locale === 'pt' ? 'Recomendado' : 'Recommended'}
+              </p>
+              <h2 className="mb-3 text-2xl font-bold text-white md:text-3xl">
+                {locale === 'es' ? 'Sistema Duo: Kangen K8 + emGuarde GO' : locale === 'fr' ? 'Pack Duo : Kangen K8 + emGuarde GO' : locale === 'pt' ? 'Sistema Duo: Kangen K8 + emGuarde GO' : 'Duo package: Kangen K8 + emGuarde GO'}
+              </h2>
+              <p className="mx-auto mb-6 max-w-2xl text-sm text-slate-300 md:text-base lg:mx-0">
+                {locale === 'es' ? 'Agua Kangen en casa con el K8 y soporte EMF portátil con el nuevo set de dos emGuarde GO.' : locale === 'fr' ? "L’eau Kangen à domicile avec le K8 et un soutien EMF portable grâce au nouveau lot de deux emGuarde GO." : locale === 'pt' ? 'Água Kangen em casa com o K8 e suporte EMF portátil com o novo conjunto de dois emGuarde GO.' : 'Kangen Water at home with the K8 and portable EMF support from the new emGuarde GO set of two.'}
+              </p>
+              <div className="flex flex-col justify-center gap-3 sm:flex-row lg:justify-start">
+                <a
+                  href="https://www.youtube.com/watch?v=l8Uk9Mbegsk"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={() => trackEvent('duo_demo_watch', { locale, source: 'products_page' })}
+                  className="inline-flex min-h-[44px] items-center justify-center gap-2 rounded-xl bg-cyan-500 px-5 py-2.5 text-sm font-semibold text-white transition-all hover:-translate-y-0.5 hover:bg-cyan-400 hover:shadow-lg hover:shadow-cyan-500/20"
+                >
+                  <PlayCircle className="h-5 w-5" />
+                  {locale === 'es' ? 'Ver demo Duo' : locale === 'fr' ? 'Voir la démo Duo' : locale === 'pt' ? 'Assistir à demo Duo' : 'Watch Duo Demo'}
+                </a>
+                <Link
+                  to={['mexico', 'colombia', 'brazil', 'paraguay'].includes(countrySlug ?? '') ? "/latam/distributors" : "/distributors"}
+                  className="inline-flex min-h-[44px] items-center justify-center gap-2 rounded-xl border border-white/20 bg-white/5 px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-white/10"
+                >
+                  {locale === 'es' ? 'Hablar con un distribuidor' : locale === 'fr' ? 'Parler à un distributeur' : locale === 'pt' ? 'Falar com um distribuidor' : 'Talk to a distributor'}
+                </Link>
+              </div>
+            </div>
+
+            <div className="relative mt-8 grid grid-cols-[1fr_auto_1fr] items-center gap-2 lg:mt-0">
+              <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-3 sm:p-4">
+                <img src="/products/k8.png" alt="Leveluk K8 Kangen Water ionizer" className="mx-auto h-36 w-full object-contain sm:h-48" />
+                <p className="mt-2 text-sm font-semibold text-white">Leveluk K8</p>
+              </div>
+              <div className="relative z-10 flex h-9 w-9 items-center justify-center rounded-full border border-cyan-400/40 bg-cyan-500/20 text-cyan-200 shadow-lg shadow-cyan-950/30 sm:h-11 sm:w-11">
+                <Plus className="h-5 w-5 sm:h-6 sm:w-6" />
+              </div>
+              <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-3 sm:p-4">
+                <img src="/products/emguarde-go.png" alt="emGuarde GO portable device set of two" className="mx-auto h-36 w-full object-contain sm:h-48" />
+                <p className="mt-2 text-sm font-semibold text-white">emGuarde GO™</p>
+              </div>
+            </div>
           </div>
         </section>
 
