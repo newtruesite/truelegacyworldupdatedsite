@@ -51,12 +51,12 @@ export function ProductSection({
   const subtitle =
     variant === "homeAll"
       ? locale === "es"
-        ? "Los 9 productos Enagic que puedes usar y vender."
+        ? "Los 11 productos Enagic que puedes usar y vender."
         : locale === "fr"
-          ? "Les 9 produits Enagic que vous pouvez utiliser et vendre."
+          ? "Les 11 produits Enagic que vous pouvez utiliser et vendre."
           : locale === "pt"
-            ? "Os 9 produtos Enagic que você pode usar e vender."
-            : "All 9 Enagic products you can use and sell."
+            ? "Os 11 produtos Enagic que você pode usar e vender."
+            : "All 11 Enagic products you can use and sell."
       : variant === "home"
         ? locale === "es"
           ? "Una vista rápida de los productos que impulsan el movimiento True Legacy."
@@ -84,12 +84,12 @@ export function ProductSection({
 
   const productsIntro =
     locale === "es"
-      ? "Enagic fabrica 9 productos de clase mundial que usas en casa Y vendes para ganar comisiones. Cada producto tiene un beneficio de salud único — y cada venta te genera ingresos directos a través del sistema de 8 puntos."
+      ? "Enagic fabrica 11 productos de clase mundial que usas en casa Y vendes para ganar comisiones. Cada producto tiene un beneficio de salud único — y cada venta te genera ingresos directos a través del sistema de 8 puntos."
       : locale === "fr"
-        ? "Enagic fabrique 9 produits de classe mondiale que vous utilisez à la maison ET vendez pour gagner des commissions. Chaque produit a un avantage santé unique — et chaque vente vous génère des revenus directs via le système à 8 points."
+        ? "Enagic fabrique 11 produits de classe mondiale que vous utilisez à la maison ET vendez pour gagner des commissions. Chaque produit a un avantage santé unique — et chaque vente vous génère des revenus directs via le système à 8 points."
         : locale === "pt"
-          ? "Enagic fabrica 9 produtos de classe mundial que você usa em casa E vende para ganhar comissões. Cada produto tem um benefício de saúde único — e cada venda gera receita direta através do sistema de 8 pontos."
-          : "Enagic manufactures 9 world-class products that you both use at home AND sell to earn commissions. Every product below has a unique health benefit — and every sale earns you direct income through the 8-point system.";
+          ? "Enagic fabrica 11 produtos de classe mundial que você usa em casa E vende para ganhar comissões. Cada produto tem um benefício de saúde único — e cada venda gera receita direta através do sistema de 8 pontos."
+          : "Enagic manufactures 11 world-class products that you both use at home AND sell to earn commissions. Every product below has a unique health benefit — and every sale earns you direct income through the 8-point system.";
 
   return (
     <section
@@ -188,6 +188,11 @@ export function ProductSection({
                   {pCopy?.badge && (
                     <span className="absolute top-3 left-3 rounded-full bg-black/70 text-[10px] font-semibold uppercase tracking-[0.18em] px-3 py-1 text-white/90">
                       {pCopy.badge}
+                    </span>
+                  )}
+                  {id === 'emguarde_original' && (
+                    <span className="absolute top-3 right-3 rounded-full bg-red-600 text-[10px] font-bold uppercase tracking-[0.16em] px-3 py-1 text-white shadow-lg">
+                      Out of Stock
                     </span>
                   )}
                 </div>
