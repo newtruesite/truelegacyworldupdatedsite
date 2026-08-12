@@ -1,11 +1,13 @@
 import { AnimatePresence, motion } from 'framer-motion'
 import { ChevronLeft, ChevronRight, Globe, Star, Trophy, Users, Zap } from 'lucide-react'
 import { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
 
 const LEADERS = [
     {
         id: 1,
         name: 'Coach Mehdi',
+        profileUrl: '/d/mehdi-cohen',
         handle: '@mehdicohen_',
         instagramUrl: 'https://www.instagram.com/mehdicohen_/',
         region: 'Morocco · Colombia · USA',
@@ -23,17 +25,16 @@ const LEADERS = [
     },
     {
         id: 2,
-        name: 'Coach Ryan',
-        handle: '@ryanpool',
-        instagramUrl: 'https://www.instagram.com/ryanpool/',
-        region: 'Miami · USA',
-        role: 'Elite Performance & Leadership Coach',
-        intro: 'For more than a decade Ryan has coached elite athletes, celebrities, and executives — now channeling that performance mindset into leadership, leverage, and legacy with Enagic.',
+        name: 'Ryan Pool Sr',
+        profileUrl: '/d/ryan-pool',
+        handle: '@ryanpoolsr',
+        instagramUrl: 'https://www.instagram.com/ryanpoolsr/',
+        region: 'Los Angeles · USA',
+        role: 'Entrepreneur & Community Leader',
+        intro: 'Ryan is an entrepreneur, former athlete, and community-minded leader focused on wellness, personal development, financial freedom, and building a lasting family legacy.',
         bio: [
-            "For more than a decade, I've had the privilege of coaching some of the world's top performers — elite athletes, celebrities, and C-suite executives.",
-            "But what I discovered along that journey went beyond just training — it was about mastering leadership, understanding leverage, and embracing a vision that's bigger than yourself.",
-            "I realized true, lasting impact isn't created in isolation. It comes from connecting with the right people and choosing the right vehicle. That's what led me to Enagic — a company built on authenticity, proven systems, and sustainable growth.",
-            "Now, we have a space where like-minded leaders unite, blend their strengths, and use our collective experience to build responsible, lasting teams.",
+            'Ryan Pool is an entrepreneur, former athlete, and community-minded leader based in Los Angeles. Passionate about health, fitness, personal development, and entrepreneurship, Ryan is focused on building businesses, connecting with like-minded people, and creating opportunities for others.',
+            'As an independent entrepreneur in the wellness space, Ryan is expanding his network and helping people discover new ways to prioritize hydration, wellness, and a healthier lifestyle. His vision goes beyond business—he wants to build a strong legacy for his family, create financial freedom, and inspire others to pursue their own goals with purpose, discipline, and consistency.',
         ],
         image: '/leaders/standardized/ryan-pool-sr.png',
         icon: Users,
@@ -43,6 +44,7 @@ const LEADERS = [
     {
         id: 3,
         name: 'Coach Magaly',
+        profileUrl: '/d/magaly-cardona',
         handle: '@mcardonita',
         instagramUrl: 'https://www.instagram.com/mcardonita/',
         region: 'USA · LATAM',
@@ -60,6 +62,7 @@ const LEADERS = [
     {
         id: 4,
         name: 'Coach Ming Way',
+        profileUrl: '/d/ming-way-sia',
         handle: '@mingwaysia',
         instagramUrl: 'https://www.instagram.com/mingwaysia/',
         region: 'Malaysia · India',
@@ -78,6 +81,7 @@ const LEADERS = [
     {
         id: 5,
         name: 'Coach Simon Loh',
+        profileUrl: '/d/simon-loh',
         handle: '@simonloh_',
         instagramUrl: 'https://www.instagram.com/simonloh_/',
         region: 'Malaysia · UAE · Nigeria',
@@ -92,6 +96,59 @@ const LEADERS = [
         icon: Star,
         gradient: 'from-cyan-600 to-blue-700',
         glow: 'rgba(6,182,212,0.5)',
+    },
+    {
+        id: 6,
+        name: 'Alex Gonzalez',
+        profileUrl: '/d/alex-gonzalez',
+        handle: '',
+        instagramUrl: '',
+        region: 'USA',
+        role: 'Marketing & Wellness Leader',
+        intro: 'Alex brings more than 35 years of supplement-industry marketing experience and a lifelong commitment to health, wellness, and helping others live fulfilling lives.',
+        bio: [
+            'Alex Gonzalez brings over 35 years of experience in marketing within the supplement industry. Throughout his career, he has remained passionate about health, wellness, and helping others live their best lives.',
+            'For Alex, a healthy lifestyle isn’t just a profession—it’s a personal commitment and the most important foundation for a fulfilling life.',
+        ],
+        image: '/leaders/standardized/alex-gonzalez.png',
+        icon: Globe,
+        gradient: 'from-blue-700 to-cyan-700',
+        glow: 'rgba(14,165,233,0.5)',
+    },
+    {
+        id: 7,
+        name: 'Zah Naderi',
+        profileUrl: '/d/zah-naderi',
+        handle: '@zahphysique',
+        instagramUrl: 'https://www.instagram.com/zahphysique/',
+        region: 'USA',
+        role: 'Performance Coach & Legacy Builder',
+        intro: 'For more than a decade, Zah has coached elite athletes, celebrities, and executives—bringing lessons in leadership, leverage, and collaboration to True Legacy.',
+        bio: [
+            'For more than a decade, I’ve had the privilege of coaching some of the world’s top performers—elite athletes, celebrities, and C-suite executives. What I discovered along that journey went beyond training: it was about mastering leadership, understanding leverage, and embracing a vision bigger than yourself.',
+            'I realized true, lasting impact comes from connecting with the right people and choosing the right vehicle. That led me to Enagic and to a space where like-minded leaders unite, blend their strengths, and leverage our collective expertise to build generational wealth and a lasting legacy.',
+        ],
+        image: '/leaders/standardized/zah-naderi.png',
+        icon: Trophy,
+        gradient: 'from-indigo-600 to-blue-700',
+        glow: 'rgba(79,70,229,0.5)',
+    },
+    {
+        id: 8,
+        name: 'Emanuela Doustova',
+        profileUrl: '/d/emanuela-doustova',
+        handle: '@emanuelabraj',
+        instagramUrl: 'https://www.instagram.com/emanuelabraj/',
+        region: 'USA',
+        role: 'True Legacy Distributor',
+        intro: 'Emanuela is part of the growing True Legacy distributor community. Her full story and additional profile details are coming soon.',
+        bio: [
+            'Emanuela is part of the growing True Legacy distributor community. Her full biography and additional profile details will be added soon.',
+        ],
+        image: '/leaders/standardized/emanuela-doustova.png',
+        icon: Star,
+        gradient: 'from-fuchsia-600 to-indigo-700',
+        glow: 'rgba(192,38,211,0.45)',
     },
 ]
 
@@ -219,18 +276,25 @@ export function PhotoCarousel3D() {
                         <span className="text-xs font-bold uppercase tracking-[0.2em] text-orange-400">{activeLeader.role}</span>
                     </div>
                     <h3 className="text-xl font-black text-white mb-0.5">{activeLeader.name}</h3>
-                    <a
-                        href={activeLeader.instagramUrl}
-                        target="_blank" rel="noopener noreferrer"
-                        className="inline-flex items-center justify-center gap-1.5 text-sm text-tl-gold hover:text-white transition-colors mb-3"
-                    >
-                        <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
-                            <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
-                            <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
-                            <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
-                        </svg>
-                        <span>{activeLeader.handle}</span>
-                    </a>
+                    <div className="mb-3 flex flex-wrap items-center justify-center gap-3">
+                        {activeLeader.instagramUrl && (
+                            <a
+                                href={activeLeader.instagramUrl}
+                                target="_blank" rel="noopener noreferrer"
+                                className="inline-flex items-center justify-center gap-1.5 text-sm text-tl-gold hover:text-white transition-colors"
+                            >
+                                <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+                                    <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
+                                    <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+                                    <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
+                                </svg>
+                                <span>{activeLeader.handle}</span>
+                            </a>
+                        )}
+                        <Link to={activeLeader.profileUrl} className="text-sm font-semibold text-cyan-300 transition-colors hover:text-white">
+                            View profile
+                        </Link>
+                    </div>
                     <div className="text-slate-400 text-sm leading-relaxed text-left space-y-3">
                         {activeLeader.bio.map((para, idx) => (
                             <p key={idx}>{para}</p>
