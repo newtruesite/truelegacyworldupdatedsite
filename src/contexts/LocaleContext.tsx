@@ -43,7 +43,7 @@ const LocaleContext = createContext<{
 } | null>(null);
 
 const COUNTRY_SLUGS = new Set(COUNTRIES.map((c) => c.slug));
-const LATAM_SLUGS = ["brazil", "mexico", "paraguay", "colombia"] as const;
+const SPANISH_LATAM_SLUGS = ["mexico", "paraguay", "colombia"] as const;
 
 export function LocaleProvider({ children }: { children: React.ReactNode }) {
   const location = useLocation();
@@ -78,9 +78,9 @@ export function LocaleProvider({ children }: { children: React.ReactNode }) {
 
     if (isCountryRoute && !userChoseLang) {
       // No explicit user choice on a country page — apply country default
-      const isLatam = LATAM_SLUGS.includes(thisCountrySlug as (typeof LATAM_SLUGS)[number]);
+      const isSpanishLatam = SPANISH_LATAM_SLUGS.includes(thisCountrySlug as (typeof SPANISH_LATAM_SLUGS)[number]);
       const isMorocco = thisCountrySlug === "morocco";
-      const defaultLocale: Locale = isLatam
+      const defaultLocale: Locale = isSpanishLatam
         ? "es"
         : isMorocco
           ? "fr"

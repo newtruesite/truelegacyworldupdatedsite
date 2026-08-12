@@ -45,7 +45,7 @@ export default function K8Page() {
   const { locale } = useLocaleContext();
   const copy = t[locale];
   const jotformUrl =
-    country.jotformUrl ?? "https://form.jotform.com/260232994952060";
+    country.jotformUrl ?? "/apply";
   const isSpanish = locale === "es";
   const FEATURES = isSpanish ? FEATURES_ES : FEATURES_EN;
 

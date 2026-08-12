@@ -185,17 +185,17 @@ export default function EventsPage() {
       <SEO
         title={
           lang === "es"
-            ? "True Legacy — Próximos Eventos | LATAM"
+            ? "Llamadas Semanales de True Legacy | LATAM"
             : lang === "fr"
               ? "True Legacy — Événements à Venir"
-              : "True Legacy — Upcoming Events in 51+ Countries"
+              : "True Legacy Weekly Calls | Global and LATAM"
         }
         description={
           lang === "es"
-            ? "Uúnete a los eventos semanales de True Legacy — presentaciones en vivo cada jueves y martes para comunidades en más de 51 países."
+            ? "Únete a la llamada LATAM en español cada jueves a las 8:00 p. m., hora del Este, y consulta las próximas sesiones de True Legacy."
             : lang === "fr"
               ? "Rejoignez les événements hebdomadaires de True Legacy — présentations en direct chaque jeudi et mardi dans plus de 51 pays."
-              : "Join True Legacy's weekly live events — Thursday global presentations and Tuesday LATAM sessions for Enagic distributors across 51+ countries."
+              : "Join the global English call every Wednesday at 8:30 p.m. Eastern or the LATAM Spanish call every Thursday at 8:00 p.m. Eastern."
         }
         image="/logos/tl-square-white.png"
       />

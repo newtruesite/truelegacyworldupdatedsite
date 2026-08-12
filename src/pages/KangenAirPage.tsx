@@ -59,7 +59,7 @@ export default function KangenAirPage() {
   const { locale } = useLocaleContext()
   const copy = t[locale]
   const jotformUrl =
-    country.jotformUrl ?? "https://form.jotform.com/260232994952060"
+    country.jotformUrl ?? "/apply"
   const FEATURES = FEATURES_MAP[locale] ?? FEATURES_EN
 
   const [heroImgError, setHeroImgError] = useState(false)

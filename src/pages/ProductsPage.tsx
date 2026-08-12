@@ -1,5 +1,6 @@
 import { Footer } from '@/components/layout/Footer'
 import { Navbar } from '@/components/layout/Navbar'
+import { SEO } from '@/components/SEO'
 import { TLBackground } from '@/components/ui/TLBackground'
 import { useLocaleContext } from '@/contexts/LocaleContext'
 import { trackEvent } from '@/lib/analytics'
@@ -49,7 +50,7 @@ export default function ProductsPage() {
         ? 'Tous les Produits Enagic que Nous Représentons'
         : locale === 'pt'
           ? 'Todos os Produtos Enagic que Representamos'
-          : 'All Enagic Products We Represent'
+          : 'All Products and Technologies We Represent'
 
   const subtitle =
     locale === 'es'
@@ -73,6 +74,7 @@ export default function ProductsPage() {
 
   return (
     <div className="page-wrapper" style={{ background: '#060b1e' }}>
+      <SEO title={`${title} | True Legacy World`} description="Explore the True Legacy product catalog, current market availability, official product details, and distributor support." />
       <Navbar />
 
       <main className="content-wrapper">
@@ -200,6 +202,12 @@ export default function ProductsPage() {
                                 ? "Discutez avec votre leader True Legacy pour comprendre comment ce produit s'intègre dans votre stratégie de santé et de revenus."
                                 : 'Speak with your True Legacy leader to understand how this product fits into your health and income strategy.'}
                           </p>
+                          {product.availability && (
+                            <p className="mb-4 rounded-xl border border-cyan-500/20 bg-cyan-500/5 px-3 py-2 text-center text-xs leading-relaxed text-cyan-100 md:text-left">
+                              <span className="font-semibold">{locale === 'es' ? 'Disponibilidad: ' : locale === 'fr' ? 'Disponibilité : ' : locale === 'pt' ? 'Disponibilidade: ' : 'Availability: '}</span>
+                              {product.availability[locale]}
+                            </p>
+                          )}
                           <div className="flex flex-wrap gap-3 justify-center md:justify-start">
                             {id === 'k8' ? (
                                 <Link

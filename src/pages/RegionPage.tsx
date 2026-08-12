@@ -1,5 +1,7 @@
 import { Footer } from "@/components/layout/Footer";
 import { Navbar } from "@/components/layout/Navbar";
+import { SEO } from "@/components/SEO";
+import NotFoundPage from "@/pages/NotFoundPage";
 import { AuroraBackground } from "@/components/ui/AuroraBackground";
 
 import { useLocaleContext } from "@/contexts/LocaleContext";
@@ -7,7 +9,7 @@ import { COUNTRIES, getFlagSrcSet } from "@/lib/countries";
 import { motion } from "framer-motion";
 import { ArrowLeft } from "lucide-react";
 import { useState } from "react";
-import { Link, Navigate, useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
 // Map the URL region IDs back to the string names used in the COUNTRIES array
 const regionIdToName: Record<string, string> = {
@@ -28,7 +30,7 @@ export default function RegionPage() {
 
   if (!regionId || !regionIdToName[regionId]) {
     // If an invalid region is typed in the URL, redirect home
-    return <Navigate to="/" replace />;
+    return <NotFoundPage />;
   }
 
   const regionName = regionIdToName[regionId];
@@ -38,6 +40,7 @@ export default function RegionPage() {
 
   return (
     <div className="page-wrapper bg-[#070b16]">
+      <SEO title={`${regionName} | True Legacy World`} description={`Explore True Legacy markets, product education, events, and distributor support across ${regionName}.`} />
       <Navbar />
 
       <main className="flex-grow pt-28 pb-16">

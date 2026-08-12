@@ -137,7 +137,7 @@ export function BentoGrid() {
                     </div>
                     <h2 className="text-3xl font-bold text-white sm:text-4xl mb-4">
                         The Water That{' '}
-                        <span className="gradient-text">Heals From Within</span>
+                        <span className="gradient-text">Everyday Product Education</span>
                     </h2>
                     <p className="mb-10 max-w-2xl text-slate-400 text-lg">
                         Not all water is the same. Medical-grade Kangen water is restructured at a molecular level to deliver antioxidants, alkalinity, and deep hydration your body has been craving.

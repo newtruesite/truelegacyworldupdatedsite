@@ -1,8 +1,9 @@
 import { Footer } from "@/components/layout/Footer";
 import { Navbar } from "@/components/layout/Navbar";
+import { SEO } from "@/components/SEO";
+import NotFoundPage from "@/pages/NotFoundPage";
 import { ProductSection } from "@/components/products/ProductSection";
 import { FlagIntro } from "@/components/ui/FlagIntro";
-import { TestimonialsSplit } from "@/components/ui/split-testimonial";
 import { TLBackground } from "@/components/ui/TLBackground";
 import { VSLPlayer } from "@/components/ui/VSLPlayer";
 import { useLocaleContext } from "@/contexts/LocaleContext";
@@ -12,7 +13,7 @@ import { COUNTRIES, getCountryBySlug, getFlagSrcSet } from "@/lib/countries";
 import { t } from "@/lib/translations";
 import { motion } from "framer-motion";
 import { useState } from "react";
-import { Link, Navigate, useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
 // ── Custom SVG Icons (no emojis) ──────────────────────────────
 function IconArrow({ size = 20 }: { size?: number }) {
@@ -248,7 +249,7 @@ const COUNTRY_LEADERS: Record<
     {
       name: "Coach Mehdi",
       role: "Global Founder & Market Builder",
-      image: "/leaders/mehdi-hero.png",
+      image: "/leaders/standardized/mehdi-cohen.png",
       intro:
         "After 24 years in the U.S., Mehdi expanded into Morocco and Colombia — mentoring leaders who want to build intentional, flexible lives with Enagic.",
       instagram: "https://www.instagram.com/mehdicohen_/",
@@ -256,7 +257,7 @@ const COUNTRY_LEADERS: Record<
     {
       name: "Coach Ryan",
       role: "Elite Performance & Leadership Coach",
-      image: "/leaders/ryan-hero.png",
+      image: "/leaders/standardized/ryan-pool-sr.png",
       intro:
         "From coaching elite performers to guiding entrepreneurs, Ryan brings performance, leadership, and leverage together to build generational legacy.",
       instagram: "https://www.instagram.com/ryanpool/",
@@ -266,9 +267,9 @@ const COUNTRY_LEADERS: Record<
     {
       name: "Coach Ryan",
       role: "Elite Performance & Leadership Coach",
-      image: "/leaders/ryan-hero.png",
+      image: "/leaders/standardized/ryan-pool-sr.png",
       intro:
-        "Supporting Canadian leaders who want to combine world-class performance with long-term financial freedom through True Legacy.",
+        "Supporting Canadian leaders who want to combine product education, responsible entrepreneurship, and long-term team development through True Legacy.",
       instagram: "https://www.instagram.com/ryanpool/",
     },
   ],
@@ -276,7 +277,7 @@ const COUNTRY_LEADERS: Record<
     {
       name: "Coach Mehdi",
       role: "Regional Expansion · Morocco",
-      image: "/leaders/mehdi-hero.png",
+      image: "/leaders/standardized/mehdi-cohen.png",
       intro:
         "Helping open new markets in North Africa while mentoring leaders who want to build with purpose and long-term vision.",
       instagram: "https://www.instagram.com/mehdicohen_/",
@@ -286,7 +287,7 @@ const COUNTRY_LEADERS: Record<
     {
       name: "Coach Simon Loh",
       role: "Global Entrepreneur & Strategist",
-      image: "/leaders/simon-hero.png",
+      image: "/leaders/standardized/simon-loh.png",
       intro:
         "Supporting expansion into Nigeria and beyond, helping leaders apply disciplined, proven business strategies in fast-growing markets.",
       instagram: "https://www.instagram.com/simonloh_/",
@@ -296,7 +297,7 @@ const COUNTRY_LEADERS: Record<
     {
       name: "Coach Mehdi",
       role: "Regional Expansion · Colombia",
-      image: "/leaders/mehdi-hero.png",
+      image: "/leaders/standardized/mehdi-cohen.png",
       intro:
         "Leading the launch of new LATAM markets from Colombia, uniting health, leadership, and long-term opportunity.",
       instagram: "https://www.instagram.com/mehdicohen_/",
@@ -304,7 +305,7 @@ const COUNTRY_LEADERS: Record<
     {
       name: "Coach Magaly",
       role: "Coach & Impact-Driven Entrepreneur",
-      image: "/leaders/magaly-hero.png",
+      image: "/leaders/standardized/magaly-cardona.png",
       intro:
         "Helping Spanish-speaking leaders build businesses that align with their values, health, and families across Latin America.",
       instagram: "https://www.instagram.com/mcardonita/",
@@ -314,7 +315,7 @@ const COUNTRY_LEADERS: Record<
     {
       name: "Coach Ming Way",
       role: "Business Builder & Mentor",
-      image: "/leaders/mingway-hero.png",
+      image: "/leaders/standardized/ming-way-sia.png",
       intro:
         "Partnering with Brazilian leaders who want to build disciplined, sustainable businesses that create long-term legacy.",
       instagram: "https://www.instagram.com/mingwaysia/",
@@ -324,7 +325,7 @@ const COUNTRY_LEADERS: Record<
     {
       name: "Coach Ryan",
       role: "Elite Performance & Leadership Coach",
-      image: "/leaders/ryan-hero.png",
+      image: "/leaders/standardized/ryan-pool-sr.png",
       intro:
         "Bringing a decade of high-performance coaching to help leaders in Mexico build strong wellness businesses with Enagic.",
       instagram: "https://www.instagram.com/ryanpool/",
@@ -334,7 +335,7 @@ const COUNTRY_LEADERS: Record<
     {
       name: "Coach Magaly",
       role: "Coach & Impact-Driven Entrepreneur",
-      image: "/leaders/magaly-hero.png",
+      image: "/leaders/standardized/magaly-cardona.png",
       intro:
         "Supporting leaders in Paraguay and across LATAM who want to build more intentional, family-centered financial futures.",
       instagram: "https://www.instagram.com/mcardonita/",
@@ -344,7 +345,7 @@ const COUNTRY_LEADERS: Record<
     {
       name: "Coach Mehdi",
       role: "Global Founder & Market Builder",
-      image: "/leaders/mehdi-hero.png",
+      image: "/leaders/standardized/mehdi-cohen.png",
       intro:
         "Expanding True Legacy into Turkey and Europe — mentoring leaders who want to build intentional, flexible lives with Enagic.",
       instagram: "https://www.instagram.com/mehdicohen_/",
@@ -352,9 +353,9 @@ const COUNTRY_LEADERS: Record<
     {
       name: "Coach Ryan",
       role: "Elite Performance & Leadership Coach",
-      image: "/leaders/ryan-hero.png",
+      image: "/leaders/standardized/ryan-pool-sr.png",
       intro:
-        "Bringing high-performance coaching to Turkish entrepreneurs who want to combine wellness and long-term financial freedom.",
+        "Bringing practical product education and team development to Turkish entrepreneurs building responsibly for the long term.",
       instagram: "https://www.instagram.com/ryanpool/",
     },
   ],
@@ -591,9 +592,9 @@ const PDF_SECTION_CONTENT: Record<"en" | "es" | "fr" | "pt", PdfSectionConfig> =
 const EIGHT_POINTS_EN = {
   heading: "The 8-Point Payment System",
   subheading:
-    "Every sale generates up to 8 commission points — paid directly to distributors at every level.",
+    "Enagic uses an 8-point commission system tied to eligible product sales.",
   description:
-    "Enagic's unique Direct Sales model pays commissions on every transaction to up to 8 people in your upline. There are no middlemen, no monthly fees — just direct payments from Enagic to your bank account within days of a sale.",
+    "Compensation depends on eligibility, sales activity, rank, market rules, and the current Enagic compensation plan. Review official materials before making a decision; no income is guaranteed.",
   points: [
     {
       point: "1",
@@ -607,8 +608,8 @@ const EIGHT_POINTS_EN = {
     },
     {
       point: "3",
-      label: "8 levels deep",
-      desc: "Earn commissions up to 8 levels in your organisation",
+      label: "8-point structure",
+      desc: "Learn how eligible product sales are allocated under the official plan",
     },
     {
       point: "4",
@@ -617,13 +618,13 @@ const EIGHT_POINTS_EN = {
     },
     {
       point: "5",
-      label: "Paid within days",
-      desc: "Enagic pays commissions directly to your bank account",
+      label: "Official payments",
+      desc: "Payment timing and methods depend on Enagic and your market",
     },
     {
       point: "6",
-      label: "Global earnings",
-      desc: "Your team can operate in 29+ countries — you earn globally",
+      label: "International team",
+      desc: "True Legacy has members and leaders across 14 featured markets",
     },
     {
       point: "7",
@@ -632,8 +633,8 @@ const EIGHT_POINTS_EN = {
     },
     {
       point: "8",
-      label: "Residual income potential",
-      desc: "Build a team that generates income even when you're not working",
+      label: "Individual results vary",
+      desc: "Earnings are not guaranteed and depend on many individual factors",
     },
   ],
   cta: "Join the True Legacy Team →",
@@ -641,9 +642,9 @@ const EIGHT_POINTS_EN = {
 const EIGHT_POINTS_ES = {
   heading: "El Sistema de Pago de 8 Puntos",
   subheading:
-    "Cada venta genera hasta 8 puntos de comisión — pagados directamente a los distribuidores en cada nivel.",
+    "Enagic utiliza un sistema de comisiones de 8 puntos vinculado a ventas de productos elegibles.",
   description:
-    "El modelo único de ventas directas de Enagic paga comisiones en cada transacción a hasta 8 personas en tu línea superior. Sin intermediarios, sin tarifas mensuales — solo pagos directos de Enagic a tu cuenta bancaria.",
+    "La compensación depende de elegibilidad, ventas, rango, reglas del mercado y el plan vigente de Enagic. Revisa los materiales oficiales; no se garantiza ningún ingreso.",
   points: [
     {
       point: "1",
@@ -657,8 +658,8 @@ const EIGHT_POINTS_ES = {
     },
     {
       point: "3",
-      label: "8 niveles de profundidad",
-      desc: "Gana comisiones hasta 8 niveles en tu organización",
+      label: "Estructura de 8 puntos",
+      desc: "Conoce cómo se asignan las ventas elegibles según el plan oficial",
     },
     {
       point: "4",
@@ -667,13 +668,13 @@ const EIGHT_POINTS_ES = {
     },
     {
       point: "5",
-      label: "Pago en días",
-      desc: "Enagic paga comisiones directamente a tu cuenta bancaria",
+      label: "Pagos oficiales",
+      desc: "Los tiempos y métodos dependen de Enagic y de tu mercado",
     },
     {
       point: "6",
-      label: "Ganancias globales",
-      desc: "Tu equipo puede operar en 29+ países — ganas globalmente",
+      label: "Equipo internacional",
+      desc: "True Legacy tiene miembros y líderes en 14 mercados destacados",
     },
     {
       point: "7",
@@ -682,8 +683,8 @@ const EIGHT_POINTS_ES = {
     },
     {
       point: "8",
-      label: "Potencial de ingresos residuales",
-      desc: "Construye un equipo que genere ingresos incluso cuando no estás trabajando",
+      label: "Los resultados varían",
+      desc: "Los ingresos no están garantizados y dependen de factores individuales",
     },
   ],
   cta: "Únete al Equipo True Legacy →",
@@ -691,9 +692,9 @@ const EIGHT_POINTS_ES = {
 const EIGHT_POINTS_FR = {
   heading: "Le Système de Paiement en 8 Points",
   subheading:
-    "Chaque vente génère jusqu'à 8 points de commission — payés directement aux distributeurs à chaque niveau.",
+    "Enagic utilise un système de commission à 8 points lié aux ventes de produits éligibles.",
   description:
-    "Le modèle de vente directe unique d'Enagic paie des commissions sur chaque transaction à jusqu'à 8 personnes dans votre upline. Pas d'intermédiaires, pas de frais mensuels — seulement des paiements directs d'Enagic sur votre compte bancaire.",
+    "La rémunération dépend de l’éligibilité, des ventes, du rang, des règles du marché et du plan Enagic en vigueur. Aucun revenu n’est garanti.",
   points: [
     {
       point: "1",
@@ -707,8 +708,8 @@ const EIGHT_POINTS_FR = {
     },
     {
       point: "3",
-      label: "8 niveaux de profondeur",
-      desc: "Gagnez des commissions jusqu'à 8 niveaux dans votre organisation",
+      label: "Structure à 8 points",
+      desc: "Découvrez comment les ventes éligibles sont réparties selon le plan officiel",
     },
     {
       point: "4",
@@ -717,13 +718,13 @@ const EIGHT_POINTS_FR = {
     },
     {
       point: "5",
-      label: "Payé en quelques jours",
-      desc: "Enagic paie les commissions directement sur votre compte bancaire",
+      label: "Paiements officiels",
+      desc: "Les délais et méthodes dépendent d’Enagic et de votre marché",
     },
     {
       point: "6",
-      label: "Revenus mondiaux",
-      desc: "Votre équipe peut opérer dans 29+ pays — vous gagnez globalement",
+      label: "Équipe internationale",
+      desc: "True Legacy compte des membres et leaders dans 14 marchés clés",
     },
     {
       point: "7",
@@ -732,8 +733,8 @@ const EIGHT_POINTS_FR = {
     },
     {
       point: "8",
-      label: "Potentiel de revenus résiduels",
-      desc: "Construisez une équipe qui génère des revenus même quand vous ne travaillez pas",
+      label: "Les résultats varient",
+      desc: "Les revenus ne sont pas garantis et dépendent de facteurs individuels",
     },
   ],
   cta: "Rejoindre l'Équipe True Legacy →",
@@ -814,17 +815,17 @@ const PILLARS = {
     {
       icon: "water" as PillarIconKey,
       title: "Health",
-      subtitle: "Kangen Water Changes Your Body",
+      subtitle: "Learn About Kangen Water Systems",
       description:
-        "Ionized alkaline water at pH 8.5–9.5 helps neutralize acidity, boost hydration at the cellular level, and support your immune system. Used by athletes, doctors, and families across 29+ countries. This is not a filter — it is a medical-grade ionizer made in Japan.",
+        "Explore how Enagic water ionizers produce multiple water types for different household uses. Product information is educational and is not medical advice.",
       color: "#00a896",
     },
     {
       icon: "money" as PillarIconKey,
       title: "Wealth",
-      subtitle: "The 8-Point System Pays You Directly",
+      subtitle: "Understand the Independent Opportunity",
       description:
-        "Every time you or your team sells a machine, Enagic pays commissions to up to 8 people in your network — directly to your bank account. No monthly fees. No middlemen. The average K8 sale generates $400–$800 in commission. One sale per week changes your financial situation completely.",
+        "Enagic offers an independent distributor opportunity based on eligible product sales. Compensation and eligibility vary; no income or business result is guaranteed.",
       color: "#F5A623",
     },
     {
@@ -832,7 +833,7 @@ const PILLARS = {
       title: "Legacy",
       subtitle: "Build Something That Outlasts You",
       description:
-        "True Legacy is a global movement of distributors in 29+ countries building income that compounds. When your team grows, you earn even while you sleep. This is not a job — it is a business that travels with you, works across borders, and can be passed to your family.",
+        "True Legacy has members and leaders across 14 featured markets, with education, mentorship, and systems intended to support responsible long-term team development.",
       color: "#9B59B6",
     },
   ],
@@ -840,17 +841,17 @@ const PILLARS = {
     {
       icon: "water" as PillarIconKey,
       title: "Salud",
-      subtitle: "Aqua Kangen Transforma Tu Cuerpo",
+      subtitle: "Conoce los Sistemas Kangen Water",
       description:
-        "El agua alcalina ionizada a pH 8.5–9.5 ayuda a neutralizar la acidez, potenciar la hidratación a nivel celular y apoyar tu sistema inmune. Usada por atletas, médicos y familias en 29+ países. No es un filtro — es un ionizador de grado médico fabricado en Japón.",
+        "Conoce cómo los ionizadores de agua Enagic producen distintos tipos de agua para diferentes usos domésticos. Esta información es educativa y no constituye asesoramiento médico.",
       color: "#00a896",
     },
     {
       icon: "money" as PillarIconKey,
       title: "Riqueza",
-      subtitle: "El Sistema de 8 Puntos Te Paga Directamente",
+      subtitle: "Comprende la Oportunidad Independiente",
       description:
-        "Cada vez que tú o tu equipo vende una máquina, Enagic paga comisiones a hasta 8 personas en tu red — directamente a tu cuenta bancaria. Sin cuotas mensuales. Sin intermediarios. La venta promedio de un K8 genera $400–$800 en comisión. Una venta por semana cambia completamente tu situación financiera.",
+        "Enagic ofrece una oportunidad de distribución independiente basada en ventas de productos elegibles. La compensación y elegibilidad varían; no se garantiza ningún ingreso.",
       color: "#F5A623",
     },
     {
@@ -858,7 +859,7 @@ const PILLARS = {
       title: "Legado",
       subtitle: "Construye Algo Que Te Sobreviva",
       description:
-        "True Legacy es un movimiento global de distribuidores en 29+ países construyendo ingresos que se multiplican. Cuando tu equipo crece, ganas incluso mientras duermes. No es un trabajo — es un negocio que viaja contigo, funciona a través de fronteras y puede dejarse a tu familia.",
+        "True Legacy tiene miembros y líderes en 14 mercados destacados, con educación, mentoría y sistemas para apoyar el desarrollo responsable de equipos a largo plazo.",
       color: "#9B59B6",
     },
   ],
@@ -866,17 +867,17 @@ const PILLARS = {
     {
       icon: "water" as PillarIconKey,
       title: "Santé",
-      subtitle: "L'Eau Kangen Transforme Votre Corps",
+      subtitle: "Découvrez les Systèmes Kangen Water",
       description:
-        "L'eau alcaline ionisée à pH 8,5–9,5 aide à neutraliser l'acidité, stimuler l'hydratation au niveau cellulaire et soutenir votre système immunitaire. Utilisée par des athlètes, médecins et familles dans 29+ pays. Ce n'est pas un filtre — c'est un ioniseur de qualité médicale fabriqué au Japon.",
+        "Découvrez comment les ioniseurs Enagic produisent plusieurs types d’eau pour différents usages domestiques. Ces informations sont éducatives et ne constituent pas un avis médical.",
       color: "#00a896",
     },
     {
       icon: "money" as PillarIconKey,
       title: "Richesse",
-      subtitle: "Le Système de 8 Points Vous Paie Directement",
+      subtitle: "Comprendre l’Opportunité Indépendante",
       description:
-        "Chaque fois que vous ou votre équipe vend une machine, Enagic verse des commissions à jusqu'à 8 personnes dans votre réseau — directement sur votre compte bancaire. Pas de frais mensuels. Pas d'intermédiaires. Une vente par semaine change complètement votre situation financière.",
+        "Enagic propose une opportunité de distributeur indépendant fondée sur les ventes de produits éligibles. La rémunération varie et aucun revenu n’est garanti.",
       color: "#F5A623",
     },
     {
@@ -884,7 +885,7 @@ const PILLARS = {
       title: "Héritage",
       subtitle: "Construisez Quelque Chose Qui Vous Survive",
       description:
-        "True Legacy est un mouvement mondial de distributeurs dans 29+ pays construisant des revenus qui se multiplient. Quand votre équipe grandit, vous gagnez même en dormant. Ce n'est pas un emploi — c'est un business qui voyage avec vous.",
+        "True Legacy compte des membres et leaders dans 14 marchés clés, avec formation, mentorat et systèmes pour soutenir un développement responsable à long terme.",
       color: "#9B59B6",
     },
   ],
@@ -892,17 +893,17 @@ const PILLARS = {
     {
       icon: "water" as PillarIconKey,
       title: "Saúde",
-      subtitle: "A Água Kangen Transforma Seu Corpo",
+      subtitle: "Conheça os Sistemas Kangen Water",
       description:
-        "Água alcalina ionizada em pH 8,5–9,5 ajuda a neutralizar a acidez e apoiar seu sistema imunológico. Não é um filtro — é um ionizador de grau médico fabricado no Japão.",
+        "Conheça como os ionizadores Enagic produzem diferentes tipos de água para usos domésticos. Estas informações são educativas e não substituem orientação médica.",
       color: "#00a896",
     },
     {
       icon: "money" as PillarIconKey,
       title: "Riqueza",
-      subtitle: "O Sistema de 8 Pontos Paga Você Diretamente",
+      subtitle: "Entenda a Oportunidade Independente",
       description:
-        "Cada venda gera comissões para até 8 pessoas na sua rede — diretamente na sua conta. Uma venda por semana muda sua situação financeira.",
+        "A Enagic oferece uma oportunidade de distribuidor independente baseada em vendas de produtos elegíveis. A remuneração varia e nenhuma renda é garantida.",
       color: "#F5A623",
     },
     {
@@ -910,7 +911,7 @@ const PILLARS = {
       title: "Legado",
       subtitle: "Construa Algo Que Lhe Sobreviva",
       description:
-        "True Legacy é um movimento global em 29+ países. Quando sua equipe cresce, você ganha mesmo dormindo.",
+        "True Legacy tem membros e líderes em 14 mercados em destaque, com educação, mentoria e sistemas para apoiar o desenvolvimento responsável de equipes.",
       color: "#9B59B6",
     },
   ],
@@ -967,38 +968,38 @@ function getContent(country: Country, locale: "en" | "es" | "fr" | "pt") {
           ? "Pronto para construir seu legado conosco?"
           : "Ready to build your legacy with us?",
     ctaDesc: es
-      ? "Miles de líderes ya están transformando vidas. Tu oportunidad comienza aquí."
+      ? "Conoce los productos, responsabilidades y apoyo antes de decidir si esta oportunidad es para ti."
       : fr
-        ? "Des milliers de leaders transforment déjà des vies. Votre opportunité commence ici."
+        ? "Découvrez les produits, responsabilités et le soutien avant de décider si cette opportunité vous convient."
         : pt
-          ? "Milhares de líderes já estão transformando vidas. Sua oportunidade começa aqui."
-          : "Thousands of leaders worldwide are already building their legacy. Your opportunity starts here.",
+          ? "Conheça os produtos, responsabilidades e suporte antes de decidir se esta oportunidade combina com você."
+          : "Learn about the products, responsibilities, and support before deciding whether this opportunity fits you.",
     points: es
       ? [
-          "Aqua Kangen de grado médico para tu salud",
-          "Protección EMF con emGuarde 24/7",
-          "Plan de compensación de 8 niveles",
-          "Comunidad global de líderes y mentores",
+          "Educación sobre los sistemas Kangen Water de Enagic",
+          "Información y disponibilidad de emGuarde por mercado",
+          "Explicación responsable del sistema de 8 puntos",
+          "Miembros y líderes en 14 mercados destacados",
         ]
       : fr
         ? [
-            "Eau Kangen de qualité médicale pour une vraie santé",
-            "Protection EMF avec emGuarde 24h/24",
-            "Plan de compensation 8 points pour des revenus mondiaux",
-            "Communauté mondiale de leaders et de mentors",
+            "Formation aux systèmes Kangen Water d’Enagic",
+            "Informations et disponibilité d’emGuarde selon le marché",
+            "Présentation responsable du système à 8 points",
+            "Membres et leaders dans 14 marchés clés",
           ]
         : pt
           ? [
-              "Água Kangen de grau médico para sua saúde",
-              "Proteção EMF com emGuarde 24/7",
-              "Plano de compensação de 8 níveis",
-              "Comunidade global de líderes e mentores",
+              "Educação sobre os sistemas Kangen Water da Enagic",
+              "Informações e disponibilidade do emGuarde por mercado",
+              "Explicação responsável do sistema de 8 pontos",
+              "Membros e líderes em 14 mercados em destaque",
             ]
           : [
-              "Medical-grade Kangen Water for real health",
-              "EMF protection with emGuarde 24/7",
-              "8-tier compensation plan for global income",
-              "Global community of leaders and mentors",
+              "Education about Enagic Kangen Water systems",
+              "emGuarde information and market availability",
+              "Responsible explanation of the 8-point system",
+              "Members and leaders across 14 featured markets",
             ],
     joinBtn: es
       ? "Empieza Ahora"
@@ -1043,12 +1044,12 @@ function getContent(country: Country, locale: "en" | "es" | "fr" | "pt") {
           ? "Líderes em todos os países"
           : "Leaders across all countries",
     socialProofCountries: es
-      ? "Más de 51 países activos"
+      ? "14 mercados destacados"
       : fr
-        ? "Plus de 51 pays actifs"
+        ? "14 marchés clés"
         : pt
-          ? "Mais de 51 países ativos"
-          : "51+ countries active",
+          ? "14 mercados em destaque"
+          : "14 featured markets",
     socialProofEnagic: es
       ? "Red distribuidor certificado Enagic"
       : fr
@@ -1092,19 +1093,19 @@ function getContent(country: Country, locale: "en" | "es" | "fr" | "pt") {
           ? "Explorar a tecnologia"
           : "Explore the Technology",
     getPaidHeadline: es
-      ? "Cobra por compartir productos que sanan"
+      ? "Explora la oportunidad de distribuidor independiente"
       : fr
-        ? "Soyez payé pour partager des produits qui guérissent"
+        ? "Découvrez l’opportunité de distributeur indépendant"
         : pt
-          ? "Ganhe compartilhando produtos que curam"
-          : "Get Paid to Share World-Healing Products",
+          ? "Conheça a oportunidade de distribuidor independente"
+          : "Explore the Independent Distributor Opportunity",
     getPaidSub: es
-      ? "No es solo bienestar. Es un negocio construido sobre productos que realmente cambian vidas."
+      ? "Conoce el modelo basado en productos de Enagic y el apoyo educativo de True Legacy."
       : fr
-        ? "Ce n'est pas qu'un programme bien‑être. C'est une activité construite sur des produits qui changent réellement des vies."
+        ? "Découvrez le modèle Enagic fondé sur les produits et le soutien éducatif de True Legacy."
         : pt
-          ? "Não é apenas bem-estar. É um negócio construído sobre produtos que realmente mudam vidas."
-          : "This isn't just wellness. It's a business built on products that actually change lives.",
+          ? "Conheça o modelo baseado em produtos da Enagic e o apoio educacional da True Legacy."
+          : "Learn about Enagic’s product-based model and True Legacy’s educational support.",
     getPaidCard1Title: es
       ? "Ingresos reales. Productos reales."
       : fr
@@ -1113,12 +1114,12 @@ function getContent(country: Country, locale: "en" | "es" | "fr" | "pt") {
           ? "Renda real. Produtos reais."
           : "Real Income. Real Products.",
     getPaidCard1Desc: es
-      ? "Ganas compartiendo máquinas de Aqua Kangen y dispositivos emGuarde — productos que la gente recompra, recomienda y recomienda. Sin ventas frías. Solo bienestar genuino que se vende solo."
+      ? "Los distribuidores independientes pueden recibir comisiones por ventas de productos elegibles según el plan vigente de Enagic. Los resultados varían."
       : fr
-        ? "Vous gagnez en partageant les machines Kangen et les appareils emGuarde — des produits que les gens recommandent et rachètent. Pas de ventes forcées. Juste du bien‑être authentique."
+        ? "Les distributeurs indépendants peuvent recevoir des commissions sur les ventes de produits éligibles selon le plan Enagic en vigueur. Les résultats varient."
         : pt
-          ? "Você ganha compartilhando máquinas Kangen Water e dispositivos emGuarde — produtos que as pessoas recomendam e compram de novo. Sem vendas agressivas. Apenas bem-estar genuíno."
-          : "You earn by sharing Kangen Water machines and emGuarde devices — products people reorder, recommend, and rave about. No cold pitching. No fake hype. Just genuine wellness that sells itself.",
+          ? "Distribuidores independentes podem receber comissões por vendas de produtos elegíveis conforme o plano vigente da Enagic. Os resultados variam."
+          : "Independent distributors may receive commissions on eligible product sales under Enagic’s current plan. Individual results vary.",
     getPaidCard2Title: es
       ? "Mercado global. Alcance ilimitado."
       : fr
@@ -1127,12 +1128,12 @@ function getContent(country: Country, locale: "en" | "es" | "fr" | "pt") {
           ? "Mercado global. Alcance ilimitado."
           : "Global Market. Unlimited Reach.",
     getPaidCard2Desc: es
-      ? "True Legacy tiene alcance global: Norteamérica, Latinoamérica, Europa, África, Asia. Al unirte, te conectas a una red internacional con sistemas probados — alcance ilimitado."
+      ? "True Legacy tiene miembros y líderes en 14 mercados destacados, con educación y apoyo para equipos internacionales."
       : fr
-        ? "True Legacy est présent en Amérique du Nord, Amérique latine, Europe, Afrique et Asie. En nous rejoignant, vous bénéficiez d'une portée mondiale illimitée."
+        ? "True Legacy compte des membres et leaders dans 14 marchés clés, avec formation et soutien pour les équipes internationales."
         : pt
-          ? "True Legacy atua na América do Norte, América Latina, Europa, África e Ásia. Ao se juntar, você se conecta a uma rede internacional com alcance global ilimitado."
-          : "True Legacy operates across North America, Latin America, Europe, Africa, and Asia — full global reach. When you join, you plug into an international network with proven systems already in place.",
+          ? "True Legacy tem membros e líderes em 14 mercados em destaque, com educação e apoio para equipes internacionais."
+          : "True Legacy has members and leaders across 14 featured markets, with education and support for international teams.",
     getPaidCard3Title: es
       ? "Plan de compensación de 8 puntos de Enagic"
       : fr
@@ -1141,12 +1142,12 @@ function getContent(country: Country, locale: "en" | "es" | "fr" | "pt") {
           ? "Plano de compensação de 8 pontos da Enagic"
           : "Enagic's 8-Point Compensation Plan",
     getPaidCard3Desc: es
-      ? "Enagic paga hasta 8 puntos de comisión directos por venta — puedes ganar con cada máquina vendida en tu red, no solo tus ventas directas. Así es como los líderes construyen riqueza generacional."
+      ? "Enagic utiliza un sistema de comisiones de 8 puntos vinculado a ventas elegibles. Consulta los materiales oficiales para conocer términos y requisitos."
       : fr
-        ? "Enagic verse jusqu'à 8 points de commission directe par vente — vous pouvez gagner sur chaque machine vendue dans votre réseau, pas seulement vos ventes directes."
+        ? "Enagic utilise un système de commission à 8 points lié aux ventes éligibles. Consultez les documents officiels pour les conditions."
         : pt
-          ? "A Enagic paga até 8 pontos de comissão direta por venda — você pode ganhar em cada máquina vendida na sua rede. É assim que líderes constroem riqueza geracional."
-          : "Enagic pays up to 8 direct commission points per sale — meaning you can earn on every machine sold within your network, not just your direct sales. This is how leaders build generational wealth.",
+          ? "A Enagic utiliza um sistema de comissões de 8 pontos ligado a vendas elegíveis. Consulte os materiais oficiais para conhecer os requisitos."
+          : "Enagic uses an 8-point commission system tied to eligible product sales. Review official materials for current terms and eligibility.",
     getPaidCtaHeadline: es
       ? "¿Listo para construir tu legado?"
       : fr
@@ -1155,12 +1156,12 @@ function getContent(country: Country, locale: "en" | "es" | "fr" | "pt") {
           ? "Pronto para construir seu legado?"
           : "Ready to build your legacy?",
     getPaidCtaDesc: es
-      ? "Únete a líderes en todos los países que ganan mientras sanan el mundo. No se necesita experiencia — solo la voluntad de liderar."
+      ? "Conecta con un distribuidor para conocer los productos, responsabilidades, costos y apoyo antes de decidir."
       : fr
-        ? "Rejoignez des leaders dans tous les pays qui gagnent tout en soignant le monde. Aucune expérience requise — seulement la volonté de mener."
+        ? "Contactez un distributeur pour comprendre les produits, responsabilités, coûts et soutien avant de décider."
         : pt
-          ? "Junte-se a líderes em todos os países que ganham enquanto curam o mundo. Nenhuma experiência necessária — apenas vontade de liderar."
-          : "Join leaders across all countries who are earning while healing the world. No experience needed — just the willingness to lead.",
+          ? "Fale com um distribuidor para conhecer produtos, responsabilidades, custos e suporte antes de decidir."
+          : "Connect with a distributor to understand the products, responsibilities, costs, and support before deciding.",
     getPaidCtaBtn: es
       ? "Comienza tu camino"
       : fr
@@ -1171,7 +1172,7 @@ function getContent(country: Country, locale: "en" | "es" | "fr" | "pt") {
   };
 }
 
-const DEFAULT_JOTFORM = "https://form.jotform.com/260232994952060";
+const DEFAULT_JOTFORM = "/apply";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const COUNTRY_TO_CONTINENT: Record<
@@ -1272,7 +1273,7 @@ export default function CountryPage() {
   const country = getCountryBySlug(slug || "");
   const { locale } = useLocaleContext();
 
-  if (!country) return <Navigate to="/" replace />;
+  if (!country) return <NotFoundPage />;
 
   const jotformUrl = country.jotformUrl ?? DEFAULT_JOTFORM;
   const copy = t[locale];
@@ -1289,6 +1290,7 @@ export default function CountryPage() {
 
   return (
     <>
+      <SEO title={`True Legacy ${country.name} | Product Education and Team Support`} description={`Explore True Legacy product education, weekly calls, training, and independent distributor support for ${country.name}.`} />
       <Navbar />
 
       <div className="page-wrapper" style={{ background: "#060b1e" }}>
@@ -1420,65 +1422,65 @@ export default function CountryPage() {
           </TLBackground>
         </div>
 
-        {/* Trust strip — 51+ Years | 29+ Countries | 3M+ Lives | #1 Water Ionizer */}
+        {/* Trust strip — owner-approved foundation facts */}
         <section
           className="trust-strip flex flex-wrap justify-center items-center gap-8 md:gap-10 py-5 px-6 border-t border-[rgba(0,168,150,0.1)] border-b border-[rgba(0,168,150,0.1)] my-8"
           style={{ background: "rgba(0,168,150,0.06)" }}
         >
           <div className="trust-stat text-center">
             <span className="trust-stat-number text-[22px] font-extrabold text-[#00a896] block">
-              51+
+              52
             </span>
             <span className="trust-stat-label text-xs text-[#5a8595] tracking-wider">
               {locale === "es"
-                ? "Años en el negocio"
+                ? "Años de innovación"
                 : locale === "fr"
-                  ? "Années d'activité"
+                  ? "Années d’innovation"
                   : locale === "pt"
-                    ? "Anos no negócio"
-                    : "Years in Business"}
+                    ? "Anos de inovação"
+                    : "Years of Innovation"}
             </span>
           </div>
           <div className="trust-stat text-center">
             <span className="trust-stat-number text-[22px] font-extrabold text-[#00a896] block">
-              29+
+              14
             </span>
             <span className="trust-stat-label text-xs text-[#5a8595] tracking-wider">
               {locale === "es"
-                ? "Países"
+                ? "Mercados destacados"
                 : locale === "fr"
-                  ? "Pays"
+                  ? "Marchés clés"
                   : locale === "pt"
-                    ? "Países"
-                    : "Countries"}
+                    ? "Mercados em destaque"
+                    : "Featured Markets"}
             </span>
           </div>
           <div className="trust-stat text-center">
             <span className="trust-stat-number text-[22px] font-extrabold text-[#00a896] block">
-              3M+
+              1974
             </span>
             <span className="trust-stat-label text-xs text-[#5a8595] tracking-wider">
               {locale === "es"
-                ? "Vidas transformadas"
+                ? "Innovando desde"
                 : locale === "fr"
-                  ? "Vies transformées"
+                  ? "Innovation depuis"
                   : locale === "pt"
-                    ? "Vidas transformadas"
-                    : "Lives Changed"}
+                    ? "Inovando desde"
+                    : "Pioneering Since"}
             </span>
           </div>
           <div className="trust-stat text-center">
             <span className="trust-stat-number text-[22px] font-extrabold text-[#00a896] block">
-              #1
+              K8
             </span>
             <span className="trust-stat-label text-xs text-[#5a8595] tracking-wider">
               {locale === "es"
-                ? "Ionizador de agua"
+                ? "Modelo insignia destacado"
                 : locale === "fr"
-                  ? "Ioniseur d'eau"
+                  ? "Modèle phare présenté"
                   : locale === "pt"
-                    ? "Ionizador de água"
-                    : "Rated #1 Water Ionizer"}
+                    ? "Modelo carro-chefe em destaque"
+                    : "Featured Flagship Model"}
             </span>
           </div>
         </section>
@@ -1563,7 +1565,15 @@ export default function CountryPage() {
                 {c.testimonialsLabel}
               </h2>
             </motion.div>
-            <TestimonialsSplit locale={locale} />
+            <div className="rounded-2xl border border-white/10 bg-white/5 px-6 py-8 text-center text-sm leading-relaxed text-slate-300">
+              {locale === "es"
+                ? "Estamos revisando las historias de la comunidad para confirmar permisos y mantener una comunicación responsable."
+                : locale === "fr"
+                  ? "Nous révisons les témoignages de la communauté afin de confirmer les autorisations et de maintenir une communication responsable."
+                  : locale === "pt"
+                    ? "Estamos revisando as histórias da comunidade para confirmar permissões e manter uma comunicação responsável."
+                    : "We are reviewing community stories to confirm permissions and maintain responsible, accurate communication."}
+            </div>
             <div className="ig-follow-strip flex justify-center gap-2 sm:gap-3 md:gap-4 mt-8 flex-wrap">
               <a
                 href="https://www.instagram.com/truelegacyworld/"

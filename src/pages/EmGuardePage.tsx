@@ -71,7 +71,7 @@ export default function EmGuardePage() {
   const copy = t[locale];
   const goCopy = GO_COPY[locale];
   const jotformUrl =
-    country.jotformUrl ?? "https://form.jotform.com/260232994952060";
+    country.jotformUrl ?? "/apply";
   const isSpanish = locale === "es";
   const isLatamCountry = ["mexico", "brazil", "colombia", "paraguay"].includes(
     countrySlug ?? "",

@@ -1,5 +1,5 @@
-const JOTFORM_EN = "https://form.jotform.com/260232994952060";
-const JOTFORM_ES = "https://form.jotform.com/260246489849069";
+const JOTFORM_EN = "/apply";
+const JOTFORM_ES = "/apply";
 
 /** Slug to ISO 3166-1 alpha-2 for flag images (flagcdn.com, etc.) */
 export const SLUG_TO_ISO2: Record<string, string> = {
@@ -193,7 +193,7 @@ export const COUNTRIES: Country[] = [
     flagEmoji: "🇧🇷",
     youtubeUrl: "https://www.youtube.com/watch?v=xxvXOluPOrY",
     youtubeId: "xxvXOluPOrY",
-    locale: "es",
+    locale: "pt",
     jotformUrl: JOTFORM_ES,
     youtube: "https://youtube.com/@TrueLegacyLATAM",
     instagram: INSTAGRAM_LATAM,

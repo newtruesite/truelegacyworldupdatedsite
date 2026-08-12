@@ -1,21 +1,23 @@
 import { LanguageReset } from "@/components/LanguageReset";
 import { LocaleProvider } from "@/contexts/LocaleContext";
-import { PdfLeadCaptureProvider } from "@/contexts/PdfLeadCaptureContext";
 import { trackPageView } from "@/lib/analytics";
 import CountryPage from "@/pages/CountryPage";
+import ApplicationPage from "@/pages/ApplicationPage";
 import DistributorsPage from "@/pages/DistributorsPage";
+import DistributorProfilePage from "@/pages/DistributorProfilePage";
 import EmGuardePage from "@/pages/EmGuardePage";
 import EventsPage from "@/pages/EventsPage";
 import HomePage from "@/pages/HomePage";
 import K8Page from "@/pages/K8Page";
 import KangenAirPage from "@/pages/KangenAirPage";
 import LatamDistributorsPage from "@/pages/LatamDistributorsPage";
-import PdfLibraryPage from "@/pages/PdfLibraryPage";
+import LegalPage from "@/pages/LegalPage";
+import NotFoundPage from "@/pages/NotFoundPage";
 import ProductsPage from "@/pages/ProductsPage";
 import RegionPage from "@/pages/RegionPage";
 import SelectCountryPage from "@/pages/SelectCountryPage";
-import SettingsPage from "@/pages/SettingsPage";
 import TrainingPage from "@/pages/TrainingPage";
+import CrmPage from "@/pages/CrmPage";
 import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useLayoutEffect } from "react";
 import {
@@ -76,11 +78,7 @@ function AnimatedRoutes() {
           />
           <Route
             path="/library"
-            element={
-              <PageTransitionWrapper>
-                <PdfLibraryPage />
-              </PageTransitionWrapper>
-            }
+            element={<Navigate to="/training" replace />}
           />
           <Route
             path="/products"
@@ -98,6 +96,15 @@ function AnimatedRoutes() {
               </PageTransitionWrapper>
             }
           />
+          <Route
+            path="/d/:slug"
+            element={
+              <PageTransitionWrapper>
+                <DistributorProfilePage />
+              </PageTransitionWrapper>
+            }
+          />
+          <Route path="/crm" element={<CrmPage />} />
           <Route
             path="/latam/distributors"
             element={
@@ -124,9 +131,21 @@ function AnimatedRoutes() {
           />
           <Route
             path="/settings"
+            element={<Navigate to="/training" replace />}
+          />
+          <Route
+            path="/apply"
             element={
               <PageTransitionWrapper>
-                <SettingsPage />
+                <ApplicationPage />
+              </PageTransitionWrapper>
+            }
+          />
+          <Route
+            path="/legal/:document"
+            element={
+              <PageTransitionWrapper>
+                <LegalPage />
               </PageTransitionWrapper>
             }
           />
@@ -205,7 +224,7 @@ function AnimatedRoutes() {
             path="*"
             element={
               <PageTransitionWrapper>
-                <HomePage />
+                <NotFoundPage />
               </PageTransitionWrapper>
             }
           />
@@ -286,9 +305,7 @@ export default function App() {
     <BrowserRouter>
       <LanguageReset />
       <LocaleProvider>
-        <PdfLeadCaptureProvider>
-          <AnimatedRoutes />
-        </PdfLeadCaptureProvider>
+        <AnimatedRoutes />
       </LocaleProvider>
     </BrowserRouter>
   );

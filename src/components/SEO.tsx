@@ -5,9 +5,10 @@ interface SEOProps {
   description: string;
   image?: string;
   canonical?: string;
+  noIndex?: boolean;
 }
 
-export function SEO({ title, description, image, canonical }: SEOProps) {
+export function SEO({ title, description, image, canonical, noIndex = false }: SEOProps) {
   useEffect(() => {
     document.title = title;
 
@@ -17,7 +18,7 @@ export function SEO({ title, description, image, canonical }: SEOProps) {
     const currentPath = typeof window !== "undefined" ? window.location.pathname : "/";
     const siteUrl = `${protocol}//${host}${currentPath}`;
 
-    const defaultImage = `${canonicalHost}/world-map-hero.png`;
+    const defaultImage = `${canonicalHost}/logos/tl-square-white.png`;
     const resolvedImage = image ? new URL(image, canonicalHost).toString() : defaultImage;
     const effectiveCanonical = canonical || `${canonicalHost}${currentPath}`;
 
@@ -40,6 +41,7 @@ export function SEO({ title, description, image, canonical }: SEOProps) {
 
     setMeta('meta[name="title"]', "content", title);
     setMeta('meta[name="description"]', "content", description);
+    setMeta('meta[name="robots"]', "content", noIndex ? "noindex, nofollow" : "index, follow");
     setMeta('meta[property="og:title"]', "content", title);
     setMeta('meta[property="og:description"]', "content", description);
     setMeta('meta[property="og:type"]', "content", "website");
@@ -61,7 +63,7 @@ export function SEO({ title, description, image, canonical }: SEOProps) {
       document.head.appendChild(canonicalLink);
     }
     canonicalLink.setAttribute("href", effectiveCanonical);
-  }, [title, description, image, canonical]);
+  }, [title, description, image, canonical, noIndex]);
 
   return null;
 }

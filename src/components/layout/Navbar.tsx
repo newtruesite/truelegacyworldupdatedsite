@@ -44,7 +44,7 @@ function IconDroplets({ className }: { className?: string }) {
 }
 
 const COUNTRY_SLUGS = COUNTRIES.map((c) => c.slug);
-const DEFAULT_JOTFORM = "https://form.jotform.com/260232994952060";
+const DEFAULT_JOTFORM = "/apply";
 
 // Custom hook for scroll detection
 function useScroll(threshold: number = 10) {
@@ -336,7 +336,7 @@ export function Navbar() {
             <div className="flex items-center gap-2">
               {/* Language Toggle - Desktop Only */}
               <div className="hidden md:flex items-center gap-0.5">
-                {(["en", "es", "fr"] as const).map((loc) => (
+                {(["en", "es", "fr", "pt"] as const).map((loc) => (
                   <button
                     key={loc}
                     onClick={() => setLocaleOverride(loc)}
@@ -398,7 +398,7 @@ export function Navbar() {
               {t[locale].nav_language}
             </span>
             <div className="flex gap-2">
-              {(["en", "es", "fr"] as const).map((loc) => (
+              {(["en", "es", "fr", "pt"] as const).map((loc) => (
                 <button
                   key={loc}
                   onClick={() => setLocaleOverride(loc)}
@@ -413,7 +413,9 @@ export function Navbar() {
                     ? "English"
                     : loc === "es"
                       ? "Español"
-                      : "Français"}
+                    : loc === "fr"
+                      ? "Français"
+                      : "Português"}
                 </button>
               ))}
             </div>
