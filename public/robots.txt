@@ -3,4 +3,5 @@ Allow: /
 Disallow: /training
 Disallow: /login
 Disallow: /settings
+Disallow: /crm
 Sitemap: https://truelegacyworld.com/sitemap.xml

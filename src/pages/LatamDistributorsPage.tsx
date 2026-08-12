@@ -5,15 +5,17 @@ import { TLBackground } from "@/components/ui/TLBackground";
 import { motion } from "framer-motion";
 import { Calendar, Globe, Instagram, MessageCircle } from "lucide-react";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 
 type Distributor = {
-  name: string; title: string; photo: string; fallbackInitial: string; region: string;
+  slug: string; name: string; title: string; photo: string; fallbackInitial: string; region: string;
   whatsapp?: string; latamWhatsapp?: string; website?: string;
   calendly?: string; telegram?: string; instagram?: string;
 };
 
 const DISTRIBUTORS: Distributor[] = [
   {
+    slug: "mehdi-cohen",
     name: "Mehdi Cohen",
     title: "True Legacy World",
     photo: "/leaders/mehdi-hero.png",
@@ -28,6 +30,7 @@ const DISTRIBUTORS: Distributor[] = [
     region: "Global y LATAM",
   },
   {
+    slug: "ryan-pool",
     name: "Ryan Pool",
     title: "Líder True Legacy",
     photo: "/leaders/ryan-hero.png",
@@ -154,6 +157,7 @@ function DistributorCard({
         <p className="text-slate-400 text-sm mb-4">{dist.title}</p>
         <p className="text-slate-500 text-xs mb-4">{dist.region}</p>
         <div className="flex flex-wrap gap-2 sm:gap-3">
+          <Link to={`/d/${dist.slug}`} className="inline-flex items-center justify-center rounded-xl bg-cyan-500 px-4 py-3 text-sm font-semibold text-white transition-colors hover:bg-cyan-400">Ver perfil</Link>
           {dist.whatsapp && (
             <a
               href={dist.whatsapp}

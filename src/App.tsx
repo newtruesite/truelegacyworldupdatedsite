@@ -4,6 +4,7 @@ import { trackPageView } from "@/lib/analytics";
 import CountryPage from "@/pages/CountryPage";
 import ApplicationPage from "@/pages/ApplicationPage";
 import DistributorsPage from "@/pages/DistributorsPage";
+import DistributorProfilePage from "@/pages/DistributorProfilePage";
 import EmGuardePage from "@/pages/EmGuardePage";
 import EventsPage from "@/pages/EventsPage";
 import HomePage from "@/pages/HomePage";
@@ -16,6 +17,7 @@ import ProductsPage from "@/pages/ProductsPage";
 import RegionPage from "@/pages/RegionPage";
 import SelectCountryPage from "@/pages/SelectCountryPage";
 import TrainingPage from "@/pages/TrainingPage";
+import CrmPage from "@/pages/CrmPage";
 import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useLayoutEffect } from "react";
 import {
@@ -94,6 +96,15 @@ function AnimatedRoutes() {
               </PageTransitionWrapper>
             }
           />
+          <Route
+            path="/d/:slug"
+            element={
+              <PageTransitionWrapper>
+                <DistributorProfilePage />
+              </PageTransitionWrapper>
+            }
+          />
+          <Route path="/crm" element={<CrmPage />} />
           <Route
             path="/latam/distributors"
             element={
