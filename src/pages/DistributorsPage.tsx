@@ -3,9 +3,10 @@ import { Navbar } from "@/components/layout/Navbar";
 import { SEO } from "@/components/SEO";
 import { TLBackground } from "@/components/ui/TLBackground";
 import { useLocaleContext } from "@/contexts/LocaleContext";
+import { getPublicDistributors } from "@/lib/crm";
 import { motion } from "framer-motion";
 import { Calendar, Globe, Instagram, MessageCircle } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
 type Distributor = {
@@ -14,7 +15,18 @@ type Distributor = {
   calendly?: string; telegram?: string; instagram?: string;
 };
 
-const DISTRIBUTORS: Distributor[] = [
+const FEATURED_CONTACTS: Record<string, Partial<Distributor>> = {
+  "mehdi-cohen": {
+    website: "https://mehdicohen.com",
+    whatsapp: "https://api.whatsapp.com/send/?phone=18649072149&text&type=phone_number&app_absent=0",
+    latamWhatsapp: "https://wa.me/+573001844049",
+    calendly: "https://calendly.com/aquacharged/true-legacy-one-on-one",
+    telegram: "https://t.me/mehdicohen",
+    instagram: "https://www.instagram.com/mehdicohen/",
+  },
+};
+
+const FALLBACK_DISTRIBUTORS: Distributor[] = [
   {
     slug: "mehdi-cohen",
     name: "Mehdi Cohen",
@@ -58,6 +70,26 @@ function IconWhatsApp({ className }: { className?: string }) {
 
 export default function DistributorsPage() {
   const { locale } = useLocaleContext();
+  const [distributors, setDistributors] = useState<Distributor[]>(FALLBACK_DISTRIBUTORS);
+
+  useEffect(() => {
+    let active = true;
+    getPublicDistributors().then((profiles) => {
+      if (!active) return;
+      setDistributors(profiles.map((profile) => ({
+        slug: profile.slug,
+        name: profile.display_name,
+        title: profile.title,
+        photo: profile.avatar_url || "",
+        fallbackInitial: profile.display_name.charAt(0),
+        region: profile.regions.join(" & "),
+        whatsapp: profile.phone ? `https://wa.me/${profile.phone.replace(/\D/g, "")}` : undefined,
+        instagram: profile.instagram_url || undefined,
+        ...FEATURED_CONTACTS[profile.slug],
+      })));
+    });
+    return () => { active = false; };
+  }, []);
 
   const isSpanish = locale === "es" || locale === "pt";
 
@@ -125,7 +157,7 @@ export default function DistributorsPage() {
 
         <section className="py-12 md:py-16" style={{ background: "#070c1a" }}>
           <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 space-y-8">
-            {DISTRIBUTORS.map((dist, index) => (
+            {distributors.map((dist, index) => (
               <DistributorCard
                 key={dist.name}
                 dist={dist}
@@ -152,7 +184,7 @@ function DistributorCard({
   websiteLabel,
   bookCallLabel,
 }: {
-  dist: (typeof DISTRIBUTORS)[0];
+  dist: Distributor;
   index: number;
   whatsappLabel: string;
   latamWhatsappLabel: string;
