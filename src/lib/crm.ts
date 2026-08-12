@@ -84,6 +84,17 @@ const FALLBACK_DISTRIBUTORS: PublicDistributor[] = [
     regions: ['Global'],
     languages: ['en'],
   },
+  {
+    id: 'preview-alex',
+    slug: 'alex-gonzalez',
+    referral_code: 'alex-gonzalez',
+    display_name: 'Alex Gonzalez',
+    title: 'True Legacy Distributor',
+    bio: 'Alex Gonzalez brings over 35 years of experience in marketing within the supplement industry. Throughout his career, he has remained passionate about health, wellness, and helping others live their best lives. For Alex, a healthy lifestyle isn’t just a profession—it’s a personal commitment and the most important foundation for a fulfilling life.',
+    avatar_url: '/leaders/alex-gonzalez.jpg',
+    regions: ['USA'],
+    languages: ['en', 'es'],
+  },
 ]
 
 export async function getPublicDistributors(): Promise<PublicDistributor[]> {
