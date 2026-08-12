@@ -119,7 +119,7 @@ const FALLBACK_DISTRIBUTORS: PublicDistributor[] = [
     display_name: 'Simon Loh',
     title: 'True Legacy Distributor',
     bio: 'I’m a global entrepreneur who has spent the last several years building and scaling businesses across multiple international markets. Since 2016, I’ve had the opportunity to work with and support more than 10,000 entrepreneurs, generate over $30 million in sales volume, and help expand operations in countries including Malaysia, India, the United Arab Emirates, Turkey, and Nigeria.\n\nMy focus is on helping people move beyond traditional career limitations by applying practical, disciplined, and proven business strategies. Through speaking, mentoring, and direct collaboration, I work with individuals who want to build more intentional, flexible, and sustainable professional lives.',
-    avatar_url: null,
+    avatar_url: '/leaders/simon-loh.jpg',
     regions: ['Malaysia'],
     languages: ['en'],
     phone: '+60 12-661 2042',

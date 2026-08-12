@@ -28,6 +28,7 @@ export default function CrmPage() {
   const [loading, setLoading] = useState(true)
   const [working, setWorking] = useState('')
   const [message, setMessage] = useState('')
+  const [accountMessage, setAccountMessage] = useState('')
 
   useEffect(() => {
     if (!crmSupabase) {
@@ -97,6 +98,26 @@ export default function CrmPage() {
     const password = String(formData.get('password') || '')
     const { error } = await crmSupabase.auth.signInWithPassword({ email, password })
     setMessage(error ? 'The email or password was not accepted.' : '')
+  }
+
+  const changePassword = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+    if (!crmSupabase) return
+    const form = event.currentTarget
+    const formData = new FormData(form)
+    const password = String(formData.get('newPassword') || '')
+    const confirmation = String(formData.get('confirmPassword') || '')
+    if (password.length < 12) {
+      setAccountMessage('Use at least 12 characters for your new password.')
+      return
+    }
+    if (password !== confirmation) {
+      setAccountMessage('The two passwords do not match.')
+      return
+    }
+    const { error } = await crmSupabase.auth.updateUser({ password })
+    setAccountMessage(error ? 'Your password could not be updated.' : 'Password updated successfully.')
+    if (!error) form.reset()
   }
 
   const changeStatus = async (lead: CrmLead, status: LeadStatus) => {
@@ -176,7 +197,7 @@ export default function CrmPage() {
       <div className="mx-auto max-w-7xl">
         <header className="flex flex-col gap-5 border-b border-white/10 pb-7 md:flex-row md:items-end md:justify-between">
           <div><img src="/logos/tl-square-white.png" alt="True Legacy" className="mb-5 h-12 w-12 object-contain" /><p className="text-xs font-bold uppercase tracking-[0.25em] text-cyan-300">Internal team platform</p><h1 className="mt-2 text-3xl font-black md:text-5xl">Lead routing CRM</h1><p className="mt-2 text-sm text-slate-400">{membership?.role === 'admin' ? 'Administrator view — all team leads' : `Distributor view — assigned leads only`} · {session.user.email}</p></div>
-          <button onClick={() => crmSupabase?.auth.signOut()} className="inline-flex items-center gap-2 self-start rounded-xl border border-white/15 px-4 py-3 text-sm text-slate-300 hover:bg-white/5"><LogOut className="h-4 w-4" /> Sign out</button>
+          <div className="flex flex-col items-start gap-3"><details className="w-full max-w-sm rounded-xl border border-white/15 bg-white/[0.03] p-3"><summary className="cursor-pointer text-sm text-cyan-200">Change my password</summary><form onSubmit={changePassword} className="mt-3 grid gap-2"><input required minLength={12} name="newPassword" type="password" autoComplete="new-password" placeholder="New password (12+ characters)" className="h-10 rounded-lg border border-white/10 bg-black/20 px-3 text-sm outline-none focus:border-cyan-400" /><input required minLength={12} name="confirmPassword" type="password" autoComplete="new-password" placeholder="Confirm new password" className="h-10 rounded-lg border border-white/10 bg-black/20 px-3 text-sm outline-none focus:border-cyan-400" /><button className="h-10 rounded-lg bg-cyan-500 text-sm font-bold">Update password</button>{accountMessage && <p role="status" className="text-xs text-cyan-100">{accountMessage}</p>}</form></details><button onClick={() => crmSupabase?.auth.signOut()} className="inline-flex items-center gap-2 self-start rounded-xl border border-white/15 px-4 py-3 text-sm text-slate-300 hover:bg-white/5"><LogOut className="h-4 w-4" /> Sign out</button></div>
         </header>
 
         <section className="mt-7 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
