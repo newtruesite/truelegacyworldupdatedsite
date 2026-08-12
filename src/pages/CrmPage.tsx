@@ -79,13 +79,24 @@ export default function CrmPage() {
     })
   }, [leads, search, statusFilter])
 
-  const signIn = async (event: FormEvent<HTMLFormElement>) => {
+  const sendMagicLink = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     if (!crmSupabase) return
     setMessage('')
     const email = String(new FormData(event.currentTarget).get('email') || '').trim().toLowerCase()
     const { error } = await crmSupabase.auth.signInWithOtp({ email, options: { emailRedirectTo: `${window.location.origin}/crm` } })
     setMessage(error ? 'The secure sign-in link could not be sent.' : 'Check your email for the secure True Legacy CRM sign-in link.')
+  }
+
+  const signInWithPassword = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+    if (!crmSupabase) return
+    setMessage('')
+    const formData = new FormData(event.currentTarget)
+    const email = String(formData.get('email') || '').trim().toLowerCase()
+    const password = String(formData.get('password') || '')
+    const { error } = await crmSupabase.auth.signInWithPassword({ email, password })
+    setMessage(error ? 'The email or password was not accepted.' : '')
   }
 
   const changeStatus = async (lead: CrmLead, status: LeadStatus) => {
@@ -152,7 +163,7 @@ export default function CrmPage() {
 
   if (!crmConfigured) return <CrmMessage title="CRM connection required" body="The secure CRM interface is ready, but this preview is not connected to its dedicated Supabase project yet." />
   if (loading && !session) return <div className="min-h-screen bg-[#060b1e]" />
-  if (!session) return <CrmLogin onSubmit={signIn} message={message} />
+  if (!session) return <CrmLogin onPasswordSubmit={signInWithPassword} onMagicLinkSubmit={sendMagicLink} message={message} />
   if (!loading && (!membership || !membership.active)) return <CrmMessage title="Account not authorized" body={`The signed-in account ${session.user.email || ''} does not have an active True Legacy CRM role.`} action={<button onClick={() => crmSupabase?.auth.signOut()} className="rounded-xl border border-white/15 px-5 py-3 text-sm">Sign out</button>} />
 
   const unassigned = leads.filter(item => !item.assigned_distributor_id).length
@@ -200,8 +211,8 @@ function Detail({ label, value }: { label: string; value: string | null }) {
   return <div className="rounded-xl border border-white/10 bg-white/[0.02] p-4"><p className="text-[10px] uppercase tracking-wider text-slate-500">{label}</p><p className="mt-2 break-words text-sm text-slate-300">{value || '—'}</p></div>
 }
 
-function CrmLogin({ onSubmit, message }: { onSubmit: (event: FormEvent<HTMLFormElement>) => void; message: string }) {
-  return <main className="flex min-h-screen items-center justify-center bg-[#060b1e] px-4 text-white"><SEO title="True Legacy CRM Sign In" description="Private team CRM sign in." noIndex /><div className="w-full max-w-md rounded-3xl border border-cyan-400/20 bg-white/[0.03] p-8 text-center"><img src="/logos/tl-square-white.png" alt="True Legacy" className="mx-auto h-16 w-16 object-contain" /><h1 className="mt-6 text-3xl font-black">Private team CRM</h1><p className="mt-3 text-sm leading-6 text-slate-400">Enter the email connected to your administrator or distributor profile. We will send a secure, password-free sign-in link.</p><form onSubmit={onSubmit} className="mt-7 grid gap-4"><input required name="email" type="email" autoComplete="email" placeholder="Authorized email" className="h-12 rounded-xl border border-white/10 bg-black/20 px-4 outline-none focus:border-cyan-400" /><button className="h-12 rounded-xl bg-cyan-500 font-bold">Send secure sign-in link</button></form>{message && <p className="mt-4 text-sm text-cyan-200">{message}</p>}</div></main>
+function CrmLogin({ onPasswordSubmit, onMagicLinkSubmit, message }: { onPasswordSubmit: (event: FormEvent<HTMLFormElement>) => void; onMagicLinkSubmit: (event: FormEvent<HTMLFormElement>) => void; message: string }) {
+  return <main className="flex min-h-screen items-center justify-center bg-[#060b1e] px-4 py-10 text-white"><SEO title="True Legacy CRM Sign In" description="Private team CRM sign in." noIndex /><div className="w-full max-w-md rounded-3xl border border-cyan-400/20 bg-white/[0.03] p-8 text-center"><img src="/logos/tl-square-white.png" alt="True Legacy" className="mx-auto h-16 w-16 object-contain" /><h1 className="mt-6 text-3xl font-black">Private team CRM</h1><p className="mt-3 text-sm leading-6 text-slate-400">Sign in with the email and password connected to your True Legacy administrator or distributor profile.</p><form onSubmit={onPasswordSubmit} className="mt-7 grid gap-4"><input required name="email" type="email" autoComplete="email" placeholder="Authorized email" className="h-12 rounded-xl border border-white/10 bg-black/20 px-4 outline-none focus:border-cyan-400" /><input required name="password" type="password" autoComplete="current-password" placeholder="Password" className="h-12 rounded-xl border border-white/10 bg-black/20 px-4 outline-none focus:border-cyan-400" /><button className="h-12 rounded-xl bg-cyan-500 font-bold">Sign in securely</button></form><div className="my-6 flex items-center gap-3 text-xs uppercase tracking-[0.2em] text-slate-600"><span className="h-px flex-1 bg-white/10" />or<span className="h-px flex-1 bg-white/10" /></div><form onSubmit={onMagicLinkSubmit} className="grid gap-3"><input required name="email" type="email" autoComplete="email" placeholder="Authorized email" className="h-12 rounded-xl border border-white/10 bg-black/20 px-4 outline-none focus:border-cyan-400" /><button className="h-12 rounded-xl border border-cyan-400/30 font-bold text-cyan-200">Email me a sign-in link</button></form>{message && <p role="alert" className="mt-4 text-sm text-cyan-200">{message}</p>}</div></main>
 }
 
 function CrmMessage({ title, body, action }: { title: string; body: string; action?: React.ReactNode }) {
