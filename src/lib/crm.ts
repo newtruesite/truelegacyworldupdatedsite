@@ -14,6 +14,8 @@ export type PublicDistributor = {
   avatar_url: string | null
   regions: string[]
   languages: string[]
+  phone?: string | null
+  instagram_url?: string | null
 }
 
 export type CrmDistributor = PublicDistributor & {
@@ -94,6 +96,19 @@ const FALLBACK_DISTRIBUTORS: PublicDistributor[] = [
     avatar_url: '/leaders/alex-gonzalez.jpg',
     regions: ['USA'],
     languages: ['en', 'es'],
+  },
+  {
+    id: 'preview-zah',
+    slug: 'zah-naderi',
+    referral_code: 'zah-naderi',
+    display_name: 'Zah Naderi',
+    title: 'True Legacy Distributor',
+    bio: "For more than a decade, I've had the privilege of coaching some of the world’s top performers—elite athletes, celebrities, and C-suite executives. But what I discovered along that journey went beyond just training—it was about mastering leadership, understanding leverage, and embracing a vision that’s bigger than yourself.\n\nI realized true, lasting impact isn't created in isolation. It comes from connecting with the right people and choosing the right vehicle. That’s what led me to Enagic—a company built on authenticity, proven systems, and sustainable growth.\n\nNow, we have a space where like-minded leaders unite, blend their strengths, and leverage our collective expertise to build generational wealth and a lasting legacy.",
+    avatar_url: '/leaders/zah-naderi.jpg',
+    regions: ['USA'],
+    languages: ['en'],
+    phone: '+1 (585) 319-6018',
+    instagram_url: 'https://www.instagram.com/zahphysique/',
   },
 ]
 
