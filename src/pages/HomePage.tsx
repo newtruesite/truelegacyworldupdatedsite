@@ -135,10 +135,10 @@ export default function HomePage() {
         }
         description={
           locale === "es"
-            ? "Únete a una comunidad de emprendedores en más de 51 países que ganan dinero compartiendo productos que cambian vidas como Aqua Kangen y emGuarde."
+            ? "True Legacy tiene miembros y líderes en 14 mercados destacados, con educación sobre productos Enagic, comunidad y apoyo para distribuidores independientes."
             : locale === "fr"
-              ? "Rejoignez une communauté d'entrepreneurs dans plus de 51 pays qui gagnent de l'argent en partageant des produits qui changent la vie comme Kangen Water et emGuarde."
-              : "Join a community of entrepreneurs across 51+ countries who make money by sharing world-changing products like the Kangen water machine and emGuarde."
+              ? "True Legacy compte des membres et des leaders dans 14 marchés clés, avec formation aux produits Enagic, communauté et soutien aux distributeurs indépendants."
+              : "True Legacy has members and leaders across 14 featured markets, offering Enagic product education, community, and independent distributor support."
         }
         image="/logos/tl-square-white.png"
       />
@@ -199,10 +199,10 @@ export default function HomePage() {
               </motion.p>
               <p className="mt-4 hero-subtitle opacity-75 max-w-xl">
                 {locale === "es"
-                  ? "Únete a una comunidad de emprendedores que ganan compartiendo productos que cambian el mundo — como la máquina de Aqua Kangen y emGuarde. Elige tu región en el mapa y comienza tu camino."
+                  ? "True Legacy tiene miembros y líderes en 14 mercados destacados. Explora los productos, conoce la comunidad y conéctate con el distribuidor adecuado."
                   : locale === "fr"
-                    ? "Rejoignez une communauté d’entrepreneurs qui gagnent en partageant des produits qui changent le monde — comme la machine d’eau Kangen et emGuarde. Choisissez votre région sur la carte et commencez votre parcours."
-                    : "Join a community of entrepreneurs who make money by sharing world‑changing products — like the Kangen water machine and emGuarde. Pick your region on the map and start your journey."}
+                    ? "True Legacy compte des membres et des leaders dans 14 marchés clés. Découvrez les produits, la communauté et le distributeur qui vous correspond."
+                    : "True Legacy has members and leaders across 14 featured markets. Explore the products, meet the community, and connect with the right distributor."}
               </p>
               <SocialProofStrip />
             </motion.div>
@@ -350,7 +350,7 @@ export default function HomePage() {
               className="text-center mt-12"
             >
               <a
-                href="https://form.jotform.com/260232994952060"
+                href="/apply"
                 target="_blank" rel="noopener noreferrer"
                 onClick={() =>
                   trackEvent("join_click", {
@@ -480,7 +480,7 @@ export default function HomePage() {
         }}
       >
         <a
-          href="https://form.jotform.com/260232994952060"
+          href="/apply"
           target="_blank" rel="noopener noreferrer"
           onClick={() =>
             trackEvent("join_click", {

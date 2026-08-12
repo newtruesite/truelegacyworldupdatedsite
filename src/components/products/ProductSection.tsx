@@ -31,7 +31,7 @@ export function ProductSection({
           ? "Gamme Complète de Produits"
           : locale === "pt"
             ? "Linha Completa de Produtos"
-            : "Complete Product Line"
+            : "Complete Product and Technology Line"
       : variant === "home"
         ? locale === "es"
           ? "Tecnología Enagic que Representamos"
@@ -51,12 +51,12 @@ export function ProductSection({
   const subtitle =
     variant === "homeAll"
       ? locale === "es"
-        ? "Los 11 productos Enagic que puedes usar y vender."
+        ? "Explora 11 productos y tecnologías en mercados compatibles."
         : locale === "fr"
-          ? "Les 11 produits Enagic que vous pouvez utiliser et vendre."
+          ? "Découvrez 11 produits et technologies sur les marchés pris en charge."
           : locale === "pt"
-            ? "Os 11 produtos Enagic que você pode usar e vender."
-            : "All 11 Enagic products you can use and sell."
+            ? "Explore 11 produtos e tecnologias nos mercados atendidos."
+            : "Explore 11 products and technologies across supported markets."
       : variant === "home"
         ? locale === "es"
           ? "Una vista rápida de los productos que impulsan el movimiento True Legacy."
@@ -84,12 +84,12 @@ export function ProductSection({
 
   const productsIntro =
     locale === "es"
-      ? "Enagic fabrica 11 productos de clase mundial que usas en casa Y vendes para ganar comisiones. Cada producto tiene un beneficio de salud único — y cada venta te genera ingresos directos a través del sistema de 8 puntos."
+      ? "Conoce la línea de productos, sus usos previstos y su disponibilidad por mercado. Habla con un distribuidor para confirmar la información local."
       : locale === "fr"
-        ? "Enagic fabrique 11 produits de classe mondiale que vous utilisez à la maison ET vendez pour gagner des commissions. Chaque produit a un avantage santé unique — et chaque vente vous génère des revenus directs via le système à 8 points."
+        ? "Découvrez la gamme, les usages prévus et la disponibilité par marché. Contactez un distributeur pour confirmer les informations locales."
         : locale === "pt"
-          ? "Enagic fabrica 11 produtos de classe mundial que você usa em casa E vende para ganhar comissões. Cada produto tem um benefício de saúde único — e cada venda gera receita direta através do sistema de 8 pontos."
-          : "Enagic manufactures 11 world-class products that you both use at home AND sell to earn commissions. Every product below has a unique health benefit — and every sale earns you direct income through the 8-point system.";
+          ? "Conheça a linha de produtos, seus usos previstos e a disponibilidade por mercado. Fale com um distribuidor para confirmar as informações locais."
+          : "Explore the product line, intended uses, and market-specific availability. Contact a distributor to confirm current information in your location.";
 
   return (
     <section
@@ -202,6 +202,14 @@ export function ProductSection({
                 <p className="text-slate-400 text-sm leading-relaxed mb-4 text-center md:text-left">
                   {pCopy?.short}
                 </p>
+                {product.availability && (
+                  <p className="mb-4 rounded-xl border border-cyan-500/20 bg-cyan-500/5 px-3 py-2 text-center text-xs leading-relaxed text-cyan-100 md:text-left">
+                    <span className="font-semibold">
+                      {locale === "es" ? "Disponibilidad: " : locale === "fr" ? "Disponibilité : " : locale === "pt" ? "Disponibilidade: " : "Availability: "}
+                    </span>
+                    {product.availability[locale]}
+                  </p>
+                )}
                 <div className="flex flex-wrap gap-3 justify-center md:justify-start">
                   {id === 'kangen_air' ? (
                     <Link

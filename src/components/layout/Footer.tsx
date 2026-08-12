@@ -12,7 +12,6 @@ function getFooterLabels(locale: 'en' | 'es' | 'fr' | 'pt') {
     return {
         home: locale === 'es' ? 'Inicio' : locale === 'fr' ? 'Accueil' : locale === 'pt' ? 'Início' : 'Home',
         training: locale === 'es' ? 'Capacitación' : locale === 'fr' ? 'Formation' : locale === 'pt' ? 'Treinamento' : 'Leadership Training',
-        myAccount: locale === 'es' ? 'Mi cuenta' : locale === 'fr' ? 'Mon compte' : locale === 'pt' ? 'Minha conta' : 'My Account',
         products: locale === 'es' ? 'Productos' : locale === 'fr' ? 'Produits' : locale === 'pt' ? 'Produtos' : 'Products',
         kangenWater: locale === 'es' ? 'Agua Kangen' : locale === 'fr' ? 'Eau Kangen' : locale === 'pt' ? 'Água Kangen' : 'Kangen Water',
         emguarde: 'emGuarde Technology',
@@ -56,7 +55,7 @@ export function Footer() {
                             <TrueLegacyLogo variant="footer" />
                         </Link>
                         <p className="text-sm text-slate-400 leading-relaxed mb-6">
-                            A global movement transforming lives through health innovation, entrepreneurship, and lasting legacy building.
+                            A team platform for product education, community, leadership development, and responsible distributor support.
                         </p>
                         {/* Community CTA */}
                         <a
@@ -105,7 +104,6 @@ export function Footer() {
                                 { label: labels.home, href: '/' },
                                 { label: labels.training, href: trainingHref },
                                 { label: labels.products, href: productsHref },
-                                { label: labels.myAccount, href: '/settings' },
                                 { label: labels.kangenWater, href: '/k8' },
                                 { label: labels.emguarde, href: '/emguarde' },
                             ].map((link) => (
@@ -197,21 +195,22 @@ export function Footer() {
                     <span className="text-center">Authorized Enagic Distributor</span>
                     <span className="text-white/40 hidden sm:inline">·</span>
                     <span className="text-center">True Legacy World — Global Team</span>
+                    <span className="text-white/40 hidden sm:inline">·</span>
+                    <span className="text-center">Enagic has been pioneering water ionization technology since 1974 — 52 years of innovation.</span>
                 </div>
+                <nav aria-label="Legal" className="mt-6 flex flex-wrap justify-center gap-x-5 gap-y-2 text-xs text-slate-500">
+                    <Link to="/legal/privacy" className="hover:text-white">Privacy</Link>
+                    <Link to="/legal/terms" className="hover:text-white">Terms</Link>
+                    <Link to="/legal/medical" className="hover:text-white">Medical Disclaimer</Link>
+                    <Link to="/legal/earnings" className="hover:text-white">Earnings Disclosure</Link>
+                    <Link to="/legal/distributor" className="hover:text-white">Distributor Disclosure</Link>
+                </nav>
                 {/* Bottom Bar */}
                 <div className="mt-8 border-t border-white/10 pt-8 flex flex-col items-center gap-4 sm:flex-row sm:justify-between">
                     <p className="text-sm text-slate-500 text-center sm:text-left">
                         © {currentYear} True Legacy World. All rights reserved.
                     </p>
-                    <a
-                        href="https://stackmode.net"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-xs text-slate-600 hover:text-slate-500 transition-colors no-underline"
-                        title="Stackmode Network"
-                    >
-                        This Website Was Created by Stackmodechris - Stackmode Network
-                    </a>
+                    <p className="text-xs text-slate-600 text-center sm:text-right">Independent team education and lead-routing platform.</p>
                 </div>
             </div>
         </footer>

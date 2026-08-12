@@ -77,7 +77,7 @@ const TESTIMONIALS = [
         name: 'Elin Mok',
         instagram: 'https://instagram.com/elinmok98',
         quote:
-            "Youth and legacy aren't opposites — True Legacy proved that. At 25, I'm building generational wealth, travelling globally, and healing daily with Kangen water.",
+            "Youth and leadership aren't opposites. At 25, I'm developing practical skills, building community, and learning how to serve people responsibly.",
         initials: 'EM',
         gradient: 'from-teal-500 to-blue-400',
         role: 'Young Legacy Innovator',
@@ -125,7 +125,7 @@ export function TestimonialSection() {
                         <span className="gradient-text">Leaders Worldwide</span>
                     </h2>
                     <p className="mx-auto max-w-2xl text-slate-400 text-lg">
-                        Thousands of people across the globe are healing their bodies, building wealth, and leaving a lasting legacy. See what they're saying.
+                        Members across featured markets are developing product knowledge, leadership skills, and community. See what they are saying.
                     </p>
                 </motion.div>
             </div>

@@ -1,4 +1,5 @@
 import { Navbar } from "@/components/layout/Navbar";
+import { SEO } from "@/components/SEO";
 import { GlobeIcon } from "@/components/ui/GlobeIcon";
 import { useLocaleContext } from "@/contexts/LocaleContext";
 import { COUNTRIES, getFlagSrcSet } from "@/lib/countries";
@@ -170,6 +171,7 @@ export default function SelectCountryPage() {
           "linear-gradient(160deg, #020d16 0%, #041824 60%, #021018 100%)",
       }}
     >
+      <SEO title="Choose Your Market | True Legacy World" description="Select one of True Legacy's 14 featured markets to view localized product education, events, and distributor support." />
       <Navbar />
       <div className="content-wrapper flex-1 flex flex-col items-center justify-center px-4 md:px-8 py-12 relative w-full">
         <div className="w-full max-w-6xl mx-auto flex justify-start mb-4">

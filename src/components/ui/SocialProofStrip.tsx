@@ -20,8 +20,8 @@ function useCountUp(end: number, duration: number, run: boolean) {
 export function SocialProofStrip() {
   const ref = useRef<HTMLDivElement>(null)
   const [inView, setInView] = useState(false)
-  const countries = useCountUp(51, 1500, inView)
-  const members = useCountUp(8, 1500, inView)
+  const markets = useCountUp(14, 1500, inView)
+  const years = useCountUp(52, 1500, inView)
 
   useEffect(() => {
     const el = ref.current
@@ -44,13 +44,13 @@ export function SocialProofStrip() {
       style={{ touchAction: 'pan-y' }}
     >
       <div>
-        <span className="block text-2xl md:text-3xl font-bold text-white tabular-nums">{countries}+</span>
-        <span className="text-sm text-slate-400">countries represented</span>
+        <span className="block text-2xl md:text-3xl font-bold text-white tabular-nums">{markets}</span>
+        <span className="text-sm text-slate-400">featured markets with True Legacy members and leaders</span>
       </div>
       <div className="w-px h-10 bg-white/10 hidden sm:block" />
       <div>
-        <span className="block text-2xl md:text-3xl font-bold text-white tabular-nums">{members}</span>
-        <span className="text-sm text-slate-400">team regions worldwide</span>
+        <span className="block text-2xl md:text-3xl font-bold text-white tabular-nums">{years}</span>
+        <span className="text-sm text-slate-400">years of Enagic innovation</span>
       </div>
     </motion.div>
   )

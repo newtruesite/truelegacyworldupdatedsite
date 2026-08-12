@@ -33,7 +33,7 @@ const LEADERS = [
             "For more than a decade, I've had the privilege of coaching some of the world's top performers — elite athletes, celebrities, and C-suite executives.",
             "But what I discovered along that journey went beyond just training — it was about mastering leadership, understanding leverage, and embracing a vision that's bigger than yourself.",
             "I realized true, lasting impact isn't created in isolation. It comes from connecting with the right people and choosing the right vehicle. That's what led me to Enagic — a company built on authenticity, proven systems, and sustainable growth.",
-            "Now, we have a space where like-minded leaders unite, blend their strengths, and leverage our collective expertise to build generational wealth and a lasting legacy.",
+            "Now, we have a space where like-minded leaders unite, blend their strengths, and use our collective experience to build responsible, lasting teams.",
         ],
         image: '/leaders/ryan-hero.png',
         icon: Users,

@@ -37,54 +37,50 @@ export interface TLEvent {
 export const UPCOMING_EVENTS: TLEvent[] = [
   {
     id: 'latam-tuesday-weekly',
-    title: 'LATAM WEEKLY PRESENTATION',
+    title: 'LATAM SPANISH WEEKLY CALL',
     title_es: 'PRESENTACIÓN SEMANAL LATAM',
     title_fr: 'PRÉSENTATION HEBDOMADAIRE LATAM',
     title_pt: 'APRESENTAÇÃO SEMANAL LATAM',
-    date: 'Every Tuesday',
-    date_es: 'Todos los Martes',
-    date_fr: 'Chaque Mardi',
-    date_pt: 'Toda Terça-feira',
+    date: 'Every Thursday',
+    date_es: 'Todos los Jueves',
+    date_fr: 'Chaque Jeudi',
+    date_pt: 'Toda Quinta-feira',
     image: '/assets/event-latam-flyer.png',
     latamImage: '/assets/event-latam-flyer.png',
     registerUrl: 'https://us02web.zoom.us/j/83000043957?pwd=Truelegacy#success',
     latamZoomUrl: 'https://us02web.zoom.us/j/83000043957?pwd=Truelegacy#success',
     joinUrl: 'https://us02web.zoom.us/j/83000043957?pwd=Truelegacy#success',
     timezones: [
-      { region: 'Colombia', time: '7:00 PM' },
-      { region: 'EST', time: '8:00 PM' },
-      { region: 'PST', time: '5:00 PM' },
+      { region: 'Eastern', time: '8:00 PM' },
     ],
     latamTimezones: [
-      { region: 'Colombia', time: '7:00 PM' },
-      { region: 'EST', time: '8:00 PM' },
-      { region: 'PST', time: '5:00 PM' },
+      { region: 'Eastern', time: '8:00 PM' },
     ],
-    description_en: `Join the LATAM weekly Zoom presentation every Tuesday — designed for Spanish and Portuguese-speaking communities across South America.
+    description_en: `Join the True Legacy LATAM Spanish call every Thursday at 8:00 p.m. Eastern.
 
-✅ Share Enagic's life-changing health products
-✅ Build your True Legacy business in South America
+✅ Product education and community updates
+✅ Practical team-building support
 ✅ Connect with the regional LATAM community
 
 Click below to join the Zoom directly.`,
-    description_es: `Únete a la presentación semanal LATAM cada martes — diseñada para las comunidades hispanohablantes y lusohablantes de Sudamérica.
+    description_es: `Únete a la llamada semanal de True Legacy LATAM en español cada jueves a las 8:00 p. m., hora del Este.
 
-✅ Comparte los productos de salud Enagic que cambian vidas
-✅ Construye tu negocio True Legacy en Sudamérica
+✅ Educación sobre productos y novedades de la comunidad
+✅ Apoyo práctico para desarrollar tu equipo
 ✅ Conéctate con la comunidad regional LATAM
 
 Haz clic abajo para entrar al Zoom directamente.`,
-    description_fr: `Rejoignez la présentation hebdomadaire LATAM chaque mardi — conçue pour les communautés hispanophones et lusophones d'Amérique du Sud.
+    description_fr: `Rejoignez l'appel hebdomadaire True Legacy LATAM en espagnol chaque jeudi à 20 h, heure de l'Est.
 
-✅ Partagez les produits de santé Enagic qui changent la vie
-✅ Développez votre activité True Legacy en Amérique du Sud
+✅ Formation aux produits et actualités de la communauté
+✅ Soutien pratique au développement d'équipe
 ✅ Connectez-vous avec la communauté régionale LATAM
 
 Cliquez ci-dessous pour accéder directement au Zoom.`,
-    description_pt: `Participe da apresentação semanal LATAM toda terça-feira — projetada para as comunidades de língua espanhola e portuguesa da América do Sul.
+    description_pt: `Participe da chamada semanal True Legacy LATAM em espanhol toda quinta-feira às 20h, horário do leste dos EUA.
 
-✅ Compartilhe os produtos de saúde da Enagic que mudam vidas
-✅ Construa seu negócio True Legacy na América do Sul
+✅ Educação sobre produtos e novidades da comunidade
+✅ Apoio prático para desenvolver sua equipe
 ✅ Conecte-se com a comunidade regional LATAM
 
 Clique abaixo para acessar o Zoom diretamente.`,
@@ -93,131 +89,54 @@ Clique abaixo para acessar o Zoom diretamente.`,
   },
   {
     id: 'duo-presentation-thursday',
-    title: 'TRUE LEGACY WEEKLY PRESENTATION',
+    title: 'GLOBAL ENGLISH WEEKLY CALL',
     title_es: 'PRESENTACIÓN SEMANAL TRUE LEGACY',
     title_fr: 'PRÉSENTATION HEBDOMADAIRE TRUE LEGACY',
     title_pt: 'APRESENTAÇÃO SEMANAL TRUE LEGACY',
-    date: 'Every Thursday',
-    date_es: 'Todos los Jueves',
-    date_fr: 'Chaque Jeudi',
-    date_pt: 'Toda Quinta-feira',
+    date: 'Every Wednesday',
+    date_es: 'Todos los Miércoles',
+    date_fr: 'Chaque Mercredi',
+    date_pt: 'Toda Quarta-feira',
     image: '/assets/event-global-flyer-UKa8W2ck.jpg',
     registerUrl: 'https://us02web.zoom.us/j/87614486219?pwd=YcmJqE7nyYnShh2jdFVz4kRdFygQpv.1#success',
     latamZoomUrl: 'https://us02web.zoom.us/j/83000043957?pwd=Truelegacy#success',
     joinUrl: 'https://us02web.zoom.us/j/87614486219?pwd=YcmJqE7nyYnShh2jdFVz4kRdFygQpv.1#success',
     timezones: [
-      { region: 'Malaysia', time: '9:00 AM (Friday)' },
-      { region: 'India', time: '6:30 AM (Friday)' },
-      { region: 'UAE', time: '5:00 AM (Friday)' },
-      { region: 'Turkey', time: '4:00 AM (Friday)' },
-      { region: 'Nigeria', time: '2:00 AM (Friday)' },
-      { region: 'EST', time: '8:00 PM' },
-      { region: 'PST', time: '5:00 PM' },
+      { region: 'Eastern', time: '8:30 PM' },
     ],
     latamTimezones: [
-      { region: 'Malaysia', time: '9:00 AM (Friday)' },
-      { region: 'India', time: '6:30 AM (Friday)' },
-      { region: 'UAE', time: '5:00 AM (Friday)' },
-      { region: 'Turkey', time: '4:00 AM (Friday)' },
-      { region: 'Nigeria', time: '2:00 AM (Friday)' },
-      { region: 'EST', time: '8:00 PM' },
-      { region: 'PST', time: '5:00 PM' },
+      { region: 'Eastern', time: '8:30 PM' },
     ],
-    description_en: `Join True Legacy's weekly Zoom presentation every Thursday — an open introduction to the Enagic business and health products available in 51+ countries.
+    description_en: `Join the True Legacy global English call every Wednesday at 8:30 p.m. Eastern.
 
 ✅ Open to members, prospects, and guests
-✅ Learn about building income across 51+ countries
+✅ Learn about the products and the independent distributor opportunity
 ✅ Ask questions live
 
 Click below to join the Zoom directly.`,
-    description_es: `Únete a la presentación semanal de True Legacy cada jueves — una introducción abierta al negocio Enagic y productos de salud disponibles en más de 51 países.
+    description_es: `Únete a la llamada global de True Legacy en inglés cada miércoles a las 8:30 p. m., hora del Este.
 
 ✅ Abierto a miembros, prospectos e invitados
-✅ Aprende a construir ingresos en más de 51 países
+✅ Conoce los productos y la oportunidad como distribuidor independiente
 ✅ Haz preguntas en vivo
 
 Haz clic abajo para entrar al Zoom directamente.`,
-    description_fr: `Rejoignez la présentation hebdomadaire de True Legacy chaque jeudi — une introduction ouverte à l'activité Enagic et aux produits de santé disponibles dans plus de 51 pays.
+    description_fr: `Rejoignez l'appel mondial True Legacy en anglais chaque mercredi à 20 h 30, heure de l'Est.
 
 ✅ Ouvert aux membres, prospects et invités
-✅ Découvrez comment construire un revenu dans 51+ pays
+✅ Découvrez les produits et l'opportunité de distributeur indépendant
 ✅ Posez des questions en direct
 
 Cliquez ci-dessous pour accéder directement au Zoom.`,
-    description_pt: `Participe da apresentação semanal da True Legacy toda quinta-feira — uma introdução aberta ao negócio Enagic e produtos de saúde disponíveis em mais de 51 países.
+    description_pt: `Participe da chamada global True Legacy em inglês toda quarta-feira às 20h30, horário do leste dos EUA.
 
 ✅ Aberto a membros, prospects e convidados
-✅ Aprenda a construir renda em mais de 51 países
+✅ Conheça os produtos e a oportunidade como distribuidor independente
 ✅ Faça perguntas ao vivo
 
 Clique abaixo para acessar o Zoom diretamente.`,
     regions: ['global'],
     hasFirstTimePrompt: false,
-  },
-  {
-    id: 'masterclass-march-2026',
-    title: 'TRUE LEGACY MASTERCLASS',
-    date: 'March 29th, 2026',
-    image: '/assets/event-masterclass.png',
-    registerUrl: 'https://tr.ee/8yBqHZ',
-    latamZoomUrl: 'https://tr.ee/8yBqHZ',
-    joinUrl: 'https://tr.ee/8yBqHZ',
-    timezones: [
-      { region: 'Malaysia', time: '8:00 PM' },
-      { region: 'India', time: '5:30 PM' },
-      { region: 'UAE', time: '4:00 PM' },
-      { region: 'Turkey', time: '3:00 PM' },
-      { region: 'Nigeria', time: '1:00 PM' },
-      { region: 'EST', time: '7:00 AM' },
-      { region: 'PST', time: '4:00 AM' },
-    ],
-    latamTimezones: [
-      { region: 'Malaysia', time: '8:00 PM' },
-      { region: 'India', time: '5:30 PM' },
-      { region: 'UAE', time: '4:00 PM' },
-      { region: 'Turkey', time: '3:00 PM' },
-      { region: 'Nigeria', time: '1:00 PM' },
-      { region: 'EST', time: '7:00 AM' },
-      { region: 'PST', time: '4:00 AM' },
-    ],
-    description_en: `This is not just another training. This is a 3-hour power-packed Masterclass designed to help you move to the next level in Enagic — with clarity, strategy, and real execution.
-
-🚨 Entry is strictly by registration only
-
-✅ Open to you and your prospects
-✅ Designed for growth, duplication & rank advancement
-✅ Limited seats — personalised attention will be given
-
-If you are serious about building momentum in 2026, this is where you need to be.
-
-⏳ Seats are limited. Register now and show up ready. 💥`,
-    description_es: `Esto no es solo otro entrenamiento. Este es un Masterclass de 3 horas diseñado para llevarte al siguiente nivel en Enagic — con claridad, estrategia y ejecución real.
-
-🚨 La entrada es estrictamente por registro
-
-✅ Abierto para ti y tus prospectos
-✅ Diseñado para el crecimiento, duplicación y avance de rango
-✅ Asientos limitados — se dará atención personalizada
-
-Si estás serio sobre construir impulso en 2026, aquí es donde debes estar.
-
-⏳ Los asientos son limitados. Regístrate ahora y preséntate listo. 💥`,
-    description_fr: `Ce n'est pas juste une autre formation. C'est une Masterclass de 3 heures conçue pour vous aider à passer au niveau supérieur dans Enagic — avec clarté, stratégie et exécution réelle.
-
-🚨 L'entrée est strictement sur inscription
-
-✅ Ouvert à vous et vos prospects
-✅ Conçu pour la croissance, la duplication et l'avancement de rang
-✅ Places limitées — attention personnalisée garantie
-
-Si vous êtes sérieux au sujet de construire l'élan en 2026, c'est là où vous devez être.
-
-⏳ Places limitées. Inscrivez-vous maintenant. 💥`,
-    title_es: 'CLASE MAGISTRAL SOBRE EL VERDADERO LEGADO',
-    title_fr: 'CLASSE MAGISTRALE VRAI HÉRITAGE',
-    title_pt: 'AULA MAGISTRAL VERDADEIRO LEGADO',
-    regions: ['global', 'latam'],
-    hasFirstTimePrompt: true,
   },
 ]
 

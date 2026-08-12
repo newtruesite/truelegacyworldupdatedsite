@@ -1,5 +1,6 @@
 import { Footer } from "@/components/layout/Footer";
 import { Navbar } from "@/components/layout/Navbar";
+import { SEO } from "@/components/SEO";
 import { TLBackground } from "@/components/ui/TLBackground";
 import { useLocaleContext } from "@/contexts/LocaleContext";
 import { motion } from "framer-motion";
@@ -88,6 +89,7 @@ export default function DistributorsPage() {
 
   return (
     <div className="page-wrapper" style={{ background: "#060b1e" }}>
+      <SEO title={`${title} | True Legacy World`} description={subtitle} />
       <Navbar />
       <main className="content-wrapper">
         <TLBackground className="pt-28 pb-16">

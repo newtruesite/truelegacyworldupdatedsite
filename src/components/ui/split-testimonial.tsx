@@ -87,7 +87,7 @@ const TESTIMONIALS_RAW = [
     instagramUrl: "https://www.instagram.com/moroccanprincess91/",
     photo: "/assets/testimonials/sofia.png",
     quote:
-      "My name is Sofia, and nine years ago I made a decision that changed my life. Purchasing my Kangen Water machine became part of my healing journey. After years of inflammation, digestive, and skin issues, drinking Kangen Water daily helped me notice real changes: less inflammation, better digestion, and the feeling that my body was finally being supported. This water became part of my lifestyle and continues to support my healing, awareness, and growth.",
+      "My name is Sofia. Purchasing my Kangen Water machine became part of my daily routine and led me to learn more about hydration, product use, and the community around it. This is my personal experience and is not a medical claim; individual experiences vary.",
     stars: 5,
     verified: true,
   },

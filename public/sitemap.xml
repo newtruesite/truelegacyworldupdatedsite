@@ -1,17 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url><loc>https://truelegacyworld.com/</loc><priority>1.0</priority></url>
-  <url><loc>https://truelegacyworld.com/usa</loc><priority>0.9</priority></url>
-  <url><loc>https://truelegacyworld.com/canada</loc><priority>0.9</priority></url>
-  <url><loc>https://truelegacyworld.com/colombia</loc><priority>0.8</priority></url>
-  <url><loc>https://truelegacyworld.com/brazil</loc><priority>0.8</priority></url>
-  <url><loc>https://truelegacyworld.com/mexico</loc><priority>0.8</priority></url>
-  <url><loc>https://truelegacyworld.com/paraguay</loc><priority>0.7</priority></url>
+  <url><loc>https://truelegacyworld.com/products</loc><priority>0.9</priority></url>
+  <url><loc>https://truelegacyworld.com/distributors</loc><priority>0.9</priority></url>
+  <url><loc>https://truelegacyworld.com/latam/distributors</loc><priority>0.8</priority></url>
+  <url><loc>https://truelegacyworld.com/select-country</loc><priority>0.8</priority></url>
+  <url><loc>https://truelegacyworld.com/events/global</loc><priority>0.8</priority></url>
+  <url><loc>https://truelegacyworld.com/events/latam</loc><priority>0.8</priority></url>
+  <url><loc>https://truelegacyworld.com/usa</loc><priority>0.8</priority></url>
+  <url><loc>https://truelegacyworld.com/canada</loc><priority>0.8</priority></url>
   <url><loc>https://truelegacyworld.com/morocco</loc><priority>0.8</priority></url>
   <url><loc>https://truelegacyworld.com/nigeria</loc><priority>0.8</priority></url>
-  <url><loc>https://truelegacyworld.com/india</loc><priority>0.8</priority></url>
+  <url><loc>https://truelegacyworld.com/colombia</loc><priority>0.8</priority></url>
+  <url><loc>https://truelegacyworld.com/paraguay</loc><priority>0.8</priority></url>
+  <url><loc>https://truelegacyworld.com/mexico</loc><priority>0.8</priority></url>
+  <url><loc>https://truelegacyworld.com/brazil</loc><priority>0.8</priority></url>
   <url><loc>https://truelegacyworld.com/uae</loc><priority>0.8</priority></url>
+  <url><loc>https://truelegacyworld.com/india</loc><priority>0.8</priority></url>
   <url><loc>https://truelegacyworld.com/malaysia</loc><priority>0.8</priority></url>
-  <url><loc>https://truelegacyworld.com/products</loc><priority>0.8</priority></url>
-  <url><loc>https://truelegacyworld.com/select-country</loc><priority>0.7</priority></url>
+  <url><loc>https://truelegacyworld.com/turkey</loc><priority>0.8</priority></url>
+  <url><loc>https://truelegacyworld.com/spain</loc><priority>0.8</priority></url>
+  <url><loc>https://truelegacyworld.com/eu</loc><priority>0.8</priority></url>
+  <url><loc>https://truelegacyworld.com/region/north-america</loc><priority>0.7</priority></url>
+  <url><loc>https://truelegacyworld.com/region/latin-america</loc><priority>0.7</priority></url>
+  <url><loc>https://truelegacyworld.com/region/europe</loc><priority>0.7</priority></url>
+  <url><loc>https://truelegacyworld.com/region/middle-east</loc><priority>0.7</priority></url>
+  <url><loc>https://truelegacyworld.com/region/africa</loc><priority>0.7</priority></url>
+  <url><loc>https://truelegacyworld.com/region/asia</loc><priority>0.7</priority></url>
+  <url><loc>https://truelegacyworld.com/usa/k8</loc><priority>0.8</priority></url>
+  <url><loc>https://truelegacyworld.com/usa/emguarde</loc><priority>0.8</priority></url>
+  <url><loc>https://truelegacyworld.com/usa/kangen-air</loc><priority>0.7</priority></url>
+  <url><loc>https://truelegacyworld.com/legal/privacy</loc><priority>0.4</priority></url>
+  <url><loc>https://truelegacyworld.com/legal/terms</loc><priority>0.4</priority></url>
+  <url><loc>https://truelegacyworld.com/legal/medical</loc><priority>0.4</priority></url>
+  <url><loc>https://truelegacyworld.com/legal/earnings</loc><priority>0.4</priority></url>
+  <url><loc>https://truelegacyworld.com/legal/distributor</loc><priority>0.4</priority></url>
 </urlset>
