@@ -98,6 +98,8 @@ const FALLBACK_DISTRIBUTORS: PublicDistributor[] = [
     avatar_url: '/leaders/standardized/magaly-cardona.png',
     regions: ['USA', 'LATAM'],
     languages: ['en', 'es'],
+    phone: '+1 (864) 201-8298',
+    instagram_url: 'https://www.instagram.com/mcardonita/',
   },
   {
     id: 'preview-ming-way',
@@ -109,6 +111,8 @@ const FALLBACK_DISTRIBUTORS: PublicDistributor[] = [
     avatar_url: '/leaders/standardized/ming-way-sia.png',
     regions: ['Malaysia', 'India'],
     languages: ['en'],
+    phone: '+60 12-276-1229',
+    instagram_url: 'https://www.instagram.com/mingwaysia/',
   },
   {
     id: 'preview-alex',
@@ -120,6 +124,8 @@ const FALLBACK_DISTRIBUTORS: PublicDistributor[] = [
     avatar_url: '/leaders/standardized/alex-gonzalez.png',
     regions: ['USA'],
     languages: ['en', 'es'],
+    phone: '+1 (954) 263-5001',
+    instagram_url: 'https://www.instagram.com/alexgonzalez_vp/',
   },
   {
     id: 'preview-zah',
