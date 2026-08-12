@@ -5,6 +5,7 @@ import CountryPage from "@/pages/CountryPage";
 import ApplicationPage from "@/pages/ApplicationPage";
 import DistributorsPage from "@/pages/DistributorsPage";
 import DistributorProfilePage from "@/pages/DistributorProfilePage";
+import DistributorLandingPage from "@/pages/DistributorLandingPage";
 import EmGuardePage from "@/pages/EmGuardePage";
 import EventsPage from "@/pages/EventsPage";
 import HomePage from "@/pages/HomePage";
@@ -93,6 +94,14 @@ function AnimatedRoutes() {
             element={
               <PageTransitionWrapper>
                 <DistributorsPage />
+              </PageTransitionWrapper>
+            }
+          />
+          <Route
+            path="/d/:slug/:campaign"
+            element={
+              <PageTransitionWrapper>
+                <DistributorLandingPage />
               </PageTransitionWrapper>
             }
           />
