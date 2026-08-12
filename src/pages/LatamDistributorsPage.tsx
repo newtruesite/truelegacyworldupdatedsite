@@ -18,7 +18,7 @@ const DISTRIBUTORS: Distributor[] = [
     slug: "mehdi-cohen",
     name: "Mehdi Cohen",
     title: "True Legacy World",
-    photo: "/leaders/mehdi-hero.png",
+    photo: "/leaders/standardized/mehdi-cohen.png",
     fallbackInitial: "M",
     website: "https://mehdicohen.com",
     whatsapp:
@@ -33,7 +33,7 @@ const DISTRIBUTORS: Distributor[] = [
     slug: "ryan-pool",
     name: "Ryan Pool",
     title: "Líder True Legacy",
-    photo: "/leaders/ryan-hero.png",
+    photo: "/leaders/standardized/ryan-pool-sr.png",
     fallbackInitial: "R",
     website: "https://ryanpool.com",
     instagram: "https://www.instagram.com/ryanpool/",

@@ -10,7 +10,7 @@ const LEADERS = [
     instagram: 'https://www.instagram.com/mehdicohen/',
     website: 'https://mehdicohen.com',
     whatsapp: 'https://wa.me/1234567890',
-    photo: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?w=120&h=120&fit=crop&crop=face',
+    photo: '/leaders/standardized/mehdi-cohen.png',
     region: 'Global',
   },
   {
@@ -19,7 +19,7 @@ const LEADERS = [
     telegram: 'https://t.me/ryanpool',
     instagram: 'https://www.instagram.com/ryanpool/',
     whatsapp: 'https://wa.me/1234567890',
-    photo: '/leaders/ryan-hero.png',
+    photo: '/leaders/standardized/ryan-pool-sr.png',
     region: 'Global',
   },
   {
@@ -27,14 +27,14 @@ const LEADERS = [
     title: '6A2-4 Leader',
     telegram: 'https://t.me/simonloh',
     region: 'Asia / Malaysia',
-    photo: null as string | null,
+    photo: '/leaders/standardized/simon-loh.png',
   },
   {
     name: 'Ming-Way Sia',
     title: '6A2-5 Leader',
     telegram: 'https://t.me/mingwaysia',
     region: 'Asia / Malaysia',
-    photo: null as string | null,
+    photo: '/leaders/standardized/ming-way-sia.png',
   },
   {
     name: 'Hemanth',
