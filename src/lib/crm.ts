@@ -125,6 +125,19 @@ const FALLBACK_DISTRIBUTORS: PublicDistributor[] = [
     phone: '+60 12-661 2042',
     instagram_url: 'https://www.instagram.com/simonloh_/',
   },
+  {
+    id: 'preview-emanuela',
+    slug: 'emanuela-doustova',
+    referral_code: 'emanuela-doustova',
+    display_name: 'Emanuela Doustova',
+    title: 'True Legacy Distributor',
+    bio: 'Profile details coming soon.',
+    avatar_url: '/leaders/emanuela-doustova.jpg',
+    regions: ['USA'],
+    languages: ['en'],
+    phone: '+1 (818) 858-8585',
+    instagram_url: 'https://www.instagram.com/emanuelabraj/',
+  },
 ]
 
 export async function getPublicDistributors(): Promise<PublicDistributor[]> {
