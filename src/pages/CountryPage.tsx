@@ -249,7 +249,7 @@ const COUNTRY_LEADERS: Record<
     {
       name: "Coach Mehdi",
       role: "Global Founder & Market Builder",
-      image: "/leaders/mehdi-hero.png",
+      image: "/leaders/standardized/mehdi-cohen.png",
       intro:
         "After 24 years in the U.S., Mehdi expanded into Morocco and Colombia — mentoring leaders who want to build intentional, flexible lives with Enagic.",
       instagram: "https://www.instagram.com/mehdicohen_/",
@@ -257,7 +257,7 @@ const COUNTRY_LEADERS: Record<
     {
       name: "Coach Ryan",
       role: "Elite Performance & Leadership Coach",
-      image: "/leaders/ryan-hero.png",
+      image: "/leaders/standardized/ryan-pool-sr.png",
       intro:
         "From coaching elite performers to guiding entrepreneurs, Ryan brings performance, leadership, and leverage together to build generational legacy.",
       instagram: "https://www.instagram.com/ryanpool/",
@@ -267,7 +267,7 @@ const COUNTRY_LEADERS: Record<
     {
       name: "Coach Ryan",
       role: "Elite Performance & Leadership Coach",
-      image: "/leaders/ryan-hero.png",
+      image: "/leaders/standardized/ryan-pool-sr.png",
       intro:
         "Supporting Canadian leaders who want to combine product education, responsible entrepreneurship, and long-term team development through True Legacy.",
       instagram: "https://www.instagram.com/ryanpool/",
@@ -277,7 +277,7 @@ const COUNTRY_LEADERS: Record<
     {
       name: "Coach Mehdi",
       role: "Regional Expansion · Morocco",
-      image: "/leaders/mehdi-hero.png",
+      image: "/leaders/standardized/mehdi-cohen.png",
       intro:
         "Helping open new markets in North Africa while mentoring leaders who want to build with purpose and long-term vision.",
       instagram: "https://www.instagram.com/mehdicohen_/",
@@ -287,7 +287,7 @@ const COUNTRY_LEADERS: Record<
     {
       name: "Coach Simon Loh",
       role: "Global Entrepreneur & Strategist",
-      image: "/leaders/simon-hero.png",
+      image: "/leaders/standardized/simon-loh.png",
       intro:
         "Supporting expansion into Nigeria and beyond, helping leaders apply disciplined, proven business strategies in fast-growing markets.",
       instagram: "https://www.instagram.com/simonloh_/",
@@ -297,7 +297,7 @@ const COUNTRY_LEADERS: Record<
     {
       name: "Coach Mehdi",
       role: "Regional Expansion · Colombia",
-      image: "/leaders/mehdi-hero.png",
+      image: "/leaders/standardized/mehdi-cohen.png",
       intro:
         "Leading the launch of new LATAM markets from Colombia, uniting health, leadership, and long-term opportunity.",
       instagram: "https://www.instagram.com/mehdicohen_/",
@@ -305,7 +305,7 @@ const COUNTRY_LEADERS: Record<
     {
       name: "Coach Magaly",
       role: "Coach & Impact-Driven Entrepreneur",
-      image: "/leaders/magaly-hero.png",
+      image: "/leaders/standardized/magaly-cardona.png",
       intro:
         "Helping Spanish-speaking leaders build businesses that align with their values, health, and families across Latin America.",
       instagram: "https://www.instagram.com/mcardonita/",
@@ -315,7 +315,7 @@ const COUNTRY_LEADERS: Record<
     {
       name: "Coach Ming Way",
       role: "Business Builder & Mentor",
-      image: "/leaders/mingway-hero.png",
+      image: "/leaders/standardized/ming-way-sia.png",
       intro:
         "Partnering with Brazilian leaders who want to build disciplined, sustainable businesses that create long-term legacy.",
       instagram: "https://www.instagram.com/mingwaysia/",
@@ -325,7 +325,7 @@ const COUNTRY_LEADERS: Record<
     {
       name: "Coach Ryan",
       role: "Elite Performance & Leadership Coach",
-      image: "/leaders/ryan-hero.png",
+      image: "/leaders/standardized/ryan-pool-sr.png",
       intro:
         "Bringing a decade of high-performance coaching to help leaders in Mexico build strong wellness businesses with Enagic.",
       instagram: "https://www.instagram.com/ryanpool/",
@@ -335,7 +335,7 @@ const COUNTRY_LEADERS: Record<
     {
       name: "Coach Magaly",
       role: "Coach & Impact-Driven Entrepreneur",
-      image: "/leaders/magaly-hero.png",
+      image: "/leaders/standardized/magaly-cardona.png",
       intro:
         "Supporting leaders in Paraguay and across LATAM who want to build more intentional, family-centered financial futures.",
       instagram: "https://www.instagram.com/mcardonita/",
@@ -345,7 +345,7 @@ const COUNTRY_LEADERS: Record<
     {
       name: "Coach Mehdi",
       role: "Global Founder & Market Builder",
-      image: "/leaders/mehdi-hero.png",
+      image: "/leaders/standardized/mehdi-cohen.png",
       intro:
         "Expanding True Legacy into Turkey and Europe — mentoring leaders who want to build intentional, flexible lives with Enagic.",
       instagram: "https://www.instagram.com/mehdicohen_/",
@@ -353,7 +353,7 @@ const COUNTRY_LEADERS: Record<
     {
       name: "Coach Ryan",
       role: "Elite Performance & Leadership Coach",
-      image: "/leaders/ryan-hero.png",
+      image: "/leaders/standardized/ryan-pool-sr.png",
       intro:
         "Bringing practical product education and team development to Turkish entrepreneurs building responsibly for the long term.",
       instagram: "https://www.instagram.com/ryanpool/",

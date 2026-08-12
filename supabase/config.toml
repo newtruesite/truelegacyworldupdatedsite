@@ -1,0 +1,15 @@
+project_id = "mzadjxuylfphlpytmwfs"
+
+[api]
+enabled = true
+schemas = ["public", "graphql_public"]
+extra_search_path = ["public", "extensions"]
+
+[auth]
+enabled = true
+site_url = "https://www.mehdicohen.com/admin/kangen-leads"
+additional_redirect_urls = [
+  "https://truelegacyworld.com/crm",
+  "https://www.truelegacyworld.com/crm",
+  "https://truelegacyworldupdatedsite-git-age-bc256b-newtruesites-projects.vercel.app/crm"
+]

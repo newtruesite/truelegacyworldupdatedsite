@@ -6,18 +6,20 @@ import { useLocaleContext } from "@/contexts/LocaleContext";
 import { motion } from "framer-motion";
 import { Calendar, Globe, Instagram, MessageCircle } from "lucide-react";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 
 type Distributor = {
-  name: string; title: string; photo: string; fallbackInitial: string; region: string;
+  slug: string; name: string; title: string; photo: string; fallbackInitial: string; region: string;
   whatsapp?: string; latamWhatsapp?: string; website?: string;
   calendly?: string; telegram?: string; instagram?: string;
 };
 
 const DISTRIBUTORS: Distributor[] = [
   {
+    slug: "mehdi-cohen",
     name: "Mehdi Cohen",
     title: "True Legacy World",
-    photo: "/leaders/mehdi-hero.png",
+    photo: "/leaders/standardized/mehdi-cohen.png",
     fallbackInitial: "M",
     website: "https://mehdicohen.com",
     whatsapp:
@@ -29,9 +31,10 @@ const DISTRIBUTORS: Distributor[] = [
     region: "Global & LATAM",
   },
   {
+    slug: "ryan-pool",
     name: "Ryan Pool",
     title: "True Legacy Leader",
-    photo: "/leaders/ryan-hero.png",
+    photo: "/leaders/standardized/ryan-pool-sr.png",
     fallbackInitial: "R",
     website: "https://ryanpool.com",
     instagram: "https://www.instagram.com/ryanpool/",
@@ -184,6 +187,7 @@ function DistributorCard({
         <p className="text-slate-400 text-sm mb-4">{dist.title}</p>
         <p className="text-slate-500 text-xs mb-4">{dist.region}</p>
         <div className="flex flex-wrap gap-2 sm:gap-3">
+          <Link to={`/d/${dist.slug}`} className="inline-flex items-center justify-center rounded-xl bg-cyan-500 px-4 py-3 text-sm font-semibold text-white transition-colors hover:bg-cyan-400">View Profile</Link>
           {dist.whatsapp && (
             <a
               href={dist.whatsapp}
