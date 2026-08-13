@@ -20,6 +20,7 @@ import RegionPage from "@/pages/RegionPage";
 import SelectCountryPage from "@/pages/SelectCountryPage";
 import TrainingPage from "@/pages/TrainingPage";
 import CrmPage from "@/pages/CrmPage";
+import GrowthCenterPage from "@/pages/GrowthCenterPage";
 import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useLayoutEffect } from "react";
 import {
@@ -115,6 +116,7 @@ function AnimatedRoutes() {
             }
           />
           <Route path="/crm" element={<CrmPage />} />
+          <Route path="/crm/growth" element={<GrowthCenterPage />} />
           <Route
             path="/latam/distributors"
             element={

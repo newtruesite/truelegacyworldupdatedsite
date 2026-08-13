@@ -2,7 +2,7 @@ import { Footer } from '@/components/layout/Footer'
 import { Navbar } from '@/components/layout/Navbar'
 import { SEO } from '@/components/SEO'
 import { useLocaleContext } from '@/contexts/LocaleContext'
-import { getPublicDistributors } from '@/lib/crm'
+import { crmSupabase, getPublicDistributors } from '@/lib/crm'
 import type { PublicDistributor } from '@/lib/crm'
 import { BookOpen, BriefcaseBusiness, CalendarDays, Globe2, Instagram, Languages, MapPin, Phone, Sparkles } from 'lucide-react'
 import { useEffect, useState } from 'react'
@@ -17,6 +17,11 @@ export default function DistributorProfilePage() {
   useEffect(() => {
     getPublicDistributors().then(items => setProfile(items.find(item => item.slug === slug) || null))
   }, [slug])
+
+  useEffect(() => {
+    if (!profile || !crmSupabase) return
+    void crmSupabase.rpc('crm_track_share_click', { p_slug: profile.slug, p_campaign: 'profile', p_locale: locale })
+  }, [profile, locale])
 
   if (profile === null) return <NotFoundPage />
 

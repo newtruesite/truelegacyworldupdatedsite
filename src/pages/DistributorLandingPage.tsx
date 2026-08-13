@@ -2,7 +2,7 @@ import { Footer } from '@/components/layout/Footer'
 import { Navbar } from '@/components/layout/Navbar'
 import { SEO } from '@/components/SEO'
 import { YouTubeEmbed } from '@/components/ui/YouTubeEmbed'
-import { getPublicDistributors } from '@/lib/crm'
+import { crmSupabase, getPublicDistributors } from '@/lib/crm'
 import type { PublicDistributor } from '@/lib/crm'
 import { useLocaleContext } from '@/contexts/LocaleContext'
 import { localizedProductVideo } from '@/lib/productVideos'
@@ -109,6 +109,11 @@ export default function DistributorLandingPage() {
   useEffect(() => {
     getPublicDistributors().then(items => setProfile(items.find(item => item.slug === slug) || null))
   }, [slug])
+
+  useEffect(() => {
+    if (!profile || !variant || !crmSupabase) return
+    void crmSupabase.rpc('crm_track_share_click', { p_slug: profile.slug, p_campaign: variant, p_locale: locale })
+  }, [profile, variant, locale])
 
   const shareUrl = typeof window === 'undefined' ? '' : window.location.href
   const share = async () => {

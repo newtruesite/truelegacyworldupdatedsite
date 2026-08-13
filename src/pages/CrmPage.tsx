@@ -5,6 +5,7 @@ import type { Session } from '@supabase/supabase-js'
 import { BellRing, CalendarClock, ChevronDown, ChevronUp, Copy, Download, ExternalLink, Filter, LogOut, Mail, MessageCircle, Search, ShieldCheck, UserRoundCheck, Users } from 'lucide-react'
 import { useEffect, useMemo, useState } from 'react'
 import type { FormEvent } from 'react'
+import { Link } from 'react-router-dom'
 
 const STATUSES: LeadStatus[] = ['new', 'contacted', 'qualified', 'nurturing', 'converted', 'closed']
 const STATUS_STYLES: Record<LeadStatus, string> = {
@@ -229,7 +230,7 @@ export default function CrmPage() {
       <SEO title="True Legacy CRM" description="Private True Legacy team lead-routing platform." noIndex />
       <div className="mx-auto max-w-7xl">
         <header className="flex flex-col gap-5 border-b border-white/10 pb-7 md:flex-row md:items-end md:justify-between">
-          <div><img src="/logos/tl-square-white.png" alt="True Legacy" className="mb-5 h-12 w-12 object-contain" /><p className="text-xs font-bold uppercase tracking-[0.25em] text-cyan-300">Internal team platform</p><h1 className="mt-2 text-3xl font-black md:text-5xl">Lead routing CRM</h1><p className="mt-2 text-sm text-slate-400">{membership?.role === 'admin' ? 'Administrator view — all team leads' : `Distributor view — assigned leads only`} · {session.user.email}</p></div>
+          <div><img src="/logos/tl-square-white.png" alt="True Legacy" className="mb-5 h-12 w-12 object-contain" /><p className="text-xs font-bold uppercase tracking-[0.25em] text-cyan-300">Internal team platform</p><h1 className="mt-2 text-3xl font-black md:text-5xl">Lead routing CRM</h1><p className="mt-2 text-sm text-slate-400">{membership?.role === 'admin' ? 'Administrator view — all team leads' : `Distributor view — assigned leads only`} · {session.user.email}</p><Link to="/crm/growth" className="mt-5 inline-flex rounded-xl bg-cyan-500 px-5 py-3 text-sm font-bold text-slate-950 hover:bg-cyan-400">Open Growth Center</Link></div>
           <div className="flex flex-col items-start gap-3"><details className="w-full max-w-sm rounded-xl border border-white/15 bg-white/[0.03] p-3"><summary className="cursor-pointer text-sm text-cyan-200">Change my password</summary><form onSubmit={changePassword} className="mt-3 grid gap-2"><input required minLength={12} name="newPassword" type="password" autoComplete="new-password" placeholder="New password (12+ characters)" className="h-10 rounded-lg border border-white/10 bg-black/20 px-3 text-sm outline-none focus:border-cyan-400" /><input required minLength={12} name="confirmPassword" type="password" autoComplete="new-password" placeholder="Confirm new password" className="h-10 rounded-lg border border-white/10 bg-black/20 px-3 text-sm outline-none focus:border-cyan-400" /><button className="h-10 rounded-lg bg-cyan-500 text-sm font-bold">Update password</button>{accountMessage && <p role="status" className="text-xs text-cyan-100">{accountMessage}</p>}</form></details><button onClick={() => crmSupabase?.auth.signOut()} className="inline-flex items-center gap-2 self-start rounded-xl border border-white/15 px-4 py-3 text-sm text-slate-300 hover:bg-white/5"><LogOut className="h-4 w-4" /> Sign out</button></div>
         </header>
 
