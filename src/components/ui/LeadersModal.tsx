@@ -26,7 +26,9 @@ const LEADERS = [
     name: 'Simon Loh',
     title: '6A2-4 Leader',
     telegram: 'https://t.me/simonloh',
-    region: 'Asia / Malaysia',
+    instagram: 'https://www.instagram.com/simonloh_/',
+    whatsapp: 'https://wa.me/60126612042',
+    region: 'Global / Malaysia',
     photo: '/leaders/standardized/simon-loh.png',
   },
   {
