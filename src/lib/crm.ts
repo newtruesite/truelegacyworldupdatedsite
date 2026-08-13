@@ -172,7 +172,11 @@ export async function getPublicDistributors(): Promise<PublicDistributor[]> {
   if (!crmSupabase) return FALLBACK_DISTRIBUTORS
   const { data, error } = await crmSupabase.rpc('get_public_crm_distributors')
   if (error || !Array.isArray(data)) return FALLBACK_DISTRIBUTORS
-  return data as PublicDistributor[]
+  return (data as PublicDistributor[]).map(profile => {
+    if (profile.slug !== 'simon-loh') return profile
+    const confirmed = FALLBACK_DISTRIBUTORS.find(item => item.slug === 'simon-loh')
+    return confirmed ? { ...profile, ...confirmed, id: profile.id } : profile
+  })
 }
 
 export async function submitCrmApplication(payload: Record<string, unknown>) {
