@@ -33,6 +33,7 @@ export default function CrmPage() {
   const [working, setWorking] = useState('')
   const [message, setMessage] = useState('')
   const [accountMessage, setAccountMessage] = useState('')
+  const [recoveringPassword, setRecoveringPassword] = useState(false)
 
   useEffect(() => {
     if (!crmSupabase) {
@@ -43,7 +44,10 @@ export default function CrmPage() {
       setSession(data.session)
       setLoading(false)
     })
-    const { data } = crmSupabase.auth.onAuthStateChange((_event, nextSession) => setSession(nextSession))
+    const { data } = crmSupabase.auth.onAuthStateChange((event, nextSession) => {
+      setSession(nextSession)
+      if (event === 'PASSWORD_RECOVERY') setRecoveringPassword(true)
+    })
     return () => data.subscription.unsubscribe()
   }, [])
 
@@ -104,6 +108,13 @@ export default function CrmPage() {
     const password = String(formData.get('password') || '')
     const { error } = await crmSupabase.auth.signInWithPassword({ email, password })
     setMessage(error ? 'The email or password was not accepted.' : '')
+  }
+
+  const requestPasswordReset = async (email: string) => {
+    if (!crmSupabase) return
+    setMessage('')
+    const { error } = await crmSupabase.auth.resetPasswordForEmail(email.trim().toLowerCase(), { redirectTo: `${window.location.origin}/crm` })
+    setMessage(error ? 'The password reset email could not be sent.' : 'Check your email for a secure password reset link.')
   }
 
   const changePassword = async (event: FormEvent<HTMLFormElement>) => {
@@ -219,7 +230,8 @@ export default function CrmPage() {
 
   if (!crmConfigured) return <CrmMessage title="CRM connection required" body="The secure CRM interface is ready, but this preview is not connected to its dedicated Supabase project yet." />
   if (loading && !session) return <div className="min-h-screen bg-[#060b1e]" />
-  if (!session) return <CrmLogin onPasswordSubmit={signInWithPassword} onMagicLinkSubmit={sendMagicLink} message={message} />
+  if (!session) return <CrmLogin onPasswordSubmit={signInWithPassword} onMagicLinkSubmit={sendMagicLink} onPasswordReset={requestPasswordReset} message={message} />
+  if (recoveringPassword) return <PasswordRecovery onComplete={() => setRecoveringPassword(false)} />
   if (!loading && (!membership || !membership.active)) return <CrmMessage title="Account not authorized" body={`The signed-in account ${session.user.email || ''} does not have an active True Legacy CRM role.`} action={<button onClick={() => crmSupabase?.auth.signOut()} className="rounded-xl border border-white/15 px-5 py-3 text-sm">Sign out</button>} />
 
   const unassigned = leads.filter(item => !item.assigned_distributor_id).length
@@ -314,8 +326,15 @@ function NurtureCenter({ lead, distributor, onOpen }: { lead: CrmLead; distribut
   })}</div></div>
 }
 
-function CrmLogin({ onPasswordSubmit, onMagicLinkSubmit, message }: { onPasswordSubmit: (event: FormEvent<HTMLFormElement>) => void; onMagicLinkSubmit: (event: FormEvent<HTMLFormElement>) => void; message: string }) {
-  return <main className="flex min-h-screen items-center justify-center bg-[#060b1e] px-4 py-10 text-white"><SEO title="True Legacy CRM Sign In" description="Private team CRM sign in." noIndex /><div className="w-full max-w-md rounded-3xl border border-cyan-400/20 bg-white/[0.03] p-8 text-center"><img src="/logos/tl-square-white.png" alt="True Legacy" className="mx-auto h-16 w-16 object-contain" /><h1 className="mt-6 text-3xl font-black">Private team CRM</h1><p className="mt-3 text-sm leading-6 text-slate-400">Sign in with the email and password connected to your True Legacy administrator or distributor profile.</p><form onSubmit={onPasswordSubmit} className="mt-7 grid gap-4"><input required name="email" type="email" autoComplete="email" placeholder="Authorized email" className="h-12 rounded-xl border border-white/10 bg-black/20 px-4 outline-none focus:border-cyan-400" /><input required name="password" type="password" autoComplete="current-password" placeholder="Password" className="h-12 rounded-xl border border-white/10 bg-black/20 px-4 outline-none focus:border-cyan-400" /><button className="h-12 rounded-xl bg-cyan-500 font-bold">Sign in securely</button></form><div className="my-6 flex items-center gap-3 text-xs uppercase tracking-[0.2em] text-slate-600"><span className="h-px flex-1 bg-white/10" />or<span className="h-px flex-1 bg-white/10" /></div><form onSubmit={onMagicLinkSubmit} className="grid gap-3"><input required name="email" type="email" autoComplete="email" placeholder="Authorized email" className="h-12 rounded-xl border border-white/10 bg-black/20 px-4 outline-none focus:border-cyan-400" /><button className="h-12 rounded-xl border border-cyan-400/30 font-bold text-cyan-200">Email me a sign-in link</button></form>{message && <p role="alert" className="mt-4 text-sm text-cyan-200">{message}</p>}</div></main>
+function CrmLogin({ onPasswordSubmit, onMagicLinkSubmit, onPasswordReset, message }: { onPasswordSubmit: (event: FormEvent<HTMLFormElement>) => void; onMagicLinkSubmit: (event: FormEvent<HTMLFormElement>) => void; onPasswordReset: (email: string) => void; message: string }) {
+  const [forgotten, setForgotten] = useState(false)
+  return <main className="flex min-h-screen items-center justify-center bg-[#060b1e] px-4 py-10 text-white"><SEO title="True Legacy CRM Sign In" description="Private team CRM sign in." noIndex /><div className="w-full max-w-md rounded-3xl border border-cyan-400/20 bg-white/[0.03] p-8 text-center"><img src="/logos/tl-square-white.png" alt="True Legacy" className="mx-auto h-16 w-16 object-contain" /><h1 className="mt-6 text-3xl font-black">{forgotten ? 'Reset your password' : 'Private team CRM'}</h1><p className="mt-3 text-sm leading-6 text-slate-400">{forgotten ? 'Enter your authorized email and we will send you a secure recovery link.' : 'Sign in with the email and password connected to your True Legacy administrator or distributor profile.'}</p>{forgotten ? <form onSubmit={event => { event.preventDefault(); onPasswordReset(String(new FormData(event.currentTarget).get('email') || '')) }} className="mt-7 grid gap-4"><input required name="email" type="email" autoComplete="email" placeholder="Authorized email" className="h-12 rounded-xl border border-white/10 bg-black/20 px-4 outline-none focus:border-cyan-400" /><button className="h-12 rounded-xl bg-cyan-500 font-bold text-slate-950">Send password reset link</button><button type="button" onClick={() => setForgotten(false)} className="text-sm text-cyan-200">Back to sign in</button></form> : <><form onSubmit={onPasswordSubmit} className="mt-7 grid gap-4"><input required name="email" type="email" autoComplete="email" placeholder="Authorized email" className="h-12 rounded-xl border border-white/10 bg-black/20 px-4 outline-none focus:border-cyan-400" /><input required name="password" type="password" autoComplete="current-password" placeholder="Password" className="h-12 rounded-xl border border-white/10 bg-black/20 px-4 outline-none focus:border-cyan-400" /><button className="h-12 rounded-xl bg-cyan-500 font-bold">Sign in securely</button><button type="button" onClick={() => setForgotten(true)} className="text-sm text-cyan-200">Forgot password?</button></form><div className="my-6 flex items-center gap-3 text-xs uppercase tracking-[0.2em] text-slate-600"><span className="h-px flex-1 bg-white/10" />or<span className="h-px flex-1 bg-white/10" /></div><form onSubmit={onMagicLinkSubmit} className="grid gap-3"><input required name="email" type="email" autoComplete="email" placeholder="Authorized email" className="h-12 rounded-xl border border-white/10 bg-black/20 px-4 outline-none focus:border-cyan-400" /><button className="h-12 rounded-xl border border-cyan-400/30 font-bold text-cyan-200">Email me a sign-in link</button></form></>}{message && <p role="alert" className="mt-4 text-sm text-cyan-200">{message}</p>}</div></main>
+}
+
+function PasswordRecovery({ onComplete }: { onComplete: () => void }) {
+  const [message, setMessage] = useState('')
+  const submit = async (event: FormEvent<HTMLFormElement>) => { event.preventDefault(); if (!crmSupabase) return; const form = event.currentTarget; const data = new FormData(form); const password = String(data.get('password') || ''); const confirmation = String(data.get('confirmation') || ''); if (password.length < 12) return setMessage('Use at least 12 characters.'); if (password !== confirmation) return setMessage('The two passwords do not match.'); const { error } = await crmSupabase.auth.updateUser({ password }); if (error) return setMessage('Your password could not be updated. Please request a new recovery link.'); setMessage('Password updated successfully.'); window.setTimeout(onComplete, 900) }
+  return <main className="flex min-h-screen items-center justify-center bg-[#060b1e] px-4 py-10 text-white"><section className="w-full max-w-md rounded-3xl border border-cyan-400/20 bg-white/[0.03] p-8"><img src="/logos/tl-square-white.png" alt="True Legacy" className="mx-auto h-16 w-16 object-contain"/><h1 className="mt-6 text-center text-3xl font-black">Create a new password</h1><p className="mt-3 text-center text-sm text-slate-400">Choose a secure password with at least 12 characters.</p><form onSubmit={submit} className="mt-7 grid gap-4"><input required minLength={12} name="password" type="password" autoComplete="new-password" placeholder="New password" className="h-12 rounded-xl border border-white/10 bg-black/20 px-4 outline-none focus:border-cyan-400"/><input required minLength={12} name="confirmation" type="password" autoComplete="new-password" placeholder="Confirm new password" className="h-12 rounded-xl border border-white/10 bg-black/20 px-4 outline-none focus:border-cyan-400"/><button className="h-12 rounded-xl bg-cyan-500 font-bold text-slate-950">Update password</button>{message && <p role="status" className="text-center text-sm text-cyan-200">{message}</p>}</form></section></main>
 }
 
 function CrmMessage({ title, body, action }: { title: string; body: string; action?: React.ReactNode }) {
