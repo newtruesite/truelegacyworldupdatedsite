@@ -1,4 +1,5 @@
 import { SEO } from '@/components/SEO'
+import { SponsorGate } from '@/components/crm/SponsorGate'
 import { addLeadNote, assignLead, crmConfigured, crmSupabase, getCrmDistributors, getCrmLeads, getCrmMembership, getLeadNotes, updateLeadStatus } from '@/lib/crm'
 import type { CrmDistributor, CrmLead, CrmLeadNote, CrmMembership, LeadStatus } from '@/lib/crm'
 import type { Session } from '@supabase/supabase-js'
@@ -226,7 +227,7 @@ export default function CrmPage() {
   const dueCount = leads.filter(item => item.next_follow_up_at && new Date(item.next_follow_up_at) <= new Date()).length
 
   return (
-    <main className="min-h-screen bg-[#060b1e] px-4 py-8 text-white md:px-8">
+    <SponsorGate membership={membership} distributors={distributors}><main className="min-h-screen bg-[#060b1e] px-4 py-8 text-white md:px-8">
       <SEO title="True Legacy CRM" description="Private True Legacy team lead-routing platform." noIndex />
       <div className="mx-auto max-w-7xl">
         <header className="flex flex-col gap-5 border-b border-white/10 pb-7 md:flex-row md:items-end md:justify-between">
@@ -256,7 +257,7 @@ export default function CrmPage() {
           {!loading && !filtered.length && <div className="p-12 text-center text-sm text-slate-500">No leads match this view.</div>}
         </section>
       </div>
-    </main>
+    </main></SponsorGate>
   )
 }
 
