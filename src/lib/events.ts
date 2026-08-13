@@ -37,36 +37,40 @@ export interface TLEvent {
 export const UPCOMING_EVENTS: TLEvent[] = [
   {
     id: 'latam-tuesday-weekly',
-    title: 'LATAM SPANISH WEEKLY CALL',
-    title_es: 'PRESENTACIÓN SEMANAL LATAM',
+    title: 'THE BIOHACKING REVOLUTION COMES TO LATAM',
+    title_es: 'LA REVOLUCIÓN DEL BIOHACKING LLEGA A LATAM',
     title_fr: 'PRÉSENTATION HEBDOMADAIRE LATAM',
     title_pt: 'APRESENTAÇÃO SEMANAL LATAM',
     date: 'Every Thursday',
     date_es: 'Todos los Jueves',
     date_fr: 'Chaque Jeudi',
     date_pt: 'Toda Quinta-feira',
-    image: '/assets/event-latam-flyer.png',
-    latamImage: '/assets/event-latam-flyer.png',
-    registerUrl: 'https://us02web.zoom.us/j/83000043957?pwd=Truelegacy#success',
-    latamZoomUrl: 'https://us02web.zoom.us/j/83000043957?pwd=Truelegacy#success',
-    joinUrl: 'https://us02web.zoom.us/j/83000043957?pwd=Truelegacy#success',
+    image: '/assets/mehdicohen-latam-weekly.png',
+    latamImage: '/assets/mehdicohen-latam-weekly.png',
+    registerUrl: 'https://us06web.zoom.us/j/84852244046?pwd=Ci7k3oLkcaBa5odDvrw6O9fokzXbK8.1',
+    latamZoomUrl: 'https://us06web.zoom.us/j/84852244046?pwd=Ci7k3oLkcaBa5odDvrw6O9fokzXbK8.1',
+    joinUrl: 'https://us06web.zoom.us/j/84852244046?pwd=Ci7k3oLkcaBa5odDvrw6O9fokzXbK8.1',
     timezones: [
+      { region: 'Colombia', time: '7:00 PM' },
       { region: 'Eastern', time: '8:00 PM' },
     ],
     latamTimezones: [
+      { region: 'Colombia', time: '7:00 PM' },
       { region: 'Eastern', time: '8:00 PM' },
     ],
     description_en: `Join the True Legacy LATAM Spanish call every Thursday at 8:00 p.m. Eastern.
 
-✅ Product education and community updates
-✅ Practical team-building support
+✅ Discover the wellness technologies behind True Legacy
+✅ Receive a clear introduction to the independent distributor model
+✅ Learn the first steps for building globally from home
 ✅ Connect with the regional LATAM community
 
 Click below to join the Zoom directly.`,
     description_es: `Únete a la llamada semanal de True Legacy LATAM en español cada jueves a las 8:00 p. m., hora del Este.
 
-✅ Educación sobre productos y novedades de la comunidad
-✅ Apoyo práctico para desarrollar tu equipo
+✅ Descubre la tecnología de bienestar detrás de True Legacy
+✅ Recibe una introducción clara al modelo de distribuidor independiente
+✅ Conoce los primeros pasos para desarrollar un negocio global desde casa
 ✅ Conéctate con la comunidad regional LATAM
 
 Haz clic abajo para entrar al Zoom directamente.`,
@@ -89,7 +93,7 @@ Clique abaixo para acessar o Zoom diretamente.`,
   },
   {
     id: 'duo-presentation-thursday',
-    title: 'GLOBAL ENGLISH WEEKLY CALL',
+    title: 'UNLOCK YOUR TRUE LEGACY',
     title_es: 'PRESENTACIÓN SEMANAL TRUE LEGACY',
     title_fr: 'PRÉSENTATION HEBDOMADAIRE TRUE LEGACY',
     title_pt: 'APRESENTAÇÃO SEMANAL TRUE LEGACY',
@@ -97,12 +101,13 @@ Clique abaixo para acessar o Zoom diretamente.`,
     date_es: 'Todos los Miércoles',
     date_fr: 'Chaque Mercredi',
     date_pt: 'Toda Quarta-feira',
-    image: '/assets/event-global-flyer-UKa8W2ck.jpg',
-    registerUrl: 'https://us02web.zoom.us/j/87614486219?pwd=YcmJqE7nyYnShh2jdFVz4kRdFygQpv.1#success',
-    latamZoomUrl: 'https://us02web.zoom.us/j/83000043957?pwd=Truelegacy#success',
-    joinUrl: 'https://us02web.zoom.us/j/87614486219?pwd=YcmJqE7nyYnShh2jdFVz4kRdFygQpv.1#success',
+    image: '/assets/mehdicohen-global-weekly.png',
+    registerUrl: 'https://us06web.zoom.us/j/88577734807?pwd=C02Pr5lK6HEYyXsXiBo1wqAS7ZcVLV.1',
+    latamZoomUrl: 'https://us06web.zoom.us/j/84852244046?pwd=Ci7k3oLkcaBa5odDvrw6O9fokzXbK8.1',
+    joinUrl: 'https://us06web.zoom.us/j/88577734807?pwd=C02Pr5lK6HEYyXsXiBo1wqAS7ZcVLV.1',
     timezones: [
       { region: 'Eastern', time: '8:30 PM' },
+      { region: 'Pacific', time: '5:30 PM' },
     ],
     latamTimezones: [
       { region: 'Eastern', time: '8:30 PM' },

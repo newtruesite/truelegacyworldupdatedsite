@@ -35,7 +35,7 @@ const LABELS = {
   en: {
     breadcrumbHome: "Home",
     breadcrumbEvents: "Events",
-    hero: "Upcoming Events",
+    hero: "Weekly Live Events",
     register: "Register now",
     noEvents: "No upcoming events for this region.",
     weeklySessions: "Weekly Live Sessions",
@@ -44,7 +44,7 @@ const LABELS = {
   es: {
     breadcrumbHome: "Inicio",
     breadcrumbEvents: "Eventos",
-    hero: "Próximos Eventos",
+    hero: "Eventos Semanales en Vivo",
     register: "Regístrate ahora",
     noEvents: "No hay eventos próximos para esta región.",
     weeklySessions: "Sesiones Semanales en Vivo",
@@ -187,14 +187,14 @@ export default function EventsPage() {
           lang === "es"
             ? "Llamadas Semanales de True Legacy | LATAM"
             : lang === "fr"
-              ? "True Legacy — Événements à Venir"
+              ? "True Legacy — Événements Hebdomadaires"
               : "True Legacy Weekly Calls | Global and LATAM"
         }
         description={
           lang === "es"
             ? "Únete a la llamada LATAM en español cada jueves a las 8:00 p. m., hora del Este, y consulta las próximas sesiones de True Legacy."
             : lang === "fr"
-              ? "Rejoignez les événements hebdomadaires de True Legacy — présentations en direct chaque jeudi et mardi dans plus de 51 pays."
+              ? "Rejoignez les présentations hebdomadaires True Legacy en direct, en anglais le mercredi et en espagnol le jeudi."
               : "Join the global English call every Wednesday at 8:30 p.m. Eastern or the LATAM Spanish call every Thursday at 8:00 p.m. Eastern."
         }
         image="/logos/tl-square-white.png"
