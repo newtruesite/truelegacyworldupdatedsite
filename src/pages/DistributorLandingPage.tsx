@@ -4,6 +4,8 @@ import { SEO } from '@/components/SEO'
 import { YouTubeEmbed } from '@/components/ui/YouTubeEmbed'
 import { getPublicDistributors } from '@/lib/crm'
 import type { PublicDistributor } from '@/lib/crm'
+import { useLocaleContext } from '@/contexts/LocaleContext'
+import { localizedProductVideo } from '@/lib/productVideos'
 import { ArrowRight, BookOpen, BriefcaseBusiness, Check, Copy, Instagram, MessageCircle, PlayCircle, ShieldCheck, Sparkles } from 'lucide-react'
 import { useEffect, useMemo, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
@@ -56,6 +58,7 @@ function whatsappUrl(profile: PublicDistributor, variant: LandingVariant) {
 
 export default function DistributorLandingPage() {
   const { slug, campaign } = useParams()
+  const { locale } = useLocaleContext()
   const [profile, setProfile] = useState<PublicDistributor | null | undefined>(undefined)
   const [copied, setCopied] = useState(false)
   const variant = campaign && campaign in VARIANTS ? campaign as LandingVariant : null
@@ -81,6 +84,8 @@ export default function DistributorLandingPage() {
   const Icon = copy?.icon || Sparkles
   const applyUrl = `/apply?ref=${profile?.referral_code || slug}&interest=${copy?.interest || 'duo'}&source=${variant}`
   const whatsapp = profile ? whatsappUrl(profile, variant) : null
+  const waterDemoUrl = localizedProductVideo('kangenWater', locale)
+  const emguardeDemoUrl = localizedProductVideo('emguardeGo', locale)
 
   return <div className="page-wrapper bg-[#05091a] text-white">
     <SEO
@@ -115,7 +120,7 @@ export default function DistributorLandingPage() {
         <div className="grid gap-3 sm:grid-cols-2">{BENEFITS[variant].map(item => <div key={item} className="flex gap-3 rounded-2xl border border-white/10 bg-white/[0.04] p-5 text-sm text-slate-200"><Check className="mt-0.5 h-5 w-5 shrink-0 text-cyan-300" />{item}</div>)}</div>
       </div></section>}
 
-      {variant === 'duo' && <section className="border-y border-white/10 bg-[#080e24] px-4 py-16 sm:px-6 md:py-24"><div className="mx-auto max-w-6xl"><div className="mx-auto mb-10 max-w-3xl text-center"><p className="text-xs font-bold uppercase tracking-[0.24em] text-cyan-300">The Duo product presentation</p><h2 className="mt-3 text-3xl font-black sm:text-4xl">Watch each product story.</h2><p className="mt-4 text-slate-300">These videos provide an introduction. Product availability and official specifications vary by market, so confirm details directly with {profile?.display_name}.</p></div><div className="grid gap-8 lg:grid-cols-2"><div><YouTubeEmbed url="https://youtu.be/Lm2DYOwU2rc?si=qSI-i8XX8EOv6ZUC" title="Leveluk K8 Kangen Water system" /><h3 className="mt-4 text-xl font-bold">Leveluk K8</h3><p className="mt-2 text-sm leading-6 text-slate-400">The featured flagship Kangen Water ionizer for home water education.</p></div><div><YouTubeEmbed url="https://youtu.be/I8fFj7-FaPw?si=Rw9aEsxSN9iiy1iq" title="emGuarde GO portable product" /><h3 className="mt-4 text-xl font-bold">emGuarde GO</h3><p className="mt-2 text-sm leading-6 text-slate-400">A compact, rechargeable set of two designed for portable use. Availability varies by market.</p></div></div></div></section>}
+      {variant === 'duo' && <section className="border-y border-white/10 bg-[#080e24] px-4 py-16 sm:px-6 md:py-24"><div className="mx-auto max-w-6xl"><div className="mx-auto mb-10 max-w-3xl text-center"><p className="text-xs font-bold uppercase tracking-[0.24em] text-cyan-300">The Duo product presentation</p><h2 className="mt-3 text-3xl font-black sm:text-4xl">Watch each product story.</h2><p className="mt-4 text-slate-300">These videos provide an introduction. Product availability and official specifications vary by market, so confirm details directly with {profile?.display_name}.</p></div><div className="grid gap-8 lg:grid-cols-2"><div><YouTubeEmbed url={waterDemoUrl} title="Leveluk K8 Kangen Water system" /><h3 className="mt-4 text-xl font-bold">Leveluk K8</h3><p className="mt-2 text-sm leading-6 text-slate-400">The featured flagship Kangen Water ionizer for home water education.</p></div><div><YouTubeEmbed url={emguardeDemoUrl} title="emGuarde GO portable product" /><h3 className="mt-4 text-xl font-bold">emGuarde GO</h3><p className="mt-2 text-sm leading-6 text-slate-400">A compact, rechargeable set of two designed for portable use. Availability varies by market.</p></div></div></div></section>}
 
       {variant === 'business' && <section className="border-y border-white/10 bg-[#080e24] px-4 py-16 sm:px-6 md:py-24"><div className="mx-auto grid max-w-6xl gap-10 lg:grid-cols-[1.1fr_0.9fr] lg:items-center"><YouTubeEmbed url="https://youtu.be/lB5fW55DmaI?si=HzPbgiwUup9u5UN-" title="True Legacy Duo business presentation" /><div><p className="text-xs font-bold uppercase tracking-[0.24em] text-cyan-300">Business through education</p><h2 className="mt-3 text-3xl font-black">Share products. Develop people. Duplicate a clear process.</h2><p className="mt-5 leading-7 text-slate-300">True Legacy supports independent distributors with product education, presentations, mentoring, and CRM-based referral attribution. This is an independent business opportunity—not employment or guaranteed income.</p><Link to={applyUrl} className="mt-7 inline-flex items-center gap-2 rounded-xl bg-cyan-500 px-6 py-3 font-bold hover:bg-cyan-400">Explore with {profile?.display_name}<ArrowRight className="h-5 w-5" /></Link></div></div></section>}
 

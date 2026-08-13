@@ -6,6 +6,7 @@ import { YouTubeEmbed } from "@/components/ui/YouTubeEmbed";
 import { useLocaleContext } from "@/contexts/LocaleContext";
 import { COUNTRIES } from "@/lib/countries";
 import { getDistributorLink } from "@/lib/distributorRouter";
+import { localizedProductVideo } from "@/lib/productVideos";
 import { t } from "@/lib/translations";
 import { motion } from "framer-motion";
 import {
@@ -48,6 +49,7 @@ export default function K8Page() {
     country.jotformUrl ?? "/apply";
   const isSpanish = locale === "es";
   const FEATURES = isSpanish ? FEATURES_ES : FEATURES_EN;
+  const waterDemoUrl = localizedProductVideo("kangenWater", locale);
 
   const [heroImgError, setHeroImgError] = useState(false);
 
@@ -102,7 +104,7 @@ export default function K8Page() {
               className="max-w-4xl mx-auto mb-8"
             >
               <YouTubeEmbed
-                url="https://youtu.be/Lm2DYOwU2rc?si=qSI-i8XX8EOv6ZUC"
+                url={waterDemoUrl}
                 title="Leveluk K8 Kangen Water Machine"
               />
             </motion.div>
@@ -230,7 +232,7 @@ export default function K8Page() {
               {copy.k8.certifications}
             </a>
             <a
-              href="https://youtu.be/Lm2DYOwU2rc?si=qSI-i8XX8EOv6ZUC"
+              href={waterDemoUrl}
               target="_blank" rel="noopener noreferrer"
               className="flex items-center justify-center gap-2 rounded-2xl border border-transparent bg-red-600/80 hover:bg-red-600 px-6 py-4 text-sm font-semibold text-white transition-all"
             >
