@@ -6,6 +6,7 @@ import { YouTubeEmbed } from "@/components/ui/YouTubeEmbed";
 import { useLocaleContext } from "@/contexts/LocaleContext";
 import { COUNTRIES } from "@/lib/countries";
 import { getDistributorLink } from "@/lib/distributorRouter";
+import { localizedProductVideo } from "@/lib/productVideos";
 import { t } from "@/lib/translations";
 import { motion } from "framer-motion";
 import {
@@ -73,10 +74,8 @@ export default function EmGuardePage() {
   const jotformUrl =
     country.jotformUrl ?? "/apply";
   const isSpanish = locale === "es";
-  const isLatamCountry = ["mexico", "brazil", "colombia", "paraguay"].includes(
-    countrySlug ?? "",
-  );
   const FEATURES = isSpanish ? FEATURES_ES : FEATURES_EN;
+  const emguardeDemoUrl = localizedProductVideo("emguardeGo", locale);
 
   const [heroImgError, setHeroImgError] = useState(false);
 
@@ -133,11 +132,7 @@ export default function EmGuardePage() {
               className="max-w-4xl mx-auto mb-8"
             >
               <YouTubeEmbed
-                url={
-                  isLatamCountry
-                    ? "https://www.youtube.com/watch?v=VFjtegRuzfQ"
-                    : "https://youtu.be/I8fFj7-FaPw?si=Rw9aEsxSN9iiy1iq"
-                }
+                url={emguardeDemoUrl}
                 title="emGuarde GO portable EMF support"
               />
             </motion.div>
@@ -262,11 +257,7 @@ export default function EmGuardePage() {
               {copy.emguarde.certifications}
             </a>
             <a
-              href={
-                isLatamCountry
-                  ? "https://www.youtube.com/watch?v=VFjtegRuzfQ"
-                  : "https://youtu.be/I8fFj7-FaPw?si=Rw9aEsxSN9iiy1iq"
-              }
+              href={emguardeDemoUrl}
               target="_blank" rel="noopener noreferrer"
               className="flex items-center justify-center gap-2 rounded-2xl border border-transparent bg-red-600/80 hover:bg-red-600 px-6 py-4 text-sm font-semibold text-white transition-all"
             >
