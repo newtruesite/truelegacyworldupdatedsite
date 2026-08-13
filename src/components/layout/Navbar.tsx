@@ -129,11 +129,7 @@ export function Navbar() {
   // Navigation paths
   const productsPath = country ? `/${country.slug}/products` : "/products";
   const trainingPath = country ? `/${country.slug}/training` : "/training";
-  const eventsPath = country
-    ? ["brazil", "mexico", "colombia", "paraguay"].includes(country.slug)
-      ? "/events/latam"
-      : "/events/global"
-    : "/events/global";
+  const eventsPath = "/events";
 
   const distributorsPath =
     country &&

@@ -8,6 +8,7 @@ import DistributorProfilePage from "@/pages/DistributorProfilePage";
 import DistributorLandingPage from "@/pages/DistributorLandingPage";
 import EmGuardePage from "@/pages/EmGuardePage";
 import EventsPage from "@/pages/EventsPage";
+import EventsHubPage from "@/pages/EventsHubPage";
 import HomePage from "@/pages/HomePage";
 import K8Page from "@/pages/K8Page";
 import KangenAirPage from "@/pages/KangenAirPage";
@@ -127,6 +128,14 @@ function AnimatedRoutes() {
             element={
               <PageTransitionWrapper>
                 <SelectCountryPage />
+              </PageTransitionWrapper>
+            }
+          />
+          <Route
+            path="/events"
+            element={
+              <PageTransitionWrapper>
+                <EventsHubPage />
               </PageTransitionWrapper>
             }
           />
