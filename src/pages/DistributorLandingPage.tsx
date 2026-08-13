@@ -6,7 +6,6 @@ import { getPublicDistributors } from '@/lib/crm'
 import type { PublicDistributor } from '@/lib/crm'
 import { useLocaleContext } from '@/contexts/LocaleContext'
 import { localizedProductVideo } from '@/lib/productVideos'
-import { UPCOMING_EVENTS } from '@/lib/events'
 import { ArrowRight, BookOpen, BriefcaseBusiness, CalendarDays, Check, Clock3, Copy, Instagram, MessageCircle, PlayCircle, Plus, ShieldCheck, Sparkles } from 'lucide-react'
 import { useEffect, useMemo, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
@@ -57,6 +56,41 @@ const BENEFITS: Record<LandingVariant, string[]> = {
   training: ['A structured training library', 'Product and presentation education', 'Weekly English and Spanish team calls', 'Leadership, media, and follow-up development'],
   events: ['Live product and business education', 'Open to members, prospects, and guests', 'English and Spanish weekly options', 'Direct follow-up with your referring distributor'],
 }
+
+const MEHDI_EVENT_PAGES = [
+  {
+    id: 'global',
+    language: 'English',
+    micro: 'Upcoming Live Event',
+    headline: 'Unlock Your True Legacy',
+    subheadline: 'Live Zoom Presentation',
+    date: 'Every Wednesday',
+    time: '8:30 PM Eastern / 5:30 PM Pacific',
+    meetingId: '885 7773 4807',
+    passcode: 'Truelegacy',
+    image: '/assets/mehdicohen-global-weekly.png',
+    imageAlt: 'True Legacy World Wednesday weekly presentation featuring the K8 and emGuarde GO',
+    zoomUrl: 'https://us06web.zoom.us/j/88577734807?pwd=C02Pr5lK6HEYyXsXiBo1wqAS7ZcVLV.1',
+    description: 'A direct, no-pressure introduction to the K8, emGuarde GO, and the team-based independent distributor model behind True Legacy.',
+    topics: ['Product education for the K8 and emGuarde GO', 'An introduction to the independent distributor model', 'Leadership, community, and building beyond borders', 'Live questions with True Legacy team leaders'],
+  },
+  {
+    id: 'latam',
+    language: 'Español',
+    micro: 'Evento en Vivo',
+    headline: 'La Revolución del Biohacking Llega a LATAM',
+    subheadline: 'Presentación en Vivo por Zoom',
+    date: 'Cada jueves',
+    time: '7:00 PM Colombia / 8:00 PM Eastern',
+    meetingId: '848 5224 4046',
+    passcode: 'Truelegacy',
+    image: '/assets/mehdicohen-latam-weekly.png',
+    imageAlt: 'Presentación semanal de True Legacy LATAM los jueves',
+    zoomUrl: 'https://us06web.zoom.us/j/84852244046?pwd=Ci7k3oLkcaBa5odDvrw6O9fokzXbK8.1',
+    description: 'Una conversación directa y sin presión sobre bienestar, tecnología y una oportunidad global pensada para LATAM.',
+    topics: ['La tecnología de biohacking que está revolucionando el mercado', 'Una introducción clara al modelo de negocio y sus comisiones', 'Cómo comenzar sin experiencia previa', 'Primeros pasos para iniciar un negocio global desde casa'],
+  },
+] as const
 
 function whatsappUrl(profile: PublicDistributor, variant: LandingVariant) {
   if (!profile.phone) return null
@@ -135,7 +169,7 @@ export default function DistributorLandingPage() {
 
       {variant === 'training' && <section className="border-y border-white/10 bg-[#080e24] px-4 py-16 sm:px-6 md:py-24"><div className="mx-auto max-w-6xl"><div className="grid gap-8 md:grid-cols-3">{[['Product mastery','Build confidence with structured product and presentation education.'],['Leadership systems','Learn prospecting, follow-up, communication, media, and duplication.'],['Global community','Join weekly calls and learn alongside leaders across featured markets.']].map(([title,text],i)=><article key={title} className="rounded-3xl border border-white/10 bg-white/[0.04] p-7"><div className="mb-5 flex h-11 w-11 items-center justify-center rounded-xl bg-cyan-400/10 text-cyan-300">{i===0?<PlayCircle />:i===1?<BookOpen />:<ShieldCheck />}</div><h3 className="text-xl font-bold">{title}</h3><p className="mt-3 text-sm leading-6 text-slate-400">{text}</p></article>)}</div><div className="mt-10 flex flex-col items-center rounded-3xl border border-cyan-400/20 bg-cyan-400/[0.06] p-8 text-center"><h2 className="text-3xl font-black">Preview the system. Join through your distributor.</h2><p className="mt-4 max-w-2xl text-slate-300">Training content remains protected by the current team access code. Submit your interest through {profile?.display_name} to learn about access and team support.</p><div className="mt-7 flex flex-col gap-3 sm:flex-row"><Link to={applyUrl} className="rounded-xl bg-cyan-500 px-6 py-3 font-bold hover:bg-cyan-400">Request training information</Link><Link to="/training" className="rounded-xl border border-white/15 px-6 py-3 font-bold hover:bg-white/5">Training login</Link></div></div></div></section>}
 
-      {variant === 'events' && <section className="border-y border-white/10 bg-[#080e24] px-4 py-16 sm:px-6 md:py-24"><div className="mx-auto max-w-6xl"><div className="mb-10 text-center"><p className="text-xs font-bold uppercase tracking-[0.24em] text-cyan-300">Choose your weekly call</p><h2 className="mt-3 text-3xl font-black sm:text-4xl">Meet True Legacy live.</h2><p className="mx-auto mt-4 max-w-2xl text-slate-300">Join directly on Zoom, then follow up with {profile?.display_name} for personalized support.</p></div><div className="grid gap-8 lg:grid-cols-2">{UPCOMING_EVENTS.slice().reverse().map(event => { const isSpanishEvent = event.id === 'latam-tuesday-weekly'; const joinUrl = event.joinUrl || event.registerUrl; return <article key={event.id} className="overflow-hidden rounded-3xl border border-white/10 bg-white/[0.04]"><img src={isSpanishEvent ? event.latamImage || event.image : event.image} alt={isSpanishEvent ? 'LATAM Spanish weekly call' : 'Global English weekly call'} className="h-56 w-full object-cover object-top sm:h-72" /><div className="p-7"><p className="text-xs font-bold uppercase tracking-[0.2em] text-cyan-300">{isSpanishEvent ? 'Spanish · Español' : 'English'}</p><h3 className="mt-2 text-2xl font-black">{isSpanishEvent ? 'LATAM Spanish Weekly Call' : 'Global English Weekly Call'}</h3><div className="mt-4 flex flex-wrap gap-4 text-sm text-slate-300"><span className="inline-flex items-center gap-2"><CalendarDays className="h-4 w-4 text-cyan-300" />{isSpanishEvent ? 'Every Thursday' : 'Every Wednesday'}</span><span className="inline-flex items-center gap-2"><Clock3 className="h-4 w-4 text-cyan-300" />{isSpanishEvent ? '8:00 p.m.' : '8:30 p.m.'} Eastern</span></div><p className="mt-5 text-sm leading-6 text-slate-400">{isSpanishEvent ? 'Product education, practical team support, and connection with the LATAM community.' : 'Open to members, prospects, and guests for product education, opportunity information, and live questions.'}</p><div className="mt-6 flex flex-col gap-3 sm:flex-row"><a href={joinUrl} target="_blank" rel="noreferrer" className="rounded-xl bg-cyan-500 px-5 py-3 text-center font-bold hover:bg-cyan-400">Join live on Zoom</a><Link to={applyUrl} className="rounded-xl border border-white/15 px-5 py-3 text-center font-bold hover:bg-white/5">Connect with {profile?.display_name}</Link></div></div></article> })}</div></div></section>}
+      {variant === 'events' && <section className="border-y border-white/10 bg-[#080e24] px-4 py-16 sm:px-6 md:py-24"><div className="mx-auto max-w-6xl"><div className="mb-12 text-center"><p className="text-xs font-bold uppercase tracking-[0.24em] text-cyan-300">The two official MehdiCohen.com event presentations</p><h2 className="mt-3 text-3xl font-black sm:text-4xl">Choose your live experience.</h2><p className="mx-auto mt-4 max-w-2xl text-slate-300">Join the English global presentation or the Spanish LATAM presentation, then follow up directly with {profile?.display_name}.</p></div><div className="space-y-12">{MEHDI_EVENT_PAGES.map((event, index) => <article key={event.id} className="grid overflow-hidden rounded-3xl border border-white/10 bg-white/[0.04] lg:grid-cols-2"><div className={index % 2 ? 'lg:order-2' : ''}><img src={event.image} alt={event.imageAlt} className="h-full min-h-[420px] w-full object-cover object-top" /></div><div className="flex flex-col justify-center p-7 sm:p-10"><p className="text-xs font-bold uppercase tracking-[0.2em] text-cyan-300">{event.micro} · {event.language}</p><h3 className="mt-3 text-3xl font-black">{event.headline}</h3><p className="mt-2 text-lg font-bold text-slate-200">{event.subheadline}</p><p className="mt-5 leading-7 text-slate-300">{event.description}</p><div className="mt-6 grid gap-3 rounded-2xl border border-white/10 bg-black/20 p-5 text-sm text-slate-300 sm:grid-cols-2"><span className="inline-flex items-start gap-2"><CalendarDays className="mt-0.5 h-4 w-4 shrink-0 text-cyan-300" />{event.date}</span><span className="inline-flex items-start gap-2"><Clock3 className="mt-0.5 h-4 w-4 shrink-0 text-cyan-300" />{event.time}</span><span>Meeting ID: <strong className="text-white">{event.meetingId}</strong></span><span>Passcode: <strong className="text-white">{event.passcode}</strong></span></div><div className="mt-6 space-y-3">{event.topics.map(topic => <p key={topic} className="flex gap-3 text-sm text-slate-300"><Check className="mt-0.5 h-4 w-4 shrink-0 text-cyan-300" />{topic}</p>)}</div><div className="mt-7 flex flex-col gap-3 sm:flex-row"><a href={event.zoomUrl} target="_blank" rel="noreferrer" className="rounded-xl bg-cyan-500 px-5 py-3 text-center font-bold hover:bg-cyan-400">{event.id === 'latam' ? 'Entrar a Zoom' : 'Join Zoom Meeting'}</a><Link to={applyUrl} className="rounded-xl border border-white/15 px-5 py-3 text-center font-bold hover:bg-white/5">Connect with {profile?.display_name}</Link></div></div></article>)}</div></div></section>}
 
       <section className="px-4 py-16 text-center sm:px-6 md:py-24"><div className="mx-auto max-w-3xl"><h2 className="text-3xl font-black">Ready to continue with {profile?.display_name}?</h2><p className="mt-4 text-slate-300">Your inquiry will be attributed directly to this distributor inside the True Legacy team CRM.</p><div className="mt-7 flex flex-col justify-center gap-3 sm:flex-row">{whatsapp && <a href={whatsapp} target="_blank" rel="noreferrer" className="rounded-xl bg-emerald-500 px-6 py-3 font-bold hover:bg-emerald-400">Message on WhatsApp</a>}<Link to={applyUrl} className="rounded-xl bg-cyan-500 px-6 py-3 font-bold hover:bg-cyan-400">Submit my interest</Link></div><p className="mt-8 text-xs leading-5 text-slate-500">Independent distributor presentation. Product information is educational and not medical advice. Earnings are not guaranteed; individual results vary.</p></div></section>
     </main>
