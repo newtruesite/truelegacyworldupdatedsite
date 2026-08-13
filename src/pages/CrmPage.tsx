@@ -2,7 +2,7 @@ import { SEO } from '@/components/SEO'
 import { addLeadNote, assignLead, crmConfigured, crmSupabase, getCrmDistributors, getCrmLeads, getCrmMembership, getLeadNotes, updateLeadStatus } from '@/lib/crm'
 import type { CrmDistributor, CrmLead, CrmLeadNote, CrmMembership, LeadStatus } from '@/lib/crm'
 import type { Session } from '@supabase/supabase-js'
-import { ChevronDown, ChevronUp, Download, LogOut, MessageCircle, Search, ShieldCheck, UserRoundCheck, Users } from 'lucide-react'
+import { BellRing, CalendarClock, ChevronDown, ChevronUp, Copy, Download, ExternalLink, Filter, LogOut, Mail, MessageCircle, Search, ShieldCheck, UserRoundCheck, Users } from 'lucide-react'
 import { useEffect, useMemo, useState } from 'react'
 import type { FormEvent } from 'react'
 
@@ -25,6 +25,8 @@ export default function CrmPage() {
   const [expanded, setExpanded] = useState<string | null>(null)
   const [search, setSearch] = useState('')
   const [statusFilter, setStatusFilter] = useState('all')
+  const [interestFilter, setInterestFilter] = useState('all')
+  const [attentionFilter, setAttentionFilter] = useState<'all' | 'new' | 'due'>('all')
   const [loading, setLoading] = useState(true)
   const [working, setWorking] = useState('')
   const [message, setMessage] = useState('')
@@ -75,10 +77,12 @@ export default function CrmPage() {
     const query = search.trim().toLowerCase()
     return leads.filter((lead) => {
       const matchesStatus = statusFilter === 'all' || lead.status === statusFilter
+      const matchesInterest = interestFilter === 'all' || lead.interest === interestFilter
+      const matchesAttention = attentionFilter === 'all' || (attentionFilter === 'new' ? lead.status === 'new' : Boolean(lead.next_follow_up_at && new Date(lead.next_follow_up_at) <= new Date()))
       const haystack = [lead.full_name, lead.email, lead.phone, lead.country, lead.interest, lead.referrer_name, lead.referral_code].join(' ').toLowerCase()
-      return matchesStatus && (!query || haystack.includes(query))
+      return matchesStatus && matchesInterest && matchesAttention && (!query || haystack.includes(query))
     })
-  }, [leads, search, statusFilter])
+  }, [leads, search, statusFilter, interestFilter, attentionFilter])
 
   const sendMagicLink = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
@@ -168,6 +172,34 @@ export default function CrmPage() {
     finally { setWorking('') }
   }
 
+  const scheduleFollowUp = async (event: FormEvent<HTMLFormElement>, lead: CrmLead) => {
+    event.preventDefault()
+    const form = event.currentTarget
+    const value = String(new FormData(form).get('followUp') || '')
+    const nextFollowUp = value ? new Date(value).toISOString() : null
+    setWorking(lead.id)
+    try {
+      await updateLeadStatus(lead.id, lead.status, nextFollowUp)
+      setLeads(current => current.map(item => item.id === lead.id ? { ...item, next_follow_up_at: nextFollowUp } : item))
+      setMessage(nextFollowUp ? `Follow-up scheduled for ${lead.full_name}.` : `Follow-up cleared for ${lead.full_name}.`)
+    } catch { setMessage('The follow-up date could not be saved.') }
+    finally { setWorking('') }
+  }
+
+  const recordOutreach = async (lead: CrmLead, channel: 'WhatsApp' | 'Email', landingUrl: string) => {
+    try {
+      await addLeadNote(lead.id, `${channel} nurture message prepared · ${landingUrl}`)
+      if (notes[lead.id]) {
+        const leadNotes = await getLeadNotes(lead.id)
+        setNotes(current => ({ ...current, [lead.id]: leadNotes }))
+      }
+      if (lead.status === 'new') {
+        await updateLeadStatus(lead.id, 'contacted', lead.next_follow_up_at)
+        setLeads(current => current.map(item => item.id === lead.id ? { ...item, status: 'contacted' } : item))
+      }
+    } catch { /* Opening the distributor's message should not be blocked by history logging. */ }
+  }
+
   const exportCsv = () => {
     const header = ['Submitted', 'Name', 'Email', 'Phone', 'Country', 'Interest', 'Referrer', 'Referral code', 'Attribution', 'Assigned distributor', 'Status', 'Consent time']
     const rows = filtered.map(lead => [lead.submitted_at, lead.full_name, lead.email, lead.phone, lead.country, lead.interest, lead.referrer_name, lead.referral_code, lead.attribution_method, distributors.find(item => item.id === lead.assigned_distributor_id)?.display_name || '', lead.status, lead.consent_at])
@@ -181,6 +213,7 @@ export default function CrmPage() {
   }
 
   const assignedName = (id: string | null) => distributors.find(item => item.id === id)?.display_name || 'Unassigned'
+  const assignedDistributor = (lead: CrmLead) => distributors.find(item => item.id === lead.assigned_distributor_id)
 
   if (!crmConfigured) return <CrmMessage title="CRM connection required" body="The secure CRM interface is ready, but this preview is not connected to its dedicated Supabase project yet." />
   if (loading && !session) return <div className="min-h-screen bg-[#060b1e]" />
@@ -200,6 +233,8 @@ export default function CrmPage() {
           <div className="flex flex-col items-start gap-3"><details className="w-full max-w-sm rounded-xl border border-white/15 bg-white/[0.03] p-3"><summary className="cursor-pointer text-sm text-cyan-200">Change my password</summary><form onSubmit={changePassword} className="mt-3 grid gap-2"><input required minLength={12} name="newPassword" type="password" autoComplete="new-password" placeholder="New password (12+ characters)" className="h-10 rounded-lg border border-white/10 bg-black/20 px-3 text-sm outline-none focus:border-cyan-400" /><input required minLength={12} name="confirmPassword" type="password" autoComplete="new-password" placeholder="Confirm new password" className="h-10 rounded-lg border border-white/10 bg-black/20 px-3 text-sm outline-none focus:border-cyan-400" /><button className="h-10 rounded-lg bg-cyan-500 text-sm font-bold">Update password</button>{accountMessage && <p role="status" className="text-xs text-cyan-100">{accountMessage}</p>}</form></details><button onClick={() => crmSupabase?.auth.signOut()} className="inline-flex items-center gap-2 self-start rounded-xl border border-white/15 px-4 py-3 text-sm text-slate-300 hover:bg-white/5"><LogOut className="h-4 w-4" /> Sign out</button></div>
         </header>
 
+        {(newCount > 0 || dueCount > 0) && <section className="mt-7 flex flex-col gap-3 rounded-2xl border border-cyan-400/20 bg-cyan-400/[0.06] p-5 sm:flex-row sm:items-center sm:justify-between"><div className="flex items-start gap-3"><BellRing className="mt-0.5 h-5 w-5 text-cyan-300" /><div><p className="font-bold">Your lead alerts</p><p className="mt-1 text-sm text-slate-300">{newCount} new lead{newCount === 1 ? '' : 's'} · {dueCount} follow-up{dueCount === 1 ? '' : 's'} due</p></div></div><div className="flex gap-2"><button onClick={() => setAttentionFilter('new')} className="rounded-lg border border-white/15 px-3 py-2 text-xs hover:bg-white/10">Show new</button><button onClick={() => setAttentionFilter('due')} className="rounded-lg border border-white/15 px-3 py-2 text-xs hover:bg-white/10">Show due</button></div></section>}
+
         <section className="mt-7 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
           <Metric icon={<Users className="h-5 w-5" />} value={leads.length} label="Accessible leads" />
           <Metric icon={<UserRoundCheck className="h-5 w-5" />} value={newCount} label="New leads" />
@@ -209,13 +244,13 @@ export default function CrmPage() {
 
         <section className="mt-6 overflow-hidden rounded-2xl border border-white/10 bg-white/[0.03]">
           <div className="flex flex-col gap-3 border-b border-white/10 p-4 lg:flex-row lg:items-center lg:justify-between">
-            <div className="flex flex-1 flex-col gap-3 sm:flex-row"><label className="flex h-11 flex-1 items-center gap-3 rounded-xl border border-white/10 bg-black/20 px-4 sm:max-w-md"><Search className="h-4 w-4 text-slate-500" /><input value={search} onChange={event => setSearch(event.target.value)} placeholder="Search leads" className="w-full bg-transparent text-sm outline-none" /></label><select value={statusFilter} onChange={event => setStatusFilter(event.target.value)} className="h-11 rounded-xl border border-white/10 bg-[#0a1020] px-4 text-sm"><option value="all">All statuses</option>{STATUSES.map(status => <option key={status} value={status}>{status}</option>)}</select></div>
+            <div className="flex flex-1 flex-col gap-3 xl:flex-row"><label className="flex h-11 flex-1 items-center gap-3 rounded-xl border border-white/10 bg-black/20 px-4 xl:max-w-sm"><Search className="h-4 w-4 text-slate-500" /><input value={search} onChange={event => setSearch(event.target.value)} placeholder="Search leads" className="w-full bg-transparent text-sm outline-none" /></label><label className="flex items-center gap-2"><Filter className="h-4 w-4 text-slate-500" /><select value={statusFilter} onChange={event => setStatusFilter(event.target.value)} className="h-11 rounded-xl border border-white/10 bg-[#0a1020] px-3 text-sm"><option value="all">All statuses</option>{STATUSES.map(status => <option key={status} value={status}>{status}</option>)}</select></label><select value={interestFilter} onChange={event => setInterestFilter(event.target.value)} className="h-11 rounded-xl border border-white/10 bg-[#0a1020] px-3 text-sm"><option value="all">All interests</option>{['product','duo','distributor','training','events'].map(interest => <option key={interest} value={interest}>{interest}</option>)}</select><select value={attentionFilter} onChange={event => setAttentionFilter(event.target.value as 'all' | 'new' | 'due')} className="h-11 rounded-xl border border-white/10 bg-[#0a1020] px-3 text-sm"><option value="all">All attention</option><option value="new">New leads</option><option value="due">Follow-ups due</option></select></div>
             <button onClick={exportCsv} disabled={!filtered.length} className="inline-flex h-11 items-center justify-center gap-2 rounded-xl border border-cyan-400/30 px-4 text-sm font-bold text-cyan-200 disabled:opacity-40"><Download className="h-4 w-4" /> Export CSV</button>
           </div>
           {message && <p role="alert" className="border-b border-amber-400/20 bg-amber-400/10 px-5 py-3 text-sm text-amber-100">{message}</p>}
           <div className="overflow-x-auto"><table className="w-full min-w-[1120px] text-left text-sm"><thead className="bg-black/20 text-[10px] uppercase tracking-wider text-slate-500"><tr>{['Submitted', 'Lead', 'Interest', 'Attribution', 'Assigned to', 'Status', 'Contact', 'Details'].map(label => <th key={label} className="px-5 py-4 font-medium">{label}</th>)}</tr></thead><tbody className="divide-y divide-white/10">{filtered.map(lead => [
             <tr key={lead.id}><td className="whitespace-nowrap px-5 py-4 text-slate-400">{new Date(lead.submitted_at).toLocaleString()}</td><td className="px-5 py-4"><p className="font-bold">{lead.full_name}</p><a href={`mailto:${lead.email}`} className="text-xs text-cyan-300">{lead.email}</a><p className="mt-1 text-xs text-slate-500">{lead.country}</p></td><td className="px-5 py-4 capitalize">{lead.interest}</td><td className="px-5 py-4"><p className="capitalize">{lead.attribution_method.replaceAll('_', ' ')}</p><p className="mt-1 text-xs text-slate-500">{lead.referrer_name || lead.referral_code || '—'}</p></td><td className="px-5 py-4">{membership?.role === 'admin' ? <select disabled={working === lead.id} value={lead.assigned_distributor_id || ''} onChange={event => changeAssignment(lead.id, event.target.value)} className="rounded-lg border border-white/10 bg-[#0a1020] px-3 py-2 text-xs"><option value="">Unassigned</option>{distributors.filter(item => item.active).map(item => <option key={item.id} value={item.id}>{item.display_name}</option>)}</select> : assignedName(lead.assigned_distributor_id)}</td><td className="px-5 py-4"><select disabled={working === lead.id} value={lead.status} onChange={event => changeStatus(lead, event.target.value as LeadStatus)} className={`rounded-lg border border-white/10 px-3 py-2 text-xs capitalize ${STATUS_STYLES[lead.status]}`}>{STATUSES.map(status => <option className="bg-[#0a1020] text-white" key={status} value={status}>{status}</option>)}</select></td><td className="px-5 py-4"><div className="flex gap-2"><a href={`mailto:${lead.email}`} className="rounded-lg border border-white/10 px-3 py-2 text-xs hover:text-cyan-200">Email</a>{lead.phone && <a href={`https://wa.me/${lead.phone.replace(/\D/g, '')}`} target="_blank" rel="noreferrer" className="rounded-lg border border-emerald-400/20 px-3 py-2 text-xs text-emerald-200">WhatsApp</a>}</div></td><td className="px-5 py-4"><button onClick={() => toggleDetails(lead.id)} className="inline-flex items-center gap-2 rounded-lg border border-white/10 px-3 py-2 text-xs">View {expanded === lead.id ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}</button></td></tr>,
-            expanded === lead.id ? <tr key={`${lead.id}-details`}><td colSpan={8} className="bg-black/20 p-5"><div className="grid gap-5 lg:grid-cols-[1fr_1fr]"><div className="grid gap-3 sm:grid-cols-2"><Detail label="Phone" value={lead.phone} /><Detail label="Referral code" value={lead.referral_code} /><Detail label="Referrer" value={lead.referrer_name} /><Detail label="Consent" value={new Date(lead.consent_at).toLocaleString()} /><Detail label="Source" value={lead.source_path} /><Detail label="Language" value={lead.locale.toUpperCase()} /></div><div><h3 className="text-sm font-bold">Team notes</h3><form onSubmit={event => saveNote(event, lead.id)} className="mt-3 flex gap-2"><textarea required name="note" maxLength={3000} placeholder="Add a follow-up note" className="min-h-20 flex-1 rounded-xl border border-white/10 bg-black/20 p-3 text-sm outline-none focus:border-cyan-400" /><button disabled={working === lead.id} className="self-end rounded-xl bg-cyan-500 px-4 py-3 text-sm font-bold">Save</button></form><div className="mt-3 space-y-2">{(notes[lead.id] || []).map(note => <div key={note.id} className="rounded-xl border border-white/10 p-3"><p className="text-sm text-slate-300">{note.body}</p><p className="mt-2 text-[10px] text-slate-500">{new Date(note.created_at).toLocaleString()}</p></div>)}{notes[lead.id]?.length === 0 && <p className="text-xs text-slate-500">No notes yet.</p>}</div></div></div></td></tr> : null,
+            expanded === lead.id ? <tr key={`${lead.id}-details`}><td colSpan={8} className="bg-black/20 p-5"><div className="grid gap-5 xl:grid-cols-[0.8fr_1.2fr_1fr]"><div><h3 className="text-sm font-bold">Lead details</h3><div className="mt-3 grid gap-3 sm:grid-cols-2 xl:grid-cols-1"><Detail label="Phone" value={lead.phone} /><Detail label="Referral code" value={lead.referral_code} /><Detail label="Referrer" value={lead.referrer_name} /><Detail label="Source" value={lead.source_path} /><Detail label="Language" value={lead.locale.toUpperCase()} /></div><form onSubmit={event => scheduleFollowUp(event, lead)} className="mt-4 rounded-xl border border-white/10 p-4"><label className="flex items-center gap-2 text-xs font-bold text-cyan-200"><CalendarClock className="h-4 w-4" />Next follow-up</label><input name="followUp" type="datetime-local" defaultValue={lead.next_follow_up_at ? new Date(new Date(lead.next_follow_up_at).getTime() - new Date().getTimezoneOffset() * 60000).toISOString().slice(0,16) : ''} className="mt-3 h-10 w-full rounded-lg border border-white/10 bg-[#0a1020] px-3 text-xs" /><button disabled={working === lead.id} className="mt-3 w-full rounded-lg bg-cyan-500 px-3 py-2 text-xs font-bold">Save follow-up</button></form></div><NurtureCenter lead={lead} distributor={assignedDistributor(lead)} onOpen={recordOutreach} /><div><h3 className="text-sm font-bold">Contact history & notes</h3><form onSubmit={event => saveNote(event, lead.id)} className="mt-3 grid gap-2"><textarea required name="note" maxLength={3000} placeholder="Add a call, WhatsApp, email, or follow-up note" className="min-h-20 rounded-xl border border-white/10 bg-black/20 p-3 text-sm outline-none focus:border-cyan-400" /><button disabled={working === lead.id} className="justify-self-end rounded-xl bg-cyan-500 px-4 py-3 text-sm font-bold">Save note</button></form><div className="mt-3 max-h-72 space-y-2 overflow-y-auto">{(notes[lead.id] || []).map(note => <div key={note.id} className="rounded-xl border border-white/10 p-3"><p className="text-sm text-slate-300">{note.body}</p><p className="mt-2 text-[10px] text-slate-500">{new Date(note.created_at).toLocaleString()}</p></div>)}{notes[lead.id]?.length === 0 && <p className="text-xs text-slate-500">No contact history yet.</p>}</div></div></div></td></tr> : null,
           ])}</tbody></table></div>
           {!loading && !filtered.length && <div className="p-12 text-center text-sm text-slate-500">No leads match this view.</div>}
         </section>
@@ -230,6 +265,51 @@ function Metric({ icon, value, label }: { icon: React.ReactNode; value: number; 
 
 function Detail({ label, value }: { label: string; value: string | null }) {
   return <div className="rounded-xl border border-white/10 bg-white/[0.02] p-4"><p className="text-[10px] uppercase tracking-wider text-slate-500">{label}</p><p className="mt-2 break-words text-sm text-slate-300">{value || '—'}</p></div>
+}
+
+const NURTURE_STEPS: Record<string, Array<{ label: string; campaign: 'duo' | 'business' | 'training' | 'events'; purpose: string }>> = {
+  product: [
+    { label: 'Start with the Duo', campaign: 'duo', purpose: 'product overview and demonstrations' },
+    { label: 'Invite to a live event', campaign: 'events', purpose: 'questions and community' },
+  ],
+  duo: [
+    { label: 'Share the Duo', campaign: 'duo', purpose: 'K8 and emGuarde GO demonstrations' },
+    { label: 'Invite to a live event', campaign: 'events', purpose: 'questions and next steps' },
+  ],
+  distributor: [
+    { label: 'Share the business page', campaign: 'business', purpose: 'business model and duplication' },
+    { label: 'Show the training system', campaign: 'training', purpose: 'team support and development' },
+    { label: 'Invite to a live event', campaign: 'events', purpose: 'live presentation and questions' },
+  ],
+  training: [
+    { label: 'Show the training system', campaign: 'training', purpose: 'training and leadership support' },
+    { label: 'Share the business page', campaign: 'business', purpose: 'duplication and community' },
+  ],
+  events: [
+    { label: 'Invite to a live event', campaign: 'events', purpose: 'the next live presentation' },
+    { label: 'Follow with the Duo', campaign: 'duo', purpose: 'product demonstrations' },
+  ],
+}
+
+function nurtureMessage(lead: CrmLead, distributor: CrmDistributor, campaign: string, url: string) {
+  const firstName = lead.full_name.trim().split(/\s+/)[0]
+  if (lead.locale === 'es') return `Hola ${firstName}, soy ${distributor.display_name} de True Legacy. Gracias por tu interés. Preparé esta información sobre ${campaign === 'duo' ? 'K8 y emGuarde GO' : campaign === 'business' ? 'el modelo de negocio' : campaign === 'training' ? 'nuestro sistema de entrenamiento' : 'nuestros eventos en vivo'} para ti: ${url}\n\nRevísala cuando puedas y dime qué preguntas tienes.`
+  if (lead.locale === 'pt') return `Olá ${firstName}, sou ${distributor.display_name} da True Legacy. Obrigado pelo seu interesse. Preparei estas informações para você: ${url}\n\nVeja quando puder e me diga quais perguntas você tem.`
+  if (lead.locale === 'fr') return `Bonjour ${firstName}, je suis ${distributor.display_name} de True Legacy. Merci pour votre intérêt. J'ai préparé ces informations pour vous : ${url}\n\nConsultez-les quand vous pourrez et dites-moi quelles questions vous avez.`
+  return `Hi ${firstName}, this is ${distributor.display_name} with True Legacy. Thanks for your interest. I prepared this information for you: ${url}\n\nTake a look when you can and let me know what questions you have.`
+}
+
+function NurtureCenter({ lead, distributor, onOpen }: { lead: CrmLead; distributor?: CrmDistributor; onOpen: (lead: CrmLead, channel: 'WhatsApp' | 'Email', landingUrl: string) => void }) {
+  const [copied, setCopied] = useState('')
+  if (!distributor) return <div className="rounded-2xl border border-amber-400/20 bg-amber-400/[0.05] p-5"><h3 className="font-bold">Nurture center</h3><p className="mt-2 text-sm text-slate-400">Assign this lead to a distributor before sending personalized landing pages.</p></div>
+  const steps = NURTURE_STEPS[lead.interest] || NURTURE_STEPS.product
+  return <div><h3 className="text-sm font-bold">Recommended nurture path</h3><p className="mt-1 text-xs text-slate-500">Based on interest: <span className="capitalize text-cyan-200">{lead.interest}</span></p><div className="mt-3 space-y-3">{steps.map((step, index) => {
+    const landingUrl = `${window.location.origin}/d/${distributor.slug}/${step.campaign}`
+    const text = nurtureMessage(lead, distributor, step.campaign, landingUrl)
+    const whatsAppUrl = lead.phone ? `https://wa.me/${lead.phone.replace(/\D/g, '')}?text=${encodeURIComponent(text)}` : ''
+    const emailUrl = `mailto:${lead.email}?subject=${encodeURIComponent(`Information from ${distributor.display_name} · True Legacy`)}&body=${encodeURIComponent(text)}`
+    return <article key={step.campaign} className="rounded-xl border border-white/10 bg-white/[0.02] p-4"><p className="text-[10px] font-bold uppercase tracking-wider text-cyan-300">Step {index + 1}</p><p className="mt-1 font-bold">{step.label}</p><p className="mt-1 text-xs text-slate-500">{step.purpose}</p><div className="mt-3 flex flex-wrap gap-2">{whatsAppUrl && <a href={whatsAppUrl} target="_blank" rel="noreferrer" onClick={() => onOpen(lead, 'WhatsApp', landingUrl)} className="inline-flex items-center gap-1.5 rounded-lg border border-emerald-400/25 px-3 py-2 text-xs text-emerald-200"><MessageCircle className="h-3.5 w-3.5" />WhatsApp</a>}<a href={emailUrl} onClick={() => onOpen(lead, 'Email', landingUrl)} className="inline-flex items-center gap-1.5 rounded-lg border border-cyan-400/25 px-3 py-2 text-xs text-cyan-200"><Mail className="h-3.5 w-3.5" />Email</a><button onClick={async () => { await navigator.clipboard.writeText(text); setCopied(step.campaign); window.setTimeout(() => setCopied(''), 1500) }} className="inline-flex items-center gap-1.5 rounded-lg border border-white/10 px-3 py-2 text-xs"><Copy className="h-3.5 w-3.5" />{copied === step.campaign ? 'Copied' : 'Copy'}</button><a href={landingUrl} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1.5 rounded-lg border border-white/10 px-3 py-2 text-xs"><ExternalLink className="h-3.5 w-3.5" />Preview</a></div></article>
+  })}</div></div>
 }
 
 function CrmLogin({ onPasswordSubmit, onMagicLinkSubmit, message }: { onPasswordSubmit: (event: FormEvent<HTMLFormElement>) => void; onMagicLinkSubmit: (event: FormEvent<HTMLFormElement>) => void; message: string }) {
