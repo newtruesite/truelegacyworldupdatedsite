@@ -138,7 +138,7 @@ const LEADERS = [
     {
         id: 8,
         name: 'Emanuela Doustova',
-        profileUrl: '/d/emanuela-doustova',
+        profileUrl: '/d/emanuela',
         handle: '@emanuelabraj',
         instagramUrl: 'https://www.instagram.com/emanuelabraj/',
         region: 'USA',

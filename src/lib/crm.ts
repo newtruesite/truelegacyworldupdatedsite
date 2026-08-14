@@ -157,8 +157,8 @@ const FALLBACK_DISTRIBUTORS: PublicDistributor[] = [
   },
   {
     id: 'preview-emanuela',
-    slug: 'emanuela-doustova',
-    referral_code: 'emanuela-doustova',
+    slug: 'emanuela',
+    referral_code: 'emanuela',
     display_name: 'Emanuela Doustova',
     title: 'True Legacy Distributor',
     bio: 'Profile details coming soon.',
