@@ -94,8 +94,8 @@ export default function DistributorProfilePage() {
               {item.visual === 'events' && <>
                 <div className="absolute inset-0 bg-[radial-gradient(circle_at_75%_50%,rgba(245,158,11,0.18),transparent_42%),linear-gradient(135deg,#07142f,#0a2550)]" />
                 <div className="absolute inset-x-[8%] bottom-3 top-3 flex items-center justify-center gap-3 sm:gap-4">
-                  <img src="/assets/event-global-flyer-UKa8W2ck.jpg" alt="True Legacy global English event" className="h-[92%] min-w-0 flex-1 rounded-lg object-contain drop-shadow-[0_16px_24px_rgba(0,0,0,0.45)] transition duration-700 group-hover:-translate-y-1 group-hover:-rotate-1" />
-                  <img src="/assets/event-latam-flyer.png" alt="True Legacy LATAM Spanish event" className="h-[92%] min-w-0 flex-1 rounded-lg object-contain drop-shadow-[0_16px_24px_rgba(0,0,0,0.45)] transition duration-700 group-hover:-translate-y-1 group-hover:rotate-1" />
+                  <img src="/assets/mehdicohen-global-weekly.png" alt="Unlock Your True Legacy global English event" className="h-[92%] min-w-0 flex-1 rounded-lg object-contain drop-shadow-[0_16px_24px_rgba(0,0,0,0.45)] transition duration-700 group-hover:-translate-y-1 group-hover:-rotate-1" />
+                  <img src="/assets/mehdicohen-latam-weekly.png" alt="La Revolución del Biohacking LATAM Spanish event" className="h-[92%] min-w-0 flex-1 rounded-lg object-contain drop-shadow-[0_16px_24px_rgba(0,0,0,0.45)] transition duration-700 group-hover:-translate-y-1 group-hover:rotate-1" />
                 </div>
                 <div className="absolute inset-0 bg-gradient-to-r from-[#071126]/50 via-transparent to-[#071126]/10" />
                 <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-[#0a1229]/80 to-transparent" />
