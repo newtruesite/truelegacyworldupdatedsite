@@ -168,17 +168,32 @@ const FALLBACK_DISTRIBUTORS: PublicDistributor[] = [
     phone: '+1 (818) 858-8585',
     instagram_url: 'https://www.instagram.com/emanuelabraj/',
   },
+  {
+    id: 'preview-jesse',
+    slug: 'jesse-schexnayder',
+    referral_code: 'jesse-hotshotz',
+    display_name: 'Jesse Schexnayder',
+    title: 'True Legacy Distributor',
+    bio: "You could say I am a serial entrepreneur. Most know me for my latest venture, HotShotz Reusable Heat Packs. I have a love for life and the universe, and I’m the CEO of Let’s Go!!",
+    avatar_url: '/leaders/standardized/jesse-schexnayder.png',
+    regions: ['USA'],
+    languages: ['en'],
+    phone: '+1 (916) 214-6943',
+    instagram_url: null,
+  },
 ]
 
 export async function getPublicDistributors(): Promise<PublicDistributor[]> {
   if (!crmSupabase) return FALLBACK_DISTRIBUTORS
   const { data, error } = await crmSupabase.rpc('get_public_crm_distributors')
   if (error || !Array.isArray(data)) return FALLBACK_DISTRIBUTORS
-  return (data as PublicDistributor[]).map(profile => {
-    if (!['mehdi-cohen', 'simon-loh', 'ming-way-sia', 'zah-naderi'].includes(profile.slug)) return profile
+  const remoteDistributors = (data as PublicDistributor[]).map(profile => {
+    if (!['mehdi-cohen', 'simon-loh', 'ming-way-sia', 'zah-naderi', 'jesse-schexnayder'].includes(profile.slug)) return profile
     const confirmed = FALLBACK_DISTRIBUTORS.find(item => item.slug === profile.slug)
     return confirmed ? { ...profile, ...confirmed, id: profile.id } : profile
   })
+  const remoteSlugs = new Set(remoteDistributors.map(profile => profile.slug))
+  return [...remoteDistributors, ...FALLBACK_DISTRIBUTORS.filter(profile => !remoteSlugs.has(profile.slug))]
 }
 
 export async function submitCrmApplication(payload: Record<string, unknown>) {
