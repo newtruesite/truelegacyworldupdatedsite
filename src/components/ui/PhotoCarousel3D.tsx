@@ -93,6 +93,7 @@ const LEADERS = [
             'My focus is on helping people move beyond traditional career limitations by applying practical, disciplined, and proven business strategies. Through speaking, mentoring, and direct collaboration, I work with individuals who want to build more intentional, flexible, and sustainable professional lives.',
         ],
         image: '/leaders/standardized/simon-loh.png',
+        imageTransform: 'scale(1.13) translateY(-2.5%)',
         icon: Star,
         gradient: 'from-cyan-600 to-blue-700',
         glow: 'rgba(6,182,212,0.5)',
@@ -154,6 +155,7 @@ const LEADERS = [
 
 export function PhotoCarousel3D() {
     const [active, setActive] = useState(0)
+    const [compact, setCompact] = useState(() => typeof window !== 'undefined' && window.innerWidth < 768)
     const count = LEADERS.length
 
     const prev = () => {
@@ -165,31 +167,36 @@ export function PhotoCarousel3D() {
     }
 
     useEffect(() => {
-        const t = setInterval(next, 5000)
-        return () => clearInterval(t)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        const onResize = () => setCompact(window.innerWidth < 768)
+        window.addEventListener('resize', onResize)
+        return () => window.removeEventListener('resize', onResize)
     }, [])
+
+    useEffect(() => {
+        const t = window.setTimeout(() => setActive((a) => (a + 1) % count), 6500)
+        return () => window.clearTimeout(t)
+    }, [active, count])
 
     const getCardStyle = (idx: number) => {
         const diff = ((idx - active + count) % count + count) % count
         const normDiff = diff > count / 2 ? diff - count : diff
 
-        if (normDiff === 0) return { zIndex: 10, x: '0%', scale: 1, opacity: 1, rotateY: 0 }
+        if (normDiff === 0) return { zIndex: 10, x: compact ? '0%' : '72%', scale: compact ? 1 : 1.08, opacity: 1, rotateY: 0 }
         if (normDiff === 1 || normDiff === -1) {
             return {
                 zIndex: 5,
-                x: normDiff > 0 ? '55%' : '-55%',
-                scale: 0.82,
-                opacity: 0.6,
-                rotateY: normDiff > 0 ? -18 : 18,
+                x: compact ? (normDiff > 0 ? '55%' : '-55%') : (normDiff > 0 ? '-20%' : '-72%'),
+                scale: compact ? 0.82 : 0.79,
+                opacity: compact ? 0.6 : 0.72,
+                rotateY: normDiff > 0 ? -12 : 12,
             }
         }
         return {
             zIndex: 1,
-            x: normDiff > 0 ? '90%' : '-90%',
-            scale: 0.65,
-            opacity: 0.2,
-            rotateY: normDiff > 0 ? -28 : 28,
+            x: compact ? (normDiff > 0 ? '90%' : '-90%') : (normDiff > 0 ? '-78%' : '-108%'),
+            scale: compact ? 0.65 : 0.61,
+            opacity: compact ? 0.2 : 0.16,
+            rotateY: normDiff > 0 ? -20 : 20,
         }
     }
 
@@ -199,7 +206,7 @@ export function PhotoCarousel3D() {
         <div className="w-full px-4 md:px-8 pb-12 overflow-visible" style={{ touchAction: 'pan-y' }}>
             {/* 3D Stage */}
             <div
-                className="relative mx-auto overflow-hidden h-[380px] sm:h-[440px]"
+                className="relative mx-auto h-[390px] max-w-6xl overflow-hidden sm:h-[470px]"
                 style={{ perspective: '1200px' }}
             >
                 {LEADERS.map((leader, idx) => {
@@ -215,7 +222,7 @@ export function PhotoCarousel3D() {
                                 rotateY: style.rotateY,
                                 zIndex: style.zIndex,
                             }}
-                            transition={{ type: 'spring', stiffness: 300, damping: 35 }}
+                            transition={{ type: 'spring', stiffness: 170, damping: 26, mass: 0.9 }}
                             className="absolute top-0 left-1/2 w-[280px] sm:w-[320px] -translate-x-1/2 cursor-pointer"
                             onClick={() => {
                                 if (idx !== active) {
@@ -234,6 +241,7 @@ export function PhotoCarousel3D() {
                                         src={leader.image}
                                         alt={leader.name}
                                         className="absolute inset-0 w-full h-full object-cover object-top"
+                                        style={{ transform: 'imageTransform' in leader ? leader.imageTransform : undefined }}
                                     />
                                 ) : (
                                     <div className="absolute inset-0 flex items-center justify-center opacity-15">
