@@ -1,0 +1,13 @@
+{
+  "name": "True Legacy Platform",
+  "short_name": "True Legacy",
+  "description": "True Legacy distributor CRM, academy, sharing, and team development platform.",
+  "start_url": "/crm/platform",
+  "display": "standalone",
+  "background_color": "#05091a",
+  "theme_color": "#05091a",
+  "icons": [
+    { "src": "/logos/tl-mark-small.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/logos/tl-square-white.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}
