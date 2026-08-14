@@ -341,13 +341,8 @@ export function TestimonialsSplit({
     <div className="mx-auto w-full max-w-6xl px-3 pb-16 sm:px-6">
       <div className="grid items-center gap-10 lg:grid-cols-[1fr_420px]">
         <div className="order-2 lg:order-1">
-          <p className="text-xs font-bold uppercase tracking-[.28em] text-cyan-300">A message shared with True Legacy</p>
-          <h3 className="mt-4 text-3xl font-black text-white sm:text-5xl">It feels different when you hear it in their own words.</h3>
-          <p className="mt-5 max-w-xl text-base leading-7 text-slate-400">Tap through nine original community stories presented as personal conversations. The words remain attributed to the individual who shared them.</p>
-          <div className="mt-7 flex items-center gap-4">
-            <img src={active.image ?? active.photo} alt={active.name} className="h-14 w-14 rounded-2xl border border-white/15 object-cover object-top"/>
-            <div><p className="font-bold text-white">{active.name}</p><a href={active.instagramUrl ?? active.instagram ?? igUrl(active.company)} target="_blank" rel="noreferrer" className="text-sm text-cyan-300 hover:text-cyan-200">{active.handle ?? igHandle(active.company)} {active.verified ? '✓' : ''}</a></div>
-          </div>
+          <p className="text-xs font-bold uppercase tracking-[.28em] text-cyan-300">Story {activeIndex + 1} of {list.length} · shared with True Legacy</p>
+          <AnimatePresence mode="wait"><motion.div key={active.id} initial={{opacity:0,y:16}} animate={{opacity:1,y:0}} exit={{opacity:0,y:-16}} className="mt-5 overflow-hidden rounded-[2rem] border border-white/10 bg-[linear-gradient(145deg,rgba(14,165,233,.12),rgba(255,255,255,.03))] p-5 sm:p-7"><div className="grid items-center gap-6 sm:grid-cols-[190px_1fr]"><div className="relative mx-auto aspect-[4/5] w-full max-w-[210px] overflow-hidden rounded-[1.5rem] border border-white/15 bg-slate-900"><img src={active.image ?? active.photo} alt={active.name} className="h-full w-full object-cover object-top"/><div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/90 to-transparent p-4 pt-14"><p className="font-bold text-white">{active.name}</p><p className="text-xs text-cyan-200">Community voice</p></div></div><div><div className="inline-flex rounded-full border border-emerald-400/20 bg-emerald-400/10 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-emerald-300">Original story</div><h3 className="mt-4 text-3xl font-black text-white">A real person.<br/><span className="text-cyan-300">A personal message.</span></h3><p className="mt-4 text-sm leading-6 text-slate-400">Read the story as a conversation, then move to the next member of the community.</p><a href={active.instagramUrl ?? active.instagram ?? igUrl(active.company)} target="_blank" rel="noreferrer" className="mt-5 inline-flex text-sm font-bold text-cyan-300 hover:text-cyan-200">{active.handle ?? igHandle(active.company)} {active.verified ? '✓' : ''}</a></div></div></motion.div></AnimatePresence>
           <div className="mt-8 flex flex-wrap items-center gap-3">
             <button onClick={prevTestimonial} aria-label="Previous testimonial" className="grid h-11 w-11 place-items-center rounded-full border border-white/10 bg-white/5 text-white hover:bg-white/10"><ChevronLeft className="h-5 w-5"/></button>
             <div className="flex flex-wrap gap-1.5">{list.map((item,index)=><button key={item.id} onClick={(event)=>{event.stopPropagation();setActiveIndex(index)}} aria-label={`Open testimonial from ${item.name}`} className={`h-2 rounded-full transition-all ${index===activeIndex?'w-8 bg-cyan-400':'w-2 bg-white/20 hover:bg-white/40'}`}/>)}</div>
@@ -358,19 +353,19 @@ export function TestimonialsSplit({
         <div className="order-1 mx-auto w-full max-w-[390px] lg:order-2" onMouseEnter={()=>setIsHovering(true)} onMouseLeave={()=>setIsHovering(false)}>
           <div className="relative rounded-[3rem] border-[8px] border-slate-800 bg-black p-1 shadow-[0_35px_90px_rgba(0,0,0,.6),0_0_60px_rgba(14,165,233,.12)]">
             <div className="absolute left-1/2 top-3 z-20 h-6 w-28 -translate-x-1/2 rounded-full bg-black"/>
-            <div className="overflow-hidden rounded-[2.4rem] bg-[#f2f2f7]">
-              <div className="flex h-11 items-center justify-between bg-white/85 px-6 pt-2 text-[11px] font-bold text-slate-900 backdrop-blur"><span>9:41</span><span className="tracking-widest">● ◉ ▰</span></div>
-              <div className="border-b border-slate-200 bg-white/90 px-4 pb-3 pt-2 text-center backdrop-blur">
-                <AnimatePresence mode="wait"><motion.div key={active.id} initial={{opacity:0,y:-6}} animate={{opacity:1,y:0}} exit={{opacity:0,y:6}} className="flex flex-col items-center"><img src={active.image ?? active.photo} alt="" className="h-12 w-12 rounded-full object-cover object-top ring-2 ring-white shadow"/><p className="mt-1 text-sm font-semibold text-slate-900">{active.name}</p><p className="text-[10px] text-slate-500">True Legacy community ›</p></motion.div></AnimatePresence>
+            <div className="overflow-hidden rounded-[2.4rem] bg-[#0b0b0d]">
+              <div className="flex h-11 items-center justify-between bg-[#17171a]/95 px-6 pt-2 text-[11px] font-bold text-white backdrop-blur"><span>9:41</span><span className="tracking-widest text-white/80">● ◉ ▰</span></div>
+              <div className="border-b border-white/10 bg-[#17171a]/95 px-4 pb-3 pt-2 text-center backdrop-blur">
+                <AnimatePresence mode="wait"><motion.div key={active.id} initial={{opacity:0,y:-6}} animate={{opacity:1,y:0}} exit={{opacity:0,y:6}} className="flex flex-col items-center"><img src={active.image ?? active.photo} alt="" className="h-12 w-12 rounded-full object-cover object-top ring-2 ring-white/20 shadow"/><p className="mt-1 text-sm font-semibold text-white">{active.name}</p><p className="text-[10px] text-slate-400">True Legacy community ›</p></motion.div></AnimatePresence>
               </div>
-              <div className="relative h-[510px] overflow-hidden bg-[linear-gradient(180deg,#f7f7fa,#ececf2)] px-3 py-5">
-                <div className="mb-4 text-center text-[10px] font-medium uppercase tracking-wider text-slate-400">Today · personal experience</div>
+              <div className="relative h-[510px] overflow-hidden bg-[linear-gradient(180deg,#0b0b0d,#111117)] px-3 py-5">
+                <div className="mb-4 text-center text-[10px] font-medium uppercase tracking-wider text-slate-500">Today · personal experience</div>
                 <AnimatePresence mode="wait"><motion.div key={active.id} initial={{opacity:0,x:25}} animate={{opacity:1,x:0}} exit={{opacity:0,x:-25}} transition={{duration:.35}} className="space-y-2.5">
-                  <div className="flex justify-start"><div className="max-w-[82%] rounded-[1.25rem] rounded-bl-md bg-white px-4 py-2.5 text-[13px] leading-[1.45] text-slate-900 shadow-sm">Hi True Legacy, I wanted to share my experience…</div></div>
+                  <div className="flex justify-start"><div className="max-w-[82%] rounded-[1.25rem] rounded-bl-md bg-[#2c2c2e] px-4 py-2.5 text-[13px] leading-[1.45] text-white shadow-sm">Hi True Legacy, I wanted to share my experience…</div></div>
                   {messageParts.map((part,index)=><motion.div key={`${active.id}-${index}`} initial={{opacity:0,y:10}} animate={{opacity:1,y:0}} transition={{delay:.12+index*.1}} className="flex justify-end"><div className="max-w-[88%] rounded-[1.25rem] rounded-br-md bg-[#0a84ff] px-4 py-2.5 text-[13px] leading-[1.45] text-white shadow-sm">{part}</div></motion.div>)}
                   <p className="pr-1 text-right text-[10px] text-slate-400">Delivered</p>
                 </motion.div></AnimatePresence>
-                <div className="absolute inset-x-3 bottom-3 flex items-center gap-2 rounded-full border border-slate-300 bg-white/80 p-1.5 pl-4 text-xs text-slate-400 shadow-sm backdrop-blur"><span className="flex-1">Personal story</span><span className="grid h-7 w-7 place-items-center rounded-full bg-[#0a84ff] text-white">↑</span></div>
+                <div className="absolute inset-x-3 bottom-3 flex items-center gap-2 rounded-full border border-white/15 bg-[#1c1c1e]/90 p-1.5 pl-4 text-xs text-slate-500 shadow-sm backdrop-blur"><span className="flex-1">Personal story</span><span className="grid h-7 w-7 place-items-center rounded-full bg-[#0a84ff] text-white">↑</span></div>
               </div>
             </div>
           </div>
