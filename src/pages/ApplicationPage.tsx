@@ -88,6 +88,7 @@ export default function ApplicationPage() {
 
   const referralCode = useMemo(() => new URLSearchParams(location.search).get('ref')?.trim().toLowerCase() || '', [location.search])
   const presetInterest = useMemo(() => new URLSearchParams(location.search).get('interest')?.trim().toLowerCase() || '', [location.search])
+  const presetCountry = useMemo(() => new URLSearchParams(location.search).get('country')?.trim().toLowerCase() || '', [location.search])
   const referralDistributor = distributors.find((item) => item.slug === referralCode || item.referral_code === referralCode)
 
   useEffect(() => {
@@ -155,7 +156,7 @@ export default function ApplicationPage() {
               <label className="text-sm text-slate-300">{t.name}<input required name="fullName" autoComplete="name" minLength={2} maxLength={160} className="mt-2 w-full rounded-xl border border-white/10 bg-black/20 px-4 py-3 text-white focus:border-cyan-400 focus:outline-none" /></label>
               <label className="text-sm text-slate-300">{t.email}<input required type="email" name="email" autoComplete="email" maxLength={254} className="mt-2 w-full rounded-xl border border-white/10 bg-black/20 px-4 py-3 text-white focus:border-cyan-400 focus:outline-none" /></label>
               <label className="text-sm text-slate-300">{t.phone}<input name="phone" autoComplete="tel" maxLength={50} className="mt-2 w-full rounded-xl border border-white/10 bg-black/20 px-4 py-3 text-white focus:border-cyan-400 focus:outline-none" /></label>
-              <label className="text-sm text-slate-300">{t.country}<select required name="country" className="mt-2 w-full rounded-xl border border-white/10 bg-[#0a1020] px-4 py-3 text-white focus:border-cyan-400 focus:outline-none"><option value="">{t.selectCountry}</option>{COUNTRIES.map(country => <option key={country.slug} value={country.slug}>{country.name}</option>)}</select></label>
+              <label className="text-sm text-slate-300">{t.country}<select required name="country" defaultValue={COUNTRIES.some(country => country.slug === presetCountry) ? presetCountry : ''} className="mt-2 w-full rounded-xl border border-white/10 bg-[#0a1020] px-4 py-3 text-white focus:border-cyan-400 focus:outline-none"><option value="">{t.selectCountry}</option>{COUNTRIES.map(country => <option key={country.slug} value={country.slug}>{country.name}</option>)}</select></label>
             </div>
 
             <fieldset><legend className="text-sm font-semibold text-white">{t.interest}</legend><div className="mt-3 grid gap-2">{INTERESTS.map(interest => <label key={interest.value} className="flex items-start gap-3 rounded-xl border border-white/10 px-4 py-3 text-sm text-slate-300"><input required type="radio" name="interest" value={interest.value} defaultChecked={presetInterest === interest.value} className="mt-1" />{interest.labels[locale]}</label>)}</div></fieldset>
