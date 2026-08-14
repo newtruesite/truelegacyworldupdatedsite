@@ -28,6 +28,16 @@ export default function DistributorProfilePage() {
   const title = locale === 'es' ? 'Conecta con este distribuidor' : locale === 'fr' ? 'Contactez ce distributeur' : locale === 'pt' ? 'Conecte-se com este distribuidor' : 'Connect with this distributor'
   const cta = locale === 'es' ? 'Enviar mi interés' : locale === 'fr' ? 'Envoyer ma demande' : locale === 'pt' ? 'Enviar meu interesse' : 'Submit my interest'
   const firstName = profile?.display_name.split(' ')[0] || 'your leader'
+  const profileHeroAssets: Record<string, string> = {
+    'jesse-schexnayder': '/leaders/jesse-hero-transparent.png',
+    'mehdi-cohen': '/leaders/mehdi-hero.png',
+    'simon-loh': '/leaders/simon-hero.png',
+    'ming-way-sia': '/leaders/mingway-hero.png',
+    'zah-naderi': '/leaders/zah-hero.png',
+    'magaly-cardona': '/leaders/magaly-hero.png',
+    'ryan-pool': '/leaders/ryan-hero.png',
+  }
+  const profileHero = profile ? profileHeroAssets[profile.slug] || profile.avatar_url || '/logos/tl-square-white.png' : '/logos/tl-square-white.png'
   const landingPages = [
     { slug: 'business', eyebrow: 'Build', label: 'Explore the business', text: `See how ${firstName} approaches leadership, duplication, and building a legacy-driven business.`, cta: 'See the opportunity', icon: BriefcaseBusiness, visual: 'business' },
     { slug: 'duo', eyebrow: 'Discover', label: 'Meet the True Legacy Duo', text: 'Explore the K8 and emGuarde GO through clear product demonstrations.', cta: 'Explore the Duo', icon: Sparkles, visual: 'duo' },
@@ -55,13 +65,14 @@ export default function DistributorProfilePage() {
           </div>
         </div>
         <div className="relative grid gap-5 md:grid-cols-2">
-          {landingPages.map(item => <Link key={item.slug} to={`/d/${profile.slug}/${item.slug}`} className="group relative flex min-h-[430px] flex-col overflow-hidden rounded-[1.6rem] border border-white/10 bg-[#0a1229] shadow-xl shadow-black/15 transition duration-500 hover:-translate-y-1 hover:border-cyan-300/40 hover:shadow-cyan-950/40">
-            <div className="relative h-44 overflow-hidden border-b border-white/10 bg-[#071126] sm:h-52 lg:h-60">
+          {landingPages.map(item => <Link key={item.slug} to={`/d/${profile.slug}/${item.slug}`} className="group relative flex min-h-[430px] flex-col overflow-hidden rounded-[1.6rem] border border-white/10 bg-gradient-to-b from-[#0c1b39] to-[#091126] shadow-xl shadow-black/15 transition duration-500 hover:-translate-y-1 hover:border-cyan-300/40 hover:shadow-cyan-950/40">
+            <div className="relative h-44 overflow-hidden sm:h-52 lg:h-60">
               {item.visual === 'business' && <>
                 <div className="absolute inset-0 bg-[radial-gradient(circle_at_78%_44%,rgba(34,211,238,0.2),transparent_38%),linear-gradient(135deg,#07142f,#0a2550)]" />
-                <img src={profile.avatar_url || '/logos/tl-square-white.png'} alt="" className="absolute -bottom-[45%] right-[3%] h-[145%] w-auto object-contain transition duration-700 group-hover:scale-[1.04]" />
-                <div className="absolute inset-0 bg-gradient-to-r from-[#06112d] via-[#06112d]/25 to-cyan-950/10" />
-                <div className="absolute inset-x-0 bottom-0 h-12 bg-gradient-to-t from-[#0a1229]/80 to-transparent" />
+                <div aria-hidden="true" className="absolute -right-14 top-2 h-56 w-56 rounded-full border border-cyan-300/15 sm:h-64 sm:w-64" />
+                <img src={profileHero} alt="" className="absolute -bottom-[180px] right-[4%] h-[280px] w-auto object-contain drop-shadow-[0_22px_34px_rgba(0,0,0,0.55)] transition duration-700 group-hover:-translate-y-1 group-hover:scale-[1.04] sm:-bottom-[210px] sm:h-[320px] lg:-bottom-[240px] lg:h-[360px]" />
+                <div className="absolute inset-0 bg-gradient-to-r from-[#06112d] via-[#06112d]/10 to-transparent" />
+                <div className="absolute inset-x-0 bottom-0 h-10 bg-gradient-to-t from-[#0a1229]/70 to-transparent" />
                 <span className="absolute bottom-5 left-5 rounded-full border border-white/20 bg-black/45 px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.18em] text-white backdrop-blur-md">A personal path with {firstName}</span>
               </>}
               {item.visual === 'duo' && <>
@@ -71,15 +82,16 @@ export default function DistributorProfilePage() {
                 <span className="absolute right-5 top-5 rounded-full border border-cyan-200/25 bg-cyan-300/10 px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.18em] text-cyan-100 backdrop-blur-md">Water + environment</span>
               </>}
               {item.visual === 'training' && <>
-                <img src="/leaders/group.png" alt="True Legacy community training" className="absolute inset-0 h-full w-full object-cover object-center transition duration-700 group-hover:scale-[1.04]" />
-                <div className="absolute inset-0 bg-gradient-to-r from-blue-950/35 via-transparent to-[#08142d]/60" />
-                <div className="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-[#0a1229] to-transparent" />
+                <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_82%,rgba(34,211,238,0.18),transparent_46%),linear-gradient(135deg,#07142f,#0a2550)]" />
+                <img src="/leaders/group.png" alt="True Legacy leadership team snapshot" className="absolute inset-x-[3%] bottom-0 h-[94%] w-[94%] object-contain drop-shadow-[0_22px_34px_rgba(0,0,0,0.5)] transition duration-700 group-hover:scale-[1.03]" />
+                <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-[#0a1229]/80 to-transparent" />
                 <span className="absolute bottom-5 left-5 rounded-full border border-white/20 bg-black/45 px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.18em] text-white backdrop-blur-md">Learn · apply · duplicate</span>
               </>}
               {item.visual === 'events' && <>
-                <img src="/assets/event-global-flyer-UKa8W2ck.jpg" alt="True Legacy live event" className="absolute inset-0 h-full w-full object-cover object-[center_18%] transition duration-700 group-hover:scale-[1.04]" />
-                <div className="absolute inset-0 bg-gradient-to-r from-[#071126]/10 via-transparent to-[#071126]/25" />
-                <div className="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-[#0a1229] to-transparent" />
+                <div className="absolute inset-0 bg-[radial-gradient(circle_at_75%_50%,rgba(245,158,11,0.18),transparent_42%),linear-gradient(135deg,#07142f,#0a2550)]" />
+                <img src="/assets/event-global-flyer-UKa8W2ck.jpg" alt="True Legacy live event" className="absolute -bottom-[58%] right-[8%] h-[175%] w-auto rotate-2 rounded-xl object-contain shadow-2xl shadow-black/50 transition duration-700 group-hover:-translate-y-1 group-hover:rotate-0 group-hover:scale-[1.03]" />
+                <div className="absolute inset-0 bg-gradient-to-r from-[#071126]/50 via-transparent to-[#071126]/10" />
+                <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-[#0a1229]/80 to-transparent" />
                 <span className="absolute bottom-5 left-5 rounded-full border border-amber-200/25 bg-amber-400/15 px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.18em] text-amber-100 backdrop-blur-md">Weekly global connection</span>
               </>}
             </div>
