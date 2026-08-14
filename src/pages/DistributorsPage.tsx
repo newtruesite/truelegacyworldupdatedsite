@@ -48,10 +48,10 @@ const FALLBACK_DISTRIBUTORS: Distributor[] = [
     title: "True Legacy World",
     photo: "/leaders/standardized/mehdi-cohen.png",
     fallbackInitial: "M",
-    regions: ["Global", "LATAM"],
+    regions: ["Global", "LATAM", "Morocco", "USA", "Canada"],
     languages: ["en", "es", "fr"],
     whatsapp: "https://wa.me/18649072149",
-    instagram: "https://www.instagram.com/mehdicohen/",
+    instagram: "https://www.instagram.com/mehdicohen_/",
   },
   {
     slug: "ryan-pool",

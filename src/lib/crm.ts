@@ -72,8 +72,10 @@ const FALLBACK_DISTRIBUTORS: PublicDistributor[] = [
     title: 'True Legacy World',
     bio: 'Global and LATAM product education, leadership, and team support.',
     avatar_url: '/leaders/standardized/mehdi-cohen.png',
-    regions: ['Global', 'LATAM'],
+    regions: ['Global', 'LATAM', 'Morocco', 'USA', 'Canada'],
     languages: ['en', 'es', 'fr'],
+    phone: '+1 (864) 907-2149',
+    instagram_url: 'https://www.instagram.com/mehdicohen_/',
   },
   {
     id: 'preview-ryan',
@@ -173,8 +175,8 @@ export async function getPublicDistributors(): Promise<PublicDistributor[]> {
   const { data, error } = await crmSupabase.rpc('get_public_crm_distributors')
   if (error || !Array.isArray(data)) return FALLBACK_DISTRIBUTORS
   return (data as PublicDistributor[]).map(profile => {
-    if (profile.slug !== 'simon-loh') return profile
-    const confirmed = FALLBACK_DISTRIBUTORS.find(item => item.slug === 'simon-loh')
+    if (!['mehdi-cohen', 'simon-loh'].includes(profile.slug)) return profile
+    const confirmed = FALLBACK_DISTRIBUTORS.find(item => item.slug === profile.slug)
     return confirmed ? { ...profile, ...confirmed, id: profile.id } : profile
   })
 }
