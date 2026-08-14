@@ -3,6 +3,7 @@ import { Footer } from "@/components/layout/Footer";
 import { Navbar } from "@/components/layout/Navbar";
 import { SEO } from "@/components/SEO";
 import { AuroraBackground } from "@/components/ui/AuroraBackground";
+import { YouTubeEmbed } from "@/components/ui/YouTubeEmbed";
 import { useLocaleContext } from "@/contexts/LocaleContext";
 import { t } from "@/lib/translations";
 import { motion } from "framer-motion";
@@ -14,6 +15,8 @@ import {
   Key,
   Lightbulb,
   LogOut,
+  PlayCircle,
+  ArrowRight,
   Target,
   Users,
 } from "lucide-react";
@@ -478,8 +481,12 @@ export default function TrainingPage() {
     () => typeof window !== "undefined" && sessionStorage.getItem("tl_secret_code_valid") === "true",
   );
   const [secretCodeError, setSecretCodeError] = useState("");
+  const [hasCompletedDuoIntro, setHasCompletedDuoIntro] = useState(
+    () => typeof window !== "undefined" && localStorage.getItem("tl_training_duo_intro") === "complete",
+  );
 
   const contentRef = useRef<HTMLDivElement>(null);
+  const accessRef = useRef<HTMLDivElement>(null);
 
   const handleResetAccess = () => {
     sessionStorage.removeItem("tl_secret_code_valid");
@@ -520,6 +527,76 @@ export default function TrainingPage() {
 
   // Get translations for current locale
   const copy = t[locale] || t.en;
+  const journeyCopy = {
+    en: {
+      eyebrow: "Your True Legacy learning path",
+      title: "Understand the Duo. Then build the skills.",
+      subtitle: "Begin with the two products at the center of the True Legacy story. Once you understand the K8 and emGuarde GO, continue into the structured leadership academy.",
+      stepOne: "Step 1",
+      stepOneTitle: "Watch the Duo orientation",
+      stepOneText: "Two focused demonstrations give you the product foundation before business training begins.",
+      water: "K8 Water Demonstration",
+      waterText: "See the water technology, the different water types, and the everyday product story.",
+      emguarde: "emGuarde GO Demonstration",
+      emguardeText: "Learn what the portable set includes and how to explain it clearly and responsibly.",
+      continue: "I’ve watched the Duo — continue",
+      completed: "Duo orientation complete",
+      revisit: "Watch the Duo again",
+      stepTwo: "Step 2",
+      stepTwoTitle: "Enter the Leadership Academy",
+      stepTwoText: "Unlock the organized training library, choose a module, and build your skills in sequence.",
+      foundation: "Product foundation",
+      modules: "10 training modules",
+      languages: "English · Spanish · Portuguese",
+    },
+    es: {
+      eyebrow: "Tu ruta de aprendizaje True Legacy",
+      title: "Comprende el Duo. Luego desarrolla las habilidades.",
+      subtitle: "Comienza con los dos productos en el centro de la historia True Legacy. Después de comprender el K8 y emGuarde GO, continúa en la academia de liderazgo.",
+      stepOne: "Paso 1", stepOneTitle: "Mira la orientación del Duo", stepOneText: "Dos demostraciones claras te dan la base de producto antes de comenzar la capacitación de negocio.",
+      water: "Demostración de agua K8", waterText: "Conoce la tecnología, los diferentes tipos de agua y la historia cotidiana del producto.",
+      emguarde: "Demostración de emGuarde GO", emguardeText: "Descubre qué incluye el set portátil y cómo explicarlo de forma clara y responsable.",
+      continue: "Ya vi el Duo — continuar", completed: "Orientación del Duo completada", revisit: "Volver a ver el Duo",
+      stepTwo: "Paso 2", stepTwoTitle: "Entra a la Academia de Liderazgo", stepTwoText: "Desbloquea la biblioteca organizada, elige un módulo y desarrolla tus habilidades en secuencia.",
+      foundation: "Base de producto", modules: "10 módulos de capacitación", languages: "Inglés · Español · Portugués",
+    },
+    pt: {
+      eyebrow: "Sua jornada de aprendizado True Legacy", title: "Entenda o Duo. Depois desenvolva as habilidades.",
+      subtitle: "Comece com os dois produtos no centro da história True Legacy. Depois de entender o K8 e o emGuarde GO, continue para a academia de liderança.",
+      stepOne: "Etapa 1", stepOneTitle: "Assista à orientação do Duo", stepOneText: "Duas demonstrações objetivas dão a base dos produtos antes do treinamento de negócios.",
+      water: "Demonstração da água K8", waterText: "Conheça a tecnologia, os diferentes tipos de água e a história cotidiana do produto.",
+      emguarde: "Demonstração do emGuarde GO", emguardeText: "Veja o que acompanha o conjunto portátil e como explicá-lo com clareza e responsabilidade.",
+      continue: "Assisti ao Duo — continuar", completed: "Orientação do Duo concluída", revisit: "Assistir ao Duo novamente",
+      stepTwo: "Etapa 2", stepTwoTitle: "Entre na Academia de Liderança", stepTwoText: "Desbloqueie a biblioteca organizada, escolha um módulo e desenvolva suas habilidades em sequência.",
+      foundation: "Base de produtos", modules: "10 módulos de treinamento", languages: "Inglês · Espanhol · Português",
+    },
+    fr: {
+      eyebrow: "Votre parcours True Legacy", title: "Comprenez le Duo. Développez ensuite vos compétences.",
+      subtitle: "Commencez par les deux produits au cœur de l’histoire True Legacy, puis poursuivez avec l’académie structurée de leadership.",
+      stepOne: "Étape 1", stepOneTitle: "Regarder l’orientation Duo", stepOneText: "Deux démonstrations ciblées donnent les bases produit avant la formation commerciale.",
+      water: "Démonstration de l’eau K8", waterText: "Découvrez la technologie, les différents types d’eau et l’usage quotidien du produit.",
+      emguarde: "Démonstration emGuarde GO", emguardeText: "Découvrez le contenu du kit portable et comment le présenter clairement et de façon responsable.",
+      continue: "J’ai regardé le Duo — continuer", completed: "Orientation Duo terminée", revisit: "Revoir le Duo",
+      stepTwo: "Étape 2", stepTwoTitle: "Entrer dans l’Académie de Leadership", stepTwoText: "Déverrouillez la bibliothèque, choisissez un module et progressez dans l’ordre.",
+      foundation: "Fondation produit", modules: "10 modules de formation", languages: "Anglais · Espagnol · Portugais",
+    },
+  }[locale] || {
+    eyebrow: "Your True Legacy learning path", title: "Understand the Duo. Then build the skills.", subtitle: "Begin with the two products at the center of the True Legacy story, then continue into the structured leadership academy.",
+    stepOne: "Step 1", stepOneTitle: "Watch the Duo orientation", stepOneText: "Two focused demonstrations give you the product foundation before business training begins.",
+    water: "K8 Water Demonstration", waterText: "See the water technology, the different water types, and the everyday product story.", emguarde: "emGuarde GO Demonstration", emguardeText: "Learn what the portable set includes and how to explain it clearly and responsibly.",
+    continue: "I’ve watched the Duo — continue", completed: "Duo orientation complete", revisit: "Watch the Duo again", stepTwo: "Step 2", stepTwoTitle: "Enter the Leadership Academy", stepTwoText: "Unlock the organized training library, choose a module, and build your skills in sequence.",
+    foundation: "Product foundation", modules: "10 training modules", languages: "English · Spanish · Portuguese",
+  };
+
+  const duoVideos = locale === "es"
+    ? { water: "https://youtu.be/6A_UpRmoWWc", emguarde: "https://youtu.be/BS4QEM-zXf0" }
+    : { water: "https://youtu.be/1nkOCId-SfQ", emguarde: "https://youtu.be/5wuY1dKjHds" };
+
+  const completeDuoIntro = () => {
+    localStorage.setItem("tl_training_duo_intro", "complete");
+    setHasCompletedDuoIntro(true);
+    window.setTimeout(() => accessRef.current?.scrollIntoView({ behavior: "smooth", block: "center" }), 100);
+  };
 
   const toggleModule = (moduleId: string) => {
     const newExpanded = new Set(expandedModules);
@@ -565,16 +642,59 @@ export default function TrainingPage() {
         <AuroraBackground className="pt-24 pb-16">
           <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
             {!isSecretCodeValid ? (
-              <div className="max-w-md mx-auto mt-12 min-h-[400px] rounded-2xl border border-white/10 bg-white/[0.04] backdrop-blur-xl p-8 shadow-[0_24px_80px_rgba(0,0,0,0.6)]">
+              <div className="pt-8 sm:pt-12">
+                <div className="mx-auto max-w-4xl text-center">
+                  <p className="text-xs font-bold uppercase tracking-[0.32em] text-tl-gold">{journeyCopy.eyebrow}</p>
+                  <h1 className="mt-4 text-4xl font-black leading-tight text-white sm:text-5xl lg:text-6xl">{journeyCopy.title}</h1>
+                  <p className="mx-auto mt-5 max-w-3xl text-base leading-7 text-slate-300 sm:text-lg">{journeyCopy.subtitle}</p>
+                  <div className="mx-auto mt-8 grid max-w-3xl grid-cols-3 gap-2 text-xs font-semibold text-slate-300 sm:text-sm">
+                    {[journeyCopy.foundation, journeyCopy.modules, journeyCopy.languages].map((item) => (
+                      <div key={item} className="rounded-xl border border-white/10 bg-white/[0.04] px-3 py-3">{item}</div>
+                    ))}
+                  </div>
+                </div>
+
+                <section className="mx-auto mt-12 max-w-5xl rounded-[2rem] border border-cyan-400/20 bg-gradient-to-br from-cyan-500/[0.08] via-white/[0.03] to-blue-600/[0.08] p-5 shadow-[0_30px_100px_rgba(0,0,0,0.45)] sm:p-8">
+                  <div className="mb-7 flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
+                    <div>
+                      <p className="text-xs font-black uppercase tracking-[0.28em] text-cyan-300">{journeyCopy.stepOne}</p>
+                      <h2 className="mt-2 text-2xl font-black text-white sm:text-3xl">{journeyCopy.stepOneTitle}</h2>
+                      <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-300 sm:text-base">{journeyCopy.stepOneText}</p>
+                    </div>
+                    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border border-cyan-300/20 bg-cyan-400/10 text-cyan-300"><PlayCircle className="h-6 w-6" /></div>
+                  </div>
+                  <div className="grid gap-5 lg:grid-cols-2">
+                    <article className="rounded-2xl border border-white/10 bg-[#071127] p-4 sm:p-5">
+                      <YouTubeEmbed url={duoVideos.water} title={journeyCopy.water} />
+                      <div className="mt-4 flex items-start gap-4">
+                        <img src="/products/k8.png" alt="K8 water ionizer" className="h-20 w-20 object-contain" />
+                        <div><h3 className="font-bold text-white">{journeyCopy.water}</h3><p className="mt-1 text-sm leading-6 text-slate-400">{journeyCopy.waterText}</p></div>
+                      </div>
+                    </article>
+                    <article className="rounded-2xl border border-white/10 bg-[#071127] p-4 sm:p-5">
+                      <YouTubeEmbed url={duoVideos.emguarde} title={journeyCopy.emguarde} />
+                      <div className="mt-4 flex items-start gap-4">
+                        <img src="/products/emguarde-go.png" alt="emGuarde GO portable set" className="h-20 w-20 object-contain" />
+                        <div><h3 className="font-bold text-white">{journeyCopy.emguarde}</h3><p className="mt-1 text-sm leading-6 text-slate-400">{journeyCopy.emguardeText}</p></div>
+                      </div>
+                    </article>
+                  </div>
+                  <button onClick={completeDuoIntro} className="mx-auto mt-7 flex min-h-14 w-full max-w-md items-center justify-center gap-3 rounded-xl bg-gradient-to-r from-cyan-400 to-blue-500 px-6 font-black text-slate-950 shadow-lg shadow-cyan-500/20 transition hover:-translate-y-0.5">
+                    {hasCompletedDuoIntro ? journeyCopy.completed : journeyCopy.continue}<ArrowRight className="h-5 w-5" />
+                  </button>
+                </section>
+
+                <div ref={accessRef} className={`max-w-md mx-auto mt-10 min-h-[400px] rounded-2xl border bg-white/[0.04] backdrop-blur-xl p-8 shadow-[0_24px_80px_rgba(0,0,0,0.6)] transition-all ${hasCompletedDuoIntro ? "border-tl-gold/30" : "border-white/10 opacity-60"}`}>
                 <div className="text-center mb-8">
                   <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-cyan-500/20 to-indigo-600/20 border border-cyan-500/30 text-cyan-400 mb-4 shadow-[0_0_30px_rgba(6,182,212,0.15)]">
                     <Key className="w-8 h-8" />
                   </div>
                   <h2 className="text-2xl font-bold text-white mb-2">
-                    {copy.training?.access_required || "Access Code Required"}
+                    <span className="mb-2 block text-xs font-black uppercase tracking-[0.26em] text-tl-gold">{journeyCopy.stepTwo}</span>
+                    {journeyCopy.stepTwoTitle}
                   </h2>
                   <p className="text-slate-400 text-sm mb-6">
-                    {copy.training?.access_desc || "Enter the secret code to access training. Join our Facebook community to get the code."}
+                    {journeyCopy.stepTwoText} {copy.training?.access_desc || "Enter the secret code to access training. Join our Facebook community to get the code."}
                   </p>
                   <a
                     href="https://www.facebook.com/groups/truelegacycommunity"
@@ -603,11 +723,13 @@ export default function TrainingPage() {
                   )}
                   <button
                     type="submit"
-                    className="w-full min-h-[52px] flex items-center justify-center gap-2 px-6 py-3 text-base font-semibold text-white bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 hover:shadow-lg hover:shadow-cyan-500/20 hover:-translate-y-0.5 rounded-xl transition-all"
+                    disabled={!hasCompletedDuoIntro}
+                    className="w-full min-h-[52px] flex items-center justify-center gap-2 px-6 py-3 text-base font-semibold text-white bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 hover:shadow-lg hover:shadow-cyan-500/20 hover:-translate-y-0.5 rounded-xl transition-all disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:translate-y-0"
                   >
                     {copy.training?.access_unlock || "Unlock Training"}
                   </button>
                 </form>
+              </div>
               </div>
             ) : (
               <div ref={contentRef}>
