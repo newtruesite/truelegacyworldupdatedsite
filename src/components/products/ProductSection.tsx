@@ -173,7 +173,9 @@ export function ProductSection({
           className={
             variant === "homeAll"
               ? "products-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 max-w-6xl mx-auto"
-              : "products-grid grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8 max-w-5xl mx-auto"
+              : variant === "country"
+                ? "products-grid mx-auto grid max-w-7xl grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-4"
+                : "products-grid grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8 max-w-5xl mx-auto"
           }
         >
           {visibleProductIds.map((id, index) => {
@@ -187,14 +189,14 @@ export function ProductSection({
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.1 }}
-                className="product-card group block rounded-3xl border border-white/10 border-t-2 border-t-[#F5A623] p-5 md:p-8 hover:border-white/30 hover:-translate-y-0.5 hover:shadow-lg transition-all duration-150"
+                className={`product-card group flex h-full flex-col border border-white/10 border-t-2 border-t-[#F5A623] hover:border-white/30 hover:-translate-y-0.5 hover:shadow-lg transition-all duration-150 ${variant === "country" ? "rounded-2xl p-4 sm:p-5" : "rounded-3xl p-5 md:p-8"}`}
                 data-product={id}
                 style={{
                   background: "transparent",
                   backdropFilter: "blur(20px)",
                 }}
               >
-                <div className="rounded-2xl overflow-hidden border border-white/10 shadow-lg mb-4 aspect-square md:aspect-[4/3] bg-white/5 flex items-center justify-center p-8 md:p-10 relative">
+                <div className={`overflow-hidden border border-white/10 shadow-lg mb-4 aspect-square bg-white/5 flex items-center justify-center relative ${variant === "country" ? "rounded-xl p-5" : "rounded-2xl p-8 md:aspect-[4/3] md:p-10"}`}>
                   <img
                     src={product.imageSrc}
                     alt={product.imageAlt}
@@ -213,7 +215,7 @@ export function ProductSection({
                     </span>
                   )}
                 </div>
-                <h3 className="font-bold text-white text-xl mb-2 text-center md:text-left">
+                <h3 className={`font-bold text-white mb-2 text-center md:text-left ${variant === "country" ? "text-lg" : "text-xl"}`}>
                   {pCopy?.label ?? product.name}
                 </h3>
                 <p className="text-slate-400 text-sm leading-relaxed mb-4 text-center md:text-left">
@@ -227,7 +229,7 @@ export function ProductSection({
                     {product.availability[locale]}
                   </p>
                 )}
-                <div className="flex flex-wrap gap-3 justify-center md:justify-start">
+                <div className="mt-auto flex flex-wrap gap-3 justify-center pt-1 md:justify-start">
                   {id === 'kangen_air' ? (
                     <Link
                       to={country ? `/${country.slug}/kangen-air` : "/kangen-air"}
