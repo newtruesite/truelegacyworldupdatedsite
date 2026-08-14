@@ -337,17 +337,21 @@ export function TestimonialsSplit({
       return parts;
     }, []);
 
+  const testimonialControls = (mobile: boolean) => (
+    <div className={`${mobile ? 'mt-4 flex lg:hidden' : 'mt-8 hidden lg:flex'} min-h-[44px] flex-nowrap items-center justify-center gap-3`}>
+      <button onClick={prevTestimonial} aria-label="Previous testimonial" className="grid h-10 w-10 shrink-0 place-items-center rounded-full border border-white/10 bg-white/5 text-white hover:bg-white/10"><ChevronLeft className="h-5 w-5"/></button>
+      <div className="flex shrink-0 flex-nowrap items-center justify-center gap-1.5">{list.map((item,index)=><button key={item.id} onClick={(event)=>{event.stopPropagation();setActiveIndex(index)}} aria-label={`Open testimonial from ${item.name}`} className={`!min-h-0 !min-w-0 shrink-0 rounded-full transition-all ${index===activeIndex?'!h-1.5 !w-4 bg-cyan-400 sm:!h-2 sm:!w-6':'!h-1.5 !w-1.5 bg-white/25 hover:bg-white/50 sm:!h-2 sm:!w-2'}`}/>)}</div>
+      <button onClick={nextTestimonial} aria-label="Next testimonial" className="grid h-10 w-10 shrink-0 place-items-center rounded-full border border-white/10 bg-white/5 text-white hover:bg-white/10"><ChevronRight className="h-5 w-5"/></button>
+    </div>
+  );
+
   return (
     <div className="mx-auto w-full max-w-6xl px-3 pb-16 sm:px-6">
       <div className="grid items-center gap-10 lg:grid-cols-[1fr_420px]">
         <div className="order-2 lg:order-1">
           <p className="text-xs font-bold uppercase tracking-[.28em] text-cyan-300">Story {activeIndex + 1} of {list.length} · shared with True Legacy</p>
           <AnimatePresence mode="wait"><motion.div key={active.id} initial={{opacity:0,y:16}} animate={{opacity:1,y:0}} exit={{opacity:0,y:-16}} className="mt-5 overflow-hidden rounded-[2rem] border border-white/10 bg-[linear-gradient(145deg,rgba(14,165,233,.12),rgba(255,255,255,.03))] p-5 sm:p-7"><div className="grid items-center gap-6 sm:grid-cols-[190px_1fr]"><div className="relative mx-auto aspect-[4/5] w-full max-w-[210px] overflow-hidden rounded-[1.5rem] border border-white/15 bg-slate-900"><img src={active.image ?? active.photo} alt={active.name} className="h-full w-full object-cover object-top"/><div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/90 to-transparent p-4 pt-14"><p className="font-bold text-white">{active.name}</p><p className="text-xs text-cyan-200">Community voice</p></div></div><div><div className="inline-flex rounded-full border border-emerald-400/20 bg-emerald-400/10 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-emerald-300">Original story</div><h3 className="mt-4 text-3xl font-black text-white">A real person.<br/><span className="text-cyan-300">A personal message.</span></h3><p className="mt-4 text-sm leading-6 text-slate-400">Read the story as a conversation, then move to the next member of the community.</p><a href={active.instagramUrl ?? active.instagram ?? igUrl(active.company)} target="_blank" rel="noreferrer" className="mt-5 inline-flex text-sm font-bold text-cyan-300 hover:text-cyan-200">{active.handle ?? igHandle(active.company)} {active.verified ? '✓' : ''}</a></div></div></motion.div></AnimatePresence>
-          <div className="mt-8 flex flex-wrap items-center gap-3">
-            <button onClick={prevTestimonial} aria-label="Previous testimonial" className="grid h-11 w-11 place-items-center rounded-full border border-white/10 bg-white/5 text-white hover:bg-white/10"><ChevronLeft className="h-5 w-5"/></button>
-            <div className="flex flex-wrap gap-1.5">{list.map((item,index)=><button key={item.id} onClick={(event)=>{event.stopPropagation();setActiveIndex(index)}} aria-label={`Open testimonial from ${item.name}`} className={`h-2 rounded-full transition-all ${index===activeIndex?'w-8 bg-cyan-400':'w-2 bg-white/20 hover:bg-white/40'}`}/>)}</div>
-            <button onClick={nextTestimonial} aria-label="Next testimonial" className="grid h-11 w-11 place-items-center rounded-full border border-white/10 bg-white/5 text-white hover:bg-white/10"><ChevronRight className="h-5 w-5"/></button>
-          </div>
+          {testimonialControls(false)}
         </div>
 
         <div className="order-1 mx-auto w-full max-w-[390px] lg:order-2" onMouseEnter={()=>setIsHovering(true)} onMouseLeave={()=>setIsHovering(false)}>
@@ -369,6 +373,7 @@ export function TestimonialsSplit({
               </div>
             </div>
           </div>
+          {testimonialControls(true)}
         </div>
       </div>
     </div>

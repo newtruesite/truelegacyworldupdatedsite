@@ -264,6 +264,39 @@ export function PhotoCarousel3D() {
                 })}
             </div>
 
+            {/* Controls stay attached to the active card, especially on mobile. */}
+            <div className="mt-3 flex min-h-[44px] flex-nowrap items-center justify-center gap-3 px-2 sm:mt-5 sm:gap-4">
+                <button
+                    onClick={prev}
+                    aria-label="Previous leader"
+                    className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-white/10 bg-white/5 text-slate-300 transition-all hover:bg-white/10 hover:text-white sm:h-11 sm:w-11"
+                >
+                    <ChevronLeft className="h-5 w-5" />
+                </button>
+
+                <div className="flex shrink-0 flex-nowrap items-center justify-center gap-1.5 sm:gap-2">
+                    {LEADERS.map((_, idx) => (
+                        <button
+                            key={idx}
+                            onClick={() => setActive(idx)}
+                            aria-label={`Go to leader ${idx + 1}`}
+                            className={`!min-h-0 !min-w-0 shrink-0 rounded-full transition-all duration-300 ${idx === active
+                                ? '!h-1.5 !w-4 bg-orange-500 sm:!h-2 sm:!w-6'
+                                : '!h-1.5 !w-1.5 bg-white/25 hover:bg-white/50 sm:!h-2 sm:!w-2'
+                                }`}
+                        />
+                    ))}
+                </div>
+
+                <button
+                    onClick={next}
+                    aria-label="Next leader"
+                    className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-white/10 bg-white/5 text-slate-300 transition-all hover:bg-white/10 hover:text-white sm:h-11 sm:w-11"
+                >
+                    <ChevronRight className="h-5 w-5" />
+                </button>
+            </div>
+
             {/* Leader intro (below 3D cards): full bio + Instagram */}
             <AnimatePresence mode="wait">
                 <motion.div
@@ -305,39 +338,6 @@ export function PhotoCarousel3D() {
                 </motion.div>
             </AnimatePresence>
 
-            {/* Controls — single row on mobile, no wrap */}
-            <div className="mt-6 min-h-[52px] flex flex-nowrap items-center justify-center gap-3 sm:gap-4 pb-4 px-2">
-                <button
-                    onClick={prev}
-                    aria-label="Previous leader"
-                    className="flex h-10 w-10 sm:h-11 sm:w-11 shrink-0 items-center justify-center rounded-full border border-white/10 bg-white/5 text-slate-300 transition-all hover:bg-white/10 hover:text-white"
-                >
-                    <ChevronLeft className="h-5 w-5" />
-                </button>
-
-                {/* Dots — same size so layout doesn't shift */}
-                <div className="flex shrink-0 flex-wrap justify-center gap-1.5 sm:gap-2">
-                    {LEADERS.map((_, idx) => (
-                        <button
-                            key={idx}
-                            onClick={() => setActive(idx)}
-                            aria-label={`Go to leader ${idx + 1}`}
-                            className={`transition-all duration-300 rounded-full shrink-0 ${idx === active
-                                ? 'w-5 h-2.5 sm:w-6 bg-orange-500'
-                                : 'w-2.5 h-2.5 bg-white/20 hover:bg-white/40'
-                                }`}
-                        />
-                    ))}
-                </div>
-
-                <button
-                    onClick={next}
-                    aria-label="Next leader"
-                    className="flex h-10 w-10 sm:h-11 sm:w-11 shrink-0 items-center justify-center rounded-full border border-white/10 bg-white/5 text-slate-300 transition-all hover:bg-white/10 hover:text-white"
-                >
-                    <ChevronRight className="h-5 w-5" />
-                </button>
-            </div>
         </div>
     )
 }
