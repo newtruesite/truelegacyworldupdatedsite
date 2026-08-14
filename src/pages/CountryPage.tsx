@@ -1174,6 +1174,123 @@ function getContent(country: Country, locale: "en" | "es" | "fr" | "pt") {
 
 const DEFAULT_JOTFORM = "/apply";
 
+const LATAM_MARKETS = new Set(["brazil", "mexico", "colombia", "paraguay"]);
+
+function getMarketEventsPath(countrySlug: string) {
+  return LATAM_MARKETS.has(countrySlug) ? "/events/latam" : "/events/global";
+}
+
+function getMarketGatewayCopy(locale: "en" | "es" | "fr" | "pt") {
+  const content = {
+    en: {
+      eyebrow: "Your local True Legacy gateway",
+      title: "Choose the path that fits you",
+      intro:
+        "Explore the products, the independent opportunity, or the team system. Your country and interest stay attached so the right True Legacy leader can support you.",
+      language: "Experience available in English",
+      products: "Explore the products",
+      productsDesc:
+        "Start with the flagship K8, compare wellness systems, and review availability for your market.",
+      duo: "Discover the True Legacy Duo",
+      duoDesc:
+        "See how the K8 water system and emGuarde GO are presented together, with product demos and responsible education.",
+      opportunity: "Explore the opportunity",
+      opportunityDesc:
+        "Understand the independent distributor model, team support, expectations, and the next steps—without income promises.",
+      events: "Events & training",
+      eventsDesc:
+        "Join the relevant weekly calls and training experiences for your region and language.",
+      view: "View",
+      connect: "Connect with the right distributor",
+      routing:
+        "Already referred? We protect that relationship. No referrer? Choose an available distributor.",
+      localMarket: "market experience",
+      globalNetwork: "featured markets",
+      supported: "team attribution protected",
+    },
+    es: {
+      eyebrow: "Tu portal local de True Legacy",
+      title: "Elige el camino ideal para ti",
+      intro:
+        "Explora los productos, la oportunidad independiente o el sistema del equipo. Conservamos tu país e interés para conectarte con el líder correcto de True Legacy.",
+      language: "Experiencia disponible en español",
+      products: "Explora los productos",
+      productsDesc:
+        "Comienza con el modelo insignia K8, compara sistemas de bienestar y revisa la disponibilidad en tu mercado.",
+      duo: "Descubre el True Legacy Duo",
+      duoDesc:
+        "Conoce cómo presentamos el sistema de agua K8 y emGuarde GO juntos, con demostraciones y educación responsable.",
+      opportunity: "Explora la oportunidad",
+      opportunityDesc:
+        "Comprende el modelo de distribuidor independiente, el apoyo del equipo, las expectativas y los próximos pasos, sin promesas de ingresos.",
+      events: "Eventos y capacitación",
+      eventsDesc:
+        "Participa en las llamadas semanales y experiencias de capacitación relevantes para tu región e idioma.",
+      view: "Ver",
+      connect: "Conecta con el distribuidor correcto",
+      routing:
+        "¿Ya tienes referente? Protegemos esa relación. ¿No tienes? Elige un distribuidor disponible.",
+      localMarket: "experiencia local",
+      globalNetwork: "mercados destacados",
+      supported: "atribución de equipo protegida",
+    },
+    fr: {
+      eyebrow: "Votre portail local True Legacy",
+      title: "Choisissez le parcours qui vous convient",
+      intro:
+        "Découvrez les produits, l’opportunité indépendante ou le système d’équipe. Votre pays et votre intérêt sont conservés afin que le bon leader True Legacy puisse vous accompagner.",
+      language: "Expérience disponible en français",
+      products: "Découvrir les produits",
+      productsDesc:
+        "Commencez par le modèle phare K8, comparez les systèmes de bien-être et vérifiez leur disponibilité dans votre marché.",
+      duo: "Découvrir le True Legacy Duo",
+      duoDesc:
+        "Découvrez comment le système d’eau K8 et emGuarde GO sont présentés ensemble, avec démonstrations et information responsable.",
+      opportunity: "Découvrir l’opportunité",
+      opportunityDesc:
+        "Comprenez le modèle de distributeur indépendant, le soutien de l’équipe, les attentes et les prochaines étapes, sans promesse de revenus.",
+      events: "Événements et formation",
+      eventsDesc:
+        "Rejoignez les appels hebdomadaires et les formations adaptés à votre région et à votre langue.",
+      view: "Voir",
+      connect: "Contacter le bon distributeur",
+      routing:
+        "Déjà recommandé ? Nous respectons cette relation. Sans référent, choisissez un distributeur disponible.",
+      localMarket: "expérience locale",
+      globalNetwork: "marchés clés",
+      supported: "attribution d’équipe protégée",
+    },
+    pt: {
+      eyebrow: "Seu portal local True Legacy",
+      title: "Escolha o caminho ideal para você",
+      intro:
+        "Explore os produtos, a oportunidade independente ou o sistema da equipe. Mantemos seu país e interesse para que o líder certo da True Legacy possa apoiar você.",
+      language: "Experiência disponível em português",
+      products: "Explore os produtos",
+      productsDesc:
+        "Comece pelo modelo carro-chefe K8, compare sistemas de bem-estar e confira a disponibilidade no seu mercado.",
+      duo: "Conheça o True Legacy Duo",
+      duoDesc:
+        "Veja como o sistema de água K8 e o emGuarde GO são apresentados juntos, com demonstrações e educação responsável.",
+      opportunity: "Explore a oportunidade",
+      opportunityDesc:
+        "Entenda o modelo de distribuidor independente, o apoio da equipe, as expectativas e os próximos passos, sem promessas de renda.",
+      events: "Eventos e treinamento",
+      eventsDesc:
+        "Participe das chamadas semanais e treinamentos relevantes para sua região e idioma.",
+      view: "Ver",
+      connect: "Conecte-se com o distribuidor certo",
+      routing:
+        "Já foi indicado? Protegemos essa relação. Sem indicação, escolha um distribuidor disponível.",
+      localMarket: "experiência local",
+      globalNetwork: "mercados em destaque",
+      supported: "atribuição da equipe protegida",
+    },
+  } as const;
+
+  return content[locale];
+}
+
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const COUNTRY_TO_CONTINENT: Record<
   string,
@@ -1278,6 +1395,8 @@ export default function CountryPage() {
   const jotformUrl = country.jotformUrl ?? DEFAULT_JOTFORM;
   const copy = t[locale];
   const c = getContent(country, locale);
+  const gateway = getMarketGatewayCopy(locale);
+  const applicationCountry = encodeURIComponent(country.slug);
 
   const followLabel =
     locale === "es"
@@ -1482,6 +1601,110 @@ export default function CountryPage() {
                     ? "Modelo carro-chefe em destaque"
                     : "Featured Flagship Model"}
             </span>
+          </div>
+        </section>
+
+        {/* ===== MARKET GATEWAY — one scalable decision framework for every country ===== */}
+        <section
+          className="border-b border-white/5 px-4 py-16 sm:px-6 md:py-20"
+          style={{ background: "linear-gradient(180deg, #060b1e 0%, #08142d 100%)" }}
+        >
+          <div className="mx-auto max-w-7xl">
+            <div className="grid gap-8 lg:grid-cols-[0.8fr_1.2fr] lg:items-end">
+              <div>
+                <div className="mb-5 inline-flex items-center gap-3 rounded-full border border-cyan-300/20 bg-cyan-300/[0.07] px-4 py-2 text-xs font-bold uppercase tracking-[0.18em] text-cyan-200">
+                  <span className="text-lg" aria-hidden="true">{country.flagEmoji}</span>
+                  {gateway.eyebrow}
+                </div>
+                <h2 className="max-w-xl text-3xl font-extrabold leading-tight text-white md:text-5xl">
+                  {gateway.title}
+                </h2>
+                <p className="mt-5 max-w-xl text-base leading-7 text-slate-300">
+                  {gateway.intro}
+                </p>
+              </div>
+
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+                <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4">
+                  <p className="text-2xl font-extrabold text-white">{country.nativeName}</p>
+                  <p className="mt-1 text-xs uppercase tracking-wider text-slate-400">{gateway.localMarket}</p>
+                </div>
+                <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4">
+                  <p className="text-2xl font-extrabold text-cyan-300">14</p>
+                  <p className="mt-1 text-xs uppercase tracking-wider text-slate-400">{gateway.globalNetwork}</p>
+                </div>
+                <div className="rounded-2xl border border-emerald-300/20 bg-emerald-300/[0.06] p-4">
+                  <p className="text-sm font-bold leading-6 text-emerald-200">{gateway.language}</p>
+                  <p className="mt-1 text-xs uppercase tracking-wider text-slate-400">{gateway.supported}</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="mt-10 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+              {[
+                {
+                  step: "01",
+                  title: gateway.products,
+                  description: gateway.productsDesc,
+                  to: `/${country.slug}/products`,
+                  color: "#38bdf8",
+                },
+                {
+                  step: "02",
+                  title: gateway.duo,
+                  description: gateway.duoDesc,
+                  to: `/${country.slug}/products#duo-package`,
+                  color: "#2dd4bf",
+                },
+                {
+                  step: "03",
+                  title: gateway.opportunity,
+                  description: gateway.opportunityDesc,
+                  to: `/apply?interest=distributor&country=${applicationCountry}`,
+                  color: "#fbbf24",
+                },
+                {
+                  step: "04",
+                  title: gateway.events,
+                  description: gateway.eventsDesc,
+                  to: getMarketEventsPath(country.slug),
+                  color: "#c084fc",
+                },
+              ].map((path) => (
+                <Link
+                  key={path.step}
+                  to={path.to}
+                  className="group flex min-h-[250px] flex-col rounded-3xl border border-white/10 bg-white/[0.035] p-6 transition-all duration-300 hover:-translate-y-1 hover:border-white/25 hover:bg-white/[0.06]"
+                >
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-black tracking-[0.22em]" style={{ color: path.color }}>
+                      {path.step}
+                    </span>
+                    <span className="flex h-9 w-9 items-center justify-center rounded-full border border-white/10 text-white transition-transform group-hover:translate-x-1">
+                      <IconArrow size={17} />
+                    </span>
+                  </div>
+                  <h3 className="mt-8 text-xl font-bold text-white">{path.title}</h3>
+                  <p className="mt-3 flex-1 text-sm leading-6 text-slate-400">{path.description}</p>
+                  <span className="mt-5 text-sm font-bold" style={{ color: path.color }}>
+                    {gateway.view} {country.nativeName}
+                  </span>
+                </Link>
+              ))}
+            </div>
+
+            <div className="mt-6 flex flex-col gap-5 rounded-3xl border border-cyan-300/20 bg-cyan-300/[0.06] p-6 sm:flex-row sm:items-center sm:justify-between md:p-8">
+              <div>
+                <h3 className="text-xl font-bold text-white">{gateway.connect}</h3>
+                <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-300">{gateway.routing}</p>
+              </div>
+              <Link
+                to={`/apply?interest=product&country=${applicationCountry}`}
+                className="inline-flex shrink-0 items-center justify-center gap-2 rounded-xl bg-cyan-500 px-6 py-3.5 text-sm font-bold text-white transition-all hover:bg-cyan-400"
+              >
+                {gateway.connect} <IconArrow size={17} />
+              </Link>
+            </div>
           </div>
         </section>
 
@@ -2022,17 +2245,7 @@ export default function CountryPage() {
                     : "Join our live masterclasses and training events."}
             </p>
             <Link
-              to={
-                ["brazil", "mexico", "colombia", "paraguay"].includes(
-                  country.slug,
-                )
-                  ? "/events/latam"
-                  : ["india", "uae", "malaysia"].includes(country.slug)
-                    ? "/events/asia"
-                    : ["nigeria", "morocco"].includes(country.slug)
-                      ? "/events/africa"
-                      : "/events/global"
-              }
+              to={getMarketEventsPath(country.slug)}
               className="inline-flex items-center gap-2 rounded-xl px-6 py-3 font-bold text-white transition-all hover:opacity-90"
               style={{
                 background: "linear-gradient(135deg, #00a896, #00c4ae)",
