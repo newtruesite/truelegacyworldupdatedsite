@@ -52,9 +52,9 @@ export default function EventsHubPage() {
               <p className="mt-5 text-lg leading-8 text-slate-300">Explore the Global English or LATAM Spanish presentation. View all event details first or join the correct Zoom room directly.</p>
             </div>
 
-            <div className="grid gap-8 lg:grid-cols-2">
+            <div className="mx-auto grid max-w-5xl gap-6 lg:grid-cols-2">
               {EVENTS.map(event => (
-                <article key={event.id} className="overflow-hidden rounded-3xl border border-white/10 bg-white/[0.04] shadow-2xl shadow-black/20">
+                <article key={event.id} className="w-full max-w-[480px] justify-self-center overflow-hidden rounded-3xl border border-white/10 bg-white/[0.04] shadow-2xl shadow-black/20">
                   <div className="aspect-[4/5] overflow-hidden bg-black/20">
                     <img src={event.image} alt={event.imageAlt} className="h-full w-full object-cover object-top transition duration-500 hover:scale-[1.02]" />
                   </div>
