@@ -41,7 +41,6 @@ export default function DistributorProfilePage() {
   }
   const profileHero = profile ? profileHeroAssets[profile.slug] || profile.avatar_url || '/logos/tl-square-white.png' : '/logos/tl-square-white.png'
   const currentProfilePhoto = profile?.avatar_url || profileHero
-  const eventFlyer = locale === 'es' ? '/assets/event-latam-flyer.png' : '/assets/event-global-flyer-UKa8W2ck.jpg'
   const landingPages = [
     { slug: 'business', eyebrow: 'Build', label: 'Explore the business', text: `See how ${firstName} approaches leadership, duplication, and building a legacy-driven business.`, cta: 'See the opportunity', icon: BriefcaseBusiness, visual: 'business' },
     { slug: 'duo', eyebrow: 'Discover', label: 'Meet the True Legacy Duo', text: 'Explore the K8 and emGuarde GO through clear product demonstrations.', cta: 'Explore the Duo', icon: Sparkles, visual: 'duo' },
@@ -94,10 +93,13 @@ export default function DistributorProfilePage() {
               </>}
               {item.visual === 'events' && <>
                 <div className="absolute inset-0 bg-[radial-gradient(circle_at_75%_50%,rgba(245,158,11,0.18),transparent_42%),linear-gradient(135deg,#07142f,#0a2550)]" />
-                <img src={eventFlyer} alt={locale === 'es' ? 'True Legacy LATAM live event' : 'True Legacy global live event'} className="absolute -bottom-[48%] right-[12%] h-[155%] w-auto rotate-2 rounded-xl object-contain shadow-2xl shadow-black/50 transition duration-700 group-hover:-translate-y-1 group-hover:rotate-0 group-hover:scale-[1.03]" />
+                <div className="absolute inset-x-[8%] bottom-3 top-3 flex items-center justify-center gap-3 sm:gap-4">
+                  <img src="/assets/event-global-flyer-UKa8W2ck.jpg" alt="True Legacy global English event" className="h-[92%] min-w-0 flex-1 rounded-lg object-contain drop-shadow-[0_16px_24px_rgba(0,0,0,0.45)] transition duration-700 group-hover:-translate-y-1 group-hover:-rotate-1" />
+                  <img src="/assets/event-latam-flyer.png" alt="True Legacy LATAM Spanish event" className="h-[92%] min-w-0 flex-1 rounded-lg object-contain drop-shadow-[0_16px_24px_rgba(0,0,0,0.45)] transition duration-700 group-hover:-translate-y-1 group-hover:rotate-1" />
+                </div>
                 <div className="absolute inset-0 bg-gradient-to-r from-[#071126]/50 via-transparent to-[#071126]/10" />
                 <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-[#0a1229]/80 to-transparent" />
-                <span className="absolute bottom-5 left-5 rounded-full border border-amber-200/25 bg-amber-400/15 px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.18em] text-amber-100 backdrop-blur-md">Weekly global connection</span>
+                <span className="absolute bottom-5 left-5 rounded-full border border-amber-200/25 bg-amber-400/15 px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.18em] text-amber-100 backdrop-blur-md">English + Spanish events</span>
               </>}
             </div>
             <div className="relative flex flex-1 flex-col border-t border-white/[0.07] p-6 sm:p-7">
