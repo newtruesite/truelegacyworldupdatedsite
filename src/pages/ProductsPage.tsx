@@ -158,7 +158,7 @@ export default function ProductsPage() {
         </section>
 
         <section className="py-12 md:py-16" style={{ background: '#070c1a' }}>
-          <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 space-y-12 md:space-y-16">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-12 md:space-y-16">
             {PRODUCT_FLOW.map((section) => {
               const productsInSection = section.productIds.map((id) => PRODUCTS[id])
 
@@ -167,7 +167,7 @@ export default function ProductsPage() {
                   <div className="mb-6 flex items-end justify-between border-b border-white/10 pb-4">
                     <h2 className="text-xl font-bold text-white font-display md:text-2xl">{getFlowLabel(section.key, locale)}</h2>
                   </div>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
+                  <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-4">
                     {productsInSection.map((product) => {
                       const id = product.id as ProductId
                       return (
@@ -177,9 +177,9 @@ export default function ProductsPage() {
                           whileInView={{ opacity: 1, y: 0 }}
                           viewport={{ once: true }}
                           transition={{ duration: 0.4 }}
-                          className="group block rounded-3xl border border-white/10 p-5 md:p-8 bg-[rgba(5,16,48,0.8)] backdrop-blur-xl hover:border-white/30 hover:-translate-y-1 transition-all"
+                          className="group flex h-full flex-col rounded-2xl border border-white/10 bg-[rgba(5,16,48,0.8)] p-4 backdrop-blur-xl transition-all hover:-translate-y-1 hover:border-white/30 sm:p-5"
                         >
-                          <div className="rounded-2xl overflow-hidden border border-white/10 shadow-lg mb-4 aspect-[4/3] md:aspect-square bg-white/5 relative flex items-center justify-center p-8 md:p-10">
+                          <div className="relative mb-4 flex aspect-square items-center justify-center overflow-hidden rounded-xl border border-white/10 bg-white/5 p-5 shadow-lg">
                             <img
                               src={product.imageSrc}
                               alt={product.imageAlt}
@@ -208,7 +208,7 @@ export default function ProductsPage() {
                               {product.availability[locale]}
                             </p>
                           )}
-                          <div className="flex flex-wrap gap-3 justify-center md:justify-start">
+                          <div className="mt-auto flex flex-wrap justify-center gap-3 pt-1 md:justify-start">
                             {id === 'k8' ? (
                                 <Link
                                     to="/k8"
