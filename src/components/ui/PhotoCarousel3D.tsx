@@ -2,6 +2,7 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { ChevronLeft, ChevronRight, Globe, Star, Trophy, Users, Zap } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
+import { useLocaleContext } from '@/contexts/LocaleContext'
 
 const LEADERS = [
     {
@@ -93,7 +94,7 @@ const LEADERS = [
             'My focus is on helping people move beyond traditional career limitations by applying practical, disciplined, and proven business strategies. Through speaking, mentoring, and direct collaboration, I work with individuals who want to build more intentional, flexible, and sustainable professional lives.',
         ],
         image: '/leaders/standardized/simon-loh.png',
-        imageTransform: 'scale(1.13) translateY(-2.5%)',
+        imageTransform: 'scale(1.24) translateY(-4.5%)',
         icon: Star,
         gradient: 'from-cyan-600 to-blue-700',
         glow: 'rgba(6,182,212,0.5)',
@@ -153,7 +154,53 @@ const LEADERS = [
     },
 ]
 
+const LEADER_COPY = {
+    es: {
+        viewProfile: 'Ver perfil',
+        roles: ['Fundador global y desarrollador de mercados', 'Emprendedor y líder comunitario', 'Coach y emprendedora con propósito', 'Constructor de negocios y mentor', 'Emprendedor global y estratega', 'Líder de marketing y bienestar', 'Coach de rendimiento y creador de legado', 'Distribuidora de True Legacy'],
+        bios: [
+            'Después de 24 años en Estados Unidos, Mehdi ahora ayuda a abrir mercados en Marruecos y Colombia mientras acompaña a personas que desean construir con propósito y visión a largo plazo.',
+            'Ryan es emprendedor, exatleta y líder comunitario en Los Ángeles. Su visión es crear libertad financiera, un legado familiar sólido e inspirar a otros con propósito, disciplina y constancia.',
+            'Magaly acompaña a personas en Estados Unidos y otros mercados para que construyan su salud, su trabajo y su vida con mayor intención, equilibrio y conexión con sus valores.',
+            'Ming Way construyó un negocio desde cero junto a su padre. Hoy ayuda a otros a desarrollar disciplina, asumir sus decisiones y crear negocios responsables que reflejen sus valores.',
+            'Desde 2016, Simon ha apoyado a más de 10.000 emprendedores en mercados internacionales y enseña estrategias prácticas para crear vidas profesionales más flexibles y sostenibles.',
+            'Alex aporta más de 35 años de experiencia en marketing dentro de la industria de suplementos y un compromiso permanente con la salud, el bienestar y una vida plena.',
+            'Durante más de una década, Zah ha entrenado a atletas de élite, celebridades y ejecutivos, uniendo liderazgo, visión y colaboración para construir un legado auténtico.',
+            'Emanuela forma parte de la creciente comunidad de distribuidores de True Legacy. Su historia completa y más detalles de su perfil se agregarán próximamente.',
+        ],
+    },
+    fr: {
+        viewProfile: 'Voir le profil',
+        roles: ['Fondateur mondial et développeur de marchés', 'Entrepreneur et leader communautaire', 'Coach et entrepreneure engagée', 'Bâtisseur d’entreprise et mentor', 'Entrepreneur mondial et stratège', 'Leader en marketing et bien-être', 'Coach de performance et bâtisseur d’héritage', 'Distributrice True Legacy'],
+        bios: [
+            'Après 24 ans aux États-Unis, Mehdi contribue aujourd’hui à ouvrir des marchés au Maroc et en Colombie tout en accompagnant ceux qui souhaitent bâtir avec vision et détermination.',
+            'Ryan est entrepreneur, ancien athlète et leader communautaire à Los Angeles. Sa vision est de créer une liberté financière, un héritage familial durable et d’inspirer les autres.',
+            'Magaly accompagne des personnes aux États-Unis et ailleurs afin qu’elles construisent leur santé, leur travail et leur vie avec davantage d’intention et d’équilibre.',
+            'Ming Way a bâti une entreprise avec son père. Aujourd’hui, il aide les autres à développer leur discipline et à créer des activités responsables, alignées avec leurs valeurs.',
+            'Depuis 2016, Simon a accompagné plus de 10 000 entrepreneurs sur plusieurs marchés et partage des stratégies pratiques pour bâtir une vie professionnelle plus libre et durable.',
+            'Alex apporte plus de 35 ans d’expérience en marketing dans l’industrie des compléments alimentaires et un engagement constant envers la santé et le bien-être.',
+            'Depuis plus de dix ans, Zah accompagne des athlètes d’élite, des célébrités et des dirigeants, en réunissant leadership, vision et collaboration pour bâtir un héritage authentique.',
+            'Emanuela fait partie de la communauté grandissante des distributeurs True Legacy. Son histoire complète et les détails de son profil seront ajoutés prochainement.',
+        ],
+    },
+    pt: {
+        viewProfile: 'Ver perfil',
+        roles: ['Fundador global e desenvolvedor de mercados', 'Empreendedor e líder comunitário', 'Coach e empreendedora de impacto', 'Construtor de negócios e mentor', 'Empreendedor global e estrategista', 'Líder de marketing e bem-estar', 'Coach de performance e construtor de legado', 'Distribuidora True Legacy'],
+        bios: [
+            'Depois de 24 anos nos Estados Unidos, Mehdi agora ajuda a abrir mercados no Marrocos e na Colômbia e apoia pessoas que desejam construir com propósito e visão de longo prazo.',
+            'Ryan é empreendedor, ex-atleta e líder comunitário em Los Angeles. Sua visão é criar liberdade financeira, um legado familiar sólido e inspirar outras pessoas.',
+            'Magaly apoia pessoas nos Estados Unidos e em outros mercados a construírem sua saúde, seu trabalho e sua vida com mais intenção, equilíbrio e alinhamento com seus valores.',
+            'Ming Way construiu um negócio ao lado do pai. Hoje ajuda outras pessoas a desenvolverem disciplina e criarem negócios responsáveis, alinhados aos seus valores.',
+            'Desde 2016, Simon já apoiou mais de 10 mil empreendedores em mercados internacionais e ensina estratégias práticas para criar vidas profissionais mais flexíveis e sustentáveis.',
+            'Alex reúne mais de 35 anos de experiência em marketing na indústria de suplementos e um compromisso permanente com saúde, bem-estar e uma vida plena.',
+            'Há mais de uma década, Zah treina atletas de elite, celebridades e executivos, unindo liderança, visão e colaboração para construir um legado autêntico.',
+            'Emanuela faz parte da crescente comunidade de distribuidores True Legacy. Sua história completa e mais detalhes do perfil serão adicionados em breve.',
+        ],
+    },
+} as const
+
 export function PhotoCarousel3D() {
+    const { locale } = useLocaleContext()
     const [active, setActive] = useState(0)
     const count = LEADERS.length
 
@@ -194,7 +241,9 @@ export function PhotoCarousel3D() {
         }
     }
 
-    const activeLeader = LEADERS[active]
+    const localized = locale === 'en' ? null : LEADER_COPY[locale]
+    const leaders = LEADERS.map((leader, index) => localized ? { ...leader, role: localized.roles[index], bio: [localized.bios[index]] } : leader)
+    const activeLeader = leaders[active]
 
     return (
         <div className="w-full px-4 md:px-8 pb-12 overflow-visible" style={{ touchAction: 'pan-y' }}>
@@ -203,7 +252,7 @@ export function PhotoCarousel3D() {
                 className="relative mx-auto overflow-hidden h-[380px] sm:h-[440px]"
                 style={{ perspective: '1200px' }}
             >
-                {LEADERS.map((leader, idx) => {
+                {leaders.map((leader, idx) => {
                     const style = getCardStyle(idx)
                     const LIcon = leader.icon
                     return (
@@ -327,7 +376,7 @@ export function PhotoCarousel3D() {
                             </a>
                         )}
                         <Link to={activeLeader.profileUrl} className="text-sm font-semibold text-cyan-300 transition-colors hover:text-white">
-                            View profile
+                            {localized?.viewProfile ?? 'View profile'}
                         </Link>
                     </div>
                     <div className="text-slate-400 text-sm leading-relaxed text-left space-y-3">
