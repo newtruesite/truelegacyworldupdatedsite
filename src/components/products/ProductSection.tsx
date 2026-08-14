@@ -4,6 +4,7 @@ import { getDistributorLink } from "@/lib/distributorRouter";
 import { PRODUCTS, type ProductId } from "@/lib/products";
 import { t } from "@/lib/translations";
 import { motion } from "framer-motion";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 
 type Variant = "home" | "homeAll" | "country";
@@ -20,6 +21,7 @@ export function ProductSection({
   variant = "country",
 }: Props) {
   const { locale } = useLocaleContext();
+  const [showAllProducts, setShowAllProducts] = useState(false);
 
   const copy = t[locale];
 
@@ -91,6 +93,11 @@ export function ProductSection({
           ? "Conheça a linha de produtos, seus usos previstos e a disponibilidade por mercado. Fale com um distribuidor para confirmar as informações locais."
           : "Explore the product line, intended uses, and market-specific availability. Contact a distributor to confirm current information in your location.";
 
+  const visibleProductIds =
+    variant === "country" && !showAllProducts
+      ? productIds.slice(0, 4)
+      : productIds;
+
   return (
     <section
       className={variant === "home" ? "py-20" : "py-20"}
@@ -114,7 +121,7 @@ export function ProductSection({
           </p>
           {/* Duo package: K8 + emGuarde — recommended combo (hidden for homeAll) */}
           {variant !== "homeAll" && (
-            <div className="mt-8 mx-auto max-w-2xl rounded-2xl border border-cyan-500/30 bg-gradient-to-br from-cyan-500/10 to-purple-500/10 p-6 text-center md:text-left">
+            <div id="duo-package" className="mt-8 mx-auto max-w-3xl rounded-3xl border border-cyan-500/30 bg-gradient-to-br from-cyan-500/10 to-purple-500/10 p-6 text-center md:p-8 md:text-left">
               <p className="text-xs font-semibold uppercase tracking-wider text-cyan-300 mb-2">
                 {locale === "es"
                   ? "Recomendado"
@@ -133,7 +140,7 @@ export function ProductSection({
                       ? "Sistema Duo: Kangen K8 + emGuarde"
                       : "Duo package: Kangen K8 + emGuarde"}
               </h3>
-              <p className="text-slate-300 text-sm mb-4">
+              <p className="text-slate-300 text-sm mb-6">
                 {locale === "es"
                   ? "La mejor agua alcalina en casa con el K8 y protección EMF 24/7 con emGuarde. El combo que más recomendamos para salud y negocio."
                   : locale === "fr"
@@ -142,6 +149,16 @@ export function ProductSection({
                       ? "A melhor água alcalina em casa com o K8 e proteção EMF 24/7 com emGuarde. O combo que mais recomendamos."
                       : "Best-in-class alkaline water at home with the K8 and 24/7 EMF protection with emGuarde. The combo we recommend most for health and business."}
               </p>
+              <div className="mb-6 grid grid-cols-2 items-end gap-4 rounded-2xl border border-white/10 bg-[#071127]/70 p-4 sm:p-6">
+                <div>
+                  <img src="/products/k8.png" alt="K8 flagship Kangen Water ionizer" className="mx-auto h-40 w-full object-contain drop-shadow-2xl sm:h-56" />
+                  <p className="mt-3 text-center text-sm font-bold text-white">K8 Flagship</p>
+                </div>
+                <div>
+                  <img src="/products/emguarde-go.png" alt="emGuarde GO product set" className="mx-auto h-36 w-full object-contain drop-shadow-2xl sm:h-48" />
+                  <p className="mt-3 text-center text-sm font-bold text-white">emGuarde GO</p>
+                </div>
+              </div>
               <Link
                 to={getDistributorLink(country?.slug)}
                 className="inline-flex items-center gap-2 rounded-md bg-cyan-500 hover:bg-cyan-400 hover:-translate-y-0.5 hover:shadow-md text-white font-semibold px-5 py-2.5 text-sm transition-all duration-150"
@@ -159,7 +176,7 @@ export function ProductSection({
               : "products-grid grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8 max-w-5xl mx-auto"
           }
         >
-          {productIds.map((id, index) => {
+          {visibleProductIds.map((id, index) => {
             const product = PRODUCTS[id];
             const pCopy = copy.products?.[id];
             if (!product) return null;
@@ -253,6 +270,31 @@ export function ProductSection({
             );
           })}
         </div>
+        {variant === "country" && productIds.length > 4 && (
+          <div className="mt-10 text-center">
+            <button
+              type="button"
+              onClick={() => setShowAllProducts((current) => !current)}
+              className="inline-flex min-h-12 items-center justify-center rounded-xl border border-cyan-400/30 bg-cyan-400/[0.06] px-7 text-sm font-bold text-cyan-200 transition-all hover:bg-cyan-400/[0.12]"
+            >
+              {showAllProducts
+                ? locale === "es"
+                  ? "Ver menos productos"
+                  : locale === "fr"
+                    ? "Voir moins de produits"
+                    : locale === "pt"
+                      ? "Ver menos produtos"
+                      : "Show fewer products"
+                : locale === "es"
+                  ? "Cargar más productos"
+                  : locale === "fr"
+                    ? "Afficher plus de produits"
+                    : locale === "pt"
+                      ? "Carregar mais produtos"
+                      : "Load more products"}
+            </button>
+          </div>
+        )}
       </div>
     </section>
   );

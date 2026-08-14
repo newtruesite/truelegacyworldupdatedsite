@@ -5,6 +5,7 @@ import NotFoundPage from "@/pages/NotFoundPage";
 import { ProductSection } from "@/components/products/ProductSection";
 import { FlagIntro } from "@/components/ui/FlagIntro";
 import { TLBackground } from "@/components/ui/TLBackground";
+import { TestimonialsSplit } from "@/components/ui/split-testimonial";
 import { VSLPlayer } from "@/components/ui/VSLPlayer";
 import { useLocaleContext } from "@/contexts/LocaleContext";
 import { trackEvent } from "@/lib/analytics";
@@ -1191,9 +1192,9 @@ function getMarketGatewayCopy(locale: "en" | "es" | "fr" | "pt") {
       products: "Explore the products",
       productsDesc:
         "Start with the flagship K8, compare wellness systems, and review availability for your market.",
-      duo: "Discover the True Legacy Duo",
+      duo: "Meet the coaches",
       duoDesc:
-        "See how the K8 water system and emGuarde GO are presented together, with product demos and responsible education.",
+        "Meet the True Legacy leaders and distributors who provide product education, mentorship, and team support.",
       opportunity: "Explore the opportunity",
       opportunityDesc:
         "Understand the independent distributor model, team support, expectations, and the next steps—without income promises.",
@@ -1217,9 +1218,9 @@ function getMarketGatewayCopy(locale: "en" | "es" | "fr" | "pt") {
       products: "Explora los productos",
       productsDesc:
         "Comienza con el modelo insignia K8, compara sistemas de bienestar y revisa la disponibilidad en tu mercado.",
-      duo: "Descubre el True Legacy Duo",
+      duo: "Conoce a los coaches",
       duoDesc:
-        "Conoce cómo presentamos el sistema de agua K8 y emGuarde GO juntos, con demostraciones y educación responsable.",
+        "Conoce a los líderes y distribuidores de True Legacy que ofrecen educación, mentoría y apoyo de equipo.",
       opportunity: "Explora la oportunidad",
       opportunityDesc:
         "Comprende el modelo de distribuidor independiente, el apoyo del equipo, las expectativas y los próximos pasos, sin promesas de ingresos.",
@@ -1243,9 +1244,9 @@ function getMarketGatewayCopy(locale: "en" | "es" | "fr" | "pt") {
       products: "Découvrir les produits",
       productsDesc:
         "Commencez par le modèle phare K8, comparez les systèmes de bien-être et vérifiez leur disponibilité dans votre marché.",
-      duo: "Découvrir le True Legacy Duo",
+      duo: "Rencontrer les coachs",
       duoDesc:
-        "Découvrez comment le système d’eau K8 et emGuarde GO sont présentés ensemble, avec démonstrations et information responsable.",
+        "Rencontrez les leaders et distributeurs True Legacy qui proposent formation, mentorat et soutien d’équipe.",
       opportunity: "Découvrir l’opportunité",
       opportunityDesc:
         "Comprenez le modèle de distributeur indépendant, le soutien de l’équipe, les attentes et les prochaines étapes, sans promesse de revenus.",
@@ -1269,9 +1270,9 @@ function getMarketGatewayCopy(locale: "en" | "es" | "fr" | "pt") {
       products: "Explore os produtos",
       productsDesc:
         "Comece pelo modelo carro-chefe K8, compare sistemas de bem-estar e confira a disponibilidade no seu mercado.",
-      duo: "Conheça o True Legacy Duo",
+      duo: "Conheça os coaches",
       duoDesc:
-        "Veja como o sistema de água K8 e o emGuarde GO são apresentados juntos, com demonstrações e educação responsável.",
+        "Conheça os líderes e distribuidores True Legacy que oferecem educação, mentoria e suporte de equipe.",
       opportunity: "Explore a oportunidade",
       opportunityDesc:
         "Entenda o modelo de distribuidor independente, o apoio da equipe, as expectativas e os próximos passos, sem promessas de renda.",
@@ -1653,7 +1654,7 @@ export default function CountryPage() {
                   step: "02",
                   title: gateway.duo,
                   description: gateway.duoDesc,
-                  to: `/${country.slug}/products#duo-package`,
+                  to: "/distributors",
                   color: "#2dd4bf",
                 },
                 {
@@ -1763,17 +1764,17 @@ export default function CountryPage() {
           </div>
         </section>
 
-        {/* ===== TESTIMONIALS (moved up after Pillars — V20) ===== */}
+        {/* ===== TEAM STORIES — immersive phone treatment ===== */}
         <section
-          className="py-20 border-t border-white/5"
-          style={{ background: "#060b1e" }}
+          className="border-y border-white/5 py-20 md:py-24"
+          style={{ background: "#080e24" }}
         >
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <motion.div
               initial={{ opacity: 0 }}
               whileInView={{ opacity: 1 }}
               viewport={{ once: true }}
-              className="mb-14"
+              className="mx-auto mb-12 max-w-3xl text-center"
             >
               <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[#F5A623] mb-2">
                 {locale === "es"
@@ -1784,86 +1785,43 @@ export default function CountryPage() {
                       ? "Depoimentos"
                       : "Testimonials"}
               </p>
-              <h2 className="text-2xl md:text-3xl font-bold text-white font-display">
-                {c.testimonialsLabel}
-              </h2>
-            </motion.div>
-            <div className="rounded-2xl border border-white/10 bg-white/5 px-6 py-8 text-center text-sm leading-relaxed text-slate-300">
-              {locale === "es"
-                ? "Estamos revisando las historias de la comunidad para confirmar permisos y mantener una comunicación responsable."
-                : locale === "fr"
-                  ? "Nous révisons les témoignages de la communauté afin de confirmer les autorisations et de maintenir une communication responsable."
-                  : locale === "pt"
-                    ? "Estamos revisando as histórias da comunidade para confirmar permissões e manter uma comunicação responsável."
-                    : "We are reviewing community stories to confirm permissions and maintain responsible, accurate communication."}
-            </div>
-            <div className="ig-follow-strip flex justify-center gap-2 sm:gap-3 md:gap-4 mt-8 flex-wrap">
-              <a
-                href="https://www.instagram.com/truelegacyworld/"
-                target="_blank" rel="noopener noreferrer"
-                className="ig-follow-btn inline-flex items-center gap-2.5 text-white py-2 px-4 sm:py-2.5 sm:px-5 md:py-3 md:px-6 rounded-full font-bold text-xs sm:text-sm no-underline transition-all hover:-translate-y-0.5"
-                style={{
-                  background:
-                    "linear-gradient(135deg, #833ab4, #fd1d1d, #fcb045)",
-                  boxShadow: "0 4px 20px rgba(131,58,180,0.3)",
-                }}
-              >
-                <IconInstagram size={18} />
-                {followLabel} @truelegacyworld
-              </a>
-              {["colombia", "brazil", "mexico", "paraguay"].includes(
-                country.slug,
-              ) && (
-                <a
-                  href="https://www.instagram.com/truelegacylatam/"
-                  target="_blank" rel="noopener noreferrer"
-                  className="ig-follow-btn ig-latam inline-flex items-center gap-2.5 text-white py-2 px-4 sm:py-2.5 sm:px-5 md:py-3 md:px-6 rounded-full font-bold text-xs sm:text-sm no-underline transition-all hover:-translate-y-0.5"
-                  style={{
-                    background:
-                      "linear-gradient(135deg, #833ab4, #fd1d1d, #fcb045)",
-                    boxShadow: "0 4px 20px rgba(131,58,180,0.3)",
-                  }}
-                >
-                  <IconInstagram size={18} />
-                  {followLabel} @truelegacylatam
-                </a>
-              )}
-              {/* YouTube follow buttons */}
-              {["colombia", "brazil", "mexico", "paraguay"].includes(
-                country.slug,
-              ) ? (
-                <a
-                  href="https://www.youtube.com/@TrueLegacyLATAM"
-                  target="_blank" rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2.5 text-white py-2 px-4 sm:py-2.5 sm:px-5 md:py-3 md:px-6 rounded-full font-bold text-xs sm:text-sm no-underline transition-all hover:-translate-y-0.5"
-                  style={{
-                    background: "linear-gradient(135deg, #c4302b, #ff0000)",
-                    boxShadow: "0 4px 20px rgba(196,48,43,0.3)",
-                  }}
-                >
-                  <IconYoutube size={18} />
-                  {locale === "es" ? "Ver en YouTube" : "Watch on YouTube"}{" "}
-                  @TrueLegacyLATAM
-                </a>
-              ) : (
-                <a
-                  href="https://www.youtube.com/@TrueLegacyWorld"
-                  target="_blank" rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2.5 text-white py-2 px-4 sm:py-2.5 sm:px-5 md:py-3 md:px-6 rounded-full font-bold text-xs sm:text-sm no-underline transition-all hover:-translate-y-0.5"
-                  style={{
-                    background: "linear-gradient(135deg, #c4302b, #ff0000)",
-                    boxShadow: "0 4px 20px rgba(196,48,43,0.3)",
-                  }}
-                >
-                  <IconYoutube size={18} />
-                  {locale === "fr"
-                    ? "Regarder sur YouTube"
+              <h2 className="mt-3 text-3xl font-black text-white md:text-5xl">
+                {locale === "es"
+                  ? "Historias de nuestro equipo"
+                  : locale === "fr"
+                    ? "Histoires de notre équipe"
                     : locale === "pt"
-                      ? "Assistir no YouTube"
-                      : "Watch on YouTube"}{" "}
-                  @TrueLegacyWorld
-                </a>
-              )}
+                      ? "Histórias da nossa equipe"
+                      : "Stories from our team"}
+              </h2>
+              <p className="mt-4 text-slate-400">
+                {locale === "es"
+                  ? "Experiencias reales compartidas por personas de nuestra comunidad True Legacy."
+                  : locale === "fr"
+                    ? "Des expériences personnelles partagées par les membres de notre communauté True Legacy."
+                    : locale === "pt"
+                      ? "Experiências pessoais compartilhadas por pessoas da comunidade True Legacy."
+                      : "Personal experiences shared by people in the True Legacy community."}
+              </p>
+            </motion.div>
+            <TestimonialsSplit locale={locale} />
+            <div className="mx-auto mt-2 max-w-4xl rounded-2xl border border-amber-300/20 bg-amber-300/[0.06] p-5 text-left text-xs leading-6 text-amber-50/80">
+              <strong className="text-amber-200">
+                {locale === "es"
+                  ? "Aviso sobre experiencias individuales: "
+                  : locale === "fr"
+                    ? "Avis sur les expériences individuelles : "
+                    : locale === "pt"
+                      ? "Aviso sobre experiências individuais: "
+                      : "Individual experience disclaimer: "}
+              </strong>
+              {locale === "es"
+                ? "Cada historia refleja únicamente la experiencia de esa persona. Los resultados varían y no se garantizan resultados de salud, ingresos ni negocios."
+                : locale === "fr"
+                  ? "Chaque histoire reflète uniquement l’expérience de cette personne. Les résultats varient et aucun résultat de santé, revenu ou activité n’est garanti."
+                  : locale === "pt"
+                    ? "Cada história reflete apenas a experiência daquela pessoa. Os resultados variam e não há garantia de saúde, renda ou resultados comerciais."
+                    : "Each story reflects that person’s experience only. Results vary, and no health, income, or business outcome is guaranteed."}
             </div>
           </div>
         </section>
@@ -2196,22 +2154,22 @@ export default function CountryPage() {
             country.slug === "usa" || country.slug === "canada"
               ? [
                   "k8",
+                  "emguarde",
                   "sd501",
                   "sd501_super",
                   "sd501_dx",
                   "anespa_dx",
-                  "emguarde",
                   "ukon_sigma",
                   "kangen_wagyu",
                   "kangen_air",
                 ]
               : [
                   "k8",
+                  "emguarde",
                   "sd501",
                   "sd501_super",
                   "sd501_dx",
                   "anespa_dx",
-                  "emguarde",
                   "ukon_sigma",
                   "kangen_wagyu",
                 ]
