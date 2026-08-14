@@ -2111,22 +2111,22 @@ export default function CountryPage() {
               ? [
                   "k8",
                   "emguarde",
+                  "anespa_dx",
+                  "ukon_sigma",
                   "sd501",
                   "sd501_super",
                   "sd501_dx",
-                  "anespa_dx",
-                  "ukon_sigma",
                   "kangen_wagyu",
                   "kangen_air",
                 ]
               : [
                   "k8",
                   "emguarde",
+                  "anespa_dx",
+                  "ukon_sigma",
                   "sd501",
                   "sd501_super",
                   "sd501_dx",
-                  "anespa_dx",
-                  "ukon_sigma",
                   "kangen_wagyu",
                 ]
           }
