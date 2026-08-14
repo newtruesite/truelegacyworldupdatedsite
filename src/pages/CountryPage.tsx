@@ -2042,8 +2042,9 @@ export default function CountryPage() {
             {(() => {
               const pdfConfig = PDF_SECTION_CONTENT[locale];
               return (
-                <div className="pdf-section-inner rounded-[1.75rem] border border-cyan-500/25 bg-gradient-to-br from-cyan-500/10 via-slate-900/80 to-slate-950/90">
-                  <div className="section-heading px-4 sm:px-8 pt-8 sm:pt-10">
+                <details className="group pdf-section-inner rounded-[1.75rem] border border-cyan-500/25 bg-gradient-to-br from-cyan-500/10 via-slate-900/80 to-slate-950/90">
+                  <summary className="flex cursor-pointer list-none items-center justify-between gap-6 px-6 py-6 sm:px-8 sm:py-7 [&::-webkit-details-marker]:hidden">
+                    <div>
                     <p className="text-[11px] font-semibold uppercase tracking-[0.3em] text-cyan-300 mb-2">
                       {locale === "es"
                         ? "Investigación & Recursos"
@@ -2053,12 +2054,14 @@ export default function CountryPage() {
                             ? "Pesquisa e Recursos"
                             : "Research & Resources"}
                     </p>
-                    <h2 className="section-title">{pdfConfig.sectionTitle}</h2>
-                    <p className="section-subtitle">
+                    <h2 className="m-0 text-xl font-bold text-white sm:text-2xl">{pdfConfig.sectionTitle}</h2>
+                    <p className="mt-2 max-w-3xl text-sm leading-6 text-slate-400">
                       {pdfConfig.sectionSubtitle}
                     </p>
-                  </div>
-                  <div className="pdf-grid px-4 sm:px-8 pb-8 sm:pb-10 pt-6 sm:pt-8">
+                    </div>
+                    <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-cyan-300/25 bg-cyan-300/[0.08] text-2xl font-light text-cyan-200 transition-transform group-open:rotate-45" aria-hidden="true">+</span>
+                  </summary>
+                  <div className="pdf-grid border-t border-white/10 px-4 pb-8 pt-6 sm:px-8 sm:pb-10 sm:pt-8">
                     {pdfConfig.pdfs.map((pdf) => (
                       <div key={pdf.name} className="pdf-card">
                         {pdf.badge && (
@@ -2095,11 +2098,41 @@ export default function CountryPage() {
                       </div>
                     ))}
                   </div>
-                </div>
+                </details>
               );
             })()}
           </div>
         </section>
+
+        {/* ===== DUO + FEATURED PRODUCTS — directly after resources ===== */}
+        <ProductSection
+          productIds={
+            country.slug === "usa" || country.slug === "canada"
+              ? [
+                  "k8",
+                  "emguarde",
+                  "sd501",
+                  "sd501_super",
+                  "sd501_dx",
+                  "anespa_dx",
+                  "ukon_sigma",
+                  "kangen_wagyu",
+                  "kangen_air",
+                ]
+              : [
+                  "k8",
+                  "emguarde",
+                  "sd501",
+                  "sd501_super",
+                  "sd501_dx",
+                  "anespa_dx",
+                  "ukon_sigma",
+                  "kangen_wagyu",
+                ]
+          }
+          country={country}
+          variant="country"
+        />
 
         {/* ===== OTHER COUNTRIES ===== */}
         <section
@@ -2146,36 +2179,6 @@ export default function CountryPage() {
             </div>
           </div>
         </section>
-
-        {/* ===== FULL PRODUCT CATALOG FOR THIS COUNTRY (Kangen Air USA/Canada only) ===== */}
-        <ProductSection
-          productIds={
-            country.slug === "usa" || country.slug === "canada"
-              ? [
-                  "k8",
-                  "emguarde",
-                  "sd501",
-                  "sd501_super",
-                  "sd501_dx",
-                  "anespa_dx",
-                  "ukon_sigma",
-                  "kangen_wagyu",
-                  "kangen_air",
-                ]
-              : [
-                  "k8",
-                  "emguarde",
-                  "sd501",
-                  "sd501_super",
-                  "sd501_dx",
-                  "anespa_dx",
-                  "ukon_sigma",
-                  "kangen_wagyu",
-                ]
-          }
-          country={country}
-          variant="country"
-        />
 
         {/* ===== EVENTS TEASER (V20) ===== */}
         <section

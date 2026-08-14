@@ -121,7 +121,7 @@ export function ProductSection({
           </p>
           {/* Duo package: K8 + emGuarde — recommended combo (hidden for homeAll) */}
           {variant !== "homeAll" && (
-            <div id="duo-package" className="mt-8 mx-auto max-w-3xl rounded-3xl border border-cyan-500/30 bg-gradient-to-br from-cyan-500/10 to-purple-500/10 p-6 text-center md:p-8 md:text-left">
+            <div id="duo-package" className="mt-8 mx-auto max-w-5xl rounded-3xl border border-cyan-500/30 bg-gradient-to-br from-cyan-500/10 to-purple-500/10 p-6 text-center md:p-8 md:text-left">
               <p className="text-xs font-semibold uppercase tracking-wider text-cyan-300 mb-2">
                 {locale === "es"
                   ? "Recomendado"
