@@ -37,7 +37,7 @@ export default function DistributorProfilePage() {
     'magaly-cardona': '/leaders/magaly-hero.png',
     'ryan-pool': '/leaders/ryan-hero.png',
     'alex-gonzalez': '/leaders/alex-hero-transparent.png',
-    'emanuela-doustova': '/leaders/emanuela-hero-transparent.png',
+    'emanuela': '/leaders/emanuela-hero-transparent.png',
   }
   const profileHero = profile ? profileHeroAssets[profile.slug] || profile.avatar_url || '/logos/tl-square-white.png' : '/logos/tl-square-white.png'
   const currentProfilePhoto = profile?.avatar_url || profileHero

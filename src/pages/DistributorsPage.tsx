@@ -38,7 +38,7 @@ const FEATURED_ORDER = [
   "alex-gonzalez",
   "ryan-pool",
   "magaly-cardona",
-  "emanuela-doustova",
+  "emanuela",
 ];
 
 const FALLBACK_DISTRIBUTORS: Distributor[] = [

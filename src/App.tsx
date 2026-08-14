@@ -30,7 +30,13 @@ import {
     Route,
     Routes,
     useLocation,
+    useParams,
 } from "react-router-dom";
+
+function LegacyEmanuelaLandingRedirect() {
+  const { campaign } = useParams();
+  return <Navigate to={`/d/emanuela/${campaign || "business"}`} replace />;
+}
 
 function PageTransitionWrapper({ children }: { children: React.ReactNode }) {
   return (
@@ -100,6 +106,8 @@ function AnimatedRoutes() {
               </PageTransitionWrapper>
             }
           />
+          <Route path="/d/emanuela-doustova" element={<Navigate to="/d/emanuela" replace />} />
+          <Route path="/d/emanuela-doustova/:campaign" element={<LegacyEmanuelaLandingRedirect />} />
           <Route
             path="/d/:slug/:campaign"
             element={
