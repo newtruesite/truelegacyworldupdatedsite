@@ -73,6 +73,7 @@ const LANGUAGE_NAMES: Record<string, string> = {
   zh: "Mandarin",
   yue: "Cantonese",
   ms: "Malay",
+  ar: "Arabic",
 };
 
 function IconWhatsApp({ className }: { className?: string }) {
@@ -292,7 +293,7 @@ function DistributorCard({ dist, index, profileLabel }: { dist: Distributor; ind
   return (
     <motion.article initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: Math.min(index, 7) * 0.05 }} className="group flex h-full flex-col overflow-hidden rounded-3xl border border-white/10 bg-[#09142c] transition-all duration-300 hover:-translate-y-1 hover:border-cyan-300/30 hover:shadow-2xl hover:shadow-cyan-950/20">
       <Link to={`/d/${dist.slug}`} className="relative block aspect-[4/5] overflow-hidden bg-cyan-500/10">
-        {!imgError && dist.photo ? <img src={dist.photo} alt={dist.name} className="h-full w-full object-cover object-top transition duration-500 group-hover:scale-[1.025]" onError={() => setImgError(true)} /> : <span className="flex h-full items-center justify-center text-5xl font-black text-cyan-300">{dist.fallbackInitial}</span>}
+        {!imgError && dist.photo ? <img src={dist.photo} alt={dist.name} className={`h-full w-full object-cover object-top transition duration-500 ${dist.slug === "simon-loh" ? "origin-bottom scale-[1.16] group-hover:scale-[1.19]" : "group-hover:scale-[1.025]"}`} onError={() => setImgError(true)} /> : <span className="flex h-full items-center justify-center text-5xl font-black text-cyan-300">{dist.fallbackInitial}</span>}
         <span className="absolute left-4 top-4 inline-flex items-center gap-1.5 rounded-full border border-cyan-200/20 bg-[#071127]/85 px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.13em] text-cyan-100 backdrop-blur">
           <BadgeCheck className="h-4 w-4 text-cyan-300" /> Verified
         </span>

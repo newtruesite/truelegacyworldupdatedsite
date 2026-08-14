@@ -73,7 +73,7 @@ const FALLBACK_DISTRIBUTORS: PublicDistributor[] = [
     bio: 'Global and LATAM product education, leadership, and team support.',
     avatar_url: '/leaders/standardized/mehdi-cohen.png',
     regions: ['Global', 'LATAM', 'Morocco', 'USA', 'Canada'],
-    languages: ['en', 'es', 'fr'],
+    languages: ['en', 'es', 'fr', 'ar'],
     phone: '+1 (864) 907-2149',
     instagram_url: 'https://www.instagram.com/mehdicohen_/',
   },
@@ -111,7 +111,7 @@ const FALLBACK_DISTRIBUTORS: PublicDistributor[] = [
     title: 'True Legacy 6A2-5 Leader',
     bio: 'Ming-Way built from the ground up alongside his father, developing discipline and resilience that he now uses to help others build responsible, legacy-focused businesses.',
     avatar_url: '/leaders/standardized/ming-way-sia.png',
-    regions: ['Malaysia', 'India'],
+    regions: ['Global', 'Malaysia', 'India'],
     languages: ['en'],
     phone: '+60 12-276-1229',
     instagram_url: 'https://www.instagram.com/mingwaysia/',
@@ -137,7 +137,7 @@ const FALLBACK_DISTRIBUTORS: PublicDistributor[] = [
     title: 'True Legacy Distributor',
     bio: "For more than a decade, I've had the privilege of coaching some of the world’s top performers—elite athletes, celebrities, and C-suite executives. But what I discovered along that journey went beyond just training—it was about mastering leadership, understanding leverage, and embracing a vision that’s bigger than yourself.\n\nI realized true, lasting impact isn't created in isolation. It comes from connecting with the right people and choosing the right vehicle. That’s what led me to Enagic—a company built on authenticity, proven systems, and sustainable growth.\n\nNow, we have a space where like-minded leaders unite, blend their strengths, and leverage our collective expertise to build generational wealth and a lasting legacy.",
     avatar_url: '/leaders/standardized/zah-naderi.png',
-    regions: ['USA'],
+    regions: ['Global', 'USA'],
     languages: ['en'],
     phone: '+1 (585) 319-6018',
     instagram_url: 'https://www.instagram.com/zahphysique/',
@@ -150,7 +150,7 @@ const FALLBACK_DISTRIBUTORS: PublicDistributor[] = [
     title: 'True Legacy 6A2-4 Leader',
     bio: 'Accountant by training, entrepreneur by life. Simon escaped the rat race in 2016 and built his Enagic business across international markets. Today, he travels the world sharing his experience and training entrepreneurs to pursue financial freedom through Enagic and the True Legacy community.',
     avatar_url: '/leaders/standardized/simon-loh.png',
-    regions: ['Malaysia', 'India', 'UAE', 'Türkiye', 'Nigeria', 'Kazakhstan', 'USA', 'Canada'],
+    regions: ['Global', 'Malaysia', 'India', 'UAE', 'Türkiye', 'Nigeria', 'Kazakhstan', 'USA', 'Canada'],
     languages: ['en', 'zh', 'yue', 'ms'],
     phone: '+60126612042',
     instagram_url: 'https://www.instagram.com/simonloh_/',
@@ -175,7 +175,7 @@ export async function getPublicDistributors(): Promise<PublicDistributor[]> {
   const { data, error } = await crmSupabase.rpc('get_public_crm_distributors')
   if (error || !Array.isArray(data)) return FALLBACK_DISTRIBUTORS
   return (data as PublicDistributor[]).map(profile => {
-    if (!['mehdi-cohen', 'simon-loh'].includes(profile.slug)) return profile
+    if (!['mehdi-cohen', 'simon-loh', 'ming-way-sia', 'zah-naderi'].includes(profile.slug)) return profile
     const confirmed = FALLBACK_DISTRIBUTORS.find(item => item.slug === profile.slug)
     return confirmed ? { ...profile, ...confirmed, id: profile.id } : profile
   })
