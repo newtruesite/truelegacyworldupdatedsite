@@ -4,12 +4,14 @@ import { ProductSection } from "@/components/products/ProductSection";
 import { SEO } from "@/components/SEO";
 import { PhotoCarousel3D } from "@/components/ui/PhotoCarousel3D";
 import { SocialProofStrip } from "@/components/ui/SocialProofStrip";
+import { TestimonialsSplit } from "@/components/ui/split-testimonial";
 import { TLBackground } from "@/components/ui/TLBackground";
 import WorldMap from "@/components/ui/WorldMap";
 import { useLocaleContext } from "@/contexts/LocaleContext";
 import { trackEvent } from "@/lib/analytics";
 import { t } from "@/lib/translations";
 import { motion } from "framer-motion";
+import { ArrowRight, BookOpenCheck, BriefcaseBusiness, CalendarDays, Droplets, PlayCircle, ShieldCheck, Users } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 
@@ -163,10 +165,12 @@ export default function HomePage() {
                 className="mb-3 text-xs font-semibold tracking-[0.3em] uppercase text-tl-gold opacity-80"
               >
                 {locale === "es"
-                  ? "Ubica tu región en el mapa"
+                  ? "Salud · Liderazgo · Legado"
                   : locale === "fr"
-                    ? "Trouvez votre région sur la carte"
-                    : "Find your region on the map"}
+                    ? "Santé · Leadership · Héritage"
+                    : locale === "pt"
+                      ? "Saúde · Liderança · Legado"
+                      : "Health · Leadership · Legacy"}
               </motion.p>
 
               {/* Main heading — fluid on mobile, larger and more confident */}
@@ -180,9 +184,9 @@ export default function HomePage() {
                 }}
                 className="hero-title mb-6 px-1"
               >
-                {copy.hero_heading}
+                {locale === "es" ? "Construye mejor salud." : locale === "fr" ? "Construisez une meilleure santé." : locale === "pt" ? "Construa uma saúde melhor." : "Build Better Health."}
                 <br />
-                <span className="gradient-text">{copy.hero_around}</span>
+                <span className="gradient-text">{locale === "es" ? "Crea un legado mayor." : locale === "fr" ? "Créez un plus grand héritage." : locale === "pt" ? "Crie um legado maior." : "Create a Bigger Legacy."}</span>
               </motion.h1>
 
               <motion.p
@@ -195,15 +199,19 @@ export default function HomePage() {
                 }}
                 className="hero-subtitle"
               >
-                {copy.heroSub}
-              </motion.p>
-              <p className="mt-4 hero-subtitle opacity-75 max-w-xl">
                 {locale === "es"
-                  ? "True Legacy tiene miembros y líderes en 14 mercados destacados. Explora los productos, conoce la comunidad y conéctate con el distribuidor adecuado."
+                  ? "Explora Kangen Water, emGuarde GO, la comunidad empresarial True Legacy y el sistema de entrenamiento que apoya a líderes en 14 mercados destacados."
                   : locale === "fr"
-                    ? "True Legacy compte des membres et des leaders dans 14 marchés clés. Découvrez les produits, la communauté et le distributeur qui vous correspond."
-                    : "True Legacy has members and leaders across 14 featured markets. Explore the products, meet the community, and connect with the right distributor."}
-              </p>
+                    ? "Découvrez Kangen Water, emGuarde GO, la communauté True Legacy et le système de formation qui soutient des leaders dans 14 marchés clés."
+                    : locale === "pt"
+                      ? "Explore Kangen Water, emGuarde GO, a comunidade True Legacy e o sistema de treinamento que apoia líderes em 14 mercados em destaque."
+                      : "Explore Kangen Water, emGuarde GO, the True Legacy business community, and the training system supporting leaders across 14 featured markets."}
+              </motion.p>
+              <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
+                <Link to="/products" onClick={()=>trackEvent("home_path_click",{path:"products",locale})} className="btn-primary inline-flex min-h-12 items-center justify-center gap-2 px-6">{locale==='es'?'Explorar productos':locale==='pt'?'Explorar produtos':'Explore the Products'}<ArrowRight className="h-4 w-4"/></Link>
+                <Link to="/apply?interest=distributor" onClick={()=>trackEvent("home_path_click",{path:"business",locale})} className="inline-flex min-h-12 items-center justify-center gap-2 rounded-lg border border-tl-gold/40 bg-tl-gold/10 px-6 font-semibold text-tl-gold hover:bg-tl-gold/20">{locale==='es'?'Explorar el negocio':locale==='pt'?'Explorar o negócio':'Explore the Opportunity'}</Link>
+                <Link to="/crm" className="inline-flex min-h-12 items-center justify-center rounded-lg border border-white/15 bg-white/5 px-6 font-semibold text-white hover:bg-white/10">{locale==='es'?'Acceso distribuidores':locale==='pt'?'Acesso distribuidores':'Distributor Login'}</Link>
+              </div>
               <SocialProofStrip />
             </motion.div>
 
@@ -238,6 +246,29 @@ export default function HomePage() {
           </TLBackground>
         </section>
 
+        {/* ===== CHOOSE YOUR PATH ===== */}
+        <section className="relative border-y border-white/5 bg-[#080e24] py-20 md:py-24">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6">
+            <div className="mx-auto mb-12 max-w-3xl text-center"><p className="mb-3 text-xs font-semibold uppercase tracking-[.3em] text-tl-gold">Start here</p><h2 className="text-3xl font-black text-white md:text-5xl">What brought you to True Legacy?</h2><p className="mt-4 text-slate-400">Choose the experience that matches your goals. We’ll guide you to the right information and the right distributor.</p></div>
+            <div className="grid gap-5 md:grid-cols-3">
+              {[
+                {title:'Health & Products',body:'Discover Kangen Water, emGuarde GO, the Duo, and market-specific product education.',to:'/products',icon:Droplets,accent:'text-cyan-300 bg-cyan-400/10'},
+                {title:'Business Opportunity',body:'Explore the independent distributor model, mentorship, duplication, and global community.',to:'/apply?interest=distributor',icon:BriefcaseBusiness,accent:'text-tl-gold bg-tl-gold/10'},
+                {title:'Training & Community',body:'Access leadership education, weekly calls, events, and the True Legacy growth system.',to:'/training',icon:BookOpenCheck,accent:'text-violet-300 bg-violet-400/10'},
+              ].map(item=><Link key={item.title} to={item.to} onClick={()=>trackEvent('home_path_click',{path:item.title,locale})} className="group rounded-3xl border border-white/10 bg-white/[.035] p-7 transition hover:-translate-y-1 hover:border-cyan-400/30 hover:bg-white/[.055]"><div className={`grid h-14 w-14 place-items-center rounded-2xl ${item.accent}`}><item.icon className="h-7 w-7"/></div><h3 className="mt-6 text-2xl font-bold text-white">{item.title}</h3><p className="mt-3 min-h-20 text-sm leading-6 text-slate-400">{item.body}</p><span className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-cyan-300">Explore this path <ArrowRight className="h-4 w-4 transition group-hover:translate-x-1"/></span></Link>)}
+            </div>
+          </div>
+        </section>
+
+        {/* ===== DUO FEATURE ===== */}
+        <section className="relative overflow-hidden bg-[#060b1e] py-20 md:py-28">
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_75%_20%,rgba(14,165,233,.16),transparent_32%)]"/>
+          <div className="relative mx-auto grid max-w-7xl items-center gap-12 px-4 sm:px-6 lg:grid-cols-2">
+            <div><p className="text-xs font-semibold uppercase tracking-[.3em] text-tl-gold">The True Legacy Duo</p><h2 className="mt-4 text-4xl font-black text-white md:text-6xl">Two technologies.<br/><span className="gradient-text">One connected story.</span></h2><p className="mt-6 max-w-xl text-lg leading-8 text-slate-300">Meet the K8 flagship water ionizer and emGuarde GO. Explore each technology, watch the demonstrations, and speak with a distributor about availability in your market.</p><div className="mt-8 flex flex-col gap-3 sm:flex-row"><a href="https://youtu.be/1nkOCId-SfQ" target="_blank" rel="noreferrer" onClick={()=>trackEvent('video_click',{video:'water_demo',locale})} className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-cyan-500 px-5 font-bold text-slate-950"><PlayCircle className="h-5 w-5"/>Watch Water Demo</a><a href="https://youtu.be/5wuY1dKjHds" target="_blank" rel="noreferrer" onClick={()=>trackEvent('video_click',{video:'emguarde_go',locale})} className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl border border-white/15 px-5 font-bold text-white"><PlayCircle className="h-5 w-5"/>Watch emGuarde GO</a></div><Link to="/distributors" className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-tl-gold">Connect with a distributor <ArrowRight className="h-4 w-4"/></Link></div>
+            <div className="relative mx-auto w-full max-w-xl"><div className="absolute inset-10 rounded-full bg-cyan-400/20 blur-3xl"/><div className="relative grid grid-cols-2 items-end gap-4 rounded-[2rem] border border-white/10 bg-white/[.04] p-6 sm:p-10"><div><img src="/products/k8.png" alt="K8 flagship Kangen Water ionizer" className="mx-auto max-h-[430px] w-full object-contain drop-shadow-2xl"/><p className="mt-4 text-center font-bold text-white">K8 Flagship</p></div><div><img src="/products/emguarde-go.png" alt="emGuarde GO product set" className="mx-auto max-h-[340px] w-full object-contain drop-shadow-2xl"/><p className="mt-4 text-center font-bold text-white">emGuarde GO</p></div></div></div>
+          </div>
+        </section>
+
         {/* ===== LEADERS CAROUSEL ===== */}
         <section className="relative py-24" style={{ background: "#060b1e" }}>
           {/* Accent arcs at top */}
@@ -268,6 +299,12 @@ export default function HomePage() {
           </div>
 
           <PhotoCarousel3D />
+          <div className="mt-12 text-center"><Link to="/distributors" className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl border border-cyan-400/30 px-6 font-semibold text-cyan-200 hover:bg-cyan-400/10"><Users className="h-5 w-5"/>Meet all leaders and distributors</Link></div>
+        </section>
+
+        {/* ===== ORIGINAL TESTIMONIALS ===== */}
+        <section id="testimonials" className="relative border-y border-white/5 bg-[#080e24] py-20 md:py-24">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6"><div className="mx-auto mb-12 max-w-3xl text-center"><p className="text-xs font-semibold uppercase tracking-[.3em] text-tl-gold">Individual stories</p><h2 className="mt-3 text-3xl font-black text-white md:text-5xl">Experiences from our community</h2><p className="mt-4 text-slate-400">Original True Legacy community stories shared in each person’s own voice.</p></div><TestimonialsSplit locale={locale}/><div className="mx-auto mt-2 flex max-w-4xl items-start gap-3 rounded-2xl border border-amber-300/20 bg-amber-300/[.06] p-5 text-left text-xs leading-6 text-amber-50/80"><ShieldCheck className="mt-0.5 h-5 w-5 shrink-0 text-amber-300"/><p><strong className="text-amber-200">Individual experience disclaimer:</strong> These testimonials describe each person’s individual experience only. They are not medical advice, treatment claims, income promises, or representations of typical results. Experiences and business outcomes vary. No specific health improvement or income is guaranteed.</p></div></div>
         </section>
 
         {/* ===== JOIN THE TEAM (below leaders) ===== */}
@@ -366,6 +403,11 @@ export default function HomePage() {
           </div>
         </section>
 
+        {/* ===== COMMUNITY & EVENTS ===== */}
+        <section className="relative border-t border-white/5 bg-[#080e24] py-20 md:py-24">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6"><div className="mb-12 flex flex-col gap-5 md:flex-row md:items-end md:justify-between"><div className="max-w-2xl"><p className="text-xs font-semibold uppercase tracking-[.3em] text-tl-gold">Community in action</p><h2 className="mt-3 text-3xl font-black text-white md:text-5xl">Learn live. Build together.</h2><p className="mt-4 leading-7 text-slate-400">Join the recurring global English and LATAM Spanish calls, meet the team, and continue your development through True Legacy events.</p></div><Link to="/events" className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-cyan-500 px-6 font-bold text-slate-950"><CalendarDays className="h-5 w-5"/>View all events</Link></div><div className="grid gap-6 md:grid-cols-2"><Link to="/events" className="group overflow-hidden rounded-3xl border border-white/10 bg-white/[.03]"><img src="/assets/event-global-flyer-UKa8W2ck.jpg" alt="True Legacy global English call" className="aspect-[16/10] w-full object-cover transition duration-500 group-hover:scale-[1.02]"/><div className="p-6"><p className="text-xs font-bold uppercase tracking-wider text-cyan-300">Global English</p><h3 className="mt-2 text-2xl font-bold text-white">Every Wednesday · 8:30 p.m. Eastern</h3><span className="mt-4 inline-flex items-center gap-2 text-sm text-cyan-200">See event details <ArrowRight className="h-4 w-4"/></span></div></Link><Link to="/events" className="group overflow-hidden rounded-3xl border border-white/10 bg-white/[.03]"><img src="/assets/event-latam-flyer.png" alt="True Legacy LATAM Spanish call" className="aspect-[16/10] w-full object-cover transition duration-500 group-hover:scale-[1.02]"/><div className="p-6"><p className="text-xs font-bold uppercase tracking-wider text-tl-gold">LATAM Spanish</p><h3 className="mt-2 text-2xl font-bold text-white">Every Thursday · 8:00 p.m. Eastern</h3><span className="mt-4 inline-flex items-center gap-2 text-sm text-cyan-200">Ver detalles <ArrowRight className="h-4 w-4"/></span></div></Link></div></div>
+        </section>
+
         {/* ===== TRAINING LIBRARY TEASER ===== */}
         <section
           className="relative py-16 border-t border-white/5"
@@ -450,23 +492,16 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* ===== ALL PRODUCTS ===== */}
+        {/* ===== FEATURED PRODUCTS ===== */}
         <ProductSection
           productIds={[
             "k8",
-            "sd501",
-            "sd501_super",
-            "sd501_dx",
             "anespa_dx",
             "emguarde",
-            "ukon_sigma",
-            "kangen_beaute",
-            "kangen_wagyu",
-            "emguarde_original",
-            "kangen_air",
           ]}
           variant="homeAll"
         />
+        <section className="bg-[#060b1e] px-4 pb-24 text-center"><Link to="/products" className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl border border-white/15 px-7 font-bold text-white hover:bg-white/5">Explore all products and technologies <ArrowRight className="h-4 w-4"/></Link></section>
       </main>
 
       {/* Sticky mobile CTA — visible after hero, hidden at footer */}
@@ -479,19 +514,7 @@ export default function HomePage() {
             "linear-gradient(to top, rgba(6,11,30,0.98), transparent)",
         }}
       >
-        <a
-          href="/apply"
-          target="_blank" rel="noopener noreferrer"
-          onClick={() =>
-            trackEvent("join_click", {
-              location: "home_join_sticky",
-              locale,
-            })
-          }
-          className="btn-primary flex items-center justify-center w-full"
-        >
-          {copy.join_cta}
-        </a>
+        <div className="grid grid-cols-3 gap-2 rounded-2xl border border-white/10 bg-[#081027]/95 p-2 shadow-2xl backdrop-blur"><Link to="/products" className="flex min-h-12 items-center justify-center rounded-xl bg-cyan-500 px-2 text-center text-xs font-bold text-slate-950">Products</Link><Link to="/apply?interest=distributor" className="flex min-h-12 items-center justify-center rounded-xl bg-tl-gold px-2 text-center text-xs font-bold text-slate-950">Opportunity</Link><Link to="/distributors" className="flex min-h-12 items-center justify-center rounded-xl border border-white/15 px-2 text-center text-xs font-bold text-white">Connect</Link></div>
       </div>
 
       <div ref={footerRef}>
