@@ -1496,14 +1496,13 @@ export default function CountryPage() {
                     {copy.unlockLegacy} <IconArrow size={18} />
                   </a>
 
-                  {/* WhatsApp */}
-                  <a
-                    href="https://wa.me/18649072149"
-                    target="_blank" rel="noopener noreferrer"
+                  {/* Coach directory — visitors choose the right team leader */}
+                  <Link
+                    to="/distributors"
                     className="mb-3 flex w-full items-center justify-center gap-2 rounded-2xl border border-green-500/20 px-6 py-3 text-sm font-semibold text-green-400 hover:bg-green-500/10 transition-all"
                   >
                     <IconWhatsapp size={16} /> {copy.getInTouch}
-                  </a>
+                  </Link>
 
                   {/* Facebook */}
                   <a
