@@ -1,8 +1,8 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
-import { ChevronLeft, ChevronRight, Star } from "lucide-react";
-import { useEffect, useState } from "react";
+import { ChevronLeft, ChevronRight, Star, X } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 
 export interface Testimonial {
   id: number;
@@ -270,6 +270,8 @@ export function TestimonialsSplit({
 
   const [activeIndex, setActiveIndex] = useState(0);
   const [isHovering, setIsHovering] = useState(false);
+  const [isStoryOpen, setIsStoryOpen] = useState(false);
+  const conversationRef = useRef<HTMLDivElement>(null);
 
   const active = listWithLocaleRole[activeIndex];
 
@@ -285,12 +287,12 @@ export function TestimonialsSplit({
 
   // Auto-advance every 5 seconds, pauses on hover
   useEffect(() => {
-    if (isHovering) return;
+    if (isHovering || isStoryOpen) return;
     const t = setInterval(() => {
       setActiveIndex((prev) => (prev + 1) % list.length);
     }, 5000);
     return () => clearInterval(t);
-  }, [isHovering, list.length]);
+  }, [isHovering, isStoryOpen, list.length]);
 
   const igUrl = (company: string | undefined) => {
     if (!company) return "https://www.instagram.com/truelegacyworld/";
@@ -337,6 +339,25 @@ export function TestimonialsSplit({
       return parts;
     }, []);
 
+  useEffect(() => {
+    const conversation = conversationRef.current;
+    if (!conversation) return;
+    conversation.scrollTo({ top: 0 });
+    const timers = messageParts.map((_, index) => window.setTimeout(() => {
+      conversation.scrollTo({ top: conversation.scrollHeight, behavior: 'smooth' });
+    }, 500 + index * 300));
+    return () => timers.forEach(window.clearTimeout);
+  }, [active.id, messageParts.length]);
+
+  useEffect(() => {
+    if (!isStoryOpen) return;
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setIsStoryOpen(false);
+    };
+    window.addEventListener('keydown', closeOnEscape);
+    return () => window.removeEventListener('keydown', closeOnEscape);
+  }, [isStoryOpen]);
+
   const testimonialControls = (mobile: boolean) => (
     <div className={`${mobile ? 'mt-4 flex lg:hidden' : 'mt-8 hidden lg:flex'} min-h-[44px] flex-nowrap items-center justify-center gap-3`}>
       <button onClick={prevTestimonial} aria-label="Previous testimonial" className="grid h-10 w-10 shrink-0 place-items-center rounded-full border border-white/10 bg-white/5 text-white hover:bg-white/10"><ChevronLeft className="h-5 w-5"/></button>
@@ -362,20 +383,33 @@ export function TestimonialsSplit({
               <div className="border-b border-white/10 bg-[#17171a]/95 px-4 pb-3 pt-2 text-center backdrop-blur">
                 <AnimatePresence mode="wait"><motion.div key={active.id} initial={{opacity:0,y:-6}} animate={{opacity:1,y:0}} exit={{opacity:0,y:6}} className="flex flex-col items-center"><img src={active.image ?? active.photo} alt="" className="h-12 w-12 rounded-full object-cover object-top ring-2 ring-white/20 shadow"/><p className="mt-1 text-sm font-semibold text-white">{active.name}</p><p className="text-[10px] text-slate-400">True Legacy community ›</p></motion.div></AnimatePresence>
               </div>
-              <div className="relative h-[510px] overflow-hidden bg-[linear-gradient(180deg,#0b0b0d,#111117)] px-3 py-5">
-                <div className="mb-4 text-center text-[10px] font-medium uppercase tracking-wider text-slate-500">Today · personal experience</div>
-                <AnimatePresence mode="wait"><motion.div key={active.id} initial={{opacity:0,x:25}} animate={{opacity:1,x:0}} exit={{opacity:0,x:-25}} transition={{duration:.35}} className="space-y-2.5">
-                  <div className="flex justify-start"><div className="max-w-[82%] rounded-[1.25rem] rounded-bl-md bg-[#2c2c2e] px-4 py-2.5 text-[13px] leading-[1.45] text-white shadow-sm">Hi True Legacy, I wanted to share my experience…</div></div>
-                  {messageParts.map((part,index)=><motion.div key={`${active.id}-${index}`} initial={{opacity:0,y:10}} animate={{opacity:1,y:0}} transition={{delay:.12+index*.1}} className="flex justify-end"><div className="max-w-[88%] rounded-[1.25rem] rounded-br-md bg-[#0a84ff] px-4 py-2.5 text-[13px] leading-[1.45] text-white shadow-sm">{part}</div></motion.div>)}
-                  <p className="pr-1 text-right text-[10px] text-slate-400">Delivered</p>
-                </motion.div></AnimatePresence>
-                <div className="absolute inset-x-3 bottom-3 flex items-center gap-2 rounded-full border border-white/15 bg-[#1c1c1e]/90 p-1.5 pl-4 text-xs text-slate-500 shadow-sm backdrop-blur"><span className="flex-1">Personal story</span><span className="grid h-7 w-7 place-items-center rounded-full bg-[#0a84ff] text-white">↑</span></div>
+              <div className="relative h-[510px] overflow-hidden bg-[linear-gradient(180deg,#0b0b0d,#111117)]">
+                <div ref={conversationRef} className="h-full overflow-y-auto px-3 pb-20 pt-5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+                  <div className="mb-4 text-center text-[10px] font-medium uppercase tracking-wider text-slate-500">Today · personal experience</div>
+                  <AnimatePresence mode="wait"><motion.div key={active.id} initial={{opacity:0,x:25}} animate={{opacity:1,x:0}} exit={{opacity:0,x:-25}} transition={{duration:.35}} className="space-y-2.5">
+                    <div className="flex justify-start"><div className="max-w-[82%] rounded-[1.25rem] rounded-bl-md bg-[#2c2c2e] px-4 py-2.5 text-[13px] leading-[1.45] text-white shadow-sm">Hi True Legacy, I wanted to share my experience…</div></div>
+                    {messageParts.map((part,index)=><motion.div key={`${active.id}-${index}`} initial={{opacity:0,y:10}} animate={{opacity:1,y:0}} transition={{delay:.12+index*.1}} className="flex justify-end"><div className="max-w-[88%] rounded-[1.25rem] rounded-br-md bg-[#0a84ff] px-4 py-2.5 text-[13px] leading-[1.45] text-white shadow-sm">{part}</div></motion.div>)}
+                    <p className="pr-1 text-right text-[10px] text-slate-400">Delivered</p>
+                  </motion.div></AnimatePresence>
+                </div>
+                <div className="pointer-events-none absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-[#111117] via-[#111117]/90 to-transparent" />
+                <button onClick={() => setIsStoryOpen(true)} className="absolute inset-x-3 bottom-3 flex min-h-10 items-center gap-2 rounded-full border border-white/15 bg-[#1c1c1e]/95 p-1.5 pl-4 text-xs text-slate-300 shadow-sm backdrop-blur transition hover:border-cyan-300/30 hover:text-white"><span className="flex-1 text-left">Read full story</span><span className="grid h-7 w-7 place-items-center rounded-full bg-[#0a84ff] text-white">↑</span></button>
               </div>
             </div>
           </div>
           {testimonialControls(true)}
         </div>
       </div>
+      <AnimatePresence>
+        {isStoryOpen && <motion.div role="dialog" aria-modal="true" aria-labelledby="testimonial-story-title" initial={{opacity:0}} animate={{opacity:1}} exit={{opacity:0}} className="fixed inset-0 z-[10000] flex items-end justify-center bg-[#030612]/85 p-3 backdrop-blur-md sm:items-center sm:p-6" onMouseDown={() => setIsStoryOpen(false)}>
+          <motion.article initial={{opacity:0,y:28,scale:.98}} animate={{opacity:1,y:0,scale:1}} exit={{opacity:0,y:20,scale:.98}} transition={{duration:.25}} className="relative max-h-[88dvh] w-full max-w-2xl overflow-y-auto rounded-[2rem] border border-cyan-300/20 bg-[#0b142b] p-6 shadow-2xl sm:p-9" onMouseDown={(event)=>event.stopPropagation()}>
+            <button onClick={() => setIsStoryOpen(false)} aria-label="Close full story" className="absolute right-4 top-4 grid h-10 w-10 place-items-center rounded-full border border-white/10 bg-white/5 text-slate-300 hover:bg-white/10 hover:text-white"><X className="h-5 w-5"/></button>
+            <div className="flex items-center gap-4 pr-12"><img src={active.image ?? active.photo} alt="" className="h-16 w-16 rounded-full object-cover object-top ring-2 ring-cyan-300/20"/><div><p className="text-xs font-bold uppercase tracking-[.2em] text-cyan-300">Individual experience</p><h3 id="testimonial-story-title" className="mt-1 text-2xl font-black text-white">{active.name}</h3></div></div>
+            <p className="mt-7 whitespace-pre-line text-base leading-8 text-slate-200">{active.quote}</p>
+            <p className="mt-7 border-t border-white/10 pt-5 text-xs leading-6 text-slate-500">This is one person’s individual experience. Experiences and outcomes vary; no specific health improvement or income is guaranteed.</p>
+          </motion.article>
+        </motion.div>}
+      </AnimatePresence>
     </div>
   );
 
