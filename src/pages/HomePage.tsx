@@ -502,8 +502,9 @@ export default function HomePage() {
         <ProductSection
           productIds={[
             "k8",
-            "anespa_dx",
             "emguarde",
+            "ukon_sigma",
+            "kangen_beaute",
           ]}
           variant="homeAll"
         />
