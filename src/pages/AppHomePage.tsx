@@ -28,7 +28,15 @@ export default function AppHomePage() {
     }).catch(() => setLoading(false))
   }, [session?.user.id])
 
-  const distributor = useMemo(() => distributors.find(item => item.id === membership?.distributor_id) || null, [distributors, membership])
+  const distributor = useMemo(() => {
+    const byId = distributors.find(item => item.id === membership?.distributor_id)
+    if (byId) return byId
+    const email = session?.user.email?.trim().toLowerCase()
+    const byEmail = email ? distributors.find(item => item.login_email?.trim().toLowerCase() === email) : null
+    if (byEmail) return byEmail
+    if (membership?.role === 'admin') return distributors.find(item => item.slug === 'mehdi-cohen' && item.active) || distributors.find(item => item.active) || null
+    return null
+  }, [distributors, membership, session?.user.email])
   const newLeads = leads.filter(item => item.status === 'new').length
   const dueLeads = leads.filter(item => item.next_follow_up_at && new Date(item.next_follow_up_at) <= new Date()).length
   const profileUrl = distributor ? `${window.location.origin}/d/${distributor.slug}` : ''
