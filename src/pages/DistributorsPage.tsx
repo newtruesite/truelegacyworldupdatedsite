@@ -65,15 +65,11 @@ const FALLBACK_DISTRIBUTORS: Distributor[] = [
   },
 ];
 
-const LANGUAGE_NAMES: Record<string, string> = {
-  en: "English",
-  es: "Spanish",
-  fr: "French",
-  pt: "Portuguese",
-  zh: "Mandarin",
-  yue: "Cantonese",
-  ms: "Malay",
-  ar: "Arabic",
+const LANGUAGE_NAMES: Record<string, Record<string, string>> = {
+  en: { en: "English", es: "Spanish", fr: "French", pt: "Portuguese", zh: "Mandarin", yue: "Cantonese", ms: "Malay", ar: "Arabic" },
+  es: { en: "Inglés", es: "Español", fr: "Francés", pt: "Portugués", zh: "Mandarín", yue: "Cantonés", ms: "Malayo", ar: "Árabe" },
+  fr: { en: "Anglais", es: "Espagnol", fr: "Français", pt: "Portugais", zh: "Mandarin", yue: "Cantonais", ms: "Malais", ar: "Arabe" },
+  pt: { en: "Inglês", es: "Espanhol", fr: "Francês", pt: "Português", zh: "Mandarim", yue: "Cantonês", ms: "Malaio", ar: "Árabe" },
 };
 
 function IconWhatsApp({ className }: { className?: string }) {
@@ -250,7 +246,7 @@ export default function DistributorsPage() {
                 </select>
                 <select value={language} onChange={(event) => setLanguage(event.target.value)} aria-label={copy.language} className="min-h-12 rounded-xl border border-white/10 bg-[#0b1630] px-4 text-sm text-white outline-none focus:border-cyan-400/60">
                   <option value="all">{copy.language}</option>
-                  {languages.map((item) => <option key={item} value={item}>{LANGUAGE_NAMES[item] || item.toUpperCase()}</option>)}
+                  {languages.map((item) => <option key={item} value={item}>{LANGUAGE_NAMES[locale]?.[item] || item.toUpperCase()}</option>)}
                 </select>
               </div>
               <div className="mt-4 flex items-center justify-between gap-4 text-xs text-slate-400">
@@ -261,7 +257,7 @@ export default function DistributorsPage() {
 
             {filtered.length ? (
               <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-                {filtered.map((dist, index) => <DistributorCard key={dist.slug} dist={dist} index={index} profileLabel={copy.profile} />)}
+                {filtered.map((dist, index) => <DistributorCard key={dist.slug} dist={dist} index={index} profileLabel={copy.profile} locale={locale} />)}
               </div>
             ) : (
               <div className="rounded-3xl border border-white/10 bg-white/[0.03] p-12 text-center">
@@ -288,14 +284,14 @@ export default function DistributorsPage() {
   );
 }
 
-function DistributorCard({ dist, index, profileLabel }: { dist: Distributor; index: number; profileLabel: string }) {
+function DistributorCard({ dist, index, profileLabel, locale }: { dist: Distributor; index: number; profileLabel: string; locale: string }) {
   const [imgError, setImgError] = useState(false);
   return (
     <motion.article initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: Math.min(index, 7) * 0.05 }} className="group flex h-full flex-col overflow-hidden rounded-3xl border border-white/10 bg-[#09142c] transition-all duration-300 hover:-translate-y-1 hover:border-cyan-300/30 hover:shadow-2xl hover:shadow-cyan-950/20">
       <Link to={`/d/${dist.slug}`} className="relative block aspect-[4/5] overflow-hidden bg-cyan-500/10">
         {!imgError && dist.photo ? <img src={dist.photo} alt={dist.name} className={`h-full w-full object-cover object-top transition duration-500 ${dist.slug === "simon-loh" ? "origin-bottom scale-[1.16] group-hover:scale-[1.19]" : "group-hover:scale-[1.025]"}`} onError={() => setImgError(true)} /> : <span className="flex h-full items-center justify-center text-5xl font-black text-cyan-300">{dist.fallbackInitial}</span>}
         <span className="absolute left-4 top-4 inline-flex items-center gap-1.5 rounded-full border border-cyan-200/20 bg-[#071127]/85 px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.13em] text-cyan-100 backdrop-blur">
-          <BadgeCheck className="h-4 w-4 text-cyan-300" /> Verified
+          <BadgeCheck className="h-4 w-4 text-cyan-300" /> {locale === 'es' ? 'Verificado' : locale === 'fr' ? 'Vérifié' : locale === 'pt' ? 'Verificado' : 'Verified'}
         </span>
       </Link>
       <div className="flex flex-1 flex-col p-5">
@@ -303,8 +299,8 @@ function DistributorCard({ dist, index, profileLabel }: { dist: Distributor; ind
         <p className="mt-1 min-h-10 text-sm leading-5 text-cyan-200/80">{dist.title}</p>
         <div className="mt-4 space-y-2 text-xs leading-5 text-slate-400">
           <p className="flex items-start gap-2"><MapPin className="mt-0.5 h-4 w-4 shrink-0 text-cyan-300" /><span>{dist.regions.join(" · ")}</span></p>
-          <p className="flex items-start gap-2"><Languages className="mt-0.5 h-4 w-4 shrink-0 text-cyan-300" /><span>{dist.languages.map((item) => LANGUAGE_NAMES[item] || item.toUpperCase()).join(" · ")}</span></p>
-          <p className="flex items-center gap-2"><Globe2 className="h-4 w-4 shrink-0 text-cyan-300" /> True Legacy team</p>
+          <p className="flex items-start gap-2"><Languages className="mt-0.5 h-4 w-4 shrink-0 text-cyan-300" /><span>{dist.languages.map((item) => LANGUAGE_NAMES[locale]?.[item] || item.toUpperCase()).join(" · ")}</span></p>
+          <p className="flex items-center gap-2"><Globe2 className="h-4 w-4 shrink-0 text-cyan-300" /> {locale === 'es' ? 'Equipo True Legacy' : locale === 'fr' ? 'Équipe True Legacy' : locale === 'pt' ? 'Equipe True Legacy' : 'True Legacy team'}</p>
         </div>
         <div className="mt-auto flex items-center gap-2 pt-6">
           <Link to={`/d/${dist.slug}`} className="inline-flex min-h-11 flex-1 items-center justify-center gap-2 rounded-xl bg-cyan-500 px-4 text-sm font-bold text-slate-950 hover:bg-cyan-400">
