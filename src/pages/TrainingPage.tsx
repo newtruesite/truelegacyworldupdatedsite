@@ -539,6 +539,8 @@ export default function TrainingPage() {
       waterText: "See the water technology, the different water types, and the everyday product story.",
       emguarde: "emGuarde GO Demonstration",
       emguardeText: "Learn what the portable set includes and how to explain it clearly and responsibly.",
+      duo: "The Full Duo Presentation",
+      duoText: "Bring both product stories together and see how the complete True Legacy Duo is presented as one connected solution.",
       continue: "I’ve watched the Duo — continue",
       completed: "Duo orientation complete",
       revisit: "Watch the Duo again",
@@ -556,6 +558,7 @@ export default function TrainingPage() {
       stepOne: "Paso 1", stepOneTitle: "Mira la orientación del Duo", stepOneText: "Dos demostraciones claras te dan la base de producto antes de comenzar la capacitación de negocio.",
       water: "Demostración de agua K8", waterText: "Conoce la tecnología, los diferentes tipos de agua y la historia cotidiana del producto.",
       emguarde: "Demostración de emGuarde GO", emguardeText: "Descubre qué incluye el set portátil y cómo explicarlo de forma clara y responsable.",
+      duo: "Presentación completa del Duo", duoText: "Une las historias de ambos productos y descubre cómo presentar el True Legacy Duo como una solución conectada.",
       continue: "Ya vi el Duo — continuar", completed: "Orientación del Duo completada", revisit: "Volver a ver el Duo",
       stepTwo: "Paso 2", stepTwoTitle: "Entra a la Academia de Liderazgo", stepTwoText: "Desbloquea la biblioteca organizada, elige un módulo y desarrolla tus habilidades en secuencia.",
       foundation: "Base de producto", modules: "10 módulos de capacitación", languages: "Inglés · Español · Portugués",
@@ -566,6 +569,7 @@ export default function TrainingPage() {
       stepOne: "Etapa 1", stepOneTitle: "Assista à orientação do Duo", stepOneText: "Duas demonstrações objetivas dão a base dos produtos antes do treinamento de negócios.",
       water: "Demonstração da água K8", waterText: "Conheça a tecnologia, os diferentes tipos de água e a história cotidiana do produto.",
       emguarde: "Demonstração do emGuarde GO", emguardeText: "Veja o que acompanha o conjunto portátil e como explicá-lo com clareza e responsabilidade.",
+      duo: "Apresentação completa do Duo", duoText: "Una as histórias dos dois produtos e veja como apresentar o True Legacy Duo como uma solução conectada.",
       continue: "Assisti ao Duo — continuar", completed: "Orientação do Duo concluída", revisit: "Assistir ao Duo novamente",
       stepTwo: "Etapa 2", stepTwoTitle: "Entre na Academia de Liderança", stepTwoText: "Desbloqueie a biblioteca organizada, escolha um módulo e desenvolva suas habilidades em sequência.",
       foundation: "Base de produtos", modules: "10 módulos de treinamento", languages: "Inglês · Espanhol · Português",
@@ -576,6 +580,7 @@ export default function TrainingPage() {
       stepOne: "Étape 1", stepOneTitle: "Regarder l’orientation Duo", stepOneText: "Deux démonstrations ciblées donnent les bases produit avant la formation commerciale.",
       water: "Démonstration de l’eau K8", waterText: "Découvrez la technologie, les différents types d’eau et l’usage quotidien du produit.",
       emguarde: "Démonstration emGuarde GO", emguardeText: "Découvrez le contenu du kit portable et comment le présenter clairement et de façon responsable.",
+      duo: "Présentation complète du Duo", duoText: "Réunissez les deux histoires produit et découvrez comment présenter le True Legacy Duo comme une solution cohérente.",
       continue: "J’ai regardé le Duo — continuer", completed: "Orientation Duo terminée", revisit: "Revoir le Duo",
       stepTwo: "Étape 2", stepTwoTitle: "Entrer dans l’Académie de Leadership", stepTwoText: "Déverrouillez la bibliothèque, choisissez un module et progressez dans l’ordre.",
       foundation: "Fondation produit", modules: "10 modules de formation", languages: "Anglais · Espagnol · Portugais",
@@ -583,14 +588,14 @@ export default function TrainingPage() {
   }[locale] || {
     eyebrow: "Your True Legacy learning path", title: "Understand the Duo. Then build the skills.", subtitle: "Begin with the two products at the center of the True Legacy story, then continue into the structured leadership academy.",
     stepOne: "Step 1", stepOneTitle: "Watch the Duo orientation", stepOneText: "Two focused demonstrations give you the product foundation before business training begins.",
-    water: "K8 Water Demonstration", waterText: "See the water technology, the different water types, and the everyday product story.", emguarde: "emGuarde GO Demonstration", emguardeText: "Learn what the portable set includes and how to explain it clearly and responsibly.",
+    water: "K8 Water Demonstration", waterText: "See the water technology, the different water types, and the everyday product story.", emguarde: "emGuarde GO Demonstration", emguardeText: "Learn what the portable set includes and how to explain it clearly and responsibly.", duo: "The Full Duo Presentation", duoText: "Bring both product stories together and see how the complete True Legacy Duo is presented as one connected solution.",
     continue: "I’ve watched the Duo — continue", completed: "Duo orientation complete", revisit: "Watch the Duo again", stepTwo: "Step 2", stepTwoTitle: "Enter the Leadership Academy", stepTwoText: "Unlock the organized training library, choose a module, and build your skills in sequence.",
     foundation: "Product foundation", modules: "10 training modules", languages: "English · Spanish · Portuguese",
   };
 
   const duoVideos = locale === "es"
-    ? { water: "https://youtu.be/6A_UpRmoWWc", emguarde: "https://youtu.be/BS4QEM-zXf0" }
-    : { water: "https://youtu.be/1nkOCId-SfQ", emguarde: "https://youtu.be/5wuY1dKjHds" };
+    ? { water: "https://youtu.be/6A_UpRmoWWc", emguarde: "https://youtu.be/BS4QEM-zXf0", duo: "https://youtu.be/lB5fW55DmaI" }
+    : { water: "https://youtu.be/1nkOCId-SfQ", emguarde: "https://youtu.be/5wuY1dKjHds", duo: "https://youtu.be/lB5fW55DmaI" };
 
   const completeDuoIntro = () => {
     localStorage.setItem("tl_training_duo_intro", "complete");
@@ -676,6 +681,20 @@ export default function TrainingPage() {
                       <div className="mt-4 flex items-start gap-4">
                         <img src="/products/emguarde-go.png" alt="emGuarde GO portable set" className="h-20 w-20 object-contain" />
                         <div><h3 className="font-bold text-white">{journeyCopy.emguarde}</h3><p className="mt-1 text-sm leading-6 text-slate-400">{journeyCopy.emguardeText}</p></div>
+                      </div>
+                    </article>
+                    <article className="rounded-2xl border border-tl-gold/25 bg-gradient-to-br from-[#11182c] to-[#071127] p-4 lg:col-span-2 sm:p-5">
+                      <div className="grid items-center gap-5 lg:grid-cols-[1.35fr_0.65fr]">
+                        <YouTubeEmbed url={duoVideos.duo} title={journeyCopy.duo} />
+                        <div className="p-2 sm:p-4">
+                          <span className="text-xs font-black uppercase tracking-[0.25em] text-tl-gold">03 · Duo</span>
+                          <h3 className="mt-3 text-2xl font-black text-white">{journeyCopy.duo}</h3>
+                          <p className="mt-3 text-sm leading-6 text-slate-300 sm:text-base">{journeyCopy.duoText}</p>
+                          <div className="mt-6 flex items-end justify-center gap-3 rounded-2xl border border-white/10 bg-white/[0.03] p-4">
+                            <img src="/products/k8.png" alt="K8 water ionizer" className="h-28 w-[54%] object-contain" />
+                            <img src="/products/emguarde-go.png" alt="emGuarde GO portable set" className="h-24 w-[34%] object-contain" />
+                          </div>
+                        </div>
                       </div>
                     </article>
                   </div>
