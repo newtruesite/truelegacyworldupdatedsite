@@ -28,12 +28,12 @@ export function ProductSection({
   const title =
     variant === "homeAll"
       ? locale === "es"
-        ? "Línea Completa de Productos"
+        ? "Esenciales de Bienestar Emblemáticos"
         : locale === "fr"
-          ? "Gamme Complète de Produits"
+          ? "Essentiels Bien-être Phares"
           : locale === "pt"
-            ? "Linha Completa de Produtos"
-            : "Complete Product and Technology Line"
+            ? "Essenciais de Bem-estar Emblemáticos"
+            : "Flagship Wellness Essentials"
       : variant === "home"
         ? locale === "es"
           ? "Tecnología Enagic que Representamos"
@@ -53,12 +53,12 @@ export function ProductSection({
   const subtitle =
     variant === "homeAll"
       ? locale === "es"
-        ? "Explora 11 productos y tecnologías en mercados compatibles."
+        ? "Descubre los productos y tecnologías que definen la experiencia True Legacy."
         : locale === "fr"
-          ? "Découvrez 11 produits et technologies sur les marchés pris en charge."
+          ? "Découvrez les produits et technologies qui définissent l’expérience True Legacy."
           : locale === "pt"
-            ? "Explore 11 produtos e tecnologias nos mercados atendidos."
-            : "Explore 11 products and technologies across supported markets."
+            ? "Conheça os produtos e tecnologias que definem a experiência True Legacy."
+            : "Discover the products and technologies that define the True Legacy experience."
       : variant === "home"
         ? locale === "es"
           ? "Una vista rápida de los productos que impulsan el movimiento True Legacy."
@@ -85,13 +85,21 @@ export function ProductSection({
           : "Talk to a distributor";
 
   const productsIntro =
-    locale === "es"
-      ? "Conoce la línea de productos, sus usos previstos y su disponibilidad por mercado. Habla con un distribuidor para confirmar la información local."
+    variant === "homeAll"
+      ? locale === "es"
+      ? "Explora cada esencial, sus usos previstos y su disponibilidad por mercado. Habla con un distribuidor para recibir orientación personalizada en tu ubicación."
       : locale === "fr"
-        ? "Découvrez la gamme, les usages prévus et la disponibilité par marché. Contactez un distributeur pour confirmer les informations locales."
+        ? "Explorez chaque essentiel, ses usages prévus et sa disponibilité par marché. Contactez un distributeur pour obtenir des conseils adaptés à votre région."
         : locale === "pt"
-          ? "Conheça a linha de produtos, seus usos previstos e a disponibilidade por mercado. Fale com um distribuidor para confirmar as informações locais."
-          : "Explore the product line, intended uses, and market-specific availability. Contact a distributor to confirm current information in your location.";
+          ? "Explore cada essencial, seus usos previstos e a disponibilidade por mercado. Fale com um distribuidor para receber orientação personalizada em sua região."
+          : "Explore each essential, its intended uses, and market-specific availability. Connect with a distributor for personalized guidance in your location."
+      : locale === "es"
+        ? "Conoce la línea de productos, sus usos previstos y su disponibilidad por mercado. Habla con un distribuidor para confirmar la información local."
+        : locale === "fr"
+          ? "Découvrez la gamme, les usages prévus et la disponibilité par marché. Contactez un distributeur pour confirmer les informations locales."
+          : locale === "pt"
+            ? "Conheça a linha de produtos, seus usos previstos e a disponibilidade por mercado. Fale com um distribuidor para confirmar as informações locais."
+            : "Explore the product line, intended uses, and market-specific availability. Contact a distributor to confirm current information in your location.";
 
   const visibleProductIds =
     variant === "country" && !showAllProducts
