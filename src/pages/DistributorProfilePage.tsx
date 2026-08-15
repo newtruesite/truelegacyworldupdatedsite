@@ -55,6 +55,11 @@ const PROFILE_TRANSLATIONS: Record<string, Record<'es' | 'fr' | 'pt', { title: s
     fr: { title: 'Distributeur True Legacy', bio: 'Jesse est un entrepreneur en série, notamment connu pour HotShotz Reusable Heat Packs. Il aime la vie et l’univers et dirige Let’s Go!!' },
     pt: { title: 'Distribuidor True Legacy', bio: 'Jesse é um empreendedor em série, conhecido principalmente pela HotShotz Reusable Heat Packs. Ama a vida e o universo e é CEO da Let’s Go!!' },
   },
+  'angel-mok': {
+    es: { title: 'Distribuidora True Legacy', bio: 'Después de graduarse de la universidad, Angel construyó una carrera exitosa en el dinámico mundo del comercio de acciones, pero buscaba algo con mayor significado. A través del Coach Simon encontró True Legacy y un nuevo camino de emprendimiento, propósito y crecimiento personal. Hoy viaja por el mundo mientras desarrolla su negocio de inversiones y una organización internacional con Enagic, ayudando a otros a descubrir nuevas posibilidades. Para Angel, el éxito significa libertad, impacto y el legado que dejamos.' },
+    fr: { title: 'Distributrice True Legacy', bio: 'Après ses études universitaires, Angel a bâti une carrière florissante dans le monde dynamique du trading d’actions, tout en recherchant quelque chose de plus porteur de sens. Grâce au Coach Simon, elle a découvert True Legacy et une nouvelle voie faite d’entrepreneuriat, de raison d’être et de développement personnel. Aujourd’hui, elle voyage à travers le monde tout en développant son activité financière et une organisation internationale avec Enagic, aidant les autres à découvrir de nouvelles possibilités. Pour Angel, la réussite signifie liberté, impact et héritage.' },
+    pt: { title: 'Distribuidora True Legacy', bio: 'Depois de se formar na universidade, Angel construiu uma carreira de sucesso no dinâmico mercado de ações, mas sabia que buscava algo com mais significado. Por meio do Coach Simon, conheceu a True Legacy e descobriu um novo caminho de empreendedorismo, propósito e crescimento pessoal. Hoje viaja pelo mundo enquanto desenvolve seu negócio financeiro e uma organização internacional com a Enagic, ajudando outras pessoas a descobrirem novas possibilidades. Para Angel, sucesso significa liberdade, impacto e o legado que deixamos.' },
+  },
 }
 
 export default function DistributorProfilePage() {
@@ -90,6 +95,7 @@ export default function DistributorProfilePage() {
   }[locale] as Record<string, string>
   const localizedProfile = profile && locale !== 'en' ? PROFILE_TRANSLATIONS[profile.slug]?.[locale] : undefined
   const profileHeroAssets: Record<string, string> = {
+    'angel-mok': '/leaders/standardized/angel-mok.png',
     'jesse-schexnayder': '/leaders/jesse-hero-transparent.png',
     'mehdi-cohen': '/leaders/mehdi-hero.png',
     'simon-loh': '/leaders/simon-hero.png',

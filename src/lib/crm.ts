@@ -181,6 +181,19 @@ const FALLBACK_DISTRIBUTORS: PublicDistributor[] = [
     phone: '+1 (916) 214-6943',
     instagram_url: null,
   },
+  {
+    id: 'preview-angel',
+    slug: 'angel-mok',
+    referral_code: 'angel',
+    display_name: 'Angel Mok E Lin',
+    title: 'True Legacy Distributor',
+    bio: 'After graduating from university, I entered the fast-paced world of equity trading and built a successful career. Yet, despite the financial success, I knew I wanted something more meaningful.\n\nThat search led me to True Legacy through Coach Simon, where I discovered a new path of entrepreneurship, purpose, and personal growth.\n\nToday, I travel the world with my equity business AND as a global distributor for Enagic, building an international business while helping others discover new possibilities for themselves.\n\nFor me, success is no longer just about income - it’s about freedom, impact, and the legacy we leave behind.',
+    avatar_url: '/leaders/standardized/angel-mok.png',
+    regions: ['Malaysia', 'Singapore', 'Dubai', 'Türkiye', 'Nigeria'],
+    languages: ['en'],
+    phone: null,
+    instagram_url: null,
+  },
 ]
 
 export async function getPublicDistributors(): Promise<PublicDistributor[]> {
@@ -188,7 +201,7 @@ export async function getPublicDistributors(): Promise<PublicDistributor[]> {
   const { data, error } = await crmSupabase.rpc('get_public_crm_distributors')
   if (error || !Array.isArray(data)) return FALLBACK_DISTRIBUTORS
   const remoteDistributors = (data as PublicDistributor[]).map(profile => {
-    if (!['mehdi-cohen', 'simon-loh', 'ming-way-sia', 'zah-naderi', 'jesse-schexnayder'].includes(profile.slug)) return profile
+    if (!['mehdi-cohen', 'simon-loh', 'ming-way-sia', 'zah-naderi', 'jesse-schexnayder', 'angel-mok'].includes(profile.slug)) return profile
     const confirmed = FALLBACK_DISTRIBUTORS.find(item => item.slug === profile.slug)
     return confirmed ? { ...profile, ...confirmed, id: profile.id } : profile
   })

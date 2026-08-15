@@ -152,12 +152,31 @@ const LEADERS = [
         gradient: 'from-fuchsia-600 to-indigo-700',
         glow: 'rgba(192,38,211,0.45)',
     },
+    {
+        id: 9,
+        name: 'Angel Mok E Lin',
+        profileUrl: '/d/angel-mok',
+        handle: '',
+        instagramUrl: '',
+        region: 'Malaysia · Singapore · Global',
+        role: 'Global Entrepreneur & True Legacy Distributor',
+        intro: 'Angel moved from a successful equity-trading career toward a more meaningful path of entrepreneurship, freedom, impact, and international growth through True Legacy and Enagic.',
+        bio: [
+            'After graduating from university, Angel entered the fast-paced world of equity trading and built a successful career. Yet, despite the financial success, she knew she wanted something more meaningful.',
+            'That search led her to True Legacy through Coach Simon, where she discovered a new path of entrepreneurship, purpose, and personal growth.',
+            'Today, Angel travels the world with her equity business and as a global distributor for Enagic, building an international business while helping others discover new possibilities for themselves.',
+        ],
+        image: '/leaders/standardized/angel-mok.png',
+        icon: Globe,
+        gradient: 'from-cyan-600 to-indigo-700',
+        glow: 'rgba(34,211,238,0.45)',
+    },
 ]
 
 const LEADER_COPY = {
     es: {
         viewProfile: 'Ver perfil',
-        roles: ['Fundador global y desarrollador de mercados', 'Emprendedor y líder comunitario', 'Coach y emprendedora con propósito', 'Constructor de negocios y mentor', 'Emprendedor global y estratega', 'Líder de marketing y bienestar', 'Coach de rendimiento y creador de legado', 'Distribuidora de True Legacy'],
+        roles: ['Fundador global y desarrollador de mercados', 'Emprendedor y líder comunitario', 'Coach y emprendedora con propósito', 'Constructor de negocios y mentor', 'Emprendedor global y estratega', 'Líder de marketing y bienestar', 'Coach de rendimiento y creador de legado', 'Distribuidora de True Legacy', 'Emprendedora global y distribuidora True Legacy'],
         bios: [
             'Después de 24 años en Estados Unidos, Mehdi ahora ayuda a abrir mercados en Marruecos y Colombia mientras acompaña a personas que desean construir con propósito y visión a largo plazo.',
             'Ryan es emprendedor, exatleta y líder comunitario en Los Ángeles. Su visión es crear libertad financiera, un legado familiar sólido e inspirar a otros con propósito, disciplina y constancia.',
@@ -167,11 +186,12 @@ const LEADER_COPY = {
             'Alex aporta más de 35 años de experiencia en marketing dentro de la industria de suplementos y un compromiso permanente con la salud, el bienestar y una vida plena.',
             'Durante más de una década, Zah ha entrenado a atletas de élite, celebridades y ejecutivos, uniendo liderazgo, visión y colaboración para construir un legado auténtico.',
             'Emanuela forma parte de la creciente comunidad de distribuidores de True Legacy. Su historia completa y más detalles de su perfil se agregarán próximamente.',
+            'Angel pasó de una exitosa carrera en el mercado de acciones a un camino con mayor propósito, libertad e impacto, desarrollando una organización internacional mediante True Legacy y Enagic.',
         ],
     },
     fr: {
         viewProfile: 'Voir le profil',
-        roles: ['Fondateur mondial et développeur de marchés', 'Entrepreneur et leader communautaire', 'Coach et entrepreneure engagée', 'Bâtisseur d’entreprise et mentor', 'Entrepreneur mondial et stratège', 'Leader en marketing et bien-être', 'Coach de performance et bâtisseur d’héritage', 'Distributrice True Legacy'],
+        roles: ['Fondateur mondial et développeur de marchés', 'Entrepreneur et leader communautaire', 'Coach et entrepreneure engagée', 'Bâtisseur d’entreprise et mentor', 'Entrepreneur mondial et stratège', 'Leader en marketing et bien-être', 'Coach de performance et bâtisseur d’héritage', 'Distributrice True Legacy', 'Entrepreneure mondiale et distributrice True Legacy'],
         bios: [
             'Après 24 ans aux États-Unis, Mehdi contribue aujourd’hui à ouvrir des marchés au Maroc et en Colombie tout en accompagnant ceux qui souhaitent bâtir avec vision et détermination.',
             'Ryan est entrepreneur, ancien athlète et leader communautaire à Los Angeles. Sa vision est de créer une liberté financière, un héritage familial durable et d’inspirer les autres.',
@@ -181,11 +201,12 @@ const LEADER_COPY = {
             'Alex apporte plus de 35 ans d’expérience en marketing dans l’industrie des compléments alimentaires et un engagement constant envers la santé et le bien-être.',
             'Depuis plus de dix ans, Zah accompagne des athlètes d’élite, des célébrités et des dirigeants, en réunissant leadership, vision et collaboration pour bâtir un héritage authentique.',
             'Emanuela fait partie de la communauté grandissante des distributeurs True Legacy. Son histoire complète et les détails de son profil seront ajoutés prochainement.',
+            'Angel a quitté une carrière florissante dans le trading pour suivre une voie davantage tournée vers le sens, la liberté et l’impact, en développant une organisation internationale avec True Legacy et Enagic.',
         ],
     },
     pt: {
         viewProfile: 'Ver perfil',
-        roles: ['Fundador global e desenvolvedor de mercados', 'Empreendedor e líder comunitário', 'Coach e empreendedora de impacto', 'Construtor de negócios e mentor', 'Empreendedor global e estrategista', 'Líder de marketing e bem-estar', 'Coach de performance e construtor de legado', 'Distribuidora True Legacy'],
+        roles: ['Fundador global e desenvolvedor de mercados', 'Empreendedor e líder comunitário', 'Coach e empreendedora de impacto', 'Construtor de negócios e mentor', 'Empreendedor global e estrategista', 'Líder de marketing e bem-estar', 'Coach de performance e construtor de legado', 'Distribuidora True Legacy', 'Empreendedora global e distribuidora True Legacy'],
         bios: [
             'Depois de 24 anos nos Estados Unidos, Mehdi agora ajuda a abrir mercados no Marrocos e na Colômbia e apoia pessoas que desejam construir com propósito e visão de longo prazo.',
             'Ryan é empreendedor, ex-atleta e líder comunitário em Los Angeles. Sua visão é criar liberdade financeira, um legado familiar sólido e inspirar outras pessoas.',
@@ -195,6 +216,7 @@ const LEADER_COPY = {
             'Alex reúne mais de 35 anos de experiência em marketing na indústria de suplementos e um compromisso permanente com saúde, bem-estar e uma vida plena.',
             'Há mais de uma década, Zah treina atletas de elite, celebridades e executivos, unindo liderança, visão e colaboração para construir um legado autêntico.',
             'Emanuela faz parte da crescente comunidade de distribuidores True Legacy. Sua história completa e mais detalhes do perfil serão adicionados em breve.',
+            'Angel trocou uma carreira de sucesso no mercado de ações por um caminho com mais propósito, liberdade e impacto, desenvolvendo uma organização internacional por meio da True Legacy e da Enagic.',
         ],
     },
 } as const
