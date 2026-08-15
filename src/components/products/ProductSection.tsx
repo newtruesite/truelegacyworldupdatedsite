@@ -129,8 +129,9 @@ export function ProductSection({
           </p>
           {/* Duo package: K8 + emGuarde — recommended combo (hidden for homeAll) */}
           {variant !== "homeAll" && (
-            <div id="duo-package" className="mt-8 mx-auto max-w-5xl rounded-3xl border border-cyan-500/30 bg-gradient-to-br from-cyan-500/10 to-purple-500/10 p-6 text-center md:p-8 md:text-left">
-              <p className="text-xs font-semibold uppercase tracking-wider text-cyan-300 mb-2">
+            <div id="duo-package" className="mt-8 mx-auto grid max-w-4xl items-center gap-6 overflow-hidden rounded-3xl border border-cyan-500/25 bg-gradient-to-br from-cyan-500/[0.08] to-purple-500/[0.08] p-5 text-center md:grid-cols-[0.9fr_1.1fr] md:p-6 md:text-left">
+              <div>
+              <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-cyan-300">
                 {locale === "es"
                   ? "Recomendado"
                   : locale === "fr"
@@ -139,7 +140,7 @@ export function ProductSection({
                       ? "Recomendado"
                       : "Recommended"}
               </p>
-              <h3 className="text-xl font-bold text-white mb-2">
+              <h3 className="mb-2 text-xl font-bold text-white">
                 {locale === "es"
                   ? "Sistema Duo: Kangen K8 + emGuarde"
                   : locale === "fr"
@@ -148,7 +149,7 @@ export function ProductSection({
                       ? "Sistema Duo: Kangen K8 + emGuarde"
                       : "Duo package: Kangen K8 + emGuarde"}
               </h3>
-              <p className="text-slate-300 text-sm mb-6">
+              <p className="mb-5 text-sm leading-6 text-slate-300">
                 {locale === "es"
                   ? "La mejor agua alcalina en casa con el K8 y protección EMF 24/7 con emGuarde. El combo que más recomendamos para salud y negocio."
                   : locale === "fr"
@@ -157,22 +158,23 @@ export function ProductSection({
                       ? "A melhor água alcalina em casa com o K8 e proteção EMF 24/7 com emGuarde. O combo que mais recomendamos."
                       : "Best-in-class alkaline water at home with the K8 and 24/7 EMF protection with emGuarde. The combo we recommend most for health and business."}
               </p>
-              <div className="mb-6 grid grid-cols-2 items-end gap-4 rounded-2xl border border-white/10 bg-[#071127]/70 p-4 sm:p-6">
-                <div>
-                  <img src="/products/k8.png" alt="K8 flagship Kangen Water ionizer" className="mx-auto h-36 w-full origin-bottom scale-[0.8] object-contain drop-shadow-2xl sm:h-48" />
-                  <p className="mt-3 text-center text-sm font-bold text-white">K8 Flagship</p>
-                </div>
-                <div>
-                  <img src="/products/emguarde-go.png" alt="emGuarde GO product set" className="mx-auto h-44 w-full origin-bottom scale-[1.25] object-contain drop-shadow-2xl sm:h-60" />
-                  <p className="mt-3 text-center text-sm font-bold text-white">emGuarde GO</p>
-                </div>
-              </div>
               <Link
                 to={getDistributorLink(country?.slug)}
-                className="inline-flex items-center gap-2 rounded-md bg-cyan-500 hover:bg-cyan-400 hover:-translate-y-0.5 hover:shadow-md text-white font-semibold px-5 py-2.5 text-sm transition-all duration-150"
+                className="inline-flex items-center gap-2 rounded-lg bg-cyan-500 px-5 py-2.5 text-sm font-semibold text-slate-950 transition-all duration-150 hover:-translate-y-0.5 hover:bg-cyan-400 hover:shadow-md"
               >
                 {contactLabel}
               </Link>
+              </div>
+              <div className="grid grid-cols-2 items-end gap-2 rounded-2xl border border-white/10 bg-[#071127]/75 px-3 py-4 sm:px-5">
+                <div>
+                  <img src="/products/k8.png" alt="K8 flagship Kangen Water ionizer" className="mx-auto h-28 w-full origin-bottom scale-[0.78] object-contain drop-shadow-2xl sm:h-36" />
+                  <p className="mt-1 text-center text-xs font-bold text-white sm:text-sm">K8 Flagship</p>
+                </div>
+                <div>
+                  <img src="/products/emguarde-go.png" alt="emGuarde GO product set" className="mx-auto h-32 w-full origin-bottom scale-[1.12] object-contain drop-shadow-2xl sm:h-40" />
+                  <p className="mt-1 text-center text-xs font-bold text-white sm:text-sm">emGuarde GO</p>
+                </div>
+              </div>
             </div>
           )}
         </motion.div>
