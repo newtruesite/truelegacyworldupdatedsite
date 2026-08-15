@@ -1,5 +1,6 @@
 import { LanguageReset } from "@/components/LanguageReset";
 import { AppInstallPrompt } from "@/components/pwa/AppInstallPrompt";
+import { AppNavigation } from "@/components/pwa/AppNavigation";
 import { LocaleProvider } from "@/contexts/LocaleContext";
 import { trackPageView } from "@/lib/analytics";
 import CountryPage from "@/pages/CountryPage";
@@ -23,6 +24,7 @@ import TrainingPage from "@/pages/TrainingPage";
 import CrmPage from "@/pages/CrmPage";
 import GrowthCenterPage from "@/pages/GrowthCenterPage";
 import PhaseFourPage from "@/pages/PhaseFourPage";
+import AppHomePage from "@/pages/AppHomePage";
 import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useLayoutEffect } from "react";
 import {
@@ -78,6 +80,7 @@ function AnimatedRoutes() {
               </PageTransitionWrapper>
             }
           />
+          <Route path="/app" element={<AppHomePage />} />
           {/* Static pages first — so they don't get matched by /:country */}
           <Route
             path="/training"
@@ -338,6 +341,7 @@ export default function App() {
       <LocaleProvider>
         <AnimatedRoutes />
         <AppInstallPrompt />
+        <AppNavigation />
       </LocaleProvider>
     </BrowserRouter>
   );
