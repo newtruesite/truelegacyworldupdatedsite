@@ -23,7 +23,7 @@ export function AppInstallPrompt() {
   const [dismissed, setDismissed] = useState(() => localStorage.getItem(DISMISSED_KEY) === '1')
 
   const isIos = useMemo(() => /iphone|ipad|ipod/i.test(navigator.userAgent), [])
-  const isAppRoute = pathname.startsWith('/crm') || pathname.includes('/training')
+  const isAppRoute = pathname === '/app' || pathname.startsWith('/crm') || pathname.includes('/training')
 
   useEffect(() => {
     setInstalled(isStandalone())

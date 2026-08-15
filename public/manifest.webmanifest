@@ -1,9 +1,9 @@
 {
-  "id": "/crm/platform",
+  "id": "/app",
   "name": "True Legacy",
   "short_name": "True Legacy",
   "description": "True Legacy distributor CRM, academy, sharing, and team development platform.",
-  "start_url": "/crm/platform",
+  "start_url": "/app",
   "scope": "/",
   "display": "standalone",
   "display_override": ["window-controls-overlay", "standalone"],
@@ -17,6 +17,7 @@
     { "src": "/icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
   ],
   "shortcuts": [
+    { "name": "App Home", "short_name": "Home", "url": "/app", "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }] },
     { "name": "Lead Dashboard", "short_name": "Leads", "url": "/crm", "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }] },
     { "name": "Training Academy", "short_name": "Training", "url": "/training", "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }] },
     { "name": "Growth Center", "short_name": "Growth", "url": "/crm/growth", "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }] }
