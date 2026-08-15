@@ -1,4 +1,5 @@
 import { LanguageReset } from "@/components/LanguageReset";
+import { AppInstallPrompt } from "@/components/pwa/AppInstallPrompt";
 import { LocaleProvider } from "@/contexts/LocaleContext";
 import { trackPageView } from "@/lib/analytics";
 import CountryPage from "@/pages/CountryPage";
@@ -336,6 +337,7 @@ export default function App() {
       <LanguageReset />
       <LocaleProvider>
         <AnimatedRoutes />
+        <AppInstallPrompt />
       </LocaleProvider>
     </BrowserRouter>
   );
