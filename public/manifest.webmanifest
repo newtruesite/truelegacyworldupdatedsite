@@ -18,6 +18,7 @@
   ],
   "shortcuts": [
     { "name": "App Home", "short_name": "Home", "url": "/app", "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }] },
+    { "name": "Share Center", "short_name": "Share", "url": "/app/share", "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }] },
     { "name": "Lead Dashboard", "short_name": "Leads", "url": "/crm", "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }] },
     { "name": "Training Academy", "short_name": "Training", "url": "/training", "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }] },
     { "name": "Growth Center", "short_name": "Growth", "url": "/crm/growth", "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }] }

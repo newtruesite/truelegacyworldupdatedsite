@@ -25,6 +25,7 @@ import CrmPage from "@/pages/CrmPage";
 import GrowthCenterPage from "@/pages/GrowthCenterPage";
 import PhaseFourPage from "@/pages/PhaseFourPage";
 import AppHomePage from "@/pages/AppHomePage";
+import AppSharePage from "@/pages/AppSharePage";
 import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useLayoutEffect } from "react";
 import {
@@ -81,6 +82,7 @@ function AnimatedRoutes() {
             }
           />
           <Route path="/app" element={<AppHomePage />} />
+          <Route path="/app/share" element={<AppSharePage />} />
           {/* Static pages first — so they don't get matched by /:country */}
           <Route
             path="/training"
