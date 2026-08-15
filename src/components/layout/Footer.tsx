@@ -9,7 +9,7 @@ const LATAM_SLUGS = ['colombia', 'mexico', 'paraguay', 'brazil']
 const COUNTRY_SLUGS = COUNTRIES.map((c) => c.slug)
 
 function getFooterLabels(locale: 'en' | 'es' | 'fr' | 'pt') {
-    return {
+    const shared = {
         home: locale === 'es' ? 'Inicio' : locale === 'fr' ? 'Accueil' : locale === 'pt' ? 'Início' : 'Home',
         training: locale === 'es' ? 'Capacitación' : locale === 'fr' ? 'Formation' : locale === 'pt' ? 'Treinamento' : 'Leadership Training',
         products: locale === 'es' ? 'Productos' : locale === 'fr' ? 'Produits' : locale === 'pt' ? 'Produtos' : 'Products',
@@ -17,6 +17,21 @@ function getFooterLabels(locale: 'en' | 'es' | 'fr' | 'pt') {
         emguarde: 'emGuarde Technology',
         ourStory: locale === 'es' ? 'Nuestra historia' : locale === 'fr' ? 'Notre histoire' : locale === 'pt' ? 'Nossa história' : 'Our Story',
     }
+    const localized = {
+        en: {
+            description: 'A team platform for product education, community, leadership development, and responsible distributor support.', joinCommunity: 'Join Our Facebook Community', regions: 'Global Regions', company: 'Company', follow: 'Follow Us', authorized: 'Authorized Enagic Distributor', team: 'True Legacy World — Global Team', innovation: 'Enagic has been pioneering water ionization technology since 1974 — 52 years of innovation.', privacy: 'Privacy', terms: 'Terms', medical: 'Medical Disclaimer', earnings: 'Earnings Disclosure', distributor: 'Distributor Disclosure', rights: 'All rights reserved.', platform: 'Independent team education and lead-routing platform.',
+        },
+        es: {
+            description: 'Una plataforma de equipo para educación sobre productos, comunidad, desarrollo de liderazgo y apoyo responsable de distribuidores.', joinCommunity: 'Únete a nuestra comunidad de Facebook', regions: 'Regiones globales', company: 'Compañía', follow: 'Síguenos', authorized: 'Distribuidor autorizado de Enagic', team: 'True Legacy World — Equipo global', innovation: 'Enagic ha sido pionera en tecnología de ionización de agua desde 1974 — 52 años de innovación.', privacy: 'Privacidad', terms: 'Términos', medical: 'Aviso médico', earnings: 'Divulgación de ingresos', distributor: 'Divulgación del distribuidor', rights: 'Todos los derechos reservados.', platform: 'Plataforma independiente de educación del equipo y asignación de prospectos.',
+        },
+        fr: {
+            description: "Une plateforme d’équipe dédiée à l’éducation sur les produits, à la communauté, au développement du leadership et au soutien responsable des distributeurs.", joinCommunity: 'Rejoignez notre communauté Facebook', regions: 'Régions mondiales', company: 'Entreprise', follow: 'Suivez-nous', authorized: 'Distributeur Enagic autorisé', team: 'True Legacy World — Équipe mondiale', innovation: "Enagic est un pionnier de la technologie d’ionisation de l’eau depuis 1974 — 52 ans d’innovation.", privacy: 'Confidentialité', terms: 'Conditions', medical: 'Avertissement médical', earnings: 'Déclaration sur les revenus', distributor: 'Déclaration du distributeur', rights: 'Tous droits réservés.', platform: "Plateforme indépendante d’éducation d’équipe et d’orientation des prospects.",
+        },
+        pt: {
+            description: 'Uma plataforma de equipe para educação sobre produtos, comunidade, desenvolvimento de liderança e suporte responsável aos distribuidores.', joinCommunity: 'Participe da nossa comunidade no Facebook', regions: 'Regiões globais', company: 'Empresa', follow: 'Siga-nos', authorized: 'Distribuidor autorizado Enagic', team: 'True Legacy World — Equipe global', innovation: 'A Enagic é pioneira em tecnologia de ionização da água desde 1974 — 52 anos de inovação.', privacy: 'Privacidade', terms: 'Termos', medical: 'Aviso médico', earnings: 'Divulgação de rendimentos', distributor: 'Divulgação do distribuidor', rights: 'Todos os direitos reservados.', platform: 'Plataforma independente de educação da equipe e direcionamento de contatos.',
+        },
+    }[locale]
+    return { ...shared, ...localized }
 }
 
 function IconInstagram({ className }: { className?: string }) {
@@ -55,7 +70,7 @@ export function Footer() {
                             <TrueLegacyLogo variant="footer" />
                         </Link>
                         <p className="text-sm text-slate-400 leading-relaxed mb-6">
-                            A team platform for product education, community, leadership development, and responsible distributor support.
+                            {labels.description}
                         </p>
                         {/* Community CTA */}
                         <a
@@ -64,14 +79,14 @@ export function Footer() {
                             className="inline-flex items-center gap-2 rounded-xl bg-[#1877F2] px-5 py-3 text-sm font-semibold text-white transition-all hover:bg-[#166FE5] hover:scale-105 shadow-lg"
                         >
                             <Facebook className="h-4 w-4" />
-                            Join Our Facebook Community
+                            {labels.joinCommunity}
                         </a>
                     </div>
 
                     {/* Countries */}
                     <div>
                         <h3 className="mb-4 text-sm font-semibold uppercase tracking-wider text-slate-400">
-                            Global Regions
+                            {labels.regions}
                         </h3>
                         <ul className="space-y-2">
                             {COUNTRIES.map((country) => (
@@ -97,7 +112,7 @@ export function Footer() {
                     {/* Quick Links */}
                     <div>
                         <h3 className="mb-4 text-sm font-semibold uppercase tracking-wider text-slate-400">
-                            Company
+                            {labels.company}
                         </h3>
                         <ul className="space-y-2">
                             {[
@@ -122,7 +137,7 @@ export function Footer() {
                     {/* Socials — Instagram, LATAM first on LATAM pages */}
                     <div>
                         <h3 className="mb-4 text-sm font-semibold uppercase tracking-wider text-slate-400">
-                            Follow Us
+                            {labels.follow}
                         </h3>
                         <div className="footer-social flex flex-wrap gap-5 justify-start items-center mb-4" style={{ width: '190px', paddingRight: '25px', transform: 'rotate(360deg)' }}>
                             {isLATAM && (
@@ -192,25 +207,25 @@ export function Footer() {
 
                 {/* Trust signals */}
                 <div className="mt-8 flex flex-wrap items-center justify-center gap-6 text-sm text-slate-500">
-                    <span className="text-center">Authorized Enagic Distributor</span>
+                    <span className="text-center">{labels.authorized}</span>
                     <span className="text-white/40 hidden sm:inline">·</span>
-                    <span className="text-center">True Legacy World — Global Team</span>
+                    <span className="text-center">{labels.team}</span>
                     <span className="text-white/40 hidden sm:inline">·</span>
-                    <span className="text-center">Enagic has been pioneering water ionization technology since 1974 — 52 years of innovation.</span>
+                    <span className="text-center">{labels.innovation}</span>
                 </div>
                 <nav aria-label="Legal" className="mt-6 flex flex-wrap justify-center gap-x-5 gap-y-2 text-xs text-slate-500">
-                    <Link to="/legal/privacy" className="hover:text-white">Privacy</Link>
-                    <Link to="/legal/terms" className="hover:text-white">Terms</Link>
-                    <Link to="/legal/medical" className="hover:text-white">Medical Disclaimer</Link>
-                    <Link to="/legal/earnings" className="hover:text-white">Earnings Disclosure</Link>
-                    <Link to="/legal/distributor" className="hover:text-white">Distributor Disclosure</Link>
+                    <Link to="/legal/privacy" className="hover:text-white">{labels.privacy}</Link>
+                    <Link to="/legal/terms" className="hover:text-white">{labels.terms}</Link>
+                    <Link to="/legal/medical" className="hover:text-white">{labels.medical}</Link>
+                    <Link to="/legal/earnings" className="hover:text-white">{labels.earnings}</Link>
+                    <Link to="/legal/distributor" className="hover:text-white">{labels.distributor}</Link>
                 </nav>
                 {/* Bottom Bar */}
                 <div className="mt-8 border-t border-white/10 pt-8 flex flex-col items-center gap-4 sm:flex-row sm:justify-between">
                     <p className="text-sm text-slate-500 text-center sm:text-left">
-                        © {currentYear} True Legacy World. All rights reserved.
+                        © {currentYear} True Legacy World. {labels.rights}
                     </p>
-                    <p className="text-xs text-slate-600 text-center sm:text-right">Independent team education and lead-routing platform.</p>
+                    <p className="text-xs text-slate-600 text-center sm:text-right">{labels.platform}</p>
                 </div>
             </div>
         </footer>

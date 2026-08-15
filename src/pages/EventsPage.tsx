@@ -26,7 +26,7 @@ function paramToRegion(param: string | undefined): RegionSlug {
 }
 
 function getRegionBreadcrumbLabel(region: RegionSlug, locale: string): string {
-  if (region === "latam") return locale === "es" ? "LATAM" : "Sudamérica";
+  if (region === "latam") return locale === "fr" ? "Amérique latine" : locale === "pt" ? "América Latina" : "LATAM";
   if (region === "global") return "Global";
   return "Events";
 }
@@ -188,6 +188,8 @@ export default function EventsPage() {
             ? "Llamadas Semanales de True Legacy | LATAM"
             : lang === "fr"
               ? "True Legacy — Événements Hebdomadaires"
+              : lang === "pt"
+                ? "Chamadas Semanais True Legacy | Global e América Latina"
               : "True Legacy Weekly Calls | Global and LATAM"
         }
         description={
@@ -195,6 +197,8 @@ export default function EventsPage() {
             ? "Únete a la llamada LATAM en español cada jueves a las 8:00 p. m., hora del Este, y consulta las próximas sesiones de True Legacy."
             : lang === "fr"
               ? "Rejoignez les présentations hebdomadaires True Legacy en direct, en anglais le mercredi et en espagnol le jeudi."
+              : lang === "pt"
+                ? "Participe da chamada global em inglês às quartas-feiras e da chamada LATAM em espanhol às quintas-feiras."
               : "Join the global English call every Wednesday at 8:30 p.m. Eastern or the LATAM Spanish call every Thursday at 8:00 p.m. Eastern."
         }
         image="/logos/tl-square-white.png"
