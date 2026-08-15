@@ -1,4 +1,5 @@
 import { LanguageReset } from "@/components/LanguageReset";
+import { BackToTopButton } from "@/components/layout/BackToTopButton";
 import { AppInstallPrompt } from "@/components/pwa/AppInstallPrompt";
 import { AppNavigation } from "@/components/pwa/AppNavigation";
 import { LocaleProvider } from "@/contexts/LocaleContext";
@@ -344,6 +345,7 @@ export default function App() {
         <AnimatedRoutes />
         <AppInstallPrompt />
         <AppNavigation />
+        <BackToTopButton />
       </LocaleProvider>
     </BrowserRouter>
   );
