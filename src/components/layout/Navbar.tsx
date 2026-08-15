@@ -193,7 +193,7 @@ export function Navbar() {
           </div>
 
           {/* Center: Desktop Navigation + Controls */}
-          <div className="hidden md:flex items-center justify-center gap-6">
+          <div className="tl-desktop-nav hidden md:flex items-center justify-center gap-6">
             <div className="flex items-center space-x-1">
               {mainNavLinks.map((link) => {
                 if (link.to === "/select-country") {
@@ -371,7 +371,7 @@ export function Navbar() {
           {/* Hamburger Button - Mobile Only */}
           <button
             onClick={() => setMenuOpen(!menuOpen)}
-            className="md:hidden absolute right-4 inline-flex items-center justify-center p-2 rounded-md text-slate-300 hover:text-white hover:bg-white/5 transition-colors"
+            className="tl-mobile-trigger md:hidden absolute right-4 inline-flex items-center justify-center p-2 rounded-md text-slate-300 hover:text-white hover:bg-white/5 transition-colors"
             aria-expanded={menuOpen}
             aria-controls="mobile-menu"
             aria-label="Toggle menu"
@@ -558,7 +558,7 @@ function MobileMenu({ open, children }: MobileMenuProps) {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="fixed top-14 right-0 bottom-0 left-0 z-40 flex flex-col overflow-hidden md:hidden"
+          className="tl-mobile-menu fixed top-14 right-0 bottom-0 left-0 z-40 flex flex-col overflow-hidden md:hidden"
           style={{
             background: "rgba(5,16,48,0.98)",
             backdropFilter: "blur(24px)",
