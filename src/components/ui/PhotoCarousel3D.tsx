@@ -213,7 +213,7 @@ export function PhotoCarousel3D() {
     }
 
     useEffect(() => {
-        const t = setInterval(next, 5000)
+        const t = setInterval(next, 10000)
         return () => clearInterval(t)
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
