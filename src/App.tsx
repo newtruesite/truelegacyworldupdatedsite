@@ -27,6 +27,8 @@ import GrowthCenterPage from "@/pages/GrowthCenterPage";
 import PhaseFourPage from "@/pages/PhaseFourPage";
 import AppHomePage from "@/pages/AppHomePage";
 import AppTodayPage from "@/pages/AppTodayPage";
+import AppResourcesPage from "@/pages/AppResourcesPage";
+import ResourceSharePage from "@/pages/ResourceSharePage";
 import AppLibraryPage from "@/pages/AppLibraryPage";
 import SagaLibraryPage from "@/pages/SagaLibraryPage";
 import AppSharePage from "@/pages/AppSharePage";
@@ -87,9 +89,11 @@ function AnimatedRoutes() {
           />
           <Route path="/app" element={<AppHomePage />} />
           <Route path="/app/today" element={<AppTodayPage />} />
+          <Route path="/app/resources" element={<AppResourcesPage />} />
           <Route path="/app/library" element={<AppLibraryPage />} />
           <Route path="/app/saga-library" element={<SagaLibraryPage />} />
           <Route path="/app/share" element={<AppSharePage />} />
+          <Route path="/resource/:resourceId/:slug" element={<ResourceSharePage />} />
           {/* Static pages first — so they don't get matched by /:country */}
           <Route
             path="/training"

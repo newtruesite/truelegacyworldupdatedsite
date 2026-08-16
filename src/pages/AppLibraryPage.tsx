@@ -2,11 +2,12 @@ import { SEO } from '@/components/SEO'
 import { crmConfigured, crmSupabase, getCrmMembership } from '@/lib/crm'
 import type { CrmMembership } from '@/lib/crm'
 import type { Session } from '@supabase/supabase-js'
-import { ArrowLeft, ArrowRight, CalendarDays, GraduationCap, LayoutDashboard, LineChart, LockKeyhole, QrCode, Share2, ShieldCheck, Sparkles, Users } from 'lucide-react'
+import { ArrowLeft, ArrowRight, CalendarDays, FileText, GraduationCap, LayoutDashboard, LineChart, LockKeyhole, QrCode, Share2, ShieldCheck, Sparkles, Users } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 
 const TRUE_LEGACY_TOOLS = [
+  { title: 'Trackable Resource Center', detail: 'Share approved pages and see views, actions, and generated leads.', to: '/app/resources', eyebrow: 'Share & measure', icon: FileText },
   { title: 'True Legacy Academy', detail: 'Courses, modules, quizzes, and tracked learning progress.', to: '/training', eyebrow: 'Learn', icon: GraduationCap },
   { title: 'Lead CRM', detail: 'Manage your contacts, conversations, and distributor follow-up.', to: '/crm', eyebrow: 'Manage', icon: LayoutDashboard },
   { title: 'Growth Center', detail: 'Track duplication, personal links, and business-building progress.', to: '/crm/growth', eyebrow: 'Grow', icon: LineChart },
