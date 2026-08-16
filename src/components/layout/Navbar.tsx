@@ -5,7 +5,7 @@ import { COUNTRIES, getFlagSrcSet } from "@/lib/countries";
 import { t } from "@/lib/translations";
 import { cn } from "@/lib/utils";
 import { AnimatePresence, motion } from "framer-motion";
-import { Menu, X } from "lucide-react";
+import { LogIn, Menu, X } from "lucide-react";
 import React, { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { Link, useLocation, useNavigate } from "react-router-dom";
@@ -149,6 +149,14 @@ export function Navbar() {
     unlockLegacy: t[locale].unlockLegacy,
     navProductK8: t[locale].navProductK8,
     navProductEmguarde: t[locale].navProductEmguarde,
+    login:
+      locale === "es"
+        ? "Acceso"
+        : locale === "fr"
+          ? "Connexion"
+          : locale === "pt"
+            ? "Entrar"
+            : "Login",
   };
 
   // Main navigation links for desktop
@@ -348,6 +356,20 @@ export function Navbar() {
                 ))}
               </div>
 
+              <Link
+                to="/crm"
+                onClick={() =>
+                  trackEvent("distributor_login_click", {
+                    location: "navbar_desktop",
+                    locale,
+                  })
+                }
+                className="hidden min-h-9 items-center gap-2 rounded-md border border-cyan-300/25 bg-cyan-300/[0.06] px-3 py-2 text-sm font-semibold text-cyan-100 transition-colors hover:border-cyan-300/45 hover:bg-cyan-300/[0.12] md:inline-flex"
+              >
+                <LogIn className="h-4 w-4" />
+                {navLabels.login}
+              </Link>
+
               {/* CTA Button - Desktop Only */}
               <a
                 href={jotformUrl}
@@ -518,6 +540,20 @@ export function Navbar() {
 
         {/* Bottom CTA */}
         <div className="flex flex-col gap-2 pt-4">
+          <Link
+            to="/crm"
+            onClick={() => {
+              trackEvent("distributor_login_click", {
+                location: "navbar_mobile",
+                locale,
+              });
+              setMenuOpen(false);
+            }}
+            className="flex min-h-[52px] w-full items-center justify-center gap-2 rounded-xl border border-cyan-300/25 bg-cyan-300/[0.07] px-6 py-3 text-base font-semibold text-cyan-100 transition-colors hover:bg-cyan-300/[0.12]"
+          >
+            <LogIn className="h-5 w-5" />
+            {navLabels.login}
+          </Link>
           <a
             href={jotformUrl}
             target="_blank" rel="noopener noreferrer"
