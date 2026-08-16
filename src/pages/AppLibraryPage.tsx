@@ -2,72 +2,52 @@ import { SEO } from '@/components/SEO'
 import { crmConfigured, crmSupabase, getCrmMembership } from '@/lib/crm'
 import type { CrmMembership } from '@/lib/crm'
 import type { Session } from '@supabase/supabase-js'
-import {
-  ArrowLeft,
-  ArrowRight,
-  BookOpenCheck,
-  Boxes,
-  BriefcaseBusiness,
-  ExternalLink,
-  FileText,
-  GraduationCap,
-  LockKeyhole,
-  Search,
-  ShieldCheck,
-  Sparkles,
-  Users,
-  Wrench,
-  X,
-} from 'lucide-react'
+import { ArrowLeft, ArrowRight, BookOpenCheck, Boxes, BriefcaseBusiness, ExternalLink, FileText, GraduationCap, LayoutGrid, LockKeyhole, Search, ShieldCheck, Sparkles, Users, Wrench, X } from 'lucide-react'
 import { useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 
 type CollectionId = 'start' | 'products' | 'business' | 'leadership'
+type LibraryFolder = { id: string; title: string; description: string; collection: CollectionId; folders: string[]; previews: string[] }
 
-type ResourceFolder = {
-  title: string
-  description: string
-  collection: CollectionId
-  topics: string[]
-  href?: string
-  official?: boolean
-}
-
-const SAGA_LIBRARY = 'https://thesaga.app/globalwavecreators/library'
-
+const SOURCE_ROOT = 'https://thesaga.app/globalwavecreators/library/category/'
 const COLLECTIONS = [
-  { id: 'start' as const, title: 'Start & Operate', subtitle: 'Set up correctly and confidently', icon: Wrench },
-  { id: 'products' as const, title: 'Product Mastery', subtitle: 'Know the complete Enagic line', icon: Boxes },
-  { id: 'business' as const, title: 'Business Growth', subtitle: 'Connect, invite, present, and follow up', icon: BriefcaseBusiness },
-  { id: 'leadership' as const, title: 'Leadership & Compliance', subtitle: 'Duplicate responsibly and lead the team', icon: Users },
+  { id: 'start' as const, title: 'Start & Operate', subtitle: 'Set up, order, finance, install', icon: Wrench },
+  { id: 'products' as const, title: 'Product Mastery', subtitle: 'Products, demos, research', icon: Boxes },
+  { id: 'business' as const, title: 'Business Growth', subtitle: 'Connect, invite, follow up', icon: BriefcaseBusiness },
+  { id: 'leadership' as const, title: 'Leadership & Compliance', subtitle: 'Train, duplicate, lead responsibly', icon: Users },
 ] as const
 
-const FOLDERS: ResourceFolder[] = [
-  { title: 'Getting Started with the Team System', description: 'Account setup, daily use, contacts, tasks, and the first distributor workflow.', collection: 'start', topics: ['SAGA setup', 'daily workflow', 'contacts'] },
-  { title: 'Placing an Order', description: 'Ordering steps, documents, customer information, and distributor responsibilities.', collection: 'start', topics: ['orders', 'documents', 'customers'] },
-  { title: 'Pricing & Financing Options', description: 'Market-aware pricing, payment options, and responsible financing conversations.', collection: 'start', topics: ['pricing', 'financing', 'markets'] },
-  { title: 'Installation, Cleaning & Pre-Filters', description: 'Installation guidance, routine cleaning, maintenance, and pre-filter education.', collection: 'start', topics: ['installation', 'cleaning', 'maintenance'] },
-  { title: 'Compensation Plan', description: 'The Enagic opportunity, compensation fundamentals, commission calculations, and the road to 6A2.', collection: 'start', topics: ['compensation', 'commissions', '6A2'] },
-  { title: 'Complete Product Information', description: 'A central product index for ionizers, Anespa, emGuarde, Kangen Air, Ukon, and Kangen Wagyu.', collection: 'products', topics: ['K8', 'Anespa', 'emGuarde', 'Ukon'] },
-  { title: 'Kangen Authority Training', description: 'Deeper product positioning, demonstration confidence, and customer education.', collection: 'products', topics: ['authority', 'education', 'demonstrations'] },
-  { title: 'Filtration Education', description: 'Water filtration fundamentals and how to explain filtration responsibly.', collection: 'products', topics: ['filtration', 'water', 'education'] },
-  { title: 'Demos, Events & Webinars', description: 'Why events matter, demo preparation, supplies, training, and presentation resources.', collection: 'products', topics: ['demos', 'events', 'supplies'] },
-  { title: 'Shareable Product Resources', description: 'Temporary product videos, documents, images, and links for distributor conversations.', collection: 'products', topics: ['videos', 'documents', 'sharing'] },
-  { title: 'The Prospect Flow', description: 'Connections, story sharing, Instagram lead generation, qualifying, invitations, and three-way calls.', collection: 'business', topics: ['prospecting', 'Instagram', 'qualifying'] },
-  { title: 'Conversation & Follow-Up Scripts', description: 'Warm and cold starts, social-media replies, invitations, follow-ups, serving, and launching.', collection: 'business', topics: ['scripts', 'follow-up', 'launching'] },
-  { title: 'Networking & Conversations', description: 'A growing library for relationship-first networking and confident conversations.', collection: 'business', topics: ['networking', 'conversations', 'relationships'] },
-  { title: 'Content Resources & Prompts', description: 'Content planning, social-media ideas, prompts, and responsible distributor storytelling.', collection: 'business', topics: ['content', 'prompts', 'social media'] },
-  { title: 'Testimonials', description: 'Individual experiences for education and social proof, always presented with the proper disclaimer.', collection: 'business', topics: ['stories', 'testimonials', 'disclaimer'] },
-  { title: 'ChatGPT for Distributors', description: 'Practical AI support for planning, writing, organizing, and follow-up—with human review.', collection: 'business', topics: ['AI', 'ChatGPT', 'productivity'] },
-  { title: 'Team Training Replays', description: 'Recurring team and company training replays organized by topic and date.', collection: 'leadership', topics: ['replays', 'team calls', 'training'] },
-  { title: 'Personal Development & Business Training', description: 'Leadership challenges, development programs, sprints, and business fundamentals.', collection: 'leadership', topics: ['leadership', 'challenges', 'development'] },
-  { title: 'Compliance & Distributor Files', description: 'Earnings disclosure, policies and procedures, compliance basics, and the distributor handbook.', collection: 'leadership', topics: ['compliance', 'policies', 'disclosures'] },
-  { title: 'PDFs & Reading Materials', description: 'A structured reading shelf for approved guides, workbooks, and distributor documents.', collection: 'leadership', topics: ['PDFs', 'guides', 'workbooks'] },
-  { title: 'Tax Education', description: 'General business tax-learning resources with clear direction to consult a qualified professional.', collection: 'leadership', topics: ['tax', 'business', 'disclaimer'] },
-  { title: 'EWS Login', description: 'Open your personal Enagic Web System account.', collection: 'start', topics: ['EWS', 'official', 'login'], href: 'https://app.enagicwebsystem.com/backoffice.php?section=logout', official: true },
-  { title: 'EWS System Training', description: 'Learn how to set up and use the Enagic Web System.', collection: 'start', topics: ['EWS', 'training', 'official'], href: 'https://app.enagicwebsystem.com/training', official: true },
-  { title: 'Monday Distributor Training', description: 'Access the recurring Monday distributor training and available replays.', collection: 'leadership', topics: ['Monday', 'live training', 'replays'], href: 'https://www.truehealthlifestyle.team/monday', official: true },
-  { title: 'Saturday Business Calls', description: 'Join the recurring Saturday business training calls and access replays.', collection: 'leadership', topics: ['Saturday', 'business call', 'replays'], href: 'https://www.truehealthlifestyle.team/saturday', official: true },
+const LIBRARY: LibraryFolder[] = [
+  { id: '15381', title: 'Getting Started', description: 'New distributor setup, launch steps, checklists, and system orientation.', collection: 'start', folders: ['Additional trainings'], previews: ['Getting Started Checklist for New Builders', 'Launch Call', 'System Overview Training'] },
+  { id: '15397', title: 'Placing an Order', description: 'Market-specific order processes and customer documentation.', collection: 'start', folders: ['Generate an order link', 'USA orders', 'Canada orders', 'Special imports', 'New Zealand orders', 'Australia orders'], previews: ['Ordering workflow', 'Required documents', 'Customer order support'] },
+  { id: '15415', title: 'Pricing & Financing', description: 'Pricing and available financing references by supported market.', collection: 'start', folders: ['United States', 'Canada', 'Mexico', 'Europe', 'Australia', 'New Zealand', 'Dubai / UAE'], previews: ['Global Pricing Options'] },
+  { id: '15441', title: 'Installation, Cleaning & Pre-Filters', description: 'Set up and maintain Enagic equipment correctly.', collection: 'start', folders: ['Installation', 'Cleaning', 'Pre-filters'], previews: ['Installation guidance', 'Routine cleaning', 'Pre-filter selection'] },
+  { id: '15396', title: 'Compensation Plan', description: 'Understand the Enagic opportunity, commissions, stacking, and advancement.', collection: 'start', folders: [], previews: ['Enagic Opportunity', 'Understand the Compensation Plan', 'Commission Calculations', 'Strategic Stacking', 'In-House Financing Comp Plan', 'Earnings Disclosure', 'Filter Commissions', 'Roadmap to 6A2-3'] },
+  { id: '15344', title: 'Shareable Resources', description: 'A complete sharing shelf for products, presentations, prices, and market conversations.', collection: 'products', folders: ['Kangen Water', 'emGuarde EMF Harmonizer', 'Kangen Wagyu', 'Compensation Plan', 'Anespa Shower System', 'Ukon Turmeric', 'Other Languages', 'Industry Resources', 'Niche Webinars', 'Testimonial Calls', 'Prices', 'Pets & Vets', 'Business Webinar', 'Network Marketing', 'Live Events'], previews: ['Videos', 'Documents', 'Images', 'Presentations', 'Market resources'] },
+  { id: '15385', title: 'Complete Product Information', description: 'The core product and technology reference center.', collection: 'products', folders: ['Ionizers', 'Anespa shower', 'emGuarde', 'Kangen Air', 'Ukon', 'Kangen Wagyu'], previews: ['Product overview', 'Features and intended uses', 'Market availability'] },
+  { id: '15469', title: 'Kangen Authority Training', description: 'Detailed machine ownership, maintenance, testing, and water education.', collection: 'products', folders: [], previews: ['Welcome to Kangen Authority', 'Getting Started With Your Kangen', 'Setting Up Your K8', 'Packing a K8 for Travel', 'Performing an E-Cleaning', 'Changing the K8 Filter', 'Ionfaucet Pre-filter Walkthrough', 'Changing Pre-filters', 'Creating Safe Kangen Water', 'Testing 2.5pH Water', 'Understanding ORP', 'Testing Chlorine Drops'] },
+  { id: '15470', title: 'Filtration Education', description: 'Pre-filtration, contaminant awareness, specifications, and water-softener education.', collection: 'products', folders: ['Multipure specifications & data', 'Water softener'], previews: ['Tap Water Contaminant Database', 'Pre-filter & Enagic Presentation', 'Pre-Filtration for Ionizers', 'Filtration Education — Full', 'Filtration Education — Quick'] },
+  { id: '15480', title: 'Demos, Events & Webinars', description: 'Prepare and present confident product demonstrations and events.', collection: 'products', folders: ['Demo event preparation', 'Demo supplies', 'Training', 'Canva presentations'], previews: ['Why Host Events?', 'Demo preparation', 'Presentation resources'] },
+  { id: '15576', title: 'PDFs & Reading Materials', description: 'Product education, guides, studies, and approved reading resources.', collection: 'products', folders: ['Older e-books'], previews: ['Learn More About Kangen Water & Enagic', 'Kangen Water 100+ Uses', 'Why Hydrogen Water', 'Doctors on Kangen Water', 'Ionized Water Protocols', 'A Chemical-Free Sanctuary', 'Ionized Water in the Kitchen', '2.5pH Sterilization & Wound Care', 'Kangen Water Therapies', 'Learn More About emGuarde', 'Anespa Mineral Shower Spa', 'Kangen Ukon E-Book'] },
+  { id: '15383', title: 'Conversation & Follow-Up Scripts', description: 'A practical conversation path from first connection through follow-up and launch.', collection: 'business', folders: ['Paid ads scripts'], previews: ['Warm start', 'Cold start', 'Social media start', 'Product lead magnet', 'Business lead magnet', 'Warm invitation', 'Cold invitation', 'Social media invitation', '24-hour follow-up', '48-hour follow-up', '72-hour follow-up', 'Serving & next steps'] },
+  { id: '15468', title: 'Content Resources & Prompts', description: 'Ideas and frameworks for clear, responsible distributor content.', collection: 'business', folders: ['Pre-made social content — coming soon'], previews: ['76 Content Prompts', '105 Viral Hooks & Angles', '60-Second Authority Script'] },
+  { id: '15478', title: 'Networking & Conversations', description: 'Relationship-first networking and confident business conversations.', collection: 'business', folders: ['Using ChatGPT'], previews: ['Dream 25 / 50 Networking', 'Conversation Scripts Pack', 'Questions for Better Conversations'] },
+  { id: '15486', title: 'Testimonials', description: 'Organized personal experiences with the required individual-results disclaimer.', collection: 'business', folders: ['Business', 'Health by topic', 'Medication', 'Saving money', 'Cleaning', 'Pesticides', 'Gardening', 'Personal backgrounds', 'Pets'], previews: ['Video stories', 'Written experiences', 'Topic-based testimonials'] },
+  { id: '15578', title: 'The Prospect Flow', description: 'A step-by-step path from connection to a qualified conversation and three-way call.', collection: 'business', folders: [], previews: ['Understanding the Flow Cycle', 'Flow Cycle Basics', 'IPA Overview', 'Rain — Share Your Story', 'Rain — Make New Connections', 'Rain — Instagram Lead Generation', 'Rain — Avatar Training', 'Streams — Conversation Flow', 'Streams — Add, Tag & Qualify', 'Streams — Invite to an Event', 'Streams — Qualify Leads', 'Rivers — Book a Three-Way Call', 'Rivers — Edify Your Upline'] },
+  { id: '15629', title: 'AI Tools for Distributors', description: 'Temporary AI assistants for faster responses, planning, and follow-up.', collection: 'business', folders: [], previews: ['Lead Responder', 'Objection Responder', 'Human review checklist'] },
+  { id: '15791', title: 'Team Training Replays', description: 'Recurring team, EWS, Monday, Wednesday, and Saturday training replays.', collection: 'leadership', folders: ['Community call replays'], previews: ['Tuesday Team Training', 'Monday Distributor Training', 'Wednesday EWS Training', 'Saturday Business Webinar'] },
+  { id: '15557', title: 'Leadership & Business Development', description: 'Challenges, sprints, mindset, selling, and leadership development.', collection: 'leadership', folders: ['30-Day Sprint', 'Sales Training', 'Leadership Study', 'GoPro Event Resources', 'Mindset Resources'], previews: ['Personal development', 'Business training', 'Leadership challenges'] },
+  { id: '15579', title: 'Tax Education', description: 'General business tax education; always confirm decisions with a qualified professional.', collection: 'leadership', folders: ['USA', 'Canada'], previews: ['Business tax learning', 'Market-specific references'] },
+  { id: '15583', title: 'Compliance & Distributor Files', description: 'Policies, disclosures, brand files, and responsible distributor guidance.', collection: 'leadership', folders: ['Independent Distributor Logos'], previews: ['Enagic Earnings Disclosure', 'Policies & Procedures', 'Compliance Basics', 'Distributor Handbook'] },
+]
+
+const QUICK_TOOLS = [
+  { title: 'True Legacy Academy', detail: 'Courses, modules, quizzes, and progress', href: '/training', internal: true },
+  { title: 'Enagic Distributor Portal', detail: 'Your official distributor support account', href: 'https://information.enagic.com/home' },
+  { title: 'EWS Login', detail: 'Open your personal Enagic Web System', href: 'https://app.enagicwebsystem.com/backoffice.php?section=logout' },
+  { title: 'EWS Training', detail: 'Learn to set up and use the web system', href: 'https://app.enagicwebsystem.com/training' },
+  { title: 'Monday Training', detail: 'Recurring distributor training and replays', href: 'https://www.truehealthlifestyle.team/monday' },
+  { title: 'Saturday Calls', detail: 'Business webinars and replays', href: 'https://www.truehealthlifestyle.team/saturday' },
 ]
 
 export default function AppLibraryPage() {
@@ -76,6 +56,7 @@ export default function AppLibraryPage() {
   const [loading, setLoading] = useState(true)
   const [query, setQuery] = useState('')
   const [collection, setCollection] = useState<CollectionId | 'all'>('all')
+  const [selected, setSelected] = useState<LibraryFolder | null>(null)
 
   useEffect(() => {
     if (!crmSupabase) { setLoading(false); return }
@@ -83,47 +64,57 @@ export default function AppLibraryPage() {
     const { data } = crmSupabase.auth.onAuthStateChange((_event, next) => setSession(next))
     return () => data.subscription.unsubscribe()
   }, [])
-
   useEffect(() => {
     if (!session) return
     getCrmMembership(session.user.id).then(member => { setMembership(member); setLoading(false) }).catch(() => setLoading(false))
   }, [session?.user.id])
+  useEffect(() => {
+    if (!selected) return
+    const close = (event: KeyboardEvent) => { if (event.key === 'Escape') setSelected(null) }
+    document.addEventListener('keydown', close)
+    return () => document.removeEventListener('keydown', close)
+  }, [selected])
 
   const visibleFolders = useMemo(() => {
     const normalized = query.trim().toLowerCase()
-    return FOLDERS.filter(folder => {
+    return LIBRARY.filter(folder => {
       const matchesCollection = collection === 'all' || folder.collection === collection
-      const haystack = `${folder.title} ${folder.description} ${folder.topics.join(' ')}`.toLowerCase()
-      return matchesCollection && (!normalized || haystack.includes(normalized))
+      const searchable = `${folder.title} ${folder.description} ${folder.folders.join(' ')} ${folder.previews.join(' ')}`.toLowerCase()
+      return matchesCollection && (!normalized || searchable.includes(normalized))
     })
   }, [collection, query])
 
   if (!crmConfigured) return <Gate title="Library connection required" body="The secure distributor connection is unavailable in this preview." />
   if (loading) return <main className="min-h-screen bg-[#05091a]" />
-  if (!session) return <Gate title="Distributor sign-in required" body="Sign in with your True Legacy distributor account to open the private library." action={<Link to="/crm" className="rounded-xl bg-cyan-400 px-5 py-3 font-black text-slate-950">Sign in</Link>} />
-  if (!membership?.active) return <Gate title="Account not authorized" body="An active True Legacy distributor profile is required to access this library." />
+  if (!session) return <Gate title="Distributor sign-in required" body="Sign in with your True Legacy distributor account to open the private Tool Center." action={<Link to="/crm" className="rounded-xl bg-cyan-400 px-5 py-3 font-black text-slate-950">Sign in</Link>} />
+  if (!membership?.active) return <Gate title="Account not authorized" body="An active True Legacy distributor profile is required to access this Tool Center." />
 
   return <main className="min-h-screen bg-[#05091a] px-4 pb-28 pt-[max(22px,env(safe-area-inset-top))] text-white sm:px-6">
-    <SEO title="Distributor Library | True Legacy" description="Private True Legacy distributor resource library." noIndex />
+    <SEO title="Distributor Tool Center | True Legacy" description="Private True Legacy distributor tools, training, and resource library." noIndex />
     <div className="mx-auto max-w-7xl">
-      <header className="flex items-center gap-4"><Link to="/app" aria-label="Back to app home" className="grid h-11 w-11 place-items-center rounded-full border border-white/10 bg-white/[.04]"><ArrowLeft /></Link><div><p className="text-xs font-bold uppercase tracking-[.22em] text-cyan-300">Private distributor resources</p><h1 className="text-2xl font-black">True Legacy Library</h1></div></header>
+      <header className="flex items-center gap-4"><Link to="/app" aria-label="Back to app home" className="grid h-11 w-11 place-items-center rounded-full border border-white/10 bg-white/[.04]"><ArrowLeft /></Link><div><p className="text-xs font-bold uppercase tracking-[.22em] text-cyan-300">Private distributor workspace</p><h1 className="text-2xl font-black">True Legacy Tool Center</h1></div></header>
+      <section className="mt-7 overflow-hidden rounded-[30px] border border-cyan-300/20 bg-[radial-gradient(circle_at_top_right,rgba(34,211,238,.18),transparent_35%),linear-gradient(145deg,rgba(37,99,235,.12),rgba(255,255,255,.025))] p-6 sm:p-9"><div className="grid gap-7 lg:grid-cols-[1fr_auto] lg:items-end"><div><span className="inline-flex items-center gap-2 rounded-full border border-cyan-300/20 bg-cyan-300/[.07] px-3 py-1.5 text-xs font-bold text-cyan-200"><LockKeyhole className="h-3.5 w-3.5" /> Distributor access only</span><h2 className="mt-5 max-w-4xl text-3xl font-black sm:text-5xl">One organized center. Every tool has a home.</h2><p className="mt-4 max-w-3xl text-sm leading-7 text-slate-300 sm:text-base">Preview the complete resource structure inside True Legacy, find exactly what you need, then open the authorized temporary material when you are ready.</p></div><Link to="/training" className="inline-flex min-h-13 items-center justify-center gap-2 rounded-2xl bg-cyan-400 px-6 font-black text-slate-950">Continue Academy <ArrowRight className="h-4 w-4" /></Link></div><div className="mt-7 flex items-start gap-3 rounded-2xl border border-amber-300/15 bg-amber-300/[.06] p-4 text-sm leading-6 text-slate-300"><Sparkles className="mt-0.5 h-5 w-5 shrink-0 text-amber-300" /><p><strong className="text-amber-200">Temporary content:</strong> the previews and authorized source links stay organized here while the True Legacy versions are being produced. Each item can be replaced without changing this Tool Center.</p></div></section>
 
-      <section className="mt-7 overflow-hidden rounded-[30px] border border-cyan-300/20 bg-[radial-gradient(circle_at_top_right,rgba(34,211,238,.18),transparent_35%),linear-gradient(145deg,rgba(37,99,235,.12),rgba(255,255,255,.025))] p-6 sm:p-9">
-        <div className="grid gap-7 lg:grid-cols-[1fr_auto] lg:items-end"><div><span className="inline-flex items-center gap-2 rounded-full border border-cyan-300/20 bg-cyan-300/[.07] px-3 py-1.5 text-xs font-bold text-cyan-200"><LockKeyhole className="h-3.5 w-3.5" /> Distributor access only</span><h2 className="mt-5 max-w-3xl text-3xl font-black sm:text-5xl">Everything you need—organized around the work.</h2><p className="mt-4 max-w-3xl text-sm leading-7 text-slate-300 sm:text-base">Learn the products, operate the business, build conversations, and duplicate responsibly from one searchable resource center.</p></div><Link to="/training" className="inline-flex min-h-13 items-center justify-center gap-2 rounded-2xl bg-cyan-400 px-6 font-black text-slate-950">Continue Academy <ArrowRight className="h-4 w-4" /></Link></div>
-        <div className="mt-7 flex items-start gap-3 rounded-2xl border border-amber-300/15 bg-amber-300/[.06] p-4 text-sm leading-6 text-slate-300"><Sparkles className="mt-0.5 h-5 w-5 shrink-0 text-amber-300" /><p><strong className="text-amber-200">Temporary resource phase:</strong> external training references remain in their original protected source until a True Legacy version is ready. They will be replaced here without changing the library structure.</p></div>
+      <section className="mt-8"><div className="flex items-end justify-between gap-4"><div><p className="text-xs font-bold uppercase tracking-[.2em] text-emerald-300">Quick access</p><h2 className="mt-2 text-2xl font-black">Daily distributor tools</h2></div><LayoutGrid className="h-6 w-6 text-slate-600" /></div><div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">{QUICK_TOOLS.map(tool => tool.internal ? <Link key={tool.title} to={tool.href} className="rounded-2xl border border-white/10 bg-white/[.035] p-4 hover:border-cyan-300/30"><p className="font-black">{tool.title}</p><p className="mt-1 text-xs leading-5 text-slate-500">{tool.detail}</p></Link> : <a key={tool.title} href={tool.href} target="_blank" rel="noopener noreferrer" className="rounded-2xl border border-white/10 bg-white/[.035] p-4 hover:border-emerald-300/30"><div className="flex items-center justify-between gap-3"><p className="font-black">{tool.title}</p><ExternalLink className="h-4 w-4 text-emerald-300" /></div><p className="mt-1 text-xs leading-5 text-slate-500">{tool.detail}</p></a>)}</div></section>
+
+      <section className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">{COLLECTIONS.map(item => { const Icon = item.icon; const count = LIBRARY.filter(folder => folder.collection === item.id).length; return <button key={item.id} onClick={() => setCollection(current => current === item.id ? 'all' : item.id)} className={`rounded-2xl border p-5 text-left transition ${collection === item.id ? 'border-cyan-300/40 bg-cyan-300/[.1]' : 'border-white/10 bg-white/[.035] hover:border-white/20'}`}><Icon className="h-7 w-7 text-cyan-300" /><h3 className="mt-4 text-lg font-black">{item.title}</h3><p className="mt-1 text-xs leading-5 text-slate-400">{item.subtitle}</p><p className="mt-4 text-xs font-bold uppercase tracking-wider text-slate-500">{count} sections</p></button> })}</section>
+
+      <section className="mt-9"><div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between"><div><p className="text-xs font-bold uppercase tracking-[.2em] text-amber-300">Central library</p><h2 className="mt-2 text-3xl font-black">Preview every resource area</h2><p className="mt-2 text-sm text-slate-500">Open a card to see all mapped folders and available material.</p></div><label className="relative block w-full sm:max-w-sm"><span className="sr-only">Search the Tool Center</span><Search className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500" /><input value={query} onChange={event => setQuery(event.target.value)} placeholder="Search products, scripts, compliance…" className="h-12 w-full rounded-xl border border-white/10 bg-white/[.035] pl-11 pr-11 text-sm outline-none focus:border-cyan-300/50" />{query ? <button onClick={() => setQuery('')} aria-label="Clear search" className="absolute right-3 top-1/2 -translate-y-1/2 p-1 text-slate-500"><X className="h-4 w-4" /></button> : null}</label></div>
+        <div className="mt-5 grid gap-4 md:grid-cols-2 xl:grid-cols-3">{visibleFolders.map(folder => { const parent = COLLECTIONS.find(item => item.id === folder.collection)!; const Icon = parent.icon; const count = folder.folders.length + folder.previews.length; return <button key={folder.id} onClick={() => setSelected(folder)} className="group flex min-h-72 flex-col rounded-[24px] border border-white/10 bg-white/[.035] p-5 text-left transition hover:-translate-y-1 hover:border-cyan-300/30"><div className="flex items-start justify-between gap-4"><span className="grid h-11 w-11 place-items-center rounded-xl bg-cyan-400/10 text-cyan-300"><Icon className="h-5 w-5" /></span><span className="rounded-full border border-amber-300/20 bg-amber-300/[.08] px-2.5 py-1 text-[10px] font-black uppercase tracking-wider text-amber-200">Temporary preview</span></div><p className="mt-5 text-xs font-bold uppercase tracking-[.17em] text-slate-500">{parent.title}</p><h3 className="mt-2 text-xl font-black">{folder.title}</h3><p className="mt-3 text-sm leading-6 text-slate-400">{folder.description}</p><div className="mt-5 flex flex-wrap gap-2">{[...folder.folders, ...folder.previews].slice(0, 3).map(topic => <span key={topic} className="rounded-lg bg-white/[.04] px-2.5 py-1 text-[10px] text-slate-400">{topic}</span>)}</div><div className="mt-auto flex items-center justify-between border-t border-white/[.07] pt-5"><span className="text-xs font-bold text-slate-500">{count} mapped resources</span><span className="inline-flex items-center gap-2 text-sm font-black text-cyan-200">Preview <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" /></span></div></button> })}</div>
+        {visibleFolders.length === 0 ? <div className="mt-5 rounded-3xl border border-dashed border-white/15 p-12 text-center"><Search className="mx-auto h-8 w-8 text-slate-600" /><h3 className="mt-4 text-xl font-black">No matching resources</h3><p className="mt-2 text-sm text-slate-500">Try another search or show all collections.</p><button onClick={() => { setQuery(''); setCollection('all') }} className="mt-5 rounded-xl border border-white/10 px-5 py-3 text-sm font-bold">Reset Tool Center</button></div> : null}
       </section>
 
-      <section className="mt-7 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">{COLLECTIONS.map(item => { const Icon = item.icon; const count = FOLDERS.filter(folder => folder.collection === item.id).length; return <button key={item.id} onClick={() => setCollection(current => current === item.id ? 'all' : item.id)} className={`rounded-2xl border p-5 text-left transition ${collection === item.id ? 'border-cyan-300/40 bg-cyan-300/[.1]' : 'border-white/10 bg-white/[.035] hover:border-white/20'}`}><Icon className="h-7 w-7 text-cyan-300" /><h3 className="mt-4 text-lg font-black">{item.title}</h3><p className="mt-1 text-xs leading-5 text-slate-400">{item.subtitle}</p><p className="mt-4 text-xs font-bold uppercase tracking-wider text-slate-500">{count} folders</p></button> })}</section>
-
-      <section className="mt-8"><div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between"><div><p className="text-xs font-bold uppercase tracking-[.2em] text-amber-300">Resource center</p><h2 className="mt-2 text-3xl font-black">Browse every subject</h2></div><label className="relative block w-full sm:max-w-sm"><span className="sr-only">Search the distributor library</span><Search className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500" /><input value={query} onChange={event => setQuery(event.target.value)} placeholder="Search products, scripts, compliance…" className="h-12 w-full rounded-xl border border-white/10 bg-white/[.035] pl-11 pr-11 text-sm outline-none focus:border-cyan-300/50" />{query && <button onClick={() => setQuery('')} aria-label="Clear search" className="absolute right-3 top-1/2 -translate-y-1/2 p-1 text-slate-500"><X className="h-4 w-4" /></button>}</label></div>
-        <div className="mt-5 grid gap-4 md:grid-cols-2 xl:grid-cols-3">{visibleFolders.map(folder => { const parent = COLLECTIONS.find(item => item.id === folder.collection)!; const Icon = parent.icon; const target = folder.href || SAGA_LIBRARY; return <article key={folder.title} className="flex min-h-72 flex-col rounded-[24px] border border-white/10 bg-white/[.035] p-5"><div className="flex items-start justify-between gap-4"><span className="grid h-11 w-11 place-items-center rounded-xl bg-cyan-400/10 text-cyan-300"><Icon className="h-5 w-5" /></span><span className={`rounded-full border px-2.5 py-1 text-[10px] font-black uppercase tracking-wider ${folder.official ? 'border-emerald-300/20 bg-emerald-300/[.08] text-emerald-200' : 'border-amber-300/20 bg-amber-300/[.08] text-amber-200'}`}>{folder.official ? 'Direct resource' : 'Temporary source'}</span></div><p className="mt-5 text-xs font-bold uppercase tracking-[.17em] text-slate-500">{parent.title}</p><h3 className="mt-2 text-xl font-black">{folder.title}</h3><p className="mt-3 flex-1 text-sm leading-6 text-slate-400">{folder.description}</p><div className="mt-5 flex flex-wrap gap-2">{folder.topics.map(topic => <span key={topic} className="rounded-lg bg-white/[.04] px-2.5 py-1 text-[10px] text-slate-400">{topic}</span>)}</div><a href={target} target="_blank" rel="noopener noreferrer" className="mt-5 inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-white/10 font-bold text-cyan-200 hover:bg-white/[.04]">{folder.official ? 'Open resource' : 'Open temporary library'} <ExternalLink className="h-4 w-4" /></a></article> })}</div>
-        {visibleFolders.length === 0 && <div className="mt-5 rounded-3xl border border-dashed border-white/15 p-12 text-center"><Search className="mx-auto h-8 w-8 text-slate-600" /><h3 className="mt-4 text-xl font-black">No matching resources</h3><p className="mt-2 text-sm text-slate-500">Try another search or show all collections.</p><button onClick={() => { setQuery(''); setCollection('all') }} className="mt-5 rounded-xl border border-white/10 px-5 py-3 text-sm font-bold">Reset library</button></div>}
-      </section>
-
-      <section className="mt-9 grid gap-4 sm:grid-cols-3"><LibraryPoint icon={<BookOpenCheck />} title="Guided learning" text="Use the Academy when you want structured modules, quizzes, and progress." /><LibraryPoint icon={<FileText />} title="Fast reference" text="Use the Library when you need an answer, document, script category, or replay." /><LibraryPoint icon={<ShieldCheck />} title="Responsible sharing" text="Compliance, disclosures, and official sources stay visible throughout the system." /></section>
+      <section className="mt-9 grid gap-4 sm:grid-cols-3"><LibraryPoint icon={<BookOpenCheck />} title="Learn in order" text="Use the Academy for courses, modules, quizzes, and tracked progress." /><LibraryPoint icon={<FileText />} title="Find it quickly" text="Use the Tool Center for documents, scripts, product help, and replays." /><LibraryPoint icon={<ShieldCheck />} title="Share responsibly" text="Compliance, disclosures, and official resources remain easy to find." /></section>
     </div>
+
+    {selected ? <div className="fixed inset-0 z-[120] flex items-end justify-center bg-black/75 p-0 backdrop-blur-sm sm:items-center sm:p-5" role="dialog" aria-modal="true" aria-labelledby="library-preview-title" onMouseDown={event => { if (event.target === event.currentTarget) setSelected(null) }}><section className="max-h-[92vh] w-full max-w-3xl overflow-y-auto rounded-t-[28px] border border-white/10 bg-[#091126] p-5 shadow-2xl sm:rounded-[28px] sm:p-7"><div className="flex items-start justify-between gap-4"><div><p className="text-xs font-bold uppercase tracking-[.2em] text-amber-300">True Legacy preview</p><h2 id="library-preview-title" className="mt-2 text-2xl font-black sm:text-3xl">{selected.title}</h2><p className="mt-3 max-w-2xl text-sm leading-6 text-slate-400">{selected.description}</p></div><button onClick={() => setSelected(null)} aria-label="Close preview" className="grid h-11 w-11 shrink-0 place-items-center rounded-full border border-white/10 bg-white/[.04]"><X className="h-5 w-5" /></button></div>
+      {selected.folders.length ? <div className="mt-7"><h3 className="text-sm font-black uppercase tracking-[.16em] text-cyan-300">Folders</h3><div className="mt-3 grid gap-2 sm:grid-cols-2">{selected.folders.map(folder => <div key={folder} className="rounded-xl border border-white/[.07] bg-white/[.035] p-3 text-sm font-bold text-slate-300">{folder}</div>)}</div></div> : null}
+      <div className="mt-7"><h3 className="text-sm font-black uppercase tracking-[.16em] text-cyan-300">Available material</h3><div className="mt-3 grid gap-2">{selected.previews.map((preview, index) => <div key={preview} className="flex items-center gap-3 rounded-xl border border-white/[.07] bg-white/[.025] p-3"><span className="grid h-8 w-8 shrink-0 place-items-center rounded-lg bg-cyan-400/10 text-xs font-black text-cyan-300">{String(index + 1).padStart(2, '0')}</span><p className="text-sm text-slate-300">{preview}</p></div>)}</div></div>
+      <div className="mt-7 rounded-2xl border border-amber-300/15 bg-amber-300/[.05] p-4 text-xs leading-5 text-slate-400">This is a temporary authorized source. It will be replaced with True Legacy-created material as each new resource becomes available.</div>
+      <a href={`${SOURCE_ROOT}${selected.id}`} target="_blank" rel="noopener noreferrer" className="mt-5 inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-xl bg-cyan-400 px-5 font-black text-slate-950">Open this resource collection <ExternalLink className="h-4 w-4" /></a>
+    </section></div> : null}
   </main>
 }
 
 function LibraryPoint({ icon, title, text }: { icon: React.ReactNode; title: string; text: string }) { return <div className="rounded-2xl border border-white/10 bg-white/[.025] p-5"><span className="text-cyan-300">{icon}</span><h3 className="mt-4 font-black">{title}</h3><p className="mt-2 text-sm leading-6 text-slate-500">{text}</p></div> }
-function Gate({ title, body, action }: { title: string; body: string; action?: React.ReactNode }) { return <main className="grid min-h-screen place-items-center bg-[#05091a] p-5 text-white"><SEO title={`${title} | True Legacy`} description={body} noIndex /><div className="max-w-md text-center"><GraduationCap className="mx-auto h-11 w-11 text-cyan-300" /><h1 className="mt-5 text-3xl font-black">{title}</h1><p className="mt-4 leading-7 text-slate-400">{body}</p>{action && <div className="mt-7">{action}</div>}</div></main> }
+function Gate({ title, body, action }: { title: string; body: string; action?: React.ReactNode }) { return <main className="grid min-h-screen place-items-center bg-[#05091a] p-5 text-white"><SEO title={`${title} | True Legacy`} description={body} noIndex /><div className="max-w-md text-center"><GraduationCap className="mx-auto h-11 w-11 text-cyan-300" /><h1 className="mt-5 text-3xl font-black">{title}</h1><p className="mt-4 leading-7 text-slate-400">{body}</p>{action ? <div className="mt-7">{action}</div> : null}</div></main> }
