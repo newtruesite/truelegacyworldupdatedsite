@@ -515,7 +515,7 @@ export default function TrainingPage() {
       ? "guides"
       : "sessions",
   );
-  const [selectedCategory, setSelectedCategory] = useState<string>("all");
+  const [activePath, setActivePath] = useState<"foundation" | "business" | "leadership" | null>(null);
   const [expandedModules, setExpandedModules] = useState<Set<string>>(
     new Set(),
   );
@@ -611,6 +611,46 @@ export default function TrainingPage() {
     { title: ewsCopy.saturday, text: ewsCopy.saturdayText, href: "https://www.truehealthlifestyle.team/saturday", icon: Users },
   ];
 
+  const pathCopy = {
+    en: { title: "Choose your training module", text: "Follow the subjects in order or open the module that matches the skill you need now.", lessons: "lessons", open: "View lessons", back: "Back to modules", foundation: "1 · Foundation & Product Mastery", foundationText: "Build your purpose, product confidence, and understanding of the Enagic opportunity.", business: "2 · Business Skills & Conversations", businessText: "Learn prospecting, invitations, presentations, closing, objections, and business media.", leadership: "3 · Systems, Leadership & Duplication", leadershipText: "Develop the systems, structure, and leadership skills required to build a duplicating team." },
+    es: { title: "Elige tu módulo de capacitación", text: "Sigue los temas en orden o abre el módulo que corresponde a la habilidad que necesitas ahora.", lessons: "lecciones", open: "Ver lecciones", back: "Volver a los módulos", foundation: "1 · Fundamentos y dominio de productos", foundationText: "Desarrolla tu propósito, confianza en los productos y comprensión de la oportunidad Enagic.", business: "2 · Habilidades de negocio y conversaciones", businessText: "Aprende prospección, invitaciones, presentaciones, cierres, objeciones y medios de negocio.", leadership: "3 · Sistemas, liderazgo y duplicación", leadershipText: "Desarrolla los sistemas, la estructura y el liderazgo necesarios para construir un equipo que se duplica." },
+    pt: { title: "Escolha seu módulo de treinamento", text: "Siga os assuntos em ordem ou abra o módulo que corresponde à habilidade que você precisa agora.", lessons: "aulas", open: "Ver aulas", back: "Voltar aos módulos", foundation: "1 · Fundamentos e domínio dos produtos", foundationText: "Desenvolva seu propósito, confiança nos produtos e compreensão da oportunidade Enagic.", business: "2 · Habilidades de negócios e conversas", businessText: "Aprenda prospecção, convites, apresentações, fechamento, objeções e mídia de negócios.", leadership: "3 · Sistemas, liderança e duplicação", leadershipText: "Desenvolva os sistemas, a estrutura e a liderança necessários para construir uma equipe duplicável." },
+    fr: { title: "Choisissez votre module de formation", text: "Suivez les sujets dans l’ordre ou ouvrez le module correspondant à la compétence dont vous avez besoin.", lessons: "leçons", open: "Voir les leçons", back: "Retour aux modules", foundation: "1 · Fondations et maîtrise des produits", foundationText: "Développez votre objectif, votre confiance produit et votre compréhension de l’opportunité Enagic.", business: "2 · Compétences commerciales et conversations", businessText: "Apprenez la prospection, les invitations, les présentations, la conclusion, les objections et les médias.", leadership: "3 · Systèmes, leadership et duplication", leadershipText: "Développez les systèmes, la structure et le leadership nécessaires pour bâtir une équipe duplicable." },
+  }[locale] || { title: "Choose your training module", text: "Follow the subjects in order or open the module that matches the skill you need now.", lessons: "lessons", open: "View lessons", back: "Back to modules", foundation: "1 · Foundation & Product Mastery", foundationText: "Build your purpose, product confidence, and understanding of the Enagic opportunity.", business: "2 · Business Skills & Conversations", businessText: "Learn prospecting, invitations, presentations, closing, objections, and business media.", leadership: "3 · Systems, Leadership & Duplication", leadershipText: "Develop the systems, structure, and leadership skills required to build a duplicating team." };
+
+  const learningPaths = [
+    {
+      id: "foundation" as const,
+      title: pathCopy.foundation,
+      text: pathCopy.foundationText,
+      categories: ["foundation", "product"] as Array<keyof typeof CATEGORY_INFO>,
+      icon: Target,
+      cardClass: "from-cyan-500/[.11] hover:border-cyan-300/35",
+      iconClass: "bg-cyan-400/10 text-cyan-300",
+      accentClass: "text-cyan-300",
+    },
+    {
+      id: "business" as const,
+      title: pathCopy.business,
+      text: pathCopy.businessText,
+      categories: ["prospecting", "closing"] as Array<keyof typeof CATEGORY_INFO>,
+      icon: CheckCircle,
+      cardClass: "from-amber-500/[.11] hover:border-amber-300/35",
+      iconClass: "bg-amber-400/10 text-amber-300",
+      accentClass: "text-amber-300",
+    },
+    {
+      id: "leadership" as const,
+      title: pathCopy.leadership,
+      text: pathCopy.leadershipText,
+      categories: ["systems", "leadership"] as Array<keyof typeof CATEGORY_INFO>,
+      icon: Users,
+      cardClass: "from-violet-500/[.11] hover:border-violet-300/35",
+      iconClass: "bg-violet-400/10 text-violet-300",
+      accentClass: "text-violet-300",
+    },
+  ];
+
   const completeDuoIntro = () => {
     localStorage.setItem("tl_training_duo_intro", "complete");
     setHasCompletedDuoIntro(true);
@@ -627,16 +667,10 @@ export default function TrainingPage() {
     setExpandedModules(newExpanded);
   };
 
-  const filteredModules =
-    selectedCategory === "all"
-      ? TRAINING_MODULES
-      : TRAINING_MODULES.filter(
-          (module) => module.category === selectedCategory,
-        );
-
-  const categories = Object.keys(CATEGORY_INFO) as Array<
-    keyof typeof CATEGORY_INFO
-  >;
+  const selectedPath = learningPaths.find((path) => path.id === activePath);
+  const filteredModules = selectedPath
+    ? TRAINING_MODULES.filter((module) => selectedPath.categories.includes(module.category))
+    : [];
 
   return (
     <div className="page-wrapper" style={{ background: "#060b1e" }}>
@@ -868,59 +902,69 @@ export default function TrainingPage() {
                   </div>
                 </div>
 
-                {/* Category Filter - Only show for sessions view */}
-                {activeView === "sessions" && (
-                  <div className="mb-8">
-                    <div className="flex flex-wrap gap-2 justify-center">
-                      <button
-                        onClick={() => setSelectedCategory("all")}
-                        className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-                          selectedCategory === "all"
-                            ? "bg-cyan-500/20 text-cyan-300 border border-cyan-500/30"
-                            : "text-slate-400 hover:text-white hover:bg-white/5"
-                        }`}
-                      >
-                        {copy.training?.all_modules || "All Modules"} (
-                        {TRAINING_MODULES.length})
-                      </button>
-                      {categories.map((category) => {
-                        const info = CATEGORY_INFO[category];
-                        const count = TRAINING_MODULES.filter(
-                          (m) => m.category === category,
-                        ).length;
-                        const categoryTitle =
-                          copy.training?.categories?.[category] || info.title;
-                        return (
-                          <button
-                            key={category}
-                            onClick={() => setSelectedCategory(category)}
-                            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-                              selectedCategory === category
-                                ? `bg-${info.color}-500/20 text-${info.color}-300 border border-${info.color}-500/30`
-                                : "text-slate-400 hover:text-white hover:bg-white/5"
-                            }`}
-                          >
-                            {categoryTitle} ({count})
-                          </button>
-                        );
-                      })}
-                    </div>
-                  </div>
-                )}
-
                 {/* Training Sessions View */}
                 {activeView === "sessions" && (
-                  <div className="space-y-6">
-                    {filteredModules.map((module) => (
-                      <TrainingModuleCard
-                        key={module.id}
-                        module={module}
-                        isExpanded={expandedModules.has(module.id)}
-                        onToggle={() => toggleModule(module.id)}
-                        copy={copy}
-                      />
-                    ))}
-                  </div>
+                  <section>
+                    {!selectedPath ? (
+                      <>
+                        <div className="mb-7 text-center">
+                          <h2 className="text-3xl font-black text-white">{pathCopy.title}</h2>
+                          <p className="mx-auto mt-3 max-w-2xl text-sm leading-6 text-slate-400 sm:text-base">{pathCopy.text}</p>
+                        </div>
+                        <div className="grid gap-5 lg:grid-cols-3">
+                          {learningPaths.map((path) => {
+                            const Icon = path.icon;
+                            const count = TRAINING_MODULES.filter((module) => path.categories.includes(module.category)).length;
+
+                            return (
+                              <button
+                                key={path.id}
+                                type="button"
+                                onClick={() => setActivePath(path.id)}
+                                className={`group flex min-h-72 flex-col rounded-[1.75rem] border border-white/10 bg-gradient-to-br to-white/[.025] p-6 text-left transition hover:-translate-y-1 ${path.cardClass}`}
+                              >
+                                <span className={`grid h-14 w-14 place-items-center rounded-2xl ${path.iconClass}`}>
+                                  <Icon className="h-7 w-7" />
+                                </span>
+                                <h3 className="mt-7 text-2xl font-black leading-tight text-white">{path.title}</h3>
+                                <p className="mt-3 flex-1 text-sm leading-6 text-slate-400">{path.text}</p>
+                                <span className={`mt-6 flex items-center justify-between border-t border-white/10 pt-5 text-sm font-black ${path.accentClass}`}>
+                                  <span>{count} {pathCopy.lessons}</span>
+                                  <span className="inline-flex items-center gap-2">{pathCopy.open}<ArrowRight className="h-4 w-4" /></span>
+                                </span>
+                              </button>
+                            );
+                          })}
+                        </div>
+                      </>
+                    ) : (
+                      <>
+                        <div className="mb-7 flex flex-col gap-4 rounded-2xl border border-white/10 bg-white/[.035] p-5 sm:flex-row sm:items-center sm:justify-between">
+                          <div>
+                            <button type="button" onClick={() => setActivePath(null)} className="inline-flex items-center gap-2 text-sm font-bold text-cyan-300">
+                              <span aria-hidden="true">←</span>{pathCopy.back}
+                            </button>
+                            <h2 className="mt-3 text-2xl font-black text-white">{selectedPath.title}</h2>
+                            <p className="mt-2 max-w-3xl text-sm leading-6 text-slate-400">{selectedPath.text}</p>
+                          </div>
+                          <span className="shrink-0 rounded-full border border-white/10 bg-black/20 px-4 py-2 text-sm font-bold text-slate-300">
+                            {filteredModules.length} {pathCopy.lessons}
+                          </span>
+                        </div>
+                        <div className="space-y-6">
+                          {filteredModules.map((module) => (
+                            <TrainingModuleCard
+                              key={module.id}
+                              module={module}
+                              isExpanded={expandedModules.has(module.id)}
+                              onToggle={() => toggleModule(module.id)}
+                              copy={copy}
+                            />
+                          ))}
+                        </div>
+                      </>
+                    )}
+                  </section>
                 )}
 
                 {/* Informational Guides View */}
