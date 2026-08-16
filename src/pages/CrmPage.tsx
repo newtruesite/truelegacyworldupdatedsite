@@ -3,10 +3,10 @@ import { SponsorGate } from '@/components/crm/SponsorGate'
 import { addLeadNote, assignLead, crmConfigured, crmSupabase, getCrmDistributors, getCrmLeads, getCrmMembership, getLeadNotes, updateLeadStatus } from '@/lib/crm'
 import type { CrmDistributor, CrmLead, CrmLeadNote, CrmMembership, LeadStatus } from '@/lib/crm'
 import type { Session } from '@supabase/supabase-js'
-import { BellRing, CalendarClock, ChevronDown, ChevronUp, Copy, Download, ExternalLink, Filter, LogOut, Mail, MessageCircle, Search, ShieldCheck, UserRoundCheck, Users } from 'lucide-react'
+import { BellRing, CalendarClock, ChevronDown, ChevronUp, Columns3, Copy, Download, ExternalLink, Filter, List, LogOut, Mail, MessageCircle, Search, ShieldCheck, UserRoundCheck, Users } from 'lucide-react'
 import { useEffect, useMemo, useState } from 'react'
 import type { FormEvent } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useSearchParams } from 'react-router-dom'
 
 const STATUSES: LeadStatus[] = ['new', 'contacted', 'qualified', 'nurturing', 'converted', 'closed']
 const STATUS_STYLES: Record<LeadStatus, string> = {
@@ -19,6 +19,7 @@ function csvCell(value: unknown) {
 }
 
 export default function CrmPage() {
+  const [searchParams] = useSearchParams()
   const [session, setSession] = useState<Session | null>(null)
   const [membership, setMembership] = useState<CrmMembership | null>(null)
   const [leads, setLeads] = useState<CrmLead[]>([])
@@ -29,6 +30,7 @@ export default function CrmPage() {
   const [statusFilter, setStatusFilter] = useState('all')
   const [interestFilter, setInterestFilter] = useState('all')
   const [attentionFilter, setAttentionFilter] = useState<'all' | 'new' | 'due'>('all')
+  const [view, setView] = useState<'table' | 'board'>(() => window.localStorage.getItem('tl-crm-view') === 'board' ? 'board' : 'table')
   const [loading, setLoading] = useState(true)
   const [working, setWorking] = useState('')
   const [message, setMessage] = useState('')
@@ -50,6 +52,15 @@ export default function CrmPage() {
     })
     return () => data.subscription.unsubscribe()
   }, [])
+
+  useEffect(() => {
+    const attention = searchParams.get('attention')
+    if (attention === 'due' || attention === 'new') setAttentionFilter(attention)
+    const contact = searchParams.get('contact')
+    if (contact) setExpanded(contact)
+  }, [searchParams])
+
+  useEffect(() => { window.localStorage.setItem('tl-crm-view', view) }, [view])
 
   const load = async (activeSession = session) => {
     if (!activeSession) return
@@ -227,6 +238,15 @@ export default function CrmPage() {
 
   const assignedName = (id: string | null) => distributors.find(item => item.id === id)?.display_name || 'Unassigned'
   const assignedDistributor = (lead: CrmLead) => distributors.find(item => item.id === lead.assigned_distributor_id)
+  const applySmartView = (preset: 'all' | 'new' | 'due' | 'product' | 'business') => {
+    setSearch('')
+    setStatusFilter('all')
+    setInterestFilter('all')
+    setAttentionFilter('all')
+    if (preset === 'new' || preset === 'due') setAttentionFilter(preset)
+    if (preset === 'product') setInterestFilter('product')
+    if (preset === 'business') setInterestFilter('distributor')
+  }
 
   if (!crmConfigured) return <CrmMessage title="CRM connection required" body="The secure CRM interface is ready, but this preview is not connected to its dedicated Supabase project yet." />
   if (loading && !session) return <div className="min-h-screen bg-[#060b1e]" />
@@ -257,15 +277,16 @@ export default function CrmPage() {
         </section>
 
         <section className="mt-6 overflow-hidden rounded-2xl border border-white/10 bg-white/[0.03]">
+          <div className="flex flex-wrap items-center gap-2 border-b border-white/10 px-4 py-3"><span className="mr-1 text-[10px] font-black uppercase tracking-[.18em] text-slate-500">Smart views</span>{([['all','All contacts'],['new','New'],['due','Follow-up due'],['product','Product'],['business','Business']] as const).map(([preset,label])=><button key={preset} onClick={()=>applySmartView(preset)} className="rounded-full border border-white/10 bg-white/[.03] px-3 py-1.5 text-xs font-bold text-slate-300 transition hover:border-cyan-300/30 hover:text-cyan-200">{label}</button>)}</div>
           <div className="flex flex-col gap-3 border-b border-white/10 p-4 lg:flex-row lg:items-center lg:justify-between">
             <div className="flex flex-1 flex-col gap-3 xl:flex-row"><label className="flex h-11 flex-1 items-center gap-3 rounded-xl border border-white/10 bg-black/20 px-4 xl:max-w-sm"><Search className="h-4 w-4 text-slate-500" /><input value={search} onChange={event => setSearch(event.target.value)} placeholder="Search leads" className="w-full bg-transparent text-sm outline-none" /></label><label className="flex items-center gap-2"><Filter className="h-4 w-4 text-slate-500" /><select value={statusFilter} onChange={event => setStatusFilter(event.target.value)} className="h-11 rounded-xl border border-white/10 bg-[#0a1020] px-3 text-sm"><option value="all">All statuses</option>{STATUSES.map(status => <option key={status} value={status}>{status}</option>)}</select></label><select value={interestFilter} onChange={event => setInterestFilter(event.target.value)} className="h-11 rounded-xl border border-white/10 bg-[#0a1020] px-3 text-sm"><option value="all">All interests</option>{['product','duo','distributor','training','events'].map(interest => <option key={interest} value={interest}>{interest}</option>)}</select><select value={attentionFilter} onChange={event => setAttentionFilter(event.target.value as 'all' | 'new' | 'due')} className="h-11 rounded-xl border border-white/10 bg-[#0a1020] px-3 text-sm"><option value="all">All attention</option><option value="new">New leads</option><option value="due">Follow-ups due</option></select></div>
-            <button onClick={exportCsv} disabled={!filtered.length} className="inline-flex h-11 items-center justify-center gap-2 rounded-xl border border-cyan-400/30 px-4 text-sm font-bold text-cyan-200 disabled:opacity-40"><Download className="h-4 w-4" /> Export CSV</button>
+            <div className="flex gap-2"><div className="flex rounded-xl border border-white/10 bg-black/20 p-1"><button onClick={()=>setView('table')} aria-label="Table view" className={`grid h-9 w-9 place-items-center rounded-lg ${view==='table'?'bg-cyan-400/15 text-cyan-200':'text-slate-500'}`}><List className="h-4 w-4"/></button><button onClick={()=>setView('board')} aria-label="Pipeline board view" className={`grid h-9 w-9 place-items-center rounded-lg ${view==='board'?'bg-cyan-400/15 text-cyan-200':'text-slate-500'}`}><Columns3 className="h-4 w-4"/></button></div><button onClick={exportCsv} disabled={!filtered.length} className="inline-flex h-11 items-center justify-center gap-2 rounded-xl border border-cyan-400/30 px-4 text-sm font-bold text-cyan-200 disabled:opacity-40"><Download className="h-4 w-4" /> Export CSV</button></div>
           </div>
           {message && <p role="alert" className="border-b border-amber-400/20 bg-amber-400/10 px-5 py-3 text-sm text-amber-100">{message}</p>}
-          <div className="overflow-x-auto"><table className="w-full min-w-[1120px] text-left text-sm"><thead className="bg-black/20 text-[10px] uppercase tracking-wider text-slate-500"><tr>{['Submitted', 'Lead', 'Interest', 'Attribution', 'Assigned to', 'Status', 'Contact', 'Details'].map(label => <th key={label} className="px-5 py-4 font-medium">{label}</th>)}</tr></thead><tbody className="divide-y divide-white/10">{filtered.map(lead => [
+          {view === 'board' ? <PipelineBoard leads={filtered} working={working} onStatusChange={changeStatus} onOpen={leadId=>{setView('table');toggleDetails(leadId)}} /> : <div className="overflow-x-auto"><table className="w-full min-w-[1120px] text-left text-sm"><thead className="bg-black/20 text-[10px] uppercase tracking-wider text-slate-500"><tr>{['Submitted', 'Lead', 'Interest', 'Attribution', 'Assigned to', 'Status', 'Contact', 'Details'].map(label => <th key={label} className="px-5 py-4 font-medium">{label}</th>)}</tr></thead><tbody className="divide-y divide-white/10">{filtered.map(lead => [
             <tr key={lead.id}><td className="whitespace-nowrap px-5 py-4 text-slate-400">{new Date(lead.submitted_at).toLocaleString()}</td><td className="px-5 py-4"><p className="font-bold">{lead.full_name}</p><a href={`mailto:${lead.email}`} className="text-xs text-cyan-300">{lead.email}</a><p className="mt-1 text-xs text-slate-500">{lead.country}</p></td><td className="px-5 py-4 capitalize">{lead.interest}</td><td className="px-5 py-4"><p className="capitalize">{lead.attribution_method.replaceAll('_', ' ')}</p><p className="mt-1 text-xs text-slate-500">{lead.referrer_name || lead.referral_code || '—'}</p></td><td className="px-5 py-4">{membership?.role === 'admin' ? <select disabled={working === lead.id} value={lead.assigned_distributor_id || ''} onChange={event => changeAssignment(lead.id, event.target.value)} className="rounded-lg border border-white/10 bg-[#0a1020] px-3 py-2 text-xs"><option value="">Unassigned</option>{distributors.filter(item => item.active).map(item => <option key={item.id} value={item.id}>{item.display_name}</option>)}</select> : assignedName(lead.assigned_distributor_id)}</td><td className="px-5 py-4"><select disabled={working === lead.id} value={lead.status} onChange={event => changeStatus(lead, event.target.value as LeadStatus)} className={`rounded-lg border border-white/10 px-3 py-2 text-xs capitalize ${STATUS_STYLES[lead.status]}`}>{STATUSES.map(status => <option className="bg-[#0a1020] text-white" key={status} value={status}>{status}</option>)}</select></td><td className="px-5 py-4"><div className="flex gap-2"><a href={`mailto:${lead.email}`} className="rounded-lg border border-white/10 px-3 py-2 text-xs hover:text-cyan-200">Email</a>{lead.phone && <a href={`https://wa.me/${lead.phone.replace(/\D/g, '')}`} target="_blank" rel="noreferrer" className="rounded-lg border border-emerald-400/20 px-3 py-2 text-xs text-emerald-200">WhatsApp</a>}</div></td><td className="px-5 py-4"><button onClick={() => toggleDetails(lead.id)} className="inline-flex items-center gap-2 rounded-lg border border-white/10 px-3 py-2 text-xs">View {expanded === lead.id ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}</button></td></tr>,
             expanded === lead.id ? <tr key={`${lead.id}-details`}><td colSpan={8} className="bg-black/20 p-5"><div className="grid gap-5 xl:grid-cols-[0.8fr_1.2fr_1fr]"><div><h3 className="text-sm font-bold">Lead details</h3><div className="mt-3 grid gap-3 sm:grid-cols-2 xl:grid-cols-1"><Detail label="Phone" value={lead.phone} /><Detail label="Referral code" value={lead.referral_code} /><Detail label="Referrer" value={lead.referrer_name} /><Detail label="Source" value={lead.source_path} /><Detail label="Language" value={lead.locale.toUpperCase()} /></div><form onSubmit={event => scheduleFollowUp(event, lead)} className="mt-4 rounded-xl border border-white/10 p-4"><label className="flex items-center gap-2 text-xs font-bold text-cyan-200"><CalendarClock className="h-4 w-4" />Next follow-up</label><input name="followUp" type="datetime-local" defaultValue={lead.next_follow_up_at ? new Date(new Date(lead.next_follow_up_at).getTime() - new Date().getTimezoneOffset() * 60000).toISOString().slice(0,16) : ''} className="mt-3 h-10 w-full rounded-lg border border-white/10 bg-[#0a1020] px-3 text-xs" /><button disabled={working === lead.id} className="mt-3 w-full rounded-lg bg-cyan-500 px-3 py-2 text-xs font-bold">Save follow-up</button></form></div><NurtureCenter lead={lead} distributor={assignedDistributor(lead)} onOpen={recordOutreach} /><div><h3 className="text-sm font-bold">Contact history & notes</h3><form onSubmit={event => saveNote(event, lead.id)} className="mt-3 grid gap-2"><textarea required name="note" maxLength={3000} placeholder="Add a call, WhatsApp, email, or follow-up note" className="min-h-20 rounded-xl border border-white/10 bg-black/20 p-3 text-sm outline-none focus:border-cyan-400" /><button disabled={working === lead.id} className="justify-self-end rounded-xl bg-cyan-500 px-4 py-3 text-sm font-bold">Save note</button></form><div className="mt-3 max-h-72 space-y-2 overflow-y-auto">{(notes[lead.id] || []).map(note => <div key={note.id} className="rounded-xl border border-white/10 p-3"><p className="text-sm text-slate-300">{note.body}</p><p className="mt-2 text-[10px] text-slate-500">{new Date(note.created_at).toLocaleString()}</p></div>)}{notes[lead.id]?.length === 0 && <p className="text-xs text-slate-500">No contact history yet.</p>}</div></div></div></td></tr> : null,
-          ])}</tbody></table></div>
+          ])}</tbody></table></div>}
           {!loading && !filtered.length && <div className="p-12 text-center text-sm text-slate-500">No leads match this view.</div>}
         </section>
       </div>
@@ -275,6 +296,10 @@ export default function CrmPage() {
 
 function Metric({ icon, value, label }: { icon: React.ReactNode; value: number; label: string }) {
   return <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-5"><span className="text-cyan-300">{icon}</span><p className="mt-4 text-3xl font-black">{value}</p><p className="text-xs uppercase tracking-wider text-slate-500">{label}</p></div>
+}
+
+function PipelineBoard({ leads, working, onStatusChange, onOpen }: { leads: CrmLead[]; working: string; onStatusChange: (lead: CrmLead, status: LeadStatus) => void; onOpen: (leadId: string) => void }) {
+  return <div className="overflow-x-auto p-4"><div className="grid min-w-[1500px] grid-cols-6 gap-3">{STATUSES.map(status => { const column = leads.filter(lead => lead.status === status); return <section key={status} className="rounded-2xl border border-white/[.08] bg-black/15 p-3"><div className="flex items-center justify-between border-b border-white/[.07] pb-3"><h3 className="text-sm font-black capitalize">{status}</h3><span className="rounded-full bg-white/[.06] px-2 py-1 text-[10px] font-bold text-slate-400">{column.length}</span></div><div className="mt-3 space-y-3">{column.map(lead => <article key={lead.id} className="rounded-xl border border-white/[.08] bg-white/[.035] p-3"><button onClick={()=>onOpen(lead.id)} className="w-full text-left"><p className="truncate font-black">{lead.full_name}</p><p className="mt-1 truncate text-xs text-slate-500">{lead.email}</p><div className="mt-3 flex flex-wrap gap-1.5"><span className="rounded-full bg-cyan-400/10 px-2 py-1 text-[9px] font-bold uppercase text-cyan-200">{lead.interest}</span><span className="rounded-full bg-white/[.06] px-2 py-1 text-[9px] font-bold uppercase text-slate-400">{lead.locale}</span>{lead.next_follow_up_at ? <span className={`rounded-full px-2 py-1 text-[9px] font-bold ${new Date(lead.next_follow_up_at)<=new Date()?'bg-rose-400/10 text-rose-200':'bg-amber-400/10 text-amber-200'}`}>{new Date(lead.next_follow_up_at).toLocaleDateString()}</span> : null}</div></button><select disabled={working===lead.id} value={lead.status} onChange={event=>onStatusChange(lead,event.target.value as LeadStatus)} className="mt-3 h-9 w-full rounded-lg border border-white/10 bg-[#0a1020] px-2 text-xs capitalize">{STATUSES.map(option=><option key={option} value={option}>{option}</option>)}</select></article>)}{column.length===0?<p className="py-8 text-center text-xs text-slate-600">No contacts</p>:null}</div></section> })}</div></div>
 }
 
 function Detail({ label, value }: { label: string; value: string | null }) {

@@ -26,6 +26,7 @@ import CrmPage from "@/pages/CrmPage";
 import GrowthCenterPage from "@/pages/GrowthCenterPage";
 import PhaseFourPage from "@/pages/PhaseFourPage";
 import AppHomePage from "@/pages/AppHomePage";
+import AppTodayPage from "@/pages/AppTodayPage";
 import AppLibraryPage from "@/pages/AppLibraryPage";
 import SagaLibraryPage from "@/pages/SagaLibraryPage";
 import AppSharePage from "@/pages/AppSharePage";
@@ -85,6 +86,7 @@ function AnimatedRoutes() {
             }
           />
           <Route path="/app" element={<AppHomePage />} />
+          <Route path="/app/today" element={<AppTodayPage />} />
           <Route path="/app/library" element={<AppLibraryPage />} />
           <Route path="/app/saga-library" element={<SagaLibraryPage />} />
           <Route path="/app/share" element={<AppSharePage />} />
