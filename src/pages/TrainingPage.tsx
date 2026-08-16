@@ -597,6 +597,20 @@ export default function TrainingPage() {
     ? { water: "https://youtu.be/6A_UpRmoWWc", emguarde: "https://youtu.be/BS4QEM-zXf0", duo: "https://youtu.be/lB5fW55DmaI" }
     : { water: "https://youtu.be/1nkOCId-SfQ", emguarde: "https://youtu.be/5wuY1dKjHds", duo: "https://youtu.be/lB5fW55DmaI" };
 
+  const ewsCopy = {
+    en: { eyebrow: "Enagic Web System", title: "EWS & company training", text: "Use your personal EWS account and continue learning through the distributor training resources available to you.", login: "Log in to EWS", loginText: "Open your personal Enagic Web System dashboard.", system: "Learn the EWS system", systemText: "Training on how to set up and use EWS.", monday: "Monday training", mondayText: "Access the recurring Monday distributor training.", saturday: "Saturday calls", saturdayText: "Join the EWS Saturday training calls.", open: "Open" },
+    es: { eyebrow: "Sistema Web de Enagic", title: "EWS y capacitación de la compañía", text: "Usa tu cuenta personal de EWS y continúa aprendiendo con los recursos de capacitación disponibles para distribuidores.", login: "Iniciar sesión en EWS", loginText: "Abre tu panel personal del Sistema Web de Enagic.", system: "Aprende a usar EWS", systemText: "Capacitación para configurar y utilizar EWS.", monday: "Capacitación del lunes", mondayText: "Accede a la capacitación recurrente de los lunes.", saturday: "Llamadas del sábado", saturdayText: "Únete a las llamadas de capacitación EWS de los sábados.", open: "Abrir" },
+    pt: { eyebrow: "Sistema Web Enagic", title: "EWS e treinamento da empresa", text: "Use sua conta pessoal do EWS e continue aprendendo com os recursos de treinamento disponíveis para distribuidores.", login: "Entrar no EWS", loginText: "Abra seu painel pessoal do Sistema Web Enagic.", system: "Aprenda a usar o EWS", systemText: "Treinamento para configurar e utilizar o EWS.", monday: "Treinamento de segunda", mondayText: "Acesse o treinamento recorrente de segunda-feira.", saturday: "Chamadas de sábado", saturdayText: "Participe das chamadas de treinamento EWS aos sábados.", open: "Abrir" },
+    fr: { eyebrow: "Système Web Enagic", title: "EWS et formation de l’entreprise", text: "Utilisez votre compte EWS personnel et poursuivez votre apprentissage avec les ressources destinées aux distributeurs.", login: "Se connecter à EWS", loginText: "Ouvrez votre tableau de bord Enagic Web System.", system: "Apprendre le système EWS", systemText: "Formation pour configurer et utiliser EWS.", monday: "Formation du lundi", mondayText: "Accédez à la formation récurrente du lundi.", saturday: "Appels du samedi", saturdayText: "Participez aux appels de formation EWS du samedi.", open: "Ouvrir" },
+  }[locale] || { eyebrow: "Enagic Web System", title: "EWS & company training", text: "Use your personal EWS account and continue learning through the distributor training resources available to you.", login: "Log in to EWS", loginText: "Open your personal Enagic Web System dashboard.", system: "Learn the EWS system", systemText: "Training on how to set up and use EWS.", monday: "Monday training", mondayText: "Access the recurring Monday distributor training.", saturday: "Saturday calls", saturdayText: "Join the EWS Saturday training calls.", open: "Open" };
+
+  const ewsResources = [
+    { title: ewsCopy.login, text: ewsCopy.loginText, href: "https://app.enagicwebsystem.com/en_US/", icon: Key },
+    { title: ewsCopy.system, text: ewsCopy.systemText, href: "https://app.enagicwebsystem.com/training", icon: PlayCircle },
+    { title: ewsCopy.monday, text: ewsCopy.mondayText, href: "https://www.truehealthlifestyle.team/monday", icon: Lightbulb },
+    { title: ewsCopy.saturday, text: ewsCopy.saturdayText, href: "https://www.truehealthlifestyle.team/saturday", icon: Users },
+  ];
+
   const completeDuoIntro = () => {
     localStorage.setItem("tl_training_duo_intro", "complete");
     setHasCompletedDuoIntro(true);
@@ -793,6 +807,16 @@ export default function TrainingPage() {
                       "Complete training system designed to take you from beginner to 6A leader. Learn from proven strategies and build your legacy business with confidence."}
                   </motion.p>
                 </div>
+
+                <section className="mb-10 rounded-[2rem] border border-cyan-300/20 bg-gradient-to-br from-cyan-500/[0.09] via-white/[0.025] to-blue-600/[0.09] p-5 shadow-[0_24px_80px_rgba(0,0,0,.35)] sm:p-7">
+                  <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+                    <div><p className="text-xs font-black uppercase tracking-[0.26em] text-cyan-300">{ewsCopy.eyebrow}</p><h2 className="mt-2 text-2xl font-black text-white sm:text-3xl">{ewsCopy.title}</h2><p className="mt-2 max-w-3xl text-sm leading-6 text-slate-300">{ewsCopy.text}</p></div>
+                    <a href="https://app.enagicwebsystem.com/en_US/" target="_blank" rel="noopener noreferrer" className="inline-flex min-h-12 shrink-0 items-center justify-center gap-2 rounded-xl bg-cyan-400 px-5 font-black text-slate-950 transition hover:-translate-y-0.5 hover:bg-cyan-300">{ewsCopy.login}<ExternalLink className="h-4 w-4"/></a>
+                  </div>
+                  <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+                    {ewsResources.map(({title,text,href,icon:Icon})=><a key={href} href={href} target="_blank" rel="noopener noreferrer" className="group flex min-h-44 flex-col rounded-2xl border border-white/10 bg-[#071127]/80 p-5 transition hover:-translate-y-1 hover:border-cyan-300/35 hover:bg-cyan-400/[0.06]"><span className="grid h-11 w-11 place-items-center rounded-xl bg-cyan-400/10 text-cyan-300"><Icon className="h-5 w-5"/></span><strong className="mt-5 text-white">{title}</strong><small className="mt-2 flex-1 leading-5 text-slate-400">{text}</small><span className="mt-4 inline-flex items-center gap-2 text-xs font-black uppercase tracking-wider text-cyan-300">{ewsCopy.open} <ExternalLink className="h-3.5 w-3.5"/></span></a>)}
+                  </div>
+                </section>
 
                 {/* Sessions/Guides/Spanish Slides Toggle */}
                 <div className="mb-8">
