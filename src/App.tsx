@@ -32,6 +32,8 @@ import ResourceSharePage from "@/pages/ResourceSharePage";
 import AppLibraryPage from "@/pages/AppLibraryPage";
 import SagaLibraryPage from "@/pages/SagaLibraryPage";
 import AppSharePage from "@/pages/AppSharePage";
+import AppBookingsPage from "@/pages/AppBookingsPage";
+import BookingPage from "@/pages/BookingPage";
 import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useLayoutEffect } from "react";
 import {
@@ -93,7 +95,9 @@ function AnimatedRoutes() {
           <Route path="/app/library" element={<AppLibraryPage />} />
           <Route path="/app/saga-library" element={<SagaLibraryPage />} />
           <Route path="/app/share" element={<AppSharePage />} />
+          <Route path="/app/bookings" element={<AppBookingsPage />} />
           <Route path="/resource/:resourceId/:slug" element={<ResourceSharePage />} />
+          <Route path="/book/:slug/:typeSlug" element={<BookingPage />} />
           {/* Static pages first — so they don't get matched by /:country */}
           <Route
             path="/training"

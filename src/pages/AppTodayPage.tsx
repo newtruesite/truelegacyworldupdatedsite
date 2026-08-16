@@ -9,6 +9,7 @@ import { Link } from 'react-router-dom'
 type Progress = { distributor_id: string; module_id?: string; item_id?: string; completed: boolean }
 type Module = { id: string; title: Record<string, string>; position: number }
 type OnboardingItem = { id: string; title: Record<string, string>; position: number }
+type Meeting = { id: string; guest_name: string; guest_email: string; starts_at: string; ends_at: string; status: string }
 
 function isToday(value: string) {
   const date = new Date(value)
@@ -25,6 +26,7 @@ export default function AppTodayPage() {
   const [items, setItems] = useState<OnboardingItem[]>([])
   const [training, setTraining] = useState<Progress[]>([])
   const [onboarding, setOnboarding] = useState<Progress[]>([])
+  const [meetings, setMeetings] = useState<Meeting[]>([])
   const [loading, setLoading] = useState(crmConfigured)
 
   useEffect(() => {
@@ -43,13 +45,14 @@ export default function AppTodayPage() {
         if (!current) return
         setMembership(member)
         if (!member?.active) return
-        const [leadRows, distributorRows, modulesResult, itemsResult, trainingResult, onboardingResult] = await Promise.all([
+        const [leadRows, distributorRows, modulesResult, itemsResult, trainingResult, onboardingResult, meetingsResult] = await Promise.all([
           getCrmLeads(),
           getCrmDistributors(),
           crmSupabase!.from('crm_training_modules').select('id,title,position').eq('active', true).order('position'),
           crmSupabase!.from('crm_onboarding_items').select('id,title,position').eq('active', true).order('position'),
           crmSupabase!.from('crm_training_progress').select('distributor_id,module_id,completed'),
           crmSupabase!.from('crm_onboarding_progress').select('distributor_id,item_id,completed'),
+          crmSupabase!.from('crm_meetings').select('id,guest_name,guest_email,starts_at,ends_at,status').eq('status', 'scheduled').order('starts_at').limit(100),
         ])
         if (!current) return
         setLeads(leadRows)
@@ -58,6 +61,7 @@ export default function AppTodayPage() {
         setItems((itemsResult.data || []) as OnboardingItem[])
         setTraining((trainingResult.data || []) as Progress[])
         setOnboarding((onboardingResult.data || []) as Progress[])
+        setMeetings((meetingsResult.data || []) as Meeting[])
       } finally { if (current) setLoading(false) }
     }
     load()
@@ -67,13 +71,14 @@ export default function AppTodayPage() {
   const due = useMemo(() => { const now = new Date(); return leads.filter(lead => lead.next_follow_up_at && new Date(lead.next_follow_up_at) <= now && !['converted', 'closed'].includes(lead.status)) }, [leads])
   const today = useMemo(() => leads.filter(lead => lead.next_follow_up_at && isToday(lead.next_follow_up_at) && !due.some(item => item.id === lead.id)), [due, leads])
   const newLeads = useMemo(() => leads.filter(lead => lead.status === 'new'), [leads])
+  const todayMeetings = useMemo(() => meetings.filter(meeting => isToday(meeting.starts_at)), [meetings])
   const distributorId = distributor?.id
   const completedTraining = training.filter(item => item.distributor_id === distributorId && item.completed)
   const completedOnboarding = onboarding.filter(item => item.distributor_id === distributorId && item.completed)
   const nextModule = modules.find(module => !completedTraining.some(item => item.module_id === module.id))
   const nextOnboarding = items.find(item => !completedOnboarding.some(progress => progress.item_id === item.id))
   const contactActionCount = new Set([...due, ...today, ...newLeads].map(lead => lead.id)).size
-  const actionCount = contactActionCount + (nextModule ? 1 : 0) + (nextOnboarding ? 1 : 0)
+  const actionCount = contactActionCount + todayMeetings.length + (nextModule ? 1 : 0) + (nextOnboarding ? 1 : 0)
 
   if (!crmConfigured) return <TodayMessage title="App connection required" body="The secure True Legacy connection is unavailable." />
   if (loading) return <main className="min-h-screen bg-[#05091a]" />
@@ -85,7 +90,9 @@ export default function AppTodayPage() {
     <div className="mx-auto max-w-7xl">
       <header className="flex flex-col gap-5 border-b border-white/10 pb-7 sm:flex-row sm:items-end sm:justify-between"><div><p className="text-xs font-black uppercase tracking-[.24em] text-cyan-300">Your daily operating system</p><h1 className="mt-2 text-4xl font-black sm:text-5xl">Today</h1><p className="mt-3 text-sm text-slate-400">Welcome back{distributor ? `, ${distributor.display_name.split(' ')[0]}` : ''}. Here is the shortest path to momentum.</p></div><div className="rounded-2xl border border-cyan-300/20 bg-cyan-300/[.07] px-5 py-3"><span className="text-3xl font-black text-cyan-200">{actionCount}</span><span className="ml-2 text-sm text-slate-400">recommended actions</span></div></header>
 
-      <section className="mt-7 grid gap-4 sm:grid-cols-2 xl:grid-cols-4"><Metric icon={<Clock3 />} value={due.length} label="Overdue follow-ups" tone="rose" /><Metric icon={<CalendarCheck2 />} value={today.length} label="Due today" tone="amber" /><Metric icon={<UserPlus />} value={newLeads.length} label="New contacts" tone="cyan" /><Metric icon={<CheckCircle2 />} value={`${completedOnboarding.length}/${items.length}`} label="Onboarding" tone="emerald" /></section>
+      <section className="mt-7 grid gap-4 sm:grid-cols-2 xl:grid-cols-5"><Metric icon={<Clock3 />} value={due.length} label="Overdue follow-ups" tone="rose" /><Metric icon={<CalendarCheck2 />} value={today.length} label="Due today" tone="amber" /><Metric icon={<UserPlus />} value={newLeads.length} label="New contacts" tone="cyan" /><Metric icon={<CalendarCheck2 />} value={todayMeetings.length} label="Calls today" tone="cyan" /><Metric icon={<CheckCircle2 />} value={`${completedOnboarding.length}/${items.length}`} label="Onboarding" tone="emerald" /></section>
+
+      {todayMeetings.length > 0 && <section className="mt-7 rounded-[28px] border border-violet-300/15 bg-violet-400/[.05] p-5 sm:p-7"><div className="flex items-center justify-between"><div><p className="text-xs font-bold uppercase tracking-[.18em] text-violet-300">Scheduled today</p><h2 className="mt-2 text-2xl font-black">Your conversations</h2></div><Link to="/app/bookings" className="text-sm font-bold text-cyan-300">All bookings</Link></div><div className="mt-5 grid gap-3 md:grid-cols-2">{todayMeetings.map(meeting => <article key={meeting.id} className="flex items-center gap-4 rounded-2xl border border-white/[.08] bg-black/15 p-4"><span className="grid h-12 w-12 shrink-0 place-items-center rounded-xl bg-violet-400/10 text-sm font-black text-violet-200">{new Date(meeting.starts_at).toLocaleTimeString([], { hour: 'numeric' })}</span><div className="min-w-0"><h3 className="truncate font-black">{meeting.guest_name}</h3><p className="mt-1 truncate text-xs text-slate-500">{new Date(meeting.starts_at).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })} · {meeting.guest_email}</p></div></article>)}</div></section>}
 
       <div className="mt-7 grid gap-6 xl:grid-cols-[1.25fr_.75fr]">
         <section className="rounded-[28px] border border-white/10 bg-white/[.03] p-5 sm:p-7"><div className="flex items-center justify-between"><div><p className="text-xs font-bold uppercase tracking-[.18em] text-rose-300">People first</p><h2 className="mt-2 text-2xl font-black">Follow-up queue</h2></div><Link to="/crm?attention=due" className="text-sm font-bold text-cyan-300">All contacts</Link></div><div className="mt-5 space-y-3">{[...due, ...today, ...newLeads.filter(lead => !due.some(item => item.id === lead.id) && !today.some(item => item.id === lead.id))].slice(0, 8).map(lead => <LeadAction key={lead.id} lead={lead} />)}{due.length + today.length + newLeads.length === 0 ? <EmptyState /> : null}</div></section>
@@ -94,7 +101,7 @@ export default function AppTodayPage() {
           <section className="rounded-[28px] border border-amber-300/15 bg-amber-300/[.05] p-6"><Sparkles className="h-7 w-7 text-amber-300" /><p className="mt-5 text-xs font-bold uppercase tracking-[.18em] text-amber-300">Next setup action</p><h2 className="mt-2 text-xl font-black">{nextOnboarding ? nextOnboarding.title.en : 'Onboarding complete'}</h2><p className="mt-3 text-sm leading-6 text-slate-400">{completedOnboarding.length} of {items.length} True Legacy setup steps complete.</p><Link to="/crm/growth" className="mt-5 inline-flex items-center gap-2 text-sm font-black text-amber-200">Open progress center <ArrowRight className="h-4 w-4" /></Link></section></div>
       </div>
 
-      <section className="mt-7 grid gap-4 md:grid-cols-3"><QuickAction to="/app/share" icon={<MessageCircle />} title="Share a presentation" text="Send an official personalized True Legacy page." /><QuickAction to="/crm/growth" icon={<Users />} title="Support your team" text="Review onboarding and academy progress." /><QuickAction to="/app/library" icon={<BookOpenCheck />} title="Find a resource" text="Open the True Legacy Tool Center." /></section>
+      <section className="mt-7 grid gap-4 md:grid-cols-4"><QuickAction to="/app/bookings" icon={<CalendarCheck2 />} title="Share your calendar" text="Send your personal discovery-call booking link." /><QuickAction to="/app/share" icon={<MessageCircle />} title="Share a presentation" text="Send an official personalized True Legacy page." /><QuickAction to="/crm/growth" icon={<Users />} title="Support your team" text="Review onboarding and academy progress." /><QuickAction to="/app/library" icon={<BookOpenCheck />} title="Find a resource" text="Open the True Legacy Tool Center." /></section>
     </div>
   </main>
 }

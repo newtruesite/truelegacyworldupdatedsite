@@ -7,6 +7,7 @@ const ITEMS = [
   { to: '/app/today', label: 'Today', icon: CalendarCheck2 },
   { to: '/crm', label: 'Contacts', icon: LayoutDashboard, exact: true },
   { to: '/app/share', label: 'Share', icon: Share2 },
+  { to: '/app/bookings', label: 'Bookings', icon: CalendarCheck2 },
   { to: '/app/library', label: 'Library', icon: BookOpen },
   { to: '/training', label: 'Academy', icon: BookOpen },
   { to: '/crm/growth', label: 'Team', icon: Users },
