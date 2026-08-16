@@ -1,0 +1,43 @@
+export type SagaCollectionId = 'start' | 'products' | 'business' | 'leadership'
+
+export type SagaFolder = {
+  id: string
+  title: string
+  description: string
+  collection: SagaCollectionId
+  folders: string[]
+  previews: string[]
+}
+
+export const SAGA_LIBRARY_URL = 'https://thesaga.app/globalwavecreators/library'
+
+export const SAGA_COLLECTIONS = [
+  { id: 'start' as const, title: 'Start & Operate', subtitle: 'Set up, order, finance, and install' },
+  { id: 'products' as const, title: 'Product Mastery', subtitle: 'Products, demonstrations, and research' },
+  { id: 'business' as const, title: 'Business Growth', subtitle: 'Connect, invite, and follow up' },
+  { id: 'leadership' as const, title: 'Leadership & Compliance', subtitle: 'Train, duplicate, and lead responsibly' },
+] as const
+
+export const SAGA_FOLDERS: SagaFolder[] = [
+  { id: '15381', title: 'Getting Started', description: 'New distributor setup, launch steps, checklists, and system orientation.', collection: 'start', folders: ['Additional trainings'], previews: ['Getting Started Checklist for New Builders', 'Launch Call', 'System Overview Training'] },
+  { id: '15397', title: 'Placing an Order', description: 'Market-specific order processes and customer documentation.', collection: 'start', folders: ['Generate an order link', 'USA orders', 'Canada orders', 'Special imports', 'New Zealand orders', 'Australia orders'], previews: ['Ordering workflow', 'Required documents', 'Customer order support'] },
+  { id: '15415', title: 'Pricing & Financing', description: 'Pricing and available financing references by supported market.', collection: 'start', folders: ['United States', 'Canada', 'Mexico', 'Europe', 'Australia', 'New Zealand', 'Dubai / UAE'], previews: ['Global Pricing Options'] },
+  { id: '15441', title: 'Installation, Cleaning & Pre-Filters', description: 'Set up and maintain Enagic equipment correctly.', collection: 'start', folders: ['Installation', 'Cleaning', 'Pre-filters'], previews: ['Installation guidance', 'Routine cleaning', 'Pre-filter selection'] },
+  { id: '15396', title: 'Compensation Plan', description: 'Understand the Enagic opportunity, commissions, stacking, and advancement.', collection: 'start', folders: [], previews: ['Enagic Opportunity', 'Understand the Compensation Plan', 'Commission Calculations', 'Strategic Stacking', 'In-House Financing Comp Plan', 'Earnings Disclosure', 'Filter Commissions', 'Roadmap to 6A2-3'] },
+  { id: '15344', title: 'Shareable Resources', description: 'A complete sharing shelf for products, presentations, prices, and market conversations.', collection: 'products', folders: ['Kangen Water', 'emGuarde EMF Harmonizer', 'Kangen Wagyu', 'Compensation Plan', 'Anespa Shower System', 'Ukon Turmeric', 'Other Languages', 'Industry Resources', 'Niche Webinars', 'Testimonial Calls', 'Prices', 'Pets & Vets', 'Business Webinar', 'Network Marketing', 'Live Events'], previews: ['Videos', 'Documents', 'Images', 'Presentations', 'Market resources'] },
+  { id: '15385', title: 'Complete Product Information', description: 'The core product and technology reference center.', collection: 'products', folders: ['Ionizers', 'Anespa shower', 'emGuarde', 'Kangen Air', 'Ukon', 'Kangen Wagyu'], previews: ['Product overview', 'Features and intended uses', 'Market availability'] },
+  { id: '15469', title: 'Kangen Authority Training', description: 'Detailed machine ownership, maintenance, testing, and water education.', collection: 'products', folders: [], previews: ['Welcome to Kangen Authority', 'Getting Started With Your Kangen', 'Setting Up Your K8', 'Packing a K8 for Travel', 'Performing an E-Cleaning', 'Changing the K8 Filter', 'Ionfaucet Pre-filter Walkthrough', 'Changing Pre-filters', 'Creating Safe Kangen Water', 'Testing 2.5pH Water', 'Understanding ORP', 'Testing Chlorine Drops'] },
+  { id: '15470', title: 'Filtration Education', description: 'Pre-filtration, contaminant awareness, specifications, and water-softener education.', collection: 'products', folders: ['Multipure specifications & data', 'Water softener'], previews: ['Tap Water Contaminant Database', 'Pre-filter & Enagic Presentation', 'Pre-Filtration for Ionizers', 'Filtration Education — Full', 'Filtration Education — Quick'] },
+  { id: '15480', title: 'Demos, Events & Webinars', description: 'Prepare and present confident product demonstrations and events.', collection: 'products', folders: ['Demo event preparation', 'Demo supplies', 'Training', 'Canva presentations'], previews: ['Why Host Events?', 'Demo preparation', 'Presentation resources'] },
+  { id: '15576', title: 'PDFs & Reading Materials', description: 'Product education, guides, studies, and approved reading resources.', collection: 'products', folders: ['Older e-books'], previews: ['Learn More About Kangen Water & Enagic', 'Kangen Water 100+ Uses', 'Why Hydrogen Water', 'Doctors on Kangen Water', 'Ionized Water Protocols', 'A Chemical-Free Sanctuary', 'Ionized Water in the Kitchen', '2.5pH Sterilization & Wound Care', 'Kangen Water Therapies', 'Learn More About emGuarde', 'Anespa Mineral Shower Spa', 'Kangen Ukon E-Book'] },
+  { id: '15383', title: 'Conversation & Follow-Up Scripts', description: 'A practical conversation path from first connection through follow-up and launch.', collection: 'business', folders: ['Paid ads scripts'], previews: ['Warm start', 'Cold start', 'Social media start', 'Product lead magnet', 'Business lead magnet', 'Warm invitation', 'Cold invitation', 'Social media invitation', '24-hour follow-up', '48-hour follow-up', '72-hour follow-up', 'Serving & next steps'] },
+  { id: '15468', title: 'Content Resources & Prompts', description: 'Ideas and frameworks for clear, responsible distributor content.', collection: 'business', folders: ['Pre-made social content — coming soon'], previews: ['76 Content Prompts', '105 Viral Hooks & Angles', '60-Second Authority Script'] },
+  { id: '15478', title: 'Networking & Conversations', description: 'Relationship-first networking and confident business conversations.', collection: 'business', folders: ['Using ChatGPT'], previews: ['Dream 25 / 50 Networking', 'Conversation Scripts Pack', 'Questions for Better Conversations'] },
+  { id: '15486', title: 'Testimonials', description: 'Organized personal experiences with the required individual-results disclaimer.', collection: 'business', folders: ['Business', 'Health by topic', 'Medication', 'Saving money', 'Cleaning', 'Pesticides', 'Gardening', 'Personal backgrounds', 'Pets'], previews: ['Video stories', 'Written experiences', 'Topic-based testimonials'] },
+  { id: '15578', title: 'The Prospect Flow', description: 'A step-by-step path from connection to a qualified conversation and three-way call.', collection: 'business', folders: [], previews: ['Understanding the Flow Cycle', 'Flow Cycle Basics', 'IPA Overview', 'Rain — Share Your Story', 'Rain — Make New Connections', 'Rain — Instagram Lead Generation', 'Rain — Avatar Training', 'Streams — Conversation Flow', 'Streams — Add, Tag & Qualify', 'Streams — Invite to an Event', 'Streams — Qualify Leads', 'Rivers — Book a Three-Way Call', 'Rivers — Edify Your Upline'] },
+  { id: '15629', title: 'AI Tools for Distributors', description: 'AI assistants for faster responses, planning, and follow-up.', collection: 'business', folders: [], previews: ['Lead Responder', 'Objection Responder', 'Human review checklist'] },
+  { id: '15791', title: 'Team Training Replays', description: 'Recurring team, EWS, Monday, Wednesday, and Saturday training replays.', collection: 'leadership', folders: ['Community call replays'], previews: ['Tuesday Team Training', 'Monday Distributor Training', 'Wednesday EWS Training', 'Saturday Business Webinar'] },
+  { id: '15557', title: 'Leadership & Business Development', description: 'Challenges, sprints, mindset, selling, and leadership development.', collection: 'leadership', folders: ['30-Day Sprint', 'Sales Training', 'Leadership Study', 'GoPro Event Resources', 'Mindset Resources'], previews: ['Personal development', 'Business training', 'Leadership challenges'] },
+  { id: '15579', title: 'Tax Education', description: 'General business tax education; always confirm decisions with a qualified professional.', collection: 'leadership', folders: ['USA', 'Canada'], previews: ['Business tax learning', 'Market-specific references'] },
+  { id: '15583', title: 'Compliance & Distributor Files', description: 'Policies, disclosures, brand files, and responsible distributor guidance.', collection: 'leadership', folders: ['Independent Distributor Logos'], previews: ['Enagic Earnings Disclosure', 'Policies & Procedures', 'Compliance Basics', 'Distributor Handbook'] },
+]

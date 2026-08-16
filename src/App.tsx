@@ -27,6 +27,7 @@ import GrowthCenterPage from "@/pages/GrowthCenterPage";
 import PhaseFourPage from "@/pages/PhaseFourPage";
 import AppHomePage from "@/pages/AppHomePage";
 import AppLibraryPage from "@/pages/AppLibraryPage";
+import SagaLibraryPage from "@/pages/SagaLibraryPage";
 import AppSharePage from "@/pages/AppSharePage";
 import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useLayoutEffect } from "react";
@@ -85,6 +86,7 @@ function AnimatedRoutes() {
           />
           <Route path="/app" element={<AppHomePage />} />
           <Route path="/app/library" element={<AppLibraryPage />} />
+          <Route path="/app/saga-library" element={<SagaLibraryPage />} />
           <Route path="/app/share" element={<AppSharePage />} />
           {/* Static pages first — so they don't get matched by /:country */}
           <Route
