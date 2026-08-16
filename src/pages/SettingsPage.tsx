@@ -1,11 +1,12 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
-import { User, Mail, Phone, Globe, Settings, Star, Edit3, Save, X } from 'lucide-react'
+import { User, Mail, Phone, Globe, Settings, Star, Edit3, Save, X, Shield } from 'lucide-react'
 import { AuroraBackground } from '@/components/ui/AuroraBackground'
 import { Navbar } from '@/components/layout/Navbar'
 import { Footer } from '@/components/layout/Footer'
 import { COUNTRIES, getFlagImageUrl } from '@/lib/countries'
 import { cn } from '@/lib/utils'
+import { LeadershipPanel } from '@/components/LeadershipPanel'
 
 const MOCK_USER = {
     name: 'Alex Johnson',
@@ -33,6 +34,7 @@ const NAV_ITEMS = [
     { label: 'Profile', icon: User, id: 'profile' },
     { label: 'Settings', icon: Settings, id: 'settings' },
     { label: 'My Status', icon: Star, id: 'status' },
+    { label: 'Leadership', icon: Shield, id: 'leadership' },
 ]
 
 export default function SettingsPage() {
@@ -350,6 +352,11 @@ export default function SettingsPage() {
                                         ))}
                                     </div>
                                 </div>
+                            )}
+
+                            {/* Leadership Tab */}
+                            {activeTab === 'leadership' && (
+                                <LeadershipPanel />
                             )}
                         </motion.div>
                     </div>
