@@ -112,7 +112,7 @@ export const SAGA_FOLDERS: SagaFolder[] = [
     description: 'A complete sharing shelf for products, presentations, prices, and market conversations.',
     collection: 'products',
     folders: [
-      { title: 'Kangen Water' },
+      { title: 'Kangen Water', url: 'https://thesaga.app/globalwavecreators/library?folder=15345' },
       { title: 'emGuarde EMF Harmonizer' },
       { title: 'Kangen Wagyu' },
       { title: 'Compensation Plan' },
