@@ -96,8 +96,8 @@ export const SAGA_FOLDERS: SagaFolder[] = [
     collection: 'start',
     folders: [],
     previews: [
-      { title: 'Enagic Opportunity' },
-      { title: 'Understand the Compensation Plan' },
+      { title: 'Enagic Opportunity', url: 'https://player.vimeo.com/video/536022681?rel=0' },
+      { title: 'Understand the Compensation Plan', url: 'https://linkmate.one/lkhod/video/34716' },
       { title: 'Commission Calculations' },
       { title: 'Strategic Stacking' },
       { title: 'In-House Financing Comp Plan' },
