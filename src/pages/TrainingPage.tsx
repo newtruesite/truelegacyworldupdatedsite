@@ -594,7 +594,7 @@ export default function TrainingPage() {
   };
 
   const duoVideos = locale === "es"
-    ? { water: "https://youtu.be/6A_UpRmoWWc", emguarde: "https://youtu.be/BS4QEM-zXf0", duo: "https://youtu.be/lB5fW55DmaI" }
+    ? { water: "https://youtu.be/6A_UpRmoWWc", emguarde: "https://youtu.be/BS4QEM-zXf0", duo: "https://youtu.be/t1OtNA4p8y4" }
     : { water: "https://youtu.be/1nkOCId-SfQ", emguarde: "https://youtu.be/5wuY1dKjHds", duo: "https://youtu.be/lB5fW55DmaI" };
 
   const ewsCopy = {

@@ -129,7 +129,7 @@ export default function ProductsPage() {
                   {contactLabel}
                 </Link>
                 <a
-                  href="https://youtu.be/lB5fW55DmaI?si=HzPbgiwUup9u5UN-"
+                  href={locale === 'es' ? "https://youtu.be/t1OtNA4p8y4" : "https://youtu.be/lB5fW55DmaI?si=HzPbgiwUup9u5UN-"}
                   target="_blank"
                   rel="noopener noreferrer"
                   onClick={() => trackEvent('duo_demo_watch', { locale, source: 'products_page' })}
