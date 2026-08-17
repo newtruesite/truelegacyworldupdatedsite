@@ -47,10 +47,31 @@ export default function SagaLibraryPage() {
     </div>
 
     {selected ? <div className="fixed inset-0 z-[120] flex items-end justify-center bg-black/75 backdrop-blur-sm sm:items-center sm:p-5" role="dialog" aria-modal="true" aria-labelledby="saga-preview-title" onMouseDown={event => { if (event.target === event.currentTarget) setSelected(null) }}><section className="max-h-[92vh] w-full max-w-3xl overflow-y-auto rounded-t-[28px] border border-white/10 bg-[#100d22] p-5 shadow-2xl sm:rounded-[28px] sm:p-7"><div className="flex items-start justify-between gap-4"><div><p className="text-xs font-bold uppercase tracking-[.2em] text-violet-300">Library catalog preview</p><h2 id="saga-preview-title" className="mt-2 text-2xl font-black sm:text-3xl">{selected.title}</h2><p className="mt-3 text-sm leading-6 text-slate-400">{selected.description}</p></div><button onClick={() => setSelected(null)} aria-label="Close preview" className="grid h-11 w-11 shrink-0 place-items-center rounded-full border border-white/10 bg-white/[.04]"><X className="h-5 w-5" /></button></div>
-      {selected.folders.length ? <ResourceList title="Folders" items={selected.folders} /> : null}<ResourceList title="Materials" items={selected.previews} />
-      <a href={SAGA_LIBRARY_URL} target="_blank" rel="noopener noreferrer" className="mt-7 inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-xl bg-violet-300 px-5 font-black text-violet-950">Open Library <ExternalLink className="h-4 w-4" /></a>
+      {selected.folders.length ? <ResourceList title="Folders" items={selected.folders} folderId={selected.id} /> : null}<ResourceList title="Materials" items={selected.previews} folderId={selected.id} />
+      <a href={`${SAGA_LIBRARY_URL}?folder=${selected.id}`} target="_blank" rel="noopener noreferrer" className="mt-7 inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-xl bg-violet-300 px-5 font-black text-violet-950">Open Folder in Library <ExternalLink className="h-4 w-4" /></a>
     </section></div> : null}
   </main>
 }
 
-function ResourceList({ title, items }: { title: string; items: string[] }) { return <div className="mt-7"><h3 className="text-sm font-black uppercase tracking-[.16em] text-violet-300">{title}</h3><div className="mt-3 grid gap-2 sm:grid-cols-2">{items.map(item => <div key={item} className="rounded-xl border border-white/[.07] bg-white/[.035] p-3 text-sm text-slate-300">{item}</div>)}</div></div> }
+function ResourceList({ title, items, folderId }: { title: string; items: string[]; folderId: string }) {
+  const folderUrl = `https://thesaga.app/globalwavecreators/library?folder=${folderId}`
+  return (
+    <div className="mt-7">
+      <h3 className="text-sm font-black uppercase tracking-[.16em] text-violet-300">{title}</h3>
+      <div className="mt-3 grid gap-2 sm:grid-cols-2">
+        {items.map(item => (
+          <a
+            key={item}
+            href={folderUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center justify-between rounded-xl border border-white/[.07] bg-white/[.035] p-3 text-sm text-slate-300 transition hover:border-violet-300/30 hover:text-white"
+          >
+            <span>{item}</span>
+            <ExternalLink className="h-3.5 w-3.5 shrink-0 text-violet-300" />
+          </a>
+        ))}
+      </div>
+    </div>
+  )
+}
