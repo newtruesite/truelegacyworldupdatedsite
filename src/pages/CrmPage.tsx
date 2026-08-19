@@ -1,9 +1,9 @@
 import { SEO } from '@/components/SEO'
 import { SponsorGate } from '@/components/crm/SponsorGate'
-import { addLeadNote, assignLead, crmConfigured, crmSupabase, getCrmDistributors, getCrmLeads, getCrmMembership, getLeadNotes, updateLeadStatus } from '@/lib/crm'
+import { addLeadNote, assignLead, crmConfigured, crmSupabase, getCrmDistributors, getCrmLeads, getCrmMembership, getLeadNotes, updateLeadStatus, submitCrmApplication } from '@/lib/crm'
 import type { CrmDistributor, CrmLead, CrmLeadNote, CrmMembership, LeadStatus } from '@/lib/crm'
 import type { Session } from '@supabase/supabase-js'
-import { BellRing, CalendarClock, ChevronDown, ChevronUp, Columns3, Copy, Download, ExternalLink, Filter, List, LogOut, Mail, MessageCircle, Search, ShieldCheck, UserRoundCheck, Users } from 'lucide-react'
+import { BellRing, CalendarClock, ChevronDown, ChevronUp, Columns3, Copy, Download, ExternalLink, Filter, List, LogOut, Mail, MessageCircle, Search, ShieldCheck, UserRoundCheck, Users, UserPlus, X } from 'lucide-react'
 import { useEffect, useMemo, useState } from 'react'
 import type { FormEvent } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
@@ -36,6 +36,9 @@ export default function CrmPage() {
   const [message, setMessage] = useState('')
   const [accountMessage, setAccountMessage] = useState('')
   const [recoveringPassword, setRecoveringPassword] = useState(false)
+  const [showAddLeadModal, setShowAddLeadModal] = useState(false)
+  const [addingLead, setAddingLead] = useState(false)
+  const [addLeadError, setAddLeadError] = useState('')
 
   useEffect(() => {
     if (!crmSupabase) {
@@ -224,6 +227,70 @@ export default function CrmPage() {
     } catch { /* Opening the distributor's message should not be blocked by history logging. */ }
   }
 
+  const handleAddLead = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+    setAddLeadError('')
+    setAddingLead(true)
+    const formData = new FormData(event.currentTarget)
+    
+    const fullName = String(formData.get('fullName') || '').trim()
+    const email = String(formData.get('email') || '').trim().toLowerCase()
+    const phone = String(formData.get('phone') || '').trim()
+    const country = String(formData.get('country') || '').trim()
+    const interest = String(formData.get('interest') || '')
+    const locale = String(formData.get('locale') || 'en')
+    const assignedId = String(formData.get('assignedTo') || '')
+
+    if (fullName.length < 2) {
+      setAddLeadError('Name must be at least 2 characters.')
+      setAddingLead(false)
+      return
+    }
+    if (!email.match(/^[^@\s]+@[^@\s]+\.[^@\s]+$/)) {
+      setAddLeadError('Please enter a valid email address.')
+      setAddingLead(false)
+      return
+    }
+    if (country.length < 2) {
+      setAddLeadError('Please enter a valid country.')
+      setAddingLead(false)
+      return
+    }
+
+    let assignedDistributor = distributors.find(d => d.id === assignedId)
+    if (membership?.role !== 'admin') {
+      assignedDistributor = distributors.find(d => d.id === membership?.distributor_id)
+    }
+
+    const payload = {
+      fullName,
+      email,
+      phone,
+      country,
+      interest,
+      hasReferrer: !!assignedDistributor,
+      referredBy: '',
+      referralCode: assignedDistributor ? assignedDistributor.referral_code : '',
+      selectedDistributor: assignedDistributor ? assignedDistributor.slug : '',
+      locale,
+      sourcePath: '/crm/manual-addition',
+      consent: true,
+      privacyVersion: '2026-08-phase-1',
+      website: '',
+    }
+
+    try {
+      await submitCrmApplication(payload)
+      setShowAddLeadModal(false)
+      await load()
+      setMessage(`Lead for ${fullName} added successfully.`)
+    } catch (err: any) {
+      setAddLeadError(err.message || 'Failed to add lead. Please try again.')
+    } finally {
+      setAddingLead(false)
+    }
+  }
+
   const exportCsv = () => {
     const header = ['Submitted', 'Name', 'Email', 'Phone', 'Country', 'Interest', 'Referrer', 'Referral code', 'Attribution', 'Assigned distributor', 'Status', 'Consent time']
     const rows = filtered.map(lead => [lead.submitted_at, lead.full_name, lead.email, lead.phone, lead.country, lead.interest, lead.referrer_name, lead.referral_code, lead.attribution_method, distributors.find(item => item.id === lead.assigned_distributor_id)?.display_name || '', lead.status, lead.consent_at])
@@ -280,7 +347,7 @@ export default function CrmPage() {
           <div className="flex flex-wrap items-center gap-2 border-b border-white/10 px-4 py-3"><span className="mr-1 text-[10px] font-black uppercase tracking-[.18em] text-slate-500">Smart views</span>{([['all','All contacts'],['new','New'],['due','Follow-up due'],['product','Product'],['business','Business']] as const).map(([preset,label])=><button key={preset} onClick={()=>applySmartView(preset)} className="rounded-full border border-white/10 bg-white/[.03] px-3 py-1.5 text-xs font-bold text-slate-300 transition hover:border-cyan-300/30 hover:text-cyan-200">{label}</button>)}</div>
           <div className="flex flex-col gap-3 border-b border-white/10 p-4 lg:flex-row lg:items-center lg:justify-between">
             <div className="flex flex-1 flex-col gap-3 xl:flex-row"><label className="flex h-11 flex-1 items-center gap-3 rounded-xl border border-white/10 bg-black/20 px-4 xl:max-w-sm"><Search className="h-4 w-4 text-slate-500" /><input value={search} onChange={event => setSearch(event.target.value)} placeholder="Search leads" className="w-full bg-transparent text-sm outline-none" /></label><label className="flex items-center gap-2"><Filter className="h-4 w-4 text-slate-500" /><select value={statusFilter} onChange={event => setStatusFilter(event.target.value)} className="h-11 rounded-xl border border-white/10 bg-[#0a1020] px-3 text-sm"><option value="all">All statuses</option>{STATUSES.map(status => <option key={status} value={status}>{status}</option>)}</select></label><select value={interestFilter} onChange={event => setInterestFilter(event.target.value)} className="h-11 rounded-xl border border-white/10 bg-[#0a1020] px-3 text-sm"><option value="all">All interests</option>{['product','duo','distributor','training','events'].map(interest => <option key={interest} value={interest}>{interest}</option>)}</select><select value={attentionFilter} onChange={event => setAttentionFilter(event.target.value as 'all' | 'new' | 'due')} className="h-11 rounded-xl border border-white/10 bg-[#0a1020] px-3 text-sm"><option value="all">All attention</option><option value="new">New leads</option><option value="due">Follow-ups due</option></select></div>
-            <div className="flex gap-2"><div className="flex rounded-xl border border-white/10 bg-black/20 p-1"><button onClick={()=>setView('table')} aria-label="Table view" className={`grid h-9 w-9 place-items-center rounded-lg ${view==='table'?'bg-cyan-400/15 text-cyan-200':'text-slate-500'}`}><List className="h-4 w-4"/></button><button onClick={()=>setView('board')} aria-label="Pipeline board view" className={`grid h-9 w-9 place-items-center rounded-lg ${view==='board'?'bg-cyan-400/15 text-cyan-200':'text-slate-500'}`}><Columns3 className="h-4 w-4"/></button></div><button onClick={exportCsv} disabled={!filtered.length} className="inline-flex h-11 items-center justify-center gap-2 rounded-xl border border-cyan-400/30 px-4 text-sm font-bold text-cyan-200 disabled:opacity-40"><Download className="h-4 w-4" /> Export CSV</button></div>
+            <div className="flex gap-2"><div className="flex rounded-xl border border-white/10 bg-black/20 p-1"><button onClick={()=>setView('table')} aria-label="Table view" className={`grid h-9 w-9 place-items-center rounded-lg ${view==='table'?'bg-cyan-400/15 text-cyan-200':'text-slate-500'}`}><List className="h-4 w-4"/></button><button onClick={()=>setView('board')} aria-label="Pipeline board view" className={`grid h-9 w-9 place-items-center rounded-lg ${view==='board'?'bg-cyan-400/15 text-cyan-200':'text-slate-500'}`}><Columns3 className="h-4 w-4"/></button></div><button onClick={() => { setShowAddLeadModal(true); setAddLeadError('') }} className="inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-cyan-500 px-4 text-sm font-bold text-slate-950 hover:bg-cyan-400"><UserPlus className="h-4 w-4" /> Add Lead</button><button onClick={exportCsv} disabled={!filtered.length} className="inline-flex h-11 items-center justify-center gap-2 rounded-xl border border-cyan-400/30 px-4 text-sm font-bold text-cyan-200 disabled:opacity-40"><Download className="h-4 w-4" /> Export CSV</button></div>
           </div>
           {message && <p role="alert" className="border-b border-amber-400/20 bg-amber-400/10 px-5 py-3 text-sm text-amber-100">{message}</p>}
           {view === 'board' ? <PipelineBoard leads={filtered} working={working} onStatusChange={changeStatus} onOpen={leadId=>{setView('table');toggleDetails(leadId)}} /> : <div className="overflow-x-auto"><table className="w-full min-w-[1120px] text-left text-sm"><thead className="bg-black/20 text-[10px] uppercase tracking-wider text-slate-500"><tr>{['Submitted', 'Lead', 'Interest', 'Attribution', 'Assigned to', 'Status', 'Contact', 'Details'].map(label => <th key={label} className="px-5 py-4 font-medium">{label}</th>)}</tr></thead><tbody className="divide-y divide-white/10">{filtered.map(lead => [
@@ -290,6 +357,88 @@ export default function CrmPage() {
           {!loading && !filtered.length && <div className="p-12 text-center text-sm text-slate-500">No leads match this view.</div>}
         </section>
       </div>
+      {showAddLeadModal ? (
+        <div className="fixed inset-0 z-[120] flex items-end justify-center bg-black/75 backdrop-blur-sm sm:items-center sm:p-5" role="dialog" aria-modal="true" onMouseDown={event => { if (event.target === event.currentTarget) setShowAddLeadModal(false) }}>
+          <section className="max-h-[92vh] w-full max-w-md overflow-y-auto rounded-t-[28px] border border-white/10 bg-[#100d22] p-6 shadow-2xl sm:rounded-[28px]">
+            <div className="flex items-start justify-between gap-4">
+              <div>
+                <p className="text-xs font-bold uppercase tracking-[0.22em] text-cyan-300">CRM Platform</p>
+                <h2 className="mt-2 text-2xl font-black">Add Lead</h2>
+              </div>
+              <button onClick={() => setShowAddLeadModal(false)} aria-label="Close modal" className="grid h-10 w-10 shrink-0 place-items-center rounded-full border border-white/10 bg-white/[0.04] text-slate-400 hover:text-white transition-colors">
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+
+            {addLeadError && (
+              <p role="alert" className="mt-4 rounded-xl border border-rose-400/20 bg-rose-400/10 px-4 py-2.5 text-xs text-rose-200">
+                {addLeadError}
+              </p>
+            )}
+
+            <form onSubmit={handleAddLead} className="mt-5 grid gap-4">
+              <label className="block">
+                <span className="text-xs font-bold text-cyan-200 uppercase tracking-wider block mb-1.5">Full Name</span>
+                <input required minLength={2} name="fullName" type="text" placeholder="e.g. John Doe" className="w-full h-11 bg-black/20 border border-white/10 rounded-xl px-4 text-sm text-white focus:border-cyan-400 outline-none transition" />
+              </label>
+
+              <label className="block">
+                <span className="text-xs font-bold text-cyan-200 uppercase tracking-wider block mb-1.5">Email Address</span>
+                <input required name="email" type="email" placeholder="e.g. john@example.com" className="w-full h-11 bg-black/20 border border-white/10 rounded-xl px-4 text-sm text-white focus:border-cyan-400 outline-none transition" />
+              </label>
+
+              <label className="block">
+                <span className="text-xs font-bold text-cyan-200 uppercase tracking-wider block mb-1.5">Phone Number (Optional)</span>
+                <input name="phone" type="tel" placeholder="e.g. +1 (555) 123-4567" className="w-full h-11 bg-black/20 border border-white/10 rounded-xl px-4 text-sm text-white focus:border-cyan-400 outline-none transition" />
+              </label>
+
+              <label className="block">
+                <span className="text-xs font-bold text-cyan-200 uppercase tracking-wider block mb-1.5">Country</span>
+                <input required minLength={2} name="country" type="text" placeholder="e.g. United States" className="w-full h-11 bg-black/20 border border-white/10 rounded-xl px-4 text-sm text-white focus:border-cyan-400 outline-none transition" />
+              </label>
+
+              <div className="grid grid-cols-2 gap-3">
+                <label className="block">
+                  <span className="text-xs font-bold text-cyan-200 uppercase tracking-wider block mb-1.5">Interest</span>
+                  <select name="interest" className="w-full h-11 bg-black/20 border border-white/10 rounded-xl px-3 text-sm text-white focus:border-cyan-400 outline-none transition">
+                    <option value="product" className="bg-[#100d22]">Product Mastery</option>
+                    <option value="duo" className="bg-[#100d22]">Duo Package</option>
+                    <option value="distributor" className="bg-[#100d22]">Business Growth</option>
+                    <option value="training" className="bg-[#100d22]">Training System</option>
+                    <option value="events" className="bg-[#100d22]">Events</option>
+                  </select>
+                </label>
+
+                <label className="block">
+                  <span className="text-xs font-bold text-cyan-200 uppercase tracking-wider block mb-1.5">Language</span>
+                  <select name="locale" className="w-full h-11 bg-black/20 border border-white/10 rounded-xl px-3 text-sm text-white focus:border-cyan-400 outline-none transition">
+                    <option value="en" className="bg-[#100d22]">English</option>
+                    <option value="es" className="bg-[#100d22]">Spanish</option>
+                    <option value="fr" className="bg-[#100d22]">French</option>
+                    <option value="pt" className="bg-[#100d22]">Portuguese</option>
+                  </select>
+                </label>
+              </div>
+
+              {membership?.role === 'admin' ? (
+                <label className="block">
+                  <span className="text-xs font-bold text-cyan-200 uppercase tracking-wider block mb-1.5">Assigned To</span>
+                  <select name="assignedTo" className="w-full h-11 bg-black/20 border border-white/10 rounded-xl px-3 text-sm text-white focus:border-cyan-400 outline-none transition">
+                    <option value="" className="bg-[#100d22]">Unassigned</option>
+                    {distributors.filter(d => d.active).map(d => (
+                      <option key={d.id} value={d.id} className="bg-[#100d22]">{d.display_name}</option>
+                    ))}
+                  </select>
+                </label>
+              ) : null}
+
+              <button type="submit" disabled={addingLead} className="mt-2 h-11 w-full rounded-xl bg-cyan-500 font-bold text-slate-950 hover:bg-cyan-400 disabled:opacity-50 transition-colors flex items-center justify-center gap-2">
+                {addingLead ? 'Adding Lead...' : 'Create Lead'}
+              </button>
+            </form>
+          </section>
+        </div>
+      ) : null}
     </main></SponsorGate>
   )
 }
