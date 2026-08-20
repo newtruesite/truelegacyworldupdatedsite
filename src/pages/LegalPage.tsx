@@ -72,20 +72,20 @@ export default function LegalPage() {
   if (!page) return <Navigate to="/" replace />
 
   return (
-    <div className="page-wrapper bg-[#060b1e] text-white">
+    <div className="page-wrapper bg-black text-white">
       <SEO title={`${page.title} | True Legacy World`} description={page.description} />
       <Navbar />
       <main className="mx-auto w-full max-w-4xl px-4 py-16 sm:px-6 md:py-24">
-        <p className="mb-3 text-xs font-semibold uppercase tracking-[0.25em] text-cyan-300">Phase 1 working draft</p>
+        <p className="mb-3 text-xs font-semibold uppercase tracking-[0.25em] text-[#2997ff]">Phase 1 working draft</p>
         <h1 className="text-3xl font-bold sm:text-5xl">{page.title}</h1>
-        <p className="mt-4 max-w-3xl text-slate-300">{page.description}</p>
-        <p className="mt-3 text-xs text-slate-500">Last updated August 2026 · Prepared for owner and legal review</p>
+        <p className="mt-4 max-w-3xl text-[#cccccc]">{page.description}</p>
+        <p className="mt-3 text-xs text-[#86868b]">Last updated August 2026 · Prepared for owner and legal review</p>
 
         <div className="mt-12 space-y-8">
           {page.sections.map((section) => (
             <section key={section.heading} className="rounded-2xl border border-white/10 bg-white/[0.03] p-6 sm:p-8">
               <h2 className="text-xl font-semibold text-white">{section.heading}</h2>
-              <div className="mt-4 space-y-4 text-sm leading-7 text-slate-300">
+              <div className="mt-4 space-y-4 text-sm leading-7 text-[#cccccc]">
                 {section.paragraphs.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
               </div>
             </section>

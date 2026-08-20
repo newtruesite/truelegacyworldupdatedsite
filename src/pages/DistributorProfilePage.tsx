@@ -111,28 +111,28 @@ export default function DistributorProfilePage() {
   const cardMeta = [['business', BriefcaseBusiness, 'business'], ['duo', Sparkles, 'duo'], ['training', BookOpen, 'training'], ['events', CalendarDays, 'events']] as const
   const landingPages = cardMeta.map(([slug, icon, visual], index) => ({ slug, icon, visual, eyebrow: ui.cards[index][0], label: ui.cards[index][1], text: ui.cards[index][2], cta: ui.cards[index][3] }))
 
-  return <div className="page-wrapper bg-[#060b1e] text-white">
+  return <div className="page-wrapper bg-black text-white">
     <SEO title={`${profile?.display_name || 'Distributor'} | True Legacy World`} description={profile?.bio || 'True Legacy distributor profile and team attribution link.'} />
     <Navbar />
     <main className="mx-auto flex w-full max-w-6xl flex-1 flex-col gap-8 px-4 py-20 sm:px-6">
       {profile ? <><article className="mx-auto grid w-full max-w-4xl gap-8 rounded-3xl border border-white/10 bg-white/[0.03] p-6 md:grid-cols-[280px_1fr] md:p-10">
         <img src={profile.avatar_url || '/logos/tl-square-white.png'} alt={profile.display_name} className="h-[360px] w-full rounded-2xl object-cover object-top" />
-        <div className="flex flex-col justify-center"><p className="text-xs font-bold uppercase tracking-[0.25em] text-cyan-300">{ui.verified}</p><h1 className="mt-3 text-4xl font-black">{profile.display_name}</h1><p className="mt-2 text-slate-400">{localizedProfile?.title || profile.title}</p><p className="mt-6 whitespace-pre-line leading-7 text-slate-300">{localizedProfile?.bio || profile.bio}</p><div className="mt-6 grid gap-3 text-sm text-slate-300"><p className="flex items-center gap-3"><MapPin className="h-4 w-4 text-cyan-300" /> {profile.regions.join(' · ')}</p><p className="flex items-center gap-3"><Languages className="h-4 w-4 text-cyan-300" /> {profile.languages.map(item => languageNames[item] ?? item.toUpperCase()).join(' · ')}</p><p className="flex items-center gap-3"><Globe2 className="h-4 w-4 text-cyan-300" /> {ui.attribution}</p>{profile.phone && <a href={`tel:${profile.phone.replace(/[^\d+]/g, '')}`} className="flex items-center gap-3 hover:text-cyan-200"><Phone className="h-4 w-4 text-cyan-300" /> {profile.phone}</a>}{profile.instagram_url && <a href={profile.instagram_url} target="_blank" rel="noreferrer" className="flex items-center gap-3 hover:text-cyan-200"><Instagram className="h-4 w-4 text-cyan-300" /> Instagram</a>}</div><div className="mt-8"><p className="mb-3 text-sm text-slate-400">{title}</p><Link to={`/apply?ref=${profile.referral_code}`} className="inline-flex rounded-xl bg-cyan-500 px-6 py-3.5 font-semibold hover:bg-cyan-400">{cta}</Link></div></div>
+        <div className="flex flex-col justify-center"><p className="text-xs font-bold uppercase tracking-[0.25em] text-[#2997ff]">{ui.verified}</p><h1 className="mt-3 text-4xl font-black">{profile.display_name}</h1><p className="mt-2 text-[#cccccc]">{localizedProfile?.title || profile.title}</p><p className="mt-6 whitespace-pre-line leading-7 text-[#cccccc]">{localizedProfile?.bio || profile.bio}</p><div className="mt-6 grid gap-3 text-sm text-[#cccccc]"><p className="flex items-center gap-3"><MapPin className="h-4 w-4 text-[#2997ff]" /> {profile.regions.join(' · ')}</p><p className="flex items-center gap-3"><Languages className="h-4 w-4 text-[#2997ff]" /> {profile.languages.map(item => languageNames[item] ?? item.toUpperCase()).join(' · ')}</p><p className="flex items-center gap-3"><Globe2 className="h-4 w-4 text-[#2997ff]" /> {ui.attribution}</p>{profile.phone && <a href={`tel:${profile.phone.replace(/[^\d+]/g, '')}`} className="flex items-center gap-3 hover:text-[#2997ff]"><Phone className="h-4 w-4 text-[#2997ff]" /> {profile.phone}</a>}{profile.instagram_url && <a href={profile.instagram_url} target="_blank" rel="noreferrer" className="flex items-center gap-3 hover:text-[#2997ff]"><Instagram className="h-4 w-4 text-[#2997ff]" /> Instagram</a>}</div><div className="mt-8"><p className="mb-3 text-sm text-[#cccccc]">{title}</p><Link to={`/apply?ref=${profile.referral_code}`} className="inline-flex rounded-xl bg-cyan-500 px-6 py-3.5 font-semibold hover:bg-cyan-400">{cta}</Link></div></div>
       </article><section className="w-full py-5 sm:py-8 lg:py-12">
         <div className="mx-auto mb-9 max-w-3xl text-center sm:mb-12">
-          <p className="text-xs font-bold uppercase tracking-[0.28em] text-cyan-300">{ui.choose}</p>
+          <p className="text-xs font-bold uppercase tracking-[0.28em] text-[#2997ff]">{ui.choose}</p>
           <h2 className="mt-3 text-3xl font-black tracking-tight text-white sm:text-5xl">{ui.explore}</h2>
-          <p className="mx-auto mt-4 max-w-2xl text-sm leading-6 text-slate-300 sm:text-base">{ui.intro}</p>
-          <div className="mx-auto mt-5 inline-flex items-center gap-2 rounded-full border border-cyan-300/20 bg-cyan-300/[0.07] px-4 py-2 text-xs font-semibold text-cyan-100">
+          <p className="mx-auto mt-4 max-w-2xl text-sm leading-6 text-[#cccccc] sm:text-base">{ui.intro}</p>
+          <div className="mx-auto mt-5 inline-flex items-center gap-2 rounded-full border border-white/20 bg-cyan-300/[0.07] px-4 py-2 text-xs font-semibold text-[#2997ff]">
             <span className="h-1.5 w-1.5 rounded-full bg-cyan-300" /> {ui.personal}
           </div>
         </div>
         <div className="grid items-stretch gap-6 md:grid-cols-2 lg:gap-7">
-          {landingPages.map((item, index) => <Link key={item.slug} to={`/d/${profile.slug}/${item.slug}`} className="group relative flex min-h-[460px] flex-col overflow-hidden rounded-[2rem] border border-white/10 bg-[#091329] shadow-[0_24px_70px_rgba(0,0,0,0.24)] transition duration-500 hover:-translate-y-1.5 hover:border-cyan-300/40 hover:shadow-[0_28px_80px_rgba(8,145,178,0.16)] sm:min-h-[500px]">
+          {landingPages.map((item, index) => <Link key={item.slug} to={`/d/${profile.slug}/${item.slug}`} className="group relative flex min-h-[460px] flex-col overflow-hidden rounded-[2rem] border border-white/10 bg-black shadow-[0_24px_70px_rgba(0,0,0,0.24)] transition duration-500 hover:-translate-y-1.5 hover:border-white/20 hover:shadow-[0_28px_80px_rgba(8,145,178,0.16)] sm:min-h-[500px]">
             <div className="relative h-52 shrink-0 overflow-hidden sm:h-60 lg:h-64">
               {item.visual === 'business' && <>
                 <div className="absolute inset-0 bg-[radial-gradient(circle_at_78%_44%,rgba(34,211,238,0.2),transparent_38%),linear-gradient(135deg,#07142f,#0a2550)]" />
-                <div aria-hidden="true" className="absolute -right-14 top-2 h-56 w-56 rounded-full border border-cyan-300/15 sm:h-64 sm:w-64" />
+                <div aria-hidden="true" className="absolute -right-14 top-2 h-56 w-56 rounded-full border border-white/20 sm:h-64 sm:w-64" />
                 <div className="absolute bottom-0 right-[5%] h-[94%] w-[72%] transition duration-700 group-hover:scale-[1.035]">
                   <img src={currentProfilePhoto} alt={`${profile.display_name} profile`} style={{ height: '100%', width: '100%', objectFit: 'contain', objectPosition: 'center bottom' }} className="drop-shadow-[0_22px_34px_rgba(0,0,0,0.55)]" />
                 </div>
@@ -144,7 +144,7 @@ export default function DistributorProfilePage() {
                 <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_75%,rgba(34,211,238,0.24),transparent_48%),linear-gradient(135deg,#07142f,#0b2450)]" />
                 <img src="/products/k8.png" alt="K8 water ionizer" className="absolute bottom-2 left-[8%] h-[74%] w-[43%] object-contain drop-shadow-[0_18px_28px_rgba(0,0,0,0.45)] transition duration-700 group-hover:-translate-x-1 group-hover:scale-105" />
                 <img src="/products/emguarde-go.png" alt="emGuarde GO" className="absolute bottom-1 right-[7%] h-[91%] w-[39%] object-contain drop-shadow-[0_18px_28px_rgba(0,0,0,0.55)] transition duration-700 group-hover:translate-x-1 group-hover:scale-105" />
-                <span className="absolute right-5 top-5 rounded-full border border-cyan-200/25 bg-cyan-300/10 px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.18em] text-cyan-100 backdrop-blur-md">{ui.duoTag}</span>
+                <span className="absolute right-5 top-5 rounded-full border border-white/20 bg-cyan-300/10 px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.18em] text-[#2997ff] backdrop-blur-md">{ui.duoTag}</span>
               </>}
               {item.visual === 'training' && <>
                 <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_82%,rgba(34,211,238,0.18),transparent_46%),linear-gradient(135deg,#07142f,#0a2550)]" />
@@ -167,19 +167,19 @@ export default function DistributorProfilePage() {
             </div>
             <div className="relative flex flex-1 flex-col border-t border-white/[0.07] p-6 sm:p-7">
               <div className="flex items-start justify-between gap-4">
-                <span className="inline-flex items-center gap-3"><span className="inline-flex rounded-xl border border-cyan-200/20 bg-cyan-200/10 p-2.5"><item.icon className="h-5 w-5 text-cyan-200" /></span><span className="text-[10px] font-bold tracking-[0.22em] text-slate-500">0{index + 1}</span></span>
-                <ArrowUpRight className="h-5 w-5 text-slate-500 transition duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-cyan-200" />
+                <span className="inline-flex items-center gap-3"><span className="inline-flex rounded-xl border border-white/20 bg-cyan-200/10 p-2.5"><item.icon className="h-5 w-5 text-[#2997ff]" /></span><span className="text-[10px] font-bold tracking-[0.22em] text-[#86868b]">0{index + 1}</span></span>
+                <ArrowUpRight className="h-5 w-5 text-[#86868b] transition duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-[#2997ff]" />
               </div>
               <div className="mt-6">
-              <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-cyan-300">{item.eyebrow}</p>
+              <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-[#2997ff]">{item.eyebrow}</p>
               <h3 className="mt-2 text-2xl font-black tracking-tight text-white">{item.label}</h3>
-              <p className="mt-3 max-w-xl text-sm leading-6 text-slate-300">{item.text}</p>
+              <p className="mt-3 max-w-xl text-sm leading-6 text-[#cccccc]">{item.text}</p>
               </div>
-              <div className="mt-auto flex items-center justify-between border-t border-white/[0.08] pt-5 text-xs font-bold uppercase tracking-[0.14em] text-cyan-200"><span>{item.cta}</span><span aria-hidden="true" className="inline-block text-lg transition-transform duration-300 group-hover:translate-x-1">→</span></div>
+              <div className="mt-auto flex items-center justify-between border-t border-white/[0.08] pt-5 text-xs font-bold uppercase tracking-[0.14em] text-[#2997ff]"><span>{item.cta}</span><span aria-hidden="true" className="inline-block text-lg transition-transform duration-300 group-hover:translate-x-1">→</span></div>
             </div>
           </Link>)}
         </div>
-      </section></> : <div className="w-full animate-pulse rounded-3xl border border-white/10 p-20 text-center text-slate-500">{ui.loading}</div>}
+      </section></> : <div className="w-full animate-pulse rounded-3xl border border-white/10 p-20 text-center text-[#86868b]">{ui.loading}</div>}
     </main>
     <Footer />
   </div>

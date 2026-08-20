@@ -101,7 +101,7 @@ export default function ProductsPage() {
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.15 }}
-              className="text-slate-300 text-sm md:text-base max-w-3xl mx-auto leading-relaxed font-light"
+              className="text-[#cccccc] text-sm md:text-base max-w-3xl mx-auto leading-relaxed font-light"
             >
               {subtitle}
             </motion.p>
@@ -110,15 +110,15 @@ export default function ProductsPage() {
 
         {/* Duo package hero: K8 + emGuarde GO */}
         <section className="py-8 px-4" style={{ background: 'linear-gradient(135deg, rgba(6,182,212,0.12) 0%, rgba(139,92,246,0.1) 100%)' }}>
-          <div className="mx-auto max-w-5xl overflow-hidden rounded-3xl border border-cyan-500/30 bg-[#0a1628]/90 p-6 text-center shadow-2xl shadow-cyan-950/20 backdrop-blur md:p-8 lg:grid lg:grid-cols-[1.05fr_0.95fr] lg:items-center lg:gap-10 lg:text-left">
+          <div className="mx-auto max-w-5xl overflow-hidden rounded-3xl border border-white/20 bg-black/90 p-6 text-center shadow-2xl shadow-cyan-950/20 backdrop-blur md:p-8 lg:grid lg:grid-cols-[1.05fr_0.95fr] lg:items-center lg:gap-10 lg:text-left">
             <div>
-              <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-cyan-300">
+              <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-[#2997ff]">
                 {locale === 'es' ? 'Recomendado' : locale === 'fr' ? 'Recommandé' : locale === 'pt' ? 'Recomendado' : 'Recommended'}
               </p>
               <h2 className="mb-3 text-2xl font-bold text-white md:text-3xl">
                 {locale === 'es' ? 'Sistema Duo: Kangen K8 + emGuarde GO' : locale === 'fr' ? 'Pack Duo : Kangen K8 + emGuarde GO' : locale === 'pt' ? 'Sistema Duo: Kangen K8 + emGuarde GO' : 'Duo package: Kangen K8 + emGuarde GO'}
               </h2>
-              <p className="mx-auto mb-6 max-w-2xl text-sm text-slate-300 md:text-base lg:mx-0">
+              <p className="mx-auto mb-6 max-w-2xl text-sm text-[#cccccc] md:text-base lg:mx-0">
                 {locale === 'es' ? 'Agua Kangen en casa con el K8 y soporte EMF portátil con el nuevo set de dos emGuarde GO.' : locale === 'fr' ? "L’eau Kangen à domicile avec le K8 et un soutien EMF portable grâce au nouveau lot de deux emGuarde GO." : locale === 'pt' ? 'Água Kangen em casa com o K8 e suporte EMF portátil com o novo conjunto de dois emGuarde GO.' : 'Kangen Water at home with the K8 and portable EMF support from the new emGuarde GO set of two.'}
               </p>
               <div className="flex flex-col justify-center gap-3 sm:flex-row lg:justify-start">
@@ -146,7 +146,7 @@ export default function ProductsPage() {
                 <img src="/products/k8.png" alt="Leveluk K8 Kangen Water ionizer" className="mx-auto h-36 w-full object-contain sm:h-48" />
                 <p className="mt-2 text-sm font-semibold text-white">Leveluk K8</p>
               </div>
-              <div className="relative z-10 flex h-9 w-9 items-center justify-center rounded-full border border-cyan-400/40 bg-cyan-500/20 text-cyan-200 shadow-lg shadow-cyan-950/30 sm:h-11 sm:w-11">
+              <div className="relative z-10 flex h-9 w-9 items-center justify-center rounded-full border border-white/20 bg-cyan-500/20 text-[#2997ff] shadow-lg shadow-cyan-950/30 sm:h-11 sm:w-11">
                 <Plus className="h-5 w-5 sm:h-6 sm:w-6" />
               </div>
               <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-3 sm:p-4">
@@ -194,7 +194,7 @@ export default function ProductsPage() {
                             )}
                           </div>
                           <h3 className="font-bold text-white text-lg md:text-xl mb-2 text-center md:text-left">{product.name}</h3>
-                          <p className="text-slate-400 text-sm leading-relaxed mb-4 text-center md:text-left">
+                          <p className="text-[#cccccc] text-sm leading-relaxed mb-4 text-center md:text-left">
                             {/* Short description is handled by per-language marketing copy on country pages; keep this concise here. */}
                             {locale === 'es'
                               ? 'Habla con tu líder True Legacy para entender cómo este producto encaja en tu estrategia de salud y de ingresos.'
@@ -203,7 +203,7 @@ export default function ProductsPage() {
                                 : 'Speak with your True Legacy leader to understand how this product fits into your health and income strategy.'}
                           </p>
                           {product.availability && (
-                            <p className="mb-4 rounded-xl border border-cyan-500/20 bg-cyan-500/5 px-3 py-2 text-center text-xs leading-relaxed text-cyan-100 md:text-left">
+                            <p className="mb-4 rounded-xl border border-white/20 bg-cyan-500/5 px-3 py-2 text-center text-xs leading-relaxed text-[#2997ff] md:text-left">
                               <span className="font-semibold">{locale === 'es' ? 'Disponibilidad: ' : locale === 'fr' ? 'Disponibilité : ' : locale === 'pt' ? 'Disponibilidade: ' : 'Availability: '}</span>
                               {product.availability[locale]}
                             </p>

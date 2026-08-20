@@ -535,8 +535,8 @@ export function LeadershipPanel() {
                             onClick={() => setSubTab(tab.id)}
                             className={`flex items-center gap-2 px-5 py-4 text-xs font-semibold uppercase tracking-wider transition-all border-b-2 ${
                                 subTab === tab.id
-                                    ? 'border-cyan-400 text-white bg-white/5'
-                                    : 'border-transparent text-slate-400 hover:text-white hover:bg-white/3'
+                                    ? 'border-white/20 text-white bg-white/5'
+                                    : 'border-transparent text-[#cccccc] hover:text-white hover:bg-white/3'
                             }`}
                         >
                             <Icon className="h-4 w-4" />
@@ -553,7 +553,7 @@ export function LeadershipPanel() {
                     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-8">
                         <div>
                             <h3 className="text-xl font-bold text-white mb-1">Organization Performance</h3>
-                            <p className="text-sm text-slate-400">Real-time metrics and geographic insights for your downline network.</p>
+                            <p className="text-sm text-[#cccccc]">Real-time metrics and geographic insights for your downline network.</p>
                         </div>
 
                         {/* Stats Summary Cards */}
@@ -569,8 +569,8 @@ export function LeadershipPanel() {
                                     <div key={idx} className="glass rounded-xl border border-white/10 p-5 relative overflow-hidden group">
                                         <div className={`absolute top-0 right-0 w-24 h-24 bg-gradient-to-br ${stat.color} opacity-10 rounded-full blur-xl group-hover:scale-125 transition-all`} />
                                         <div className="flex items-center justify-between mb-3">
-                                            <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">{stat.title}</span>
-                                            <Icon className="h-5 w-5 text-slate-400" />
+                                            <span className="text-xs font-semibold text-[#86868b] uppercase tracking-wider">{stat.title}</span>
+                                            <Icon className="h-5 w-5 text-[#cccccc]" />
                                         </div>
                                         <p className="text-2xl font-bold text-white mb-1">{stat.value}</p>
                                         <p className="text-xs text-green-400 font-semibold">{stat.desc}</p>
@@ -646,7 +646,7 @@ export function LeadershipPanel() {
                                         ].map((geo, idx) => (
                                             <div key={idx} className="space-y-1.5">
                                                 <div className="flex justify-between text-xs">
-                                                    <span className="font-semibold text-slate-300">{geo.country}</span>
+                                                    <span className="font-semibold text-[#cccccc]">{geo.country}</span>
                                                     <span className="font-bold text-white">{geo.sales} ({geo.percentage}%)</span>
                                                 </div>
                                                 <div className="w-full h-2 bg-white/5 rounded-full overflow-hidden">
@@ -659,8 +659,8 @@ export function LeadershipPanel() {
                                         ))}
                                     </div>
                                 </div>
-                                <div className="mt-6 pt-4 border-t border-white/10 flex items-center justify-between text-xs text-slate-400">
-                                    <span className="flex items-center gap-1"><Globe className="h-3.5 w-3.5 text-cyan-400" /> Active regions</span>
+                                <div className="mt-6 pt-4 border-t border-white/10 flex items-center justify-between text-xs text-[#cccccc]">
+                                    <span className="flex items-center gap-1"><Globe className="h-3.5 w-3.5 text-[#2997ff]" /> Active regions</span>
                                     <span className="font-bold text-white">4 Countries</span>
                                 </div>
                             </div>
@@ -686,14 +686,14 @@ export function LeadershipPanel() {
                                     </svg>
                                     <div className="absolute inset-0 flex flex-col items-center justify-center">
                                         <span className="text-3xl font-extrabold text-white">24</span>
-                                        <span className="text-[10px] text-slate-500 uppercase tracking-wider font-semibold">Total Reps</span>
+                                        <span className="text-[10px] text-[#86868b] uppercase tracking-wider font-semibold">Total Reps</span>
                                     </div>
                                 </div>
                                 <div className="grid grid-cols-2 gap-x-6 gap-y-2 w-full text-xs text-left">
-                                    <div className="flex items-center gap-2"><span className="h-3 w-3 rounded-full bg-slate-500" /> <span className="text-slate-400">Starter (40%)</span></div>
-                                    <div className="flex items-center gap-2"><span className="h-3 w-3 rounded-full bg-amber-600" /> <span className="text-slate-400">Bronze (30%)</span></div>
-                                    <div className="flex items-center gap-2"><span className="h-3 w-3 rounded-full bg-slate-300" /> <span className="text-slate-400">Silver (20%)</span></div>
-                                    <div className="flex items-center gap-2"><span className="h-3 w-3 rounded-full bg-yellow-400" /> <span className="text-slate-400">Gold (10%)</span></div>
+                                    <div className="flex items-center gap-2"><span className="h-3 w-3 rounded-full bg-slate-500" /> <span className="text-[#cccccc]">Starter (40%)</span></div>
+                                    <div className="flex items-center gap-2"><span className="h-3 w-3 rounded-full bg-amber-600" /> <span className="text-[#cccccc]">Bronze (30%)</span></div>
+                                    <div className="flex items-center gap-2"><span className="h-3 w-3 rounded-full bg-slate-300" /> <span className="text-[#cccccc]">Silver (20%)</span></div>
+                                    <div className="flex items-center gap-2"><span className="h-3 w-3 rounded-full bg-yellow-400" /> <span className="text-[#cccccc]">Gold (10%)</span></div>
                                 </div>
                             </div>
 
@@ -703,15 +703,15 @@ export function LeadershipPanel() {
                                     {[
                                         { label: 'Emma Watson completed compliance validation module', type: 'training', time: '10 mins ago', color: 'text-green-400 bg-green-500/10' },
                                         { label: 'Juan Perez submitted new landing page for approval', type: 'compliance', time: '2 hours ago', color: 'text-amber-400 bg-amber-500/10' },
-                                        { label: 'Sarah Miller completed 2/3 sales for Summer Sprint', type: 'challenge', time: '5 hours ago', color: 'text-cyan-400 bg-cyan-500/10' },
+                                        { label: 'Sarah Miller completed 2/3 sales for Summer Sprint', type: 'challenge', time: '5 hours ago', color: 'text-[#2997ff] bg-cyan-500/10' },
                                         { label: 'Yuki Tanaka reached Silver Leader rank status', type: 'rank', time: '1 day ago', color: 'text-yellow-400 bg-yellow-500/10' }
                                     ].map((log, idx) => (
                                         <div key={idx} className="flex items-center justify-between text-xs border-b border-white/5 pb-3 last:border-0 last:pb-0">
                                             <div className="flex items-center gap-3">
                                                 <span className={`px-2.5 py-1 rounded-full font-bold uppercase tracking-wider text-[9px] ${log.color}`}>{log.type}</span>
-                                                <span className="text-slate-300 font-medium">{log.label}</span>
+                                                <span className="text-[#cccccc] font-medium">{log.label}</span>
                                             </div>
-                                            <span className="text-slate-500">{log.time}</span>
+                                            <span className="text-[#86868b]">{log.time}</span>
                                         </div>
                                     ))}
                                 </div>
@@ -726,7 +726,7 @@ export function LeadershipPanel() {
                         <div className="flex items-center justify-between">
                             <div>
                                 <h3 className="text-xl font-bold text-white mb-1">Downline Template Inheritance</h3>
-                                <p className="text-sm text-slate-400">Define onboarding flows, sales assets, and tracks that downstream distributors inherit automatically.</p>
+                                <p className="text-sm text-[#cccccc]">Define onboarding flows, sales assets, and tracks that downstream distributors inherit automatically.</p>
                             </div>
                             <button
                                 onClick={() => setIsTemplateModalOpen(true)}
@@ -739,23 +739,23 @@ export function LeadershipPanel() {
                         {/* Templates List */}
                         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
                             {templates.map(template => (
-                                <div key={template.id} className="glass rounded-xl border border-white/10 p-6 flex flex-col justify-between hover:border-cyan-400/30 transition-all group">
+                                <div key={template.id} className="glass rounded-xl border border-white/10 p-6 flex flex-col justify-between hover:border-white/20 transition-all group">
                                     <div>
                                         <div className="flex items-center justify-between mb-4">
-                                            <span className="px-2.5 py-1 rounded-full bg-cyan-500/10 text-cyan-400 font-semibold text-[10px] uppercase tracking-wider">{template.type}</span>
+                                            <span className="px-2.5 py-1 rounded-full bg-cyan-500/10 text-[#2997ff] font-semibold text-[10px] uppercase tracking-wider">{template.type}</span>
                                             <button
                                                 onClick={() => handleDeleteTemplate(template.id)}
-                                                className="text-slate-500 hover:text-red-400 opacity-0 group-hover:opacity-100 transition-opacity"
+                                                className="text-[#86868b] hover:text-red-400 opacity-0 group-hover:opacity-100 transition-opacity"
                                             >
                                                 <X className="h-4 w-4" />
                                             </button>
                                         </div>
                                         <h4 className="text-base font-bold text-white mb-2">{template.title}</h4>
-                                        <p className="text-xs text-slate-400 mb-4 line-clamp-3 leading-relaxed">{template.description}</p>
+                                        <p className="text-xs text-[#cccccc] mb-4 line-clamp-3 leading-relaxed">{template.description}</p>
                                     </div>
-                                    <div className="pt-4 border-t border-white/5 flex items-center justify-between text-xs text-slate-400">
+                                    <div className="pt-4 border-t border-white/5 flex items-center justify-between text-xs text-[#cccccc]">
                                         <span className="flex items-center gap-1.5"><Users className="h-3.5 w-3.5" /> Inherited by {template.activeMembers} reps</span>
-                                        <span className="flex items-center gap-1 font-semibold text-cyan-400"><FileText className="h-3.5 w-3.5" /> {template.attachedFile.slice(0, 16)}...</span>
+                                        <span className="flex items-center gap-1 font-semibold text-[#2997ff]"><FileText className="h-3.5 w-3.5" /> {template.attachedFile.slice(0, 16)}...</span>
                                     </div>
                                 </div>
                             ))}
@@ -773,27 +773,27 @@ export function LeadershipPanel() {
                                     >
                                         <div className="flex items-center justify-between mb-6">
                                             <h4 className="text-lg font-bold text-white">Define New Inherited Template</h4>
-                                            <button onClick={() => setIsTemplateModalOpen(false)} className="text-slate-400 hover:text-white"><X className="h-5 w-5" /></button>
+                                            <button onClick={() => setIsTemplateModalOpen(false)} className="text-[#cccccc] hover:text-white"><X className="h-5 w-5" /></button>
                                         </div>
                                         <form onSubmit={handleCreateTemplate} className="space-y-4">
                                             <div>
-                                                <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">Template Title</label>
+                                                <label className="block text-xs font-semibold uppercase tracking-wider text-[#cccccc] mb-2">Template Title</label>
                                                 <input
                                                     type="text"
                                                     required
                                                     placeholder="e.g. Europe Compliance Guide"
                                                     value={newTemplate.title}
                                                     onChange={e => setNewTemplate({ ...newTemplate, title: e.target.value })}
-                                                    className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-sm text-white outline-none focus:border-cyan-500"
+                                                    className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-sm text-white outline-none focus:border-white/20"
                                                 />
                                             </div>
                                             <div className="grid grid-cols-2 gap-4">
                                                 <div>
-                                                    <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">Template Type</label>
+                                                    <label className="block text-xs font-semibold uppercase tracking-wider text-[#cccccc] mb-2">Template Type</label>
                                                     <select
                                                         value={newTemplate.type}
                                                         onChange={e => setNewTemplate({ ...newTemplate, type: e.target.value })}
-                                                        className="w-full rounded-xl border border-white/10 bg-[#0c1120] px-4 py-2.5 text-sm text-white outline-none focus:border-cyan-500"
+                                                        className="w-full rounded-xl border border-white/10 bg-black px-4 py-2.5 text-sm text-white outline-none focus:border-white/20"
                                                     >
                                                         <option value="Training Track">Training Track</option>
                                                         <option value="Leadership Blueprint">Leadership Blueprint</option>
@@ -801,32 +801,32 @@ export function LeadershipPanel() {
                                                     </select>
                                                 </div>
                                                 <div>
-                                                    <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">File Attachment</label>
+                                                    <label className="block text-xs font-semibold uppercase tracking-wider text-[#cccccc] mb-2">File Attachment</label>
                                                     <input
                                                         type="text"
                                                         placeholder="e.g. blueprint.pdf"
                                                         value={newTemplate.file}
                                                         onChange={e => setNewTemplate({ ...newTemplate, file: e.target.value })}
-                                                        className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-sm text-white outline-none focus:border-cyan-500"
+                                                        className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-sm text-white outline-none focus:border-white/20"
                                                     />
                                                 </div>
                                             </div>
                                             <div>
-                                                <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">Detailed Instructions</label>
+                                                <label className="block text-xs font-semibold uppercase tracking-wider text-[#cccccc] mb-2">Detailed Instructions</label>
                                                 <textarea
                                                     required
                                                     rows={4}
                                                     placeholder="Describe the steps, goals, and details that distributors inheriting this blueprint will follow..."
                                                     value={newTemplate.description}
                                                     onChange={e => setNewTemplate({ ...newTemplate, description: e.target.value })}
-                                                    className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-sm text-white outline-none focus:border-cyan-500 resize-none"
+                                                    className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-sm text-white outline-none focus:border-white/20 resize-none"
                                                 />
                                             </div>
                                             <div className="pt-4 flex justify-end gap-3">
                                                 <button
                                                     type="button"
                                                     onClick={() => setIsTemplateModalOpen(false)}
-                                                    className="rounded-xl px-5 py-2.5 text-xs font-bold text-slate-400 bg-white/5 hover:bg-white/10"
+                                                    className="rounded-xl px-5 py-2.5 text-xs font-bold text-[#cccccc] bg-white/5 hover:bg-white/10"
                                                 >
                                                     Cancel
                                                 </button>
@@ -851,7 +851,7 @@ export function LeadershipPanel() {
                         <div className="flex items-center justify-between">
                             <div>
                                 <h3 className="text-xl font-bold text-white mb-1">Resource & Announcement Publisher</h3>
-                                <p className="text-sm text-slate-400">Broadcast PDFs, training videos, or organizational announcements targeting specific rank groups.</p>
+                                <p className="text-sm text-[#cccccc]">Broadcast PDFs, training videos, or organizational announcements targeting specific rank groups.</p>
                             </div>
                             <button
                                 onClick={() => setIsPublishModalOpen(true)}
@@ -864,9 +864,9 @@ export function LeadershipPanel() {
                         {/* Resources Feed */}
                         <div className="space-y-4">
                             {resources.map(resource => (
-                                <div key={resource.id} className="glass rounded-xl border border-white/10 p-5 flex items-center justify-between hover:border-cyan-400/20 transition-all group">
+                                <div key={resource.id} className="glass rounded-xl border border-white/10 p-5 flex items-center justify-between hover:border-white/20 transition-all group">
                                     <div className="flex items-start gap-4">
-                                        <div className="mt-1 flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white/5 text-cyan-400">
+                                        <div className="mt-1 flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white/5 text-[#2997ff]">
                                             {resource.type === 'pdf' ? (
                                                 <FileText className="h-5 w-5" />
                                             ) : resource.type === 'video' ? (
@@ -878,21 +878,21 @@ export function LeadershipPanel() {
                                         <div>
                                             <div className="flex items-center gap-2 mb-1">
                                                 <h4 className="text-sm font-bold text-white">{resource.title}</h4>
-                                                <span className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider">• targeting: {resource.targetRank}</span>
+                                                <span className="text-[10px] font-semibold text-[#86868b] uppercase tracking-wider">• targeting: {resource.targetRank}</span>
                                             </div>
-                                            <p className="text-xs text-slate-400 mb-1 max-w-xl">{resource.description}</p>
+                                            <p className="text-xs text-[#cccccc] mb-1 max-w-xl">{resource.description}</p>
                                             {resource.link && (
-                                                <a href={resource.link} target="_blank" rel="noopener noreferrer" className="text-xs text-cyan-400 font-semibold hover:underline">
+                                                <a href={resource.link} target="_blank" rel="noopener noreferrer" className="text-xs text-[#2997ff] font-semibold hover:underline">
                                                     View Resource file/link →
                                                 </a>
                                             )}
                                         </div>
                                     </div>
                                     <div className="text-right flex flex-col items-end gap-2">
-                                        <span className="text-xs text-slate-500">{resource.datePublished}</span>
+                                        <span className="text-xs text-[#86868b]">{resource.datePublished}</span>
                                         <button
                                             onClick={() => handleDeleteResource(resource.id)}
-                                            className="text-slate-500 hover:text-red-400 opacity-0 group-hover:opacity-100 transition-opacity"
+                                            className="text-[#86868b] hover:text-red-400 opacity-0 group-hover:opacity-100 transition-opacity"
                                         >
                                             <X className="h-4 w-4" />
                                         </button>
@@ -913,27 +913,27 @@ export function LeadershipPanel() {
                                     >
                                         <div className="flex items-center justify-between mb-6">
                                             <h4 className="text-lg font-bold text-white">Publish New Resource</h4>
-                                            <button onClick={() => setIsPublishModalOpen(false)} className="text-slate-400 hover:text-white"><X className="h-5 w-5" /></button>
+                                            <button onClick={() => setIsPublishModalOpen(false)} className="text-[#cccccc] hover:text-white"><X className="h-5 w-5" /></button>
                                         </div>
                                         <form onSubmit={handlePublishResource} className="space-y-4">
                                             <div>
-                                                <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">Resource Title</label>
+                                                <label className="block text-xs font-semibold uppercase tracking-wider text-[#cccccc] mb-2">Resource Title</label>
                                                 <input
                                                     type="text"
                                                     required
                                                     placeholder="e.g. August Promotion Strategy"
                                                     value={newResource.title}
                                                     onChange={e => setNewResource({ ...newResource, title: e.target.value })}
-                                                    className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-sm text-white outline-none focus:border-cyan-500"
+                                                    className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-sm text-white outline-none focus:border-white/20"
                                                 />
                                             </div>
                                             <div className="grid grid-cols-2 gap-4">
                                                 <div>
-                                                    <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">Content Type</label>
+                                                    <label className="block text-xs font-semibold uppercase tracking-wider text-[#cccccc] mb-2">Content Type</label>
                                                     <select
                                                         value={newResource.type}
                                                         onChange={e => setNewResource({ ...newResource, type: e.target.value as 'pdf' | 'announcement' | 'video' })}
-                                                        className="w-full rounded-xl border border-white/10 bg-[#0c1120] px-4 py-2.5 text-sm text-white outline-none focus:border-cyan-500"
+                                                        className="w-full rounded-xl border border-white/10 bg-black px-4 py-2.5 text-sm text-white outline-none focus:border-white/20"
                                                     >
                                                         <option value="announcement">Announcement</option>
                                                         <option value="pdf">PDF Resource</option>
@@ -941,11 +941,11 @@ export function LeadershipPanel() {
                                                     </select>
                                                 </div>
                                                 <div>
-                                                    <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">Target Rank Audience</label>
+                                                    <label className="block text-xs font-semibold uppercase tracking-wider text-[#cccccc] mb-2">Target Rank Audience</label>
                                                     <select
                                                         value={newResource.targetRank}
                                                         onChange={e => setNewResource({ ...newResource, targetRank: e.target.value })}
-                                                        className="w-full rounded-xl border border-white/10 bg-[#0c1120] px-4 py-2.5 text-sm text-white outline-none focus:border-cyan-500"
+                                                        className="w-full rounded-xl border border-white/10 bg-black px-4 py-2.5 text-sm text-white outline-none focus:border-white/20"
                                                     >
                                                         <option value="All">All Distributors</option>
                                                         <option value="Starters Only">Starters Only</option>
@@ -955,31 +955,31 @@ export function LeadershipPanel() {
                                                 </div>
                                             </div>
                                             <div>
-                                                <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">Resource Link / File path (Optional)</label>
+                                                <label className="block text-xs font-semibold uppercase tracking-wider text-[#cccccc] mb-2">Resource Link / File path (Optional)</label>
                                                 <input
                                                     type="text"
                                                     placeholder="e.g. https://youtube.com/... or resource.pdf"
                                                     value={newResource.link}
                                                     onChange={e => setNewResource({ ...newResource, link: e.target.value })}
-                                                    className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-sm text-white outline-none focus:border-cyan-500"
+                                                    className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-sm text-white outline-none focus:border-white/20"
                                                 />
                                             </div>
                                             <div>
-                                                <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">Brief Summary</label>
+                                                <label className="block text-xs font-semibold uppercase tracking-wider text-[#cccccc] mb-2">Brief Summary</label>
                                                 <textarea
                                                     required
                                                     rows={4}
                                                     placeholder="Enter a description of what this resource provides and why it is important..."
                                                     value={newResource.description}
                                                     onChange={e => setNewResource({ ...newResource, description: e.target.value })}
-                                                    className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-sm text-white outline-none focus:border-cyan-500 resize-none"
+                                                    className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-sm text-white outline-none focus:border-white/20 resize-none"
                                                 />
                                             </div>
                                             <div className="pt-4 flex justify-end gap-3">
                                                 <button
                                                     type="button"
                                                     onClick={() => setIsPublishModalOpen(false)}
-                                                    className="rounded-xl px-5 py-2.5 text-xs font-bold text-slate-400 bg-white/5 hover:bg-white/10"
+                                                    className="rounded-xl px-5 py-2.5 text-xs font-bold text-[#cccccc] bg-white/5 hover:bg-white/10"
                                                 >
                                                     Cancel
                                                 </button>
@@ -1004,25 +1004,25 @@ export function LeadershipPanel() {
                         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                             <div>
                                 <h3 className="text-xl font-bold text-white mb-1">Downline Activity Directory</h3>
-                                <p className="text-sm text-slate-400">Track module completions, lead captures, and last active status of team members.</p>
+                                <p className="text-sm text-[#cccccc]">Track module completions, lead captures, and last active status of team members.</p>
                             </div>
                             <div className="flex gap-3">
                                 <div className="relative">
-                                    <Search className="absolute left-3 top-3 h-4 w-4 text-slate-500" />
+                                    <Search className="absolute left-3 top-3 h-4 w-4 text-[#86868b]" />
                                     <input
                                         type="text"
                                         placeholder="Search downlines..."
                                         value={distributorSearch}
                                         onChange={e => setDistributorSearch(e.target.value)}
-                                        className="w-48 rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 pl-9 text-xs text-white outline-none focus:border-cyan-500"
+                                        className="w-48 rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 pl-9 text-xs text-white outline-none focus:border-white/20"
                                     />
                                 </div>
                                 <div className="relative">
-                                    <Filter className="absolute left-3 top-3 h-4 w-4 text-slate-500" />
+                                    <Filter className="absolute left-3 top-3 h-4 w-4 text-[#86868b]" />
                                     <select
                                         value={distributorRankFilter}
                                         onChange={e => setDistributorRankFilter(e.target.value)}
-                                        className="w-44 rounded-xl border border-white/10 bg-[#0c1120] px-4 py-2.5 pl-9 text-xs text-white outline-none focus:border-cyan-500"
+                                        className="w-44 rounded-xl border border-white/10 bg-black px-4 py-2.5 pl-9 text-xs text-white outline-none focus:border-white/20"
                                     >
                                         <option value="all">All Ranks</option>
                                         <option value="Starter">Starter</option>
@@ -1035,8 +1035,8 @@ export function LeadershipPanel() {
 
                         {/* Distributor Table */}
                         <div className="glass rounded-xl border border-white/10 overflow-hidden">
-                            <table className="w-full text-left text-xs text-slate-300">
-                                <thead className="bg-white/3 text-[10px] font-semibold uppercase tracking-wider text-slate-400 border-b border-white/10">
+                            <table className="w-full text-left text-xs text-[#cccccc]">
+                                <thead className="bg-white/3 text-[10px] font-semibold uppercase tracking-wider text-[#cccccc] border-b border-white/10">
                                     <tr>
                                         <th className="px-6 py-4">Distributor</th>
                                         <th className="px-6 py-4">Rank</th>
@@ -1052,9 +1052,9 @@ export function LeadershipPanel() {
                                         <tr key={member.id} className="hover:bg-white/3 transition-colors">
                                             <td className="px-6 py-4 font-bold text-white">
                                                 <div>{member.name}</div>
-                                                <div className="text-[10px] text-slate-500 font-normal">{member.email}</div>
+                                                <div className="text-[10px] text-[#86868b] font-normal">{member.email}</div>
                                             </td>
-                                            <td className="px-6 py-4 font-medium text-cyan-400">{member.rank}</td>
+                                            <td className="px-6 py-4 font-medium text-[#2997ff]">{member.rank}</td>
                                             <td className="px-6 py-4 uppercase font-semibold">{member.country}</td>
                                             <td className="px-6 py-4 font-bold text-white">{member.leads}</td>
                                             <td className="px-6 py-4">
@@ -1065,11 +1065,11 @@ export function LeadershipPanel() {
                                                     <span className="font-bold text-white">{member.trainingProgress}%</span>
                                                 </div>
                                             </td>
-                                            <td className="px-6 py-4 text-slate-400">{member.lastActive}</td>
+                                            <td className="px-6 py-4 text-[#cccccc]">{member.lastActive}</td>
                                             <td className="px-6 py-4 text-right">
                                                 <button
                                                     onClick={() => setSelectedDistributor(member)}
-                                                    className="inline-flex items-center gap-1 rounded-lg bg-white/5 border border-white/10 px-3 py-1.5 hover:bg-white/10 hover:border-cyan-400/30 text-xs font-semibold text-white transition-all"
+                                                    className="inline-flex items-center gap-1 rounded-lg bg-white/5 border border-white/10 px-3 py-1.5 hover:bg-white/10 hover:border-white/20 text-xs font-semibold text-white transition-all"
                                                 >
                                                     <Eye className="h-3.5 w-3.5" /> Inspect
                                                 </button>
@@ -1078,7 +1078,7 @@ export function LeadershipPanel() {
                                     ))}
                                     {filteredDownlines.length === 0 && (
                                         <tr>
-                                            <td colSpan={7} className="px-6 py-12 text-center text-slate-500">
+                                            <td colSpan={7} className="px-6 py-12 text-center text-[#86868b]">
                                                 No team members matched the search filters.
                                             </td>
                                         </tr>
@@ -1095,26 +1095,26 @@ export function LeadershipPanel() {
                                         initial={{ scale: 0.95, opacity: 0 }}
                                         animate={{ scale: 1, opacity: 1 }}
                                         exit={{ scale: 0.95, opacity: 0 }}
-                                        className="w-full max-w-xl glass rounded-2xl border border-white/15 p-6 shadow-2xl text-slate-300"
+                                        className="w-full max-w-xl glass rounded-2xl border border-white/15 p-6 shadow-2xl text-[#cccccc]"
                                     >
                                         <div className="flex items-center justify-between mb-6 pb-4 border-b border-white/10">
                                             <div>
                                                 <h4 className="text-lg font-bold text-white">{selectedDistributor.name}</h4>
-                                                <p className="text-xs text-cyan-400">{selectedDistributor.rank} • {selectedDistributor.email}</p>
+                                                <p className="text-xs text-[#2997ff]">{selectedDistributor.rank} • {selectedDistributor.email}</p>
                                             </div>
-                                            <button onClick={() => setSelectedDistributor(null)} className="text-slate-400 hover:text-white"><X className="h-5 w-5" /></button>
+                                            <button onClick={() => setSelectedDistributor(null)} className="text-[#cccccc] hover:text-white"><X className="h-5 w-5" /></button>
                                         </div>
 
                                         <div className="grid grid-cols-2 gap-6 mb-6">
                                             <div className="glass rounded-xl p-4 border border-white/5 space-y-1">
-                                                <div className="text-[10px] uppercase font-bold text-slate-500">Lead captures</div>
+                                                <div className="text-[10px] uppercase font-bold text-[#86868b]">Lead captures</div>
                                                 <div className="text-2xl font-black text-white">{selectedDistributor.leads}</div>
-                                                <div className="text-xs text-slate-400">Total pipeline contacts captured</div>
+                                                <div className="text-xs text-[#cccccc]">Total pipeline contacts captured</div>
                                             </div>
                                             <div className="glass rounded-xl p-4 border border-white/5 space-y-1">
-                                                <div className="text-[10px] uppercase font-bold text-slate-500">Last activity</div>
+                                                <div className="text-[10px] uppercase font-bold text-[#86868b]">Last activity</div>
                                                 <div className="text-sm font-semibold text-white mt-1">{selectedDistributor.lastActive}</div>
-                                                <div className="text-xs text-slate-400">Distributor login activity status</div>
+                                                <div className="text-xs text-[#cccccc]">Distributor login activity status</div>
                                             </div>
                                         </div>
 
@@ -1127,7 +1127,7 @@ export function LeadershipPanel() {
                                                         {mod.completed ? (
                                                             <span className="flex h-5 w-5 items-center justify-center rounded-full bg-green-500/20 text-green-400 text-xs">✓</span>
                                                         ) : (
-                                                            <span className="flex h-5 w-5 items-center justify-center rounded-full bg-white/5 text-slate-500 text-xs">•</span>
+                                                            <span className="flex h-5 w-5 items-center justify-center rounded-full bg-white/5 text-[#86868b] text-xs">•</span>
                                                         )}
                                                     </div>
                                                 ))}
@@ -1155,7 +1155,7 @@ export function LeadershipPanel() {
                         <div className="flex items-center justify-between">
                             <div>
                                 <h3 className="text-xl font-bold text-white mb-1">Network Activity Challenges</h3>
-                                <p className="text-sm text-slate-400">Launch challenges, reward performers, and track individual progress status across metrics.</p>
+                                <p className="text-sm text-[#cccccc]">Launch challenges, reward performers, and track individual progress status across metrics.</p>
                             </div>
                             <button
                                 onClick={() => setIsChallengeModalOpen(true)}
@@ -1174,21 +1174,21 @@ export function LeadershipPanel() {
                                         <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between pb-4 border-b border-white/5">
                                             <div>
                                                 <h4 className="text-base font-bold text-white">{challenge.title}</h4>
-                                                <p className="text-xs text-slate-400 mt-1">{challenge.description}</p>
+                                                <p className="text-xs text-[#cccccc] mt-1">{challenge.description}</p>
                                             </div>
                                             <div className="text-right">
                                                 <span className="inline-block rounded-full bg-yellow-500/10 border border-yellow-500/20 px-3 py-1 text-xs text-yellow-400 font-semibold">
                                                     🏆 Reward: {challenge.reward}
                                                 </span>
-                                                <div className="text-[10px] text-slate-500 mt-1">End Date: {challenge.endDate}</div>
+                                                <div className="text-[10px] text-[#86868b] mt-1">End Date: {challenge.endDate}</div>
                                             </div>
                                         </div>
 
                                         {/* Progress breakdown */}
                                         <div className="space-y-4">
                                             <div className="flex justify-between text-xs font-semibold">
-                                                <span className="text-slate-400">Participants Tracker ({completedCount} / {challenge.participants.length} finished)</span>
-                                                <span className="text-cyan-400">{Math.round((completedCount / challenge.participants.length) * 100)}% overall completion</span>
+                                                <span className="text-[#cccccc]">Participants Tracker ({completedCount} / {challenge.participants.length} finished)</span>
+                                                <span className="text-[#2997ff]">{Math.round((completedCount / challenge.participants.length) * 100)}% overall completion</span>
                                             </div>
 
                                             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -1198,7 +1198,7 @@ export function LeadershipPanel() {
                                                         <div key={pIdx} className="glass rounded-xl border border-white/5 p-4 flex flex-col justify-between">
                                                             <div className="flex items-center justify-between mb-2">
                                                                 <span className="text-xs font-bold text-white">{part.name}</span>
-                                                                <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full ${part.completed ? 'bg-green-500/10 text-green-400' : 'bg-white/5 text-slate-400'}`}>
+                                                                <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full ${part.completed ? 'bg-green-500/10 text-green-400' : 'bg-white/5 text-[#cccccc]'}`}>
                                                                     {part.completed ? 'Finished' : `${part.progress} / ${challenge.targetValue}`}
                                                                 </span>
                                                             </div>
@@ -1209,14 +1209,14 @@ export function LeadershipPanel() {
                                                                 <button
                                                                     onClick={() => handleProgressChallenge(challenge.id, part.name, -1)}
                                                                     disabled={part.progress <= 0}
-                                                                    className="h-6 w-6 flex items-center justify-center rounded bg-white/5 hover:bg-white/10 text-slate-400 disabled:opacity-30"
+                                                                    className="h-6 w-6 flex items-center justify-center rounded bg-white/5 hover:bg-white/10 text-[#cccccc] disabled:opacity-30"
                                                                 >
                                                                     -
                                                                 </button>
                                                                 <button
                                                                     onClick={() => handleProgressChallenge(challenge.id, part.name, 1)}
                                                                     disabled={part.completed}
-                                                                    className="h-6 w-6 flex items-center justify-center rounded bg-white/5 hover:bg-white/10 text-slate-400 disabled:opacity-30"
+                                                                    className="h-6 w-6 flex items-center justify-center rounded bg-white/5 hover:bg-white/10 text-[#cccccc] disabled:opacity-30"
                                                                 >
                                                                     +
                                                                 </button>
@@ -1243,27 +1243,27 @@ export function LeadershipPanel() {
                                     >
                                         <div className="flex items-center justify-between mb-6">
                                             <h4 className="text-lg font-bold text-white">Start New Goal Challenge</h4>
-                                            <button onClick={() => setIsChallengeModalOpen(false)} className="text-slate-400 hover:text-white"><X className="h-5 w-5" /></button>
+                                            <button onClick={() => setIsChallengeModalOpen(false)} className="text-[#cccccc] hover:text-white"><X className="h-5 w-5" /></button>
                                         </div>
                                         <form onSubmit={handleCreateChallenge} className="space-y-4">
                                             <div>
-                                                <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">Challenge Title</label>
+                                                <label className="block text-xs font-semibold uppercase tracking-wider text-[#cccccc] mb-2">Challenge Title</label>
                                                 <input
                                                     type="text"
                                                     required
                                                     placeholder="e.g. Latam Recruits Sprint"
                                                     value={newChallenge.title}
                                                     onChange={e => setNewChallenge({ ...newChallenge, title: e.target.value })}
-                                                    className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-sm text-white outline-none focus:border-cyan-500"
+                                                    className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-sm text-white outline-none focus:border-white/20"
                                                 />
                                             </div>
                                             <div className="grid grid-cols-2 gap-4">
                                                 <div>
-                                                    <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">Target Group</label>
+                                                    <label className="block text-xs font-semibold uppercase tracking-wider text-[#cccccc] mb-2">Target Group</label>
                                                     <select
                                                         value={newChallenge.targetGroup}
                                                         onChange={e => setNewChallenge({ ...newChallenge, targetGroup: e.target.value })}
-                                                        className="w-full rounded-xl border border-white/10 bg-[#0c1120] px-4 py-2.5 text-sm text-white outline-none focus:border-cyan-500"
+                                                        className="w-full rounded-xl border border-white/10 bg-black px-4 py-2.5 text-sm text-white outline-none focus:border-white/20"
                                                     >
                                                         <option value="All Distributors">All Distributors</option>
                                                         <option value="Starters">Starters Only</option>
@@ -1271,11 +1271,11 @@ export function LeadershipPanel() {
                                                     </select>
                                                 </div>
                                                 <div>
-                                                    <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">Metric Type</label>
+                                                    <label className="block text-xs font-semibold uppercase tracking-wider text-[#cccccc] mb-2">Metric Type</label>
                                                     <select
                                                         value={newChallenge.metric}
                                                         onChange={e => setNewChallenge({ ...newChallenge, metric: e.target.value })}
-                                                        className="w-full rounded-xl border border-white/10 bg-[#0c1120] px-4 py-2.5 text-sm text-white outline-none focus:border-cyan-500"
+                                                        className="w-full rounded-xl border border-white/10 bg-black px-4 py-2.5 text-sm text-white outline-none focus:border-white/20"
                                                     >
                                                         <option value="K8 Sales">K8 Sales Volume</option>
                                                         <option value="Recruits">New Recruits</option>
@@ -1285,54 +1285,54 @@ export function LeadershipPanel() {
                                             </div>
                                             <div className="grid grid-cols-2 gap-4">
                                                 <div>
-                                                    <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">Target value count</label>
+                                                    <label className="block text-xs font-semibold uppercase tracking-wider text-[#cccccc] mb-2">Target value count</label>
                                                     <input
                                                         type="number"
                                                         required
                                                         min="1"
                                                         value={newChallenge.targetValue}
                                                         onChange={e => setNewChallenge({ ...newChallenge, targetValue: parseInt(e.target.value) || 1 })}
-                                                        className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-sm text-white outline-none focus:border-cyan-500"
+                                                        className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-sm text-white outline-none focus:border-white/20"
                                                     />
                                                 </div>
                                                 <div>
-                                                    <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">Deadline Date</label>
+                                                    <label className="block text-xs font-semibold uppercase tracking-wider text-[#cccccc] mb-2">Deadline Date</label>
                                                     <input
                                                         type="date"
                                                         required
                                                         value={newChallenge.endDate}
                                                         onChange={e => setNewChallenge({ ...newChallenge, endDate: e.target.value })}
-                                                        className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-sm text-white outline-none focus:border-cyan-500"
+                                                        className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-sm text-white outline-none focus:border-white/20"
                                                     />
                                                 </div>
                                             </div>
                                             <div>
-                                                <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">Completion Reward Details</label>
+                                                <label className="block text-xs font-semibold uppercase tracking-wider text-[#cccccc] mb-2">Completion Reward Details</label>
                                                 <input
                                                     type="text"
                                                     required
                                                     placeholder="e.g. Free emGuarde device or special commission bonus"
                                                     value={newChallenge.reward}
                                                     onChange={e => setNewChallenge({ ...newChallenge, reward: e.target.value })}
-                                                    className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-sm text-white outline-none focus:border-cyan-500"
+                                                    className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-sm text-white outline-none focus:border-white/20"
                                                 />
                                             </div>
                                             <div>
-                                                <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">Instructions</label>
+                                                <label className="block text-xs font-semibold uppercase tracking-wider text-[#cccccc] mb-2">Instructions</label>
                                                 <textarea
                                                     required
                                                     rows={3}
                                                     placeholder="Write details or guidelines to motivate the team to finish this task..."
                                                     value={newChallenge.description}
                                                     onChange={e => setNewChallenge({ ...newChallenge, description: e.target.value })}
-                                                    className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-sm text-white outline-none focus:border-cyan-500 resize-none"
+                                                    className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-sm text-white outline-none focus:border-white/20 resize-none"
                                                 />
                                             </div>
                                             <div className="pt-4 flex justify-end gap-3">
                                                 <button
                                                     type="button"
                                                     onClick={() => setIsChallengeModalOpen(false)}
-                                                    className="rounded-xl px-5 py-2.5 text-xs font-bold text-slate-400 bg-white/5 hover:bg-white/10"
+                                                    className="rounded-xl px-5 py-2.5 text-xs font-bold text-[#cccccc] bg-white/5 hover:bg-white/10"
                                                 >
                                                     Cancel
                                                 </button>
@@ -1356,7 +1356,7 @@ export function LeadershipPanel() {
                     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-6">
                         <div>
                             <h3 className="text-xl font-bold text-white mb-1">Compliance Approval Queue</h3>
-                            <p className="text-sm text-slate-400">Review distributor websites, landing pages, and promotional resources to ensure alignment with compliance guidelines.</p>
+                            <p className="text-sm text-[#cccccc]">Review distributor websites, landing pages, and promotional resources to ensure alignment with compliance guidelines.</p>
                         </div>
 
                         {/* Tab Headers */}
@@ -1371,8 +1371,8 @@ export function LeadershipPanel() {
                                     onClick={() => setComplianceTab(cTab.id)}
                                     className={`px-5 py-3 text-xs font-bold transition-all border-b-2 ${
                                         complianceTab === cTab.id
-                                            ? 'border-cyan-400 text-white'
-                                            : 'border-transparent text-slate-500 hover:text-slate-300'
+                                            ? 'border-white/20 text-white'
+                                            : 'border-transparent text-[#86868b] hover:text-[#cccccc]'
                                     }`}
                                 >
                                     {cTab.label}
@@ -1388,17 +1388,17 @@ export function LeadershipPanel() {
                                         <div className="space-y-1">
                                             <div className="flex items-center gap-2">
                                                 <span className="font-bold text-white text-sm">{item.distributorName}</span>
-                                                <span className="text-[10px] text-slate-500 uppercase tracking-wider">• {item.type}</span>
+                                                <span className="text-[10px] text-[#86868b] uppercase tracking-wider">• {item.type}</span>
                                             </div>
-                                            <h4 className="text-xs font-semibold text-slate-400">Submission: <span className="text-slate-300">{item.title}</span></h4>
-                                            <div className="text-[10px] text-slate-500">Submitted on {item.submittedDate}</div>
+                                            <h4 className="text-xs font-semibold text-[#cccccc]">Submission: <span className="text-[#cccccc]">{item.title}</span></h4>
+                                            <div className="text-[10px] text-[#86868b]">Submitted on {item.submittedDate}</div>
                                         </div>
                                         <div className="text-right">
                                             <a
                                                 href={item.link}
                                                 target="_blank"
                                                 rel="noopener noreferrer"
-                                                className="inline-flex items-center gap-1 text-xs text-cyan-400 font-bold hover:underline"
+                                                className="inline-flex items-center gap-1 text-xs text-[#2997ff] font-bold hover:underline"
                                             >
                                                 Inspect Resource →
                                             </a>
@@ -1434,7 +1434,7 @@ export function LeadershipPanel() {
                             ))}
 
                             {complianceQueue.filter(item => item.status === complianceTab).length === 0 && (
-                                <div className="py-12 text-center text-slate-500 text-xs">
+                                <div className="py-12 text-center text-[#86868b] text-xs">
                                     No elements found in this queue tab.
                                 </div>
                             )}
@@ -1452,15 +1452,15 @@ export function LeadershipPanel() {
                                     >
                                         <div className="flex items-center justify-between mb-6">
                                             <h4 className="text-lg font-bold text-white">Flag Non-Compliant Material</h4>
-                                            <button onClick={() => setRejectionModalItem(null)} className="text-slate-400 hover:text-white"><X className="h-5 w-5" /></button>
+                                            <button onClick={() => setRejectionModalItem(null)} className="text-[#cccccc] hover:text-white"><X className="h-5 w-5" /></button>
                                         </div>
                                         <form onSubmit={handleRejectCompliance} className="space-y-4">
                                             <div>
-                                                <p className="text-xs text-slate-400 mb-2">
+                                                <p className="text-xs text-[#cccccc] mb-2">
                                                     Distributor: <strong className="text-white">{rejectionModalItem.distributorName}</strong><br />
                                                     Item: <strong className="text-white">{rejectionModalItem.title}</strong>
                                                 </p>
-                                                <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">Rejection Feedback & Required Changes</label>
+                                                <label className="block text-xs font-semibold uppercase tracking-wider text-[#cccccc] mb-2">Rejection Feedback & Required Changes</label>
                                                 <textarea
                                                     required
                                                     rows={4}
@@ -1474,7 +1474,7 @@ export function LeadershipPanel() {
                                                 <button
                                                     type="button"
                                                     onClick={() => setRejectionModalItem(null)}
-                                                    className="rounded-xl px-5 py-2.5 text-xs font-bold text-slate-400 bg-white/5 hover:bg-white/10"
+                                                    className="rounded-xl px-5 py-2.5 text-xs font-bold text-[#cccccc] bg-white/5 hover:bg-white/10"
                                                 >
                                                     Cancel
                                                 </button>

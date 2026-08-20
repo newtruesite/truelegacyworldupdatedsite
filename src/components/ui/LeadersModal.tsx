@@ -94,20 +94,20 @@ export function LeadersModal({ isOpen, onClose, country, title = 'Connect With a
     <div className="fixed inset-0 z-[9999] flex items-end sm:items-center justify-center p-0 sm:p-4">
       <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose} aria-hidden />
       <div
-        className="relative w-full max-h-[90vh] overflow-y-auto rounded-t-2xl sm:rounded-2xl border border-white/10 bg-[#0a1628] shadow-2xl max-w-lg"
+        className="relative w-full max-h-[90vh] overflow-y-auto rounded-t-2xl sm:rounded-2xl border border-white/10 bg-black shadow-2xl max-w-lg"
         role="dialog"
         aria-modal="true"
         aria-labelledby="leaders-modal-title"
       >
-        <div className="sticky top-0 flex items-center justify-between p-4 border-b border-white/10 bg-[#0a1628]/95 z-10">
+        <div className="sticky top-0 flex items-center justify-between p-4 border-b border-white/10 bg-black/95 z-10">
           <div>
             <h2 id="leaders-modal-title" className="text-lg font-bold text-white">{title}</h2>
-            <p className="text-sm text-slate-400 mt-0.5">{subtitle}</p>
+            <p className="text-sm text-[#cccccc] mt-0.5">{subtitle}</p>
           </div>
           <button
             type="button"
             onClick={onClose}
-            className="flex h-10 w-10 items-center justify-center rounded-xl text-slate-400 hover:text-white hover:bg-white/10 transition-colors"
+            className="flex h-10 w-10 items-center justify-center rounded-xl text-[#cccccc] hover:text-white hover:bg-white/10 transition-colors"
             aria-label="Close"
           >
             <X className="w-5 h-5" />
@@ -125,8 +125,8 @@ export function LeadersModal({ isOpen, onClose, country, title = 'Connect With a
               )}
               <div className="flex-1 min-w-0">
                 <p className="leader-name">{leader.name}</p>
-                <p className="text-sm text-slate-400">{leader.title}</p>
-                <p className="text-xs text-slate-500 mt-0.5">{leader.region}</p>
+                <p className="text-sm text-[#cccccc]">{leader.title}</p>
+                <p className="text-xs text-[#86868b] mt-0.5">{leader.region}</p>
                 <div className="flex flex-wrap gap-2 mt-3">
                   {(leader as { whatsapp?: string }).whatsapp && (
                     <a

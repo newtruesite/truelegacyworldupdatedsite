@@ -54,7 +54,7 @@ export default function K8Page() {
   const [heroImgError, setHeroImgError] = useState(false);
 
   return (
-    <div className="page-wrapper bg-[#070b16]">
+    <div className="page-wrapper bg-black">
       <SEO
         title={
           locale === "es"
@@ -84,7 +84,7 @@ export default function K8Page() {
             transition={{ duration: 0.7 }}
             className="text-center mb-16 pt-8"
           >
-            <span className="inline-block mb-4 rounded-full border border-cyan-500/30 bg-cyan-500/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-widest text-cyan-400">
+            <span className="inline-block mb-4 rounded-full border border-white/20 bg-cyan-500/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-widest text-[#2997ff]">
               {copy.k8.badge}
             </span>
             <h1 className="page-hero-title mb-6">
@@ -92,7 +92,7 @@ export default function K8Page() {
               <br />
               <span className="gradient-text">{copy.k8.headlineAccent}</span>
             </h1>
-            <p className="mx-auto max-w-3xl text-lg md:text-xl text-slate-400 leading-relaxed mb-8">
+            <p className="mx-auto max-w-3xl text-lg md:text-xl text-[#cccccc] leading-relaxed mb-8">
               {copy.k8.sub}
             </p>
 
@@ -129,7 +129,7 @@ export default function K8Page() {
                 ) : (
                   <div className="flex flex-col items-center justify-center gap-3 py-8">
                     <div className="w-24 h-24 rounded-2xl bg-cyan-500/20 flex items-center justify-center">
-                      <Droplets className="w-12 h-12 text-cyan-400" />
+                      <Droplets className="w-12 h-12 text-[#2997ff]" />
                     </div>
                     <span className="text-white font-bold text-xl">
                       Leveluk K8
@@ -139,7 +139,7 @@ export default function K8Page() {
                 <h3 className="text-2xl font-bold text-white mb-2">
                   Leveluk K8
                 </h3>
-                <p className="text-slate-400 text-sm">{FEATURES[0].text}</p>
+                <p className="text-[#cccccc] text-sm">{FEATURES[0].text}</p>
               </div>
             </motion.div>
 
@@ -158,7 +158,7 @@ export default function K8Page() {
                   className="flex items-center gap-4 glass rounded-xl border border-white/10 p-4"
                 >
                   <div className="w-10 h-10 rounded-xl bg-cyan-500/20 flex items-center justify-center shrink-0">
-                    <Icon className="w-5 h-5 text-cyan-400" />
+                    <Icon className="w-5 h-5 text-[#2997ff]" />
                   </div>
                   <span className="text-slate-200 font-medium">{text}</span>
                 </div>
@@ -191,7 +191,7 @@ export default function K8Page() {
                     <h4 className="font-bold text-white text-sm mb-2">
                       {name}
                     </h4>
-                    <p className="text-slate-400 text-xs leading-relaxed">
+                    <p className="text-[#cccccc] text-xs leading-relaxed">
                       {use}
                     </p>
                   </div>
@@ -205,13 +205,13 @@ export default function K8Page() {
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="glass rounded-3xl border border-cyan-500/20 p-8 md:p-12 mb-16 text-center"
+            className="glass rounded-3xl border border-white/20 p-8 md:p-12 mb-16 text-center"
           >
             <div className="text-6xl font-bold gradient-text mb-4">8</div>
             <h3 className="text-xl md:text-2xl font-bold text-white mb-4">
               {copy.k8.titaniumTitle}
             </h3>
-            <p className="text-slate-400 max-w-2xl mx-auto text-lg leading-relaxed">
+            <p className="text-[#cccccc] max-w-2xl mx-auto text-lg leading-relaxed">
               {copy.k8.titaniumSub}
             </p>
           </motion.div>
@@ -249,7 +249,7 @@ export default function K8Page() {
               to={countrySlug ? `/${countrySlug}/training` : "/training"}
               className="flex items-center justify-center gap-2 rounded-2xl border border-white/10 bg-white/5 px-6 py-4 text-sm font-semibold text-white hover:bg-white/10 transition-all min-h-[48px] hover:scale-[1.02]"
             >
-              <Download className="w-4 h-4 text-cyan-400" />{" "}
+              <Download className="w-4 h-4 text-[#2997ff]" />{" "}
               {copy.k8.downloadPdf}
             </Link>
             <Link
@@ -291,7 +291,7 @@ export default function K8Page() {
           <div className="text-center pb-16">
             <Link
               to={`/${countrySlug}`}
-              className="inline-flex items-center gap-2 text-sm text-slate-400 hover:text-white transition-colors"
+              className="inline-flex items-center gap-2 text-sm text-[#cccccc] hover:text-white transition-colors"
             >
               {copy.k8.backLink} {country.name}
             </Link>

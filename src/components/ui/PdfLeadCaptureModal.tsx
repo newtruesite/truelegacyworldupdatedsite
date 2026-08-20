@@ -168,7 +168,7 @@ export function PdfLeadCaptureModal({
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 0.95 }}
-          className="relative z-10 w-full max-w-md rounded-2xl bg-[#0f172a] border border-white/10 shadow-2xl overflow-hidden"
+          className="relative z-10 w-full max-w-md rounded-2xl bg-black border border-white/10 shadow-2xl overflow-hidden"
           onClick={(e) => e.stopPropagation()}
         >
           <div className="flex items-center justify-between p-5 border-b border-white/10">
@@ -176,7 +176,7 @@ export function PdfLeadCaptureModal({
             <button
               type="button"
               onClick={onClose}
-              className="p-2 rounded-lg text-slate-400 hover:text-white hover:bg-white/10 transition-colors"
+              className="p-2 rounded-lg text-[#cccccc] hover:text-white hover:bg-white/10 transition-colors"
               aria-label="Close"
             >
               <X className="h-5 w-5" />
@@ -184,7 +184,7 @@ export function PdfLeadCaptureModal({
           </div>
           <div className="p-5">
             {submitted ? (
-              <p className="text-slate-300 text-center py-8">{t.thankYou}</p>
+              <p className="text-[#cccccc] text-center py-8">{t.thankYou}</p>
             ) : (
               <form
                 onSubmit={handleSubmit}
@@ -197,7 +197,7 @@ export function PdfLeadCaptureModal({
 
                 <div className="space-y-4">
                   <div>
-                    <label className="block text-sm font-medium text-slate-300 mb-1">
+                    <label className="block text-sm font-medium text-[#cccccc] mb-1">
                       {t.fullName} *
                     </label>
                     <input
@@ -205,7 +205,7 @@ export function PdfLeadCaptureModal({
                       name="full-name"
                       value={form.fullName}
                       onChange={(e) => handleChange("fullName", e.target.value)}
-                      className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white placeholder-slate-500 focus:border-cyan-500 focus:outline-none focus:ring-1 focus:ring-cyan-500/30"
+                      className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white placeholder-slate-500 focus:border-white/20 focus:outline-none focus:ring-1 focus:ring-cyan-500/30"
                       placeholder={t.fullName}
                     />
                     {errors.fullName && (
@@ -215,7 +215,7 @@ export function PdfLeadCaptureModal({
                     )}
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-slate-300 mb-1">
+                    <label className="block text-sm font-medium text-[#cccccc] mb-1">
                       {t.email} *
                     </label>
                     <input
@@ -223,7 +223,7 @@ export function PdfLeadCaptureModal({
                       name="email"
                       value={form.email}
                       onChange={(e) => handleChange("email", e.target.value)}
-                      className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white placeholder-slate-500 focus:border-cyan-500 focus:outline-none focus:ring-1 focus:ring-cyan-500/30"
+                      className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white placeholder-slate-500 focus:border-white/20 focus:outline-none focus:ring-1 focus:ring-cyan-500/30"
                       placeholder={t.email}
                     />
                     {errors.email && (
@@ -233,7 +233,7 @@ export function PdfLeadCaptureModal({
                     )}
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-slate-300 mb-1">
+                    <label className="block text-sm font-medium text-[#cccccc] mb-1">
                       {t.phone}
                     </label>
                     <input
@@ -241,19 +241,19 @@ export function PdfLeadCaptureModal({
                       name="phone"
                       value={form.phone}
                       onChange={(e) => handleChange("phone", e.target.value)}
-                      className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white placeholder-slate-500 focus:border-cyan-500 focus:outline-none focus:ring-1 focus:ring-cyan-500/30"
+                      className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white placeholder-slate-500 focus:border-white/20 focus:outline-none focus:ring-1 focus:ring-cyan-500/30"
                       placeholder={t.phone}
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-slate-300 mb-1">
+                    <label className="block text-sm font-medium text-[#cccccc] mb-1">
                       {t.country} *
                     </label>
                     <select
                       name="country"
                       value={form.country}
                       onChange={(e) => handleChange("country", e.target.value)}
-                      className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white focus:border-cyan-500 focus:outline-none focus:ring-1 focus:ring-cyan-500/30"
+                      className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white focus:border-white/20 focus:outline-none focus:ring-1 focus:ring-cyan-500/30"
                     >
                       <option value="">
                         {isSpanish ? "Selecciona" : "Select"}

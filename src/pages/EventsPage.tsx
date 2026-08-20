@@ -129,15 +129,15 @@ function EventCard({ event, region, lang, onFirstTimeNo }: {
         </p>
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-5 p-4 rounded-xl bg-white/5 border border-white/5">
           {timezones.map((tz) => (
-            <div key={tz.region} className="text-sm text-slate-300">
-              <span className="block text-xs font-semibold uppercase tracking-wide text-slate-500 mb-0.5">
+            <div key={tz.region} className="text-sm text-[#cccccc]">
+              <span className="block text-xs font-semibold uppercase tracking-wide text-[#86868b] mb-0.5">
                 {translateEventTimezoneRegion(tz.region, lang)}
               </span>
               <span className="font-bold text-white">{translateEventTimezoneTime(tz.time, lang)}</span>
             </div>
           ))}
         </div>
-        <div className="whitespace-pre-line text-slate-300 text-sm leading-relaxed mb-6">
+        <div className="whitespace-pre-line text-[#cccccc] text-sm leading-relaxed mb-6">
           {desc}
         </div>
         <div className="mb-6">
@@ -181,7 +181,7 @@ export default function EventsPage() {
   };
 
   return (
-    <div className="page-wrapper bg-[#060b1e] text-white">
+    <div className="page-wrapper bg-black text-white">
       <SEO
         title={
           lang === "es"
@@ -210,7 +210,7 @@ export default function EventsPage() {
         </h1>
 
         {events.length === 0 ? (
-          <p className="text-slate-400">{t.noEvents}</p>
+          <p className="text-[#cccccc]">{t.noEvents}</p>
         ) : (
           <div className="space-y-10">
             {[...featuredEvents, ...weeklyEvents].map((event) => (

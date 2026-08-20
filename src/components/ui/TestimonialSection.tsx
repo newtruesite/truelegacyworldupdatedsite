@@ -117,14 +117,14 @@ export function TestimonialSection() {
                     transition={{ duration: 0.6 }}
                     className="text-center mb-16"
                 >
-                    <span className="inline-block mb-3 rounded-full border border-cyan-500/30 bg-cyan-500/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-widest text-cyan-400">
+                    <span className="inline-block mb-3 rounded-full border border-white/20 bg-cyan-500/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-widest text-[#2997ff]">
                         Real People. Real Results.
                     </span>
                     <h2 className="text-3xl font-bold text-white sm:text-4xl lg:text-5xl mb-4">
                         True Legacy{' '}
                         <span className="gradient-text">Leaders Worldwide</span>
                     </h2>
-                    <p className="mx-auto max-w-2xl text-slate-400 text-lg">
+                    <p className="mx-auto max-w-2xl text-[#cccccc] text-lg">
                         Members across featured markets are developing product knowledge, leadership skills, and community. See what they are saying.
                     </p>
                 </motion.div>
@@ -159,9 +159,9 @@ export function TestimonialSection() {
 
 function TestimonialCard({ testimonial: t }: { testimonial: (typeof TESTIMONIALS)[0] }) {
     return (
-        <div className="glass shrink-0 w-80 rounded-2xl border border-white/10 p-6 hover:border-cyan-500/30 transition-all duration-300 group">
-            <Quote className="mb-3 h-5 w-5 text-cyan-400/60" />
-            <p className="text-sm text-slate-300 leading-relaxed mb-6 line-clamp-4">
+        <div className="glass shrink-0 w-80 rounded-2xl border border-white/10 p-6 hover:border-white/20 transition-all duration-300 group">
+            <Quote className="mb-3 h-5 w-5 text-[#2997ff]/60" />
+            <p className="text-sm text-[#cccccc] leading-relaxed mb-6 line-clamp-4">
                 "{t.quote}"
             </p>
             <div className="flex items-center justify-between">
@@ -173,13 +173,13 @@ function TestimonialCard({ testimonial: t }: { testimonial: (typeof TESTIMONIALS
                     </div>
                     <div>
                         <p className="text-sm font-semibold text-white">{t.name}</p>
-                        <p className="text-xs text-slate-500">{t.role}</p>
+                        <p className="text-xs text-[#86868b]">{t.role}</p>
                     </div>
                 </div>
                 <a
                     href={t.instagram}
                     target="_blank" rel="noopener noreferrer"
-                    className="flex items-center gap-1 text-xs text-cyan-400 transition-colors hover:text-cyan-300 opacity-0 group-hover:opacity-100"
+                    className="flex items-center gap-1 text-xs text-[#2997ff] transition-colors hover:text-[#2997ff] opacity-0 group-hover:opacity-100"
                 >
                     <ExternalLink className="h-3 w-3" />
                     {t.handle}

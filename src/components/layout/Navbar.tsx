@@ -215,7 +215,7 @@ export function Navbar() {
                             isCountryPage ||
                             countriesOpen
                             ? "text-white bg-white/10"
-                            : "text-slate-300 hover:text-white hover:bg-white/5",
+                            : "text-[#cccccc] hover:text-white hover:bg-white/5",
                         )}
                         aria-haspopup="listbox"
                         aria-expanded={countriesOpen}
@@ -271,12 +271,12 @@ export function Navbar() {
                                     "flex items-center gap-3 w-full p-2 rounded-lg text-left text-sm transition-colors",
                                     country?.slug === c.slug
                                       ? "bg-white/10 text-white"
-                                      : "text-slate-300 hover:text-white hover:bg-white/5",
+                                      : "text-[#cccccc] hover:text-white hover:bg-white/5",
                                   )}
                                   role="option"
                                   aria-selected={country?.slug === c.slug}
                                 >
-                                  <span className="inline-flex h-5 w-7 shrink-0 overflow-hidden rounded border border-white/20 bg-[#0a2060]">
+                                  <span className="inline-flex h-5 w-7 shrink-0 overflow-hidden rounded border border-white/20 bg-black">
                                     {failedFlagSlugs.has(c.slug) ? (
                                       <span className="flex h-full w-full items-center justify-center text-[10px] leading-none">
                                         {c.flagEmoji}
@@ -315,7 +315,7 @@ export function Navbar() {
                     target="_blank" rel="noopener noreferrer"
                     className={cn(
                       "px-3 py-2 text-sm font-medium rounded-md transition-colors inline-flex items-center",
-                      "text-slate-300 hover:text-white hover:bg-white/5",
+                      "text-[#cccccc] hover:text-white hover:bg-white/5",
                     )}
                   >
                     <span>{link.label}</span>
@@ -328,7 +328,7 @@ export function Navbar() {
                       "px-3 py-2 text-sm font-medium rounded-md transition-colors inline-flex items-center",
                       pathname === link.to
                         ? "text-white bg-white/10"
-                        : "text-slate-300 hover:text-white hover:bg-white/5",
+                        : "text-[#cccccc] hover:text-white hover:bg-white/5",
                     )}
                   >
                     <span>{link.label}</span>
@@ -348,7 +348,7 @@ export function Navbar() {
                       "px-2 py-1 text-xs font-medium rounded transition-colors",
                       locale === loc
                         ? "text-white bg-white/10"
-                        : "text-slate-400 hover:text-white hover:bg-white/5",
+                        : "text-[#cccccc] hover:text-white hover:bg-white/5",
                     )}
                   >
                     {loc.toUpperCase()}
@@ -364,7 +364,7 @@ export function Navbar() {
                     locale,
                   })
                 }
-                className="hidden min-h-9 items-center gap-2 rounded-md border border-cyan-300/25 bg-cyan-300/[0.06] px-3 py-2 text-sm font-semibold text-cyan-100 transition-colors hover:border-cyan-300/45 hover:bg-cyan-300/[0.12] md:inline-flex"
+                className="hidden min-h-9 items-center gap-2 rounded-md border border-white/20 bg-cyan-300/[0.06] px-3 py-2 text-sm font-semibold text-[#2997ff] transition-colors hover:border-white/20 hover:bg-cyan-300/[0.12] md:inline-flex"
               >
                 <LogIn className="h-4 w-4" />
                 {navLabels.login}
@@ -393,7 +393,7 @@ export function Navbar() {
           {/* Hamburger Button - Mobile Only */}
           <button
             onClick={() => setMenuOpen(!menuOpen)}
-            className="tl-mobile-trigger md:hidden absolute right-4 inline-flex items-center justify-center p-2 rounded-md text-slate-300 hover:text-white hover:bg-white/5 transition-colors"
+            className="tl-mobile-trigger md:hidden absolute right-4 inline-flex items-center justify-center p-2 rounded-md text-[#cccccc] hover:text-white hover:bg-white/5 transition-colors"
             aria-expanded={menuOpen}
             aria-controls="mobile-menu"
             aria-label="Toggle menu"
@@ -412,7 +412,7 @@ export function Navbar() {
         <div className="flex w-full flex-col gap-y-4">
           {/* Language Selection */}
           <div className="space-y-2">
-            <span className="px-2 text-xs font-semibold uppercase tracking-wider text-slate-500">
+            <span className="px-2 text-xs font-semibold uppercase tracking-wider text-[#86868b]">
               {t[locale].nav_language}
             </span>
             <div className="flex gap-2">
@@ -424,7 +424,7 @@ export function Navbar() {
                     "flex-1 min-h-[44px] flex items-center justify-center px-4 py-2 rounded-xl transition-colors font-medium text-sm",
                     locale === loc
                       ? "text-white bg-white/10"
-                      : "text-slate-300 hover:text-white hover:bg-white/5",
+                      : "text-[#cccccc] hover:text-white hover:bg-white/5",
                   )}
                 >
                   {loc === "en"
@@ -441,7 +441,7 @@ export function Navbar() {
 
           {/* Main Navigation */}
           <div className="space-y-1">
-            <span className="px-2 text-xs font-semibold uppercase tracking-wider text-slate-500">
+            <span className="px-2 text-xs font-semibold uppercase tracking-wider text-[#86868b]">
               {t[locale].nav_navigation}
             </span>
             {mainNavLinks.map((link) => {
@@ -452,7 +452,7 @@ export function Navbar() {
                   href={link.to}
                   target="_blank" rel="noopener noreferrer"
                   onClick={() => setMenuOpen(false)}
-                  className="flex items-center min-h-[48px] px-4 py-3 text-base font-medium text-slate-300 hover:text-white hover:bg-white/5 rounded-xl transition-colors"
+                  className="flex items-center min-h-[48px] px-4 py-3 text-base font-medium text-[#cccccc] hover:text-white hover:bg-white/5 rounded-xl transition-colors"
                 >
                   {link.label}
                 </a>
@@ -465,7 +465,7 @@ export function Navbar() {
                     "flex items-center min-h-[48px] px-4 py-3 text-base font-medium rounded-xl transition-colors",
                     pathname === link.to
                       ? "text-white bg-white/10"
-                      : "text-slate-300 hover:text-white hover:bg-white/5",
+                      : "text-[#cccccc] hover:text-white hover:bg-white/5",
                   )}
                 >
                   {link.label}
@@ -476,30 +476,30 @@ export function Navbar() {
 
           {/* Products Section */}
           <div className="space-y-1">
-            <span className="px-2 text-xs font-semibold uppercase tracking-wider text-slate-500">
+            <span className="px-2 text-xs font-semibold uppercase tracking-wider text-[#86868b]">
               {t[locale].nav_duo_package}
             </span>
             <Link
               to={country ? `/${country.slug}/emguarde` : "/emguarde"}
               onClick={() => setMenuOpen(false)}
-              className="flex items-center min-h-[48px] gap-3 px-4 py-3 text-base font-medium text-purple-300 hover:bg-purple-500/10 rounded-xl transition-colors"
+              className="flex items-center min-h-[48px] gap-3 px-4 py-3 text-base font-medium text-[#2997ff] hover:bg-purple-500/10 rounded-xl transition-colors"
             >
-              <IconShield className="text-purple-400 shrink-0" />{" "}
+              <IconShield className="text-[#2997ff] shrink-0" />{" "}
               {navLabels.navProductEmguarde}
             </Link>
             <Link
               to={country ? `/${country.slug}/k8` : "/k8"}
               onClick={() => setMenuOpen(false)}
-              className="flex items-center min-h-[48px] gap-3 px-4 py-3 text-base font-medium text-cyan-300 hover:bg-cyan-500/10 rounded-xl transition-colors"
+              className="flex items-center min-h-[48px] gap-3 px-4 py-3 text-base font-medium text-[#2997ff] hover:bg-cyan-500/10 rounded-xl transition-colors"
             >
-              <IconDroplets className="text-cyan-400 shrink-0" />{" "}
+              <IconDroplets className="text-[#2997ff] shrink-0" />{" "}
               {navLabels.navProductK8}
             </Link>
           </div>
 
           {/* Countries — all with flags */}
           <div className="space-y-2">
-            <span className="px-2 text-xs font-semibold uppercase tracking-wider text-slate-500">
+            <span className="px-2 text-xs font-semibold uppercase tracking-wider text-[#86868b]">
               {t[locale].nav_countries}
             </span>
             <div className="grid grid-cols-2 gap-2 overflow-y-auto max-h-[50vh] min-h-0">
@@ -507,9 +507,9 @@ export function Navbar() {
                 <button
                   key={c.slug}
                   onClick={() => goToCountry(c.slug)}
-                  className="flex items-start min-h-[44px] gap-3 rounded-xl px-2 py-2.5 text-sm text-slate-300 hover:bg-white/5 hover:text-white transition-colors text-left"
+                  className="flex items-start min-h-[44px] gap-3 rounded-xl px-2 py-2.5 text-sm text-[#cccccc] hover:bg-white/5 hover:text-white transition-colors text-left"
                 >
-                  <span className="inline-flex mt-0.5 h-4 w-6 shrink-0 overflow-hidden rounded border border-white/20 bg-[#0a2060]">
+                  <span className="inline-flex mt-0.5 h-4 w-6 shrink-0 overflow-hidden rounded border border-white/20 bg-black">
                     {failedFlagSlugs.has(c.slug) ? (
                       <span className="flex h-full w-full items-center justify-center text-[10px] leading-none">
                         {c.flagEmoji}
@@ -549,7 +549,7 @@ export function Navbar() {
               });
               setMenuOpen(false);
             }}
-            className="flex min-h-[52px] w-full items-center justify-center gap-2 rounded-xl border border-cyan-300/25 bg-cyan-300/[0.07] px-6 py-3 text-base font-semibold text-cyan-100 transition-colors hover:bg-cyan-300/[0.12]"
+            className="flex min-h-[52px] w-full items-center justify-center gap-2 rounded-xl border border-white/20 bg-cyan-300/[0.07] px-6 py-3 text-base font-semibold text-[#2997ff] transition-colors hover:bg-cyan-300/[0.12]"
           >
             <LogIn className="h-5 w-5" />
             {navLabels.login}

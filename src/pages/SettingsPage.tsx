@@ -22,12 +22,12 @@ const MOCK_USER = {
 }
 
 const RANKS = [
-    { name: 'Starter', color: 'text-slate-400', bg: 'bg-slate-500/20' },
+    { name: 'Starter', color: 'text-[#cccccc]', bg: 'bg-slate-500/20' },
     { name: 'Bronze Leader', color: 'text-amber-600', bg: 'bg-amber-600/20' },
-    { name: 'Silver Leader', color: 'text-slate-300', bg: 'bg-slate-400/20' },
+    { name: 'Silver Leader', color: 'text-[#cccccc]', bg: 'bg-slate-400/20' },
     { name: 'Gold Leader', color: 'text-yellow-400', bg: 'bg-yellow-500/20' },
-    { name: 'Platinum Director', color: 'text-cyan-400', bg: 'bg-cyan-500/20' },
-    { name: 'Legacy Master', color: 'text-purple-400', bg: 'bg-purple-500/20' },
+    { name: 'Platinum Director', color: 'text-[#2997ff]', bg: 'bg-cyan-500/20' },
+    { name: 'Legacy Master', color: 'text-[#2997ff]', bg: 'bg-purple-500/20' },
 ]
 
 const NAV_ITEMS = [
@@ -63,7 +63,7 @@ export default function SettingsPage() {
                             My True Legacy{' '}
                             <span className="gradient-text">Dashboard</span>
                         </h1>
-                        <p className="mt-2 text-slate-400">Manage your profile, track your status, and view your legacy progress.</p>
+                        <p className="mt-2 text-[#cccccc]">Manage your profile, track your status, and view your legacy progress.</p>
                     </motion.div>
 
                     <div className="grid grid-cols-1 gap-8 lg:grid-cols-4">
@@ -80,7 +80,7 @@ export default function SettingsPage() {
                                     {MOCK_USER.name.split(' ').map((n) => n[0]).join('')}
                                 </div>
                                 <h2 className="text-lg font-bold text-white">{MOCK_USER.name}</h2>
-                                <p className="text-sm text-slate-400 mb-3">{MOCK_USER.email}</p>
+                                <p className="text-sm text-[#cccccc] mb-3">{MOCK_USER.email}</p>
                                 <span
                                     className={cn(
                                         'inline-block rounded-full px-3 py-1 text-xs font-semibold',
@@ -103,8 +103,8 @@ export default function SettingsPage() {
                                             className={cn(
                                                 'flex w-full items-center gap-3 px-5 py-3.5 text-sm font-medium transition-all',
                                                 activeTab === item.id
-                                                    ? 'bg-gradient-to-r from-blue-600/20 to-cyan-500/20 text-white border-l-2 border-cyan-400'
-                                                    : 'text-slate-400 hover:bg-white/5 hover:text-white'
+                                                    ? 'bg-gradient-to-r from-blue-600/20 to-cyan-500/20 text-white border-l-2 border-white/20'
+                                                    : 'text-[#cccccc] hover:bg-white/5 hover:text-white'
                                             )}
                                         >
                                             <Icon className="h-4 w-4" />
@@ -151,25 +151,25 @@ export default function SettingsPage() {
                                             { label: 'Phone Number', key: 'phone', icon: Phone, type: 'tel' },
                                         ].map(({ label, key, icon: Icon, type }) => (
                                             <div key={key}>
-                                                <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-slate-500">
+                                                <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-[#86868b]">
                                                     {label}
                                                 </label>
                                                 {editing ? (
                                                     <div className="relative">
-                                                        <Icon className="absolute left-3 top-3 h-4 w-4 text-slate-500" />
+                                                        <Icon className="absolute left-3 top-3 h-4 w-4 text-[#86868b]" />
                                                         <input
                                                             type={type}
                                                             value={formData[key as keyof typeof formData]}
                                                             onChange={(e) =>
                                                                 setFormData({ ...formData, [key]: e.target.value })
                                                             }
-                                                            className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 pl-10 text-sm text-white outline-none focus:border-cyan-500/50 focus:ring-1 focus:ring-cyan-500/30"
+                                                            className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 pl-10 text-sm text-white outline-none focus:border-white/20 focus:ring-1 focus:ring-cyan-500/30"
                                                         />
                                                     </div>
                                                 ) : (
                                                     <div className="flex items-center gap-2 rounded-xl border border-white/5 bg-white/3 px-4 py-2.5">
-                                                        <Icon className="h-4 w-4 text-slate-500" />
-                                                        <span className="text-sm text-slate-300">
+                                                        <Icon className="h-4 w-4 text-[#86868b]" />
+                                                        <span className="text-sm text-[#cccccc]">
                                                             {formData[key as keyof typeof formData]}
                                                         </span>
                                                     </div>
@@ -179,19 +179,19 @@ export default function SettingsPage() {
 
                                         {/* Country */}
                                         <div>
-                                            <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-slate-500">
+                                            <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-[#86868b]">
                                                 Country
                                             </label>
                                             {editing ? (
                                                 <div className="relative">
-                                                    <Globe className="absolute left-3 top-3 h-4 w-4 text-slate-500" />
+                                                    <Globe className="absolute left-3 top-3 h-4 w-4 text-[#86868b]" />
                                                     <select
                                                         value={formData.country}
                                                         onChange={(e) => setFormData({ ...formData, country: e.target.value })}
-                                                        className="w-full appearance-none rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 pl-10 text-sm text-white outline-none focus:border-cyan-500/50"
+                                                        className="w-full appearance-none rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 pl-10 text-sm text-white outline-none focus:border-white/20"
                                                     >
                                                         {COUNTRIES.map((c) => (
-                                                            <option key={c.slug} value={c.slug} className="bg-[#0a0e1a]">
+                                                            <option key={c.slug} value={c.slug} className="bg-black">
                                                                 {c.flagEmoji} {c.name}
                                                             </option>
                                                         ))}
@@ -200,7 +200,7 @@ export default function SettingsPage() {
                                             ) : (
                                                 <div className="flex items-center gap-2 rounded-xl border border-white/5 bg-white/3 px-4 py-2.5">
                                                     {countryObj && (
-                                                        <span className="inline-flex h-5 w-7 shrink-0 overflow-hidden rounded border border-white/20 bg-[#0a2060]">
+                                                        <span className="inline-flex h-5 w-7 shrink-0 overflow-hidden rounded border border-white/20 bg-black">
                                                             {failedFlagSlugs.has(countryObj.slug) ? (
                                                                 <span className="flex h-full w-full items-center justify-center text-base leading-none">{countryObj.flagEmoji}</span>
                                                             ) : (
@@ -208,7 +208,7 @@ export default function SettingsPage() {
                                                             )}
                                                         </span>
                                                     )}
-                                                    <span className="text-sm text-slate-300">{countryObj?.name}</span>
+                                                    <span className="text-sm text-[#cccccc]">{countryObj?.name}</span>
                                                 </div>
                                             )}
                                         </div>
@@ -235,7 +235,7 @@ export default function SettingsPage() {
                                             </div>
                                             <div>
                                                 <p className="font-semibold text-white">{MOCK_USER.sponsorName}</p>
-                                                <p className="text-sm text-slate-400">{MOCK_USER.sponsorInstagram}</p>
+                                                <p className="text-sm text-[#cccccc]">{MOCK_USER.sponsorInstagram}</p>
                                             </div>
                                             <Star className="ml-auto h-5 w-5 text-yellow-400" />
                                         </div>
@@ -250,9 +250,9 @@ export default function SettingsPage() {
 
                                     {/* Current Rank */}
                                     <div className="mb-8 rounded-2xl bg-gradient-to-r from-yellow-500/10 to-amber-500/10 border border-yellow-500/20 p-6 text-center">
-                                        <p className="text-xs font-semibold uppercase tracking-wider text-slate-500 mb-2">Current Rank</p>
+                                        <p className="text-xs font-semibold uppercase tracking-wider text-[#86868b] mb-2">Current Rank</p>
                                         <p className="text-4xl font-extrabold text-yellow-400 mb-1">{MOCK_USER.rank}</p>
-                                        <p className="text-sm text-slate-400">Member since {MOCK_USER.joinDate}</p>
+                                        <p className="text-sm text-[#cccccc]">Member since {MOCK_USER.joinDate}</p>
                                     </div>
 
                                     {/* Stats Grid */}
@@ -265,13 +265,13 @@ export default function SettingsPage() {
                                             <div key={stat.label} className="rounded-xl bg-white/5 border border-white/10 p-4 text-center">
                                                 <div className="text-2xl mb-1">{stat.icon}</div>
                                                 <p className="text-xl font-bold text-white">{stat.value}</p>
-                                                <p className="text-xs text-slate-500 mt-0.5">{stat.label}</p>
+                                                <p className="text-xs text-[#86868b] mt-0.5">{stat.label}</p>
                                             </div>
                                         ))}
                                     </div>
 
                                     {/* Rank progression */}
-                                    <h4 className="text-sm font-semibold text-slate-400 uppercase tracking-wider mb-4">Rank Progression</h4>
+                                    <h4 className="text-sm font-semibold text-[#cccccc] uppercase tracking-wider mb-4">Rank Progression</h4>
                                     <div className="space-y-2">
                                         {RANKS.map((rank, i) => (
                                             <div
@@ -295,10 +295,10 @@ export default function SettingsPage() {
                                                 </div>
                                                 <span className={cn('text-sm font-medium', rank.color)}>{rank.name}</span>
                                                 {i === currentRankIndex && (
-                                                    <span className="ml-auto text-xs text-cyan-400 font-semibold">Current</span>
+                                                    <span className="ml-auto text-xs text-[#2997ff] font-semibold">Current</span>
                                                 )}
                                                 {i === currentRankIndex + 1 && (
-                                                    <span className="ml-auto text-xs text-slate-500">Next Goal</span>
+                                                    <span className="ml-auto text-xs text-[#86868b]">Next Goal</span>
                                                 )}
                                             </div>
                                         ))}
@@ -309,7 +309,7 @@ export default function SettingsPage() {
                                             <p className="text-sm font-semibold text-white mb-1">
                                                 🎯 Next milestone: {nextRank.name}
                                             </p>
-                                            <p className="text-xs text-slate-400">
+                                            <p className="text-xs text-[#cccccc]">
                                                 Keep growing your team and volume. Your sponsor will guide you to the next rank.
                                             </p>
                                         </div>
@@ -333,7 +333,7 @@ export default function SettingsPage() {
                                             >
                                                 <div>
                                                     <p className="text-sm font-semibold text-white">{setting.label}</p>
-                                                    <p className="text-xs text-slate-500 mt-0.5">{setting.desc}</p>
+                                                    <p className="text-xs text-[#86868b] mt-0.5">{setting.desc}</p>
                                                 </div>
                                                 <div
                                                     className={cn(

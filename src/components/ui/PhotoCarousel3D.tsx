@@ -340,7 +340,7 @@ export function PhotoCarousel3D() {
                 <button
                     onClick={prev}
                     aria-label="Previous leader"
-                    className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-white/10 bg-white/5 text-slate-300 transition-all hover:bg-white/10 hover:text-white sm:h-11 sm:w-11"
+                    className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-white/10 bg-white/5 text-[#cccccc] transition-all hover:bg-white/10 hover:text-white sm:h-11 sm:w-11"
                 >
                     <ChevronLeft className="h-5 w-5" />
                 </button>
@@ -362,7 +362,7 @@ export function PhotoCarousel3D() {
                 <button
                     onClick={next}
                     aria-label="Next leader"
-                    className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-white/10 bg-white/5 text-slate-300 transition-all hover:bg-white/10 hover:text-white sm:h-11 sm:w-11"
+                    className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-white/10 bg-white/5 text-[#cccccc] transition-all hover:bg-white/10 hover:text-white sm:h-11 sm:w-11"
                 >
                     <ChevronRight className="h-5 w-5" />
                 </button>
@@ -397,11 +397,11 @@ export function PhotoCarousel3D() {
                                 <span>{activeLeader.handle}</span>
                             </a>
                         )}
-                        <Link to={activeLeader.profileUrl} className="text-sm font-semibold text-cyan-300 transition-colors hover:text-white">
+                        <Link to={activeLeader.profileUrl} className="text-sm font-semibold text-[#2997ff] transition-colors hover:text-white">
                             {localized?.viewProfile ?? 'View profile'}
                         </Link>
                     </div>
-                    <div className="text-slate-400 text-sm leading-relaxed text-left space-y-3">
+                    <div className="text-[#cccccc] text-sm leading-relaxed text-left space-y-3">
                         {activeLeader.bio.map((para, idx) => (
                             <p key={idx}>{para}</p>
                         ))}

@@ -94,9 +94,9 @@ export default function HomePage() {
     pt: { start: 'Comece aqui', brought: 'O que trouxe você à True Legacy?', choose: 'Escolha a experiência que combina com seus objetivos. Vamos direcionar você às informações e ao distribuidor certos.', paths: [['Saúde e produtos','Conheça Kangen Water, emGuarde GO, o Duo e a educação de produtos para o seu mercado.'],['Oportunidade de negócio','Explore o modelo de distribuidor independente, mentoria, duplicação e comunidade global.'],['Treinamento e comunidade','Acesse educação de liderança, chamadas semanais, eventos e o sistema de crescimento True Legacy.']], explorePath: 'Explorar este caminho', duoLabel: 'O Duo True Legacy', duoTitle: 'Duas tecnologias.', duoAccent: 'Uma história conectada.', duoBody: 'Conheça o ionizador de água K8 e o emGuarde GO. Explore cada tecnologia, assista às demonstrações e consulte um distribuidor sobre disponibilidade.', watchDuo: 'Assistir ao Duo', connectDistributor: 'Falar com um distribuidor', waterDemo: 'Ver demonstração da água', allLeaders: 'Conheça todos os líderes e distribuidores', community: 'Comunidade em ação', eventsTitle: 'Aprenda ao vivo. Construa em equipe.', eventsBody: 'Participe das chamadas globais em inglês e LATAM em espanhol, conheça a equipe e continue seu desenvolvimento nos eventos True Legacy.', allEvents: 'Ver todos os eventos', globalSchedule: 'Toda quarta-feira · 20h30 Leste / 17h30 Pacífico', eventDetails: 'Ver detalhes', allProducts: 'Explorar todos os produtos e tecnologias', products: 'Produtos', opportunity: 'Oportunidade', connect: 'Conectar' },
   }[locale];
   const homePaths = [
-    { ...{ title: homeLocalized.paths[0][0], body: homeLocalized.paths[0][1] }, to:'/products', icon:Droplets, accent:'text-cyan-300 bg-cyan-400/10' },
+    { ...{ title: homeLocalized.paths[0][0], body: homeLocalized.paths[0][1] }, to:'/products', icon:Droplets, accent:'text-[#2997ff] bg-cyan-400/10' },
     { ...{ title: homeLocalized.paths[1][0], body: homeLocalized.paths[1][1] }, to:'/apply?interest=distributor', icon:BriefcaseBusiness, accent:'text-tl-gold bg-tl-gold/10' },
-    { ...{ title: homeLocalized.paths[2][0], body: homeLocalized.paths[2][1] }, to:'/training', icon:BookOpenCheck, accent:'text-violet-300 bg-violet-400/10' },
+    { ...{ title: homeLocalized.paths[2][0], body: homeLocalized.paths[2][1] }, to:'/training', icon:BookOpenCheck, accent:'text-[#2997ff] bg-violet-400/10' },
   ];
   const [pastHero, setPastHero] = useState(false);
   const [footerInView, setFooterInView] = useState(false);
@@ -255,7 +255,7 @@ export default function HomePage() {
               transition={{ delay: 1.5, duration: 1 }}
               className="absolute bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
             >
-              <span className="text-[9px] uppercase tracking-[0.35em] font-semibold text-slate-500">
+              <span className="text-[9px] uppercase tracking-[0.35em] font-semibold text-[#86868b]">
                 {copy.homeScrollToExplore}
               </span>
               <div className="w-px h-10 bg-gradient-to-b from-slate-500 to-transparent" />
@@ -264,21 +264,21 @@ export default function HomePage() {
         </section>
 
         {/* ===== CHOOSE YOUR PATH ===== */}
-        <section className="relative border-y border-white/5 bg-[#080e24] py-20 md:py-24">
+        <section className="relative border-y border-white/5 bg-black py-20 md:py-24">
           <div className="mx-auto max-w-7xl px-4 sm:px-6">
-            <div className="mx-auto mb-12 max-w-3xl text-center"><p className="mb-3 text-xs font-semibold uppercase tracking-[.3em] text-tl-gold">{homeLocalized.start}</p><h2 className="text-3xl font-black text-white md:text-5xl">{homeLocalized.brought}</h2><p className="mt-4 text-slate-400">{homeLocalized.choose}</p></div>
+            <div className="mx-auto mb-12 max-w-3xl text-center"><p className="mb-3 text-xs font-semibold uppercase tracking-[.3em] text-tl-gold">{homeLocalized.start}</p><h2 className="text-3xl font-black text-white md:text-5xl">{homeLocalized.brought}</h2><p className="mt-4 text-[#cccccc]">{homeLocalized.choose}</p></div>
             <div className="grid gap-5 md:grid-cols-3">
-              {homePaths.map(item=><Link key={item.title} to={item.to} onClick={()=>trackEvent('home_path_click',{path:item.title,locale})} className="group rounded-3xl border border-white/10 bg-white/[.035] p-7 transition hover:-translate-y-1 hover:border-cyan-400/30 hover:bg-white/[.055]"><div className={`grid h-14 w-14 place-items-center rounded-2xl ${item.accent}`}><item.icon className="h-7 w-7"/></div><h3 className="mt-6 text-2xl font-bold text-white">{item.title}</h3><p className="mt-3 min-h-20 text-sm leading-6 text-slate-400">{item.body}</p><span className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-cyan-300">{homeLocalized.explorePath} <ArrowRight className="h-4 w-4 transition group-hover:translate-x-1"/></span></Link>)}
+              {homePaths.map(item=><Link key={item.title} to={item.to} onClick={()=>trackEvent('home_path_click',{path:item.title,locale})} className="group rounded-3xl border border-white/10 bg-white/[.035] p-7 transition hover:-translate-y-1 hover:border-white/20 hover:bg-white/[.055]"><div className={`grid h-14 w-14 place-items-center rounded-2xl ${item.accent}`}><item.icon className="h-7 w-7"/></div><h3 className="mt-6 text-2xl font-bold text-white">{item.title}</h3><p className="mt-3 min-h-20 text-sm leading-6 text-[#cccccc]">{item.body}</p><span className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-[#2997ff]">{homeLocalized.explorePath} <ArrowRight className="h-4 w-4 transition group-hover:translate-x-1"/></span></Link>)}
             </div>
           </div>
         </section>
 
         {/* ===== DUO FEATURE ===== */}
-        <section className="relative overflow-hidden bg-[#060b1e] py-20 md:py-28">
+        <section className="relative overflow-hidden bg-black py-20 md:py-28">
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_75%_20%,rgba(14,165,233,.16),transparent_32%)]"/>
           <div className="relative mx-auto grid max-w-7xl items-center gap-12 px-4 sm:px-6 lg:grid-cols-2">
-            <div><p className="text-xs font-semibold uppercase tracking-[.3em] text-tl-gold">{homeLocalized.duoLabel}</p><h2 className="mt-4 text-4xl font-black text-white md:text-6xl">{homeLocalized.duoTitle}<br/><span className="gradient-text">{homeLocalized.duoAccent}</span></h2><p className="mt-6 max-w-xl text-lg leading-8 text-slate-300">{homeLocalized.duoBody}</p><a href={locale === 'es' ? "https://youtu.be/t1OtNA4p8y4" : "https://youtu.be/lB5fW55DmaI"} target="_blank" rel="noreferrer" onClick={()=>trackEvent('video_click',{video:'duo_demo',locale})} className="mt-8 inline-flex min-h-14 items-center justify-center gap-3 rounded-xl bg-gradient-to-r from-tl-gold to-amber-400 px-7 text-lg font-black text-slate-950 shadow-lg shadow-amber-500/20"><PlayCircle className="h-6 w-6"/>{homeLocalized.watchDuo}</a><br/><Link to="/distributors" className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-tl-gold">{homeLocalized.connectDistributor} <ArrowRight className="h-4 w-4"/></Link></div>
-            <div className="relative mx-auto w-full max-w-xl"><div className="absolute inset-10 rounded-full bg-cyan-400/20 blur-3xl"/><div className="relative grid grid-cols-2 items-end gap-4 rounded-[2rem] border border-white/10 bg-white/[.04] p-5 sm:p-8"><div className="flex h-full flex-col justify-end"><img src="/products/k8.png" alt="K8 flagship Kangen Water ionizer" className="mx-auto max-h-[390px] w-full object-contain drop-shadow-2xl"/><p className="mt-4 text-center font-bold text-white">K8 Flagship</p><a href={locale === 'es' ? "https://youtu.be/6A_UpRmoWWc" : "https://youtu.be/1nkOCId-SfQ"} target="_blank" rel="noreferrer" onClick={()=>trackEvent('video_click',{video:'water_demo',locale})} className="mt-3 inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-cyan-500 px-3 text-center text-xs font-bold text-slate-950 sm:text-sm"><PlayCircle className="h-4 w-4"/>{homeLocalized.waterDemo}</a></div><div className="flex h-full flex-col justify-end"><img src="/products/emguarde-go.png" alt="emGuarde GO product set" className="mx-auto max-h-[310px] w-full object-contain drop-shadow-2xl"/><p className="mt-4 text-center font-bold text-white">emGuarde GO</p><a href={locale === 'es' ? "https://youtu.be/BS4QEM-zXf0" : "https://youtu.be/5wuY1dKjHds"} target="_blank" rel="noreferrer" onClick={()=>trackEvent('video_click',{video:'emguarde_go',locale})} className="mt-3 inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-cyan-300/30 bg-white/5 px-3 text-center text-xs font-bold text-white sm:text-sm"><PlayCircle className="h-4 w-4"/>emGuarde GO</a></div></div></div>
+            <div><p className="text-xs font-semibold uppercase tracking-[.3em] text-tl-gold">{homeLocalized.duoLabel}</p><h2 className="mt-4 text-4xl font-black text-white md:text-6xl">{homeLocalized.duoTitle}<br/><span className="gradient-text">{homeLocalized.duoAccent}</span></h2><p className="mt-6 max-w-xl text-lg leading-8 text-[#cccccc]">{homeLocalized.duoBody}</p><a href={locale === 'es' ? "https://youtu.be/t1OtNA4p8y4" : "https://youtu.be/lB5fW55DmaI"} target="_blank" rel="noreferrer" onClick={()=>trackEvent('video_click',{video:'duo_demo',locale})} className="mt-8 inline-flex min-h-14 items-center justify-center gap-3 rounded-xl bg-gradient-to-r from-tl-gold to-amber-400 px-7 text-lg font-black text-slate-950 shadow-lg shadow-amber-500/20"><PlayCircle className="h-6 w-6"/>{homeLocalized.watchDuo}</a><br/><Link to="/distributors" className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-tl-gold">{homeLocalized.connectDistributor} <ArrowRight className="h-4 w-4"/></Link></div>
+            <div className="relative mx-auto w-full max-w-xl"><div className="absolute inset-10 rounded-full bg-cyan-400/20 blur-3xl"/><div className="relative grid grid-cols-2 items-end gap-4 rounded-[2rem] border border-white/10 bg-white/[.04] p-5 sm:p-8"><div className="flex h-full flex-col justify-end"><img src="/products/k8.png" alt="K8 flagship Kangen Water ionizer" className="mx-auto max-h-[390px] w-full object-contain drop-shadow-2xl"/><p className="mt-4 text-center font-bold text-white">K8 Flagship</p><a href={locale === 'es' ? "https://youtu.be/6A_UpRmoWWc" : "https://youtu.be/1nkOCId-SfQ"} target="_blank" rel="noreferrer" onClick={()=>trackEvent('video_click',{video:'water_demo',locale})} className="mt-3 inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-cyan-500 px-3 text-center text-xs font-bold text-slate-950 sm:text-sm"><PlayCircle className="h-4 w-4"/>{homeLocalized.waterDemo}</a></div><div className="flex h-full flex-col justify-end"><img src="/products/emguarde-go.png" alt="emGuarde GO product set" className="mx-auto max-h-[310px] w-full object-contain drop-shadow-2xl"/><p className="mt-4 text-center font-bold text-white">emGuarde GO</p><a href={locale === 'es' ? "https://youtu.be/BS4QEM-zXf0" : "https://youtu.be/5wuY1dKjHds"} target="_blank" rel="noreferrer" onClick={()=>trackEvent('video_click',{video:'emguarde_go',locale})} className="mt-3 inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-white/20 bg-white/5 px-3 text-center text-xs font-bold text-white sm:text-sm"><PlayCircle className="h-4 w-4"/>emGuarde GO</a></div></div></div>
           </div>
         </section>
 
@@ -301,23 +301,23 @@ export default function HomePage() {
                 <h2 className="text-3xl md:text-5xl text-white mb-4 leading-tight font-display font-bold">
                   {copy.homeLeadersHeadline}
                 </h2>
-                <p className="text-slate-400 text-base leading-relaxed font-light">
+                <p className="text-[#cccccc] text-base leading-relaxed font-light">
                   {copy.homeLeadersTagline}
                 </p>
               </div>
-              <div className="flex items-center justify-center w-14 h-14 rounded-full border border-white/10 bg-tl-blue/10 text-slate-400">
+              <div className="flex items-center justify-center w-14 h-14 rounded-full border border-white/10 bg-tl-blue/10 text-[#cccccc]">
                 <IconGlobe />
               </div>
             </motion.div>
           </div>
 
           <PhotoCarousel3D />
-          <div className="mt-12 text-center"><Link to="/distributors" className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl border border-cyan-400/30 px-6 font-semibold text-cyan-200 hover:bg-cyan-400/10"><Users className="h-5 w-5"/>{homeLocalized.allLeaders}</Link></div>
+          <div className="mt-12 text-center"><Link to="/distributors" className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl border border-white/20 px-6 font-semibold text-[#2997ff] hover:bg-cyan-400/10"><Users className="h-5 w-5"/>{homeLocalized.allLeaders}</Link></div>
         </section>
 
         {/* ===== ORIGINAL TESTIMONIALS ===== */}
-        <section id="testimonials" className="relative border-y border-white/5 bg-[#080e24] py-20 md:py-24">
-          <div className="mx-auto max-w-7xl px-4 sm:px-6"><div className="mx-auto mb-12 max-w-3xl text-center"><p className="text-xs font-semibold uppercase tracking-[.3em] text-tl-gold">{testimonialCopy.label}</p><h2 className="mt-3 text-3xl font-black text-white md:text-5xl">{testimonialCopy.title}</h2><p className="mt-4 text-slate-400">{testimonialCopy.subtitle}</p></div><TestimonialsSplit locale={locale}/><div className="mx-auto mt-2 flex max-w-4xl items-start gap-3 rounded-2xl border border-amber-300/20 bg-amber-300/[.06] p-5 text-left text-xs leading-6 text-amber-50/80"><ShieldCheck className="mt-0.5 h-5 w-5 shrink-0 text-amber-300"/><p><strong className="text-amber-200">{testimonialCopy.disclaimerTitle}</strong> {testimonialCopy.disclaimer}</p></div></div>
+        <section id="testimonials" className="relative border-y border-white/5 bg-black py-20 md:py-24">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6"><div className="mx-auto mb-12 max-w-3xl text-center"><p className="text-xs font-semibold uppercase tracking-[.3em] text-tl-gold">{testimonialCopy.label}</p><h2 className="mt-3 text-3xl font-black text-white md:text-5xl">{testimonialCopy.title}</h2><p className="mt-4 text-[#cccccc]">{testimonialCopy.subtitle}</p></div><TestimonialsSplit locale={locale}/><div className="mx-auto mt-2 flex max-w-4xl items-start gap-3 rounded-2xl border border-amber-300/20 bg-amber-300/[.06] p-5 text-left text-xs leading-6 text-amber-50/80"><ShieldCheck className="mt-0.5 h-5 w-5 shrink-0 text-amber-300"/><p><strong className="text-amber-200">{testimonialCopy.disclaimerTitle}</strong> {testimonialCopy.disclaimer}</p></div></div>
         </section>
 
         {/* ===== JOIN THE TEAM (below leaders) ===== */}
@@ -337,7 +337,7 @@ export default function HomePage() {
               <h2 className="text-3xl md:text-5xl font-display font-bold text-white mb-4">
                 {copy.join_heading}
               </h2>
-              <p className="text-slate-400 text-base md:text-lg max-w-3xl mx-auto leading-relaxed">
+              <p className="text-[#cccccc] text-base md:text-lg max-w-3xl mx-auto leading-relaxed">
                 {copy.join_sub}
               </p>
             </motion.div>
@@ -348,13 +348,13 @@ export default function HomePage() {
                 viewport={{ once: true }}
                 className="glass rounded-2xl border border-white/10 p-8 text-center"
               >
-                <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-cyan-500/20 text-cyan-400 mb-5">
+                <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-cyan-500/20 text-[#2997ff] mb-5">
                   <IconGlobeLarge />
                 </div>
                 <h3 className="text-xl font-bold text-white mb-3">
                   {copy.join_global}
                 </h3>
-                <p className="text-slate-400 text-sm md:text-base leading-relaxed">
+                <p className="text-[#cccccc] text-sm md:text-base leading-relaxed">
                   {copy.join_global_body}
                 </p>
               </motion.div>
@@ -365,13 +365,13 @@ export default function HomePage() {
                 transition={{ delay: 0.1 }}
                 className="glass rounded-2xl border border-white/10 p-8 text-center"
               >
-                <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-purple-500/20 text-purple-400 mb-5">
+                <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-purple-500/20 text-[#2997ff] mb-5">
                   <IconHeart />
                 </div>
                 <h3 className="text-xl font-bold text-white mb-3">
                   {copy.join_healing}
                 </h3>
-                <p className="text-slate-400 text-sm md:text-base leading-relaxed">
+                <p className="text-[#cccccc] text-sm md:text-base leading-relaxed">
                   {copy.join_healing_body}
                 </p>
               </motion.div>
@@ -388,7 +388,7 @@ export default function HomePage() {
                 <h3 className="text-xl font-bold text-white mb-3">
                   {copy.join_income}
                 </h3>
-                <p className="text-slate-400 text-sm md:text-base leading-relaxed">
+                <p className="text-[#cccccc] text-sm md:text-base leading-relaxed">
                   {copy.join_income_body}
                 </p>
               </motion.div>
@@ -417,8 +417,8 @@ export default function HomePage() {
         </section>
 
         {/* ===== COMMUNITY & EVENTS ===== */}
-        <section className="relative border-t border-white/5 bg-[#080e24] px-3 py-20 md:px-12 md:py-24 lg:px-24">
-          <div className="mx-auto max-w-6xl px-4 sm:px-6"><div className="mb-10 flex flex-col gap-5 md:flex-row md:items-end md:justify-between"><div className="max-w-2xl"><p className="text-xs font-semibold uppercase tracking-[.3em] text-tl-gold">{homeLocalized.community}</p><h2 className="mt-3 text-3xl font-black text-white md:text-5xl">{homeLocalized.eventsTitle}</h2><p className="mt-4 leading-7 text-slate-400">{homeLocalized.eventsBody}</p></div><Link to="/events" className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-cyan-500 px-6 font-bold text-slate-950"><CalendarDays className="h-5 w-5"/>{homeLocalized.allEvents}</Link></div><div className="mx-auto grid max-w-4xl gap-5 md:grid-cols-2"><Link to="/events/global" className="group overflow-hidden rounded-3xl border border-white/10 bg-white/[.03]"><div className="flex h-[350px] items-center justify-center overflow-hidden bg-black/20 p-3 sm:h-[430px]"><img src="/assets/mehdicohen-global-weekly.png" alt="Unlock Your True Legacy global English call flyer" className="h-full w-full object-contain object-top transition duration-500 group-hover:scale-[1.015]"/></div><div className="p-5"><p className="text-xs font-bold uppercase tracking-wider text-cyan-300">Global · English</p><h3 className="mt-2 text-xl font-bold text-white">Unlock Your True Legacy</h3><p className="mt-2 text-sm text-slate-400">{homeLocalized.globalSchedule}</p><span className="mt-4 inline-flex items-center gap-2 text-sm text-cyan-200">{homeLocalized.eventDetails} <ArrowRight className="h-4 w-4"/></span></div></Link><Link to="/events/latam" className="group overflow-hidden rounded-3xl border border-white/10 bg-white/[.03]"><div className="flex h-[350px] items-center justify-center overflow-hidden bg-black/20 p-3 sm:h-[430px]"><img src="/assets/mehdicohen-latam-weekly.png" alt="La Revolución del Biohacking Llega a LATAM Spanish call flyer" className="h-full w-full object-contain object-top transition duration-500 group-hover:scale-[1.015]"/></div><div className="p-5"><p className="text-xs font-bold uppercase tracking-wider text-tl-gold">LATAM · Español</p><h3 className="mt-2 text-xl font-bold text-white">La Revolución del Biohacking Llega a LATAM</h3><p className="mt-2 text-sm text-slate-400">Cada jueves · 7:00 PM Colombia / 8:00 PM Eastern</p><span className="mt-4 inline-flex items-center gap-2 text-sm text-cyan-200">{homeLocalized.eventDetails} <ArrowRight className="h-4 w-4"/></span></div></Link></div></div>
+        <section className="relative border-t border-white/5 bg-black px-3 py-20 md:px-12 md:py-24 lg:px-24">
+          <div className="mx-auto max-w-6xl px-4 sm:px-6"><div className="mb-10 flex flex-col gap-5 md:flex-row md:items-end md:justify-between"><div className="max-w-2xl"><p className="text-xs font-semibold uppercase tracking-[.3em] text-tl-gold">{homeLocalized.community}</p><h2 className="mt-3 text-3xl font-black text-white md:text-5xl">{homeLocalized.eventsTitle}</h2><p className="mt-4 leading-7 text-[#cccccc]">{homeLocalized.eventsBody}</p></div><Link to="/events" className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-cyan-500 px-6 font-bold text-slate-950"><CalendarDays className="h-5 w-5"/>{homeLocalized.allEvents}</Link></div><div className="mx-auto grid max-w-4xl gap-5 md:grid-cols-2"><Link to="/events/global" className="group overflow-hidden rounded-3xl border border-white/10 bg-white/[.03]"><div className="flex h-[350px] items-center justify-center overflow-hidden bg-black/20 p-3 sm:h-[430px]"><img src="/assets/mehdicohen-global-weekly.png" alt="Unlock Your True Legacy global English call flyer" className="h-full w-full object-contain object-top transition duration-500 group-hover:scale-[1.015]"/></div><div className="p-5"><p className="text-xs font-bold uppercase tracking-wider text-[#2997ff]">Global · English</p><h3 className="mt-2 text-xl font-bold text-white">Unlock Your True Legacy</h3><p className="mt-2 text-sm text-[#cccccc]">{homeLocalized.globalSchedule}</p><span className="mt-4 inline-flex items-center gap-2 text-sm text-[#2997ff]">{homeLocalized.eventDetails} <ArrowRight className="h-4 w-4"/></span></div></Link><Link to="/events/latam" className="group overflow-hidden rounded-3xl border border-white/10 bg-white/[.03]"><div className="flex h-[350px] items-center justify-center overflow-hidden bg-black/20 p-3 sm:h-[430px]"><img src="/assets/mehdicohen-latam-weekly.png" alt="La Revolución del Biohacking Llega a LATAM Spanish call flyer" className="h-full w-full object-contain object-top transition duration-500 group-hover:scale-[1.015]"/></div><div className="p-5"><p className="text-xs font-bold uppercase tracking-wider text-tl-gold">LATAM · Español</p><h3 className="mt-2 text-xl font-bold text-white">La Revolución del Biohacking Llega a LATAM</h3><p className="mt-2 text-sm text-[#cccccc]">Cada jueves · 7:00 PM Colombia / 8:00 PM Eastern</p><span className="mt-4 inline-flex items-center gap-2 text-sm text-[#2997ff]">{homeLocalized.eventDetails} <ArrowRight className="h-4 w-4"/></span></div></Link></div></div>
         </section>
 
         {/* ===== TRAINING LIBRARY TEASER ===== */}
@@ -431,13 +431,13 @@ export default function HomePage() {
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              className="glass rounded-2xl border border-cyan-500/25 p-8 md:p-12 text-center"
+              className="glass rounded-2xl border border-white/20 p-8 md:p-12 text-center"
               style={{
                 background:
                   "linear-gradient(135deg, rgba(6,182,212,0.05), rgba(15,23,42,0.8))",
               }}
             >
-              <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-cyan-500/20 text-cyan-400 mb-6">
+              <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-cyan-500/20 text-[#2997ff] mb-6">
                 <svg
                   width="32"
                   height="32"
@@ -462,7 +462,7 @@ export default function HomePage() {
                       ? "Biblioteca de Treinamento"
                       : "Training Library"}
               </h3>
-              <p className="text-slate-400 text-base md:text-lg max-w-2xl mx-auto leading-relaxed mb-8">
+              <p className="text-[#cccccc] text-base md:text-lg max-w-2xl mx-auto leading-relaxed mb-8">
                 {locale === "es"
                   ? "Accede a guías exclusivas, entrenamientos de productos y recursos para distribuidores que te ayudarán a construir tu negocio True Legacy."
                   : locale === "fr"
@@ -490,7 +490,7 @@ export default function HomePage() {
                 </Link>
                 <Link
                   to="/training#pdf-guides"
-                  className="inline-flex items-center justify-center min-h-[44px] px-6 py-3 rounded-md font-semibold text-cyan-300 border border-cyan-500/30 transition-all hover:bg-cyan-500/10 hover:-translate-y-0.5"
+                  className="inline-flex items-center justify-center min-h-[44px] px-6 py-3 rounded-md font-semibold text-[#2997ff] border border-white/20 transition-all hover:bg-cyan-500/10 hover:-translate-y-0.5"
                 >
                   {locale === "es"
                     ? "Guías de Productos"
@@ -515,7 +515,7 @@ export default function HomePage() {
           ]}
           variant="homeAll"
         />
-        <section className="bg-[#060b1e] px-4 pb-24 text-center"><Link to="/products" className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl border border-white/15 px-7 font-bold text-white hover:bg-white/5">{homeLocalized.allProducts} <ArrowRight className="h-4 w-4"/></Link></section>
+        <section className="bg-black px-4 pb-24 text-center"><Link to="/products" className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl border border-white/15 px-7 font-bold text-white hover:bg-white/5">{homeLocalized.allProducts} <ArrowRight className="h-4 w-4"/></Link></section>
       </main>
 
       {/* Sticky mobile CTA — visible after hero, hidden at footer */}
@@ -528,7 +528,7 @@ export default function HomePage() {
             "linear-gradient(to top, rgba(6,11,30,0.98), transparent)",
         }}
       >
-        <div className="grid grid-cols-3 gap-2 rounded-2xl border border-white/10 bg-[#081027]/95 p-2 shadow-2xl backdrop-blur"><Link to="/products" className="flex min-h-12 items-center justify-center rounded-xl bg-cyan-500 px-2 text-center text-xs font-bold text-slate-950">{homeLocalized.products}</Link><Link to="/apply?interest=distributor" className="flex min-h-12 items-center justify-center rounded-xl bg-tl-gold px-2 text-center text-xs font-bold text-slate-950">{homeLocalized.opportunity}</Link><Link to="/distributors" className="flex min-h-12 items-center justify-center rounded-xl border border-white/15 px-2 text-center text-xs font-bold text-white">{homeLocalized.connect}</Link></div>
+        <div className="grid grid-cols-3 gap-2 rounded-2xl border border-white/10 bg-black/95 p-2 shadow-2xl backdrop-blur"><Link to="/products" className="flex min-h-12 items-center justify-center rounded-xl bg-cyan-500 px-2 text-center text-xs font-bold text-slate-950">{homeLocalized.products}</Link><Link to="/apply?interest=distributor" className="flex min-h-12 items-center justify-center rounded-xl bg-tl-gold px-2 text-center text-xs font-bold text-slate-950">{homeLocalized.opportunity}</Link><Link to="/distributors" className="flex min-h-12 items-center justify-center rounded-xl border border-white/15 px-2 text-center text-xs font-bold text-white">{homeLocalized.connect}</Link></div>
       </div>
 
       <div ref={footerRef}>

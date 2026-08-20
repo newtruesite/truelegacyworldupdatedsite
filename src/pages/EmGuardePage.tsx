@@ -80,7 +80,7 @@ export default function EmGuardePage() {
   const [heroImgError, setHeroImgError] = useState(false);
 
   return (
-    <div className="page-wrapper bg-[#070b16]">
+    <div className="page-wrapper bg-black">
       <SEO
         title={
           locale === "es"
@@ -110,7 +110,7 @@ export default function EmGuardePage() {
             transition={{ duration: 0.7 }}
             className="text-center mb-16 pt-8"
           >
-            <span className="inline-block mb-4 rounded-full border border-purple-500/30 bg-purple-500/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-widest text-purple-400">
+            <span className="inline-block mb-4 rounded-full border border-purple-500/30 bg-purple-500/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-widest text-[#2997ff]">
               {goCopy.badge}
             </span>
             <h1 className="page-hero-title mb-6">
@@ -120,7 +120,7 @@ export default function EmGuardePage() {
                 {goCopy.accent}
               </span>
             </h1>
-            <p className="mx-auto max-w-3xl text-lg md:text-xl text-slate-400 leading-relaxed mb-8">
+            <p className="mx-auto max-w-3xl text-lg md:text-xl text-[#cccccc] leading-relaxed mb-8">
               {goCopy.sub}
             </p>
 
@@ -167,7 +167,7 @@ export default function EmGuardePage() {
                 ) : (
                   <div className="flex flex-col items-center justify-center gap-3 py-8">
                     <div className="w-24 h-24 rounded-2xl bg-purple-500/20 flex items-center justify-center">
-                      <Shield className="w-12 h-12 text-purple-400" />
+                      <Shield className="w-12 h-12 text-[#2997ff]" />
                     </div>
                     <span className="text-white font-bold text-xl">
                       emGuarde GO™
@@ -177,7 +177,7 @@ export default function EmGuardePage() {
                 <h3 className="text-2xl font-bold text-white mb-2">
                   emGuarde GO™
                 </h3>
-                <p className="text-slate-400 text-sm">
+                <p className="text-[#cccccc] text-sm">
                   {goCopy.detail}
                 </p>
               </div>
@@ -198,7 +198,7 @@ export default function EmGuardePage() {
                   className="flex items-center gap-4 glass rounded-xl border border-white/10 p-4"
                 >
                   <div className="w-10 h-10 rounded-xl bg-purple-500/20 flex items-center justify-center shrink-0">
-                    <Icon className="w-5 h-5 text-purple-400" />
+                    <Icon className="w-5 h-5 text-[#2997ff]" />
                   </div>
                   <span className="text-slate-200 font-medium">{text}</span>
                 </div>
@@ -216,7 +216,7 @@ export default function EmGuardePage() {
             <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">
               {copy.emguarde.statsTitle}
             </h2>
-            <p className="text-slate-400 text-lg leading-relaxed mb-10">
+            <p className="text-[#cccccc] text-lg leading-relaxed mb-10">
               {copy.emguarde.statsSub}
             </p>
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
@@ -228,13 +228,13 @@ export default function EmGuardePage() {
                   <div className="text-3xl md:text-4xl font-bold text-orange-400 mb-2">
                     {pct}
                   </div>
-                  <div className="text-sm text-slate-400">
+                  <div className="text-sm text-[#cccccc]">
                     {isSpanish ? labelEs : labelEn}
                   </div>
                 </div>
               ))}
             </div>
-            <p className="text-xs text-slate-600 mt-6 text-center">
+            <p className="text-xs text-[#86868b] mt-6 text-center">
               {isSpanish
                 ? "Fuente: EMF Safety Network – Estudio 2019"
                 : "Source: EMF Safety Network – 2019 Study"}
@@ -274,7 +274,7 @@ export default function EmGuardePage() {
               to={countrySlug ? `/${countrySlug}/training` : "/training"}
               className="flex items-center justify-center gap-2 rounded-2xl border border-white/10 bg-white/5 px-6 py-4 text-sm font-semibold text-white hover:bg-white/10 transition-all min-h-[48px] hover:scale-[1.02]"
             >
-              <Download className="w-4 h-4 text-cyan-400" />{" "}
+              <Download className="w-4 h-4 text-[#2997ff]" />{" "}
               {copy.emguarde.downloadPdf}
             </Link>
             <Link
@@ -316,7 +316,7 @@ export default function EmGuardePage() {
           <div className="text-center pb-16">
             <Link
               to={`/${countrySlug}`}
-              className="inline-flex items-center gap-2 text-sm text-slate-400 hover:text-white transition-colors"
+              className="inline-flex items-center gap-2 text-sm text-[#cccccc] hover:text-white transition-colors"
             >
               {copy.emguarde.backLink} {country.name}
             </Link>

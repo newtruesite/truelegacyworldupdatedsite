@@ -157,7 +157,7 @@ export function RegionMap() {
       <div className="absolute bottom-3 left-3 flex flex-col gap-1">
         <div className="flex items-center gap-2 rounded-lg bg-black/60 px-3 py-1.5 backdrop-blur-sm">
           <div className="h-2 w-2 rounded-full bg-amber-500 animate-pulse" />
-          <span className="text-xs text-slate-300">Select a Region</span>
+          <span className="text-xs text-[#cccccc]">Select a Region</span>
         </div>
       </div>
     </div>

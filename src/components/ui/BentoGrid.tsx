@@ -19,7 +19,7 @@ const KANGEN_ITEMS = [
         title: 'Powerful Antioxidant',
         description:
             'With a negative ORP (Oxidation Reduction Potential), Kangen water neutralizes harmful free radicals — the root cause of aging and disease.',
-        color: 'text-cyan-400',
+        color: 'text-[#2997ff]',
         bg: 'bg-cyan-400/10',
         span: 'col-span-1',
     },
@@ -37,7 +37,7 @@ const KANGEN_ITEMS = [
         title: 'Certified by 6,500 Hospitals',
         description:
             "Enagic's Kangen machines are the only water ionizers certified as medical devices by the Japanese Ministry of Health.",
-        color: 'text-purple-400',
+        color: 'text-[#2997ff]',
         bg: 'bg-purple-400/10',
         span: 'col-span-2',
     },
@@ -113,7 +113,7 @@ function BentoItem({ icon: Icon, title, description, color, bg, span = 'col-span
                 <Icon className={cn('h-6 w-6', color)} />
             </div>
             <h3 className="mb-2 text-base font-semibold text-white">{title}</h3>
-            <p className="text-sm text-slate-400 leading-relaxed">{description}</p>
+            <p className="text-sm text-[#cccccc] leading-relaxed">{description}</p>
         </motion.div>
     )
 }
@@ -139,7 +139,7 @@ export function BentoGrid() {
                         The Water That{' '}
                         <span className="gradient-text">Everyday Product Education</span>
                     </h2>
-                    <p className="mb-10 max-w-2xl text-slate-400 text-lg">
+                    <p className="mb-10 max-w-2xl text-[#cccccc] text-lg">
                         Not all water is the same. Medical-grade Kangen water is restructured at a molecular level to deliver antioxidants, alkalinity, and deep hydration your body has been craving.
                     </p>
                     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -176,7 +176,7 @@ export function BentoGrid() {
                         Shield Your Life from{' '}
                         <span className="gradient-text">Invisible Radiation</span>
                     </h2>
-                    <p className="mb-10 max-w-2xl text-slate-400 text-lg">
+                    <p className="mb-10 max-w-2xl text-[#cccccc] text-lg">
                         Every device around you emits electromagnetic noise. emGuarde's patented technology harmonizes those frequencies — protecting your family 24/7 without blocking your WiFi.
                     </p>
                     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">

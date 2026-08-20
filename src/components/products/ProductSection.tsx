@@ -124,14 +124,14 @@ export function ProductSection({
           <h2 className="text-3xl md:text-4xl font-bold text-white font-display">
             {subtitle}
           </h2>
-          <p className="text-slate-400 max-w-3xl mx-auto mt-4 text-base leading-relaxed">
+          <p className="text-[#cccccc] max-w-3xl mx-auto mt-4 text-base leading-relaxed">
             {productsIntro}
           </p>
           {/* Duo package: K8 + emGuarde — recommended combo (hidden for homeAll) */}
           {variant !== "homeAll" && (
-            <div id="duo-package" className="mt-8 mx-auto grid max-w-4xl items-center gap-6 overflow-hidden rounded-3xl border border-cyan-500/25 bg-gradient-to-br from-cyan-500/[0.08] to-purple-500/[0.08] p-5 text-center md:grid-cols-[0.9fr_1.1fr] md:p-6 md:text-left">
+            <div id="duo-package" className="mt-8 mx-auto grid max-w-4xl items-center gap-6 overflow-hidden rounded-3xl border border-white/20 bg-gradient-to-br from-cyan-500/[0.08] to-purple-500/[0.08] p-5 text-center md:grid-cols-[0.9fr_1.1fr] md:p-6 md:text-left">
               <div>
-              <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-cyan-300">
+              <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-[#2997ff]">
                 {locale === "es"
                   ? "Recomendado"
                   : locale === "fr"
@@ -149,7 +149,7 @@ export function ProductSection({
                       ? "Sistema Duo: Kangen K8 + emGuarde"
                       : "Duo package: Kangen K8 + emGuarde"}
               </h3>
-              <p className="mb-5 text-sm leading-6 text-slate-300">
+              <p className="mb-5 text-sm leading-6 text-[#cccccc]">
                 {locale === "es"
                   ? "La mejor agua alcalina en casa con el K8 y protección EMF 24/7 con emGuarde. El combo que más recomendamos para salud y negocio."
                   : locale === "fr"
@@ -165,7 +165,7 @@ export function ProductSection({
                 {contactLabel}
               </Link>
               </div>
-              <div className="grid grid-cols-2 items-end gap-2 rounded-2xl border border-white/10 bg-[#071127]/75 px-3 py-4 sm:px-5">
+              <div className="grid grid-cols-2 items-end gap-2 rounded-2xl border border-white/10 bg-black/75 px-3 py-4 sm:px-5">
                 <div>
                   <img src="/products/k8.png" alt="K8 flagship Kangen Water ionizer" className="mx-auto h-28 w-full origin-bottom scale-[0.78] object-contain drop-shadow-2xl sm:h-36" />
                   <p className="mt-1 text-center text-xs font-bold text-white sm:text-sm">K8 Flagship</p>
@@ -228,11 +228,11 @@ export function ProductSection({
                 <h3 className={`font-bold text-white mb-2 text-center md:text-left ${variant === "country" ? "text-lg" : "text-xl"}`}>
                   {pCopy?.label ?? product.name}
                 </h3>
-                <p className="text-slate-400 text-sm leading-relaxed mb-4 text-center md:text-left">
+                <p className="text-[#cccccc] text-sm leading-relaxed mb-4 text-center md:text-left">
                   {pCopy?.short}
                 </p>
                 {product.availability && (
-                  <p className="mb-4 rounded-xl border border-cyan-500/20 bg-cyan-500/5 px-3 py-2 text-center text-xs leading-relaxed text-cyan-100 md:text-left">
+                  <p className="mb-4 rounded-xl border border-white/20 bg-cyan-500/5 px-3 py-2 text-center text-xs leading-relaxed text-[#2997ff] md:text-left">
                     <span className="font-semibold">
                       {locale === "es" ? "Disponibilidad: " : locale === "fr" ? "Disponibilité : " : locale === "pt" ? "Disponibilidade: " : "Availability: "}
                     </span>
@@ -259,7 +259,7 @@ export function ProductSection({
                   {product.pdfGuideUrl && (
                     <Link
                       to={country ? `/${country.slug}/training` : "/training"}
-                      className="inline-flex items-center gap-1.5 rounded-md border border-cyan-500/30 px-4 py-2 text-xs font-semibold text-cyan-300 hover:bg-cyan-500/10 hover:-translate-y-0.5 hover:shadow-md transition-all duration-150"
+                      className="inline-flex items-center gap-1.5 rounded-md border border-white/20 px-4 py-2 text-xs font-semibold text-[#2997ff] hover:bg-cyan-500/10 hover:-translate-y-0.5 hover:shadow-md transition-all duration-150"
                     >
                       {pCopy?.downloadGuide ??
                         (locale === "es"
@@ -287,7 +287,7 @@ export function ProductSection({
             <button
               type="button"
               onClick={() => setShowAllProducts((current) => !current)}
-              className="inline-flex min-h-12 items-center justify-center rounded-xl border border-cyan-400/30 bg-cyan-400/[0.06] px-7 text-sm font-bold text-cyan-200 transition-all hover:bg-cyan-400/[0.12]"
+              className="inline-flex min-h-12 items-center justify-center rounded-xl border border-white/20 bg-cyan-400/[0.06] px-7 text-sm font-bold text-[#2997ff] transition-all hover:bg-cyan-400/[0.12]"
             >
               {showAllProducts
                 ? locale === "es"

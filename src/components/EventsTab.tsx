@@ -20,7 +20,7 @@ export function EventsTab({ locale, countrySlug }: Props) {
 
   if (events.length === 0) {
     return (
-      <div className="text-center text-slate-400 py-12">
+      <div className="text-center text-[#cccccc] py-12">
         {isSpanish
           ? "No hay eventos próximos para tu región."
           : isFrench
@@ -99,8 +99,8 @@ export function EventsTab({ locale, countrySlug }: Props) {
               {/* Timezone grid */}
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-5 p-4 rounded-xl bg-white/5 border border-white/5">
                 {timezones.map((tz) => (
-                  <div key={tz.region} className="text-sm text-slate-300">
-                    <span className="block text-xs font-semibold uppercase tracking-wide text-slate-500 mb-0.5">
+                  <div key={tz.region} className="text-sm text-[#cccccc]">
+                    <span className="block text-xs font-semibold uppercase tracking-wide text-[#86868b] mb-0.5">
                       {translateEventTimezoneRegion(tz.region, locale)}
                     </span>
                     <span className="font-bold text-white">{translateEventTimezoneTime(tz.time, locale)}</span>
@@ -109,7 +109,7 @@ export function EventsTab({ locale, countrySlug }: Props) {
               </div>
 
               {/* Description */}
-              <div className="whitespace-pre-line text-slate-300 text-sm leading-relaxed mb-6">
+              <div className="whitespace-pre-line text-[#cccccc] text-sm leading-relaxed mb-6">
                 {desc}
               </div>
 

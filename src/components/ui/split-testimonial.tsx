@@ -377,30 +377,30 @@ export function TestimonialsSplit({
     <div className="mx-auto w-full max-w-6xl px-3 pb-16 sm:px-6">
       <div className="grid items-center gap-10 lg:grid-cols-[1fr_420px]">
         <div className="order-2 lg:order-1">
-          <p className="text-xs font-bold uppercase tracking-[.28em] text-cyan-300">{ui.story} {activeIndex + 1} {ui.of} {list.length} · {ui.shared}</p>
-          <AnimatePresence mode="wait"><motion.div key={active.id} initial={{opacity:0,y:16}} animate={{opacity:1,y:0}} exit={{opacity:0,y:-16}} className="mt-5 overflow-hidden rounded-[2rem] border border-white/10 bg-[linear-gradient(145deg,rgba(14,165,233,.12),rgba(255,255,255,.03))] p-5 sm:p-7"><div className="grid items-center gap-6 sm:grid-cols-[190px_1fr]"><div className="relative mx-auto aspect-[4/5] w-full max-w-[210px] overflow-hidden rounded-[1.5rem] border border-white/15 bg-slate-900"><img src={active.image ?? active.photo} alt={active.name} className="h-full w-full object-cover object-top"/><div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/90 to-transparent p-4 pt-14"><p className="font-bold text-white">{active.name}</p><p className="text-xs text-cyan-200">{roleLabel}</p></div></div><div><div className="inline-flex rounded-full border border-emerald-400/20 bg-emerald-400/10 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-emerald-300">{ui.original}</div><h3 className="mt-4 text-3xl font-black text-white">{ui.real}<br/><span className="text-cyan-300">{ui.personal}</span></h3><p className="mt-4 text-sm leading-6 text-slate-400">{ui.guide}</p><a href={active.instagramUrl ?? active.instagram ?? igUrl(active.company)} target="_blank" rel="noreferrer" className="mt-5 inline-flex text-sm font-bold text-cyan-300 hover:text-cyan-200">{active.handle ?? igHandle(active.company)} {active.verified ? '✓' : ''}</a></div></div></motion.div></AnimatePresence>
+          <p className="text-xs font-bold uppercase tracking-[.28em] text-[#2997ff]">{ui.story} {activeIndex + 1} {ui.of} {list.length} · {ui.shared}</p>
+          <AnimatePresence mode="wait"><motion.div key={active.id} initial={{opacity:0,y:16}} animate={{opacity:1,y:0}} exit={{opacity:0,y:-16}} className="mt-5 overflow-hidden rounded-[2rem] border border-white/10 bg-[linear-gradient(145deg,rgba(14,165,233,.12),rgba(255,255,255,.03))] p-5 sm:p-7"><div className="grid items-center gap-6 sm:grid-cols-[190px_1fr]"><div className="relative mx-auto aspect-[4/5] w-full max-w-[210px] overflow-hidden rounded-[1.5rem] border border-white/15 bg-slate-900"><img src={active.image ?? active.photo} alt={active.name} className="h-full w-full object-cover object-top"/><div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/90 to-transparent p-4 pt-14"><p className="font-bold text-white">{active.name}</p><p className="text-xs text-[#2997ff]">{roleLabel}</p></div></div><div><div className="inline-flex rounded-full border border-emerald-400/20 bg-emerald-400/10 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-[#cccccc]">{ui.original}</div><h3 className="mt-4 text-3xl font-black text-white">{ui.real}<br/><span className="text-[#2997ff]">{ui.personal}</span></h3><p className="mt-4 text-sm leading-6 text-[#cccccc]">{ui.guide}</p><a href={active.instagramUrl ?? active.instagram ?? igUrl(active.company)} target="_blank" rel="noreferrer" className="mt-5 inline-flex text-sm font-bold text-[#2997ff] hover:text-[#2997ff]">{active.handle ?? igHandle(active.company)} {active.verified ? '✓' : ''}</a></div></div></motion.div></AnimatePresence>
           {testimonialControls(false)}
         </div>
 
         <div className="order-1 mx-auto w-full max-w-[390px] lg:order-2" onMouseEnter={()=>setIsHovering(true)} onMouseLeave={()=>setIsHovering(false)}>
           <div className="relative rounded-[3rem] border-[8px] border-slate-800 bg-black p-1 shadow-[0_35px_90px_rgba(0,0,0,.6),0_0_60px_rgba(14,165,233,.12)]">
             <div className="absolute left-1/2 top-3 z-20 h-6 w-28 -translate-x-1/2 rounded-full bg-black"/>
-            <div className="overflow-hidden rounded-[2.4rem] bg-[#0b0b0d]">
+            <div className="overflow-hidden rounded-[2.4rem] bg-black">
               <div className="flex h-11 items-center justify-between bg-[#17171a]/95 px-6 pt-2 text-[11px] font-bold text-white backdrop-blur"><span>9:41</span><span className="tracking-widest text-white/80">● ◉ ▰</span></div>
               <div className="border-b border-white/10 bg-[#17171a]/95 px-4 pb-3 pt-2 text-center backdrop-blur">
-                <AnimatePresence mode="wait"><motion.div key={active.id} initial={{opacity:0,y:-6}} animate={{opacity:1,y:0}} exit={{opacity:0,y:6}} className="flex flex-col items-center"><img src={active.image ?? active.photo} alt="" className="h-12 w-12 rounded-full object-cover object-top ring-2 ring-white/20 shadow"/><p className="mt-1 text-sm font-semibold text-white">{active.name}</p><p className="text-[10px] text-slate-400">True Legacy community ›</p></motion.div></AnimatePresence>
+                <AnimatePresence mode="wait"><motion.div key={active.id} initial={{opacity:0,y:-6}} animate={{opacity:1,y:0}} exit={{opacity:0,y:6}} className="flex flex-col items-center"><img src={active.image ?? active.photo} alt="" className="h-12 w-12 rounded-full object-cover object-top ring-2 ring-white/20 shadow"/><p className="mt-1 text-sm font-semibold text-white">{active.name}</p><p className="text-[10px] text-[#cccccc]">True Legacy community ›</p></motion.div></AnimatePresence>
               </div>
               <div className="relative h-[510px] overflow-hidden bg-[linear-gradient(180deg,#0b0b0d,#111117)]">
                 <div ref={conversationRef} className="h-full overflow-y-auto px-3 pb-20 pt-5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-                  <div className="mb-4 text-center text-[10px] font-medium uppercase tracking-wider text-slate-500">{ui.today}</div>
+                  <div className="mb-4 text-center text-[10px] font-medium uppercase tracking-wider text-[#86868b]">{ui.today}</div>
                   <AnimatePresence mode="wait"><motion.div key={active.id} initial={{opacity:0,x:25}} animate={{opacity:1,x:0}} exit={{opacity:0,x:-25}} transition={{duration:.35}} className="space-y-2.5">
                     <div className="flex justify-start"><div className="max-w-[82%] rounded-[1.25rem] rounded-bl-md bg-[#2c2c2e] px-4 py-2.5 text-[13px] leading-[1.45] text-white shadow-sm">{ui.hello}</div></div>
                     {messageParts.map((part,index)=><motion.div key={`${active.id}-${index}`} initial={{opacity:0,y:10}} animate={{opacity:1,y:0}} transition={{delay:.12+index*.1}} className="flex justify-end"><div className="max-w-[88%] rounded-[1.25rem] rounded-br-md bg-[#0a84ff] px-4 py-2.5 text-[13px] leading-[1.45] text-white shadow-sm">{part}</div></motion.div>)}
-                    <p className="pr-1 text-right text-[10px] text-slate-400">{ui.delivered}</p>
+                    <p className="pr-1 text-right text-[10px] text-[#cccccc]">{ui.delivered}</p>
                   </motion.div></AnimatePresence>
                 </div>
                 <div className="pointer-events-none absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-[#111117] via-[#111117]/90 to-transparent" />
-                <button onClick={() => setIsStoryOpen(true)} className="absolute inset-x-3 bottom-3 flex min-h-10 items-center gap-2 rounded-full border border-white/15 bg-[#1c1c1e]/95 p-1.5 pl-4 text-xs text-slate-300 shadow-sm backdrop-blur transition hover:border-cyan-300/30 hover:text-white"><span className="flex-1 text-left">{ui.read}</span><span className="grid h-7 w-7 place-items-center rounded-full bg-[#0a84ff] text-white">↑</span></button>
+                <button onClick={() => setIsStoryOpen(true)} className="absolute inset-x-3 bottom-3 flex min-h-10 items-center gap-2 rounded-full border border-white/15 bg-[#1c1c1e]/95 p-1.5 pl-4 text-xs text-[#cccccc] shadow-sm backdrop-blur transition hover:border-white/20 hover:text-white"><span className="flex-1 text-left">{ui.read}</span><span className="grid h-7 w-7 place-items-center rounded-full bg-[#0a84ff] text-white">↑</span></button>
               </div>
             </div>
           </div>
@@ -408,12 +408,12 @@ export function TestimonialsSplit({
         </div>
       </div>
       <AnimatePresence>
-        {isStoryOpen && <motion.div role="dialog" aria-modal="true" aria-labelledby="testimonial-story-title" initial={{opacity:0}} animate={{opacity:1}} exit={{opacity:0}} className="fixed inset-0 z-[10000] flex items-end justify-center bg-[#030612]/85 p-3 backdrop-blur-md sm:items-center sm:p-6" onMouseDown={() => setIsStoryOpen(false)}>
-          <motion.article initial={{opacity:0,y:28,scale:.98}} animate={{opacity:1,y:0,scale:1}} exit={{opacity:0,y:20,scale:.98}} transition={{duration:.25}} className="relative max-h-[88dvh] w-full max-w-2xl overflow-y-auto rounded-[2rem] border border-cyan-300/20 bg-[#0b142b] p-6 shadow-2xl sm:p-9" onMouseDown={(event)=>event.stopPropagation()}>
-            <button onClick={() => setIsStoryOpen(false)} aria-label="Close full story" className="absolute right-4 top-4 grid h-10 w-10 place-items-center rounded-full border border-white/10 bg-white/5 text-slate-300 hover:bg-white/10 hover:text-white"><X className="h-5 w-5"/></button>
-            <div className="flex items-center gap-4 pr-12"><img src={active.image ?? active.photo} alt="" className="h-16 w-16 rounded-full object-cover object-top ring-2 ring-cyan-300/20"/><div><p className="text-xs font-bold uppercase tracking-[.2em] text-cyan-300">{ui.experience}</p><h3 id="testimonial-story-title" className="mt-1 text-2xl font-black text-white">{active.name}</h3></div></div>
+        {isStoryOpen && <motion.div role="dialog" aria-modal="true" aria-labelledby="testimonial-story-title" initial={{opacity:0}} animate={{opacity:1}} exit={{opacity:0}} className="fixed inset-0 z-[10000] flex items-end justify-center bg-black/85 p-3 backdrop-blur-md sm:items-center sm:p-6" onMouseDown={() => setIsStoryOpen(false)}>
+          <motion.article initial={{opacity:0,y:28,scale:.98}} animate={{opacity:1,y:0,scale:1}} exit={{opacity:0,y:20,scale:.98}} transition={{duration:.25}} className="relative max-h-[88dvh] w-full max-w-2xl overflow-y-auto rounded-[2rem] border border-white/20 bg-black p-6 shadow-2xl sm:p-9" onMouseDown={(event)=>event.stopPropagation()}>
+            <button onClick={() => setIsStoryOpen(false)} aria-label="Close full story" className="absolute right-4 top-4 grid h-10 w-10 place-items-center rounded-full border border-white/10 bg-white/5 text-[#cccccc] hover:bg-white/10 hover:text-white"><X className="h-5 w-5"/></button>
+            <div className="flex items-center gap-4 pr-12"><img src={active.image ?? active.photo} alt="" className="h-16 w-16 rounded-full object-cover object-top ring-2 ring-cyan-300/20"/><div><p className="text-xs font-bold uppercase tracking-[.2em] text-[#2997ff]">{ui.experience}</p><h3 id="testimonial-story-title" className="mt-1 text-2xl font-black text-white">{active.name}</h3></div></div>
             <p className="mt-7 whitespace-pre-line text-base leading-8 text-slate-200">{active.quote}</p>
-            <p className="mt-7 border-t border-white/10 pt-5 text-xs leading-6 text-slate-500">{ui.disclaimer}</p>
+            <p className="mt-7 border-t border-white/10 pt-5 text-xs leading-6 text-[#86868b]">{ui.disclaimer}</p>
           </motion.article>
         </motion.div>}
       </AnimatePresence>
@@ -438,7 +438,7 @@ export function TestimonialsSplit({
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.3 }}
-              className="inline-flex items-center gap-2 text-xs tracking-[0.2em] uppercase text-slate-500"
+              className="inline-flex items-center gap-2 text-xs tracking-[0.2em] uppercase text-[#86868b]"
             >
               <span className="w-8 h-px bg-orange-500/50" />
               {active.flagEmoji && (
@@ -493,7 +493,7 @@ export function TestimonialsSplit({
                 <p className="text-sm font-semibold text-white">
                   {active.name}
                 </p>
-                <p className="text-xs text-slate-400">
+                <p className="text-xs text-[#cccccc]">
                   {active.role}
                   {active.isLeader ? " · Team Leader" : ""}
                 </p>
@@ -541,7 +541,7 @@ export function TestimonialsSplit({
                 href={active.tiktok}
                 target="_blank" rel="noopener noreferrer"
                 onClick={(e) => e.stopPropagation()}
-                className="inline-flex items-center gap-1.5 text-xs text-slate-300 hover:text-white opacity-80 hover:opacity-100 transition-opacity"
+                className="inline-flex items-center gap-1.5 text-xs text-[#cccccc] hover:text-white opacity-80 hover:opacity-100 transition-opacity"
               >
                 <svg
                   width="14"
@@ -590,7 +590,7 @@ export function TestimonialsSplit({
         <button
           onClick={prevTestimonial}
           aria-label="Previous testimonial"
-          className="flex h-9 w-9 sm:h-10 sm:w-10 shrink-0 items-center justify-center rounded-full border border-white/10 bg-white/5 text-slate-300 transition-all hover:bg-white/10 hover:text-white"
+          className="flex h-9 w-9 sm:h-10 sm:w-10 shrink-0 items-center justify-center rounded-full border border-white/10 bg-white/5 text-[#cccccc] transition-all hover:bg-white/10 hover:text-white"
         >
           <ChevronLeft className="h-4 w-4 sm:h-5 sm:w-5" />
         </button>
@@ -616,7 +616,7 @@ export function TestimonialsSplit({
         <button
           onClick={nextTestimonial}
           aria-label="Next testimonial"
-          className="flex h-9 w-9 sm:h-10 sm:w-10 shrink-0 items-center justify-center rounded-full border border-white/10 bg-white/5 text-slate-300 transition-all hover:bg-white/10 hover:text-white"
+          className="flex h-9 w-9 sm:h-10 sm:w-10 shrink-0 items-center justify-center rounded-full border border-white/10 bg-white/5 text-[#cccccc] transition-all hover:bg-white/10 hover:text-white"
         >
           <ChevronRight className="h-4 w-4 sm:h-5 sm:w-5" />
         </button>

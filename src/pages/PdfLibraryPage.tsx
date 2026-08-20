@@ -26,10 +26,10 @@ export default function PdfLibraryPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
-              className="glass rounded-2xl border border-cyan-500/25 p-8 md:p-12"
+              className="glass rounded-2xl border border-white/20 p-8 md:p-12"
               style={{ background: 'linear-gradient(135deg, rgba(6,182,212,0.05), rgba(15,23,42,0.8))' }}
             >
-              <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-cyan-500/20 text-cyan-400 mb-6">
+              <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-cyan-500/20 text-[#2997ff] mb-6">
                 <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
                   <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
                   <polyline points="14,2 14,8 20,8" />
@@ -44,7 +44,7 @@ export default function PdfLibraryPage() {
                  locale === 'pt' ? 'Biblioteca Movida' : 
                  'Library Moved'}
               </h1>
-              <p className="text-slate-300 text-base leading-relaxed mb-8">
+              <p className="text-[#cccccc] text-base leading-relaxed mb-8">
                 {locale === 'es' ? 'Nuestra biblioteca de PDFs ahora está integrada en la página de entrenamiento para una mejor experiencia. Serás redirigido automáticamente...' :
                  locale === 'fr' ? 'Notre bibliothèque PDF est maintenant intégrée dans la page de formation pour une meilleure expérience. Vous serez redirigé automatiquement...' :
                  locale === 'pt' ? 'Nossa biblioteca de PDFs agora está integrada na página de treinamento para uma melhor experiência. Você será redirecionado automaticamente...' :
@@ -63,7 +63,7 @@ export default function PdfLibraryPage() {
                  locale === 'pt' ? 'Ir para Treinamento →' :
                  'Go to Training →'}
               </Link>
-              <p className="mt-4 text-slate-400 text-sm">
+              <p className="mt-4 text-[#cccccc] text-sm">
                 {locale === 'es' ? 'Redirigiendo en 3 segundos...' :
                  locale === 'fr' ? 'Redirection dans 3 secondes...' :
                  locale === 'pt' ? 'Redirecionando em 3 segundos...' :

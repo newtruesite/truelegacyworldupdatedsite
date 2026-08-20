@@ -1419,7 +1419,7 @@ export default function CountryPage() {
           <TLBackground className="pt-28 md:pt-20 pb-0 scroll-mt-20">
             <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-10">
               <FlagIntro country={country} />
-              <p className="text-center text-slate-400 text-sm md:text-base max-w-2xl mx-auto mt-4 font-light leading-relaxed">
+              <p className="text-center text-[#cccccc] text-sm md:text-base max-w-2xl mx-auto mt-4 font-light leading-relaxed">
                 {copy.heroSub}
               </p>
 
@@ -1431,7 +1431,7 @@ export default function CountryPage() {
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ duration: 0.7, delay: 0.8 }}
                 >
-                  <p className="mb-2 text-[11px] font-semibold uppercase tracking-[0.25em] text-slate-500">
+                  <p className="mb-2 text-[11px] font-semibold uppercase tracking-[0.25em] text-[#86868b]">
                     {c.watchLabel}
                   </p>
                   <div className={IMG_WRAPPER_CLASS}>
@@ -1456,7 +1456,7 @@ export default function CountryPage() {
                   <h2 className="text-2xl md:text-3xl text-white mb-3 leading-tight font-display font-bold">
                     {c.ctaHeadline}
                   </h2>
-                  <p className="text-slate-400 text-sm mb-6 leading-relaxed font-light">
+                  <p className="text-[#cccccc] text-sm mb-6 leading-relaxed font-light">
                     {c.ctaDesc}
                   </p>
 
@@ -1465,7 +1465,7 @@ export default function CountryPage() {
                     {c.points.map((point) => (
                       <li
                         key={point}
-                        className="flex items-start gap-3 text-sm text-slate-300"
+                        className="flex items-start gap-3 text-sm text-[#cccccc]"
                       >
                         <span className="shrink-0 mt-0.5 w-5 h-5 rounded-full bg-[#1B3A8C]/30 flex items-center justify-center text-blue-400">
                           <IconCheck size={11} />
@@ -1508,7 +1508,7 @@ export default function CountryPage() {
                   <a
                     href="https://www.facebook.com/groups/truelegacycommunity"
                     target="_blank" rel="noopener noreferrer"
-                    className="flex w-full items-center justify-center gap-2 rounded-2xl border border-white/10 bg-white/5 px-6 py-3 text-sm font-medium text-slate-300 hover:bg-white/10 transition-all"
+                    className="flex w-full items-center justify-center gap-2 rounded-2xl border border-white/10 bg-white/5 px-6 py-3 text-sm font-medium text-[#cccccc] hover:bg-white/10 transition-all"
                   >
                     <IconFacebook size={15} /> {c.communityBtn}
                   </a>
@@ -1518,14 +1518,14 @@ export default function CountryPage() {
                     <a
                       href={country.youtube}
                       target="_blank" rel="noopener noreferrer"
-                      className="flex items-center gap-1.5 text-xs text-slate-400 hover:text-red-400 transition-colors"
+                      className="flex items-center gap-1.5 text-xs text-[#cccccc] hover:text-red-400 transition-colors"
                     >
                       <IconYoutube size={14} /> {c.ytHandle}
                     </a>
                     <a
                       href={country.instagram}
                       target="_blank" rel="noopener noreferrer"
-                      className="flex items-center gap-1.5 text-xs text-slate-400 hover:text-pink-400 transition-colors"
+                      className="flex items-center gap-1.5 text-xs text-[#cccccc] hover:text-pink-400 transition-colors"
                     >
                       <IconInstagram size={14} />{" "}
                       {["colombia", "mexico", "paraguay", "brazil"].includes(
@@ -1612,14 +1612,14 @@ export default function CountryPage() {
           <div className="mx-auto max-w-7xl">
             <div className="grid gap-8 lg:grid-cols-[0.8fr_1.2fr] lg:items-end">
               <div>
-                <div className="mb-5 inline-flex items-center gap-3 rounded-full border border-cyan-300/20 bg-cyan-300/[0.07] px-4 py-2 text-xs font-bold uppercase tracking-[0.18em] text-cyan-200">
+                <div className="mb-5 inline-flex items-center gap-3 rounded-full border border-white/20 bg-cyan-300/[0.07] px-4 py-2 text-xs font-bold uppercase tracking-[0.18em] text-[#2997ff]">
                   <span className="text-lg" aria-hidden="true">{country.flagEmoji}</span>
                   {gateway.eyebrow}
                 </div>
                 <h2 className="max-w-xl text-3xl font-extrabold leading-tight text-white md:text-5xl">
                   {gateway.title}
                 </h2>
-                <p className="mt-5 max-w-xl text-base leading-7 text-slate-300">
+                <p className="mt-5 max-w-xl text-base leading-7 text-[#cccccc]">
                   {gateway.intro}
                 </p>
               </div>
@@ -1627,15 +1627,15 @@ export default function CountryPage() {
               <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
                 <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4">
                   <p className="text-2xl font-extrabold text-white">{country.nativeName}</p>
-                  <p className="mt-1 text-xs uppercase tracking-wider text-slate-400">{gateway.localMarket}</p>
+                  <p className="mt-1 text-xs uppercase tracking-wider text-[#cccccc]">{gateway.localMarket}</p>
                 </div>
                 <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4">
-                  <p className="text-2xl font-extrabold text-cyan-300">14</p>
-                  <p className="mt-1 text-xs uppercase tracking-wider text-slate-400">{gateway.globalNetwork}</p>
+                  <p className="text-2xl font-extrabold text-[#2997ff]">14</p>
+                  <p className="mt-1 text-xs uppercase tracking-wider text-[#cccccc]">{gateway.globalNetwork}</p>
                 </div>
                 <div className="rounded-2xl border border-emerald-300/20 bg-emerald-300/[0.06] p-4">
-                  <p className="text-sm font-bold leading-6 text-emerald-200">{gateway.language}</p>
-                  <p className="mt-1 text-xs uppercase tracking-wider text-slate-400">{gateway.supported}</p>
+                  <p className="text-sm font-bold leading-6 text-[#cccccc]">{gateway.language}</p>
+                  <p className="mt-1 text-xs uppercase tracking-wider text-[#cccccc]">{gateway.supported}</p>
                 </div>
               </div>
             </div>
@@ -1685,7 +1685,7 @@ export default function CountryPage() {
                     </span>
                   </div>
                   <h3 className="mt-8 text-xl font-bold text-white">{path.title}</h3>
-                  <p className="mt-3 flex-1 text-sm leading-6 text-slate-400">{path.description}</p>
+                  <p className="mt-3 flex-1 text-sm leading-6 text-[#cccccc]">{path.description}</p>
                   <span className="mt-5 text-sm font-bold" style={{ color: path.color }}>
                     {gateway.view} {country.nativeName}
                   </span>
@@ -1693,10 +1693,10 @@ export default function CountryPage() {
               ))}
             </div>
 
-            <div className="mt-6 flex flex-col gap-5 rounded-3xl border border-cyan-300/20 bg-cyan-300/[0.06] p-6 sm:flex-row sm:items-center sm:justify-between md:p-8">
+            <div className="mt-6 flex flex-col gap-5 rounded-3xl border border-white/20 bg-cyan-300/[0.06] p-6 sm:flex-row sm:items-center sm:justify-between md:p-8">
               <div>
                 <h3 className="text-xl font-bold text-white">{gateway.connect}</h3>
-                <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-300">{gateway.routing}</p>
+                <p className="mt-2 max-w-2xl text-sm leading-6 text-[#cccccc]">{gateway.routing}</p>
               </div>
               <Link
                 to={`/apply?interest=product&country=${applicationCountry}`}
@@ -1793,7 +1793,7 @@ export default function CountryPage() {
                       ? "Histórias da nossa equipe"
                       : "Stories from our team"}
               </h2>
-              <p className="mt-4 text-slate-400">
+              <p className="mt-4 text-[#cccccc]">
                 {locale === "es"
                   ? "Experiencias reales compartidas por personas de nuestra comunidad True Legacy."
                   : locale === "fr"
@@ -1841,7 +1841,7 @@ export default function CountryPage() {
                   <p className="text-[#00a896] font-semibold mb-4">
                     {eight.subheading}
                   </p>
-                  <p className="text-slate-400 mb-10 max-w-3xl">
+                  <p className="text-[#cccccc] mb-10 max-w-3xl">
                     {eight.description}
                   </p>
                   <div className="eight-points-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-10">
@@ -1862,7 +1862,7 @@ export default function CountryPage() {
                         <h3 className="font-bold text-white text-sm mb-1">
                           {item.label}
                         </h3>
-                        <p className="text-slate-400 text-xs leading-relaxed">
+                        <p className="text-[#cccccc] text-xs leading-relaxed">
                           {item.desc}
                         </p>
                       </div>
@@ -1903,7 +1903,7 @@ export default function CountryPage() {
               <h2 className="section-title text-center">
                 {copy.paidSection.headline}
               </h2>
-              <p className="text-slate-400 text-lg max-w-2xl mx-auto">
+              <p className="text-[#cccccc] text-lg max-w-2xl mx-auto">
                 {copy.paidSection.sub}
               </p>
             </div>
@@ -1918,7 +1918,7 @@ export default function CountryPage() {
                 <h3 className="font-bold text-white text-lg mb-2">
                   {copy.paidSection.card1Title}
                 </h3>
-                <p className="text-slate-400 text-sm leading-relaxed font-light">
+                <p className="text-[#cccccc] text-sm leading-relaxed font-light">
                   {copy.paidSection.card1Body}
                 </p>
               </motion.div>
@@ -1932,7 +1932,7 @@ export default function CountryPage() {
                 <h3 className="font-bold text-white text-lg mb-2">
                   {copy.paidSection.card2Title}
                 </h3>
-                <p className="text-slate-400 text-sm leading-relaxed font-light">
+                <p className="text-[#cccccc] text-sm leading-relaxed font-light">
                   {copy.paidSection.card2Body}
                 </p>
               </motion.div>
@@ -1940,13 +1940,13 @@ export default function CountryPage() {
                 whileHover={{ scale: 1.03 }}
                 className="rounded-2xl border border-white/10 p-6 bg-white/5 backdrop-blur-sm"
               >
-                <div className="w-12 h-12 rounded-xl bg-emerald-500/20 flex items-center justify-center text-emerald-400 mb-4">
+                <div className="w-12 h-12 rounded-xl bg-emerald-500/20 flex items-center justify-center text-[#cccccc] mb-4">
                   <IconTrendingUp size={26} />
                 </div>
                 <h3 className="font-bold text-white text-lg mb-2">
                   {copy.paidSection.card3Title}
                 </h3>
-                <p className="text-slate-400 text-sm leading-relaxed font-light">
+                <p className="text-[#cccccc] text-sm leading-relaxed font-light">
                   {copy.paidSection.card3Body}
                 </p>
               </motion.div>
@@ -1975,12 +1975,12 @@ export default function CountryPage() {
                       : "Download Compensation Plan (PDF)"}
               </Link>
             </div>
-            <div className="flex flex-col md:flex-row items-center justify-between gap-6 rounded-2xl border border-yellow-500/30 bg-[#0a1628]/90 p-6 md:p-8">
+            <div className="flex flex-col md:flex-row items-center justify-between gap-6 rounded-2xl border border-yellow-500/30 bg-black/90 p-6 md:p-8">
               <div className="text-center md:text-left max-w-lg">
                 <h3 className="section-title text-center">
                   {copy.paidSection.ctaHeadline}
                 </h3>
-                <p className="text-slate-400">{copy.paidSection.ctaBody}</p>
+                <p className="text-[#cccccc]">{copy.paidSection.ctaBody}</p>
               </div>
               <a
                 href={jotformUrl}
@@ -2006,18 +2006,18 @@ export default function CountryPage() {
             <div className="flex flex-col sm:flex-row items-center justify-center gap-8 md:gap-16">
               <div className="flex items-center gap-3">
                 <IconUsers size={20} />
-                <span className="text-sm text-slate-400">
+                <span className="text-sm text-[#cccccc]">
                   <strong className="text-white font-bold">
                     {c.socialProofLeaders}
                   </strong>
                 </span>
               </div>
-              <div className="text-sm text-slate-400">
+              <div className="text-sm text-[#cccccc]">
                 <strong className="text-white font-bold">
                   {c.socialProofCountries}
                 </strong>
               </div>
-              <div className="text-sm text-slate-400">
+              <div className="text-sm text-[#cccccc]">
                 <strong className="text-white font-bold">
                   {c.socialProofEnagic}
                 </strong>
@@ -2042,10 +2042,10 @@ export default function CountryPage() {
             {(() => {
               const pdfConfig = PDF_SECTION_CONTENT[locale];
               return (
-                <details className="group pdf-section-inner rounded-[1.75rem] border border-cyan-500/25 bg-gradient-to-br from-cyan-500/10 via-slate-900/80 to-slate-950/90">
+                <details className="group pdf-section-inner rounded-[1.75rem] border border-white/20 bg-gradient-to-br from-cyan-500/10 via-slate-900/80 to-slate-950/90">
                   <summary className="flex cursor-pointer list-none items-center justify-between gap-6 px-6 py-6 sm:px-8 sm:py-7 [&::-webkit-details-marker]:hidden">
                     <div>
-                    <p className="text-[11px] font-semibold uppercase tracking-[0.3em] text-cyan-300 mb-2">
+                    <p className="text-[11px] font-semibold uppercase tracking-[0.3em] text-[#2997ff] mb-2">
                       {locale === "es"
                         ? "Investigación & Recursos"
                         : locale === "fr"
@@ -2055,11 +2055,11 @@ export default function CountryPage() {
                             : "Research & Resources"}
                     </p>
                     <h2 className="m-0 text-xl font-bold text-white sm:text-2xl">{pdfConfig.sectionTitle}</h2>
-                    <p className="mt-2 max-w-3xl text-sm leading-6 text-slate-400">
+                    <p className="mt-2 max-w-3xl text-sm leading-6 text-[#cccccc]">
                       {pdfConfig.sectionSubtitle}
                     </p>
                     </div>
-                    <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-cyan-300/25 bg-cyan-300/[0.08] text-2xl font-light text-cyan-200 transition-transform group-open:rotate-45" aria-hidden="true">+</span>
+                    <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-white/20 bg-cyan-300/[0.08] text-2xl font-light text-[#2997ff] transition-transform group-open:rotate-45" aria-hidden="true">+</span>
                   </summary>
                   <div className="pdf-grid border-t border-white/10 px-4 pb-8 pt-6 sm:px-8 sm:pb-10 sm:pt-8">
                     {pdfConfig.pdfs.map((pdf) => (
@@ -2140,7 +2140,7 @@ export default function CountryPage() {
           style={{ background: "#070c1a" }}
         >
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <p className="text-center text-[11px] font-semibold uppercase tracking-[0.3em] text-slate-500 mb-6">
+            <p className="text-center text-[11px] font-semibold uppercase tracking-[0.3em] text-[#86868b] mb-6">
               {c.globalLabel}
             </p>
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:flex lg:flex-wrap lg:justify-center gap-3">
@@ -2148,10 +2148,10 @@ export default function CountryPage() {
                 <Link
                   key={cx.slug}
                   to={`/${cx.slug}`}
-                  className="flex items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-sm text-slate-300 hover:border-blue-500/30 hover:bg-blue-500/10 hover:text-white transition-all"
+                  className="flex items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-sm text-[#cccccc] hover:border-blue-500/30 hover:bg-blue-500/10 hover:text-white transition-all"
                 >
                   <span
-                    className="inline-flex h-6 w-8 shrink-0 overflow-hidden rounded border border-white/20 bg-[#0a2060]"
+                    className="inline-flex h-6 w-8 shrink-0 overflow-hidden rounded border border-white/20 bg-black"
                     role="img"
                     aria-label={`Flag of ${cx.name}`}
                   >
@@ -2195,7 +2195,7 @@ export default function CountryPage() {
                     ? "Próximos Eventos"
                     : "Upcoming Events"}
             </h2>
-            <p className="text-slate-400 mb-6 max-w-xl mx-auto">
+            <p className="text-[#cccccc] mb-6 max-w-xl mx-auto">
               {locale === "es"
                 ? "Únete a nuestros masterclass y entrenamientos en vivo."
                 : locale === "fr"
@@ -2252,7 +2252,7 @@ export default function CountryPage() {
             boxShadow: "0 -4px 24px rgba(0,0,0,0.4)",
           }}
         >
-          <p className="sticky-cta-text text-sm text-slate-400 m-0 font-medium">
+          <p className="sticky-cta-text text-sm text-[#cccccc] m-0 font-medium">
             {locale === "es"
               ? "¿Listo para construir tu True Legacy?"
               : locale === "fr"

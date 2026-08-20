@@ -92,7 +92,7 @@ export default function LatamDistributorsPage() {
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.15 }}
-              className="text-slate-300 text-sm md:text-base max-w-2xl mx-auto"
+              className="text-[#cccccc] text-sm md:text-base max-w-2xl mx-auto"
             >
               {subtitle}
             </motion.p>
@@ -147,15 +147,15 @@ function DistributorCard({
           />
         ) : null}
         {(imgError || !dist.photo) && (
-          <span className="text-cyan-400 font-bold text-2xl">
+          <span className="text-[#2997ff] font-bold text-2xl">
             {dist.fallbackInitial}
           </span>
         )}
       </div>
       <div className="flex-1 min-w-0">
         <h2 className="text-xl font-bold text-white mb-1">{dist.name}</h2>
-        <p className="text-slate-400 text-sm mb-4">{dist.title}</p>
-        <p className="text-slate-500 text-xs mb-4">{dist.region}</p>
+        <p className="text-[#cccccc] text-sm mb-4">{dist.title}</p>
+        <p className="text-[#86868b] text-xs mb-4">{dist.region}</p>
         <div className="flex flex-wrap gap-2 sm:gap-3">
           <Link to={`/d/${dist.slug}`} className="inline-flex items-center justify-center rounded-xl bg-cyan-500 px-4 py-3 text-sm font-semibold text-white transition-colors hover:bg-cyan-400">Ver perfil</Link>
           {dist.whatsapp && (

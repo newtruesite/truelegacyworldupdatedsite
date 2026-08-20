@@ -39,7 +39,7 @@ export default function RegionPage() {
   const regionCountries = COUNTRIES.filter((c) => c.region === regionName);
 
   return (
-    <div className="page-wrapper bg-[#070b16]">
+    <div className="page-wrapper bg-black">
       <SEO title={`${regionName} | True Legacy World`} description={`Explore True Legacy markets, product education, events, and distributor support across ${regionName}.`} />
       <Navbar />
 
@@ -50,7 +50,7 @@ export default function RegionPage() {
             <div className="mb-12">
               <Link
                 to="/"
-                className="inline-flex items-center gap-2 text-slate-400 hover:text-white transition-colors mb-8"
+                className="inline-flex items-center gap-2 text-[#cccccc] hover:text-white transition-colors mb-8"
               >
                 <ArrowLeft className="h-4 w-4" />
                 {locale === "es"
@@ -65,7 +65,7 @@ export default function RegionPage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5 }}
               >
-                <span className="inline-block mb-4 rounded-full border border-cyan-500/30 bg-cyan-500/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-widest text-cyan-400">
+                <span className="inline-block mb-4 rounded-full border border-white/20 bg-cyan-500/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-widest text-[#2997ff]">
                   {locale === "es"
                     ? "Selecciona tu región"
                     : locale === "fr"
@@ -75,7 +75,7 @@ export default function RegionPage() {
                 <h1 className="text-4xl font-extrabold text-white sm:text-5xl lg:text-6xl tracking-tight">
                   <span className="gradient-text">{regionName}</span>
                 </h1>
-                <p className="mt-4 text-xl text-slate-400 max-w-2xl">
+                <p className="mt-4 text-xl text-[#cccccc] max-w-2xl">
                   {locale === "es"
                     ? "Elige un país para ver el plano True Legacy dedicado a tu mercado."
                     : locale === "fr"
@@ -101,10 +101,10 @@ export default function RegionPage() {
                         setLocale("es");
                       }
                     }}
-                    className="group block relative overflow-hidden rounded-2xl glass border border-white/10 bg-white/5 p-6 hover:bg-white/10 hover:border-cyan-500/30 transition-all duration-300 hover:-translate-y-1"
+                    className="group block relative overflow-hidden rounded-2xl glass border border-white/10 bg-white/5 p-6 hover:bg-white/10 hover:border-white/20 transition-all duration-300 hover:-translate-y-1"
                   >
                     {/* FLAG BOX — full flag visible on mobile (aspect ratio), retina srcset */}
-                    <div className="relative w-full aspect-[4/3] min-h-[120px] rounded-xl overflow-hidden border border-white/20 bg-[#0a2060] mb-4 flex items-center justify-center">
+                    <div className="relative w-full aspect-[4/3] min-h-[120px] rounded-xl overflow-hidden border border-white/20 bg-black mb-4 flex items-center justify-center">
                       {failedFlagSlugs.has(country.slug) ? (
                         <motion.div
                           animate={{ x: [0, 2, -2, 2, 0] }}
@@ -138,16 +138,16 @@ export default function RegionPage() {
                     {/* COUNTRY NAME */}
                     <div className="flex items-center justify-between">
                       <div>
-                        <h3 className="text-lg font-bold text-white group-hover:text-cyan-400 transition-colors">
+                        <h3 className="text-lg font-bold text-white group-hover:text-[#2997ff] transition-colors">
                           {country.name}
                         </h3>
-                        <span className="text-xs font-medium text-slate-500 uppercase tracking-wider">
+                        <span className="text-xs font-medium text-[#86868b] uppercase tracking-wider">
                           {country.nativeName}
                         </span>
                       </div>
-                      <div className="h-9 w-9 rounded-full bg-white/5 flex items-center justify-center border border-white/10 group-hover:bg-cyan-500 group-hover:border-cyan-400 transition-all shrink-0">
+                      <div className="h-9 w-9 rounded-full bg-white/5 flex items-center justify-center border border-white/10 group-hover:bg-cyan-500 group-hover:border-white/20 transition-all shrink-0">
                         <svg
-                          className="w-4 h-4 text-slate-400 group-hover:text-white transition-colors"
+                          className="w-4 h-4 text-[#cccccc] group-hover:text-white transition-colors"
                           fill="none"
                           viewBox="0 0 24 24"
                           stroke="currentColor"
@@ -171,7 +171,7 @@ export default function RegionPage() {
 
             {regionCountries.length === 0 && (
               <div className="text-center py-20 glass rounded-2xl border border-white/10">
-                <p className="text-xl text-slate-400">
+                <p className="text-xl text-[#cccccc]">
                   More countries in {regionName} coming soon!
                 </p>
               </div>

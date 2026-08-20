@@ -57,7 +57,7 @@ export function Footer() {
     const labels = getFooterLabels(locale)
 
     return (
-        <footer className="relative border-t border-white/10 bg-[#060810]">
+        <footer className="relative border-t border-white/10 bg-black">
             <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
                 <div className="grid grid-cols-1 gap-12 lg:grid-cols-4">
                     {/* Brand */}
@@ -69,7 +69,7 @@ export function Footer() {
                         >
                             <TrueLegacyLogo variant="footer" />
                         </Link>
-                        <p className="text-sm text-slate-400 leading-relaxed mb-6">
+                        <p className="text-sm text-[#cccccc] leading-relaxed mb-6">
                             {labels.description}
                         </p>
                         {/* Community CTA */}
@@ -85,7 +85,7 @@ export function Footer() {
 
                     {/* Countries */}
                     <div>
-                        <h3 className="mb-4 text-sm font-semibold uppercase tracking-wider text-slate-400">
+                        <h3 className="mb-4 text-sm font-semibold uppercase tracking-wider text-[#cccccc]">
                             {labels.regions}
                         </h3>
                         <ul className="space-y-2">
@@ -93,9 +93,9 @@ export function Footer() {
                                 <li key={country.slug}>
                                     <Link
                                         to={`/${country.slug}`}
-                                        className="flex items-center gap-2 text-sm text-slate-400 transition-colors hover:text-white"
+                                        className="flex items-center gap-2 text-sm text-[#cccccc] transition-colors hover:text-white"
                                     >
-                                        <span className="inline-flex h-4 w-6 shrink-0 overflow-hidden rounded border border-white/20 bg-[#0a2060]">
+                                        <span className="inline-flex h-4 w-6 shrink-0 overflow-hidden rounded border border-white/20 bg-black">
                                             {failedFlagSlugs.has(country.slug) ? (
                                                 <span className="flex h-full w-full items-center justify-center text-xs leading-none">{country.flagEmoji}</span>
                                             ) : (
@@ -111,7 +111,7 @@ export function Footer() {
 
                     {/* Quick Links */}
                     <div>
-                        <h3 className="mb-4 text-sm font-semibold uppercase tracking-wider text-slate-400">
+                        <h3 className="mb-4 text-sm font-semibold uppercase tracking-wider text-[#cccccc]">
                             {labels.company}
                         </h3>
                         <ul className="space-y-2">
@@ -125,7 +125,7 @@ export function Footer() {
                                 <li key={link.href}>
                                     <Link
                                         to={link.href}
-                                        className="text-sm text-slate-400 transition-colors hover:text-white"
+                                        className="text-sm text-[#cccccc] transition-colors hover:text-white"
                                     >
                                         {link.label}
                                     </Link>
@@ -136,7 +136,7 @@ export function Footer() {
 
                     {/* Socials — Instagram, LATAM first on LATAM pages */}
                     <div>
-                        <h3 className="mb-4 text-sm font-semibold uppercase tracking-wider text-slate-400">
+                        <h3 className="mb-4 text-sm font-semibold uppercase tracking-wider text-[#cccccc]">
                             {labels.follow}
                         </h3>
                         <div className="footer-social flex flex-wrap gap-5 justify-start items-center mb-4" style={{ width: '190px', paddingRight: '25px', transform: 'rotate(360deg)' }}>
@@ -154,7 +154,7 @@ export function Footer() {
                             <a
                                 href="https://www.instagram.com/truelegacyworld/"
                                 target="_blank" rel="noopener noreferrer"
-                                className="footer-social-link inline-flex items-center gap-2 text-sm font-semibold text-slate-400 no-underline transition-colors hover:text-white min-h-[44px]"
+                                className="footer-social-link inline-flex items-center gap-2 text-sm font-semibold text-[#cccccc] no-underline transition-colors hover:text-white min-h-[44px]"
                             >
                                 <IconInstagram />
                                 @truelegacyworld
@@ -163,7 +163,7 @@ export function Footer() {
                                 <a
                                     href="https://www.instagram.com/truelegacylatam?igsh=MTgxZW9yMTMxd2FpbQ=="
                                     target="_blank" rel="noopener noreferrer"
-                                    className="footer-social-link inline-flex items-center gap-2 text-sm font-semibold text-slate-400 no-underline transition-colors hover:text-white min-h-[44px]"
+                                    className="footer-social-link inline-flex items-center gap-2 text-sm font-semibold text-[#cccccc] no-underline transition-colors hover:text-white min-h-[44px]"
                                 >
                                     <IconInstagram />
                                     @truelegacylatam
@@ -174,7 +174,7 @@ export function Footer() {
                             <a
                                 href="https://youtube.com/@TrueLegacyWorld"
                                 target="_blank" rel="noopener noreferrer"
-                                className="flex items-center gap-3 text-sm text-slate-400 transition-colors hover:text-white group min-h-[44px]"
+                                className="flex items-center gap-3 text-sm text-[#cccccc] transition-colors hover:text-white group min-h-[44px]"
                             >
                                 <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-white/5 transition-colors group-hover:bg-red-500/20">
                                     <Youtube className="h-4 w-4 text-red-400" />
@@ -184,7 +184,7 @@ export function Footer() {
                             <a
                                 href="https://youtube.com/@TrueLegacyLATAM"
                                 target="_blank" rel="noopener noreferrer"
-                                className="flex items-center gap-3 text-sm text-slate-400 transition-colors hover:text-white group min-h-[44px]"
+                                className="flex items-center gap-3 text-sm text-[#cccccc] transition-colors hover:text-white group min-h-[44px]"
                             >
                                 <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-white/5 transition-colors group-hover:bg-red-500/20">
                                     <Youtube className="h-4 w-4 text-red-400" />
@@ -194,26 +194,26 @@ export function Footer() {
                         </div>
 
                         <div className="mt-8">
-                            <h3 className="mb-3 text-sm font-semibold uppercase tracking-wider text-slate-400">
+                            <h3 className="mb-3 text-sm font-semibold uppercase tracking-wider text-[#cccccc]">
                                 {labels.products}
                             </h3>
                             <div className="space-y-1">
-                                <Link to={productsHref} className="block text-sm text-slate-400 transition-colors hover:text-white">Kangen Water (Enagic)</Link>
-                                <Link to={productsHref} className="block text-sm text-slate-400 transition-colors hover:text-white">emGuarde Technology</Link>
+                                <Link to={productsHref} className="block text-sm text-[#cccccc] transition-colors hover:text-white">Kangen Water (Enagic)</Link>
+                                <Link to={productsHref} className="block text-sm text-[#cccccc] transition-colors hover:text-white">emGuarde Technology</Link>
                             </div>
                         </div>
                     </div>
                 </div>
 
                 {/* Trust signals */}
-                <div className="mt-8 flex flex-wrap items-center justify-center gap-6 text-sm text-slate-500">
+                <div className="mt-8 flex flex-wrap items-center justify-center gap-6 text-sm text-[#86868b]">
                     <span className="text-center">{labels.authorized}</span>
                     <span className="text-white/40 hidden sm:inline">·</span>
                     <span className="text-center">{labels.team}</span>
                     <span className="text-white/40 hidden sm:inline">·</span>
                     <span className="text-center">{labels.innovation}</span>
                 </div>
-                <nav aria-label="Legal" className="mt-6 flex flex-wrap justify-center gap-x-5 gap-y-2 text-xs text-slate-500">
+                <nav aria-label="Legal" className="mt-6 flex flex-wrap justify-center gap-x-5 gap-y-2 text-xs text-[#86868b]">
                     <Link to="/legal/privacy" className="hover:text-white">{labels.privacy}</Link>
                     <Link to="/legal/terms" className="hover:text-white">{labels.terms}</Link>
                     <Link to="/legal/medical" className="hover:text-white">{labels.medical}</Link>
@@ -222,10 +222,10 @@ export function Footer() {
                 </nav>
                 {/* Bottom Bar */}
                 <div className="mt-8 border-t border-white/10 pt-8 flex flex-col items-center gap-4 sm:flex-row sm:justify-between">
-                    <p className="text-sm text-slate-500 text-center sm:text-left">
+                    <p className="text-sm text-[#86868b] text-center sm:text-left">
                         © {currentYear} True Legacy World. {labels.rights}
                     </p>
-                    <p className="text-xs text-slate-600 text-center sm:text-right">{labels.platform}</p>
+                    <p className="text-xs text-[#86868b] text-center sm:text-right">{labels.platform}</p>
                 </div>
             </div>
         </footer>

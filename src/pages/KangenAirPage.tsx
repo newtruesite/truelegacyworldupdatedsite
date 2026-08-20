@@ -65,7 +65,7 @@ export default function KangenAirPage() {
   const [heroImgError, setHeroImgError] = useState(false)
 
   return (
-    <div className="page-wrapper bg-[#070b16]">
+    <div className="page-wrapper bg-black">
       <SEO
         title={
           locale === "es"
@@ -99,7 +99,7 @@ export default function KangenAirPage() {
             transition={{ duration: 0.7 }}
             className="text-center mb-16 pt-8"
           >
-            <span className="inline-block mb-4 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-widest text-emerald-400">
+            <span className="inline-block mb-4 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-widest text-[#cccccc]">
               {copy.kangen_air.badge}
             </span>
             <h1 className="page-hero-title mb-6">
@@ -109,7 +109,7 @@ export default function KangenAirPage() {
                 {copy.kangen_air.headlineAccent}
               </span>
             </h1>
-            <p className="mx-auto max-w-3xl text-lg md:text-xl text-slate-400 leading-relaxed mb-8">
+            <p className="mx-auto max-w-3xl text-lg md:text-xl text-[#cccccc] leading-relaxed mb-8">
               {copy.kangen_air.sub}
             </p>
           </motion.div>
@@ -133,7 +133,7 @@ export default function KangenAirPage() {
                 ) : (
                   <div className="flex flex-col items-center justify-center gap-3 py-8">
                     <div className="w-24 h-24 rounded-2xl bg-emerald-500/20 flex items-center justify-center">
-                      <Fan className="w-12 h-12 text-emerald-400" />
+                      <Fan className="w-12 h-12 text-[#cccccc]" />
                     </div>
                     <span className="text-white font-bold text-xl">
                       Kangen Air
@@ -143,7 +143,7 @@ export default function KangenAirPage() {
                 <h3 className="text-2xl font-bold text-white mb-2">
                   Kangen Air
                 </h3>
-                <p className="text-slate-400 text-sm">
+                <p className="text-[#cccccc] text-sm">
                   {FEATURES[0].text}
                 </p>
               </div>
@@ -164,7 +164,7 @@ export default function KangenAirPage() {
                   className="flex items-center gap-4 glass rounded-xl border border-white/10 p-4"
                 >
                   <div className="w-10 h-10 rounded-xl bg-emerald-500/20 flex items-center justify-center shrink-0">
-                    <Icon className="w-5 h-5 text-emerald-400" />
+                    <Icon className="w-5 h-5 text-[#cccccc]" />
                   </div>
                   <span className="text-slate-200 font-medium">{text}</span>
                 </div>
@@ -180,12 +180,12 @@ export default function KangenAirPage() {
             className="glass rounded-3xl border border-emerald-500/20 p-8 md:p-12 mb-16 text-center"
           >
             <div className="w-16 h-16 rounded-2xl bg-emerald-500/20 flex items-center justify-center mx-auto mb-6">
-              <Sun className="w-8 h-8 text-emerald-400" />
+              <Sun className="w-8 h-8 text-[#cccccc]" />
             </div>
             <h3 className="text-xl md:text-2xl font-bold text-white mb-4">
               {copy.kangen_air.howItWorksTitle}
             </h3>
-            <p className="text-slate-400 max-w-2xl mx-auto text-lg leading-relaxed">
+            <p className="text-[#cccccc] max-w-2xl mx-auto text-lg leading-relaxed">
               {copy.kangen_air.howItWorksSub}
             </p>
           </motion.div>
@@ -200,7 +200,7 @@ export default function KangenAirPage() {
             <h2 className="text-2xl md:text-3xl font-bold text-white mb-4 text-center">
               {copy.kangen_air.orderingTitle}
             </h2>
-            <p className="text-slate-400 text-lg leading-relaxed mb-8 text-center max-w-2xl mx-auto">
+            <p className="text-[#cccccc] text-lg leading-relaxed mb-8 text-center max-w-2xl mx-auto">
               {copy.kangen_air.orderingSub}
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
@@ -232,7 +232,7 @@ export default function KangenAirPage() {
               to={countrySlug ? `/${countrySlug}/training` : "/training"}
               className="flex items-center justify-center gap-2 rounded-2xl border border-white/10 bg-white/5 px-6 py-4 text-sm font-semibold text-white hover:bg-white/10 transition-all min-h-[48px] hover:scale-[1.02]"
             >
-              <Download className="w-4 h-4 text-cyan-400" />{" "}
+              <Download className="w-4 h-4 text-[#2997ff]" />{" "}
               {copy.kangen_air.downloadPdf}
             </Link>
             <Link
@@ -268,7 +268,7 @@ export default function KangenAirPage() {
           <div className="text-center pb-16">
             <Link
               to={`/${countrySlug}`}
-              className="inline-flex items-center gap-2 text-sm text-slate-400 hover:text-white transition-colors"
+              className="inline-flex items-center gap-2 text-sm text-[#cccccc] hover:text-white transition-colors"
             >
               {copy.kangen_air.backLink} {country.name}
             </Link>

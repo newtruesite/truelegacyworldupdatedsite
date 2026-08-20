@@ -329,7 +329,7 @@ const TrainingModuleCard: React.FC<TrainingModuleCardProps> = ({
       case "advanced":
         return "bg-red-500/20 text-red-300 border-red-500/30";
       default:
-        return "bg-slate-500/20 text-slate-300 border-slate-500/30";
+        return "bg-slate-500/20 text-[#cccccc] border-slate-500/30";
     }
   };
 
@@ -371,7 +371,7 @@ const TrainingModuleCard: React.FC<TrainingModuleCardProps> = ({
               </span>
             </div>
             {module.duration && (
-              <p className="text-slate-400 text-sm mb-2">{module.duration}</p>
+              <p className="text-[#cccccc] text-sm mb-2">{module.duration}</p>
             )}
           </div>
         </div>
@@ -390,7 +390,7 @@ const TrainingModuleCard: React.FC<TrainingModuleCardProps> = ({
           </div>
         )}
 
-        <p className="text-slate-300 text-sm leading-relaxed mb-6">
+        <p className="text-[#cccccc] text-sm leading-relaxed mb-6">
           {localizedDescription}
         </p>
 
@@ -421,14 +421,14 @@ const TrainingModuleCard: React.FC<TrainingModuleCardProps> = ({
                 target="_blank" rel="noopener noreferrer"
                 className="flex items-center gap-3 p-3 rounded-lg bg-white/5 hover:bg-white/10 transition-colors text-sm"
               >
-                <FileText className="w-4 h-4 text-slate-400 shrink-0" />
+                <FileText className="w-4 h-4 text-[#cccccc] shrink-0" />
                 <span className="text-slate-200 flex-1">
                   {localizedResourceTitles?.[index] ?? resource.title}
                 </span>
-                <span className="text-slate-500 text-xs uppercase">
+                <span className="text-[#86868b] text-xs uppercase">
                   {resource.type}
                 </span>
-                <ExternalLink className="w-4 h-4 text-slate-400" />
+                <ExternalLink className="w-4 h-4 text-[#cccccc]" />
               </a>
             ))}
           </motion.div>
@@ -625,9 +625,9 @@ export default function TrainingPage() {
       text: pathCopy.foundationText,
       categories: ["foundation", "product"] as Array<keyof typeof CATEGORY_INFO>,
       icon: Target,
-      cardClass: "from-cyan-500/[.11] hover:border-cyan-300/35",
-      iconClass: "bg-cyan-400/10 text-cyan-300",
-      accentClass: "text-cyan-300",
+      cardClass: "from-cyan-500/[.11] hover:border-white/20",
+      iconClass: "bg-cyan-400/10 text-[#2997ff]",
+      accentClass: "text-[#2997ff]",
     },
     {
       id: "business" as const,
@@ -645,9 +645,9 @@ export default function TrainingPage() {
       text: pathCopy.leadershipText,
       categories: ["systems", "leadership"] as Array<keyof typeof CATEGORY_INFO>,
       icon: Users,
-      cardClass: "from-violet-500/[.11] hover:border-violet-300/35",
-      iconClass: "bg-violet-400/10 text-violet-300",
-      accentClass: "text-violet-300",
+      cardClass: "from-violet-500/[.11] hover:border-white/20",
+      iconClass: "bg-violet-400/10 text-[#2997ff]",
+      accentClass: "text-[#2997ff]",
     },
   ];
 
@@ -699,36 +699,36 @@ export default function TrainingPage() {
                 <div className="mx-auto max-w-4xl text-center">
                   <p className="text-xs font-bold uppercase tracking-[0.32em] text-tl-gold">{journeyCopy.eyebrow}</p>
                   <h1 className="mt-4 text-4xl font-black leading-tight text-white sm:text-5xl lg:text-6xl">{journeyCopy.title}</h1>
-                  <p className="mx-auto mt-5 max-w-3xl text-base leading-7 text-slate-300 sm:text-lg">{journeyCopy.subtitle}</p>
-                  <div className="mx-auto mt-8 grid max-w-3xl grid-cols-3 gap-2 text-xs font-semibold text-slate-300 sm:text-sm">
+                  <p className="mx-auto mt-5 max-w-3xl text-base leading-7 text-[#cccccc] sm:text-lg">{journeyCopy.subtitle}</p>
+                  <div className="mx-auto mt-8 grid max-w-3xl grid-cols-3 gap-2 text-xs font-semibold text-[#cccccc] sm:text-sm">
                     {[journeyCopy.foundation, journeyCopy.modules, journeyCopy.languages].map((item) => (
                       <div key={item} className="rounded-xl border border-white/10 bg-white/[0.04] px-3 py-3">{item}</div>
                     ))}
                   </div>
                 </div>
 
-                <section className="mx-auto mt-12 max-w-5xl rounded-[2rem] border border-cyan-400/20 bg-gradient-to-br from-cyan-500/[0.08] via-white/[0.03] to-blue-600/[0.08] p-5 shadow-[0_30px_100px_rgba(0,0,0,0.45)] sm:p-8">
+                <section className="mx-auto mt-12 max-w-5xl rounded-[2rem] border border-white/20 bg-gradient-to-br from-cyan-500/[0.08] via-white/[0.03] to-blue-600/[0.08] p-5 shadow-[0_30px_100px_rgba(0,0,0,0.45)] sm:p-8">
                   <div className="mb-7 flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
                     <div>
-                      <p className="text-xs font-black uppercase tracking-[0.28em] text-cyan-300">{journeyCopy.stepOne}</p>
+                      <p className="text-xs font-black uppercase tracking-[0.28em] text-[#2997ff]">{journeyCopy.stepOne}</p>
                       <h2 className="mt-2 text-2xl font-black text-white sm:text-3xl">{journeyCopy.stepOneTitle}</h2>
-                      <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-300 sm:text-base">{journeyCopy.stepOneText}</p>
+                      <p className="mt-2 max-w-2xl text-sm leading-6 text-[#cccccc] sm:text-base">{journeyCopy.stepOneText}</p>
                     </div>
-                    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border border-cyan-300/20 bg-cyan-400/10 text-cyan-300"><PlayCircle className="h-6 w-6" /></div>
+                    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border border-white/20 bg-cyan-400/10 text-[#2997ff]"><PlayCircle className="h-6 w-6" /></div>
                   </div>
                   <div className="grid gap-5 lg:grid-cols-2">
-                    <article className="rounded-2xl border border-white/10 bg-[#071127] p-4 sm:p-5">
+                    <article className="rounded-2xl border border-white/10 bg-black p-4 sm:p-5">
                       <YouTubeEmbed url={duoVideos.water} title={journeyCopy.water} />
                       <div className="mt-4 flex items-start gap-4">
                         <img src="/products/k8.png" alt="K8 water ionizer" className="h-20 w-20 object-contain" />
-                        <div><h3 className="font-bold text-white">{journeyCopy.water}</h3><p className="mt-1 text-sm leading-6 text-slate-400">{journeyCopy.waterText}</p></div>
+                        <div><h3 className="font-bold text-white">{journeyCopy.water}</h3><p className="mt-1 text-sm leading-6 text-[#cccccc]">{journeyCopy.waterText}</p></div>
                       </div>
                     </article>
-                    <article className="rounded-2xl border border-white/10 bg-[#071127] p-4 sm:p-5">
+                    <article className="rounded-2xl border border-white/10 bg-black p-4 sm:p-5">
                       <YouTubeEmbed url={duoVideos.emguarde} title={journeyCopy.emguarde} />
                       <div className="mt-4 flex items-start gap-4">
                         <img src="/products/emguarde-go.png" alt="emGuarde GO portable set" className="h-20 w-20 object-contain" />
-                        <div><h3 className="font-bold text-white">{journeyCopy.emguarde}</h3><p className="mt-1 text-sm leading-6 text-slate-400">{journeyCopy.emguardeText}</p></div>
+                        <div><h3 className="font-bold text-white">{journeyCopy.emguarde}</h3><p className="mt-1 text-sm leading-6 text-[#cccccc]">{journeyCopy.emguardeText}</p></div>
                       </div>
                     </article>
                     <article className="rounded-2xl border border-tl-gold/25 bg-gradient-to-br from-[#11182c] to-[#071127] p-4 lg:col-span-2 sm:p-5">
@@ -737,7 +737,7 @@ export default function TrainingPage() {
                         <div className="p-2 sm:p-4">
                           <span className="text-xs font-black uppercase tracking-[0.25em] text-tl-gold">03 · Duo</span>
                           <h3 className="mt-3 text-2xl font-black text-white">{journeyCopy.duo}</h3>
-                          <p className="mt-3 text-sm leading-6 text-slate-300 sm:text-base">{journeyCopy.duoText}</p>
+                          <p className="mt-3 text-sm leading-6 text-[#cccccc] sm:text-base">{journeyCopy.duoText}</p>
                           <div className="mt-6 flex items-end justify-center gap-3 rounded-2xl border border-white/10 bg-white/[0.03] p-4">
                             <img src="/products/k8.png" alt="K8 water ionizer" className="h-28 w-[54%] object-contain" />
                             <img src="/products/emguarde-go.png" alt="emGuarde GO portable set" className="h-24 w-[34%] object-contain" />
@@ -753,14 +753,14 @@ export default function TrainingPage() {
 
                 <div ref={accessRef} className={`max-w-md mx-auto mt-10 min-h-[400px] rounded-2xl border bg-white/[0.04] backdrop-blur-xl p-8 shadow-[0_24px_80px_rgba(0,0,0,0.6)] transition-all ${hasCompletedDuoIntro ? "border-tl-gold/30" : "border-white/10 opacity-60"}`}>
                 <div className="text-center mb-8">
-                  <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-cyan-500/20 to-indigo-600/20 border border-cyan-500/30 text-cyan-400 mb-4 shadow-[0_0_30px_rgba(6,182,212,0.15)]">
+                  <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-cyan-500/20 to-indigo-600/20 border border-white/20 text-[#2997ff] mb-4 shadow-[0_0_30px_rgba(6,182,212,0.15)]">
                     <Key className="w-8 h-8" />
                   </div>
                   <h2 className="text-2xl font-bold text-white mb-2">
                     <span className="mb-2 block text-xs font-black uppercase tracking-[0.26em] text-tl-gold">{journeyCopy.stepTwo}</span>
                     {journeyCopy.stepTwoTitle}
                   </h2>
-                  <p className="text-slate-400 text-sm mb-6">
+                  <p className="text-[#cccccc] text-sm mb-6">
                     {journeyCopy.stepTwoText} {copy.training?.access_desc || "Enter the secret code to access training. Join our Facebook community to get the code."}
                   </p>
                   <a
@@ -779,7 +779,7 @@ export default function TrainingPage() {
                       placeholder={copy.training?.access_placeholder || "Secret Code"}
                       value={secretCode}
                       onChange={(e) => setSecretCode(e.target.value)}
-                      className="w-full px-4 py-3 rounded-xl bg-black/40 border border-white/10 text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500 transition-colors"
+                      className="w-full px-4 py-3 rounded-xl bg-black/40 border border-white/10 text-white placeholder-slate-500 focus:outline-none focus:border-white/20 transition-colors"
                       required
                     />
                   </div>
@@ -803,7 +803,7 @@ export default function TrainingPage() {
                 <div className="flex justify-end mb-4">
                   <button
                     onClick={handleResetAccess}
-                    className="flex items-center gap-2 text-sm text-slate-400 hover:text-white transition-colors px-4 py-2 rounded-lg bg-white/5 hover:bg-white/10"
+                    className="flex items-center gap-2 text-sm text-[#cccccc] hover:text-white transition-colors px-4 py-2 rounded-lg bg-white/5 hover:bg-white/10"
                   >
                     <LogOut className="w-4 h-4" />{" "}
                     {copy.training?.access_reset || "Reset access"}
@@ -818,7 +818,7 @@ export default function TrainingPage() {
                   >
                     {copy.training?.academy || "True Legacy Leadership Academy"}
                     {isLatamTraining && (
-                      <span className="ml-2 px-2 py-1 bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 rounded text-[10px] font-medium">
+                      <span className="ml-2 px-2 py-1 bg-cyan-500/20 text-[#2997ff] border border-white/20 rounded text-[10px] font-medium">
                         LATAM
                       </span>
                     )}
@@ -835,20 +835,20 @@ export default function TrainingPage() {
                     initial={{ opacity: 0, y: 12 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.2 }}
-                    className="text-slate-300 text-lg max-w-2xl mx-auto leading-relaxed"
+                    className="text-[#cccccc] text-lg max-w-2xl mx-auto leading-relaxed"
                   >
                     {copy.training?.hero_subtitle ||
                       "Complete training system designed to take you from beginner to 6A leader. Learn from proven strategies and build your legacy business with confidence."}
                   </motion.p>
                 </div>
 
-                <section className="mb-10 rounded-[2rem] border border-cyan-300/20 bg-gradient-to-br from-cyan-500/[0.09] via-white/[0.025] to-blue-600/[0.09] p-5 shadow-[0_24px_80px_rgba(0,0,0,.35)] sm:p-7">
+                <section className="mb-10 rounded-[2rem] border border-white/20 bg-gradient-to-br from-cyan-500/[0.09] via-white/[0.025] to-blue-600/[0.09] p-5 shadow-[0_24px_80px_rgba(0,0,0,.35)] sm:p-7">
                   <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-                    <div><p className="text-xs font-black uppercase tracking-[0.26em] text-cyan-300">{ewsCopy.eyebrow}</p><h2 className="mt-2 text-2xl font-black text-white sm:text-3xl">{ewsCopy.title}</h2><p className="mt-2 max-w-3xl text-sm leading-6 text-slate-300">{ewsCopy.text}</p></div>
+                    <div><p className="text-xs font-black uppercase tracking-[0.26em] text-[#2997ff]">{ewsCopy.eyebrow}</p><h2 className="mt-2 text-2xl font-black text-white sm:text-3xl">{ewsCopy.title}</h2><p className="mt-2 max-w-3xl text-sm leading-6 text-[#cccccc]">{ewsCopy.text}</p></div>
                     <div className="flex shrink-0 flex-col gap-3 sm:flex-row"><a href="https://app.enagicwebsystem.com/backoffice.php?section=logout" target="_blank" rel="noopener noreferrer" className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-cyan-400 px-5 font-black text-slate-950 transition hover:-translate-y-0.5 hover:bg-cyan-300">{ewsCopy.login}<ExternalLink className="h-4 w-4"/></a><a href="https://information.enagic.com/home" target="_blank" rel="noopener noreferrer" onClick={event=>{if(!window.confirm(ewsCopy.portalWarning))event.preventDefault()}} className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-emerald-500 px-5 font-black text-white transition hover:-translate-y-0.5 hover:bg-emerald-400">{ewsCopy.portal}<ExternalLink className="h-4 w-4"/></a></div>
                   </div>
                   <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-                    {ewsResources.map(({title,text,href,icon:Icon})=><a key={href} href={href} target="_blank" rel="noopener noreferrer" className="group flex min-h-44 flex-col rounded-2xl border border-white/10 bg-[#071127]/80 p-5 transition hover:-translate-y-1 hover:border-cyan-300/35 hover:bg-cyan-400/[0.06]"><span className="grid h-11 w-11 place-items-center rounded-xl bg-cyan-400/10 text-cyan-300"><Icon className="h-5 w-5"/></span><strong className="mt-5 text-white">{title}</strong><small className="mt-2 flex-1 leading-5 text-slate-400">{text}</small><span className="mt-4 inline-flex items-center gap-2 text-xs font-black uppercase tracking-wider text-cyan-300">{ewsCopy.open} <ExternalLink className="h-3.5 w-3.5"/></span></a>)}
+                    {ewsResources.map(({title,text,href,icon:Icon})=><a key={href} href={href} target="_blank" rel="noopener noreferrer" className="group flex min-h-44 flex-col rounded-2xl border border-white/10 bg-black/80 p-5 transition hover:-translate-y-1 hover:border-white/20 hover:bg-cyan-400/[0.06]"><span className="grid h-11 w-11 place-items-center rounded-xl bg-cyan-400/10 text-[#2997ff]"><Icon className="h-5 w-5"/></span><strong className="mt-5 text-white">{title}</strong><small className="mt-2 flex-1 leading-5 text-[#cccccc]">{text}</small><span className="mt-4 inline-flex items-center gap-2 text-xs font-black uppercase tracking-wider text-[#2997ff]">{ewsCopy.open} <ExternalLink className="h-3.5 w-3.5"/></span></a>)}
                   </div>
                 </section>
 
@@ -860,8 +860,8 @@ export default function TrainingPage() {
                         onClick={() => setActiveView("sessions")}
                         className={`px-6 py-3 rounded-lg text-sm font-medium transition-all ${
                           activeView === "sessions"
-                            ? "bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 shadow-lg"
-                            : "text-slate-400 hover:text-white hover:bg-white/5"
+                            ? "bg-cyan-500/20 text-[#2997ff] border border-white/20 shadow-lg"
+                            : "text-[#cccccc] hover:text-white hover:bg-white/5"
                         }`}
                       >
                         {copy.training?.sessions_tab || "Training Sessions"}
@@ -870,8 +870,8 @@ export default function TrainingPage() {
                         onClick={() => setActiveView("guides")}
                         className={`px-6 py-3 rounded-lg text-sm font-medium transition-all ${
                           activeView === "guides"
-                            ? "bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 shadow-lg"
-                            : "text-slate-400 hover:text-white hover:bg-white/5"
+                            ? "bg-cyan-500/20 text-[#2997ff] border border-white/20 shadow-lg"
+                            : "text-[#cccccc] hover:text-white hover:bg-white/5"
                         }`}
                       >
                         {copy.training?.guides_tab || "Informational Guides"}
@@ -881,8 +881,8 @@ export default function TrainingPage() {
                           onClick={() => setActiveView("slides")}
                           className={`px-6 py-3 rounded-lg text-sm font-medium transition-all ${
                             activeView === "slides"
-                              ? "bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 shadow-lg"
-                              : "text-slate-400 hover:text-white hover:bg-white/5"
+                              ? "bg-cyan-500/20 text-[#2997ff] border border-white/20 shadow-lg"
+                              : "text-[#cccccc] hover:text-white hover:bg-white/5"
                           }`}
                         >
                           Presentación True Legacy
@@ -892,8 +892,8 @@ export default function TrainingPage() {
                         onClick={() => setActiveView("events")}
                         className={`px-6 py-3 rounded-lg text-sm font-medium transition-all ${
                           activeView === "events"
-                            ? "bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 shadow-lg"
-                            : "text-slate-400 hover:text-white hover:bg-white/5"
+                            ? "bg-cyan-500/20 text-[#2997ff] border border-white/20 shadow-lg"
+                            : "text-[#cccccc] hover:text-white hover:bg-white/5"
                         }`}
                       >
                         {copy.training?.events_tab || "Upcoming Events"}
@@ -909,7 +909,7 @@ export default function TrainingPage() {
                       <>
                         <div className="mb-7 text-center">
                           <h2 className="text-3xl font-black text-white">{pathCopy.title}</h2>
-                          <p className="mx-auto mt-3 max-w-2xl text-sm leading-6 text-slate-400 sm:text-base">{pathCopy.text}</p>
+                          <p className="mx-auto mt-3 max-w-2xl text-sm leading-6 text-[#cccccc] sm:text-base">{pathCopy.text}</p>
                         </div>
                         <div className="grid gap-5 lg:grid-cols-3">
                           {learningPaths.map((path) => {
@@ -927,7 +927,7 @@ export default function TrainingPage() {
                                   <Icon className="h-7 w-7" />
                                 </span>
                                 <h3 className="mt-7 text-2xl font-black leading-tight text-white">{path.title}</h3>
-                                <p className="mt-3 flex-1 text-sm leading-6 text-slate-400">{path.text}</p>
+                                <p className="mt-3 flex-1 text-sm leading-6 text-[#cccccc]">{path.text}</p>
                                 <span className={`mt-6 flex items-center justify-between border-t border-white/10 pt-5 text-sm font-black ${path.accentClass}`}>
                                   <span>{count} {pathCopy.lessons}</span>
                                   <span className="inline-flex items-center gap-2">{pathCopy.open}<ArrowRight className="h-4 w-4" /></span>
@@ -941,13 +941,13 @@ export default function TrainingPage() {
                       <>
                         <div className="mb-7 flex flex-col gap-4 rounded-2xl border border-white/10 bg-white/[.035] p-5 sm:flex-row sm:items-center sm:justify-between">
                           <div>
-                            <button type="button" onClick={() => setActivePath(null)} className="inline-flex items-center gap-2 text-sm font-bold text-cyan-300">
+                            <button type="button" onClick={() => setActivePath(null)} className="inline-flex items-center gap-2 text-sm font-bold text-[#2997ff]">
                               <span aria-hidden="true">←</span>{pathCopy.back}
                             </button>
                             <h2 className="mt-3 text-2xl font-black text-white">{selectedPath.title}</h2>
-                            <p className="mt-2 max-w-3xl text-sm leading-6 text-slate-400">{selectedPath.text}</p>
+                            <p className="mt-2 max-w-3xl text-sm leading-6 text-[#cccccc]">{selectedPath.text}</p>
                           </div>
-                          <span className="shrink-0 rounded-full border border-white/10 bg-black/20 px-4 py-2 text-sm font-bold text-slate-300">
+                          <span className="shrink-0 rounded-full border border-white/10 bg-black/20 px-4 py-2 text-sm font-bold text-[#cccccc]">
                             {filteredModules.length} {pathCopy.lessons}
                           </span>
                         </div>
@@ -975,7 +975,7 @@ export default function TrainingPage() {
                         {copy.training?.essential_guides ||
                           "Essential Product Guides"}
                       </h2>
-                      <p className="text-slate-300 max-w-2xl mx-auto">
+                      <p className="text-[#cccccc] max-w-2xl mx-auto">
                         {copy.training?.guides_subtitle ||
                           "Download these comprehensive PDFs to master every product in the Enagic lineup. Essential reading for all distributors building their True Legacy business."}
                       </p>
@@ -1002,22 +1002,22 @@ export default function TrainingPage() {
                           >
                             <div className="flex items-start gap-3 mb-4">
                               <div className="p-3 rounded-lg bg-cyan-500/20 shrink-0">
-                                <FileText className="w-6 h-6 text-cyan-400" />
+                                <FileText className="w-6 h-6 text-[#2997ff]" />
                               </div>
                               <div className="flex-1 min-w-0">
-                                <h3 className="font-semibold text-white mb-2 group-hover:text-cyan-300 transition-colors">
+                                <h3 className="font-semibold text-white mb-2 group-hover:text-[#2997ff] transition-colors">
                                   {title}
                                 </h3>
-                                <p className="text-slate-400 text-sm leading-relaxed">
+                                <p className="text-[#cccccc] text-sm leading-relaxed">
                                   {desc}
                                 </p>
                               </div>
                             </div>
                             <div className="flex items-center justify-between mt-auto">
-                              <span className="px-2 py-1 rounded-md text-xs uppercase tracking-wider text-slate-500 bg-white/5 border border-white/10">
+                              <span className="px-2 py-1 rounded-md text-xs uppercase tracking-wider text-[#86868b] bg-white/5 border border-white/10">
                                 {pdf.category}
                               </span>
-                              <ExternalLink className="w-4 h-4 text-slate-400 group-hover:text-cyan-400 transition-colors" />
+                              <ExternalLink className="w-4 h-4 text-[#cccccc] group-hover:text-[#2997ff] transition-colors" />
                             </div>
                           </motion.a>
                         );
@@ -1033,37 +1033,37 @@ export default function TrainingPage() {
                     <motion.div
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
-                      className="rounded-2xl border border-cyan-500/30 bg-black/40 backdrop-blur-sm p-8"
+                      className="rounded-2xl border border-white/20 bg-black/40 backdrop-blur-sm p-8"
                     >
                       <h3 className="text-2xl font-bold text-white mb-6 border-b border-white/10 pb-4">
                         Sistema de 8 Puntos
                       </h3>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                         <div>
-                          <h4 className="text-lg font-semibold text-cyan-400 mb-3">
+                          <h4 className="text-lg font-semibold text-[#2997ff] mb-3">
                             ¿Cómo funciona?
                           </h4>
-                          <p className="text-slate-300 mb-4">
+                          <p className="text-[#cccccc] mb-4">
                             Enagic utiliza un sistema único de 8 puntos para el
                             pago de comisiones, donde "1A" significa "1 Punto".
                             Cada venta genera un pago de hasta 8 puntos hacia
                             arriba en la estructura de la organización.
                           </p>
-                          <ul className="space-y-2 text-slate-300">
+                          <ul className="space-y-2 text-[#cccccc]">
                             <li className="flex items-start gap-2">
-                              <CheckCircle className="w-5 h-5 text-cyan-400 shrink-0" />{" "}
+                              <CheckCircle className="w-5 h-5 text-[#2997ff] shrink-0" />{" "}
                               <span className="pt-0.5">
                                 Sin cuota mensual de inscripción o mantenimiento
                               </span>
                             </li>
                             <li className="flex items-start gap-2">
-                              <CheckCircle className="w-5 h-5 text-cyan-400 shrink-0" />{" "}
+                              <CheckCircle className="w-5 h-5 text-[#2997ff] shrink-0" />{" "}
                               <span className="pt-0.5">
                                 Sin inventario que mantener
                               </span>
                             </li>
                             <li className="flex items-start gap-2">
-                              <CheckCircle className="w-5 h-5 text-cyan-400 shrink-0" />{" "}
+                              <CheckCircle className="w-5 h-5 text-[#2997ff] shrink-0" />{" "}
                               <span className="pt-0.5">
                                 Pagos diarios directos a tu cuenta
                               </span>
@@ -1076,18 +1076,18 @@ export default function TrainingPage() {
                           </h4>
                           <div className="space-y-4">
                             <div className="flex justify-between items-center border-b border-white/10 pb-2">
-                              <span className="text-slate-300 font-medium">
+                              <span className="text-[#cccccc] font-medium">
                                 Kangen K8
                               </span>
-                              <span className="text-xl font-bold text-cyan-400">
+                              <span className="text-xl font-bold text-[#2997ff]">
                                 $340 USD
                               </span>
                             </div>
                             <div className="flex justify-between items-center pb-2">
-                              <span className="text-slate-300 font-medium">
+                              <span className="text-[#cccccc] font-medium">
                                 emGuarde
                               </span>
-                              <span className="text-xl font-bold text-purple-400">
+                              <span className="text-xl font-bold text-[#2997ff]">
                                 $130 USD
                               </span>
                             </div>
@@ -1120,9 +1120,9 @@ export default function TrainingPage() {
                               </th>
                             </tr>
                           </thead>
-                          <tbody className="text-slate-300">
+                          <tbody className="text-[#cccccc]">
                             <tr>
-                              <td className="py-4 px-6 border-b border-white/5 font-bold text-cyan-400">
+                              <td className="py-4 px-6 border-b border-white/5 font-bold text-[#2997ff]">
                                 1A
                               </td>
                               <td className="py-4 px-6 border-b border-white/5">
@@ -1133,7 +1133,7 @@ export default function TrainingPage() {
                               </td>
                             </tr>
                             <tr>
-                              <td className="py-4 px-6 border-b border-white/5 font-bold text-cyan-400">
+                              <td className="py-4 px-6 border-b border-white/5 font-bold text-[#2997ff]">
                                 2A
                               </td>
                               <td className="py-4 px-6 border-b border-white/5">
@@ -1144,7 +1144,7 @@ export default function TrainingPage() {
                               </td>
                             </tr>
                             <tr>
-                              <td className="py-4 px-6 border-b border-white/5 font-bold text-cyan-400">
+                              <td className="py-4 px-6 border-b border-white/5 font-bold text-[#2997ff]">
                                 3A
                               </td>
                               <td className="py-4 px-6 border-b border-white/5">
@@ -1155,7 +1155,7 @@ export default function TrainingPage() {
                               </td>
                             </tr>
                             <tr>
-                              <td className="py-4 px-6 border-b border-white/5 font-bold text-cyan-400">
+                              <td className="py-4 px-6 border-b border-white/5 font-bold text-[#2997ff]">
                                 4A
                               </td>
                               <td className="py-4 px-6 border-b border-white/5">
@@ -1166,7 +1166,7 @@ export default function TrainingPage() {
                               </td>
                             </tr>
                             <tr>
-                              <td className="py-4 px-6 border-b border-white/5 font-bold text-cyan-400">
+                              <td className="py-4 px-6 border-b border-white/5 font-bold text-[#2997ff]">
                                 5A
                               </td>
                               <td className="py-4 px-6 border-b border-white/5">
@@ -1200,7 +1200,7 @@ export default function TrainingPage() {
                         <h3 className="text-2xl font-bold text-white mb-6 border-b border-white/10 pb-4">
                           Vía Rápida a 6A
                         </h3>
-                        <p className="text-slate-300 mb-6">
+                        <p className="text-[#cccccc] mb-6">
                           Para alcanzar las 101 ventas requeridas para 6A, el
                           enfoque del paquete que promueves hace una gran
                           diferencia en la velocidad de tu crecimiento:
@@ -1212,17 +1212,17 @@ export default function TrainingPage() {
                               <span className="font-semibold text-white">
                                 Vendiendo solo K8
                               </span>
-                              <span className="text-cyan-400 font-bold">
+                              <span className="text-[#2997ff] font-bold">
                                 101 Personas
                               </span>
                             </div>
-                            <p className="text-sm text-slate-400">
+                            <p className="text-sm text-[#cccccc]">
                               Necesitas encontrar 101 compradores individuales
                               de la máquina K8.
                             </p>
                           </div>
 
-                          <div className="bg-gradient-to-r from-cyan-900/40 to-blue-900/40 rounded-xl p-5 border border-cyan-500/30">
+                          <div className="bg-gradient-to-r from-cyan-900/40 to-blue-900/40 rounded-xl p-5 border border-white/20">
                             <div className="flex justify-between items-center mb-2">
                               <span className="font-semibold text-white">
                                 Vendiendo Paquete DUO
@@ -1231,7 +1231,7 @@ export default function TrainingPage() {
                                 51 Personas
                               </span>
                             </div>
-                            <p className="text-sm text-slate-300">
+                            <p className="text-sm text-[#cccccc]">
                               Cada paquete DUO (K8 + emGuarde) cuenta como 2
                               ventas. Cortas el tiempo y esfuerzo a la mitad.
                             </p>
@@ -1247,7 +1247,7 @@ export default function TrainingPage() {
                         <h3 className="text-2xl font-bold text-white mb-6 border-b border-white/10 pb-4">
                           Por qué 6A es la meta
                         </h3>
-                        <ul className="space-y-4 text-slate-300">
+                        <ul className="space-y-4 text-[#cccccc]">
                           <li className="flex items-start gap-3">
                             <Target className="w-6 h-6 text-tl-gold shrink-0" />
                             <div>
@@ -1306,10 +1306,10 @@ export default function TrainingPage() {
                         <div className="space-y-6">
                           <div>
                             <h4 className="text-lg font-semibold text-white mb-2 flex items-center gap-2">
-                              <CheckCircle className="w-5 h-5 text-cyan-400" />{" "}
+                              <CheckCircle className="w-5 h-5 text-[#2997ff]" />{" "}
                               Pago de Contado
                             </h4>
-                            <p className="text-slate-300 text-sm">
+                            <p className="text-[#cccccc] text-sm">
                               Tarjeta de crédito, débito o transferencia
                               bancaria. La forma más rápida de obtener tus
                               productos y comenzar.
@@ -1317,10 +1317,10 @@ export default function TrainingPage() {
                           </div>
                           <div>
                             <h4 className="text-lg font-semibold text-white mb-2 flex items-center gap-2">
-                              <CheckCircle className="w-5 h-5 text-cyan-400" />{" "}
+                              <CheckCircle className="w-5 h-5 text-[#2997ff]" />{" "}
                               Financiamiento Externo
                             </h4>
-                            <p className="text-slate-300 text-sm">
+                            <p className="text-[#cccccc] text-sm">
                               Tarjetas de crédito a meses (varía por país) o
                               préstamos personales. Ideal para no
                               descapitalizarse e invertir las ganancias en pagar
@@ -1329,10 +1329,10 @@ export default function TrainingPage() {
                           </div>
                           <div>
                             <h4 className="text-lg font-semibold text-white mb-2 flex items-center gap-2">
-                              <CheckCircle className="w-5 h-5 text-cyan-400" />{" "}
+                              <CheckCircle className="w-5 h-5 text-[#2997ff]" />{" "}
                               Plan Enagic (In-house)
                             </h4>
-                            <p className="text-slate-300 text-sm">
+                            <p className="text-[#cccccc] text-sm">
                               Pago inicial (enganche) y mensualidades
                               directamente con Enagic sin revisión de crédito
                               severa. Una opción accesible para todos.
@@ -1359,10 +1359,10 @@ export default function TrainingPage() {
                         </h3>
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                           <div>
-                            <h4 className="text-lg font-semibold text-cyan-400 mb-4">
+                            <h4 className="text-lg font-semibold text-[#2997ff] mb-4">
                               Qué Necesitamos de Ti
                             </h4>
-                            <ul className="space-y-3 text-slate-300 text-sm">
+                            <ul className="space-y-3 text-[#cccccc] text-sm">
                               <li className="flex items-start gap-2">
                                 <div className="mt-1 w-1.5 h-1.5 rounded-full bg-cyan-400 shrink-0" />{" "}
                                 Ganas de aprender y ser enseñable
@@ -1386,7 +1386,7 @@ export default function TrainingPage() {
                             <h4 className="text-lg font-semibold text-tl-gold mb-4">
                               Qué Ofrecemos
                             </h4>
-                            <ul className="space-y-3 text-slate-300 text-sm">
+                            <ul className="space-y-3 text-[#cccccc] text-sm">
                               <li className="flex items-start gap-2">
                                 <div className="mt-1 w-1.5 h-1.5 rounded-full bg-tl-gold shrink-0" />{" "}
                                 Mentoría uno a uno de líderes 6A+

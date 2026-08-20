@@ -27,7 +27,7 @@ export function FlagIntro({ country }: FlagIntroProps) {
                 className="mb-6 relative"
             >
                 <motion.div
-                    className="relative min-w-[180px] min-h-[120px] w-[200px] h-[133px] md:w-56 md:h-[150px] rounded-md overflow-hidden border border-white/20 bg-[#0a2060] flex items-center justify-center"
+                    className="relative min-w-[180px] min-h-[120px] w-[200px] h-[133px] md:w-56 md:h-[150px] rounded-md overflow-hidden border border-white/20 bg-black flex items-center justify-center"
                     animate={{ skewX: [-2, 2, -2], y: [0, -4, 0] }}
                     transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
                     style={{
@@ -72,7 +72,7 @@ export function FlagIntro({ country }: FlagIntroProps) {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: 0.5 }}
             >
-                <p className="mb-2 text-sm font-semibold uppercase tracking-widest text-cyan-400">
+                <p className="mb-2 text-sm font-semibold uppercase tracking-widest text-[#2997ff]">
                     True Legacy World — {country.region}
                 </p>
                 <h1 className="text-4xl font-bold text-white sm:text-5xl lg:text-6xl">

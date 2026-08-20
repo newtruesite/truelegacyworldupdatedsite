@@ -27,46 +27,46 @@ export default function SagaLibraryPage() {
     })
   }, [collection, query])
 
-  return <main className="min-h-screen bg-[#070615] px-4 pb-28 pt-6 text-white sm:px-6 lg:px-8">
+  return <main className="min-h-screen bg-black px-4 pb-28 pt-6 text-white sm:px-6 lg:px-8">
     <SEO title="Library Catalog" description="An organized directory of the resource library." noIndex />
     <div className="mx-auto max-w-7xl">
-      <header className="flex items-center gap-4"><Link to="/app" aria-label="Back to distributor workspace" className="grid h-11 w-11 place-items-center rounded-full border border-white/10 bg-white/[.04]"><ArrowLeft /></Link><div><p className="text-xs font-bold uppercase tracking-[.22em] text-violet-300">Separate resource catalog</p><h1 className="text-2xl font-black">Library</h1></div></header>
+      <header className="flex items-center gap-4"><Link to="/app" aria-label="Back to distributor workspace" className="grid h-11 w-11 place-items-center rounded-full border border-white/10 bg-white/[.04]"><ArrowLeft /></Link><div><p className="text-xs font-bold uppercase tracking-[.22em] text-[#2997ff]">Separate resource catalog</p><h1 className="text-2xl font-black">Library</h1></div></header>
 
-      <section className="mt-7 overflow-hidden rounded-[30px] border border-violet-300/20 bg-[radial-gradient(circle_at_top_right,rgba(139,92,246,.24),transparent_38%),linear-gradient(145deg,rgba(76,29,149,.18),rgba(255,255,255,.025))] p-6 sm:p-9">
-        <span className="inline-flex items-center gap-2 rounded-full border border-violet-300/20 bg-violet-300/[.08] px-3 py-1.5 text-xs font-bold text-violet-200"><BookOpen className="h-3.5 w-3.5" /> Library catalog</span>
+      <section className="mt-7 overflow-hidden rounded-[30px] border border-white/20 bg-[radial-gradient(circle_at_top_right,rgba(139,92,246,.24),transparent_38%),linear-gradient(145deg,rgba(76,29,149,.18),rgba(255,255,255,.025))] p-6 sm:p-9">
+        <span className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-violet-300/[.08] px-3 py-1.5 text-xs font-bold text-[#2997ff]"><BookOpen className="h-3.5 w-3.5" /> Library catalog</span>
         <h2 className="mt-5 max-w-4xl text-2xl font-black sm:text-4xl">The complete library, organized for faster browsing.</h2>
-        <p className="mt-4 max-w-3xl text-sm leading-7 text-slate-300 sm:text-base">Browse every captured library section by category, search for a topic, and preview the materials inside before opening the source library.</p>
-        <div className="mt-7 flex flex-col gap-3 sm:flex-row sm:items-center"><a href={SAGA_LIBRARY_URL} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-violet-300 px-5 font-black text-violet-950">Open the source library <ExternalLink className="h-4 w-4" /></a><p className="text-xs leading-5 text-slate-500">Content remains attributed to and hosted by the source library.</p></div>
+        <p className="mt-4 max-w-3xl text-sm leading-7 text-[#cccccc] sm:text-base">Browse every captured library section by category, search for a topic, and preview the materials inside before opening the source library.</p>
+        <div className="mt-7 flex flex-col gap-3 sm:flex-row sm:items-center"><a href={SAGA_LIBRARY_URL} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-violet-300 px-5 font-black text-[#2997ff]">Open the source library <ExternalLink className="h-4 w-4" /></a><p className="text-xs leading-5 text-[#86868b]">Content remains attributed to and hosted by the source library.</p></div>
       </section>
 
-      <section className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">{SAGA_COLLECTIONS.map(item => <button key={item.id} onClick={() => setCollection(collection === item.id ? 'all' : item.id)} className={`rounded-2xl border p-4 text-left transition ${collection === item.id ? 'border-violet-300/50 bg-violet-300/15' : 'border-white/10 bg-white/[.035] hover:border-violet-300/30'}`}><p className="font-black">{item.title}</p><p className="mt-1 text-xs leading-5 text-slate-500">{item.subtitle}</p></button>)}</section>
+      <section className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">{SAGA_COLLECTIONS.map(item => <button key={item.id} onClick={() => setCollection(collection === item.id ? 'all' : item.id)} className={`rounded-2xl border p-4 text-left transition ${collection === item.id ? 'border-white/20 bg-violet-300/15' : 'border-white/10 bg-white/[.035] hover:border-white/20'}`}><p className="font-black">{item.title}</p><p className="mt-1 text-xs leading-5 text-[#86868b]">{item.subtitle}</p></button>)}</section>
 
-      <section className="mt-9"><div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between"><div><p className="text-xs font-bold uppercase tracking-[.2em] text-violet-300">{visibleFolders.length} catalog sections</p><h2 className="mt-2 text-2xl font-black">Browse the library</h2></div><label className="relative block w-full sm:max-w-sm"><span className="sr-only">Search the library</span><Search className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500" /><input value={query} onChange={event => setQuery(event.target.value)} placeholder="Search resources, products, scripts…" className="h-12 w-full rounded-xl border border-white/10 bg-white/[.035] pl-11 pr-11 text-sm outline-none focus:border-violet-300/50" />{query ? <button onClick={() => setQuery('')} aria-label="Clear search" className="absolute right-3 top-1/2 -translate-y-1/2 p-1 text-slate-500"><X className="h-4 w-4" /></button> : null}</label></div>
-        <div className="mt-5 grid gap-4 md:grid-cols-2 xl:grid-cols-3">{visibleFolders.map(folder => { const parent = SAGA_COLLECTIONS.find(item => item.id === folder.collection)!; const count = folder.folders.length + folder.previews.length; return <button key={folder.id} onClick={() => setSelected(folder)} className="group flex min-h-60 flex-col rounded-[24px] border border-white/10 bg-white/[.035] p-5 text-left transition hover:-translate-y-1 hover:border-violet-300/30"><div className="flex items-start justify-between gap-4"><span className="grid h-11 w-11 place-items-center rounded-xl bg-violet-400/10 text-violet-300"><FolderOpen className="h-5 w-5" /></span><span className="rounded-full border border-violet-300/20 bg-violet-300/[.08] px-2.5 py-1 text-[10px] font-black uppercase tracking-wider text-violet-200">Library</span></div><p className="mt-5 text-xs font-bold uppercase tracking-[.17em] text-slate-500">{parent.title}</p><h3 className="mt-2 text-xl font-black">{folder.title}</h3><p className="mt-3 text-sm leading-6 text-slate-400">{folder.description}</p><div className="mt-5 flex flex-wrap gap-2">{[...folder.folders, ...folder.previews].slice(0, 3).map(topic => <span key={topic.title} className="rounded-lg bg-white/[.04] px-2.5 py-1 text-[10px] text-slate-400">{topic.title}</span>)}</div><div className="mt-auto flex items-center justify-between border-t border-white/[.07] pt-5"><span className="text-xs font-bold text-slate-500">{count} resources</span><span className="inline-flex items-center gap-2 text-sm font-black text-violet-200">Preview <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" /></span></div></button> })}</div>
-        {visibleFolders.length === 0 ? <div className="mt-5 rounded-3xl border border-dashed border-white/15 p-12 text-center"><Search className="mx-auto h-8 w-8 text-slate-600" /><h3 className="mt-4 text-xl font-black">No matching resources</h3><button onClick={() => { setQuery(''); setCollection('all') }} className="mt-5 rounded-xl border border-white/10 px-5 py-3 text-sm font-bold">Reset library</button></div> : null}
+      <section className="mt-9"><div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between"><div><p className="text-xs font-bold uppercase tracking-[.2em] text-[#2997ff]">{visibleFolders.length} catalog sections</p><h2 className="mt-2 text-2xl font-black">Browse the library</h2></div><label className="relative block w-full sm:max-w-sm"><span className="sr-only">Search the library</span><Search className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-[#86868b]" /><input value={query} onChange={event => setQuery(event.target.value)} placeholder="Search resources, products, scripts…" className="h-12 w-full rounded-xl border border-white/10 bg-white/[.035] pl-11 pr-11 text-sm outline-none focus:border-white/20" />{query ? <button onClick={() => setQuery('')} aria-label="Clear search" className="absolute right-3 top-1/2 -translate-y-1/2 p-1 text-[#86868b]"><X className="h-4 w-4" /></button> : null}</label></div>
+        <div className="mt-5 grid gap-4 md:grid-cols-2 xl:grid-cols-3">{visibleFolders.map(folder => { const parent = SAGA_COLLECTIONS.find(item => item.id === folder.collection)!; const count = folder.folders.length + folder.previews.length; return <button key={folder.id} onClick={() => setSelected(folder)} className="group flex min-h-60 flex-col rounded-[24px] border border-white/10 bg-white/[.035] p-5 text-left transition hover:-translate-y-1 hover:border-white/20"><div className="flex items-start justify-between gap-4"><span className="grid h-11 w-11 place-items-center rounded-xl bg-violet-400/10 text-[#2997ff]"><FolderOpen className="h-5 w-5" /></span><span className="rounded-full border border-white/20 bg-violet-300/[.08] px-2.5 py-1 text-[10px] font-black uppercase tracking-wider text-[#2997ff]">Library</span></div><p className="mt-5 text-xs font-bold uppercase tracking-[.17em] text-[#86868b]">{parent.title}</p><h3 className="mt-2 text-xl font-black">{folder.title}</h3><p className="mt-3 text-sm leading-6 text-[#cccccc]">{folder.description}</p><div className="mt-5 flex flex-wrap gap-2">{[...folder.folders, ...folder.previews].slice(0, 3).map(topic => <span key={topic.title} className="rounded-lg bg-white/[.04] px-2.5 py-1 text-[10px] text-[#cccccc]">{topic.title}</span>)}</div><div className="mt-auto flex items-center justify-between border-t border-white/[.07] pt-5"><span className="text-xs font-bold text-[#86868b]">{count} resources</span><span className="inline-flex items-center gap-2 text-sm font-black text-[#2997ff]">Preview <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" /></span></div></button> })}</div>
+        {visibleFolders.length === 0 ? <div className="mt-5 rounded-3xl border border-dashed border-white/15 p-12 text-center"><Search className="mx-auto h-8 w-8 text-[#86868b]" /><h3 className="mt-4 text-xl font-black">No matching resources</h3><button onClick={() => { setQuery(''); setCollection('all') }} className="mt-5 rounded-xl border border-white/10 px-5 py-3 text-sm font-bold">Reset library</button></div> : null}
       </section>
     </div>
 
-    {selected ? <div className="fixed inset-0 z-[120] flex items-end justify-center bg-black/75 backdrop-blur-sm sm:items-center sm:p-5" role="dialog" aria-modal="true" aria-labelledby="saga-preview-title" onMouseDown={event => { if (event.target === event.currentTarget) setSelected(null) }}><section className="max-h-[92vh] w-full max-w-3xl overflow-y-auto rounded-t-[28px] border border-white/10 bg-[#100d22] p-5 shadow-2xl sm:rounded-[28px] sm:p-7"><div className="flex items-start justify-between gap-4"><div><p className="text-xs font-bold uppercase tracking-[.2em] text-violet-300">Library catalog preview</p><h2 id="saga-preview-title" className="mt-2 text-2xl font-black sm:text-3xl">{selected.title}</h2><p className="mt-3 text-sm leading-6 text-slate-400">{selected.description}</p></div><button onClick={() => setSelected(null)} aria-label="Close preview" className="grid h-11 w-11 shrink-0 place-items-center rounded-full border border-white/10 bg-white/[.04]"><X className="h-5 w-5" /></button></div>
+    {selected ? <div className="fixed inset-0 z-[120] flex items-end justify-center bg-black/75 backdrop-blur-sm sm:items-center sm:p-5" role="dialog" aria-modal="true" aria-labelledby="saga-preview-title" onMouseDown={event => { if (event.target === event.currentTarget) setSelected(null) }}><section className="max-h-[92vh] w-full max-w-3xl overflow-y-auto rounded-t-[28px] border border-white/10 bg-black p-5 shadow-2xl sm:rounded-[28px] sm:p-7"><div className="flex items-start justify-between gap-4"><div><p className="text-xs font-bold uppercase tracking-[.2em] text-[#2997ff]">Library catalog preview</p><h2 id="saga-preview-title" className="mt-2 text-2xl font-black sm:text-3xl">{selected.title}</h2><p className="mt-3 text-sm leading-6 text-[#cccccc]">{selected.description}</p></div><button onClick={() => setSelected(null)} aria-label="Close preview" className="grid h-11 w-11 shrink-0 place-items-center rounded-full border border-white/10 bg-white/[.04]"><X className="h-5 w-5" /></button></div>
       {selected.folders.length ? <ResourceList title="Folders" items={selected.folders} onEmptyLink={setAlertResource} /> : null}<ResourceList title="Materials" items={selected.previews} onEmptyLink={setAlertResource} />
-      <a href={`${SAGA_LIBRARY_URL}?folder=${selected.id}`} target="_blank" rel="noopener noreferrer" className="mt-7 inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-xl bg-violet-300 px-5 font-black text-violet-950">Open Folder in Library <ExternalLink className="h-4 w-4" /></a>
+      <a href={`${SAGA_LIBRARY_URL}?folder=${selected.id}`} target="_blank" rel="noopener noreferrer" className="mt-7 inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-xl bg-violet-300 px-5 font-black text-[#2997ff]">Open Folder in Library <ExternalLink className="h-4 w-4" /></a>
     </section></div> : null}
 
     {alertResource ? (
       <div className="fixed inset-0 z-[130] flex items-center justify-center bg-black/85 p-4 backdrop-blur-md" onClick={() => setAlertResource(null)}>
-        <div role="dialog" aria-modal="true" onClick={event => event.stopPropagation()} className="w-full max-w-md rounded-3xl border border-violet-300/20 bg-[#0d0a1b] p-6 text-center shadow-2xl sm:p-8">
-          <span className="mx-auto grid h-14 w-14 place-items-center rounded-2xl bg-violet-400/10 text-violet-300">
-            <Hourglass className="h-7 w-7 animate-pulse text-violet-300" />
+        <div role="dialog" aria-modal="true" onClick={event => event.stopPropagation()} className="w-full max-w-md rounded-3xl border border-white/20 bg-black p-6 text-center shadow-2xl sm:p-8">
+          <span className="mx-auto grid h-14 w-14 place-items-center rounded-2xl bg-violet-400/10 text-[#2997ff]">
+            <Hourglass className="h-7 w-7 animate-pulse text-[#2997ff]" />
           </span>
-          <p className="mt-5 text-xs font-bold uppercase tracking-[.25em] text-violet-300">Resource Update</p>
+          <p className="mt-5 text-xs font-bold uppercase tracking-[.25em] text-[#2997ff]">Resource Update</p>
           <h2 className="mt-3 text-xl font-black">{alertResource}</h2>
-          <p className="mt-4 text-sm leading-6 text-slate-400">
+          <p className="mt-4 text-sm leading-6 text-[#cccccc]">
             This resource link is currently being verified and updated. It will be available directly in your workspace shortly!
           </p>
           <button
             type="button"
             onClick={() => setAlertResource(null)}
-            className="mt-7 min-h-12 w-full rounded-xl bg-violet-300 font-black text-violet-950 hover:bg-violet-200 transition-colors"
+            className="mt-7 min-h-12 w-full rounded-xl bg-violet-300 font-black text-[#2997ff] hover:bg-violet-200 transition-colors"
           >
             Got it, thanks!
           </button>
@@ -79,7 +79,7 @@ export default function SagaLibraryPage() {
 function ResourceList({ title, items, onEmptyLink }: { title: string; items: LibraryItem[]; onEmptyLink: (title: string) => void }) {
   return (
     <div className="mt-7">
-      <h3 className="text-sm font-black uppercase tracking-[.16em] text-violet-300">{title}</h3>
+      <h3 className="text-sm font-black uppercase tracking-[.16em] text-[#2997ff]">{title}</h3>
       <div className="mt-3 grid gap-2 sm:grid-cols-2">
         {items.map(item => {
           const handleClick = (e: React.MouseEvent) => {
@@ -95,11 +95,11 @@ function ResourceList({ title, items, onEmptyLink }: { title: string; items: Lib
               target={item.url ? "_blank" : undefined}
               rel={item.url ? "noopener noreferrer" : undefined}
               onClick={handleClick}
-              className="flex items-center justify-between rounded-xl border border-white/[.07] bg-white/[.035] p-3 text-sm text-slate-300 transition hover:border-violet-300/30 hover:text-white"
+              className="flex items-center justify-between rounded-xl border border-white/[.07] bg-white/[.035] p-3 text-sm text-[#cccccc] transition hover:border-white/20 hover:text-white"
             >
               <span>{item.title}</span>
               {item.url ? (
-                <ExternalLink className="h-3.5 w-3.5 shrink-0 text-violet-300" />
+                <ExternalLink className="h-3.5 w-3.5 shrink-0 text-[#2997ff]" />
               ) : (
                 <Hourglass className="h-3.5 w-3.5 shrink-0 text-amber-400" />
               )}

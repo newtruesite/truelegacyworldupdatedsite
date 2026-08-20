@@ -133,12 +133,12 @@ export default function SelectCountryPage() {
         <div className="content-wrapper flex-1 flex items-center justify-center px-4 py-20">
           <div className="text-center max-w-md w-full bg-white/5 border border-white/10 rounded-2xl p-6 md:p-8 backdrop-blur-sm shadow-2xl mx-auto">
             <div className="flex justify-center mb-6">
-              <GlobeIcon className="w-16 h-16 text-cyan-400 opacity-80" />
+              <GlobeIcon className="w-16 h-16 text-[#2997ff] opacity-80" />
             </div>
             <h1 className="text-2xl md:text-3xl font-bold text-white mb-3 tracking-tight break-words">
               Let's get you to the right region
             </h1>
-            <p className="text-slate-400 mb-8 text-sm md:text-base leading-relaxed">
+            <p className="text-[#cccccc] mb-8 text-sm md:text-base leading-relaxed">
               We couldn't find the region you're looking for. Please try
               selecting a region from the world map or view all available
               countries.
@@ -152,7 +152,7 @@ export default function SelectCountryPage() {
               </Link>
               <Link
                 to="/select-country"
-                className="w-full inline-flex items-center justify-center rounded-xl px-5 py-3.5 text-sm font-semibold text-slate-300 border border-white/10 hover:text-white hover:bg-white/5 transition-all"
+                className="w-full inline-flex items-center justify-center rounded-xl px-5 py-3.5 text-sm font-semibold text-[#cccccc] border border-white/10 hover:text-white hover:bg-white/5 transition-all"
               >
                 Browse all countries
               </Link>
@@ -188,12 +188,12 @@ export default function SelectCountryPage() {
 
         <div className="text-center mb-10 w-full max-w-2xl mx-auto px-2">
           <div className="flex justify-center mb-6">
-            <GlobeIcon className="w-16 h-16 md:w-20 md:h-20 text-cyan-400 opacity-80" />
+            <GlobeIcon className="w-16 h-16 md:w-20 md:h-20 text-[#2997ff] opacity-80" />
           </div>
           <h1 className="page-hero-title mb-4 gradient-text text-3xl md:text-5xl font-bold break-words leading-tight">
             {displayData.name}
           </h1>
-          <p className="text-slate-300 text-base md:text-lg leading-relaxed max-w-lg mx-auto">
+          <p className="text-[#cccccc] text-base md:text-lg leading-relaxed max-w-lg mx-auto">
             {locale === "es" && continent === "south-america"
               ? "Selecciona tu país para explorar los productos y unirte al equipo True Legacy cerca de ti"
               : "Select your country to explore products and join the True Legacy team near you"}
@@ -254,7 +254,7 @@ export default function SelectCountryPage() {
               }}
             >
               <span
-                className="inline-flex overflow-hidden rounded border-2 border-white/15 bg-[#0a2060] shadow-xl"
+                className="inline-flex overflow-hidden rounded border-2 border-white/15 bg-black shadow-xl"
                 style={{ width: "96px", height: "64px" }}
               >
                 {failedFlagSlugs.has(country.slug) ? (
@@ -311,7 +311,7 @@ export default function SelectCountryPage() {
               ? "¿No ves tu país?"
               : "Don't see your country?"}
           </h3>
-          <p className="text-slate-400 mb-6 max-w-2xl mx-auto">
+          <p className="text-[#cccccc] mb-6 max-w-2xl mx-auto">
             {locale === "es" && continent === "south-america"
               ? "Contáctanos por WhatsApp para más información. Más países se agregarán pronto."
               : "Contact us via WhatsApp for more information. More countries will be added soon."}

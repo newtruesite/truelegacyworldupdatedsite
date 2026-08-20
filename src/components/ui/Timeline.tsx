@@ -68,7 +68,7 @@ export function Timeline() {
                         Step-by-Step:{' '}
                         <span className="gradient-text">Build Your Legacy</span>
                     </h2>
-                    <p className="mx-auto max-w-xl text-slate-400 text-lg">
+                    <p className="mx-auto max-w-xl text-[#cccccc] text-lg">
                         There's no guessing, no hustling alone. Follow this proven path and watch your health, wealth, and freedom transform.
                     </p>
                 </motion.div>
@@ -105,14 +105,14 @@ export function Timeline() {
                                         </div>
 
                                         <h3 className="mb-2 text-lg font-bold text-white">{step.title}</h3>
-                                        <p className="mb-3 text-sm text-slate-400 leading-relaxed">{step.description}</p>
+                                        <p className="mb-3 text-sm text-[#cccccc] leading-relaxed">{step.description}</p>
                                         <div className="flex flex-wrap items-center gap-x-1 gap-y-1">
                                             {step.detail.split('→').map((d, di) => (
                                                 <span key={di} className="flex items-center gap-1">
-                                                    <CheckCircle className="h-3.5 w-3.5 shrink-0 text-cyan-400" />
-                                                    <span className="text-xs text-slate-500">{d.trim()}</span>
+                                                    <CheckCircle className="h-3.5 w-3.5 shrink-0 text-[#2997ff]" />
+                                                    <span className="text-xs text-[#86868b]">{d.trim()}</span>
                                                     {di < step.detail.split('→').length - 1 && (
-                                                        <ArrowRight className="h-3 w-3 text-slate-600" />
+                                                        <ArrowRight className="h-3 w-3 text-[#86868b]" />
                                                     )}
                                                 </span>
                                             ))}

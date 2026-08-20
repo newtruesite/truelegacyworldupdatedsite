@@ -211,7 +211,7 @@ export default function DistributorsPage() {
   };
 
   return (
-    <div className="page-wrapper bg-[#060b1e] text-white">
+    <div className="page-wrapper bg-black text-white">
       <SEO title="True Legacy Verified Leaders & Distributors" description="Find a verified True Legacy leader by market and language while preserving referral and team attribution." />
       <Navbar />
       <main className="content-wrapper">
@@ -223,37 +223,37 @@ export default function DistributorsPage() {
             <motion.h1 initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.08 }} className="mt-4 text-4xl font-black leading-tight sm:text-5xl md:text-6xl">
               {copy.title}
             </motion.h1>
-            <motion.p initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.14 }} className="mx-auto mt-5 max-w-3xl text-base leading-7 text-slate-300 md:text-lg">
+            <motion.p initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.14 }} className="mx-auto mt-5 max-w-3xl text-base leading-7 text-[#cccccc] md:text-lg">
               {copy.subtitle}
             </motion.p>
-            <div className="mx-auto mt-8 flex max-w-3xl items-start gap-3 rounded-2xl border border-cyan-300/20 bg-cyan-300/[0.07] p-4 text-left text-sm leading-6 text-cyan-50/90">
-              <Users className="mt-0.5 h-5 w-5 shrink-0 text-cyan-300" />
+            <div className="mx-auto mt-8 flex max-w-3xl items-start gap-3 rounded-2xl border border-white/20 bg-cyan-300/[0.07] p-4 text-left text-sm leading-6 text-cyan-50/90">
+              <Users className="mt-0.5 h-5 w-5 shrink-0 text-[#2997ff]" />
               <p><strong className="text-white">{copy.referred}</strong> {copy.referredBody}</p>
             </div>
           </div>
         </TLBackground>
 
-        <section className="border-t border-white/5 bg-[#070c1a] py-12 md:py-16">
+        <section className="border-t border-white/5 bg-black py-12 md:py-16">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <div className="sticky top-20 z-20 mb-10 rounded-3xl border border-white/10 bg-[#081126]/95 p-4 shadow-2xl shadow-black/30 backdrop-blur-xl sm:p-5">
+            <div className="sticky top-20 z-20 mb-10 rounded-3xl border border-white/10 bg-black/95 p-4 shadow-2xl shadow-black/30 backdrop-blur-xl sm:p-5">
               <div className="grid gap-3 md:grid-cols-[1.4fr_1fr_1fr]">
                 <label className="relative">
-                  <Search className="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-500" />
+                  <Search className="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-[#86868b]" />
                   <span className="sr-only">{copy.search}</span>
-                  <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder={copy.search} className="min-h-12 w-full rounded-xl border border-white/10 bg-black/20 py-3 pl-12 pr-4 text-sm text-white outline-none transition placeholder:text-slate-500 focus:border-cyan-400/60" />
+                  <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder={copy.search} className="min-h-12 w-full rounded-xl border border-white/10 bg-black/20 py-3 pl-12 pr-4 text-sm text-white outline-none transition placeholder:text-[#86868b] focus:border-white/20" />
                 </label>
-                <select value={region} onChange={(event) => setRegion(event.target.value)} aria-label={copy.market} className="min-h-12 rounded-xl border border-white/10 bg-[#0b1630] px-4 text-sm text-white outline-none focus:border-cyan-400/60">
+                <select value={region} onChange={(event) => setRegion(event.target.value)} aria-label={copy.market} className="min-h-12 rounded-xl border border-white/10 bg-black px-4 text-sm text-white outline-none focus:border-white/20">
                   <option value="all">{copy.market}</option>
                   {regions.map((item) => <option key={item} value={item}>{item}</option>)}
                 </select>
-                <select value={language} onChange={(event) => setLanguage(event.target.value)} aria-label={copy.language} className="min-h-12 rounded-xl border border-white/10 bg-[#0b1630] px-4 text-sm text-white outline-none focus:border-cyan-400/60">
+                <select value={language} onChange={(event) => setLanguage(event.target.value)} aria-label={copy.language} className="min-h-12 rounded-xl border border-white/10 bg-black px-4 text-sm text-white outline-none focus:border-white/20">
                   <option value="all">{copy.language}</option>
                   {languages.map((item) => <option key={item} value={item}>{LANGUAGE_NAMES[locale]?.[item] || item.toUpperCase()}</option>)}
                 </select>
               </div>
-              <div className="mt-4 flex items-center justify-between gap-4 text-xs text-slate-400">
+              <div className="mt-4 flex items-center justify-between gap-4 text-xs text-[#cccccc]">
                 <p><strong className="text-white">{filtered.length}</strong> {copy.showing}</p>
-                {(query || region !== "all" || language !== "all") && <button type="button" onClick={resetFilters} className="font-semibold text-cyan-300 hover:text-cyan-200">{copy.clear}</button>}
+                {(query || region !== "all" || language !== "all") && <button type="button" onClick={resetFilters} className="font-semibold text-[#2997ff] hover:text-[#2997ff]">{copy.clear}</button>}
               </div>
             </div>
 
@@ -263,16 +263,16 @@ export default function DistributorsPage() {
               </div>
             ) : (
               <div className="rounded-3xl border border-white/10 bg-white/[0.03] p-12 text-center">
-                <p className="text-slate-300">{copy.noResults}</p>
-                <button type="button" onClick={resetFilters} className="mt-5 rounded-xl border border-cyan-400/30 px-5 py-3 text-sm font-bold text-cyan-200 hover:bg-cyan-400/10">{copy.clear}</button>
+                <p className="text-[#cccccc]">{copy.noResults}</p>
+                <button type="button" onClick={resetFilters} className="mt-5 rounded-xl border border-white/20 px-5 py-3 text-sm font-bold text-[#2997ff] hover:bg-cyan-400/10">{copy.clear}</button>
               </div>
             )}
 
-            <div className="mt-14 grid gap-6 rounded-[2rem] border border-cyan-300/20 bg-gradient-to-br from-cyan-400/[0.10] to-blue-600/[0.07] p-7 md:grid-cols-[1fr_auto] md:items-center md:p-10">
+            <div className="mt-14 grid gap-6 rounded-[2rem] border border-white/20 bg-gradient-to-br from-cyan-400/[0.10] to-blue-600/[0.07] p-7 md:grid-cols-[1fr_auto] md:items-center md:p-10">
               <div>
-                <p className="text-xs font-bold uppercase tracking-[0.24em] text-cyan-300">{copy.unsure}</p>
+                <p className="text-xs font-bold uppercase tracking-[0.24em] text-[#2997ff]">{copy.unsure}</p>
                 <h2 className="mt-3 text-2xl font-black md:text-3xl">{copy.match}</h2>
-                <p className="mt-3 max-w-2xl leading-7 text-slate-300">{copy.unsureBody}</p>
+                <p className="mt-3 max-w-2xl leading-7 text-[#cccccc]">{copy.unsureBody}</p>
               </div>
               <Link to="/apply?interest=product" className="inline-flex min-h-13 items-center justify-center gap-2 rounded-xl bg-cyan-500 px-6 py-3.5 font-bold text-slate-950 transition hover:bg-cyan-400">
                 {copy.match} <ArrowRight className="h-5 w-5" />
@@ -289,26 +289,26 @@ export default function DistributorsPage() {
 function DistributorCard({ dist, index, profileLabel, locale }: { dist: Distributor; index: number; profileLabel: string; locale: string }) {
   const [imgError, setImgError] = useState(false);
   return (
-    <motion.article initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: Math.min(index, 7) * 0.05 }} className="group flex h-full flex-col overflow-hidden rounded-3xl border border-white/10 bg-[#09142c] transition-all duration-300 hover:-translate-y-1 hover:border-cyan-300/30 hover:shadow-2xl hover:shadow-cyan-950/20">
+    <motion.article initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: Math.min(index, 7) * 0.05 }} className="group flex h-full flex-col overflow-hidden rounded-3xl border border-white/10 bg-black transition-all duration-300 hover:-translate-y-1 hover:border-white/20 hover:shadow-2xl hover:shadow-cyan-950/20">
       <Link to={`/d/${dist.slug}`} className="relative block aspect-[4/5] overflow-hidden bg-cyan-500/10">
-        {!imgError && dist.photo ? <img src={dist.photo} alt={dist.name} className={`h-full w-full object-cover object-top transition duration-500 ${dist.slug === "simon-loh" ? "origin-bottom scale-[1.16] group-hover:scale-[1.19]" : "group-hover:scale-[1.025]"}`} onError={() => setImgError(true)} /> : <span className="flex h-full items-center justify-center text-5xl font-black text-cyan-300">{dist.fallbackInitial}</span>}
-        <span className="absolute left-4 top-4 inline-flex items-center gap-1.5 rounded-full border border-cyan-200/20 bg-[#071127]/85 px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.13em] text-cyan-100 backdrop-blur">
-          <BadgeCheck className="h-4 w-4 text-cyan-300" /> {locale === 'es' ? 'Verificado' : locale === 'fr' ? 'Vérifié' : locale === 'pt' ? 'Verificado' : 'Verified'}
+        {!imgError && dist.photo ? <img src={dist.photo} alt={dist.name} className={`h-full w-full object-cover object-top transition duration-500 ${dist.slug === "simon-loh" ? "origin-bottom scale-[1.16] group-hover:scale-[1.19]" : "group-hover:scale-[1.025]"}`} onError={() => setImgError(true)} /> : <span className="flex h-full items-center justify-center text-5xl font-black text-[#2997ff]">{dist.fallbackInitial}</span>}
+        <span className="absolute left-4 top-4 inline-flex items-center gap-1.5 rounded-full border border-white/20 bg-black/85 px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.13em] text-[#2997ff] backdrop-blur">
+          <BadgeCheck className="h-4 w-4 text-[#2997ff]" /> {locale === 'es' ? 'Verificado' : locale === 'fr' ? 'Vérifié' : locale === 'pt' ? 'Verificado' : 'Verified'}
         </span>
       </Link>
       <div className="flex flex-1 flex-col p-5">
         <h2 className="text-xl font-black text-white">{dist.name}</h2>
-        <p className="mt-1 min-h-10 text-sm leading-5 text-cyan-200/80">{dist.title}</p>
-        <div className="mt-4 space-y-2 text-xs leading-5 text-slate-400">
-          <p className="flex items-start gap-2"><MapPin className="mt-0.5 h-4 w-4 shrink-0 text-cyan-300" /><span>{dist.regions.join(" · ")}</span></p>
-          <p className="flex items-start gap-2"><Languages className="mt-0.5 h-4 w-4 shrink-0 text-cyan-300" /><span>{dist.languages.map((item) => LANGUAGE_NAMES[locale]?.[item] || item.toUpperCase()).join(" · ")}</span></p>
-          <p className="flex items-center gap-2"><Globe2 className="h-4 w-4 shrink-0 text-cyan-300" /> {locale === 'es' ? 'Equipo True Legacy' : locale === 'fr' ? 'Équipe True Legacy' : locale === 'pt' ? 'Equipe True Legacy' : 'True Legacy team'}</p>
+        <p className="mt-1 min-h-10 text-sm leading-5 text-[#2997ff]/80">{dist.title}</p>
+        <div className="mt-4 space-y-2 text-xs leading-5 text-[#cccccc]">
+          <p className="flex items-start gap-2"><MapPin className="mt-0.5 h-4 w-4 shrink-0 text-[#2997ff]" /><span>{dist.regions.join(" · ")}</span></p>
+          <p className="flex items-start gap-2"><Languages className="mt-0.5 h-4 w-4 shrink-0 text-[#2997ff]" /><span>{dist.languages.map((item) => LANGUAGE_NAMES[locale]?.[item] || item.toUpperCase()).join(" · ")}</span></p>
+          <p className="flex items-center gap-2"><Globe2 className="h-4 w-4 shrink-0 text-[#2997ff]" /> {locale === 'es' ? 'Equipo True Legacy' : locale === 'fr' ? 'Équipe True Legacy' : locale === 'pt' ? 'Equipe True Legacy' : 'True Legacy team'}</p>
         </div>
         <div className="mt-auto flex items-center gap-2 pt-6">
           <Link to={`/d/${dist.slug}`} className="inline-flex min-h-11 flex-1 items-center justify-center gap-2 rounded-xl bg-cyan-500 px-4 text-sm font-bold text-slate-950 hover:bg-cyan-400">
             {profileLabel} <ArrowRight className="h-4 w-4" />
           </Link>
-          {dist.whatsapp && <a href={dist.whatsapp} target="_blank" rel="noreferrer" aria-label={`WhatsApp ${dist.name}`} className="grid h-11 w-11 shrink-0 place-items-center rounded-xl border border-emerald-300/25 bg-emerald-400/10 text-emerald-300 hover:bg-emerald-400/20"><IconWhatsApp className="h-5 w-5" /></a>}
+          {dist.whatsapp && <a href={dist.whatsapp} target="_blank" rel="noreferrer" aria-label={`WhatsApp ${dist.name}`} className="grid h-11 w-11 shrink-0 place-items-center rounded-xl border border-emerald-300/25 bg-emerald-400/10 text-[#cccccc] hover:bg-emerald-400/20"><IconWhatsApp className="h-5 w-5" /></a>}
           {dist.instagram && <a href={dist.instagram} target="_blank" rel="noreferrer" aria-label={`Instagram ${dist.name}`} className="grid h-11 w-11 shrink-0 place-items-center rounded-xl border border-pink-300/20 bg-pink-400/10 text-pink-300 hover:bg-pink-400/20"><Instagram className="h-5 w-5" /></a>}
         </div>
       </div>

@@ -45,12 +45,12 @@ export function SocialProofStrip() {
     >
       <div>
         <span className="block text-2xl md:text-3xl font-bold text-white tabular-nums">{markets}</span>
-        <span className="text-sm text-slate-400">featured markets with True Legacy members and leaders</span>
+        <span className="text-sm text-[#cccccc]">featured markets with True Legacy members and leaders</span>
       </div>
       <div className="w-px h-10 bg-white/10 hidden sm:block" />
       <div>
         <span className="block text-2xl md:text-3xl font-bold text-white tabular-nums">{years}</span>
-        <span className="text-sm text-slate-400">years of Enagic innovation</span>
+        <span className="text-sm text-[#cccccc]">years of Enagic innovation</span>
       </div>
     </motion.div>
   )

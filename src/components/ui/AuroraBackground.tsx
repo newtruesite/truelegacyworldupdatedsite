@@ -47,7 +47,7 @@ export function AuroraBackground({
     return (
         <div
             ref={containerRef}
-            className={cn('relative overflow-hidden bg-[#0a0e1a]', className)}
+            className={cn('relative overflow-hidden bg-black', className)}
         >
             {/* Aurora blobs */}
             <div

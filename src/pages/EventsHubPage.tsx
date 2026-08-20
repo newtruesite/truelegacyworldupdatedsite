@@ -46,7 +46,7 @@ export default function EventsHubPage() {
     ? { ...event, subtitle: copy.globalSubtitle, schedule: copy.globalSchedule, detailsLabel: copy.globalDetails, zoomLabel: copy.zoom }
     : { ...event, subtitle: copy.latamSubtitle, schedule: copy.latamSchedule, detailsLabel: copy.latamDetails, zoomLabel: copy.zoom })
   return (
-    <div className="page-wrapper bg-[#060b1e] text-white">
+    <div className="page-wrapper bg-black text-white">
       <SEO
         title="True Legacy Live Events | Global and LATAM"
         description="Choose the Global English or LATAM Spanish weekly True Legacy presentation, view the full details, and join live on Zoom."
@@ -58,9 +58,9 @@ export default function EventsHubPage() {
           <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_10%,rgba(37,99,235,0.18),transparent_38%),radial-gradient(circle_at_80%_30%,rgba(6,182,212,0.12),transparent_35%)]" />
           <div className="relative mx-auto max-w-6xl">
             <div className="mx-auto mb-12 max-w-3xl text-center">
-              <p className="text-xs font-bold uppercase tracking-[0.28em] text-cyan-300">{copy.eyebrow}</p>
+              <p className="text-xs font-bold uppercase tracking-[0.28em] text-[#2997ff]">{copy.eyebrow}</p>
               <h1 className="mt-4 text-4xl font-black sm:text-5xl">{copy.title}</h1>
-              <p className="mt-5 text-lg leading-8 text-slate-300">{copy.subtitle}</p>
+              <p className="mt-5 text-lg leading-8 text-[#cccccc]">{copy.subtitle}</p>
             </div>
 
             <div className="mx-auto grid max-w-5xl gap-6 lg:grid-cols-2">
@@ -70,11 +70,11 @@ export default function EventsHubPage() {
                     <img src={event.image} alt={event.imageAlt} className="h-full w-full object-cover object-top transition duration-500 hover:scale-[1.02]" />
                   </div>
                   <div className="p-6 sm:p-8">
-                    <p className="text-xs font-bold uppercase tracking-[0.22em] text-cyan-300">{event.eyebrow}</p>
+                    <p className="text-xs font-bold uppercase tracking-[0.22em] text-[#2997ff]">{event.eyebrow}</p>
                     <h2 className="mt-3 text-2xl font-black sm:text-3xl">{event.title}</h2>
-                    <p className="mt-2 text-slate-400">{event.subtitle}</p>
+                    <p className="mt-2 text-[#cccccc]">{event.subtitle}</p>
                     <div className="mt-5 flex items-start gap-3 rounded-2xl border border-white/10 bg-black/20 p-4 text-sm text-slate-200">
-                      <Clock3 className="mt-0.5 h-5 w-5 shrink-0 text-cyan-300" />
+                      <Clock3 className="mt-0.5 h-5 w-5 shrink-0 text-[#2997ff]" />
                       <span>{event.schedule}</span>
                     </div>
                     <div className="mt-6 grid gap-3 sm:grid-cols-2">
