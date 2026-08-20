@@ -2346,7 +2346,7 @@ a:not([class*="bg-"]):not(.btn-primary):hover { color: var(--color-link-blue); }
 /* Full-bleed cinema canvas and restrained photographic treatment. */
 .tl-bg, .tl-bg-light, .tl-bg-dark,
 [class*="bg-[#05"], [class*="bg-[#06"], [class*="bg-[#07"], [class*="bg-[#08"],
-[class*="bg-gradient"], [class*="from-cyan"], [class*="from-blue"] {
+[class*="from-cyan"], [class*="from-blue"] {
   background-color: #000 !important;
 }
 .tl-bg {
