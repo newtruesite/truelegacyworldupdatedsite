@@ -161,7 +161,7 @@ const FALLBACK_DISTRIBUTORS: PublicDistributor[] = [
     referral_code: 'emanuela',
     display_name: 'Emanuela',
     title: 'True Legacy Distributor',
-    bio: 'Profile details coming soon.',
+    bio: 'Emanuela is a True Legacy distributor serving the United States and helping people connect with the community, product education, and distributor support.',
     avatar_url: '/leaders/standardized/emanuela-doustova.png',
     regions: ['USA'],
     languages: ['en'],
@@ -201,7 +201,7 @@ export async function getPublicDistributors(): Promise<PublicDistributor[]> {
   const { data, error } = await crmSupabase.rpc('get_public_crm_distributors')
   if (error || !Array.isArray(data)) return FALLBACK_DISTRIBUTORS
   const remoteDistributors = (data as PublicDistributor[]).map(profile => {
-    if (!['mehdi-cohen', 'simon-loh', 'ming-way-sia', 'zah-naderi', 'jesse-schexnayder', 'angel-mok'].includes(profile.slug)) return profile
+    if (!['mehdi-cohen', 'simon-loh', 'ming-way-sia', 'zah-naderi', 'emanuela', 'jesse-schexnayder', 'angel-mok'].includes(profile.slug)) return profile
     const confirmed = FALLBACK_DISTRIBUTORS.find(item => item.slug === profile.slug)
     return confirmed ? { ...profile, ...confirmed, id: profile.id } : profile
   })

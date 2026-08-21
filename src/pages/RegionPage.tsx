@@ -172,8 +172,11 @@ export default function RegionPage() {
             {regionCountries.length === 0 && (
               <div className="text-center py-20 glass rounded-2xl border border-white/10">
                 <p className="text-xl text-[#cccccc]">
-                  More countries in {regionName} coming soon!
+                  No featured country pages are currently available for {regionName}. Browse the global distributor directory to connect with the right leader.
                 </p>
+                <Link to="/distributors" className="mt-6 inline-flex min-h-12 items-center justify-center rounded-xl border border-white/20 px-6 font-semibold text-[#2997ff] hover:bg-cyan-400/10">
+                  Browse global distributors
+                </Link>
               </div>
             )}
           </div>

@@ -262,7 +262,7 @@ export const SAGA_FOLDERS: SagaFolder[] = [
     description: 'Ideas and frameworks for clear, responsible distributor content.',
     collection: 'business',
     folders: [
-      { title: 'Pre-made social content — coming soon' }
+      { title: 'Social content planning & prompts' }
     ],
     previews: [
       { title: '76 Content Prompts' },

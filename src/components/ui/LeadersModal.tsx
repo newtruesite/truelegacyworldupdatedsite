@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
 import { X } from 'lucide-react'
 import type { Country } from '@/lib/countries'
+import { getWhatsAppLink } from '@/config/contactLinks'
 
 const LEADERS = [
   {
@@ -9,7 +10,7 @@ const LEADERS = [
     telegram: 'https://t.me/mehdicohen',
     instagram: 'https://www.instagram.com/mehdicohen/',
     website: 'https://mehdicohen.com',
-    whatsapp: 'https://wa.me/1234567890',
+    whatsapp: getWhatsAppLink(),
     photo: '/leaders/standardized/mehdi-cohen.png',
     region: 'Global',
   },
@@ -18,7 +19,7 @@ const LEADERS = [
     title: 'True Legacy Leader',
     telegram: 'https://t.me/ryanpool',
     instagram: 'https://www.instagram.com/ryanpool/',
-    whatsapp: 'https://wa.me/1234567890',
+    whatsapp: getWhatsAppLink(),
     photo: '/leaders/standardized/ryan-pool-sr.png',
     region: 'Global',
   },
@@ -63,8 +64,6 @@ function IconWhatsApp({ className }: { className?: string }) {
 }
 
 const LATAM_SLUGS = ['colombia', 'mexico', 'paraguay', 'brazil']
-// TODO: Replace with actual LATAM WhatsApp number when provided
-const WHATSAPP_LATAM = 'https://wa.me/1234567890'
 
 type Props = {
   isOpen: boolean
@@ -161,7 +160,7 @@ export function LeadersModal({ isOpen, onClose, country, title = 'Connect With a
                   )}
                   {isLATAM && !(leader as { whatsapp?: string }).whatsapp && (
                     <a
-                      href={WHATSAPP_LATAM}
+                      href={getWhatsAppLink(country?.slug)}
                       target="_blank" rel="noopener noreferrer"
                       className="inline-flex items-center gap-2 min-h-[44px] px-4 py-2.5 rounded-lg font-bold text-white no-underline text-sm transition-opacity hover:opacity-90"
                       style={{ background: '#25D366' }}

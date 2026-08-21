@@ -143,9 +143,9 @@ const LEADERS = [
         instagramUrl: 'https://www.instagram.com/emanuelabraj/',
         region: 'USA',
         role: 'True Legacy Distributor',
-        intro: 'Emanuela is part of the growing True Legacy distributor community. Her full story and additional profile details are coming soon.',
+        intro: 'Emanuela is a True Legacy distributor serving the United States and helping people connect with the community, product education, and distributor support.',
         bio: [
-            'Emanuela is part of the growing True Legacy distributor community. Her full biography and additional profile details will be added soon.',
+            'Connect with Emanuela for product education, community support, and guidance on the independent distributor opportunity in the United States.',
         ],
         image: '/leaders/standardized/emanuela-doustova.png',
         icon: Star,

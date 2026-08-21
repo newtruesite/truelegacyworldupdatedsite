@@ -91,8 +91,8 @@ export const PRODUCTS: Record<ProductId, ProductDefinition> = {
     slug: 'emguarde',
     name: 'emGuarde GO™ (Set of 2)',
     category: 'accessory',
-    enagicProductUrl: 'https://EmGuarde.com',
-    pdfGuideUrl: 'https://www.truelegacyworld.com/_files/ugd/7b12be_ff7cba88b07d461890527e0d74fcea43.pdf',
+    enagicProductUrl: 'https://www.enagic.com/en_US/product-emguarde',
+    pdfGuideUrl: undefined,
     imageSrc: '/products/emguarde-go.png',
     imageAlt: 'emGuarde GO portable device set of two by Enagic',
     availability: {
@@ -140,7 +140,7 @@ export const PRODUCTS: Record<ProductId, ProductDefinition> = {
     name: 'Kangen Beauté®',
     category: 'accessory',
     enagicProductUrl: 'https://www.enagic.com/en_US/product-kangen-beaute',
-    pdfGuideUrl: undefined,
+    pdfGuideUrl: 'https://www.enagic.com/pdf/1282/Kangen_Beaut%C3%A9_Presentation_-_English.pdf?v=1784249348',
     imageSrc: '/products/kangen-beaute.png',
     imageAlt: 'Kangen Beauté luxury three-step skincare collection',
     availability: {

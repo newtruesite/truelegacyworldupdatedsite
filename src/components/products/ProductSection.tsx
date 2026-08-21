@@ -257,19 +257,21 @@ export function ProductSection({
                     </a>
                   )}
                   {product.pdfGuideUrl && (
-                    <Link
-                      to={country ? `/${country.slug}/training` : "/training"}
+                    <a
+                      href={product.pdfGuideUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
                       className="inline-flex items-center gap-1.5 rounded-md border border-white/20 px-4 py-2 text-xs font-semibold text-[#2997ff] hover:bg-cyan-500/10 hover:-translate-y-0.5 hover:shadow-md transition-all duration-150"
                     >
                       {pCopy?.downloadGuide ??
                         (locale === "es"
-                          ? "Guías en Capacitación"
+                          ? "Abrir guía PDF"
                           : locale === "fr"
-                            ? "Guides en Formation"
+                            ? "Ouvrir le guide PDF"
                             : locale === "pt"
-                              ? "Guias no Treinamento"
-                              : "Guides in Training")}
-                    </Link>
+                              ? "Abrir guia PDF"
+                              : "Open PDF guide")}
+                    </a>
                   )}
                   <Link
                     to={getDistributorLink(country?.slug)}
