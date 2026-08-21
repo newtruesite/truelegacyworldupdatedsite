@@ -240,7 +240,21 @@ export function ProductSection({
                   </p>
                 )}
                 <div className="mt-auto flex flex-wrap gap-3 justify-center pt-1 md:justify-start">
-                  {id === 'kangen_air' ? (
+                  {id === 'k8' ? (
+                    <Link
+                      to={country ? `/${country.slug}/k8` : "/k8"}
+                      className="inline-flex items-center gap-1.5 rounded-md border border-white/15 bg-white/5 px-4 py-2 text-xs font-semibold text-slate-100 hover:bg-white/10 hover:-translate-y-0.5 hover:shadow-md transition-all duration-150"
+                    >
+                      {pCopy?.learnMore}
+                    </Link>
+                  ) : id === 'emguarde' ? (
+                    <Link
+                      to={country ? `/${country.slug}/emguarde` : "/emguarde"}
+                      className="inline-flex items-center gap-1.5 rounded-md border border-white/15 bg-white/5 px-4 py-2 text-xs font-semibold text-slate-100 hover:bg-white/10 hover:-translate-y-0.5 hover:shadow-md transition-all duration-150"
+                    >
+                      {pCopy?.learnMore}
+                    </Link>
+                  ) : id === 'kangen_air' ? (
                     <Link
                       to={country ? `/${country.slug}/kangen-air` : "/kangen-air"}
                       className="inline-flex items-center gap-1.5 rounded-md bg-emerald-500 hover:bg-emerald-400 px-4 py-2 text-xs font-semibold text-white hover:-translate-y-0.5 hover:shadow-md transition-all duration-150"
