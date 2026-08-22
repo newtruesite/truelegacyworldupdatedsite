@@ -30,7 +30,7 @@ const LEADERS = [
     instagram: 'https://www.instagram.com/simonloh_/',
     whatsapp: 'https://wa.me/60126612042',
     region: 'Global / Malaysia',
-    photo: '/leaders/standardized/simon-loh.png',
+    photo: '/leaders/standardized/simon-loh-v2.png',
   },
   {
     name: 'Ming-Way Sia',

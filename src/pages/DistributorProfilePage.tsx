@@ -95,12 +95,12 @@ export default function DistributorProfilePage() {
   }[locale] as Record<string, string>
   const localizedProfile = profile && locale !== 'en' ? PROFILE_TRANSLATIONS[profile.slug]?.[locale] : undefined
   const profileHeroAssets: Record<string, string> = {
-    'angel-mok': '/leaders/standardized/angel-mok.png',
+    'angel-mok': '/leaders/standardized/angel-mok-v2.png',
     'jesse-schexnayder': '/leaders/jesse-hero-transparent.png',
     'mehdi-cohen': '/leaders/mehdi-hero.png',
     'simon-loh': '/leaders/simon-hero.png',
     'ming-way-sia': '/leaders/mingway-hero.png',
-    'zah-naderi': '/leaders/zah-hero-v2.png',
+    'zah-naderi': '/leaders/zah-hero-v3.png',
     'magaly-cardona': '/leaders/magaly-hero.png',
     'ryan-pool': '/leaders/ryan-hero.png',
     'alex-gonzalez': '/leaders/alex-hero-transparent.png',
@@ -149,7 +149,7 @@ export default function DistributorProfilePage() {
               {item.visual === 'training' && <>
                 <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_82%,rgba(34,211,238,0.18),transparent_46%),linear-gradient(135deg,#07142f,#0a2550)]" />
                 <div className="absolute inset-x-[6%] bottom-0 flex h-[92%] items-end justify-center">
-                  {['/leaders/standardized/simon-loh.png', '/leaders/standardized/mehdi-cohen.png', '/leaders/standardized/ming-way-sia.png'].map((src, leaderIndex) => <img key={src} src={src} alt="True Legacy leader" className={`h-[86%] w-[36%] rounded-t-2xl border border-white/15 object-cover object-top shadow-2xl shadow-black/40 transition duration-700 group-hover:-translate-y-1 ${leaderIndex === 1 ? 'z-20 h-[96%] -mx-3' : 'z-10 opacity-90'}`} />)}
+                  {['/leaders/standardized/simon-loh-v2.png', '/leaders/standardized/mehdi-cohen.png', '/leaders/standardized/ming-way-sia.png'].map((src, leaderIndex) => <img key={src} src={src} alt="True Legacy leader" className={`h-[86%] w-[36%] rounded-t-2xl border border-white/15 object-cover object-top shadow-2xl shadow-black/40 transition duration-700 group-hover:-translate-y-1 ${leaderIndex === 1 ? 'z-20 h-[96%] -mx-3' : 'z-10 opacity-90'}`} />)}
                 </div>
                 <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-[#0a1229]/80 to-transparent" />
                 <span className="absolute bottom-5 left-5 rounded-full border border-white/20 bg-black/45 px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.18em] text-white backdrop-blur-md">{ui.trainingTag}</span>

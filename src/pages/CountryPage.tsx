@@ -288,7 +288,7 @@ const COUNTRY_LEADERS: Record<
     {
       name: "Coach Simon Loh",
       role: "Global Entrepreneur & Strategist",
-      image: "/leaders/standardized/simon-loh.png",
+      image: "/leaders/standardized/simon-loh-v2.png",
       intro:
         "Supporting expansion into Nigeria and beyond, helping leaders apply disciplined, proven business strategies in fast-growing markets.",
       instagram: "https://www.instagram.com/simonloh_/",

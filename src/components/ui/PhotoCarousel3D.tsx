@@ -93,8 +93,7 @@ const LEADERS = [
             "Since 2016, I've had the opportunity to work with and support more than 10,000 entrepreneurs, generate over $30 million in sales volume, and help expand operations in countries including Malaysia, India, the United Arab Emirates, Turkey, and Nigeria.",
             'My focus is on helping people move beyond traditional career limitations by applying practical, disciplined, and proven business strategies. Through speaking, mentoring, and direct collaboration, I work with individuals who want to build more intentional, flexible, and sustainable professional lives.',
         ],
-        image: '/leaders/standardized/simon-loh.png',
-        imageTransform: 'scale(1.24) translateY(-4.5%)',
+        image: '/leaders/standardized/simon-loh-v2.png',
         icon: Star,
         gradient: 'from-cyan-600 to-blue-700',
         glow: 'rgba(6,182,212,0.5)',
@@ -130,7 +129,7 @@ const LEADERS = [
             'For more than a decade, I’ve had the privilege of coaching some of the world’s top performers—elite athletes, celebrities, and C-suite executives. What I discovered along that journey went beyond training: it was about mastering leadership, understanding leverage, and embracing a vision bigger than yourself.',
             'I realized true, lasting impact comes from connecting with the right people and choosing the right vehicle. That led me to Enagic and to a space where like-minded leaders unite, blend their strengths, and leverage our collective expertise to build generational wealth and a lasting legacy.',
         ],
-        image: '/leaders/standardized/zah-naderi-v2.png',
+        image: '/leaders/standardized/zah-naderi-v3.png',
         icon: Trophy,
         gradient: 'from-indigo-600 to-blue-700',
         glow: 'rgba(79,70,229,0.5)',
@@ -166,7 +165,7 @@ const LEADERS = [
             'That search led her to True Legacy through Coach Simon, where she discovered a new path of entrepreneurship, purpose, and personal growth.',
             'Today, Angel travels the world with her equity business and as a global distributor for Enagic, building an international business while helping others discover new possibilities for themselves.',
         ],
-        image: '/leaders/standardized/angel-mok.png',
+        image: '/leaders/standardized/angel-mok-v2.png',
         icon: Globe,
         gradient: 'from-cyan-600 to-indigo-700',
         glow: 'rgba(34,211,238,0.45)',
@@ -306,7 +305,6 @@ export function PhotoCarousel3D() {
                                         src={leader.image}
                                         alt={leader.name}
                                         className="absolute inset-0 w-full h-full object-cover object-top"
-                                        style={{ transform: 'imageTransform' in leader ? leader.imageTransform : undefined }}
                                     />
                                 ) : (
                                     <div className="absolute inset-0 flex items-center justify-center opacity-15">
