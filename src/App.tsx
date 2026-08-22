@@ -34,6 +34,7 @@ import SagaLibraryPage from "@/pages/SagaLibraryPage";
 import AppSharePage from "@/pages/AppSharePage";
 import AppBookingsPage from "@/pages/AppBookingsPage";
 import BookingPage from "@/pages/BookingPage";
+import { GlobalCursorGlow } from "@/components/ui/GlobalCursorGlow";
 import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useLayoutEffect } from "react";
 import {
@@ -356,6 +357,7 @@ export default function App() {
     <BrowserRouter>
       <LanguageReset />
       <LocaleProvider>
+        <GlobalCursorGlow />
         <AnimatedRoutes />
         <AppInstallPrompt />
         <AppNavigation />
