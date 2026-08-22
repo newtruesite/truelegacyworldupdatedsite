@@ -143,7 +143,7 @@ export default function HomePage() {
   }, []);
 
   return (
-    <div className="page-wrapper" style={{ background: "#060b1e" }}>
+    <div className="page-wrapper">
       <SEO
         title={
           locale === "es"
