@@ -130,7 +130,7 @@ const LEADERS = [
             'For more than a decade, I’ve had the privilege of coaching some of the world’s top performers—elite athletes, celebrities, and C-suite executives. What I discovered along that journey went beyond training: it was about mastering leadership, understanding leverage, and embracing a vision bigger than yourself.',
             'I realized true, lasting impact comes from connecting with the right people and choosing the right vehicle. That led me to Enagic and to a space where like-minded leaders unite, blend their strengths, and leverage our collective expertise to build generational wealth and a lasting legacy.',
         ],
-        image: '/leaders/standardized/zah-naderi.png',
+        image: '/leaders/standardized/zah-naderi-v2.png',
         icon: Trophy,
         gradient: 'from-indigo-600 to-blue-700',
         glow: 'rgba(79,70,229,0.5)',

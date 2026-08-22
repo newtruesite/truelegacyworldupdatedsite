@@ -100,7 +100,7 @@ export default function DistributorProfilePage() {
     'mehdi-cohen': '/leaders/mehdi-hero.png',
     'simon-loh': '/leaders/simon-hero.png',
     'ming-way-sia': '/leaders/mingway-hero.png',
-    'zah-naderi': '/leaders/zah-hero.png',
+    'zah-naderi': '/leaders/zah-hero-v2.png',
     'magaly-cardona': '/leaders/magaly-hero.png',
     'ryan-pool': '/leaders/ryan-hero.png',
     'alex-gonzalez': '/leaders/alex-hero-transparent.png',
