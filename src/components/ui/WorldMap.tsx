@@ -128,6 +128,8 @@ export function WorldMap() {
   const regionPinsRef = useRef<Record<string, HTMLDivElement | null>>({});
   // Ref-shadowed hovered region id for canvas loop (avoids stale closure)
   const hoveredRegionRef = useRef<string | null>(null);
+  // Live projected screen positions of each pin — updated every animation frame
+  const projectedPositionsRef = useRef<Record<string, { x: number; y: number; visible: boolean }>>({});
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -344,10 +346,13 @@ export function WorldMap() {
         const el = regionPinsRef.current[r.id];
         if (!el || !proj) return;
 
+        // Save projected position for mouse hit-testing
+        projectedPositionsRef.current[r.id] = proj;
+
         if (proj.visible) {
-          el.style.transform = `translate3d(${proj.x}px, ${proj.y}px, 0) scale(${hoveredRegionRef.current === r.id ? 1.15 : 1})`;
+          el.style.transform = `translate3d(${proj.x}px, ${proj.y}px, 0) scale(${hoveredRegionRef.current === r.id ? 1.25 : 1})`;
           el.style.opacity = '1';
-          el.style.pointerEvents = "all";
+          el.style.pointerEvents = "none"; // Hit-testing done in mousemove handler
         } else {
           el.style.opacity = "0";
           el.style.pointerEvents = "none";
@@ -379,20 +384,57 @@ export function WorldMap() {
   };
 
   const handleMove = (clientX: number, clientY: number) => {
-    if (!isDragging.current) return;
-    const deltaX = clientX - startMouseX.current;
-    const deltaY = clientY - startMouseY.current;
+    // Drag rotation
+    if (isDragging.current) {
+      const deltaX = clientX - startMouseX.current;
+      const deltaY = clientY - startMouseY.current;
+      const speed = 0.005;
+      rotationRef.current = dragRotation.current + deltaX * speed;
+      const nextTilt = dragTilt.current - deltaY * speed;
+      tiltRef.current = Math.max(-0.6, Math.min(0.6, nextTilt));
+      dragInertia.current = deltaX * speed * 0.15;
+    }
 
-    // Convert mouse delta movement to polar rotation updates
-    const speed = 0.005;
-    rotationRef.current = dragRotation.current + deltaX * speed;
-    
-    // Constrain vertical tilt to avoid rotating globe completely upside down
-    const nextTilt = dragTilt.current - deltaY * speed;
-    tiltRef.current = Math.max(-0.6, Math.min(0.6, nextTilt));
+    // Pin proximity hover detection (works regardless of drag state)
+    if (!containerRef.current) return;
+    const rect = containerRef.current.getBoundingClientRect();
+    const mouseX = clientX - rect.left;
+    const mouseY = clientY - rect.top;
+    const HIT_RADIUS = 28; // px — generous hit area
 
-    // Store delta for inertia on release
-    dragInertia.current = deltaX * speed * 0.15;
+    let closestId: string | null = null;
+    let closestDist = HIT_RADIUS;
+
+    for (const r of REGIONS) {
+      const proj = projectedPositionsRef.current[r.id];
+      if (!proj || !proj.visible) continue;
+      const dist = Math.sqrt((mouseX - proj.x) ** 2 + (mouseY - proj.y) ** 2);
+      if (dist < closestDist) {
+        closestDist = dist;
+        closestId = r.id;
+      }
+    }
+
+    if (closestId !== hoveredRegionRef.current) {
+      if (closestId) {
+        // Entering a new pin
+        hoveredRegionRef.current = closestId;
+        setHoveredRegion(closestId);
+        const region = REGIONS.find((r) => r.id === closestId)!;
+        setHoveredRegionData({
+          name: getRegionName(region),
+          message: getRegionMessage(region),
+          x: projectedPositionsRef.current[closestId]?.x ?? 0,
+          y: projectedPositionsRef.current[closestId]?.y ?? 0,
+          regionId: closestId,
+        });
+      } else {
+        // Left all pins
+        hoveredRegionRef.current = null;
+        setHoveredRegion(null);
+        setHoveredRegionData(null);
+      }
+    }
   };
 
   const handleEnd = () => {
@@ -472,6 +514,22 @@ export function WorldMap() {
         onMouseDown={(e) => handleStart(e.clientX, e.clientY)}
         onMouseMove={(e) => handleMove(e.clientX, e.clientY)}
         onMouseUp={handleEnd}
+        onClick={(e) => {
+          // Click a pin if mouse is near one
+          if (!containerRef.current) return;
+          const rect = containerRef.current.getBoundingClientRect();
+          const mx = e.clientX - rect.left;
+          const my = e.clientY - rect.top;
+          for (const r of REGIONS) {
+            const proj = projectedPositionsRef.current[r.id];
+            if (!proj || !proj.visible) continue;
+            const dist = Math.sqrt((mx - proj.x) ** 2 + (my - proj.y) ** 2);
+            if (dist < 36) {
+              handleRegionClick(r.id);
+              return;
+            }
+          }
+        }}
         onTouchStart={(e) => {
           if (e.touches[0]) handleStart(e.touches[0].clientX, e.touches[0].clientY);
         }}
