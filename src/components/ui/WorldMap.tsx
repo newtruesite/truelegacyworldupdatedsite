@@ -192,8 +192,8 @@ export function WorldMap() {
       const cx = currentWidth / 2;
       const cy = currentHeight / 2;
 
-      // Globe parameters (stays compact and beautifully circular)
-      const R = Math.min(currentWidth * 0.32, 135);
+      // Globe parameters (larger, cinematic globe on desktop)
+      const R = Math.min(currentWidth * 0.42, 190);
 
       // Flat map dimensions (expands to be wide and easily readable on hover)
       const flatWidth = Math.min(currentWidth * 0.86, 920);
@@ -454,44 +454,9 @@ export function WorldMap() {
 
   return (
     <div className="map-section w-full relative" style={{ touchAction: "pan-y" }}>
-      {/* Map statistics header */}
-      <div className="text-center mb-8 relative z-20">
-        <div className="flex flex-col md:flex-row justify-center items-center gap-8 md:gap-16">
-          <div className="text-center">
-            <div className="text-4xl md:text-5xl font-black text-white tracking-tight leading-none bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent">
-              14
-            </div>
-            <div className="text-xs uppercase tracking-widest text-neutral-400 font-semibold mt-2">
-              {locale === "es"
-                ? "Mercados destacados con miembros de True Legacy"
-                : locale === "fr"
-                  ? "Marchés en vedette avec des membres de True Legacy"
-                  : locale === "pt"
-                    ? "Mercados em destaque com membros da True Legacy"
-                    : "Featured markets with True Legacy members"}
-            </div>
-          </div>
-          <div className="hidden md:block w-[1px] h-12 bg-neutral-800" />
-          <div className="text-center">
-            <div className="text-4xl md:text-5xl font-black text-white tracking-tight leading-none bg-gradient-to-r from-blue-400 to-indigo-500 bg-clip-text text-transparent">
-              52
-            </div>
-            <div className="text-xs uppercase tracking-widest text-neutral-400 font-semibold mt-2">
-              {locale === "es"
-                ? "Años de innovación de Enagic"
-                : locale === "fr"
-                  ? "Années d'innovation d'Enagic"
-                  : locale === "pt"
-                    ? "Anos de inovação da Enagic"
-                    : "Years of Enagic innovation"}
-            </div>
-          </div>
-        </div>
-      </div>
-
       <div
         ref={containerRef}
-        className="relative w-full flex items-center justify-center select-none h-[320px] md:h-[420px]"
+        className="relative w-full flex items-center justify-center select-none h-[360px] md:h-[520px]"
         onMouseEnter={() => {
           isHoveredRef.current = true;
         }}
@@ -528,11 +493,12 @@ export function WorldMap() {
         <div
           className="absolute pointer-events-none z-20 transition-opacity duration-700"
           style={{
-            top: 20,
+            top: 16,
             left: "50%",
-            transform: "translateX(-50%)",
-            filter: "drop-shadow(0 2px 4px rgba(0,0,0,0.6))",
-            opacity: hoveredRegionData ? 0.2 : 0.8,
+            transform: "translateX(-50%) scale(1.45)",
+            transformOrigin: "top center",
+            filter: "drop-shadow(0 3px 8px rgba(0,0,0,0.7)) drop-shadow(0 0 20px rgba(6,182,212,0.25))",
+            opacity: hoveredRegionData ? 0.15 : 0.9,
           }}
         >
           <TrueLegacyLogo variant="mapOverlay" />
@@ -558,19 +524,30 @@ export function WorldMap() {
               onMouseEnter={(e) => handlePinMouseEnter(r.id, e)}
               onMouseLeave={handlePinMouseLeave}
             >
-              {/* Outer double pulsing rings */}
-              <div className="absolute w-8 h-8 -left-4 -top-4 rounded-full bg-cyan-400/20 animate-ping" style={{ animationDuration: '3s' }} />
-              <div className="absolute w-12 h-12 -left-6 -top-6 rounded-full bg-blue-500/10 animate-ping" style={{ animationDuration: '4s', animationDelay: '1s' }} />
-              
-              {/* Solid point center */}
-              <div className="absolute w-3 h-3 -left-1.5 -top-1.5 rounded-full bg-cyan-400 border border-white flex items-center justify-center shadow-lg shadow-cyan-400/50">
-                <div className="w-1 h-1 rounded-full bg-white" />
-              </div>
+              {/* Outer throbbing glow rings */}
+              <div
+                className="absolute rounded-full bg-cyan-400/15 animate-ping"
+                style={{ width: 28, height: 28, left: -14, top: -14, animationDuration: '2.4s' }}
+              />
+              <div
+                className="absolute rounded-full bg-cyan-300/08 animate-ping"
+                style={{ width: 44, height: 44, left: -22, top: -22, animationDuration: '3.2s', animationDelay: '0.8s' }}
+              />
 
-              {/* Text label underneath */}
-              <div className="absolute top-3 left-1/2 -translate-x-1/2 whitespace-nowrap bg-neutral-950/80 backdrop-blur-sm border border-neutral-800/80 px-2 py-0.5 rounded text-[10px] md:text-[11px] font-bold text-white tracking-widest uppercase transition-colors duration-300">
-                {getRegionName(r)}
-              </div>
+              {/* Glowing solid dot center */}
+              <div
+                className="absolute rounded-full bg-cyan-400 shadow-[0_0_10px_3px_rgba(34,211,238,0.7)]"
+                style={{
+                  width: hoveredRegion === r.id ? 10 : 7,
+                  height: hoveredRegion === r.id ? 10 : 7,
+                  left: hoveredRegion === r.id ? -5 : -3.5,
+                  top: hoveredRegion === r.id ? -5 : -3.5,
+                  transition: 'all 0.2s ease',
+                  boxShadow: hoveredRegion === r.id
+                    ? '0 0 16px 6px rgba(34,211,238,0.9), 0 0 32px 12px rgba(34,211,238,0.4)'
+                    : '0 0 8px 3px rgba(34,211,238,0.65)',
+                }}
+              />
             </div>
           ))}
         </div>
