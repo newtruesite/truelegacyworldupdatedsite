@@ -923,16 +923,16 @@ export default function TrainingPage() {
                   <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
                     <div className="flex items-start gap-4">
                       <div className="relative shrink-0">
-                        <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl overflow-hidden border border-white/20 bg-black/60 shadow-lg shadow-cyan-500/10 p-1 flex items-center justify-center">
+                        <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full overflow-hidden border-2 border-cyan-400/40 bg-black shadow-xl shadow-cyan-500/20 p-0.5 flex items-center justify-center">
                           <img
                             src="/logos/true-health-lifestyle.png"
                             alt="True Health Lifestyle"
-                            className="w-full h-full object-contain rounded-xl"
+                            className="w-full h-full object-cover rounded-full"
                           />
                         </div>
-                        <span className="absolute -bottom-1 -right-1 flex h-4 w-4">
+                        <span className="absolute bottom-0 right-0 flex h-4 w-4">
                           <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75"></span>
-                          <span className="relative inline-flex rounded-full h-4 w-4 bg-cyan-500 border-2 border-slate-950"></span>
+                          <span className="relative inline-flex rounded-full h-4 w-4 bg-cyan-400 border-2 border-slate-950"></span>
                         </span>
                       </div>
                       <div>
