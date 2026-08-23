@@ -2325,8 +2325,7 @@ body {
   line-height: 1.47;
   letter-spacing: -0.022em;
 }
-.page-wrapper, .content-wrapper { background: transparent !important; }
-.map-section { background: #000 !important; }
+.page-wrapper, .content-wrapper, .map-section { background: transparent !important; }
 
 h1, h2, h3, h4, h5, h6,
 .hero-title, .section-heading, .section-title {
