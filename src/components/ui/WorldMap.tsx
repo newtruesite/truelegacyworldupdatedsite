@@ -2,321 +2,605 @@ import TrueLegacyLogo from "@/components/ui/TrueLegacyLogo";
 import { useLocaleContext } from "@/contexts/LocaleContext";
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { WORLD_POINTS } from "./worldPoints";
 
-declare global {
-  interface Window {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    jsVectorMap?: { new (...args: any[]): { destroy?: () => void } };
-  }
-}
-
-const CONTINENTS = [
+const REGIONS = [
   {
     id: "north-america",
-    nameEn: "N. America",
-    nameEs: "Norteamérica",
-    nameFr: "Amérique du Nord",
-    namePt: "N. América",
+    nameEn: "N. AMERICA",
+    nameEs: "NORTEAMÉRICA",
+    nameFr: "AMÉRIQUE DU N.",
+    namePt: "N. AMÉRICA",
     lat: 45.5,
-    lng: -125.0,
-    mobileLat: 45.5,
-    mobileLng: -120.0,
+    lng: -110.0, // adjusted slightly for visual balance on globe
+    messageEn: "Established markets and world-class leaders",
+    messageEs: "Mercados establecidos y líderes de clase mundial",
+    messageFr: "Marchés établis et leaders de classe mondiale",
+    messagePt: "Mercados estabelecidos e líderes de classe mundial",
   },
   {
     id: "south-america",
-    nameEn: "S. America / LATAM",
-    nameEs: "Sudamérica / LATAM",
-    nameFr: "Amérique latine",
-    namePt: "América do Sul / LATAM",
-    lat: -10.0,
-    lng: -80.0,
-    mobileLat: -10.0,
-    mobileLng: -75.0,
+    nameEn: "S. AMERICA / LATAM",
+    nameEs: "SUDAMÉRICA / LATAM",
+    nameFr: "AMÉRIQUE LATINE",
+    namePt: "AMÉRICA DO SUL / LATAM",
+    lat: -12.0,
+    lng: -60.0,
+    messageEn: "Growing True Legacy leadership network",
+    messageEs: "Red de liderazgo de True Legacy en crecimiento",
+    messageFr: "Réseau de leadership True Legacy en pleine croissance",
+    messagePt: "Rede de liderança da True Legacy em crescimento",
   },
   {
     id: "europe",
-    nameEn: "Europe",
-    nameEs: "Europa",
-    nameFr: "Europe",
-    namePt: "Europa",
-    lat: 57.5,
-    lng: 2.0,
-    mobileLat: 57.5,
-    mobileLng: 5.0,
-  },
-  {
-    id: "middle-east",
-    nameEn: "Middle East",
-    nameEs: "Medio Oriente",
-    nameFr: "Moyen-Orient",
-    namePt: "Oriente Médio",
-    lat: 24.0,
-    lng: 53.0,
-    mobileLat: 24.0,
-    mobileLng: 49.0,
+    nameEn: "EUROPE",
+    nameEs: "EUROPA",
+    nameFr: "EUROPE",
+    namePt: "EUROPA",
+    lat: 48.0,
+    lng: 15.0,
+    messageEn: "Expanding training and community hub",
+    messageEs: "Centro de capacitación y comunidad en expansión",
+    messageFr: "Centre de formation et communauté en expansion",
+    messagePt: "Centro de treinamento e comunidade em expansão",
   },
   {
     id: "africa",
-    nameEn: "Africa",
-    nameEs: "África",
-    nameFr: "Afrique",
-    namePt: "África",
-    lat: 12.5,
-    lng: -13.0,
-    mobileLat: 12.5,
-    mobileLng: -10.0,
+    nameEn: "AFRICA",
+    nameEs: "ÁFRICA",
+    nameFr: "AFRIQUE",
+    namePt: "ÁFRICA",
+    lat: 5.0,
+    lng: 20.0,
+    messageEn: "Emerging markets and new opportunities",
+    messageEs: "Mercados emergentes y nuevas oportunidades",
+    messageFr: "Marchés émergents et nouvelles opportunités",
+    messagePt: "Mercados emergentes e oportunidades",
+  },
+  {
+    id: "middle-east",
+    nameEn: "MIDDLE EAST",
+    nameEs: "MEDIO ORIENTE",
+    nameFr: "MOYEN-ORIENT",
+    namePt: "ORIENTE MÉDIO",
+    lat: 25.0,
+    lng: 45.0,
+    messageEn: "Rapidly growing distributor network",
+    messageEs: "Red de distribuidores de rápido crecimiento",
+    messageFr: "Réseau de distributeurs en croissance rapide",
+    messagePt: "Rede de distribuidores em rápido crescimento",
   },
   {
     id: "asia",
-    nameEn: "Asia",
-    nameEs: "Asia",
-    nameFr: "Asie",
-    namePt: "Ásia",
-    lat: 45.0,
-    lng: 88.0,
-    mobileLat: 45.0,
-    mobileLng: 90.0,
+    nameEn: "ASIA",
+    nameEs: "ASIA",
+    nameFr: "ASIE",
+    namePt: "ÁSIA",
+    lat: 35.0,
+    lng: 105.0,
+    messageEn: "Established leaders and expanding markets",
+    messageEs: "Líderes establecidos y mercados en expansión",
+    messageFr: "Leaders établis et marchés en expansion",
+    messagePt: "Líderes estabelecidos e mercados em expansão",
   },
 ];
 
-function latLngToPercent(lat: number, lng: number) {
-  const x = (lng + 180) / 360;
-  const latRad = (lat * Math.PI) / 180;
-  const mercN = Math.log(Math.tan(Math.PI / 4 + latRad / 2));
-  const mercFull = 0.5 - mercN / (2 * Math.PI);
-  const topBound =
-    0.5 -
-    Math.log(Math.tan(Math.PI / 4 + (83.5 * Math.PI) / 180 / 2)) /
-      (2 * Math.PI);
-  const botBound =
-    0.5 -
-    Math.log(Math.tan(Math.PI / 4 + (-56 * Math.PI) / 180 / 2)) / (2 * Math.PI);
-  const y = (mercFull - topBound) / (botBound - topBound);
-  return { x, y };
-}
+// Arc connections for international growth visualization (using IDs)
+const CONNECTIONS = [
+  { from: "north-america", to: "europe" },
+  { from: "north-america", to: "asia" },
+  { from: "europe", to: "middle-east" },
+  { from: "asia", to: "middle-east" },
+  { from: "south-america", to: "north-america" },
+];
 
 export function WorldMap() {
-  const mapContainerRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
   const navigate = useNavigate();
   const { locale, setLocale } = useLocaleContext();
-  const [mapReady, setMapReady] = useState(false);
-  const [hoveredContinent, setHoveredContinent] = useState<string | null>(null);
-  const [isMobile, setIsMobile] = useState(
-    () => typeof window !== "undefined" && window.innerWidth < 768
-  );
+
+  const [hoveredRegion, setHoveredRegion] = useState<string | null>(null);
+  const [hoveredRegionData, setHoveredRegionData] = useState<{
+    name: string;
+    message: string;
+    x: number;
+    y: number;
+  } | null>(null);
+
+  // Animation values in refs for 60fps canvas loop
+  const progressRef = useRef(0); // 0 = Globe, 1 = Flat Map
+  const isHoveredRef = useRef(false);
+  const rotationRef = useRef(-0.5); // Initial spin position to center Atlantic
+  const tiltRef = useRef(0.25); // Globe tilt down around X-axis
+  const autoRotationSpeed = 0.002;
+
+  // Dragging states
+  const isDragging = useRef(false);
+  const startMouseX = useRef(0);
+  const startMouseY = useRef(0);
+  const dragRotation = useRef(0);
+  const dragTilt = useRef(0);
+  const dragInertia = useRef(0);
+
+  // Region HTML overlays refs to manipulate styles directly without React re-renders
+  const regionPinsRef = useRef<Record<string, HTMLDivElement | null>>({});
 
   useEffect(() => {
-    const handleResize = () => setIsMobile(window.innerWidth < 768);
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
+    const canvas = canvasRef.current;
+    const container = containerRef.current;
+    if (!canvas || !container) return;
 
-  useEffect(() => {
-    if (
-      typeof window === "undefined" ||
-      !window.jsVectorMap ||
-      !mapContainerRef.current
-    )
-      return;
+    let animationFrameId: number;
+    let width = container.clientWidth;
+    const isMobile = width < 768;
+    const height = isMobile ? 320 : 420;
 
-    const map = new window.jsVectorMap({
-      selector: "#world-map",
-      map: "world",
-      backgroundColor: "transparent",
-      zoomButtons: false,
-      zoomOnScroll: false,
-      draggable: false,
-      showTooltip: false,
-      regionsSelectable: false,
-      regionsSelectableOne: false,
-      selectedRegions: [],
-      regionStyle: {
-        initial: {
-          fill: "#0d2535",
-          stroke: "#071824",
-          strokeWidth: 0.4,
-          fillOpacity: 1,
-          cursor: "default",
-        },
-        hover: {
-          fill: "#112d42",
-          fillOpacity: 1,
-          cursor: "default",
-        },
-        selected: {
-          fill: "#0d2535",
-          cursor: "default",
-        },
-        selectedHover: {
-          fill: "#0d2535",
-          cursor: "default",
-        },
-      },
-      markers: [],
-      onRegionClick(e: Event) {
-        e.preventDefault();
-        (e as Event & { stopPropagation?: () => void }).stopPropagation?.();
-        return false;
-      },
-      onRegionTooltipShow(e: Event) {
-        e.preventDefault();
-        return false;
-      },
-    });
+    const dpr = window.devicePixelRatio || 1;
+    canvas.width = width * dpr;
+    canvas.height = height * dpr;
+    canvas.style.width = `${width}px`;
+    canvas.style.height = `${height}px`;
 
-    setTimeout(() => {
-      const wrapper = document.getElementById("world-map");
-      if (wrapper) {
-        wrapper.style.touchAction = "pan-y";
-        wrapper
-          .querySelectorAll(".jvm-tooltip, text, .jvm-marker-label")
-          .forEach((el) => el.remove());
-        wrapper.querySelectorAll("path").forEach((p) => {
-          (p as SVGElement).style.pointerEvents = "none";
-          (p as SVGElement).style.cursor = "default";
-        });
-        const svg = wrapper.querySelector("svg");
-        if (svg) {
-          svg.style.touchAction = "pan-y";
-        }
-      }
-      setMapReady(true);
-    }, 350);
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+    ctx.scale(dpr, dpr);
 
-    return () => {
-      try {
-        map?.destroy?.();
-      } catch {
-        /* ignore */
+    const handleResize = () => {
+      if (!container || !canvas) return;
+      width = container.clientWidth;
+      const nextIsMobile = width < 768;
+      const nextHeight = nextIsMobile ? 320 : 420;
+      canvas.width = width * dpr;
+      canvas.height = nextHeight * dpr;
+      canvas.style.width = `${width}px`;
+      canvas.style.height = `${nextHeight}px`;
+      const context = canvas.getContext("2d");
+      if (context) {
+        context.scale(dpr, dpr);
       }
     };
-  }, []);
+    window.addEventListener("resize", handleResize);
 
-  const getContinentName = (c: (typeof CONTINENTS)[0]) => {
-    if (locale === "es") return c.nameEs;
-    if (locale === "fr") return c.nameFr;
-    if (locale === "pt") return (c as { namePt?: string }).namePt ?? c.nameEs;
-    return c.nameEn;
+    const render = () => {
+      const currentWidth = container.clientWidth;
+      const currentIsMobile = currentWidth < 768;
+      const currentHeight = currentIsMobile ? 320 : 420;
+      ctx.clearRect(0, 0, currentWidth, currentHeight);
+
+      // Interpolate progress towards target (1 when hovered/zoomed, 0 when default rotating globe)
+      const targetProgress = isHoveredRef.current ? 1 : 0;
+      progressRef.current += (targetProgress - progressRef.current) * 0.08;
+      const progress = progressRef.current;
+
+      // Adjust rotation: auto-spin in 3D globe, ease towards 0 (centering Europe/Atlantic) in flat map
+      if (!isDragging.current && progress < 0.99) {
+        rotationRef.current += autoRotationSpeed * (1 - progress);
+      }
+      
+      // Apply drag inertia
+      if (!isDragging.current) {
+        rotationRef.current += dragInertia.current;
+        dragInertia.current *= 0.95; // dampening
+      }
+
+      // If flattening, interpolate rotation and tilt to clean flat values
+      const currentRotation = rotationRef.current * (1 - progress) + (-0.5) * progress;
+      const currentTilt = tiltRef.current * (1 - progress) + 0.1 * progress; // slight tilt up in flat view
+
+      // Calculations for centering & dimensions
+      const cx = currentWidth / 2;
+      const cy = currentHeight / 2;
+
+      // Globe parameters (stays compact and beautifully circular)
+      const R = Math.min(currentWidth * 0.32, 135);
+
+      // Flat map dimensions (expands to be wide and easily readable on hover)
+      const flatWidth = Math.min(currentWidth * 0.86, 920);
+      const flatHeight = flatWidth * 0.48;
+
+      // 1. Draw Globe Sphere Body (Behind land points)
+      if (progress < 0.99) {
+        ctx.save();
+        ctx.globalAlpha = 1 - progress;
+
+        // Globe sphere fill
+        const gradient = ctx.createRadialGradient(
+          cx - R * 0.2,
+          cy - R * 0.2,
+          R * 0.2,
+          cx,
+          cy,
+          R
+        );
+        gradient.addColorStop(0, "#071124");
+        gradient.addColorStop(0.7, "#02050c");
+        gradient.addColorStop(1, "#000000");
+
+        ctx.beginPath();
+        ctx.arc(cx, cy, R, 0, Math.PI * 2);
+        ctx.fillStyle = gradient;
+        ctx.fill();
+
+        // Edge glow
+        ctx.strokeStyle = "rgba(6, 182, 212, 0.25)";
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+
+        ctx.restore();
+      }
+
+      // Pre-compute project positions for regions to use in arcs and overlay pins
+      const projectedRegions: Record<string, { x: number; y: number; visible: boolean }> = {};
+      REGIONS.forEach((r) => {
+        const phi = (r.lat * Math.PI) / 180;
+        const theta = (r.lng * Math.PI) / 180;
+
+        // 3D position
+        const x3d = R * Math.cos(phi) * Math.sin(theta + currentRotation);
+        const y3d = R * Math.sin(phi);
+        const z3d = R * Math.cos(phi) * Math.cos(theta + currentRotation);
+
+        const ty = y3d * Math.cos(currentTilt) - z3d * Math.sin(currentTilt);
+        const tz = y3d * Math.sin(currentTilt) + z3d * Math.cos(currentTilt);
+
+        const sx3d = cx + x3d;
+        const sy3d = cy - ty;
+
+        // 2D position (mapped dynamically to the expanded flatWidth/flatHeight)
+        const sx2d = cx + (r.lng / 180) * (flatWidth * 0.5);
+        const sy2d = cy - (r.lat / 90) * (flatHeight * 0.5) + (currentIsMobile ? 10 : 20); // slightly offset down to center
+
+        // Blended position
+        const sx = sx3d * (1 - progress) + sx2d * progress;
+        const sy = sy3d * (1 - progress) + sy2d * progress;
+
+        projectedRegions[r.id] = {
+          x: sx,
+          y: sy,
+          visible: tz > -10 || progress > 0.5,
+        };
+      });
+
+      // 2. Draw Connection Arcs (International growth arcs)
+      if (progress < 0.95) {
+        CONNECTIONS.forEach((conn) => {
+          const fromProj = projectedRegions[conn.from];
+          const toProj = projectedRegions[conn.to];
+
+          if (!fromProj || !toProj) return;
+
+          // Only draw if both points are somewhat on the front/visible
+          if (fromProj.visible && toProj.visible) {
+            ctx.save();
+            ctx.globalAlpha = (1 - progress) * 0.35;
+            ctx.strokeStyle = "#06b6d4";
+            ctx.lineWidth = 1;
+
+            ctx.beginPath();
+            ctx.moveTo(fromProj.x, fromProj.y);
+
+            // Draw a curved bezier arc bridging the two points
+            const midX = (fromProj.x + toProj.x) / 2;
+            const midY = (fromProj.y + toProj.y) / 2 - R * 0.25; // lift midpoint for 3D arch height
+
+            ctx.quadraticCurveTo(midX, midY, toProj.x, toProj.y);
+            ctx.stroke();
+            ctx.restore();
+          }
+        });
+      }
+
+      // 3. Draw Dotted Map (Continents)
+      ctx.save();
+      WORLD_POINTS.forEach(([lat, lng]) => {
+        const phi = (lat * Math.PI) / 180;
+        const theta = (lng * Math.PI) / 180;
+
+        // 3D position
+        const x3d = R * Math.cos(phi) * Math.sin(theta + currentRotation);
+        const y3d = R * Math.sin(phi);
+        const z3d = R * Math.cos(phi) * Math.cos(theta + currentRotation);
+
+        const ty = y3d * Math.cos(currentTilt) - z3d * Math.sin(currentTilt);
+        const tz = y3d * Math.sin(currentTilt) + z3d * Math.cos(currentTilt);
+
+        // Visibility / depth occlusion in 3D
+        if (tz <= -5 && progress < 0.1) return;
+
+        const sx3d = cx + x3d;
+        const sy3d = cy - ty;
+
+        // 2D Flat mapping
+        const sx2d = cx + (lng / 180) * (flatWidth * 0.5);
+        const sy2d = cy - (lat / 90) * (flatHeight * 0.5) + (currentIsMobile ? 10 : 20);
+
+        // Blended positions
+        const sx = sx3d * (1 - progress) + sx2d * progress;
+        const sy = sy3d * (1 - progress) + sy2d * progress;
+
+        // Opacity based on spherical depth fading near the horizon, fully visible in 2D
+        const depthAlpha = Math.max(0, tz / R);
+        const pointAlpha = (1 - progress) * depthAlpha + progress * 0.75;
+
+        if (pointAlpha <= 0.05) return;
+
+        // Blue / Cyan continent colors
+        ctx.fillStyle = `rgba(34, 211, 238, ${pointAlpha * 0.7})`;
+        ctx.beginPath();
+        // Dot size: slightly larger in 2D for solid outline clarity
+        const dotRadius = 1.2 + progress * 0.4;
+        ctx.arc(sx, sy, dotRadius, 0, Math.PI * 2);
+        ctx.fill();
+      });
+      ctx.restore();
+
+      // 4. Update Region Overlay Div Pins
+      REGIONS.forEach((r) => {
+        const proj = projectedRegions[r.id];
+        const el = regionPinsRef.current[r.id];
+        if (!el || !proj) return;
+
+        if (proj.visible) {
+          el.style.transform = `translate3d(${proj.x}px, ${proj.y}px, 0) scale(${hoveredRegion === r.id ? 1.15 : 1})`;
+          // Fade pins out on backside rotation during 3D sphere auto-spin
+          el.style.opacity = `${progress > 0.4 ? 1 : 1}`;
+          el.style.pointerEvents = "all";
+        } else {
+          el.style.opacity = "0";
+          el.style.pointerEvents = "none";
+        }
+      });
+
+      animationFrameId = requestAnimationFrame(render);
+    };
+
+    render();
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+      cancelAnimationFrame(animationFrameId);
+    };
+  }, [hoveredRegion]);
+
+  // Touch & Mouse Drag Handlers for Globe Rotation
+  const handleStart = (clientX: number, clientY: number) => {
+    // Disable interaction if flattened/map mode
+    if (progressRef.current > 0.6) return;
+
+    isDragging.current = true;
+    startMouseX.current = clientX;
+    startMouseY.current = clientY;
+    dragRotation.current = rotationRef.current;
+    dragTilt.current = tiltRef.current;
+    dragInertia.current = 0;
   };
 
-  const handleContinentClick = (continentId: string) => {
+  const handleMove = (clientX: number, clientY: number) => {
+    if (!isDragging.current) return;
+    const deltaX = clientX - startMouseX.current;
+    const deltaY = clientY - startMouseY.current;
+
+    // Convert mouse delta movement to polar rotation updates
+    const speed = 0.005;
+    rotationRef.current = dragRotation.current + deltaX * speed;
+    
+    // Constrain vertical tilt to avoid rotating globe completely upside down
+    const nextTilt = dragTilt.current - deltaY * speed;
+    tiltRef.current = Math.max(-0.6, Math.min(0.6, nextTilt));
+
+    // Store delta for inertia on release
+    dragInertia.current = deltaX * speed * 0.15;
+  };
+
+  const handleEnd = () => {
+    isDragging.current = false;
+  };
+
+  const getRegionName = (r: (typeof REGIONS)[0]) => {
+    if (locale === "es") return r.nameEs;
+    if (locale === "fr") return r.nameFr;
+    if (locale === "pt") return r.namePt;
+    return r.nameEn;
+  };
+
+  const getRegionMessage = (r: (typeof REGIONS)[0]) => {
+    if (locale === "es") return r.messageEs;
+    if (locale === "fr") return r.messageFr;
+    if (locale === "pt") return r.messagePt;
+    return r.messageEn;
+  };
+
+  const handleRegionClick = (regionId: string) => {
     try {
       sessionStorage.setItem("last_page", window.location.href);
       sessionStorage.setItem("last_page_label", "World Map");
-      if (continentId === "south-america") {
+      if (regionId === "south-america") {
         setLocale("es");
       }
     } catch {
       /* ignore */
     }
-    navigate(`/select-country?continent=${continentId}`);
+    navigate(`/select-country?continent=${regionId}`);
+  };
+
+  const handlePinMouseEnter = (regionId: string, e: React.MouseEvent) => {
+    setHoveredRegion(regionId);
+
+    const region = REGIONS.find((r) => r.id === regionId);
+    if (!region || !containerRef.current) return;
+
+    // Get position relative to container
+    const rect = containerRef.current.getBoundingClientRect();
+    const pinEl = regionPinsRef.current[regionId];
+    if (!pinEl) return;
+
+    const pinRect = pinEl.getBoundingClientRect();
+    const pinX = pinRect.left - rect.left + pinRect.width / 2;
+    const pinY = pinRect.top - rect.top;
+
+    setHoveredRegionData({
+      name: getRegionName(region),
+      message: getRegionMessage(region),
+      x: pinX,
+      y: pinY,
+    });
+  };
+
+  const handlePinMouseLeave = () => {
+    setHoveredRegion(null);
+    setHoveredRegionData(null);
   };
 
   return (
-    <div className="map-section w-full" style={{ touchAction: "pan-y" }}>
+    <div className="map-section w-full relative" style={{ touchAction: "pan-y" }}>
+      {/* Map statistics header */}
+      <div className="text-center mb-8 relative z-20">
+        <div className="flex flex-col md:flex-row justify-center items-center gap-8 md:gap-16">
+          <div className="text-center">
+            <div className="text-4xl md:text-5xl font-black text-white tracking-tight leading-none bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent">
+              14
+            </div>
+            <div className="text-xs uppercase tracking-widest text-neutral-400 font-semibold mt-2">
+              {locale === "es"
+                ? "Mercados destacados con miembros de True Legacy"
+                : locale === "fr"
+                  ? "Marchés en vedette avec des membres de True Legacy"
+                  : locale === "pt"
+                    ? "Mercados em destaque com membros da True Legacy"
+                    : "Featured markets with True Legacy members"}
+            </div>
+          </div>
+          <div className="hidden md:block w-[1px] h-12 bg-neutral-800" />
+          <div className="text-center">
+            <div className="text-4xl md:text-5xl font-black text-white tracking-tight leading-none bg-gradient-to-r from-blue-400 to-indigo-500 bg-clip-text text-transparent">
+              52
+            </div>
+            <div className="text-xs uppercase tracking-widest text-neutral-400 font-semibold mt-2">
+              {locale === "es"
+                ? "Años de innovación de Enagic"
+                : locale === "fr"
+                  ? "Années d'innovation d'Enagic"
+                  : locale === "pt"
+                    ? "Anos de inovação da Enagic"
+                    : "Years of Enagic innovation"}
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div
-        id="map-wrapper"
-        className="map-wrapper relative w-full flex items-center justify-center"
-        style={{ position: "relative", touchAction: "pan-y" }}
+        ref={containerRef}
+        className="relative w-full flex items-center justify-center select-none h-[320px] md:h-[420px]"
+        onMouseEnter={() => {
+          isHoveredRef.current = true;
+        }}
+        onMouseLeave={() => {
+          isHoveredRef.current = false;
+          handlePinMouseLeave();
+        }}
       >
-        <div
-          ref={mapContainerRef}
-          id="world-map"
-          className="w-full rounded-2xl overflow-hidden"
-          style={{ width: "100%", height: "300px", touchAction: "pan-y" }}
+        {/* Cinematic atmospheric backdrop glow behind the globe */}
+        <div className="absolute inset-0 bg-radial-gradient(circle,rgba(6,182,212,0.03),transparent_70%) pointer-events-none z-0" />
+
+        {/* Dynamic 3D WebGL / Canvas projection */}
+        <canvas
+          ref={canvasRef}
+          className="z-10 cursor-grab active:cursor-grabbing block"
+          onMouseDown={(e) => handleStart(e.clientX, e.clientY)}
+          onMouseMove={(e) => handleMove(e.clientX, e.clientY)}
+          onMouseUp={handleEnd}
+          onMouseLeave={handleEnd}
+          onTouchStart={(e) => {
+            if (e.touches[0]) {
+              handleStart(e.touches[0].clientX, e.touches[0].clientY);
+            }
+          }}
+          onTouchMove={(e) => {
+            if (e.touches[0]) {
+              handleMove(e.touches[0].clientX, e.touches[0].clientY);
+            }
+          }}
+          onTouchEnd={handleEnd}
         />
+
+        {/* Global branding overlay in center */}
         <div
-          className="map-logo-overlay"
+          className="absolute pointer-events-none z-20 transition-opacity duration-700"
           style={{
-            position: "absolute",
-            top: 8,
+            top: 20,
             left: "50%",
             transform: "translateX(-50%)",
-            pointerEvents: "none",
-            zIndex: 50,
-            filter: "drop-shadow(0 1px 2px rgba(0,0,0,0.4))",
+            filter: "drop-shadow(0 2px 4px rgba(0,0,0,0.6))",
+            opacity: hoveredRegionData ? 0.2 : 0.8,
           }}
-          aria-hidden
         >
           <TrueLegacyLogo variant="mapOverlay" />
         </div>
 
-        {mapReady && (
+        {/* Region overlay markers & labels */}
+        <div className="absolute inset-0 pointer-events-none z-30">
+          {REGIONS.map((r) => (
+            <div
+              key={r.id}
+              ref={(el) => {
+                regionPinsRef.current[r.id] = el;
+              }}
+              className="absolute pointer-events-auto cursor-pointer"
+              style={{
+                left: 0,
+                top: 0,
+                transform: "translate3d(0, 0, 0)",
+                opacity: 0, // initially updated by canvas loop animation
+                willChange: "transform, opacity",
+              }}
+              onClick={() => handleRegionClick(r.id)}
+              onMouseEnter={(e) => handlePinMouseEnter(r.id, e)}
+              onMouseLeave={handlePinMouseLeave}
+            >
+              {/* Outer double pulsing rings */}
+              <div className="absolute w-8 h-8 -left-4 -top-4 rounded-full bg-cyan-400/20 animate-ping" style={{ animationDuration: '3s' }} />
+              <div className="absolute w-12 h-12 -left-6 -top-6 rounded-full bg-blue-500/10 animate-ping" style={{ animationDuration: '4s', animationDelay: '1s' }} />
+              
+              {/* Solid point center */}
+              <div className="absolute w-3 h-3 -left-1.5 -top-1.5 rounded-full bg-cyan-400 border border-white flex items-center justify-center shadow-lg shadow-cyan-400/50">
+                <div className="w-1 h-1 rounded-full bg-white" />
+              </div>
+
+              {/* Text label underneath */}
+              <div className="absolute top-3 left-1/2 -translate-x-1/2 whitespace-nowrap bg-neutral-950/80 backdrop-blur-sm border border-neutral-800/80 px-2 py-0.5 rounded text-[10px] md:text-[11px] font-bold text-white tracking-widest uppercase transition-colors duration-300">
+                {getRegionName(r)}
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Hover / tap popup glassmorphism tooltip */}
+        {hoveredRegionData && (
           <div
-            id="pin-overlay"
+            className="absolute pointer-events-none z-50 bg-neutral-950/90 backdrop-blur-md border border-cyan-500/20 p-4 rounded-xl shadow-2xl text-center w-64 transition-all duration-300"
             style={{
-              position: "absolute",
-              top: 0,
-              left: 0,
-              width: "100%",
-              height: "100%",
-              pointerEvents: "none",
-              zIndex: 100,
+              left: hoveredRegionData.x,
+              top: hoveredRegionData.y - 12,
+              transform: "translate(-50%, -100%)",
             }}
           >
-            {CONTINENTS.map((c) => {
-              const effectiveLng =
-                isMobile && "mobileLng" in c && typeof c.mobileLng === "number"
-                  ? c.mobileLng
-                  : c.lng;
-              const effectiveLat =
-                isMobile && "mobileLat" in c && typeof c.mobileLat === "number"
-                  ? c.mobileLat
-                  : c.lat;
-              const { x, y } = latLngToPercent(effectiveLat, effectiveLng);
-              const left = `${(x * 100).toFixed(2)}%`;
-              const top = `${(y * 100).toFixed(2)}%`;
-
-              return (
-                <div
-                  key={c.id}
-                  className={`continent-pin ${hoveredContinent === c.id ? "pin-hovered" : ""}`}
-                  style={{
-                    position: "absolute",
-                    left,
-                    top,
-                    transform: "translate(-50%, -50%)",
-                    pointerEvents: "all",
-                    cursor: "pointer",
-                    zIndex: 101,
-                  }}
-                  onClick={() => handleContinentClick(c.id)}
-                  onMouseEnter={() => setHoveredContinent(c.id)}
-                  onMouseLeave={() => setHoveredContinent(null)}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter" || e.key === " ") {
-                      e.preventDefault();
-                      handleContinentClick(c.id);
-                    }
-                  }}
-                  role="button"
-                  tabIndex={0}
-                  aria-label={getContinentName(c)}
-                >
-                  <div className="pin-pulse-ring" />
-                  <div className="pin-pulse-ring pin-pulse-ring--delay" />
-                  <div className="pin-dot">
-                    <svg
-                      width="14"
-                      height="14"
-                      viewBox="0 0 14 14"
-                      fill="none"
-                      aria-hidden
-                    >
-                      <circle cx="7" cy="7" r="7" fill="#F5A623" />
-                      <circle
-                        cx="7"
-                        cy="7"
-                        r="3.5"
-                        fill="#ffffff"
-                        fillOpacity="0.9"
-                      />
-                    </svg>
-                  </div>
-                  <div className="pin-label">{getContinentName(c)}</div>
-                </div>
-              );
-            })}
+            <div className="text-[11px] font-black text-cyan-400 tracking-widest uppercase leading-none">
+              {hoveredRegionData.name}
+            </div>
+            <div className="text-[12px] font-medium text-neutral-200 mt-2 leading-relaxed">
+              {hoveredRegionData.message}
+            </div>
+            <div className="text-[10px] font-semibold text-cyan-500 mt-3 uppercase tracking-wider animate-pulse flex items-center justify-center gap-1">
+              {locale === "es"
+                ? "Click para ver mercados"
+                : locale === "fr"
+                  ? "Cliquez pour voir les marchés"
+                  : locale === "pt"
+                    ? "Clique para ver mercados"
+                    : "Click to explore markets"}
+              <span>→</span>
+            </div>
           </div>
         )}
       </div>
