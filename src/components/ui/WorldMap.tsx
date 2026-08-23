@@ -139,7 +139,7 @@ export function WorldMap() {
     let animationFrameId: number;
     let width = container.clientWidth;
     const isMobile = width < 768;
-    const height = isMobile ? 320 : 420;
+    const height = isMobile ? 380 : 480;
 
     const dpr = window.devicePixelRatio || 1;
     canvas.width = width * dpr;
@@ -155,7 +155,7 @@ export function WorldMap() {
       if (!container || !canvas) return;
       width = container.clientWidth;
       const nextIsMobile = width < 768;
-      const nextHeight = nextIsMobile ? 320 : 420;
+      const nextHeight = nextIsMobile ? 380 : 480;
       canvas.width = width * dpr;
       canvas.height = nextHeight * dpr;
       canvas.style.width = `${width}px`;
@@ -170,7 +170,7 @@ export function WorldMap() {
     const render = () => {
       const currentWidth = container.clientWidth;
       const currentIsMobile = currentWidth < 768;
-      const currentHeight = currentIsMobile ? 320 : 420;
+      const currentHeight = currentIsMobile ? 380 : 480;
       ctx.clearRect(0, 0, currentWidth, currentHeight);
 
       // Interpolate progress towards target (1 when hovered/zoomed, 0 when default rotating globe)
@@ -197,8 +197,9 @@ export function WorldMap() {
       const cx = currentWidth / 2;
       const cy = currentHeight / 2;
 
-      // Globe parameters (larger, cinematic globe on desktop)
-      const R = Math.min(currentWidth * 0.42, 190);
+      // Globe parameters (constrained to fit height with top/bottom padding)
+      const maxRFromHeight = (currentHeight - 48) * 0.5;
+      const R = Math.min(currentWidth * 0.38, maxRFromHeight, 190);
 
       // Flat map dimensions (expands to be wide and easily readable on hover)
       const flatWidth = Math.min(currentWidth * 0.86, 920);
@@ -502,7 +503,7 @@ export function WorldMap() {
     <div className="map-section w-full relative" style={{ touchAction: "pan-y" }}>
       <div
         ref={containerRef}
-        className="relative w-full flex items-center justify-center select-none h-[360px] md:h-[520px] cursor-grab active:cursor-grabbing"
+        className="relative w-full flex items-center justify-center select-none h-[380px] md:h-[480px] cursor-grab active:cursor-grabbing"
         onMouseEnter={() => {
           isHoveredRef.current = true;
         }}
