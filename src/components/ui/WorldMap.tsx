@@ -585,31 +585,54 @@ export function WorldMap() {
               {/* Large invisible hit area so hover is easy to trigger */}
               <div className="absolute" style={{ width: 48, height: 48, left: -24, top: -24 }} />
 
-              {/* Outer throbbing glow rings */}
+              {/* Outer throbbing glow rings — high visibility yellow */}
               <div
                 className="absolute rounded-full animate-ping"
-                style={{ width: 28, height: 28, left: -14, top: -14, animationDuration: '2.4s', backgroundColor: 'rgba(234,179,8,0.2)' }}
+                style={{ width: 32, height: 32, left: -16, top: -16, animationDuration: '2.2s', backgroundColor: 'rgba(250,204,21,0.35)' }}
               />
               <div
                 className="absolute rounded-full animate-ping"
-                style={{ width: 44, height: 44, left: -22, top: -22, animationDuration: '3.2s', animationDelay: '0.8s', backgroundColor: 'rgba(234,179,8,0.1)' }}
+                style={{ width: 48, height: 48, left: -24, top: -24, animationDuration: '3s', animationDelay: '0.6s', backgroundColor: 'rgba(250,204,21,0.15)' }}
               />
 
-              {/* Glowing solid dot center — gold/yellow */}
+              {/* Glowing solid bold dot center — gold/yellow with a dark solid border and white core */}
               <div
-                className="absolute rounded-full"
+                className="absolute rounded-full border-2 border-neutral-950 flex items-center justify-center shadow-lg"
                 style={{
-                  width: hoveredRegion === r.id ? 11 : 7,
-                  height: hoveredRegion === r.id ? 11 : 7,
-                  left: hoveredRegion === r.id ? -5.5 : -3.5,
-                  top: hoveredRegion === r.id ? -5.5 : -3.5,
-                  backgroundColor: '#facc15',
-                  transition: 'all 0.2s ease',
+                  width: hoveredRegion === r.id ? 16 : 12,
+                  height: hoveredRegion === r.id ? 16 : 12,
+                  left: hoveredRegion === r.id ? -8 : -6,
+                  top: hoveredRegion === r.id ? -8 : -6,
+                  backgroundColor: '#fbbf24',
+                  transition: 'all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275)',
                   boxShadow: hoveredRegion === r.id
-                    ? '0 0 18px 7px rgba(250,204,21,0.9), 0 0 36px 14px rgba(250,204,21,0.4)'
-                    : '0 0 9px 3px rgba(250,204,21,0.7)',
+                    ? '0 0 25px 6px rgba(250,204,21,1), 0 0 45px 15px rgba(234,179,8,0.5)'
+                    : '0 0 12px 3px rgba(250,204,21,0.8)',
+                  zIndex: 40,
                 }}
-              />
+              >
+                {/* Solid inner white core for premium high-contrast indicator shine */}
+                <div 
+                  className="rounded-full bg-white shadow-inner" 
+                  style={{
+                    width: hoveredRegion === r.id ? 6 : 4,
+                    height: hoveredRegion === r.id ? 6 : 4,
+                  }}
+                />
+              </div>
+
+              {/* Market Name Label (Always displayed under the dot, even while Earth is spinning) */}
+              <div 
+                className="absolute top-4 left-1/2 -translate-x-1/2 whitespace-nowrap bg-neutral-950/85 backdrop-blur-sm border px-2 py-0.5 rounded text-[10px] md:text-[11px] font-extrabold tracking-wider uppercase transition-all duration-300 shadow-md shadow-black/50"
+                style={{
+                  color: hoveredRegion === r.id ? '#fbbf24' : '#ffffff',
+                  borderColor: hoveredRegion === r.id ? 'rgba(250,204,21,0.6)' : 'rgba(163,163,163,0.2)',
+                  boxShadow: hoveredRegion === r.id ? '0 0 12px rgba(250,204,21,0.3)' : '0 2px 4px rgba(0,0,0,0.5)',
+                  zIndex: 35,
+                }}
+              >
+                {getRegionName(r)}
+              </div>
             </div>
           ))}
         </div>
@@ -624,7 +647,10 @@ export function WorldMap() {
               transform: "translate(-50%, -100%)",
               pointerEvents: 'auto',
             }}
-            onClick={() => handleRegionClick(hoveredRegionData.regionId)}
+            onClick={(e) => {
+              e.stopPropagation();
+              handleRegionClick(hoveredRegionData.regionId);
+            }}
           >
             {/* Region name */}
             <div className="text-[11px] font-black text-yellow-400 tracking-widest uppercase leading-none mb-2">
