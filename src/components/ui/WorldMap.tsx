@@ -106,6 +106,7 @@ export function WorldMap() {
     message: string;
     x: number;
     y: number;
+    regionId: string;
   } | null>(null);
 
   // Animation values in refs for 60fps canvas loop
@@ -444,6 +445,7 @@ export function WorldMap() {
       message: getRegionMessage(region),
       x: pinX,
       y: pinY,
+      regionId,
     });
   };
 
@@ -526,57 +528,70 @@ export function WorldMap() {
             >
               {/* Outer throbbing glow rings */}
               <div
-                className="absolute rounded-full bg-cyan-400/15 animate-ping"
-                style={{ width: 28, height: 28, left: -14, top: -14, animationDuration: '2.4s' }}
+                className="absolute rounded-full animate-ping"
+                style={{ width: 28, height: 28, left: -14, top: -14, animationDuration: '2.4s', backgroundColor: 'rgba(234,179,8,0.2)' }}
               />
               <div
-                className="absolute rounded-full bg-cyan-300/08 animate-ping"
-                style={{ width: 44, height: 44, left: -22, top: -22, animationDuration: '3.2s', animationDelay: '0.8s' }}
+                className="absolute rounded-full animate-ping"
+                style={{ width: 44, height: 44, left: -22, top: -22, animationDuration: '3.2s', animationDelay: '0.8s', backgroundColor: 'rgba(234,179,8,0.1)' }}
               />
 
-              {/* Glowing solid dot center */}
+              {/* Glowing solid dot center — gold/yellow */}
               <div
-                className="absolute rounded-full bg-cyan-400 shadow-[0_0_10px_3px_rgba(34,211,238,0.7)]"
+                className="absolute rounded-full"
                 style={{
-                  width: hoveredRegion === r.id ? 10 : 7,
-                  height: hoveredRegion === r.id ? 10 : 7,
-                  left: hoveredRegion === r.id ? -5 : -3.5,
-                  top: hoveredRegion === r.id ? -5 : -3.5,
+                  width: hoveredRegion === r.id ? 11 : 7,
+                  height: hoveredRegion === r.id ? 11 : 7,
+                  left: hoveredRegion === r.id ? -5.5 : -3.5,
+                  top: hoveredRegion === r.id ? -5.5 : -3.5,
+                  backgroundColor: '#facc15',
                   transition: 'all 0.2s ease',
                   boxShadow: hoveredRegion === r.id
-                    ? '0 0 16px 6px rgba(34,211,238,0.9), 0 0 32px 12px rgba(34,211,238,0.4)'
-                    : '0 0 8px 3px rgba(34,211,238,0.65)',
+                    ? '0 0 18px 7px rgba(250,204,21,0.9), 0 0 36px 14px rgba(250,204,21,0.4)'
+                    : '0 0 9px 3px rgba(250,204,21,0.7)',
                 }}
               />
             </div>
           ))}
         </div>
 
-        {/* Hover / tap popup glassmorphism tooltip */}
+        {/* Hover / tap popup glassmorphism tooltip — clickable */}
         {hoveredRegionData && (
           <div
-            className="absolute pointer-events-none z-50 bg-neutral-950/90 backdrop-blur-md border border-cyan-500/20 p-4 rounded-xl shadow-2xl text-center w-64 transition-all duration-300"
+            className="absolute z-50 bg-neutral-950/95 backdrop-blur-md border border-yellow-400/30 p-4 rounded-xl shadow-2xl text-center w-64 transition-all duration-300 cursor-pointer group"
             style={{
               left: hoveredRegionData.x,
-              top: hoveredRegionData.y - 12,
+              top: hoveredRegionData.y - 16,
               transform: "translate(-50%, -100%)",
+              pointerEvents: 'auto',
             }}
+            onClick={() => handleRegionClick(hoveredRegionData.regionId)}
           >
-            <div className="text-[11px] font-black text-cyan-400 tracking-widest uppercase leading-none">
+            {/* Region name */}
+            <div className="text-[11px] font-black text-yellow-400 tracking-widest uppercase leading-none mb-2">
               {hoveredRegionData.name}
             </div>
-            <div className="text-[12px] font-medium text-neutral-200 mt-2 leading-relaxed">
+
+            {/* Divider */}
+            <div className="w-8 h-[1px] bg-yellow-400/30 mx-auto mb-2" />
+
+            {/* Description */}
+            <div className="text-[12px] font-medium text-neutral-200 leading-relaxed">
               {hoveredRegionData.message}
             </div>
-            <div className="text-[10px] font-semibold text-cyan-500 mt-3 uppercase tracking-wider animate-pulse flex items-center justify-center gap-1">
-              {locale === "es"
-                ? "Click para ver mercados"
-                : locale === "fr"
-                  ? "Cliquez pour voir les marchés"
-                  : locale === "pt"
-                    ? "Clique para ver mercados"
-                    : "Click to explore markets"}
-              <span>→</span>
+
+            {/* Clickable CTA */}
+            <div className="mt-3 flex items-center justify-center gap-1.5 bg-yellow-400/10 hover:bg-yellow-400/20 border border-yellow-400/30 rounded-lg px-3 py-1.5 transition-colors duration-200">
+              <span className="text-[10px] font-bold text-yellow-400 uppercase tracking-wider">
+                {locale === "es"
+                  ? "Ver mercados"
+                  : locale === "fr"
+                    ? "Voir les marchés"
+                    : locale === "pt"
+                      ? "Ver mercados"
+                      : "Explore markets"}
+              </span>
+              <span className="text-yellow-400 text-[11px]">→</span>
             </div>
           </div>
         )}
