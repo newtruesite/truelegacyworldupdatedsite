@@ -19,6 +19,7 @@ export function TLBackground({ children, className, variant = 'dark' }: TLBackgr
 
     return (
         <div className={cn('relative overflow-hidden bg-black', className)}>
+            <div className="global-background-glow" aria-hidden="true" />
             <div className="relative z-10">{children}</div>
         </div>
     )

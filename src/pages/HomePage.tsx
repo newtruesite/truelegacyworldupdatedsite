@@ -241,7 +241,6 @@ export default function HomePage() {
               className="relative z-10 w-full max-w-6xl mx-auto px-4 scroll-mt-28 pb-16"
             >
               <div className="relative w-full">
-                <div className="absolute -inset-x-10 -top-10 h-40 bg-gradient-to-b from-white/5 to-transparent opacity-40 pointer-events-none" />
                 <div className="relative w-full overflow-visible">
                   <WorldMap />
                 </div>

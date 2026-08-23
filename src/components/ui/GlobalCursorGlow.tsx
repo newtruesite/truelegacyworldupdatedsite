@@ -34,6 +34,7 @@ export function GlobalCursorGlow() {
     const handleMouseMove = (e: MouseEvent) => {
       if (!isActive) {
         setIsActive(true)
+        document.documentElement.classList.add('mouse-active')
         // Set initial positions immediately on first move to prevent jumping from (0,0)
         glowX.current = e.clientX
         glowY.current = e.clientY
@@ -47,6 +48,7 @@ export function GlobalCursorGlow() {
 
     const handleMouseLeave = () => {
       setIsActive(false)
+      document.documentElement.classList.remove('mouse-active')
     }
 
     window.addEventListener('mousemove', handleMouseMove)
@@ -64,6 +66,6 @@ export function GlobalCursorGlow() {
     }
   }, [isActive])
 
-  return <div className={`global-cursor-glow ${isActive ? 'active' : ''}`} aria-hidden="true" />
+  return null
 }
 

@@ -2493,26 +2493,25 @@ a[class*="bg-cyan"], a[class*="bg-blue"], button[class*="bg-cyan"], button[class
 }
 
 /* ============================================================
-   GLOBAL CURSOR SPOTLIGHT GLOW
+   GLOBAL BACKGROUND SPOTLIGHT GLOW
    ============================================================ */
-.global-cursor-glow {
+.global-background-glow {
   position: fixed;
   inset: 0;
   pointer-events: none;
-  z-index: 9999; /* on top of all content, including backgrounds */
+  z-index: 0;
   opacity: 0;
-  mix-blend-mode: screen;
   transition: opacity 0.6s ease;
   background: radial-gradient(
     800px circle at var(--mouse-x, 0px) var(--mouse-y, 0px),
-    rgba(6, 182, 212, 0.2) 0%,
-    rgba(59, 130, 246, 0.08) 45%,
+    rgba(6, 182, 212, 0.15) 0%,
+    rgba(59, 130, 246, 0.05) 45%,
     transparent 80%
   );
 }
 
 @media (pointer: fine) {
-  .global-cursor-glow.active {
+  .mouse-active .global-background-glow {
     opacity: 1;
   }
 }
