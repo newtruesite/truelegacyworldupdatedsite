@@ -920,12 +920,90 @@ export default function TrainingPage() {
                 </div>
 
                 <section className="mb-10 rounded-[2rem] border border-white/20 bg-gradient-to-br from-cyan-500/[0.09] via-white/[0.025] to-blue-600/[0.09] p-5 shadow-[0_24px_80px_rgba(0,0,0,.35)] sm:p-7">
-                  <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-                    <div><p className="text-xs font-black uppercase tracking-[0.26em] text-[#2997ff]">{ewsCopy.eyebrow}</p><h2 className="mt-2 text-2xl font-black text-white sm:text-3xl">{ewsCopy.title}</h2><p className="mt-2 max-w-3xl text-sm leading-6 text-[#cccccc]">{ewsCopy.text}</p></div>
-                    <div className="flex shrink-0 flex-col gap-3 sm:flex-row"><a href="https://app.enagicwebsystem.com/backoffice.php?section=logout" target="_blank" rel="noopener noreferrer" className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-cyan-400 px-5 font-black text-slate-950 transition hover:-translate-y-0.5 hover:bg-cyan-300">{ewsCopy.login}<ExternalLink className="h-4 w-4"/></a><a href="https://information.enagic.com/home" target="_blank" rel="noopener noreferrer" onClick={event=>{if(!window.confirm(ewsCopy.portalWarning))event.preventDefault()}} className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-emerald-500 px-5 font-black text-white transition hover:-translate-y-0.5 hover:bg-emerald-400">{ewsCopy.portal}<ExternalLink className="h-4 w-4"/></a></div>
+                  <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
+                    <div className="flex items-start gap-4">
+                      <div className="relative shrink-0">
+                        <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl overflow-hidden border border-white/20 bg-black/60 shadow-lg shadow-cyan-500/10 p-1 flex items-center justify-center">
+                          <img
+                            src="/logos/true-health-lifestyle.png"
+                            alt="True Health Lifestyle"
+                            className="w-full h-full object-contain rounded-xl"
+                          />
+                        </div>
+                        <span className="absolute -bottom-1 -right-1 flex h-4 w-4">
+                          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75"></span>
+                          <span className="relative inline-flex rounded-full h-4 w-4 bg-cyan-500 border-2 border-slate-950"></span>
+                        </span>
+                      </div>
+                      <div>
+                        <p className="text-xs font-black uppercase tracking-[0.26em] text-[#2997ff]">
+                          {ewsCopy.eyebrow} • True Health Lifestyle
+                        </p>
+                        <h2 className="mt-1 text-2xl font-black text-white sm:text-3xl">
+                          {ewsCopy.title}
+                        </h2>
+                        <p className="mt-2 max-w-2xl text-sm leading-6 text-[#cccccc]">
+                          {ewsCopy.text}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex shrink-0 flex-wrap gap-3">
+                      <a
+                        href="https://app.enagicwebsystem.com/backoffice.php?section=logout"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-cyan-400 px-5 font-black text-slate-950 transition hover:-translate-y-0.5 hover:bg-cyan-300 shadow-lg shadow-cyan-500/20 text-sm"
+                      >
+                        {ewsCopy.login}
+                        <ExternalLink className="h-4 w-4" />
+                      </a>
+                      <a
+                        href="https://information.enagic.com/home"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        onClick={(event) => {
+                          if (!window.confirm(ewsCopy.portalWarning)) event.preventDefault();
+                        }}
+                        className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-emerald-500 px-5 font-black text-white transition hover:-translate-y-0.5 hover:bg-emerald-400 shadow-lg text-sm"
+                      >
+                        {ewsCopy.portal}
+                        <ExternalLink className="h-4 w-4" />
+                      </a>
+                    </div>
                   </div>
-                  <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-                    {ewsResources.map(({title,text,href,icon:Icon})=><a key={href} href={href} target="_blank" rel="noopener noreferrer" className="group flex min-h-44 flex-col rounded-2xl border border-white/10 bg-black/80 p-5 transition hover:-translate-y-1 hover:border-white/20 hover:bg-cyan-400/[0.06]"><span className="grid h-11 w-11 place-items-center rounded-xl bg-cyan-400/10 text-[#2997ff]"><Icon className="h-5 w-5"/></span><strong className="mt-5 text-white">{title}</strong><small className="mt-2 flex-1 leading-5 text-[#cccccc]">{text}</small><span className="mt-4 inline-flex items-center gap-2 text-xs font-black uppercase tracking-wider text-[#2997ff]">{ewsCopy.open} <ExternalLink className="h-3.5 w-3.5"/></span></a>)}
+                  <div className="mt-7 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                    {ewsResources.map(({ title, text, href, icon: Icon }) => (
+                      <a
+                        key={href}
+                        href={href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="group flex flex-col justify-between rounded-2xl border border-white/10 bg-black/60 p-5 backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 hover:border-cyan-400/40 hover:bg-cyan-500/[0.05] hover:shadow-xl hover:shadow-cyan-500/10"
+                      >
+                        <div>
+                          <div className="flex items-center justify-between">
+                            <span className="grid h-12 w-12 place-items-center rounded-xl bg-gradient-to-br from-cyan-400/20 to-blue-500/10 border border-white/15 text-[#2997ff] group-hover:scale-105 group-hover:border-cyan-400/40 transition-transform">
+                              <Icon className="h-6 w-6" />
+                            </span>
+                            <span className="text-[10px] font-bold uppercase tracking-wider text-[#86868b] bg-white/5 border border-white/10 px-2 py-1 rounded-md">
+                              EWS / THL
+                            </span>
+                          </div>
+                          <h3 className="mt-4 text-base font-bold text-white group-hover:text-cyan-300 transition-colors">
+                            {title}
+                          </h3>
+                          <p className="mt-2 text-xs leading-relaxed text-[#cccccc]">
+                            {text}
+                          </p>
+                        </div>
+                        <div className="mt-5 pt-3.5 border-t border-white/10 flex items-center justify-between text-xs font-black uppercase tracking-wider text-[#2997ff] group-hover:text-cyan-300">
+                          <span>{ewsCopy.open}</span>
+                          <span className="w-7 h-7 rounded-lg bg-cyan-400/10 border border-cyan-400/20 flex items-center justify-center group-hover:bg-cyan-400 group-hover:text-slate-950 transition-all">
+                            <ExternalLink className="h-3.5 w-3.5" />
+                          </span>
+                        </div>
+                      </a>
+                    ))}
                   </div>
                 </section>
 
