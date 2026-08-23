@@ -9,6 +9,12 @@ import { t } from "@/lib/translations";
 import { motion } from "framer-motion";
 import {
   CheckCircle,
+  CheckCircle2,
+  Circle,
+  Clock,
+  ChevronDown,
+  ChevronRight,
+  ChevronLeft,
   Download,
   ExternalLink,
   FileText,
@@ -16,9 +22,11 @@ import {
   Lightbulb,
   LogOut,
   PlayCircle,
+  Play,
   ArrowRight,
   Target,
   Users,
+  BookOpenCheck,
 } from "lucide-react";
 import { useRef, useState } from "react";
 import { useParams } from "react-router-dom";
@@ -271,10 +279,53 @@ const CATEGORY_INFO = {
     color: "blue",
   },
   closing: {
-    title: "Closing, Objections & Business Media",
+    title: "Closing & Business Media",
     icon: FileText,
     color: "orange",
   },
+};
+
+const ACADEMY_STRUCTURE = [
+  {
+    id: "module-1",
+    num: 1,
+    titleKey: "foundation" as const,
+    categories: ["foundation", "product"],
+    moduleIds: ["purpose-vision", "kangen-science", "product-lineup"],
+  },
+  {
+    id: "module-2",
+    num: 2,
+    titleKey: "business" as const,
+    categories: ["prospecting", "closing"],
+    moduleIds: ["prospecting-basics", "social-media-prospecting", "closing-techniques", "business-media"],
+  },
+  {
+    id: "module-3",
+    num: 3,
+    titleKey: "leadership" as const,
+    categories: ["systems", "leadership"],
+    moduleIds: ["systems-funnels", "leadership-structure", "income-projection"],
+  },
+];
+
+const getYouTubeThumbnail = (url?: string) => {
+  if (!url) return '';
+  try {
+    if (url.includes("youtube.com/watch")) {
+      const u = new URL(url);
+      const id = u.searchParams.get("v");
+      return id ? `https://img.youtube.com/vi/${id}/hqdefault.jpg` : '';
+    }
+    if (url.includes("youtu.be/")) {
+      const after = url.split("youtu.be/")[1] || "";
+      const id = after.split(/[?&]/)[0];
+      return id ? `https://img.youtube.com/vi/${id}/hqdefault.jpg` : '';
+    }
+  } catch {
+    return '';
+  }
+  return '';
 };
 
 // Training Module Card Component
@@ -515,10 +566,41 @@ export default function TrainingPage() {
       ? "guides"
       : "sessions",
   );
-  const [activePath, setActivePath] = useState<"foundation" | "business" | "leadership" | null>(null);
   const [expandedModules, setExpandedModules] = useState<Set<string>>(
     new Set(),
   );
+
+  // LMS Academy State: Completed lessons, Active lesson, Module Overviews, & Mobile Curriculum
+  const [completedLessonIds, setCompletedLessonIds] = useState<Set<string>>(() => {
+    if (typeof window === "undefined") return new Set(["purpose-vision"]);
+    try {
+      const saved = localStorage.getItem("tl_completed_lessons");
+      if (saved) return new Set(JSON.parse(saved));
+    } catch { /* ignore */ }
+    return new Set(["purpose-vision"]);
+  });
+
+  const [activeLessonId, setActiveLessonId] = useState<string>("purpose-vision");
+  const [activeModuleOverviewId, setActiveModuleOverviewId] = useState<string | null>(null);
+  const [showMobileCurriculum, setShowMobileCurriculum] = useState(false);
+  const [expandedCurriculumModules, setExpandedCurriculumModules] = useState<Set<string>>(
+    new Set(["module-1", "module-2", "module-3"])
+  );
+
+  const toggleLessonComplete = (lessonId: string) => {
+    setCompletedLessonIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(lessonId)) {
+        next.delete(lessonId);
+      } else {
+        next.add(lessonId);
+      }
+      try {
+        localStorage.setItem("tl_completed_lessons", JSON.stringify([...next]));
+      } catch { /* ignore */ }
+      return next;
+    });
+  };
 
   // Check if this is a LATAM training page
   const isLatamTraining =
@@ -666,11 +748,6 @@ export default function TrainingPage() {
     }
     setExpandedModules(newExpanded);
   };
-
-  const selectedPath = learningPaths.find((path) => path.id === activePath);
-  const filteredModules = selectedPath
-    ? TRAINING_MODULES.filter((module) => selectedPath.categories.includes(module.category))
-    : [];
 
   return (
     <div className="page-wrapper" style={{ background: "#060b1e" }}>
@@ -902,70 +979,552 @@ export default function TrainingPage() {
                   </div>
                 </div>
 
-                {/* Training Sessions View */}
-                {activeView === "sessions" && (
-                  <section>
-                    {!selectedPath ? (
-                      <>
-                        <div className="mb-7 text-center">
-                          <h2 className="text-3xl font-black text-white">{pathCopy.title}</h2>
-                          <p className="mx-auto mt-3 max-w-2xl text-sm leading-6 text-[#cccccc] sm:text-base">{pathCopy.text}</p>
-                        </div>
-                        <div className="grid gap-5 lg:grid-cols-3">
-                          {learningPaths.map((path) => {
-                            const Icon = path.icon;
-                            const count = TRAINING_MODULES.filter((module) => path.categories.includes(module.category)).length;
+                {/* Training Sessions View (MasterClass x Apple LMS Academy 2-Column Experience) */}
+                {activeView === "sessions" && (() => {
+                  const toEmbedUrl = (url: string) => {
+                    try {
+                      if (url.includes("youtube.com/watch")) {
+                        const u = new URL(url);
+                        const id = u.searchParams.get("v");
+                        return id ? `https://www.youtube.com/embed/${id}?autoplay=1&rel=0` : url;
+                      }
+                      if (url.includes("youtu.be/")) {
+                        const after = url.split("youtu.be/")[1] || "";
+                        const id = after.split(/[?&]/)[0];
+                        return id ? `https://www.youtube.com/embed/${id}?autoplay=1&rel=0` : url;
+                      }
+                      return url;
+                    } catch {
+                      return url;
+                    }
+                  };
 
-                            return (
-                              <button
-                                key={path.id}
-                                type="button"
-                                onClick={() => setActivePath(path.id)}
-                                className={`group flex min-h-72 flex-col rounded-[1.75rem] border border-white/10 bg-gradient-to-br to-white/[.025] p-6 text-left transition hover:-translate-y-1 ${path.cardClass}`}
-                              >
-                                <span className={`grid h-14 w-14 place-items-center rounded-2xl ${path.iconClass}`}>
-                                  <Icon className="h-7 w-7" />
-                                </span>
-                                <h3 className="mt-7 text-2xl font-black leading-tight text-white">{path.title}</h3>
-                                <p className="mt-3 flex-1 text-sm leading-6 text-[#cccccc]">{path.text}</p>
-                                <span className={`mt-6 flex items-center justify-between border-t border-white/10 pt-5 text-sm font-black ${path.accentClass}`}>
-                                  <span>{count} {pathCopy.lessons}</span>
-                                  <span className="inline-flex items-center gap-2">{pathCopy.open}<ArrowRight className="h-4 w-4" /></span>
-                                </span>
-                              </button>
-                            );
-                          })}
-                        </div>
-                      </>
-                    ) : (
-                      <>
-                        <div className="mb-7 flex flex-col gap-4 rounded-2xl border border-white/10 bg-white/[.035] p-5 sm:flex-row sm:items-center sm:justify-between">
-                          <div>
-                            <button type="button" onClick={() => setActivePath(null)} className="inline-flex items-center gap-2 text-sm font-bold text-[#2997ff]">
-                              <span aria-hidden="true">←</span>{pathCopy.back}
-                            </button>
-                            <h2 className="mt-3 text-2xl font-black text-white">{selectedPath.title}</h2>
-                            <p className="mt-2 max-w-3xl text-sm leading-6 text-[#cccccc]">{selectedPath.text}</p>
-                          </div>
-                          <span className="shrink-0 rounded-full border border-white/10 bg-black/20 px-4 py-2 text-sm font-bold text-[#cccccc]">
-                            {filteredModules.length} {pathCopy.lessons}
+                  const ALL_LESSON_IDS = ACADEMY_STRUCTURE.flatMap((m) => m.moduleIds);
+                  const activeLesson = TRAINING_MODULES.find((m) => m.id === activeLessonId) || TRAINING_MODULES[0];
+                  const activeAcademyModule = ACADEMY_STRUCTURE.find((m) => m.moduleIds.includes(activeLessonId)) || ACADEMY_STRUCTURE[0];
+                  const activeLessonIndexInModule = activeAcademyModule.moduleIds.indexOf(activeLessonId);
+                  
+                  const currentGlobalIndex = ALL_LESSON_IDS.indexOf(activeLessonId);
+                  const prevLessonId = currentGlobalIndex > 0 ? ALL_LESSON_IDS[currentGlobalIndex - 1] : null;
+                  const nextLessonId = currentGlobalIndex < ALL_LESSON_IDS.length - 1 ? ALL_LESSON_IDS[currentGlobalIndex + 1] : null;
+                  const nextLesson = nextLessonId ? TRAINING_MODULES.find((m) => m.id === nextLessonId) : null;
+
+                  const totalLessonsCount = TRAINING_MODULES.length;
+                  const totalCompletedCount = completedLessonIds.size;
+                  const academyProgressPercent = Math.round((totalCompletedCount / totalLessonsCount) * 100);
+
+                  const activeModuleCompletedCount = activeAcademyModule.moduleIds.filter((id) => completedLessonIds.has(id)).length;
+
+                  const getLocalizedLesson = (mod: TrainingModule) => {
+                    const trans = copy.trainingModules?.[mod.id as keyof typeof copy.trainingModules];
+                    return {
+                      title: trans?.title || mod.title,
+                      description: trans?.description || mod.description,
+                      resources: (trans as { resources?: ReadonlyArray<string> } | undefined)?.resources,
+                    };
+                  };
+
+                  const getModuleTitle = (titleKey: "foundation" | "business" | "leadership") => {
+                    return pathCopy[titleKey];
+                  };
+
+                  const toggleCurriculumModule = (modId: string) => {
+                    setExpandedCurriculumModules((prev) => {
+                      const next = new Set(prev);
+                      if (next.has(modId)) next.delete(modId);
+                      else next.add(modId);
+                      return next;
+                    });
+                  };
+
+                  const renderCurriculumSidebar = () => (
+                    <div className="space-y-6">
+                      {/* Sidebar Header & Progress */}
+                      <div>
+                        <div className="flex items-center justify-between mb-2">
+                          <span className="text-[11px] font-black uppercase tracking-[0.25em] text-[#2997ff]">
+                            {locale === "es" ? "TU ENTRENAMIENTO" : locale === "fr" ? "VOTRE FORMATION" : locale === "pt" ? "SEU TREINAMENTO" : "YOUR TRAINING"}
+                          </span>
+                          <span className="text-xs font-black text-cyan-400">
+                            {academyProgressPercent}%
                           </span>
                         </div>
-                        <div className="space-y-6">
-                          {filteredModules.map((module) => (
-                            <TrainingModuleCard
-                              key={module.id}
-                              module={module}
-                              isExpanded={expandedModules.has(module.id)}
-                              onToggle={() => toggleModule(module.id)}
-                              copy={copy}
+
+                        {/* Academy Progress Bar */}
+                        <div className="mb-4">
+                          <div className="flex items-center justify-between text-xs text-[#cccccc] mb-1.5 font-semibold">
+                            <span>{locale === "es" ? "Progreso de la Academia" : locale === "fr" ? "Progrès de l’Académie" : locale === "pt" ? "Progresso da Academia" : "Academy Progress"}</span>
+                            <span>{totalCompletedCount} / {totalLessonsCount}</span>
+                          </div>
+                          <div className="h-2 w-full rounded-full bg-white/10 overflow-hidden">
+                            <div
+                              className="h-full bg-gradient-to-r from-cyan-400 to-blue-500 rounded-full transition-all duration-500"
+                              style={{ width: `${academyProgressPercent}%` }}
                             />
-                          ))}
+                          </div>
                         </div>
-                      </>
-                    )}
-                  </section>
-                )}
+
+                        {/* Active Module Progress Bar */}
+                        <div className="p-3 rounded-xl border border-white/10 bg-white/[0.03]">
+                          <div className="flex items-center justify-between text-xs text-[#cccccc] mb-1 font-semibold">
+                            <span>{locale === "es" ? "Progreso del Módulo" : locale === "fr" ? "Progrès du Module" : locale === "pt" ? "Progresso do Módulo" : "Module Progress"}</span>
+                            <span className="text-[#2997ff]">
+                              {activeModuleCompletedCount} / {activeAcademyModule.moduleIds.length}
+                            </span>
+                          </div>
+                          <div className="h-1.5 w-full rounded-full bg-white/10 overflow-hidden">
+                            <div
+                              className="h-full bg-[#2997ff] rounded-full transition-all duration-500"
+                              style={{ width: `${Math.round((activeModuleCompletedCount / activeAcademyModule.moduleIds.length) * 100)}%` }}
+                            />
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Module Accordions */}
+                      <div className="space-y-3">
+                        {ACADEMY_STRUCTURE.map((acadMod) => {
+                          const isExpanded = expandedCurriculumModules.has(acadMod.id);
+                          const modTitle = getModuleTitle(acadMod.titleKey);
+                          const modLessons = acadMod.moduleIds.map((id) => TRAINING_MODULES.find((m) => m.id === id)!);
+                          const modCompleted = acadMod.moduleIds.filter((id) => completedLessonIds.has(id)).length;
+
+                          return (
+                            <div key={acadMod.id} className="rounded-xl border border-white/10 bg-black/40 overflow-hidden transition-colors">
+                              {/* Module Header Button */}
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  toggleCurriculumModule(acadMod.id);
+                                }}
+                                className="w-full p-3.5 flex items-center justify-between gap-2 text-left hover:bg-white/5 transition-colors"
+                              >
+                                <div className="min-w-0 flex-1">
+                                  <div className="flex items-center gap-2 mb-0.5">
+                                    <span className="text-[10px] font-black uppercase tracking-wider text-tl-gold">
+                                      {locale === "es" ? `MÓDULO ${acadMod.num}` : locale === "fr" ? `MODULE ${acadMod.num}` : locale === "pt" ? `MÓDULO ${acadMod.num}` : `MODULE ${acadMod.num}`}
+                                    </span>
+                                    <span className="text-[10px] font-medium text-[#cccccc] bg-white/10 px-1.5 py-0.5 rounded">
+                                      {modCompleted}/{acadMod.moduleIds.length} {locale === "es" ? "completado" : "completed"}
+                                    </span>
+                                  </div>
+                                  <h4 className="text-xs font-extrabold text-white truncate">{modTitle}</h4>
+                                </div>
+                                <span className="text-[#cccccc] p-1">
+                                  {isExpanded ? <ChevronDown className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />}
+                                </span>
+                              </button>
+
+                              {/* Lesson Items inside Module */}
+                              {isExpanded && (
+                                <div className="border-t border-white/10 p-1.5 space-y-1 bg-white/[0.01]">
+                                  {modLessons.map((lesson, idx) => {
+                                    const loc = getLocalizedLesson(lesson);
+                                    const isCurrentActive = lesson.id === activeLessonId && !activeModuleOverviewId;
+                                    const isDone = completedLessonIds.has(lesson.id);
+
+                                    return (
+                                      <button
+                                        key={lesson.id}
+                                        type="button"
+                                        onClick={() => {
+                                          setActiveLessonId(lesson.id);
+                                          setActiveModuleOverviewId(null);
+                                          setShowMobileCurriculum(false);
+                                        }}
+                                        className={`w-full p-2.5 rounded-lg flex items-center gap-2.5 text-left transition-all text-xs ${
+                                          isCurrentActive
+                                            ? "border-l-2 border-[#2997ff] bg-cyan-500/15 text-white font-bold shadow-[0_0_20px_rgba(6,182,212,0.15)]"
+                                            : isDone
+                                              ? "text-[#cccccc] hover:bg-white/5 hover:text-white"
+                                              : "text-[#cccccc] hover:bg-white/5 hover:text-white"
+                                        }`}
+                                      >
+                                        <span className="shrink-0">
+                                          {isCurrentActive ? (
+                                            <Play className="w-3.5 h-3.5 fill-[#2997ff] text-[#2997ff]" />
+                                          ) : isDone ? (
+                                            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
+                                          ) : (
+                                            <Circle className="w-3.5 h-3.5 text-neutral-600" />
+                                          )}
+                                        </span>
+                                        <span className="truncate flex-1 leading-snug">
+                                          {idx + 1}. {loc.title}
+                                        </span>
+                                        {lesson.duration && (
+                                          <span className="text-[10px] text-[#86868b] shrink-0 font-medium">
+                                            {lesson.duration}
+                                          </span>
+                                        )}
+                                      </button>
+                                    );
+                                  })}
+                                </div>
+                              )}
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  );
+
+                  return (
+                    <section className="mb-12">
+                      {/* Mobile Curriculum Toggle Drawer Button */}
+                      <div className="mb-6 lg:hidden">
+                        <button
+                          type="button"
+                          onClick={() => setShowMobileCurriculum(!showMobileCurriculum)}
+                          className="flex items-center justify-between w-full p-4 rounded-xl border border-cyan-500/30 bg-neutral-900/90 text-white font-bold shadow-lg"
+                        >
+                          <div className="flex items-center gap-2.5">
+                            <BookOpenCheck className="w-5 h-5 text-[#2997ff]" />
+                            <span className="text-sm">
+                              {showMobileCurriculum
+                                ? (locale === "es" ? "Ocultar plan de estudios" : "Hide Course Curriculum")
+                                : (locale === "es" ? "Ver plan de estudios" : "View Course Curriculum")}
+                            </span>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <span className="text-xs px-2.5 py-1 rounded-full bg-cyan-500/20 text-[#2997ff] border border-cyan-500/30">
+                              {academyProgressPercent}%
+                            </span>
+                            {showMobileCurriculum ? <ChevronDown className="w-4 h-4 text-[#cccccc]" /> : <ChevronRight className="w-4 h-4 text-[#cccccc]" />}
+                          </div>
+                        </button>
+
+                        {/* Mobile Drawer Accordion */}
+                        {showMobileCurriculum && (
+                          <motion.div
+                            initial={{ opacity: 0, height: 0 }}
+                            animate={{ opacity: 1, height: "auto" }}
+                            exit={{ opacity: 0, height: 0 }}
+                            className="mt-3 rounded-2xl border border-white/15 bg-neutral-950 p-5 shadow-2xl space-y-4"
+                          >
+                            {renderCurriculumSidebar()}
+                          </motion.div>
+                        )}
+                      </div>
+
+                      {/* Main LMS 2-Column Desktop Grid */}
+                      <div className="grid lg:grid-cols-[1fr_320px] xl:grid-cols-[1fr_360px] gap-8 items-start">
+                        {/* LEFT COLUMN: Focused Video Player & Active Lesson / Module Overview */}
+                        <div className="space-y-6 min-w-0">
+                          {activeModuleOverviewId ? (
+                            /* MODULE OVERVIEW PAGE */
+                            (() => {
+                              const overviewMod = ACADEMY_STRUCTURE.find((m) => m.id === activeModuleOverviewId) || ACADEMY_STRUCTURE[0];
+                              const overviewModTitle = getModuleTitle(overviewMod.titleKey);
+                              const overviewLessons = overviewMod.moduleIds.map((id) => TRAINING_MODULES.find((m) => m.id === id)!);
+
+                              return (
+                                <motion.div
+                                  initial={{ opacity: 0, y: 15 }}
+                                  animate={{ opacity: 1, y: 0 }}
+                                  className="space-y-6"
+                                >
+                                  <div className="p-6 rounded-2xl border border-white/10 bg-white/[0.035] backdrop-blur-md">
+                                    <button
+                                      type="button"
+                                      onClick={() => setActiveModuleOverviewId(null)}
+                                      className="inline-flex items-center gap-2 text-xs font-bold text-[#2997ff] mb-4 hover:underline"
+                                    >
+                                      <ChevronLeft className="w-4 h-4" />
+                                      {locale === "es" ? "Volver a la lección activa" : "Back to active lesson"}
+                                    </button>
+                                    <p className="text-xs font-black uppercase tracking-[0.25em] text-tl-gold mb-2">
+                                      {locale === "es" ? `MÓDULO ${overviewMod.num}` : `MODULE ${overviewMod.num}`}
+                                    </p>
+                                    <h2 className="text-2xl sm:text-3xl font-black text-white">{overviewModTitle}</h2>
+                                    <p className="mt-3 text-sm text-[#cccccc] leading-relaxed">
+                                      {locale === "es"
+                                        ? "Completa estas lecciones en secuencia para dominar este nivel y avanzar en tu negocio Enagic."
+                                        : "Complete these lessons in sequence to master this level and advance your Enagic business."}
+                                    </p>
+                                  </div>
+
+                                  <div className="space-y-3">
+                                    {overviewLessons.map((lesson, idx) => {
+                                      const loc = getLocalizedLesson(lesson);
+                                      const isDone = completedLessonIds.has(lesson.id);
+                                      const thumb = getYouTubeThumbnail(lesson.videoUrl);
+
+                                      return (
+                                        <div
+                                          key={lesson.id}
+                                          onClick={() => {
+                                            setActiveLessonId(lesson.id);
+                                            setActiveModuleOverviewId(null);
+                                          }}
+                                          className="group p-4 rounded-xl border border-white/10 bg-black/50 hover:border-cyan-400/40 hover:bg-cyan-500/[0.03] transition-all cursor-pointer flex flex-col sm:flex-row items-start sm:items-center gap-4"
+                                        >
+                                          {/* Thumbnail image (No iframe loaded for overview performance) */}
+                                          <div className="relative w-full sm:w-36 aspect-video rounded-lg overflow-hidden border border-white/10 bg-neutral-900 shrink-0">
+                                            {thumb ? (
+                                              <img src={thumb} alt={loc.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+                                            ) : (
+                                              <div className="w-full h-full flex items-center justify-center bg-cyan-950/40 text-[#2997ff]">
+                                                <Play className="w-6 h-6" />
+                                              </div>
+                                            )}
+                                            <div className="absolute inset-0 bg-black/30 flex items-center justify-center group-hover:bg-black/10 transition-colors">
+                                              <span className="w-9 h-9 rounded-full bg-cyan-400/90 text-slate-950 flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
+                                                <Play className="w-4 h-4 fill-slate-950 ml-0.5" />
+                                              </span>
+                                            </div>
+                                          </div>
+
+                                          <div className="flex-1 min-w-0">
+                                            <div className="flex items-center gap-2 mb-1">
+                                              <span className="text-xs font-black text-[#2997ff]">0{idx + 1}</span>
+                                              <span className="text-xs text-[#cccccc] font-medium">• {lesson.duration}</span>
+                                              {isDone && (
+                                                <span className="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">
+                                                  <CheckCircle2 className="w-3 h-3" /> {locale === "es" ? "Completado" : "Completed"}
+                                                </span>
+                                              )}
+                                            </div>
+                                            <h3 className="font-bold text-white text-base group-hover:text-[#2997ff] transition-colors">{loc.title}</h3>
+                                            <p className="text-xs text-[#cccccc] line-clamp-2 mt-1">{loc.description}</p>
+                                          </div>
+
+                                          <button
+                                            type="button"
+                                            className="shrink-0 px-4 py-2 rounded-lg bg-white/5 group-hover:bg-cyan-400 group-hover:text-slate-950 text-xs font-bold text-white transition-colors flex items-center gap-1.5"
+                                          >
+                                            {locale === "es" ? "Iniciar lección" : "Start Lesson"} <ArrowRight className="w-3.5 h-3.5" />
+                                          </button>
+                                        </div>
+                                      );
+                                    })}
+                                  </div>
+                                </motion.div>
+                              );
+                            })()
+                          ) : (
+                            /* ACTIVE LESSON FOCUSED PLAYER MODE */
+                            (() => {
+                              const loc = getLocalizedLesson(activeLesson);
+                              const isCompleted = completedLessonIds.has(activeLesson.id);
+
+                              return (
+                                <motion.div
+                                  key={activeLesson.id}
+                                  initial={{ opacity: 0, y: 15 }}
+                                  animate={{ opacity: 1, y: 0 }}
+                                  transition={{ duration: 0.3 }}
+                                  className="space-y-6"
+                                >
+                                  {/* Lesson Header */}
+                                  <div>
+                                    <div className="flex items-center justify-between flex-wrap gap-2 mb-2">
+                                      <span className="text-xs font-black uppercase tracking-[0.25em] text-tl-gold">
+                                        {locale === "es" ? `MÓDULO ${activeAcademyModule.num}` : `MODULE ${activeAcademyModule.num}`} • {getModuleTitle(activeAcademyModule.titleKey)}
+                                      </span>
+                                      <button
+                                        type="button"
+                                        onClick={() => setActiveModuleOverviewId(activeAcademyModule.id)}
+                                        className="text-xs font-bold text-[#2997ff] hover:underline flex items-center gap-1"
+                                      >
+                                        {locale === "es" ? "Ver resumen del módulo" : "View Module Overview"} →
+                                      </button>
+                                    </div>
+                                    <h1 className="text-2xl sm:text-3xl lg:text-4xl font-black text-white leading-tight mb-3">
+                                      {loc.title}
+                                    </h1>
+                                    <div className="flex items-center gap-3 text-xs text-[#cccccc] font-medium flex-wrap">
+                                      {activeLesson.duration && (
+                                        <span className="inline-flex items-center gap-1.5 bg-white/5 border border-white/10 px-2.5 py-1 rounded-md">
+                                          <Clock className="w-3.5 h-3.5 text-[#2997ff]" /> {activeLesson.duration}
+                                        </span>
+                                      )}
+                                      <span className="inline-flex items-center gap-1.5 bg-white/5 border border-white/10 px-2.5 py-1 rounded-md capitalize">
+                                        <Target className="w-3.5 h-3.5 text-[#2997ff]" /> {activeLesson.level}
+                                      </span>
+                                      <span className="inline-flex items-center gap-1.5 bg-white/5 border border-white/10 px-2.5 py-1 rounded-md">
+                                        {locale === "es" ? `Lección ${activeLessonIndexInModule + 1} de ${activeAcademyModule.moduleIds.length}` : `Lesson ${activeLessonIndexInModule + 1} of ${activeAcademyModule.moduleIds.length}`}
+                                      </span>
+                                    </div>
+                                  </div>
+
+                                  {/* Prominent Video Player (ONLY instantiates iframe for active lesson) */}
+                                  <div className="relative w-full aspect-video rounded-2xl border border-white/15 bg-black shadow-2xl overflow-hidden shadow-cyan-500/10">
+                                    {activeLesson.videoUrl ? (
+                                      <iframe
+                                        src={toEmbedUrl(activeLesson.videoUrl)}
+                                        title={loc.title}
+                                        className="absolute inset-0 w-full h-full"
+                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                        allowFullScreen
+                                      />
+                                    ) : (
+                                      <div className="absolute inset-0 flex items-center justify-center text-[#cccccc] text-sm">
+                                        No video available for this lesson.
+                                      </div>
+                                    )}
+                                  </div>
+
+                                  {/* Action Bar Under Video */}
+                                  <div className="flex items-center justify-between flex-wrap gap-4 p-4 rounded-xl border border-white/10 bg-white/[0.03]">
+                                    {/* Mark Complete Toggle Button */}
+                                    <button
+                                      type="button"
+                                      onClick={() => toggleLessonComplete(activeLesson.id)}
+                                      className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold transition-all shadow-md ${
+                                        isCompleted
+                                          ? "bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 hover:bg-emerald-500/30"
+                                          : "bg-gradient-to-r from-cyan-400 to-blue-500 text-slate-950 hover:shadow-cyan-500/20 hover:scale-[1.02]"
+                                      }`}
+                                    >
+                                      <CheckCircle2 className="w-4 h-4" />
+                                      {isCompleted
+                                        ? (locale === "es" ? "Lección completada ✓" : "Lesson Completed ✓")
+                                        : (locale === "es" ? "Marcar como completada" : "Mark Complete")}
+                                    </button>
+
+                                    {/* Previous / Next Lesson Buttons */}
+                                    <div className="flex items-center gap-2">
+                                      <button
+                                        type="button"
+                                        disabled={!prevLessonId}
+                                        onClick={() => {
+                                          if (prevLessonId) {
+                                            setActiveLessonId(prevLessonId);
+                                            setActiveModuleOverviewId(null);
+                                          }
+                                        }}
+                                        className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg border border-white/10 bg-white/5 hover:bg-white/10 text-xs font-bold text-white transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+                                      >
+                                        <ChevronLeft className="w-4 h-4" />
+                                        {locale === "es" ? "Anterior" : "Previous"}
+                                      </button>
+                                      <button
+                                        type="button"
+                                        disabled={!nextLessonId}
+                                        onClick={() => {
+                                          if (nextLessonId) {
+                                            setActiveLessonId(nextLessonId);
+                                            setActiveModuleOverviewId(null);
+                                          }
+                                        }}
+                                        className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg border border-white/10 bg-white/5 hover:bg-white/10 text-xs font-bold text-white transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+                                      >
+                                        {locale === "es" ? "Siguiente" : "Next"}
+                                        <ChevronRight className="w-4 h-4" />
+                                      </button>
+                                    </div>
+                                  </div>
+
+                                  {/* Lesson Description & Resources */}
+                                  <div className="p-6 rounded-2xl border border-white/10 bg-white/[0.025] space-y-6">
+                                    <div>
+                                      <h3 className="text-sm font-bold uppercase tracking-wider text-[#2997ff] mb-2">
+                                        {locale === "es" ? "Acerca de esta lección" : "About this lesson"}
+                                      </h3>
+                                      <p className="text-[#cccccc] text-sm sm:text-base leading-relaxed">
+                                        {loc.description}
+                                      </p>
+                                    </div>
+
+                                    {/* Resources Downloads */}
+                                    {activeLesson.resources.length > 0 && (
+                                      <div className="border-t border-white/10 pt-5">
+                                        <h4 className="text-xs font-bold uppercase tracking-wider text-[#cccccc] mb-3 flex items-center gap-2">
+                                          <Download className="w-4 h-4 text-[#2997ff]" />
+                                          {locale === "es" ? "Descargas y Recursos" : "Downloads & Resources"} ({activeLesson.resources.length})
+                                        </h4>
+                                        <div className="grid gap-2.5 sm:grid-cols-2">
+                                          {activeLesson.resources.map((res, rIdx) => {
+                                            const resTitle = loc.resources?.[rIdx] || res.title;
+                                            return (
+                                              <a
+                                                key={rIdx}
+                                                href={res.url}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="flex items-center gap-3 p-3 rounded-xl border border-white/10 bg-black/40 hover:border-cyan-400/40 hover:bg-cyan-500/10 transition-all text-xs group"
+                                              >
+                                                <FileText className="w-4 h-4 text-[#2997ff] shrink-0" />
+                                                <span className="text-slate-200 font-medium truncate flex-1 group-hover:text-white">
+                                                  {resTitle}
+                                                </span>
+                                                <span className="text-[10px] text-[#86868b] uppercase font-bold px-1.5 py-0.5 rounded bg-white/5">
+                                                  {res.type}
+                                                </span>
+                                                <ExternalLink className="w-3.5 h-3.5 text-[#cccccc] group-hover:text-[#2997ff]" />
+                                              </a>
+                                            );
+                                          })}
+                                        </div>
+                                      </div>
+                                    )}
+                                  </div>
+
+                                  {/* NEXT LESSON Preview Card */}
+                                  {nextLesson && (() => {
+                                    const nextLoc = getLocalizedLesson(nextLesson);
+                                    const nextThumb = getYouTubeThumbnail(nextLesson.videoUrl);
+
+                                    return (
+                                      <div
+                                        onClick={() => {
+                                          setActiveLessonId(nextLesson.id);
+                                          setActiveModuleOverviewId(null);
+                                          window.scrollTo({ top: 300, behavior: "smooth" });
+                                        }}
+                                        className="group p-5 rounded-2xl border border-white/15 bg-gradient-to-r from-cyan-950/30 via-neutral-950 to-blue-950/30 hover:border-cyan-400/50 transition-all cursor-pointer flex flex-col sm:flex-row items-start sm:items-center justify-between gap-5 shadow-xl"
+                                      >
+                                        <div className="flex items-center gap-4 min-w-0">
+                                          {/* Thumbnail */}
+                                          <div className="relative w-28 aspect-video rounded-lg overflow-hidden border border-white/10 bg-neutral-900 shrink-0">
+                                            {nextThumb ? (
+                                              <img src={nextThumb} alt={nextLoc.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+                                            ) : (
+                                              <div className="w-full h-full flex items-center justify-center bg-cyan-950 text-[#2997ff]">
+                                                <Play className="w-5 h-5" />
+                                              </div>
+                                            )}
+                                          </div>
+
+                                          <div className="min-w-0">
+                                            <p className="text-[10px] font-black uppercase tracking-[0.25em] text-[#2997ff] mb-1">
+                                              {locale === "es" ? "SIGUIENTE LECCIÓN" : "NEXT LESSON"}
+                                            </p>
+                                            <h4 className="font-bold text-white text-base truncate group-hover:text-[#2997ff] transition-colors">
+                                              {nextLoc.title}
+                                            </h4>
+                                            {nextLesson.duration && (
+                                              <p className="text-xs text-[#cccccc] mt-1 font-medium">
+                                                {nextLesson.duration}
+                                              </p>
+                                            )}
+                                          </div>
+                                        </div>
+
+                                        <button
+                                          type="button"
+                                          className="shrink-0 px-5 py-2.5 rounded-xl bg-cyan-400 text-slate-950 font-black text-xs inline-flex items-center gap-2 group-hover:bg-cyan-300 transition-colors shadow-md"
+                                        >
+                                          {locale === "es" ? "Continuar" : "Continue"} <ArrowRight className="w-4 h-4" />
+                                        </button>
+                                      </div>
+                                    );
+                                  })()}
+                                </motion.div>
+                              );
+                            })()
+                          )}
+                        </div>
+
+                        {/* RIGHT COLUMN: Sticky Course Curriculum Sidebar (Desktop) */}
+                        <aside className="hidden lg:block sticky top-24 rounded-2xl border border-white/10 bg-neutral-950/90 backdrop-blur-xl p-5 shadow-2xl">
+                          {renderCurriculumSidebar()}
+                        </aside>
+                      </div>
+                    </section>
+                  );
+                })()}
 
                 {/* Informational Guides View */}
                 {activeView === "guides" && (
