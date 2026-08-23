@@ -126,6 +126,8 @@ export function WorldMap() {
 
   // Region HTML overlays refs to manipulate styles directly without React re-renders
   const regionPinsRef = useRef<Record<string, HTMLDivElement | null>>({});
+  // Ref-shadowed hovered region id for canvas loop (avoids stale closure)
+  const hoveredRegionRef = useRef<string | null>(null);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -343,9 +345,8 @@ export function WorldMap() {
         if (!el || !proj) return;
 
         if (proj.visible) {
-          el.style.transform = `translate3d(${proj.x}px, ${proj.y}px, 0) scale(${hoveredRegion === r.id ? 1.15 : 1})`;
-          // Fade pins out on backside rotation during 3D sphere auto-spin
-          el.style.opacity = `${progress > 0.4 ? 1 : 1}`;
+          el.style.transform = `translate3d(${proj.x}px, ${proj.y}px, 0) scale(${hoveredRegionRef.current === r.id ? 1.15 : 1})`;
+          el.style.opacity = '1';
           el.style.pointerEvents = "all";
         } else {
           el.style.opacity = "0";
@@ -425,13 +426,19 @@ export function WorldMap() {
     navigate(`/select-country?continent=${regionId}`);
   };
 
-  const handlePinMouseEnter = (regionId: string, e: React.MouseEvent) => {
+  const handlePinMouseLeave = () => {
+    setHoveredRegion(null);
+    hoveredRegionRef.current = null;
+    setHoveredRegionData(null);
+  };
+
+  const handlePinMouseEnterById = (regionId: string, e: React.MouseEvent | MouseEvent) => {
     setHoveredRegion(regionId);
+    hoveredRegionRef.current = regionId;
 
     const region = REGIONS.find((r) => r.id === regionId);
     if (!region || !containerRef.current) return;
 
-    // Get position relative to container
     const rect = containerRef.current.getBoundingClientRect();
     const pinEl = regionPinsRef.current[regionId];
     if (!pinEl) return;
@@ -449,46 +456,37 @@ export function WorldMap() {
     });
   };
 
-  const handlePinMouseLeave = () => {
-    setHoveredRegion(null);
-    setHoveredRegionData(null);
-  };
-
   return (
     <div className="map-section w-full relative" style={{ touchAction: "pan-y" }}>
       <div
         ref={containerRef}
-        className="relative w-full flex items-center justify-center select-none h-[360px] md:h-[520px]"
+        className="relative w-full flex items-center justify-center select-none h-[360px] md:h-[520px] cursor-grab active:cursor-grabbing"
         onMouseEnter={() => {
           isHoveredRef.current = true;
         }}
         onMouseLeave={() => {
           isHoveredRef.current = false;
           handlePinMouseLeave();
+          handleEnd();
         }}
+        onMouseDown={(e) => handleStart(e.clientX, e.clientY)}
+        onMouseMove={(e) => handleMove(e.clientX, e.clientY)}
+        onMouseUp={handleEnd}
+        onTouchStart={(e) => {
+          if (e.touches[0]) handleStart(e.touches[0].clientX, e.touches[0].clientY);
+        }}
+        onTouchMove={(e) => {
+          if (e.touches[0]) handleMove(e.touches[0].clientX, e.touches[0].clientY);
+        }}
+        onTouchEnd={handleEnd}
       >
         {/* Cinematic atmospheric backdrop glow behind the globe */}
         <div className="absolute inset-0 bg-radial-gradient(circle,rgba(6,182,212,0.03),transparent_70%) pointer-events-none z-0" />
 
-        {/* Dynamic 3D WebGL / Canvas projection */}
+        {/* Dynamic 3D Canvas projection — pointer-events-none so pins can receive events */}
         <canvas
           ref={canvasRef}
-          className="z-10 cursor-grab active:cursor-grabbing block"
-          onMouseDown={(e) => handleStart(e.clientX, e.clientY)}
-          onMouseMove={(e) => handleMove(e.clientX, e.clientY)}
-          onMouseUp={handleEnd}
-          onMouseLeave={handleEnd}
-          onTouchStart={(e) => {
-            if (e.touches[0]) {
-              handleStart(e.touches[0].clientX, e.touches[0].clientY);
-            }
-          }}
-          onTouchMove={(e) => {
-            if (e.touches[0]) {
-              handleMove(e.touches[0].clientX, e.touches[0].clientY);
-            }
-          }}
-          onTouchEnd={handleEnd}
+          className="z-10 block absolute inset-0 w-full h-full pointer-events-none"
         />
 
         {/* Global branding overlay in center */}
@@ -523,9 +521,12 @@ export function WorldMap() {
                 willChange: "transform, opacity",
               }}
               onClick={() => handleRegionClick(r.id)}
-              onMouseEnter={(e) => handlePinMouseEnter(r.id, e)}
+              onMouseEnter={(e) => handlePinMouseEnterById(r.id, e)}
               onMouseLeave={handlePinMouseLeave}
             >
+              {/* Large invisible hit area so hover is easy to trigger */}
+              <div className="absolute" style={{ width: 48, height: 48, left: -24, top: -24 }} />
+
               {/* Outer throbbing glow rings */}
               <div
                 className="absolute rounded-full animate-ping"
