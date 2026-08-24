@@ -56,11 +56,11 @@ export function AppNavigation() {
 
   if (isCollapsed) {
     return (
-      <div className="fixed z-[9400] left-1/2 -translate-x-1/2 bottom-[max(10px,env(safe-area-inset-bottom))]">
+      <div className="fixed z-[9400] right-4 sm:right-8 bottom-[max(12px,env(safe-area-inset-bottom))]">
         <button
           type="button"
           onClick={() => handleSetCollapsed(false)}
-          className="flex items-center gap-2 px-4 py-2 rounded-full border border-cyan-400/50 bg-[#05091a]/95 text-white shadow-2xl backdrop-blur-xl hover:border-cyan-400 hover:bg-[#0d1d46] transition-all hover:scale-105 active:scale-95 group cursor-pointer"
+          className="flex items-center gap-2 px-4 py-2.5 rounded-full border border-cyan-400/50 bg-[#05091a]/95 text-white shadow-2xl backdrop-blur-xl hover:border-cyan-400 hover:bg-[#0d1d46] transition-all hover:scale-105 active:scale-95 group cursor-pointer"
           title="Expand app navigation"
           aria-label="Expand app navigation"
         >
@@ -79,11 +79,11 @@ export function AppNavigation() {
 
   return (
     <nav className="tl-app-nav" aria-label="True Legacy app navigation">
-      {/* Sleek top collapse handle */}
+      {/* Sleek top-right collapse handle */}
       <button
         type="button"
         onClick={() => handleSetCollapsed(true)}
-        className="absolute -top-3.5 left-1/2 -translate-x-1/2 z-20 flex items-center gap-1 px-3 py-0.5 rounded-full border border-white/20 bg-[#05091a] hover:bg-[#0d1d46] hover:border-cyan-400/60 text-[10px] font-bold text-slate-300 hover:text-cyan-300 transition-all shadow-lg cursor-pointer"
+        className="absolute -top-3.5 right-4 sm:right-6 z-20 flex items-center gap-1 px-3 py-0.5 rounded-full border border-white/20 bg-[#05091a] hover:bg-[#0d1d46] hover:border-cyan-400/60 text-[10px] font-bold text-slate-300 hover:text-cyan-300 transition-all shadow-lg cursor-pointer"
         title="Collapse navigation"
         aria-label="Collapse navigation"
       >
