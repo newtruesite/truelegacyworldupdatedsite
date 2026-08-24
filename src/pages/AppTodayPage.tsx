@@ -135,16 +135,16 @@ function QuickAction({ to, icon, title, text }: { to: string; icon: React.ReactN
   return (
     <Link
       to={to}
-      className="group flex flex-col justify-between rounded-2xl border border-white/10 bg-white/[.025] hover:bg-white/[.05] p-4 sm:p-5 transition-all duration-300 hover:-translate-y-1 hover:border-cyan-400/40 hover:shadow-lg hover:shadow-cyan-500/10"
+      className="group flex flex-col justify-between rounded-2xl border border-white/10 bg-white/[.025] hover:bg-white/[.05] p-4 transition-all duration-300 hover:-translate-y-1 hover:border-cyan-400/40 hover:shadow-lg hover:shadow-cyan-500/10"
     >
       <div>
-        <span className="grid h-10 w-10 place-items-center rounded-xl bg-cyan-400/10 text-[#2997ff] border border-cyan-400/20 group-hover:scale-105 group-hover:bg-cyan-400/20 group-hover:border-cyan-400/40 transition-all">
+        <span className="grid h-9 w-9 place-items-center rounded-xl bg-cyan-400/10 text-[#2997ff] border border-cyan-400/20 group-hover:scale-105 group-hover:bg-cyan-400/20 group-hover:border-cyan-400/40 transition-all">
           {icon}
         </span>
-        <h2 className="mt-3.5 text-sm sm:text-base font-bold text-white leading-snug group-hover:text-cyan-300 transition-colors">
+        <h3 className="mt-3 text-xs sm:text-sm font-bold text-white leading-snug group-hover:text-cyan-300 transition-colors">
           {title}
-        </h2>
-        <p className="mt-1.5 text-xs text-[#86868b] leading-relaxed line-clamp-2">
+        </h3>
+        <p className="mt-1 text-[11px] sm:text-xs text-[#86868b] leading-relaxed line-clamp-2">
           {text}
         </p>
       </div>
