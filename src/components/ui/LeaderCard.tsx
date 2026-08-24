@@ -193,7 +193,7 @@ export function LeaderCard({
       <div className="flex flex-1 flex-col p-5 bg-[#090d16]">
         {/* Name Area (Standardized Height to keep all cards aligned) */}
         <div className="min-h-[3.25rem] flex items-center">
-          <h2 className="text-lg sm:text-xl font-bold text-white leading-snug group-hover:text-cyan-300 transition-colors line-clamp-2">
+          <h2 className="text-lg sm:text-xl font-bold !text-white leading-snug line-clamp-2">
             {dist.name}
           </h2>
         </div>
