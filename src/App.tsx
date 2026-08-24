@@ -130,6 +130,8 @@ function AnimatedRoutes() {
           />
           <Route path="/d/emanuela-doustova" element={<Navigate to="/d/emanuela" replace />} />
           <Route path="/d/emanuela-doustova/:campaign" element={<LegacyEmanuelaLandingRedirect />} />
+          <Route path="/d/emanuela-braj" element={<Navigate to="/d/emanuela" replace />} />
+          <Route path="/d/emanuela-braj/:campaign" element={<LegacyEmanuelaLandingRedirect />} />
           <Route
             path="/d/:slug/:campaign"
             element={
