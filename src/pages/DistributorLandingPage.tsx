@@ -144,78 +144,76 @@ export default function DistributorLandingPage() {
     <Navbar />
     <main className="flex-1">
       <section className="relative overflow-hidden border-b border-white/10 px-4 pb-16 pt-28 sm:px-6 md:pb-24 md:pt-36">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(6,182,212,0.18),transparent_34%),radial-gradient(circle_at_80%_10%,rgba(79,70,229,0.2),transparent_32%)]" />
-        <div className="relative mx-auto max-w-6xl">
-          {/* Top Header Bar: Eyebrow + Minimized Top-Right Distributor Badge */}
-          <div className="mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-            <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-cyan-400/10 px-4 py-2 text-xs font-bold uppercase tracking-[0.18em] text-[#2997ff] w-fit">
-              <Icon className="h-4 w-4" />
-              {copy?.eyebrow}
-            </div>
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_20%,rgba(6,182,212,0.14),transparent_45%),radial-gradient(circle_at_50%_70%,rgba(79,70,229,0.12),transparent_50%)]" />
+        <div className="relative mx-auto max-w-4xl text-center flex flex-col items-center">
+          {/* Centered Guide Badge */}
+          {profile && (
+            <Link
+              to={`/d/${profile.slug}`}
+              className="group mb-6 inline-flex items-center gap-3.5 rounded-full border border-white/15 bg-black/60 p-1.5 pr-5 backdrop-blur-xl shadow-2xl hover:border-cyan-400/40 hover:bg-black/80 transition-all duration-300 active:scale-95"
+            >
+              <div className="relative h-11 w-11 sm:h-12 sm:w-12 shrink-0 overflow-hidden rounded-full border border-white/20 bg-gradient-to-b from-[#141926] to-[#07090f]">
+                <img
+                  src={profile.avatar_url || '/logos/tl-square-white.png'}
+                  alt={profile.display_name}
+                  className="h-full w-full object-cover object-top transition duration-300 group-hover:scale-105"
+                />
+                <span className="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full bg-emerald-500 border-2 border-black" title="Verified Distributor" />
+              </div>
+              <div className="text-left">
+                <div className="flex items-center gap-1.5">
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-[#2997ff]">Your Verified Guide</span>
+                  <ShieldCheck className="h-3 w-3 text-[#2997ff]" />
+                </div>
+                <p className="text-sm font-bold !text-white group-hover:text-cyan-300 transition-colors leading-tight">
+                  {profile.display_name}
+                </p>
+              </div>
+            </Link>
+          )}
 
-            {profile && (
-              <Link
-                to={`/d/${profile.slug}`}
-                className="group inline-flex items-center gap-3.5 rounded-2xl border border-white/15 bg-black/60 p-2.5 pr-4 backdrop-blur-xl shadow-xl hover:border-cyan-400/40 hover:bg-black/80 transition-all duration-300 w-fit self-start sm:self-auto"
-              >
-                <div className="relative h-12 w-12 sm:h-14 sm:w-14 shrink-0 overflow-hidden rounded-xl border border-white/20 bg-gradient-to-b from-[#141926] to-[#07090f]">
-                  <img
-                    src={profile.avatar_url || '/logos/tl-square-white.png'}
-                    alt={profile.display_name}
-                    className="h-full w-full object-cover object-top transition duration-300 group-hover:scale-105"
-                  />
-                  <span className="absolute bottom-0.5 right-0.5 h-2.5 w-2.5 rounded-full bg-emerald-500 border border-black" title="Verified Distributor" />
-                </div>
-                <div className="text-left">
-                  <div className="flex items-center gap-1.5">
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-[#2997ff]">Your Guide</span>
-                    <ShieldCheck className="h-3 w-3 text-[#2997ff]" />
-                  </div>
-                  <p className="text-sm font-bold !text-white group-hover:text-cyan-300 transition-colors leading-tight">
-                    {profile.display_name}
-                  </p>
-                  <p className="text-[11px] text-[#86868b] leading-tight mt-0.5">
-                    {profile.title}
-                  </p>
-                </div>
-              </Link>
-            )}
+          {/* Campaign Eyebrow Pill */}
+          <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-cyan-400/10 px-4 py-2 text-xs font-bold uppercase tracking-[0.18em] text-[#2997ff]">
+            <Icon className="h-4 w-4" />
+            {copy?.eyebrow}
           </div>
 
-          {/* Main Hero Content */}
-          <div className="max-w-4xl">
-            <h1 className="text-4xl font-black leading-[1.05] sm:text-6xl md:text-7xl !text-white">
-              {copy?.headline(profile?.display_name || 'your True Legacy distributor')}
-            </h1>
-            <p className="mt-6 max-w-3xl text-lg sm:text-xl leading-8 text-[#cccccc]">
-              {copy?.subheadline}
-            </p>
-            <div className="mt-8 flex flex-wrap gap-3">
-              {whatsapp && (
-                <a
-                  href={whatsapp}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 px-6 py-3 font-bold text-slate-950 transition-colors shadow-lg shadow-emerald-500/10"
-                >
-                  <MessageCircle className="h-5 w-5" />
-                  Connect with {profile?.display_name}
-                </a>
-              )}
-              <Link
-                to={applyUrl}
-                className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-cyan-500 hover:bg-cyan-400 px-6 py-3 font-bold text-slate-950 transition-colors shadow-lg shadow-cyan-500/10"
+          {/* Main Hero Headline - Proportionate and Centered */}
+          <h1 className="mt-6 text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black leading-[1.12] !text-white tracking-tight max-w-3xl">
+            {copy?.headline(profile?.display_name || 'your True Legacy distributor')}
+          </h1>
+
+          {/* Subtitle */}
+          <p className="mt-5 max-w-2xl text-base sm:text-lg leading-relaxed text-[#cccccc]">
+            {copy?.subheadline}
+          </p>
+
+          {/* Action Buttons Row */}
+          <div className="mt-8 flex flex-wrap items-center justify-center gap-3.5">
+            {whatsapp && (
+              <a
+                href={whatsapp}
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 px-6 py-3 font-bold text-slate-950 transition-colors shadow-lg shadow-emerald-500/10"
               >
-                Request information <ArrowRight className="h-5 w-5" />
-              </Link>
-              <button
-                onClick={share}
-                className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl border border-white/15 bg-white/5 px-5 py-3 text-sm font-semibold hover:bg-white/10 transition-colors"
-              >
-                <Copy className="h-4 w-4" />
-                {copied ? 'Link copied' : 'Share this page'}
-              </button>
-            </div>
+                <MessageCircle className="h-5 w-5" />
+                Connect with {profile?.display_name}
+              </a>
+            )}
+            <Link
+              to={applyUrl}
+              className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-cyan-500 hover:bg-cyan-400 px-6 py-3 font-bold text-slate-950 transition-colors shadow-lg shadow-cyan-500/10"
+            >
+              Request information <ArrowRight className="h-5 w-5" />
+            </Link>
+            <button
+              onClick={share}
+              className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl border border-white/15 bg-white/5 px-5 py-3 text-sm font-semibold hover:bg-white/10 transition-colors"
+            >
+              <Copy className="h-4 w-4" />
+              {copied ? 'Link copied' : 'Share this page'}
+            </button>
           </div>
         </div>
       </section>
