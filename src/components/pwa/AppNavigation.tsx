@@ -79,11 +79,11 @@ export function AppNavigation() {
 
   return (
     <nav className="tl-app-nav" aria-label="True Legacy app navigation">
-      {/* Sleek top-right collapse handle */}
+      {/* Sleek top-right collapse handle positioned cleanly at the outer right edge */}
       <button
         type="button"
         onClick={() => handleSetCollapsed(true)}
-        className="absolute -top-3.5 right-4 sm:right-6 z-20 flex items-center gap-1 px-3 py-0.5 rounded-full border border-white/20 bg-[#05091a] hover:bg-[#0d1d46] hover:border-cyan-400/60 text-[10px] font-bold text-slate-300 hover:text-cyan-300 transition-all shadow-lg cursor-pointer"
+        className="absolute -top-3.5 right-1 sm:-right-2 z-20 flex items-center gap-1 px-2.5 py-0.5 rounded-full border border-white/20 bg-[#05091a] hover:bg-[#0d1d46] hover:border-cyan-400/60 text-[10px] font-bold text-slate-300 hover:text-cyan-300 transition-all shadow-lg cursor-pointer"
         title="Collapse navigation"
         aria-label="Collapse navigation"
       >
