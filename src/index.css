@@ -1583,16 +1583,16 @@ img {
   height: auto;
   display: block;
 }
-h1 {
+:where(h1:not([class*="text-"])) {
   font-size: clamp(1.8rem, 5vw, 3.5rem);
 }
-h2 {
+:where(h2:not([class*="text-"])) {
   font-size: clamp(1.4rem, 3.5vw, 2.4rem);
 }
-h3 {
+:where(h3:not([class*="text-"])) {
   font-size: clamp(1.1rem, 2.5vw, 1.6rem);
 }
-p {
+:where(p:not([class*="text-"])) {
   font-size: clamp(0.9rem, 1.5vw, 1.05rem);
   line-height: 1.7;
 }
@@ -2000,24 +2000,24 @@ canvas,
   pointer-events: none !important;
   touch-action: none !important;
 }
-h1 {
-  font-size: clamp(1.75rem, 5vw, 3.5rem);
+:where(h1:not([class*="text-"])) {
+  font-size: clamp(1.8rem, 5vw, 3.5rem);
   line-height: 1.15;
   overflow-wrap: break-word;
-  word-break: break-word;
+  word-break: normal;
 }
-h2 {
+:where(h2:not([class*="text-"])) {
   font-size: clamp(1.35rem, 3.5vw, 2.4rem);
   line-height: 1.2;
   overflow-wrap: break-word;
-  word-break: break-word;
+  word-break: normal;
 }
-h3 {
+:where(h3:not([class*="text-"])) {
   font-size: clamp(1.1rem, 2.5vw, 1.6rem);
   overflow-wrap: break-word;
-  word-break: break-word;
+  word-break: normal;
 }
-p {
+:where(p:not([class*="text-"])) {
   font-size: clamp(0.9rem, 1.5vw, 1.05rem);
   line-height: 1.75;
 }

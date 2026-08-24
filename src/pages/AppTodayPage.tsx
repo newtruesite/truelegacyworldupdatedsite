@@ -97,11 +97,30 @@ export default function AppTodayPage() {
       <div className="mt-7 grid gap-6 xl:grid-cols-[1.25fr_.75fr]">
         <section className="rounded-[28px] border border-white/10 bg-white/[.03] p-5 sm:p-7"><div className="flex items-center justify-between"><div><p className="text-xs font-bold uppercase tracking-[.18em] text-rose-300">People first</p><h2 className="mt-2 text-2xl font-black">Follow-up queue</h2></div><Link to="/crm?attention=due" className="text-sm font-bold text-[#2997ff]">All contacts</Link></div><div className="mt-5 space-y-3">{[...due, ...today, ...newLeads.filter(lead => !due.some(item => item.id === lead.id) && !today.some(item => item.id === lead.id))].slice(0, 8).map(lead => <LeadAction key={lead.id} lead={lead} />)}{due.length + today.length + newLeads.length === 0 ? <EmptyState /> : null}</div></section>
 
-        <div className="space-y-6"><section className="rounded-[28px] border border-white/20 bg-gradient-to-br from-cyan-400/[.1] to-blue-500/[.04] p-6"><GraduationCap className="h-7 w-7 text-[#2997ff]" /><p className="mt-5 text-xs font-bold uppercase tracking-[.18em] text-[#2997ff]">Next learning action</p><h2 className="mt-2 text-2xl font-black">{nextModule ? nextModule.title.en : 'Academy complete'}</h2><p className="mt-3 text-sm leading-6 text-[#cccccc]">{nextModule ? `${completedTraining.length} of ${modules.length} modules complete. Continue with the next lesson.` : 'You have completed every active training module.'}</p><Link to="/training" className="mt-5 inline-flex items-center gap-2 rounded-xl bg-cyan-400 px-5 py-3 text-sm font-black text-slate-950">Open Academy <ArrowRight className="h-4 w-4" /></Link></section>
-          <section className="rounded-[28px] border border-amber-300/15 bg-amber-300/[.05] p-6"><Sparkles className="h-7 w-7 text-amber-300" /><p className="mt-5 text-xs font-bold uppercase tracking-[.18em] text-amber-300">Next setup action</p><h2 className="mt-2 text-xl font-black">{nextOnboarding ? nextOnboarding.title.en : 'Onboarding complete'}</h2><p className="mt-3 text-sm leading-6 text-[#cccccc]">{completedOnboarding.length} of {items.length} True Legacy setup steps complete.</p><Link to="/crm/growth" className="mt-5 inline-flex items-center gap-2 text-sm font-black text-amber-200">Open progress center <ArrowRight className="h-4 w-4" /></Link></section></div>
+        <div className="space-y-6">
+          <section className="rounded-[28px] border border-white/20 bg-gradient-to-br from-cyan-400/[.1] to-blue-500/[.04] p-6">
+            <GraduationCap className="h-7 w-7 text-[#2997ff]" />
+            <p className="mt-4 text-xs font-bold uppercase tracking-[.18em] text-[#2997ff]">Next learning action</p>
+            <h2 className="mt-1.5 text-lg sm:text-xl font-black text-white">{nextModule ? nextModule.title.en : 'Academy complete'}</h2>
+            <p className="mt-2 text-xs sm:text-sm leading-6 text-[#cccccc]">{nextModule ? `${completedTraining.length} of ${modules.length} modules complete. Continue with the next lesson.` : 'You have completed every active training module.'}</p>
+            <Link to="/training" className="mt-4 inline-flex items-center gap-2 rounded-xl bg-cyan-400 px-5 py-2.5 text-xs sm:text-sm font-black text-slate-950 hover:bg-cyan-300 transition-colors">Open Academy <ArrowRight className="h-4 w-4" /></Link>
+          </section>
+          <section className="rounded-[28px] border border-amber-300/15 bg-amber-300/[.05] p-6">
+            <Sparkles className="h-7 w-7 text-amber-300" />
+            <p className="mt-4 text-xs font-bold uppercase tracking-[.18em] text-amber-300">Next setup action</p>
+            <h2 className="mt-1.5 text-lg sm:text-xl font-black text-white">{nextOnboarding ? nextOnboarding.title.en : 'Onboarding complete'}</h2>
+            <p className="mt-2 text-xs sm:text-sm leading-6 text-[#cccccc]">{completedOnboarding.length} of {items.length} True Legacy setup steps complete.</p>
+            <Link to="/crm/growth" className="mt-4 inline-flex items-center gap-2 text-xs sm:text-sm font-black text-amber-200 hover:text-amber-100 transition-colors">Open progress center <ArrowRight className="h-4 w-4" /></Link>
+          </section>
+        </div>
       </div>
 
-      <section className="mt-7 grid gap-4 md:grid-cols-4"><QuickAction to="/app/bookings" icon={<CalendarCheck2 />} title="Share your calendar" text="Send your personal discovery-call booking link." /><QuickAction to="/app/share" icon={<MessageCircle />} title="Share a presentation" text="Send an official personalized True Legacy page." /><QuickAction to="/crm/growth" icon={<Users />} title="Support your team" text="Review onboarding and academy progress." /><QuickAction to="/app/library" icon={<BookOpenCheck />} title="Find a resource" text="Open the True Legacy Tool Center." /></section>
+      <section className="mt-7 grid grid-cols-2 gap-3.5 sm:gap-4 lg:grid-cols-4">
+        <QuickAction to="/app/bookings" icon={<CalendarCheck2 className="h-5 w-5" />} title="Share your calendar" text="Send your personal discovery-call booking link." />
+        <QuickAction to="/app/share" icon={<MessageCircle className="h-5 w-5" />} title="Share a presentation" text="Send an official personalized True Legacy page." />
+        <QuickAction to="/crm/growth" icon={<Users className="h-5 w-5" />} title="Support your team" text="Review onboarding and academy progress." />
+        <QuickAction to="/app/library" icon={<BookOpenCheck className="h-5 w-5" />} title="Find a resource" text="Open the True Legacy Tool Center." />
+      </section>
     </div>
   </main>
 }
@@ -112,6 +131,25 @@ function LeadAction({ lead }: { lead: CrmLead }) {
 }
 const METRIC_TONES: Record<string, string> = { rose: 'text-rose-300', amber: 'text-amber-300', cyan: 'text-[#2997ff]', emerald: 'text-[#cccccc]' }
 function Metric({ icon, value, label, tone }: { icon: React.ReactNode; value: string | number; label: string; tone: string }) { return <div className="rounded-2xl border border-white/10 bg-white/[.03] p-5"><span className={METRIC_TONES[tone]}>{icon}</span><p className="mt-4 text-3xl font-black">{value}</p><p className="mt-1 text-xs font-bold uppercase tracking-wider text-[#86868b]">{label}</p></div> }
-function QuickAction({ to, icon, title, text }: { to: string; icon: React.ReactNode; title: string; text: string }) { return <Link to={to} className="group rounded-2xl border border-white/10 bg-white/[.025] p-5 transition hover:-translate-y-1 hover:border-white/20"><span className="text-[#2997ff]">{icon}</span><h2 className="mt-4 text-lg font-black">{title}</h2><p className="mt-2 text-sm leading-6 text-[#86868b]">{text}</p></Link> }
+function QuickAction({ to, icon, title, text }: { to: string; icon: React.ReactNode; title: string; text: string }) {
+  return (
+    <Link
+      to={to}
+      className="group flex flex-col justify-between rounded-2xl border border-white/10 bg-white/[.025] hover:bg-white/[.05] p-4 sm:p-5 transition-all duration-300 hover:-translate-y-1 hover:border-cyan-400/40 hover:shadow-lg hover:shadow-cyan-500/10"
+    >
+      <div>
+        <span className="grid h-10 w-10 place-items-center rounded-xl bg-cyan-400/10 text-[#2997ff] border border-cyan-400/20 group-hover:scale-105 group-hover:bg-cyan-400/20 group-hover:border-cyan-400/40 transition-all">
+          {icon}
+        </span>
+        <h2 className="mt-3.5 text-sm sm:text-base font-bold text-white leading-snug group-hover:text-cyan-300 transition-colors">
+          {title}
+        </h2>
+        <p className="mt-1.5 text-xs text-[#86868b] leading-relaxed line-clamp-2">
+          {text}
+        </p>
+      </div>
+    </Link>
+  )
+}
 function EmptyState() { return <div className="rounded-2xl border border-dashed border-emerald-300/20 p-8 text-center"><CheckCircle2 className="mx-auto h-8 w-8 text-[#cccccc]" /><h3 className="mt-3 font-black">You are caught up</h3><p className="mt-2 text-sm text-[#86868b]">No new or overdue contacts need attention.</p></div> }
 function TodayMessage({ title, body, action }: { title: string; body: string; action?: React.ReactNode }) { return <main className="grid min-h-screen place-items-center bg-black p-5 text-white"><div className="max-w-md text-center"><CalendarCheck2 className="mx-auto h-12 w-12 text-[#2997ff]" /><h1 className="mt-5 text-3xl font-black">{title}</h1><p className="mt-4 leading-7 text-[#cccccc]">{body}</p>{action ? <div className="mt-7">{action}</div> : null}</div></main> }
