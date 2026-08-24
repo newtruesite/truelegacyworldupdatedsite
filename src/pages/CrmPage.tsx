@@ -3,15 +3,78 @@ import { SponsorGate } from '@/components/crm/SponsorGate'
 import { addLeadNote, assignLead, crmConfigured, crmSupabase, getCrmDistributors, getCrmLeads, getCrmMembership, getLeadNotes, updateLeadStatus, submitCrmApplication } from '@/lib/crm'
 import type { CrmDistributor, CrmLead, CrmLeadNote, CrmMembership, LeadStatus } from '@/lib/crm'
 import type { Session } from '@supabase/supabase-js'
-import { BellRing, CalendarClock, ChevronDown, ChevronUp, Columns3, Copy, Download, ExternalLink, Filter, List, LogOut, Mail, MessageCircle, Search, ShieldCheck, UserRoundCheck, Users, UserPlus, X } from 'lucide-react'
+import {
+  BellRing,
+  CalendarClock,
+  Check,
+  ChevronDown,
+  ChevronRight,
+  Columns3,
+  Copy,
+  Download,
+  ExternalLink,
+  Filter,
+  List,
+  LogOut,
+  Mail,
+  MessageCircle,
+  MoreVertical,
+  Phone,
+  Search,
+  ShieldCheck,
+  Sparkles,
+  UserPlus,
+  UserRoundCheck,
+  Users,
+  X,
+} from 'lucide-react'
 import { useEffect, useMemo, useState } from 'react'
 import type { FormEvent } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 
 const STATUSES: LeadStatus[] = ['new', 'contacted', 'qualified', 'nurturing', 'converted', 'closed']
-const STATUS_STYLES: Record<LeadStatus, string> = {
-  new: 'bg-cyan-400/10 text-[#2997ff]', contacted: 'bg-blue-400/10 text-blue-200', qualified: 'bg-violet-400/10 text-[#2997ff]',
-  nurturing: 'bg-amber-400/10 text-amber-200', converted: 'bg-emerald-400/10 text-[#cccccc]', closed: 'bg-slate-400/10 text-[#cccccc]',
+
+const STATUS_CONFIG: Record<LeadStatus, { label: string; bg: string; text: string; border: string; dot: string }> = {
+  new: { label: 'New', bg: 'bg-cyan-500/10', text: 'text-cyan-400', border: 'border-cyan-500/30', dot: 'bg-cyan-400' },
+  contacted: { label: 'Contacted', bg: 'bg-blue-500/10', text: 'text-blue-300', border: 'border-blue-500/30', dot: 'bg-blue-400' },
+  qualified: { label: 'Qualified', bg: 'bg-violet-500/10', text: 'text-violet-300', border: 'border-violet-500/30', dot: 'bg-violet-400' },
+  nurturing: { label: 'Nurturing', bg: 'bg-amber-500/10', text: 'text-amber-300', border: 'border-amber-500/30', dot: 'bg-amber-400' },
+  converted: { label: 'Converted', bg: 'bg-emerald-500/10', text: 'text-emerald-300', border: 'border-emerald-500/30', dot: 'bg-emerald-400' },
+  closed: { label: 'Closed', bg: 'bg-zinc-500/10', text: 'text-zinc-400', border: 'border-zinc-500/30', dot: 'bg-zinc-400' },
+}
+
+const INTEREST_CONFIG: Record<string, { label: string; badge: string }> = {
+  product: { label: 'Product', badge: 'bg-emerald-500/10 text-emerald-300 border-emerald-500/20' },
+  duo: { label: 'Duo', badge: 'bg-cyan-500/10 text-[#2997ff] border-cyan-500/20' },
+  distributor: { label: 'Business', badge: 'bg-amber-500/10 text-amber-300 border-amber-500/20' },
+  training: { label: 'Training', badge: 'bg-violet-500/10 text-violet-300 border-violet-500/20' },
+  events: { label: 'Events', badge: 'bg-blue-500/10 text-blue-300 border-blue-500/20' },
+}
+
+function formatLeadDate(dateString: string) {
+  if (!dateString) return ''
+  const date = new Date(dateString)
+  return date.toLocaleDateString(undefined, {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
+  })
+}
+
+function formatLeadDateTime(dateString: string) {
+  if (!dateString) return ''
+  const date = new Date(dateString)
+  return `${date.toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}, ${date.toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit' })}`
+}
+
+function getGmailComposeUrl(to: string, subject: string = '', body: string = '') {
+  const params = new URLSearchParams()
+  params.set('view', 'cm')
+  params.set('fs', '1')
+  params.set('to', to)
+  if (subject) params.set('su', subject)
+  if (body) params.set('body', body)
+  return `https://mail.google.com/mail/?${params.toString()}`
 }
 
 function csvCell(value: unknown) {
@@ -25,12 +88,12 @@ export default function CrmPage() {
   const [leads, setLeads] = useState<CrmLead[]>([])
   const [distributors, setDistributors] = useState<CrmDistributor[]>([])
   const [notes, setNotes] = useState<Record<string, CrmLeadNote[]>>({})
-  const [expanded, setExpanded] = useState<string | null>(null)
+  const [selectedLeadId, setSelectedLeadId] = useState<string | null>(null)
   const [search, setSearch] = useState('')
   const [statusFilter, setStatusFilter] = useState('all')
   const [interestFilter, setInterestFilter] = useState('all')
   const [attentionFilter, setAttentionFilter] = useState<'all' | 'new' | 'due'>('all')
-  const [view, setView] = useState<'table' | 'board'>(() => window.localStorage.getItem('tl-crm-view') === 'board' ? 'board' : 'table')
+  const [view, setView] = useState<'table' | 'board'>(() => (window.localStorage.getItem('tl-crm-view') === 'board' ? 'board' : 'table'))
   const [loading, setLoading] = useState(true)
   const [working, setWorking] = useState('')
   const [message, setMessage] = useState('')
@@ -39,6 +102,7 @@ export default function CrmPage() {
   const [showAddLeadModal, setShowAddLeadModal] = useState(false)
   const [addingLead, setAddingLead] = useState(false)
   const [addLeadError, setAddLeadError] = useState('')
+  const [activeTab, setActiveTab] = useState<'details' | 'nurture' | 'notes'>('details')
 
   useEffect(() => {
     if (!crmSupabase) {
@@ -60,10 +124,12 @@ export default function CrmPage() {
     const attention = searchParams.get('attention')
     if (attention === 'due' || attention === 'new') setAttentionFilter(attention)
     const contact = searchParams.get('contact')
-    if (contact) setExpanded(contact)
+    if (contact) setSelectedLeadId(contact)
   }, [searchParams])
 
-  useEffect(() => { window.localStorage.setItem('tl-crm-view', view) }, [view])
+  useEffect(() => {
+    window.localStorage.setItem('tl-crm-view', view)
+  }, [view])
 
   const load = async (activeSession = session) => {
     if (!activeSession) return
@@ -98,89 +164,58 @@ export default function CrmPage() {
     return leads.filter((lead) => {
       const matchesStatus = statusFilter === 'all' || lead.status === statusFilter
       const matchesInterest = interestFilter === 'all' || lead.interest === interestFilter
-      const matchesAttention = attentionFilter === 'all' || (attentionFilter === 'new' ? lead.status === 'new' : Boolean(lead.next_follow_up_at && new Date(lead.next_follow_up_at) <= new Date()))
-      const haystack = [lead.full_name, lead.email, lead.phone, lead.country, lead.interest, lead.referrer_name, lead.referral_code].join(' ').toLowerCase()
+      const matchesAttention =
+        attentionFilter === 'all' ||
+        (attentionFilter === 'new'
+          ? lead.status === 'new'
+          : Boolean(lead.next_follow_up_at && new Date(lead.next_follow_up_at) <= new Date()))
+      const haystack = [lead.full_name, lead.email, lead.phone, lead.country, lead.interest, lead.referrer_name, lead.referral_code]
+        .join(' ')
+        .toLowerCase()
       return matchesStatus && matchesInterest && matchesAttention && (!query || haystack.includes(query))
     })
   }, [leads, search, statusFilter, interestFilter, attentionFilter])
 
-  const sendMagicLink = async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault()
-    if (!crmSupabase) return
-    setMessage('')
-    const email = String(new FormData(event.currentTarget).get('email') || '').trim().toLowerCase()
-    const { error } = await crmSupabase.auth.signInWithOtp({ email, options: { emailRedirectTo: `${window.location.origin}/crm` } })
-    setMessage(error ? 'The secure sign-in link could not be sent.' : 'Check your email for the secure True Legacy CRM sign-in link.')
-  }
+  const selectedLead = useMemo(() => {
+    if (!selectedLeadId) return null
+    return leads.find((item) => item.id === selectedLeadId) || null
+  }, [leads, selectedLeadId])
 
-  const signInWithPassword = async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault()
-    if (!crmSupabase) return
-    setMessage('')
-    const formData = new FormData(event.currentTarget)
-    const email = String(formData.get('email') || '').trim().toLowerCase()
-    const password = String(formData.get('password') || '')
-    const { error } = await crmSupabase.auth.signInWithPassword({ email, password })
-    setMessage(error ? 'The email or password was not accepted.' : '')
-  }
-
-  const requestPasswordReset = async (email: string) => {
-    if (!crmSupabase) return
-    setMessage('')
-    const { error } = await crmSupabase.auth.resetPasswordForEmail(email.trim().toLowerCase(), { redirectTo: `${window.location.origin}/crm` })
-    setMessage(error ? 'The password reset email could not be sent.' : 'Check your email for a secure password reset link.')
-  }
-
-  const changePassword = async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault()
-    if (!crmSupabase) return
-    const form = event.currentTarget
-    const formData = new FormData(form)
-    const password = String(formData.get('newPassword') || '')
-    const confirmation = String(formData.get('confirmPassword') || '')
-    if (password.length < 12) {
-      setAccountMessage('Use at least 12 characters for your new password.')
-      return
+  const openLeadDrawer = async (leadId: string) => {
+    setSelectedLeadId(leadId)
+    if (!notes[leadId]) {
+      try {
+        const leadNotes = await getLeadNotes(leadId)
+        setNotes((current) => ({ ...current, [leadId]: leadNotes }))
+      } catch {
+        setMessage('Notes could not be loaded.')
+      }
     }
-    if (password !== confirmation) {
-      setAccountMessage('The two passwords do not match.')
-      return
-    }
-    const { error } = await crmSupabase.auth.updateUser({ password })
-    setAccountMessage(error ? 'Your password could not be updated.' : 'Password updated successfully.')
-    if (!error) form.reset()
   }
 
   const changeStatus = async (lead: CrmLead, status: LeadStatus) => {
     setWorking(lead.id)
     try {
       await updateLeadStatus(lead.id, status, lead.next_follow_up_at)
-      setLeads(current => current.map(item => item.id === lead.id ? { ...item, status } : item))
-    } catch { setMessage('The lead status could not be updated.') }
-    finally { setWorking('') }
+      setLeads((current) => current.map((item) => (item.id === lead.id ? { ...item, status } : item)))
+    } catch {
+      setMessage('The lead status could not be updated.')
+    } finally {
+      setWorking('')
+    }
   }
 
   const changeAssignment = async (leadId: string, distributorId: string) => {
     setWorking(leadId)
     try {
       await assignLead(leadId, distributorId || null)
-      setLeads(current => current.map(item => item.id === leadId ? { ...item, assigned_distributor_id: distributorId || null } : item))
-    } catch { setMessage('The lead assignment could not be updated.') }
-    finally { setWorking('') }
-  }
-
-  const toggleDetails = async (leadId: string) => {
-    if (expanded === leadId) {
-      setExpanded(null)
-      return
-    }
-    setExpanded(leadId)
-    if (!notes[leadId]) {
-      try {
-        const leadNotes = await getLeadNotes(leadId)
-        setNotes(current => ({ ...current, [leadId]: leadNotes }))
-      }
-      catch { setMessage('Notes could not be loaded.') }
+      setLeads((current) =>
+        current.map((item) => (item.id === leadId ? { ...item, assigned_distributor_id: distributorId || null } : item))
+      )
+    } catch {
+      setMessage('The lead assignment could not be updated.')
+    } finally {
+      setWorking('')
     }
   }
 
@@ -194,9 +229,12 @@ export default function CrmPage() {
       await addLeadNote(leadId, body)
       form.reset()
       const leadNotes = await getLeadNotes(leadId)
-      setNotes(current => ({ ...current, [leadId]: leadNotes }))
-    } catch { setMessage('The note could not be saved.') }
-    finally { setWorking('') }
+      setNotes((current) => ({ ...current, [leadId]: leadNotes }))
+    } catch {
+      setMessage('The note could not be saved.')
+    } finally {
+      setWorking('')
+    }
   }
 
   const scheduleFollowUp = async (event: FormEvent<HTMLFormElement>, lead: CrmLead) => {
@@ -207,10 +245,15 @@ export default function CrmPage() {
     setWorking(lead.id)
     try {
       await updateLeadStatus(lead.id, lead.status, nextFollowUp)
-      setLeads(current => current.map(item => item.id === lead.id ? { ...item, next_follow_up_at: nextFollowUp } : item))
+      setLeads((current) =>
+        current.map((item) => (item.id === lead.id ? { ...item, next_follow_up_at: nextFollowUp } : item))
+      )
       setMessage(nextFollowUp ? `Follow-up scheduled for ${lead.full_name}.` : `Follow-up cleared for ${lead.full_name}.`)
-    } catch { setMessage('The follow-up date could not be saved.') }
-    finally { setWorking('') }
+    } catch {
+      setMessage('The follow-up date could not be saved.')
+    } finally {
+      setWorking('')
+    }
   }
 
   const recordOutreach = async (lead: CrmLead, channel: 'WhatsApp' | 'Email', landingUrl: string) => {
@@ -218,13 +261,15 @@ export default function CrmPage() {
       await addLeadNote(lead.id, `${channel} nurture message prepared · ${landingUrl}`)
       if (notes[lead.id]) {
         const leadNotes = await getLeadNotes(lead.id)
-        setNotes(current => ({ ...current, [lead.id]: leadNotes }))
+        setNotes((current) => ({ ...current, [lead.id]: leadNotes }))
       }
       if (lead.status === 'new') {
         await updateLeadStatus(lead.id, 'contacted', lead.next_follow_up_at)
-        setLeads(current => current.map(item => item.id === lead.id ? { ...item, status: 'contacted' } : item))
+        setLeads((current) => current.map((item) => (item.id === lead.id ? { ...item, status: 'contacted' } : item)))
       }
-    } catch { /* Opening the distributor's message should not be blocked by history logging. */ }
+    } catch {
+      /* Outreach logging */
+    }
   }
 
   const handleAddLead = async (event: FormEvent<HTMLFormElement>) => {
@@ -232,7 +277,7 @@ export default function CrmPage() {
     setAddLeadError('')
     setAddingLead(true)
     const formData = new FormData(event.currentTarget)
-    
+
     const fullName = String(formData.get('fullName') || '').trim()
     const email = String(formData.get('email') || '').trim().toLowerCase()
     const phone = String(formData.get('phone') || '').trim()
@@ -257,9 +302,9 @@ export default function CrmPage() {
       return
     }
 
-    let assignedDistributor = distributors.find(d => d.id === assignedId)
+    let assignedDistributor = distributors.find((d) => d.id === assignedId)
     if (membership?.role !== 'admin') {
-      assignedDistributor = distributors.find(d => d.id === membership?.distributor_id)
+      assignedDistributor = distributors.find((d) => d.id === membership?.distributor_id)
     }
 
     const payload = {
@@ -292,9 +337,35 @@ export default function CrmPage() {
   }
 
   const exportCsv = () => {
-    const header = ['Submitted', 'Name', 'Email', 'Phone', 'Country', 'Interest', 'Referrer', 'Referral code', 'Attribution', 'Assigned distributor', 'Status', 'Consent time']
-    const rows = filtered.map(lead => [lead.submitted_at, lead.full_name, lead.email, lead.phone, lead.country, lead.interest, lead.referrer_name, lead.referral_code, lead.attribution_method, distributors.find(item => item.id === lead.assigned_distributor_id)?.display_name || '', lead.status, lead.consent_at])
-    const csv = [header, ...rows].map(row => row.map(csvCell).join(',')).join('\n')
+    const header = [
+      'Submitted',
+      'Name',
+      'Email',
+      'Phone',
+      'Country',
+      'Interest',
+      'Referrer',
+      'Referral code',
+      'Attribution',
+      'Assigned distributor',
+      'Status',
+      'Consent time',
+    ]
+    const rows = filtered.map((lead) => [
+      lead.submitted_at,
+      lead.full_name,
+      lead.email,
+      lead.phone,
+      lead.country,
+      lead.interest,
+      lead.referrer_name,
+      lead.referral_code,
+      lead.attribution_method,
+      distributors.find((item) => item.id === lead.assigned_distributor_id)?.display_name || '',
+      lead.status,
+      lead.consent_at,
+    ])
+    const csv = [header, ...rows].map((row) => row.map(csvCell).join(',')).join('\n')
     const url = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8' }))
     const anchor = document.createElement('a')
     anchor.href = url
@@ -303,8 +374,9 @@ export default function CrmPage() {
     URL.revokeObjectURL(url)
   }
 
-  const assignedName = (id: string | null) => distributors.find(item => item.id === id)?.display_name || 'Unassigned'
-  const assignedDistributor = (lead: CrmLead) => distributors.find(item => item.id === lead.assigned_distributor_id)
+  const assignedName = (id: string | null) => distributors.find((item) => item.id === id)?.display_name || 'Unassigned'
+  const assignedDistributor = (lead: CrmLead) => distributors.find((item) => item.id === lead.assigned_distributor_id)
+
   const applySmartView = (preset: 'all' | 'new' | 'due' | 'product' | 'business') => {
     setSearch('')
     setStatusFilter('all')
@@ -315,263 +387,1103 @@ export default function CrmPage() {
     if (preset === 'business') setInterestFilter('distributor')
   }
 
-  if (!crmConfigured) return <CrmMessage title="CRM connection required" body="The secure CRM interface is ready, but this preview is not connected to its dedicated Supabase project yet." />
+  if (!crmConfigured) {
+    return (
+      <CrmMessage
+        title="CRM connection required"
+        body="The secure CRM interface is ready, but this preview is not connected to its dedicated Supabase project yet."
+      />
+    )
+  }
   if (loading && !session) return <div className="min-h-screen bg-black" />
-  if (!session) return <CrmLogin onPasswordSubmit={signInWithPassword} onMagicLinkSubmit={sendMagicLink} onPasswordReset={requestPasswordReset} message={message} />
+  if (!session) {
+    return (
+      <CrmLogin
+        onPasswordSubmit={async (e) => {
+          e.preventDefault()
+          const data = new FormData(e.currentTarget)
+          const email = String(data.get('email') || '').trim().toLowerCase()
+          const password = String(data.get('password') || '')
+          const { error } = await crmSupabase!.auth.signInWithPassword({ email, password })
+          setMessage(error ? 'The email or password was not accepted.' : '')
+        }}
+        onMagicLinkSubmit={async (e) => {
+          e.preventDefault()
+          const email = String(new FormData(e.currentTarget).get('email') || '').trim().toLowerCase()
+          const { error } = await crmSupabase!.auth.signInWithOtp({ email, options: { emailRedirectTo: `${window.location.origin}/crm` } })
+          setMessage(error ? 'The sign-in link could not be sent.' : 'Check your email for the sign-in link.')
+        }}
+        onPasswordReset={async (email) => {
+          const { error } = await crmSupabase!.auth.resetPasswordForEmail(email.trim().toLowerCase(), { redirectTo: `${window.location.origin}/crm` })
+          setMessage(error ? 'The reset email could not be sent.' : 'Check your email for a password reset link.')
+        }}
+        message={message}
+      />
+    )
+  }
   if (recoveringPassword) return <PasswordRecovery onComplete={() => setRecoveringPassword(false)} />
-  if (!loading && (!membership || !membership.active)) return <CrmMessage title="Account not authorized" body={`The signed-in account ${session.user.email || ''} does not have an active True Legacy CRM role.`} action={<button onClick={() => crmSupabase?.auth.signOut()} className="rounded-xl border border-white/15 px-5 py-3 text-sm">Sign out</button>} />
+  if (!loading && (!membership || !membership.active)) {
+    return (
+      <CrmMessage
+        title="Account not authorized"
+        body={`The signed-in account ${session.user.email || ''} does not have an active True Legacy CRM role.`}
+        action={
+          <button onClick={() => crmSupabase?.auth.signOut()} className="rounded-xl border border-white/15 px-5 py-3 text-sm">
+            Sign out
+          </button>
+        }
+      />
+    )
+  }
 
-  const unassigned = leads.filter(item => !item.assigned_distributor_id).length
-  const newCount = leads.filter(item => item.status === 'new').length
-  const dueCount = leads.filter(item => item.next_follow_up_at && new Date(item.next_follow_up_at) <= new Date()).length
+  const unassigned = leads.filter((item) => !item.assigned_distributor_id).length
+  const newCount = leads.filter((item) => item.status === 'new').length
+  const dueCount = leads.filter((item) => item.next_follow_up_at && new Date(item.next_follow_up_at) <= new Date()).length
 
   return (
-    <SponsorGate membership={membership} distributors={distributors}><main className="min-h-screen bg-black px-4 py-8 text-white md:px-8">
-      <SEO title="True Legacy CRM" description="Private True Legacy team lead-routing platform." noIndex />
-      <div className="mx-auto max-w-7xl">
-        <header className="flex flex-col gap-5 border-b border-white/10 pb-7 md:flex-row md:items-end md:justify-between">
-          <div><img src="/logos/tl-square-white.png" alt="True Legacy" className="mb-5 h-12 w-12 object-contain" /><p className="text-xs font-bold uppercase tracking-[0.25em] text-[#2997ff]">Internal team platform</p><h1 className="mt-2 text-3xl font-black md:text-5xl">Lead routing CRM</h1><p className="mt-2 text-sm text-[#cccccc]">{membership?.role === 'admin' ? 'Administrator view — all team leads' : `Distributor view — assigned leads only`} · {session.user.email}</p><Link to="/crm/growth" className="mt-5 inline-flex rounded-xl bg-cyan-500 px-5 py-3 text-sm font-bold text-slate-950 hover:bg-cyan-400">Open Growth Center</Link></div>
-          <div className="flex flex-col items-start gap-3"><details className="w-full max-w-sm rounded-xl border border-white/15 bg-white/[0.03] p-3"><summary className="cursor-pointer text-sm text-[#2997ff]">Change my password</summary><form onSubmit={changePassword} className="mt-3 grid gap-2"><input required minLength={12} name="newPassword" type="password" autoComplete="new-password" placeholder="New password (12+ characters)" className="h-10 rounded-lg border border-white/10 bg-black/20 px-3 text-sm outline-none focus:border-white/20" /><input required minLength={12} name="confirmPassword" type="password" autoComplete="new-password" placeholder="Confirm new password" className="h-10 rounded-lg border border-white/10 bg-black/20 px-3 text-sm outline-none focus:border-white/20" /><button className="h-10 rounded-lg bg-cyan-500 text-sm font-bold">Update password</button>{accountMessage && <p role="status" className="text-xs text-[#2997ff]">{accountMessage}</p>}</form></details><button onClick={() => crmSupabase?.auth.signOut()} className="inline-flex items-center gap-2 self-start rounded-xl border border-white/15 px-4 py-3 text-sm text-[#cccccc] hover:bg-white/5"><LogOut className="h-4 w-4" /> Sign out</button></div>
-        </header>
-
-        {(newCount > 0 || dueCount > 0) && <section className="mt-7 flex flex-col gap-3 rounded-2xl border border-white/20 bg-cyan-400/[0.06] p-5 sm:flex-row sm:items-center sm:justify-between"><div className="flex items-start gap-3"><BellRing className="mt-0.5 h-5 w-5 text-[#2997ff]" /><div><p className="font-bold">Your lead alerts</p><p className="mt-1 text-sm text-[#cccccc]">{newCount} new lead{newCount === 1 ? '' : 's'} · {dueCount} follow-up{dueCount === 1 ? '' : 's'} due</p></div></div><div className="flex gap-2"><button onClick={() => setAttentionFilter('new')} className="rounded-lg border border-white/15 px-3 py-2 text-xs hover:bg-white/10">Show new</button><button onClick={() => setAttentionFilter('due')} className="rounded-lg border border-white/15 px-3 py-2 text-xs hover:bg-white/10">Show due</button></div></section>}
-
-        <section className="mt-7 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-          <Metric icon={<Users className="h-5 w-5" />} value={leads.length} label="Accessible leads" />
-          <Metric icon={<UserRoundCheck className="h-5 w-5" />} value={newCount} label="New leads" />
-          <Metric icon={<ShieldCheck className="h-5 w-5" />} value={unassigned} label="Needs assignment" />
-          <Metric icon={<MessageCircle className="h-5 w-5" />} value={dueCount} label="Follow-ups due" />
-        </section>
-
-        <section className="mt-6 overflow-hidden rounded-2xl border border-white/10 bg-white/[0.03]">
-          <div className="flex flex-wrap items-center gap-2 border-b border-white/10 px-4 py-3"><span className="mr-1 text-[10px] font-black uppercase tracking-[.18em] text-[#86868b]">Smart views</span>{([['all','All contacts'],['new','New'],['due','Follow-up due'],['product','Product'],['business','Business']] as const).map(([preset,label])=><button key={preset} onClick={()=>applySmartView(preset)} className="rounded-full border border-white/10 bg-white/[.03] px-3 py-1.5 text-xs font-bold text-[#cccccc] transition hover:border-white/20 hover:text-[#2997ff]">{label}</button>)}</div>
-          <div className="flex flex-col gap-3 border-b border-white/10 p-4 lg:flex-row lg:items-center lg:justify-between">
-            <div className="flex flex-1 flex-col gap-3 xl:flex-row"><label className="flex h-11 flex-1 items-center gap-3 rounded-xl border border-white/10 bg-black/20 px-4 xl:max-w-sm"><Search className="h-4 w-4 text-[#86868b]" /><input value={search} onChange={event => setSearch(event.target.value)} placeholder="Search leads" className="w-full bg-transparent text-sm outline-none" /></label><label className="flex items-center gap-2"><Filter className="h-4 w-4 text-[#86868b]" /><select value={statusFilter} onChange={event => setStatusFilter(event.target.value)} className="h-11 rounded-xl border border-white/10 bg-black px-3 text-sm"><option value="all">All statuses</option>{STATUSES.map(status => <option key={status} value={status}>{status}</option>)}</select></label><select value={interestFilter} onChange={event => setInterestFilter(event.target.value)} className="h-11 rounded-xl border border-white/10 bg-black px-3 text-sm"><option value="all">All interests</option>{['product','duo','distributor','training','events'].map(interest => <option key={interest} value={interest}>{interest}</option>)}</select><select value={attentionFilter} onChange={event => setAttentionFilter(event.target.value as 'all' | 'new' | 'due')} className="h-11 rounded-xl border border-white/10 bg-black px-3 text-sm"><option value="all">All attention</option><option value="new">New leads</option><option value="due">Follow-ups due</option></select></div>
-            <div className="flex gap-2"><div className="flex rounded-xl border border-white/10 bg-black/20 p-1"><button onClick={()=>setView('table')} aria-label="Table view" className={`grid h-9 w-9 place-items-center rounded-lg ${view==='table'?'bg-cyan-400/15 text-[#2997ff]':'text-[#86868b]'}`}><List className="h-4 w-4"/></button><button onClick={()=>setView('board')} aria-label="Pipeline board view" className={`grid h-9 w-9 place-items-center rounded-lg ${view==='board'?'bg-cyan-400/15 text-[#2997ff]':'text-[#86868b]'}`}><Columns3 className="h-4 w-4"/></button></div><button onClick={() => { setShowAddLeadModal(true); setAddLeadError('') }} className="inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-cyan-500 px-4 text-sm font-bold text-slate-950 hover:bg-cyan-400"><UserPlus className="h-4 w-4" /> Add Lead</button><button onClick={exportCsv} disabled={!filtered.length} className="inline-flex h-11 items-center justify-center gap-2 rounded-xl border border-white/20 px-4 text-sm font-bold text-[#2997ff] disabled:opacity-40"><Download className="h-4 w-4" /> Export CSV</button></div>
-          </div>
-          {message && <p role="alert" className="border-b border-amber-400/20 bg-amber-400/10 px-5 py-3 text-sm text-amber-100">{message}</p>}
-          {view === 'board' ? <PipelineBoard leads={filtered} working={working} onStatusChange={changeStatus} onOpen={leadId=>{setView('table');toggleDetails(leadId)}} /> : <div className="overflow-x-auto"><table className="w-full min-w-[1120px] text-left text-sm"><thead className="bg-black/20 text-[10px] uppercase tracking-wider text-[#86868b]"><tr>{['Submitted', 'Lead', 'Interest', 'Attribution', 'Assigned to', 'Status', 'Contact', 'Details'].map(label => <th key={label} className="px-5 py-4 font-medium">{label}</th>)}</tr></thead><tbody className="divide-y divide-white/10">{filtered.map(lead => [
-            <tr key={lead.id}><td className="whitespace-nowrap px-5 py-4 text-[#cccccc]">{new Date(lead.submitted_at).toLocaleString()}</td><td className="px-5 py-4"><p className="font-bold">{lead.full_name}</p><a href={getGmailComposeUrl(lead.email, `True Legacy · Follow-Up with ${lead.full_name}`)} target="_blank" rel="noopener noreferrer" className="text-xs text-[#2997ff] hover:underline" title="Email via Gmail">{lead.email}</a><p className="mt-1 text-xs text-[#86868b]">{lead.country}</p></td><td className="px-5 py-4 capitalize">{lead.interest}</td><td className="px-5 py-4"><p className="capitalize">{lead.attribution_method.replaceAll('_', ' ')}</p><p className="mt-1 text-xs text-[#86868b]">{lead.referrer_name || lead.referral_code || '—'}</p></td><td className="px-5 py-4">{membership?.role === 'admin' ? <select disabled={working === lead.id} value={lead.assigned_distributor_id || ''} onChange={event => changeAssignment(lead.id, event.target.value)} className="rounded-lg border border-white/10 bg-black px-3 py-2 text-xs"><option value="">Unassigned</option>{distributors.filter(item => item.active).map(item => <option key={item.id} value={item.id}>{item.display_name}</option>)}</select> : assignedName(lead.assigned_distributor_id)}</td><td className="px-5 py-4"><select disabled={working === lead.id} value={lead.status} onChange={event => changeStatus(lead, event.target.value as LeadStatus)} className={`rounded-lg border border-white/10 px-3 py-2 text-xs capitalize ${STATUS_STYLES[lead.status]}`}>{STATUSES.map(status => <option className="bg-black text-white" key={status} value={status}>{status}</option>)}</select></td><td className="px-5 py-4"><div className="flex flex-wrap items-center gap-1.5"><a href={getGmailComposeUrl(lead.email, `True Legacy Follow-Up · ${lead.full_name}`)} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 rounded-lg border border-red-500/30 bg-red-500/10 hover:bg-red-500/20 px-2.5 py-1.5 text-xs font-bold text-red-300 transition-colors" title="Compose in Gmail"><Mail className="h-3.5 w-3.5" />Gmail</a><a href={`mailto:${lead.email}`} className="rounded-lg border border-white/10 bg-white/5 hover:bg-white/10 px-2 py-1.5 text-xs text-[#cccccc] hover:text-white transition-colors" title="Open default email app">Mail</a>{lead.phone && <a href={`https://wa.me/${lead.phone.replace(/\D/g, '')}`} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 rounded-lg border border-emerald-400/20 bg-emerald-500/10 hover:bg-emerald-500/20 px-2.5 py-1.5 text-xs font-bold text-emerald-300 transition-colors"><MessageCircle className="h-3.5 w-3.5" />WhatsApp</a>}</div></td><td className="px-5 py-4"><button onClick={() => toggleDetails(lead.id)} className="inline-flex items-center gap-2 rounded-lg border border-white/10 px-3 py-2 text-xs">View {expanded === lead.id ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}</button></td></tr>,
-            expanded === lead.id ? <tr key={`${lead.id}-details`}><td colSpan={8} className="bg-black/20 p-5"><div className="grid gap-5 xl:grid-cols-[0.8fr_1.2fr_1fr]"><div><h3 className="text-sm font-bold">Lead details</h3><div className="mt-3 grid gap-3 sm:grid-cols-2 xl:grid-cols-1"><Detail label="Phone" value={lead.phone} /><Detail label="Referral code" value={lead.referral_code} /><Detail label="Referrer" value={lead.referrer_name} /><Detail label="Source" value={lead.source_path} /><Detail label="Language" value={lead.locale.toUpperCase()} /></div><form onSubmit={event => scheduleFollowUp(event, lead)} className="mt-4 rounded-xl border border-white/10 p-4"><label className="flex items-center gap-2 text-xs font-bold text-[#2997ff]"><CalendarClock className="h-4 w-4" />Next follow-up</label><input name="followUp" type="datetime-local" defaultValue={lead.next_follow_up_at ? new Date(new Date(lead.next_follow_up_at).getTime() - new Date().getTimezoneOffset() * 60000).toISOString().slice(0,16) : ''} className="mt-3 h-10 w-full rounded-lg border border-white/10 bg-black px-3 text-xs" /><button disabled={working === lead.id} className="mt-3 w-full rounded-lg bg-cyan-500 px-3 py-2 text-xs font-bold">Save follow-up</button></form></div><NurtureCenter lead={lead} distributor={assignedDistributor(lead)} onOpen={recordOutreach} /><div><h3 className="text-sm font-bold">Contact history & notes</h3><form onSubmit={event => saveNote(event, lead.id)} className="mt-3 grid gap-2"><textarea required name="note" maxLength={3000} placeholder="Add a call, WhatsApp, email, or follow-up note" className="min-h-20 rounded-xl border border-white/10 bg-black/20 p-3 text-sm outline-none focus:border-white/20" /><button disabled={working === lead.id} className="justify-self-end rounded-xl bg-cyan-500 px-4 py-3 text-sm font-bold">Save note</button></form><div className="mt-3 max-h-72 space-y-2 overflow-y-auto">{(notes[lead.id] || []).map(note => <div key={note.id} className="rounded-xl border border-white/10 p-3"><p className="text-sm text-[#cccccc]">{note.body}</p><p className="mt-2 text-[10px] text-[#86868b]">{new Date(note.created_at).toLocaleString()}</p></div>)}{notes[lead.id]?.length === 0 && <p className="text-xs text-[#86868b]">No contact history yet.</p>}</div></div></div></td></tr> : null,
-          ])}</tbody></table></div>}
-          {!loading && !filtered.length && <div className="p-12 text-center text-sm text-[#86868b]">No leads match this view.</div>}
-        </section>
-      </div>
-      {showAddLeadModal ? (
-        <div className="fixed inset-0 z-[120] flex items-end justify-center bg-black/75 backdrop-blur-sm sm:items-center sm:p-5" role="dialog" aria-modal="true" onMouseDown={event => { if (event.target === event.currentTarget) setShowAddLeadModal(false) }}>
-          <section className="max-h-[92vh] w-full max-w-md overflow-y-auto rounded-t-[28px] border border-white/10 bg-black p-6 shadow-2xl sm:rounded-[28px]">
-            <div className="flex items-start justify-between gap-4">
-              <div>
-                <p className="text-xs font-bold uppercase tracking-[0.22em] text-[#2997ff]">CRM Platform</p>
-                <h2 className="mt-2 text-2xl font-black">Add Lead</h2>
+    <SponsorGate membership={membership} distributors={distributors}>
+      <main className="min-h-screen bg-black px-3 py-6 text-white sm:px-6 lg:px-8">
+        <SEO title="True Legacy CRM" description="Command Center & Lead Management Platform." noIndex />
+        <div className="crm-container mx-auto w-full max-w-[1500px]">
+          {/* Header */}
+          <header className="flex flex-col gap-4 border-b border-white/10 pb-6 md:flex-row md:items-end md:justify-between">
+            <div>
+              <div className="flex items-center gap-3 mb-2">
+                <img src="/logos/tl-square-white.png" alt="True Legacy" className="h-8 w-8 object-contain" />
+                <span className="text-[11px] font-bold uppercase tracking-[0.2em] text-[#2997ff]">Sales Command Center</span>
               </div>
-              <button onClick={() => setShowAddLeadModal(false)} aria-label="Close modal" className="grid h-10 w-10 shrink-0 place-items-center rounded-full border border-white/10 bg-white/[0.04] text-[#cccccc] hover:text-white transition-colors">
-                <X className="h-5 w-5" />
+              <h1 className="text-2xl sm:text-4xl font-black text-white">Contacts & Leads</h1>
+              <p className="mt-1 text-xs sm:text-sm text-[#cccccc]">
+                {membership?.role === 'admin' ? 'Administrator Workspace · All Team Leads' : 'Distributor Workspace · Assigned Leads'} ·{' '}
+                <span className="text-white font-medium">{session.user.email}</span>
+              </p>
+            </div>
+            <div className="flex flex-wrap items-center gap-2.5">
+              <Link
+                to="/crm/growth"
+                className="inline-flex items-center gap-1.5 rounded-xl border border-white/15 bg-white/[0.04] px-4 py-2 text-xs font-bold text-white hover:bg-white/10 transition-colors"
+              >
+                Growth Center
+              </Link>
+              <button
+                onClick={() => {
+                  setShowAddLeadModal(true)
+                  setAddLeadError('')
+                }}
+                className="inline-flex items-center gap-1.5 rounded-xl bg-cyan-500 hover:bg-cyan-400 px-4 py-2 text-xs font-black text-slate-950 transition-colors shadow-lg shadow-cyan-500/20"
+              >
+                <UserPlus className="h-4 w-4" />
+                Add Lead
+              </button>
+              <button
+                onClick={() => crmSupabase?.auth.signOut()}
+                className="inline-flex items-center gap-1.5 rounded-xl border border-white/10 bg-white/[0.03] px-3 py-2 text-xs text-[#86868b] hover:text-white hover:bg-white/5 transition-colors"
+              >
+                <LogOut className="h-3.5 w-3.5" />
               </button>
             </div>
+          </header>
 
-            {addLeadError && (
-              <p role="alert" className="mt-4 rounded-xl border border-rose-400/20 bg-rose-400/10 px-4 py-2.5 text-xs text-rose-200">
-                {addLeadError}
-              </p>
-            )}
+          {/* Quick KPI Stats Bar */}
+          <section className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
+            <MetricCard icon={<Users className="h-4 w-4 text-[#2997ff]" />} value={leads.length} label="Accessible Leads" />
+            <MetricCard icon={<UserRoundCheck className="h-4 w-4 text-cyan-400" />} value={newCount} label="New Leads" tone="cyan" />
+            <MetricCard icon={<ShieldCheck className="h-4 w-4 text-amber-400" />} value={unassigned} label="Needs Assignment" tone="amber" />
+            <MetricCard icon={<MessageCircle className="h-4 w-4 text-rose-400" />} value={dueCount} label="Follow-ups Due" tone="rose" />
+          </section>
 
-            <form onSubmit={handleAddLead} className="mt-5 grid gap-4">
-              <label className="block">
-                <span className="text-xs font-bold text-[#2997ff] uppercase tracking-wider block mb-1.5">Full Name</span>
-                <input required minLength={2} name="fullName" type="text" placeholder="e.g. John Doe" className="w-full h-11 bg-black/20 border border-white/10 rounded-xl px-4 text-sm text-white focus:border-white/20 outline-none transition" />
-              </label>
+          {/* Lead Alerts Banner */}
+          {(newCount > 0 || dueCount > 0) && (
+            <div className="mt-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 rounded-2xl border border-cyan-400/30 bg-cyan-400/[0.06] p-4">
+              <div className="flex items-center gap-3">
+                <span className="grid h-9 w-9 place-items-center rounded-xl bg-cyan-400/15 text-[#2997ff]">
+                  <BellRing className="h-4 w-4 animate-pulse" />
+                </span>
+                <div>
+                  <p className="text-xs font-black text-white">Lead Priority Queue</p>
+                  <p className="text-xs text-[#cccccc]">
+                    {newCount} new lead{newCount === 1 ? '' : 's'} · {dueCount} follow-up{dueCount === 1 ? '' : 's'} due for outreach
+                  </p>
+                </div>
+              </div>
+              <div className="flex gap-2">
+                <button
+                  onClick={() => setAttentionFilter('new')}
+                  className="rounded-lg border border-cyan-400/30 bg-cyan-400/10 px-3 py-1.5 text-xs font-bold text-cyan-300 hover:bg-cyan-400/20 transition-colors"
+                >
+                  Show New ({newCount})
+                </button>
+                <button
+                  onClick={() => setAttentionFilter('due')}
+                  className="rounded-lg border border-amber-400/30 bg-amber-400/10 px-3 py-1.5 text-xs font-bold text-amber-300 hover:bg-amber-400/20 transition-colors"
+                >
+                  Show Due ({dueCount})
+                </button>
+              </div>
+            </div>
+          )}
 
-              <label className="block">
-                <span className="text-xs font-bold text-[#2997ff] uppercase tracking-wider block mb-1.5">Email Address</span>
-                <input required name="email" type="email" placeholder="e.g. john@example.com" className="w-full h-11 bg-black/20 border border-white/10 rounded-xl px-4 text-sm text-white focus:border-white/20 outline-none transition" />
-              </label>
+          {/* Main Command Center Container */}
+          <section className="mt-6 rounded-2xl border border-white/10 bg-white/[0.025] backdrop-blur-xl shadow-2xl">
+            {/* Top Toolbar: Smart Views + Search + Filters + Actions */}
+            <div className="border-b border-white/10 p-4 space-y-3">
+              {/* Row 1: Smart Views Tabs */}
+              <div className="flex flex-wrap items-center justify-between gap-3">
+                <div className="flex flex-wrap items-center gap-1.5">
+                  <span className="text-[10px] font-black uppercase tracking-wider text-[#86868b] mr-1">Views</span>
+                  {[
+                    ['all', 'All Contacts'],
+                    ['new', 'New Leads'],
+                    ['due', 'Follow-up Due'],
+                    ['product', 'Product Leads'],
+                    ['business', 'Business Leads'],
+                  ].map(([preset, label]) => {
+                    const isActive =
+                      (preset === 'all' && statusFilter === 'all' && interestFilter === 'all' && attentionFilter === 'all') ||
+                      (preset === 'new' && attentionFilter === 'new') ||
+                      (preset === 'due' && attentionFilter === 'due') ||
+                      (preset === 'product' && interestFilter === 'product') ||
+                      (preset === 'business' && interestFilter === 'distributor')
 
-              <label className="block">
-                <span className="text-xs font-bold text-[#2997ff] uppercase tracking-wider block mb-1.5">Phone Number (Optional)</span>
-                <input name="phone" type="tel" placeholder="e.g. +1 (555) 123-4567" className="w-full h-11 bg-black/20 border border-white/10 rounded-xl px-4 text-sm text-white focus:border-white/20 outline-none transition" />
-              </label>
+                    return (
+                      <button
+                        key={preset}
+                        onClick={() => applySmartView(preset as any)}
+                        className={`rounded-full px-3 py-1 text-xs font-bold transition-all ${
+                          isActive
+                            ? 'bg-cyan-500 text-slate-950 shadow-md shadow-cyan-500/20'
+                            : 'border border-white/10 bg-white/[0.03] text-[#cccccc] hover:border-white/20 hover:text-white'
+                        }`}
+                      >
+                        {label}
+                      </button>
+                    )
+                  })}
+                </div>
 
-              <label className="block">
-                <span className="text-xs font-bold text-[#2997ff] uppercase tracking-wider block mb-1.5">Country</span>
-                <input required minLength={2} name="country" type="text" placeholder="e.g. United States" className="w-full h-11 bg-black/20 border border-white/10 rounded-xl px-4 text-sm text-white focus:border-white/20 outline-none transition" />
-              </label>
-
-              <div className="grid grid-cols-2 gap-3">
-                <label className="block">
-                  <span className="text-xs font-bold text-[#2997ff] uppercase tracking-wider block mb-1.5">Interest</span>
-                  <select name="interest" className="w-full h-11 bg-black/20 border border-white/10 rounded-xl px-3 text-sm text-white focus:border-white/20 outline-none transition">
-                    <option value="product" className="bg-black">Product Mastery</option>
-                    <option value="duo" className="bg-black">Duo Package</option>
-                    <option value="distributor" className="bg-black">Business Growth</option>
-                    <option value="training" className="bg-black">Training System</option>
-                    <option value="events" className="bg-black">Events</option>
-                  </select>
-                </label>
-
-                <label className="block">
-                  <span className="text-xs font-bold text-[#2997ff] uppercase tracking-wider block mb-1.5">Language</span>
-                  <select name="locale" className="w-full h-11 bg-black/20 border border-white/10 rounded-xl px-3 text-sm text-white focus:border-white/20 outline-none transition">
-                    <option value="en" className="bg-black">English</option>
-                    <option value="es" className="bg-black">Spanish</option>
-                    <option value="fr" className="bg-black">French</option>
-                    <option value="pt" className="bg-black">Portuguese</option>
-                  </select>
-                </label>
+                {/* View switcher & Export */}
+                <div className="flex items-center gap-2">
+                  <div className="flex items-center rounded-xl border border-white/10 bg-black/40 p-0.5">
+                    <button
+                      onClick={() => setView('table')}
+                      aria-label="Table view"
+                      className={`grid h-7 w-7 place-items-center rounded-lg transition-colors ${
+                        view === 'table' ? 'bg-cyan-400/20 text-[#2997ff]' : 'text-[#86868b] hover:text-white'
+                      }`}
+                    >
+                      <List className="h-3.5 w-3.5" />
+                    </button>
+                    <button
+                      onClick={() => setView('board')}
+                      aria-label="Board view"
+                      className={`grid h-7 w-7 place-items-center rounded-lg transition-colors ${
+                        view === 'board' ? 'bg-cyan-400/20 text-[#2997ff]' : 'text-[#86868b] hover:text-white'
+                      }`}
+                    >
+                      <Columns3 className="h-3.5 w-3.5" />
+                    </button>
+                  </div>
+                  <button
+                    onClick={exportCsv}
+                    disabled={!filtered.length}
+                    className="inline-flex items-center gap-1.5 rounded-xl border border-white/15 bg-white/5 hover:bg-white/10 px-3 py-1.5 text-xs font-bold text-[#cccccc] hover:text-white transition-colors disabled:opacity-40"
+                  >
+                    <Download className="h-3.5 w-3.5 text-[#2997ff]" />
+                    Export CSV
+                  </button>
+                </div>
               </div>
 
-              {membership?.role === 'admin' ? (
-                <label className="block">
-                  <span className="text-xs font-bold text-[#2997ff] uppercase tracking-wider block mb-1.5">Assigned To</span>
-                  <select name="assignedTo" className="w-full h-11 bg-black/20 border border-white/10 rounded-xl px-3 text-sm text-white focus:border-white/20 outline-none transition">
-                    <option value="" className="bg-black">Unassigned</option>
-                    {distributors.filter(d => d.active).map(d => (
-                      <option key={d.id} value={d.id} className="bg-black">{d.display_name}</option>
+              {/* Row 2: Search Input & Filter Dropdowns (Flex layout that never causes overflow) */}
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5">
+                <div className="relative flex-1">
+                  <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-[#86868b]" />
+                  <input
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
+                    placeholder="Search by name, email, phone, referrer..."
+                    className="w-full h-10 rounded-xl border border-white/10 bg-black/40 pl-10 pr-4 text-xs sm:text-sm text-white placeholder:text-[#86868b] focus:border-cyan-400 focus:outline-none transition-colors"
+                  />
+                  {search && (
+                    <button
+                      onClick={() => setSearch('')}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-[#86868b] hover:text-white"
+                    >
+                      Clear
+                    </button>
+                  )}
+                </div>
+
+                <div className="flex flex-wrap items-center gap-2">
+                  <select
+                    value={statusFilter}
+                    onChange={(e) => setStatusFilter(e.target.value)}
+                    className="h-10 rounded-xl border border-white/10 bg-black/50 px-3 text-xs text-white focus:border-cyan-400 outline-none transition-colors"
+                  >
+                    <option value="all">All Statuses</option>
+                    {STATUSES.map((status) => (
+                      <option key={status} value={status}>
+                        {STATUS_CONFIG[status]?.label || status}
+                      </option>
                     ))}
                   </select>
-                </label>
-              ) : null}
 
-              <button type="submit" disabled={addingLead} className="mt-2 h-11 w-full rounded-xl bg-cyan-500 font-bold text-slate-950 hover:bg-cyan-400 disabled:opacity-50 transition-colors flex items-center justify-center gap-2">
-                {addingLead ? 'Adding Lead...' : 'Create Lead'}
-              </button>
-            </form>
+                  <select
+                    value={interestFilter}
+                    onChange={(e) => setInterestFilter(e.target.value)}
+                    className="h-10 rounded-xl border border-white/10 bg-black/50 px-3 text-xs text-white focus:border-cyan-400 outline-none transition-colors"
+                  >
+                    <option value="all">All Interests</option>
+                    {['product', 'duo', 'distributor', 'training', 'events'].map((interest) => (
+                      <option key={interest} value={interest}>
+                        {INTEREST_CONFIG[interest]?.label || interest}
+                      </option>
+                    ))}
+                  </select>
+
+                  <select
+                    value={attentionFilter}
+                    onChange={(e) => setAttentionFilter(e.target.value as any)}
+                    className="h-10 rounded-xl border border-white/10 bg-black/50 px-3 text-xs text-white focus:border-cyan-400 outline-none transition-colors"
+                  >
+                    <option value="all">All Attention</option>
+                    <option value="new">New Leads</option>
+                    <option value="due">Follow-ups Due</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            {message && (
+              <div className="border-b border-amber-400/20 bg-amber-400/10 px-5 py-2.5 text-xs text-amber-100 flex items-center justify-between">
+                <span>{message}</span>
+                <button onClick={() => setMessage('')} className="text-amber-300 hover:text-white">
+                  ✕
+                </button>
+              </div>
+            )}
+
+            {/* View Area */}
+            {view === 'board' ? (
+              <PipelineBoard leads={filtered} working={working} onStatusChange={changeStatus} onOpen={openLeadDrawer} />
+            ) : (
+              <div>
+                {/* Desktop & Laptop High-Density Layout */}
+                <div className="hidden md:block">
+                  {/* Table Header */}
+                  <div className="grid grid-cols-[minmax(240px,2fr)_minmax(100px,0.9fr)_minmax(140px,1.2fr)_minmax(150px,1.2fr)_minmax(130px,1.1fr)_minmax(120px,0.9fr)] items-center gap-3 border-b border-white/10 bg-black/30 px-5 py-3 text-[10px] font-black uppercase tracking-wider text-[#86868b]">
+                    <div>Lead</div>
+                    <div>Interest</div>
+                    <div>Attribution</div>
+                    <div>Assigned To</div>
+                    <div>Status</div>
+                    <div className="text-right pr-2">Actions</div>
+                  </div>
+
+                  {/* Table Rows */}
+                  <div className="divide-y divide-white/[0.06]">
+                    {filtered.map((lead) => {
+                      const statusCfg = STATUS_CONFIG[lead.status] || STATUS_CONFIG.new
+                      const interestCfg = INTEREST_CONFIG[lead.interest] || { label: lead.interest, badge: 'bg-white/5 text-white' }
+                      const isSelected = selectedLeadId === lead.id
+                      const isOverdue = lead.next_follow_up_at && new Date(lead.next_follow_up_at) <= new Date()
+
+                      return (
+                        <div
+                          key={lead.id}
+                          onClick={() => openLeadDrawer(lead.id)}
+                          className={`group grid grid-cols-[minmax(240px,2fr)_minmax(100px,0.9fr)_minmax(140px,1.2fr)_minmax(150px,1.2fr)_minmax(130px,1.1fr)_minmax(120px,0.9fr)] items-center gap-3 px-5 py-3.5 transition-all cursor-pointer ${
+                            isSelected
+                              ? 'bg-cyan-500/[0.08] border-l-2 border-cyan-400'
+                              : 'hover:bg-white/[0.035]'
+                          }`}
+                        >
+                          {/* Col 1: Lead (Combined Name + Email + Country + Date) */}
+                          <div className="min-w-0 pr-2">
+                            <div className="flex items-center gap-2">
+                              <span className="font-bold text-white text-sm group-hover:text-cyan-300 transition-colors truncate">
+                                {lead.full_name}
+                              </span>
+                              {isOverdue && (
+                                <span className="h-1.5 w-1.5 rounded-full bg-rose-400 animate-ping shrink-0" title="Follow-up due" />
+                              )}
+                            </div>
+                            <p className="text-xs text-[#2997ff] truncate hover:underline">
+                              {lead.email}
+                            </p>
+                            <p className="mt-0.5 text-[11px] text-[#86868b] truncate">
+                              <span className="uppercase">{lead.country}</span> · {formatLeadDate(lead.submitted_at)}
+                            </p>
+                          </div>
+
+                          {/* Col 2: Interest Badge */}
+                          <div>
+                            <span
+                              className={`inline-flex items-center rounded-full border px-2.5 py-0.5 text-[11px] font-bold ${interestCfg.badge}`}
+                            >
+                              {interestCfg.label}
+                            </span>
+                          </div>
+
+                          {/* Col 3: Attribution */}
+                          <div className="min-w-0">
+                            <p className="text-xs font-semibold text-white capitalize truncate">
+                              {lead.attribution_method.replaceAll('_', ' ')}
+                            </p>
+                            <p className="text-[11px] text-[#86868b] truncate">
+                              {lead.referrer_name || lead.referral_code || 'Direct Organic'}
+                            </p>
+                          </div>
+
+                          {/* Col 4: Assigned To */}
+                          <div onClick={(e) => e.stopPropagation()}>
+                            {membership?.role === 'admin' ? (
+                              <select
+                                disabled={working === lead.id}
+                                value={lead.assigned_distributor_id || ''}
+                                onChange={(e) => changeAssignment(lead.id, e.target.value)}
+                                className="h-8 w-full max-w-[150px] rounded-lg border border-white/10 bg-black/60 px-2 py-1 text-xs text-white focus:border-cyan-400 outline-none transition-colors truncate"
+                              >
+                                <option value="">Unassigned</option>
+                                {distributors
+                                  .filter((d) => d.active)
+                                  .map((d) => (
+                                    <option key={d.id} value={d.id}>
+                                      {d.display_name}
+                                    </option>
+                                  ))}
+                              </select>
+                            ) : (
+                              <span className="text-xs text-[#cccccc] font-medium truncate block">
+                                {assignedName(lead.assigned_distributor_id)}
+                              </span>
+                            )}
+                          </div>
+
+                          {/* Col 5: Status */}
+                          <div onClick={(e) => e.stopPropagation()}>
+                            <select
+                              disabled={working === lead.id}
+                              value={lead.status}
+                              onChange={(e) => changeStatus(lead, e.target.value as LeadStatus)}
+                              className={`h-8 rounded-lg border px-2.5 py-1 text-xs font-bold capitalize transition-all outline-none ${statusCfg.bg} ${statusCfg.text} ${statusCfg.border}`}
+                            >
+                              {STATUSES.map((status) => (
+                                <option key={status} value={status} className="bg-black text-white">
+                                  {STATUS_CONFIG[status]?.label || status}
+                                </option>
+                              ))}
+                            </select>
+                          </div>
+
+                          {/* Col 6: Actions */}
+                          <div className="flex items-center justify-end gap-1.5" onClick={(e) => e.stopPropagation()}>
+                            <a
+                              href={getGmailComposeUrl(lead.email, `True Legacy · Follow-Up with ${lead.full_name}`)}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="grid h-8 w-8 place-items-center rounded-lg border border-red-500/25 bg-red-500/10 hover:bg-red-500/20 text-red-300 transition-colors"
+                              title="Compose in Gmail"
+                            >
+                              <Mail className="h-3.5 w-3.5" />
+                            </a>
+
+                            {lead.phone ? (
+                              <a
+                                href={`https://wa.me/${lead.phone.replace(/\D/g, '')}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="grid h-8 w-8 place-items-center rounded-lg border border-emerald-400/25 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-300 transition-colors"
+                                title="Chat on WhatsApp"
+                              >
+                                <MessageCircle className="h-3.5 w-3.5" />
+                              </a>
+                            ) : null}
+
+                            <button
+                              onClick={() => openLeadDrawer(lead.id)}
+                              className="grid h-8 w-8 place-items-center rounded-lg border border-white/10 bg-white/5 hover:bg-white/15 text-white transition-colors"
+                              title="View Details"
+                            >
+                              <ChevronRight className="h-4 w-4" />
+                            </button>
+                          </div>
+                        </div>
+                      )
+                    })}
+                  </div>
+                </div>
+
+                {/* Mobile Responsive Cards (< 768px) - 100% Fluid & Zero Horizontal Scroll */}
+                <div className="md:hidden divide-y divide-white/[0.06] p-3 space-y-3">
+                  {filtered.map((lead) => {
+                    const statusCfg = STATUS_CONFIG[lead.status] || STATUS_CONFIG.new
+                    const interestCfg = INTEREST_CONFIG[lead.interest] || { label: lead.interest, badge: 'bg-white/5 text-white' }
+
+                    return (
+                      <div
+                        key={lead.id}
+                        onClick={() => openLeadDrawer(lead.id)}
+                        className="rounded-2xl border border-white/10 bg-black/40 p-4 space-y-3 cursor-pointer hover:border-cyan-400/40 transition-colors"
+                      >
+                        <div className="flex items-start justify-between gap-2">
+                          <div>
+                            <h3 className="font-bold text-white text-base">{lead.full_name}</h3>
+                            <a
+                              href={getGmailComposeUrl(lead.email, `True Legacy · ${lead.full_name}`)}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              onClick={(e) => e.stopPropagation()}
+                              className="text-xs text-[#2997ff] hover:underline"
+                            >
+                              {lead.email}
+                            </a>
+                            <p className="text-[11px] text-[#86868b] mt-0.5">
+                              {lead.country} · {formatLeadDate(lead.submitted_at)}
+                            </p>
+                          </div>
+                          <span className={`rounded-full border px-2 py-0.5 text-[10px] font-bold ${interestCfg.badge}`}>
+                            {interestCfg.label}
+                          </span>
+                        </div>
+
+                        <div className="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-white/[0.06] text-xs">
+                          <div>
+                            <span className="text-[10px] uppercase tracking-wider text-[#86868b] block">Attribution</span>
+                            <span className="font-medium text-white">{lead.referrer_name || 'Direct'}</span>
+                          </div>
+                          <div onClick={(e) => e.stopPropagation()}>
+                            <select
+                              disabled={working === lead.id}
+                              value={lead.status}
+                              onChange={(e) => changeStatus(lead, e.target.value as LeadStatus)}
+                              className={`h-7 rounded-lg border px-2 text-[11px] font-bold capitalize ${statusCfg.bg} ${statusCfg.text} ${statusCfg.border}`}
+                            >
+                              {STATUSES.map((status) => (
+                                <option key={status} value={status} className="bg-black text-white">
+                                  {STATUS_CONFIG[status]?.label || status}
+                                </option>
+                              ))}
+                            </select>
+                          </div>
+                        </div>
+
+                        <div className="flex items-center justify-between gap-2 pt-2 border-t border-white/[0.06]" onClick={(e) => e.stopPropagation()}>
+                          <div className="flex items-center gap-1.5">
+                            <a
+                              href={getGmailComposeUrl(lead.email, `True Legacy · ${lead.full_name}`)}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="inline-flex items-center gap-1 rounded-lg border border-red-500/25 bg-red-500/10 px-2.5 py-1.5 text-xs font-bold text-red-300"
+                            >
+                              <Mail className="h-3 w-3" />
+                              Gmail
+                            </a>
+                            {lead.phone ? (
+                              <a
+                                href={`https://wa.me/${lead.phone.replace(/\D/g, '')}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="inline-flex items-center gap-1 rounded-lg border border-emerald-400/25 bg-emerald-500/10 px-2.5 py-1.5 text-xs font-bold text-emerald-300"
+                              >
+                                <MessageCircle className="h-3 w-3" />
+                                WhatsApp
+                              </a>
+                            ) : null}
+                          </div>
+                          <button
+                            onClick={() => openLeadDrawer(lead.id)}
+                            className="inline-flex items-center gap-1 text-xs font-bold text-[#2997ff]"
+                          >
+                            Details <ChevronRight className="h-3.5 w-3.5" />
+                          </button>
+                        </div>
+                      </div>
+                    )
+                  })}
+                </div>
+
+                {!loading && !filtered.length && (
+                  <div className="p-12 text-center text-sm text-[#86868b]">
+                    No leads match your active search or filters.
+                  </div>
+                )}
+              </div>
+            )}
           </section>
         </div>
-      ) : null}
-    </main></SponsorGate>
+
+        {/* Modern Slide-Over Lead Detail Drawer (attio / Linear style) */}
+        {selectedLead ? (
+          <div
+            className="fixed inset-0 z-[120] flex justify-end bg-black/60 backdrop-blur-sm transition-all"
+            onClick={() => setSelectedLeadId(null)}
+          >
+            <aside
+              onClick={(e) => e.stopPropagation()}
+              className="flex h-full w-full max-w-xl flex-col border-l border-white/15 bg-[#090d16] text-white shadow-2xl overflow-y-auto animate-in slide-in-from-right duration-300"
+            >
+              {/* Drawer Header */}
+              <div className="sticky top-0 z-10 border-b border-white/10 bg-[#090d16]/95 p-5 backdrop-blur-md">
+                <div className="flex items-start justify-between gap-4">
+                  <div className="min-w-0">
+                    <div className="flex items-center gap-2">
+                      <h2 className="text-xl font-black text-white truncate">{selectedLead.full_name}</h2>
+                      <span
+                        className={`rounded-full border px-2 py-0.5 text-[10px] font-bold ${
+                          INTEREST_CONFIG[selectedLead.interest]?.badge || 'bg-white/5 text-white'
+                        }`}
+                      >
+                        {INTEREST_CONFIG[selectedLead.interest]?.label || selectedLead.interest}
+                      </span>
+                    </div>
+                    <p className="mt-1 text-xs text-[#2997ff]">{selectedLead.email}</p>
+                    <p className="text-[11px] text-[#86868b]">
+                      {selectedLead.country} · Submitted on {formatLeadDateTime(selectedLead.submitted_at)}
+                    </p>
+                  </div>
+                  <button
+                    onClick={() => setSelectedLeadId(null)}
+                    className="grid h-9 w-9 shrink-0 place-items-center rounded-full border border-white/10 bg-white/5 hover:bg-white/10 text-[#cccccc] hover:text-white transition-colors"
+                  >
+                    <X className="h-4 w-4" />
+                  </button>
+                </div>
+
+                {/* Status and Assignment Selector Bar */}
+                <div className="mt-4 flex flex-wrap items-center gap-3 pt-3 border-t border-white/10">
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs text-[#86868b]">Status:</span>
+                    <select
+                      disabled={working === selectedLead.id}
+                      value={selectedLead.status}
+                      onChange={(e) => changeStatus(selectedLead, e.target.value as LeadStatus)}
+                      className={`h-8 rounded-lg border px-2.5 text-xs font-bold capitalize outline-none ${
+                        STATUS_CONFIG[selectedLead.status]?.bg || ''
+                      } ${STATUS_CONFIG[selectedLead.status]?.text || ''} ${
+                        STATUS_CONFIG[selectedLead.status]?.border || ''
+                      }`}
+                    >
+                      {STATUSES.map((status) => (
+                        <option key={status} value={status} className="bg-black text-white">
+                          {STATUS_CONFIG[status]?.label || status}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div className="flex items-center gap-2 ml-auto">
+                    <span className="text-xs text-[#86868b]">Assigned:</span>
+                    {membership?.role === 'admin' ? (
+                      <select
+                        disabled={working === selectedLead.id}
+                        value={selectedLead.assigned_distributor_id || ''}
+                        onChange={(e) => changeAssignment(selectedLead.id, e.target.value)}
+                        className="h-8 rounded-lg border border-white/10 bg-black/60 px-2 text-xs text-white focus:border-cyan-400 outline-none"
+                      >
+                        <option value="">Unassigned</option>
+                        {distributors
+                          .filter((d) => d.active)
+                          .map((d) => (
+                            <option key={d.id} value={d.id}>
+                              {d.display_name}
+                            </option>
+                          ))}
+                      </select>
+                    ) : (
+                      <span className="text-xs font-bold text-white">
+                        {assignedName(selectedLead.assigned_distributor_id)}
+                      </span>
+                    )}
+                  </div>
+                </div>
+
+                {/* Primary Quick Connect Action Row */}
+                <div className="mt-4 grid grid-cols-2 sm:grid-cols-3 gap-2">
+                  <a
+                    href={getGmailComposeUrl(selectedLead.email, `True Legacy · ${selectedLead.full_name}`)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center justify-center gap-1.5 rounded-xl border border-red-500/30 bg-red-500/10 hover:bg-red-500/20 py-2.5 text-xs font-bold text-red-300 transition-colors"
+                  >
+                    <Mail className="h-3.5 w-3.5" />
+                    Gmail Compose
+                  </a>
+
+                  {selectedLead.phone ? (
+                    <a
+                      href={`https://wa.me/${selectedLead.phone.replace(/\D/g, '')}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center justify-center gap-1.5 rounded-xl border border-emerald-400/30 bg-emerald-500/10 hover:bg-emerald-500/20 py-2.5 text-xs font-bold text-emerald-300 transition-colors"
+                    >
+                      <MessageCircle className="h-3.5 w-3.5" />
+                      WhatsApp
+                    </a>
+                  ) : (
+                    <span className="flex items-center justify-center gap-1.5 rounded-xl border border-white/5 bg-white/[0.02] py-2.5 text-xs text-[#86868b] opacity-60">
+                      No Phone
+                    </span>
+                  )}
+
+                  {selectedLead.phone ? (
+                    <a
+                      href={`tel:${selectedLead.phone.replace(/\s+/g, '')}`}
+                      className="flex items-center justify-center gap-1.5 rounded-xl border border-white/15 bg-white/5 hover:bg-white/10 py-2.5 text-xs font-bold text-white transition-colors col-span-2 sm:col-span-1"
+                    >
+                      <Phone className="h-3.5 w-3.5 text-[#2997ff]" />
+                      Call
+                    </a>
+                  ) : null}
+                </div>
+
+                {/* Tabs */}
+                <div className="mt-5 flex gap-1 border-b border-white/10">
+                  <button
+                    onClick={() => setActiveTab('details')}
+                    className={`pb-2.5 text-xs font-bold border-b-2 transition-all px-3 ${
+                      activeTab === 'details' ? 'border-cyan-400 text-cyan-400' : 'border-transparent text-[#86868b] hover:text-white'
+                    }`}
+                  >
+                    Lead Details
+                  </button>
+                  <button
+                    onClick={() => setActiveTab('nurture')}
+                    className={`pb-2.5 text-xs font-bold border-b-2 transition-all px-3 ${
+                      activeTab === 'nurture' ? 'border-cyan-400 text-cyan-400' : 'border-transparent text-[#86868b] hover:text-white'
+                    }`}
+                  >
+                    Send Presentations
+                  </button>
+                  <button
+                    onClick={() => setActiveTab('notes')}
+                    className={`pb-2.5 text-xs font-bold border-b-2 transition-all px-3 ${
+                      activeTab === 'notes' ? 'border-cyan-400 text-cyan-400' : 'border-transparent text-[#86868b] hover:text-white'
+                    }`}
+                  >
+                    History & Notes ({notes[selectedLead.id]?.length || 0})
+                  </button>
+                </div>
+              </div>
+
+              {/* Drawer Body Tabs */}
+              <div className="flex-1 p-5 space-y-6">
+                {activeTab === 'details' && (
+                  <div className="space-y-6">
+                    {/* Follow-up scheduler */}
+                    <div className="rounded-2xl border border-white/10 bg-white/[0.025] p-4">
+                      <div className="flex items-center gap-2 mb-3">
+                        <CalendarClock className="h-4 w-4 text-[#2997ff]" />
+                        <h3 className="text-xs font-bold uppercase tracking-wider text-white">Next Follow-Up</h3>
+                      </div>
+                      <form onSubmit={(e) => scheduleFollowUp(e, selectedLead)} className="grid gap-2 sm:grid-cols-[1fr_auto]">
+                        <input
+                          name="followUp"
+                          type="datetime-local"
+                          defaultValue={
+                            selectedLead.next_follow_up_at
+                              ? new Date(new Date(selectedLead.next_follow_up_at).getTime() - new Date().getTimezoneOffset() * 60000)
+                                  .toISOString()
+                                  .slice(0, 16)
+                              : ''
+                          }
+                          className="h-10 rounded-xl border border-white/10 bg-black/60 px-3 text-xs text-white focus:border-cyan-400 outline-none"
+                        />
+                        <button
+                          disabled={working === selectedLead.id}
+                          className="h-10 rounded-xl bg-cyan-500 hover:bg-cyan-400 px-4 text-xs font-bold text-slate-950 transition-colors"
+                        >
+                          Save Date
+                        </button>
+                      </form>
+                    </div>
+
+                    {/* Metadata Grid */}
+                    <div className="grid gap-3 sm:grid-cols-2">
+                      <DetailCard label="Phone" value={selectedLead.phone} />
+                      <DetailCard label="Country" value={selectedLead.country} />
+                      <DetailCard label="Referral Method" value={selectedLead.attribution_method.replaceAll('_', ' ')} />
+                      <DetailCard label="Referrer Name" value={selectedLead.referrer_name} />
+                      <DetailCard label="Referral Code" value={selectedLead.referral_code} />
+                      <DetailCard label="Language" value={selectedLead.locale.toUpperCase()} />
+                      <DetailCard label="Source Path" value={selectedLead.source_path} />
+                      <DetailCard label="Consent Timestamp" value={formatLeadDateTime(selectedLead.consent_at)} />
+                    </div>
+                  </div>
+                )}
+
+                {activeTab === 'nurture' && (
+                  <div>
+                    <NurtureCenter
+                      lead={selectedLead}
+                      distributor={assignedDistributor(selectedLead)}
+                      onOpen={recordOutreach}
+                    />
+                  </div>
+                )}
+
+                {activeTab === 'notes' && (
+                  <div className="space-y-4">
+                    {/* Add note */}
+                    <form onSubmit={(e) => saveNote(e, selectedLead.id)} className="space-y-2">
+                      <textarea
+                        required
+                        name="note"
+                        maxLength={3000}
+                        placeholder="Add interaction note (call notes, WhatsApp updates, objections, questions)..."
+                        className="w-full min-h-[90px] rounded-xl border border-white/10 bg-black/40 p-3 text-xs text-white placeholder:text-[#86868b] focus:border-cyan-400 outline-none"
+                      />
+                      <button
+                        disabled={working === selectedLead.id}
+                        className="rounded-xl bg-cyan-500 hover:bg-cyan-400 px-4 py-2 text-xs font-bold text-slate-950 transition-colors"
+                      >
+                        Save Note
+                      </button>
+                    </form>
+
+                    {/* Notes timeline */}
+                    <div className="space-y-2.5 pt-2">
+                      {(notes[selectedLead.id] || []).map((note) => (
+                        <div key={note.id} className="rounded-xl border border-white/10 bg-white/[0.02] p-3.5">
+                          <p className="text-xs text-[#cccccc] leading-relaxed whitespace-pre-wrap">{note.body}</p>
+                          <p className="mt-2 text-[10px] text-[#86868b]">{formatLeadDateTime(note.created_at)}</p>
+                        </div>
+                      ))}
+                      {notes[selectedLead.id]?.length === 0 && (
+                        <p className="py-6 text-center text-xs text-[#86868b]">No contact history recorded yet.</p>
+                      )}
+                    </div>
+                  </div>
+                )}
+              </div>
+            </aside>
+          </div>
+        ) : null}
+
+        {/* Add Lead Modal */}
+        {showAddLeadModal ? (
+          <div
+            className="fixed inset-0 z-[130] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4"
+            role="dialog"
+            aria-modal="true"
+            onMouseDown={(e) => {
+              if (e.target === e.currentTarget) setShowAddLeadModal(false)
+            }}
+          >
+            <section className="w-full max-w-lg overflow-y-auto max-h-[90vh] rounded-3xl border border-white/15 bg-[#090d16] p-6 sm:p-8 shadow-2xl">
+              <div className="flex items-start justify-between gap-4 border-b border-white/10 pb-4">
+                <div>
+                  <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#2997ff]">Command Center</p>
+                  <h2 className="mt-1 text-2xl font-black text-white">Add New Contact</h2>
+                </div>
+                <button
+                  onClick={() => setShowAddLeadModal(false)}
+                  className="grid h-9 w-9 place-items-center rounded-full border border-white/10 bg-white/5 hover:bg-white/10 text-white"
+                >
+                  <X className="h-4 w-4" />
+                </button>
+              </div>
+
+              {addLeadError && (
+                <p role="alert" className="mt-4 rounded-xl border border-rose-400/20 bg-rose-400/10 px-4 py-2.5 text-xs text-rose-200">
+                  {addLeadError}
+                </p>
+              )}
+
+              <form onSubmit={handleAddLead} className="mt-5 space-y-4">
+                <div>
+                  <label className="block text-xs font-bold text-[#2997ff] uppercase tracking-wider mb-1.5">Full Name</label>
+                  <input
+                    required
+                    minLength={2}
+                    name="fullName"
+                    placeholder="e.g. Sarah Jenkins"
+                    className="w-full h-11 bg-black/40 border border-white/10 rounded-xl px-4 text-sm text-white focus:border-cyan-400 outline-none"
+                  />
+                </div>
+
+                <div className="grid gap-3 sm:grid-cols-2">
+                  <div>
+                    <label className="block text-xs font-bold text-[#2997ff] uppercase tracking-wider mb-1.5">Email</label>
+                    <input
+                      required
+                      name="email"
+                      type="email"
+                      placeholder="e.g. sarah@example.com"
+                      className="w-full h-11 bg-black/40 border border-white/10 rounded-xl px-4 text-sm text-white focus:border-cyan-400 outline-none"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-bold text-[#2997ff] uppercase tracking-wider mb-1.5">Phone (Optional)</label>
+                    <input
+                      name="phone"
+                      type="tel"
+                      placeholder="+1 (555) 000-0000"
+                      className="w-full h-11 bg-black/40 border border-white/10 rounded-xl px-4 text-sm text-white focus:border-cyan-400 outline-none"
+                    />
+                  </div>
+                </div>
+
+                <div className="grid gap-3 sm:grid-cols-2">
+                  <div>
+                    <label className="block text-xs font-bold text-[#2997ff] uppercase tracking-wider mb-1.5">Country</label>
+                    <input
+                      required
+                      minLength={2}
+                      name="country"
+                      placeholder="e.g. United States"
+                      className="w-full h-11 bg-black/40 border border-white/10 rounded-xl px-4 text-sm text-white focus:border-cyan-400 outline-none"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-bold text-[#2997ff] uppercase tracking-wider mb-1.5">Interest Area</label>
+                    <select
+                      name="interest"
+                      className="w-full h-11 bg-black/40 border border-white/10 rounded-xl px-3 text-sm text-white focus:border-cyan-400 outline-none"
+                    >
+                      <option value="product">Product Mastery (K8)</option>
+                      <option value="duo">Duo Package (K8 + emGuarde)</option>
+                      <option value="distributor">Business Opportunity</option>
+                      <option value="training">Leadership Academy</option>
+                      <option value="events">Live Weekly Events</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div className="grid gap-3 sm:grid-cols-2">
+                  <div>
+                    <label className="block text-xs font-bold text-[#2997ff] uppercase tracking-wider mb-1.5">Language</label>
+                    <select
+                      name="locale"
+                      className="w-full h-11 bg-black/40 border border-white/10 rounded-xl px-3 text-sm text-white focus:border-cyan-400 outline-none"
+                    >
+                      <option value="en">English</option>
+                      <option value="es">Spanish</option>
+                      <option value="fr">French</option>
+                      <option value="pt">Portuguese</option>
+                    </select>
+                  </div>
+                  {membership?.role === 'admin' ? (
+                    <div>
+                      <label className="block text-xs font-bold text-[#2997ff] uppercase tracking-wider mb-1.5">Assign Distributor</label>
+                      <select
+                        name="assignedTo"
+                        className="w-full h-11 bg-black/40 border border-white/10 rounded-xl px-3 text-sm text-white focus:border-cyan-400 outline-none"
+                      >
+                        <option value="">Unassigned</option>
+                        {distributors
+                          .filter((d) => d.active)
+                          .map((d) => (
+                            <option key={d.id} value={d.id}>
+                              {d.display_name}
+                            </option>
+                          ))}
+                      </select>
+                    </div>
+                  ) : null}
+                </div>
+
+                <button
+                  type="submit"
+                  disabled={addingLead}
+                  className="mt-4 h-12 w-full rounded-xl bg-cyan-500 hover:bg-cyan-400 font-bold text-slate-950 transition-colors shadow-lg shadow-cyan-500/20"
+                >
+                  {addingLead ? 'Adding Lead...' : 'Create Contact'}
+                </button>
+              </form>
+            </section>
+          </div>
+        ) : null}
+      </main>
+    </SponsorGate>
   )
 }
 
-function Metric({ icon, value, label }: { icon: React.ReactNode; value: number; label: string }) {
-  return <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-5"><span className="text-[#2997ff]">{icon}</span><p className="mt-4 text-3xl font-black">{value}</p><p className="text-xs uppercase tracking-wider text-[#86868b]">{label}</p></div>
+function MetricCard({ icon, value, label, tone }: { icon: React.ReactNode; value: number; label: string; tone?: string }) {
+  return (
+    <div className="rounded-2xl border border-white/10 bg-white/[0.025] p-4 flex items-center justify-between">
+      <div>
+        <p className="text-xs uppercase tracking-wider text-[#86868b]">{label}</p>
+        <p className="mt-1 text-2xl font-black text-white">{value}</p>
+      </div>
+      <span className="grid h-10 w-10 place-items-center rounded-xl bg-white/5 border border-white/10">{icon}</span>
+    </div>
+  )
 }
 
-function PipelineBoard({ leads, working, onStatusChange, onOpen }: { leads: CrmLead[]; working: string; onStatusChange: (lead: CrmLead, status: LeadStatus) => void; onOpen: (leadId: string) => void }) {
-  return <div className="overflow-x-auto p-4"><div className="grid min-w-[1500px] grid-cols-6 gap-3">{STATUSES.map(status => { const column = leads.filter(lead => lead.status === status); return <section key={status} className="rounded-2xl border border-white/[.08] bg-black/15 p-3"><div className="flex items-center justify-between border-b border-white/[.07] pb-3"><h3 className="text-sm font-black capitalize">{status}</h3><span className="rounded-full bg-white/[.06] px-2 py-1 text-[10px] font-bold text-[#cccccc]">{column.length}</span></div><div className="mt-3 space-y-3">{column.map(lead => <article key={lead.id} className="rounded-xl border border-white/[.08] bg-white/[.035] p-3"><button onClick={()=>onOpen(lead.id)} className="w-full text-left"><p className="truncate font-black">{lead.full_name}</p><p className="mt-1 truncate text-xs text-[#86868b]">{lead.email}</p><div className="mt-3 flex flex-wrap gap-1.5"><span className="rounded-full bg-cyan-400/10 px-2 py-1 text-[9px] font-bold uppercase text-[#2997ff]">{lead.interest}</span><span className="rounded-full bg-white/[.06] px-2 py-1 text-[9px] font-bold uppercase text-[#cccccc]">{lead.locale}</span>{lead.next_follow_up_at ? <span className={`rounded-full px-2 py-1 text-[9px] font-bold ${new Date(lead.next_follow_up_at)<=new Date()?'bg-rose-400/10 text-rose-200':'bg-amber-400/10 text-amber-200'}`}>{new Date(lead.next_follow_up_at).toLocaleDateString()}</span> : null}</div></button><select disabled={working===lead.id} value={lead.status} onChange={event=>onStatusChange(lead,event.target.value as LeadStatus)} className="mt-3 h-9 w-full rounded-lg border border-white/10 bg-black px-2 text-xs capitalize">{STATUSES.map(option=><option key={option} value={option}>{option}</option>)}</select></article>)}{column.length===0?<p className="py-8 text-center text-xs text-[#86868b]">No contacts</p>:null}</div></section> })}</div></div>
+function DetailCard({ label, value }: { label: string; value: string | null }) {
+  return (
+    <div className="rounded-xl border border-white/10 bg-white/[0.02] p-3.5">
+      <p className="text-[10px] uppercase tracking-wider text-[#86868b]">{label}</p>
+      <p className="mt-1 text-xs font-semibold text-white break-words">{value || '—'}</p>
+    </div>
+  )
 }
 
-function Detail({ label, value }: { label: string; value: string | null }) {
-  return <div className="rounded-xl border border-white/10 bg-white/[0.02] p-4"><p className="text-[10px] uppercase tracking-wider text-[#86868b]">{label}</p><p className="mt-2 break-words text-sm text-[#cccccc]">{value || '—'}</p></div>
+function PipelineBoard({
+  leads,
+  working,
+  onStatusChange,
+  onOpen,
+}: {
+  leads: CrmLead[]
+  working: string
+  onStatusChange: (lead: CrmLead, status: LeadStatus) => void
+  onOpen: (leadId: string) => void
+}) {
+  return (
+    <div className="overflow-x-auto p-4">
+      <div className="grid min-w-[1200px] grid-cols-6 gap-3">
+        {STATUSES.map((status) => {
+          const column = leads.filter((lead) => lead.status === status)
+          const statusCfg = STATUS_CONFIG[status]
+          return (
+            <section key={status} className="rounded-2xl border border-white/[0.08] bg-black/20 p-3">
+              <div className="flex items-center justify-between border-b border-white/[0.07] pb-2.5">
+                <div className="flex items-center gap-1.5">
+                  <span className={`h-2 w-2 rounded-full ${statusCfg.dot}`} />
+                  <h3 className="text-xs font-black capitalize text-white">{statusCfg.label}</h3>
+                </div>
+                <span className="rounded-full bg-white/[0.06] px-2 py-0.5 text-[10px] font-bold text-[#cccccc]">
+                  {column.length}
+                </span>
+              </div>
+              <div className="mt-3 space-y-2.5">
+                {column.map((lead) => (
+                  <article
+                    key={lead.id}
+                    className="rounded-xl border border-white/10 bg-white/[0.035] hover:border-cyan-400/40 p-3 transition-colors cursor-pointer"
+                    onClick={() => onOpen(lead.id)}
+                  >
+                    <p className="font-bold text-white text-xs truncate">{lead.full_name}</p>
+                    <p className="text-[11px] text-[#86868b] truncate">{lead.email}</p>
+                    <div className="mt-2.5 flex flex-wrap items-center justify-between gap-1.5 pt-2 border-t border-white/5">
+                      <span className="rounded-full bg-cyan-400/10 px-2 py-0.5 text-[9px] font-bold uppercase text-[#2997ff]">
+                        {lead.interest}
+                      </span>
+                      <span className="text-[10px] text-[#86868b] uppercase">{lead.country}</span>
+                    </div>
+                  </article>
+                ))}
+                {column.length === 0 ? <p className="py-6 text-center text-xs text-[#86868b]">No contacts</p> : null}
+              </div>
+            </section>
+          )
+        })}
+      </div>
+    </div>
+  )
 }
 
-const NURTURE_STEPS: Record<string, Array<{ label: string; campaign: 'duo' | 'business' | 'training' | 'events'; purpose: string }>> = {
-  product: [
-    { label: 'Start with the Duo', campaign: 'duo', purpose: 'product overview and demonstrations' },
-    { label: 'Invite to a live event', campaign: 'events', purpose: 'questions and community' },
-  ],
-  duo: [
-    { label: 'Share the Duo', campaign: 'duo', purpose: 'K8 and emGuarde GO demonstrations' },
-    { label: 'Invite to a live event', campaign: 'events', purpose: 'questions and next steps' },
-  ],
-  distributor: [
-    { label: 'Share the business page', campaign: 'business', purpose: 'business model and duplication' },
-    { label: 'Show the training system', campaign: 'training', purpose: 'team support and development' },
-    { label: 'Invite to a live event', campaign: 'events', purpose: 'live presentation and questions' },
-  ],
-  training: [
-    { label: 'Show the training system', campaign: 'training', purpose: 'training and leadership support' },
-    { label: 'Share the business page', campaign: 'business', purpose: 'duplication and community' },
-  ],
-  events: [
-    { label: 'Invite to a live event', campaign: 'events', purpose: 'the next live presentation' },
-    { label: 'Follow with the Duo', campaign: 'duo', purpose: 'product demonstrations' },
-  ],
-}
-
-function getGmailComposeUrl(to: string, subject: string = '', body: string = '') {
-  const params = new URLSearchParams()
-  params.set('view', 'cm')
-  params.set('fs', '1')
-  params.set('to', to)
-  if (subject) params.set('su', subject)
-  if (body) params.set('body', body)
-  return `https://mail.google.com/mail/?${params.toString()}`
-}
-
-function nurtureMessage(lead: CrmLead, distributor: CrmDistributor, campaign: string, url: string) {
-  const firstName = lead.full_name.trim().split(/\s+/)[0]
-  if (lead.locale === 'es') return `Hola ${firstName}, soy ${distributor.display_name} de True Legacy. Gracias por tu interés. Preparé esta información sobre ${campaign === 'duo' ? 'K8 y emGuarde GO' : campaign === 'business' ? 'el modelo de negocio' : campaign === 'training' ? 'nuestro sistema de entrenamiento' : 'nuestros eventos en vivo'} para ti: ${url}\n\nRevísala cuando puedas y dime qué preguntas tienes.`
-  if (lead.locale === 'pt') return `Olá ${firstName}, sou ${distributor.display_name} da True Legacy. Obrigado pelo seu interesse. Preparei estas informações para você: ${url}\n\nVeja quando puder e me diga quais perguntas você tem.`
-  if (lead.locale === 'fr') return `Bonjour ${firstName}, je suis ${distributor.display_name} de True Legacy. Merci pour votre intérêt. J'ai préparé ces informations pour vous : ${url}\n\nConsultez-les quand vous pourrez et dites-moi quelles questions vous avez.`
-  return `Hi ${firstName}, this is ${distributor.display_name} with True Legacy. Thanks for your interest. I prepared this information for you: ${url}\n\nTake a look when you can and let me know what questions you have.`
-}
-
-const ALL_LANDING_PAGES = [
-  {
-    campaign: 'business' as const,
-    label: '1 · Business Opportunity Page',
-    purpose: 'Independent distributor model, compensation, and duplication.',
-    badge: 'BUSINESS',
-  },
-  {
-    campaign: 'duo' as const,
-    label: '2 · Duo Products Page (K8 + emGuarde)',
-    purpose: 'Leveluk K8 Kangen Water system & emGuarde GO demonstrations.',
-    badge: 'PRODUCTS',
-  },
-  {
-    campaign: 'training' as const,
-    label: '3 · Leadership Academy & Training',
-    purpose: 'Preview the education system, skills, and community resources.',
-    badge: 'TRAINING',
-  },
-  {
-    campaign: 'events' as const,
-    label: '4 · Weekly Live Events',
-    purpose: 'Live Zoom presentations in English and Spanish.',
-    badge: 'EVENTS',
-  },
-]
-
-function NurtureCenter({ lead, distributor, onOpen }: { lead: CrmLead; distributor?: CrmDistributor; onOpen: (lead: CrmLead, channel: 'WhatsApp' | 'Email', landingUrl: string) => void }) {
+function NurtureCenter({
+  lead,
+  distributor,
+  onOpen,
+}: {
+  lead: CrmLead
+  distributor?: CrmDistributor
+  onOpen: (lead: CrmLead, channel: 'WhatsApp' | 'Email', landingUrl: string) => void
+}) {
   const [copied, setCopied] = useState('')
-  if (!distributor) return <div className="rounded-2xl border border-amber-400/20 bg-amber-400/[0.05] p-5"><h3 className="font-bold">Nurture center</h3><p className="mt-2 text-sm text-[#cccccc]">Assign this lead to a distributor before sending personalized landing pages.</p></div>
+  if (!distributor) {
+    return (
+      <div className="rounded-2xl border border-amber-400/20 bg-amber-400/[0.05] p-5">
+        <h3 className="font-bold text-amber-200">Distributor assignment required</h3>
+        <p className="mt-2 text-xs text-[#cccccc]">
+          Assign this lead to an active distributor before sending personalized landing pages.
+        </p>
+      </div>
+    )
+  }
+
+  const ALL_LANDING_PAGES = [
+    {
+      campaign: 'business' as const,
+      label: '1 · Business Opportunity Page',
+      purpose: 'Independent distributor model, compensation, and duplication.',
+      badge: 'BUSINESS',
+    },
+    {
+      campaign: 'duo' as const,
+      label: '2 · Duo Products Page (K8 + emGuarde)',
+      purpose: 'Leveluk K8 Kangen Water system & emGuarde GO demonstrations.',
+      badge: 'PRODUCTS',
+    },
+    {
+      campaign: 'training' as const,
+      label: '3 · Leadership Academy & Training',
+      purpose: 'Preview the education system, skills, and community resources.',
+      badge: 'TRAINING',
+    },
+    {
+      campaign: 'events' as const,
+      label: '4 · Weekly Live Events',
+      purpose: 'Live Zoom presentations in English and Spanish.',
+      badge: 'EVENTS',
+    },
+  ]
+
+  const nurtureMessage = (lead: CrmLead, distributor: CrmDistributor, campaign: string, url: string) => {
+    const firstName = lead.full_name.trim().split(/\s+/)[0]
+    if (lead.locale === 'es')
+      return `Hola ${firstName}, soy ${distributor.display_name} de True Legacy. Gracias por tu interés. Preparé esta información sobre ${
+        campaign === 'duo'
+          ? 'K8 y emGuarde GO'
+          : campaign === 'business'
+          ? 'el modelo de negocio'
+          : campaign === 'training'
+          ? 'nuestro sistema de entrenamiento'
+          : 'nuestros eventos en vivo'
+      } para ti: ${url}\n\nRevísala cuando puedas y dime qué preguntas tienes.`
+    if (lead.locale === 'pt')
+      return `Olá ${firstName}, sou ${distributor.display_name} da True Legacy. Obrigado pelo seu interesse. Preparei estas informações para você: ${url}\n\nVeja quando puder e me diga quais perguntas você tem.`
+    if (lead.locale === 'fr')
+      return `Bonjour ${firstName}, je suis ${distributor.display_name} de True Legacy. Merci pour votre intérêt. J'ai préparé ces informations pour vous : ${url}\n\nConsultez-les quand vous pourrez et dites-moi quelles questions vous avez.`
+    return `Hi ${firstName}, this is ${distributor.display_name} with True Legacy. Thanks for your interest. I prepared this information for you: ${url}\n\nTake a look when you can and let me know what questions you have.`
+  }
 
   return (
-    <div>
-      <div className="flex items-center justify-between">
+    <div className="space-y-3">
+      <div className="flex items-center justify-between mb-2">
         <div>
-          <h3 className="text-sm font-bold text-white">Send Landing Pages</h3>
-          <p className="mt-0.5 text-xs text-[#86868b]">
-            Choose a presentation page to send to <span className="font-semibold text-white">{lead.full_name}</span> (Interest: <span className="capitalize text-[#2997ff]">{lead.interest}</span>)
-          </p>
+          <h3 className="text-xs font-black uppercase tracking-wider text-[#2997ff]">Send Presentation Pages</h3>
+          <p className="text-xs text-[#86868b]">Personalized with your referral attribution</p>
         </div>
       </div>
 
-      <div className="mt-3 grid gap-3 sm:grid-cols-2">
+      <div className="grid gap-3">
         {ALL_LANDING_PAGES.map((page) => {
           const landingUrl = `${window.location.origin}/d/${distributor.slug}/${page.campaign}`
           const text = nurtureMessage(lead, distributor, page.campaign, landingUrl)
-          const whatsAppUrl = lead.phone ? `https://wa.me/${lead.phone.replace(/\D/g, '')}?text=${encodeURIComponent(text)}` : `https://wa.me/?text=${encodeURIComponent(text)}`
+          const whatsAppUrl = lead.phone
+            ? `https://wa.me/${lead.phone.replace(/\D/g, '')}?text=${encodeURIComponent(text)}`
+            : `https://wa.me/?text=${encodeURIComponent(text)}`
           const emailSubject = `Information from ${distributor.display_name} · True Legacy`
           const gmailUrl = getGmailComposeUrl(lead.email, emailSubject, text)
-          const emailUrl = `mailto:${lead.email}?subject=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(text)}`
-          const isPrimary = lead.interest === page.campaign || (lead.interest === 'product' && page.campaign === 'duo') || (lead.interest === 'distributor' && page.campaign === 'business')
+          const isPrimary =
+            lead.interest === page.campaign ||
+            (lead.interest === 'product' && page.campaign === 'duo') ||
+            (lead.interest === 'distributor' && page.campaign === 'business')
 
           return (
             <article
               key={page.campaign}
               className={`rounded-xl border p-4 transition-all ${
-                isPrimary
-                  ? 'border-cyan-400/40 bg-cyan-400/[0.04]'
-                  : 'border-white/10 bg-white/[0.02]'
+                isPrimary ? 'border-cyan-400/40 bg-cyan-400/[0.04]' : 'border-white/10 bg-white/[0.02]'
               }`}
             >
               <div className="flex items-center justify-between">
-                <span className="text-[10px] font-bold uppercase tracking-wider text-[#2997ff]">
-                  {page.badge}
-                </span>
+                <span className="text-[10px] font-bold uppercase tracking-wider text-[#2997ff]">{page.badge}</span>
                 {isPrimary && (
                   <span className="text-[9px] font-bold uppercase tracking-wider bg-cyan-400/20 text-[#2997ff] border border-cyan-400/30 px-1.5 py-0.5 rounded">
                     Matched Interest
                   </span>
                 )}
               </div>
-              <p className="mt-1 font-bold text-white text-sm">{page.label}</p>
-              <p className="mt-1 text-xs text-[#86868b] line-clamp-2 leading-relaxed">{page.purpose}</p>
+              <p className="mt-1 font-bold text-white text-xs sm:text-sm">{page.label}</p>
+              <p className="mt-0.5 text-xs text-[#86868b] leading-relaxed">{page.purpose}</p>
 
-              <div className="mt-3.5 flex flex-wrap gap-2 pt-2.5 border-t border-white/10">
+              <div className="mt-3 flex flex-wrap gap-2 pt-2.5 border-t border-white/10">
                 <a
                   href={whatsAppUrl}
                   target="_blank"
@@ -592,14 +1504,6 @@ function NurtureCenter({ lead, distributor, onOpen }: { lead: CrmLead; distribut
                   <Mail className="h-3.5 w-3.5" />
                   Gmail
                 </a>
-                <a
-                  href={emailUrl}
-                  onClick={() => onOpen(lead, 'Email', landingUrl)}
-                  className="inline-flex items-center gap-1.5 rounded-lg border border-white/15 bg-white/5 hover:bg-white/10 px-2.5 py-1.5 text-xs text-[#cccccc] hover:text-white transition-colors"
-                  title="Open default email app"
-                >
-                  Default Mail
-                </a>
                 <button
                   type="button"
                   onClick={async () => {
@@ -609,14 +1513,14 @@ function NurtureCenter({ lead, distributor, onOpen }: { lead: CrmLead; distribut
                   }}
                   className="inline-flex items-center gap-1.5 rounded-lg border border-white/10 bg-white/5 hover:bg-white/10 px-2.5 py-1.5 text-xs text-[#cccccc] transition-colors"
                 >
-                  <Copy className="h-3.5 w-3.5" />
+                  {copied === page.campaign ? <Check className="h-3.5 w-3.5 text-emerald-400" /> : <Copy className="h-3.5 w-3.5" />}
                   {copied === page.campaign ? 'Copied' : 'Copy'}
                 </button>
                 <a
                   href={landingUrl}
                   target="_blank"
                   rel="noreferrer"
-                  className="inline-flex items-center gap-1.5 rounded-lg border border-white/10 bg-white/5 hover:bg-white/10 px-2.5 py-1.5 text-xs text-[#cccccc] transition-colors"
+                  className="inline-flex items-center gap-1.5 rounded-lg border border-white/10 bg-white/5 hover:bg-white/10 px-2.5 py-1.5 text-xs text-[#cccccc] transition-colors ml-auto"
                 >
                   <ExternalLink className="h-3.5 w-3.5" />
                   Preview
@@ -630,17 +1534,183 @@ function NurtureCenter({ lead, distributor, onOpen }: { lead: CrmLead; distribut
   )
 }
 
-function CrmLogin({ onPasswordSubmit, onMagicLinkSubmit, onPasswordReset, message }: { onPasswordSubmit: (event: FormEvent<HTMLFormElement>) => void; onMagicLinkSubmit: (event: FormEvent<HTMLFormElement>) => void; onPasswordReset: (email: string) => void; message: string }) {
+function CrmLogin({
+  onPasswordSubmit,
+  onMagicLinkSubmit,
+  onPasswordReset,
+  message,
+}: {
+  onPasswordSubmit: (event: FormEvent<HTMLFormElement>) => void
+  onMagicLinkSubmit: (event: FormEvent<HTMLFormElement>) => void
+  onPasswordReset: (email: string) => void
+  message: string
+}) {
   const [forgotten, setForgotten] = useState(false)
-  return <main className="flex min-h-screen items-center justify-center bg-black px-4 py-10 text-white"><SEO title="True Legacy CRM Sign In" description="Private team CRM sign in." noIndex /><div className="w-full max-w-md rounded-3xl border border-white/20 bg-white/[0.03] p-8 text-center"><img src="/logos/tl-square-white.png" alt="True Legacy" className="mx-auto h-16 w-16 object-contain" /><h1 className="mt-6 text-3xl font-black">{forgotten ? 'Reset your password' : 'Private team CRM'}</h1><p className="mt-3 text-sm leading-6 text-[#cccccc]">{forgotten ? 'Enter your authorized email and we will send you a secure recovery link.' : 'Sign in with the email and password connected to your True Legacy administrator or distributor profile.'}</p>{forgotten ? <form onSubmit={event => { event.preventDefault(); onPasswordReset(String(new FormData(event.currentTarget).get('email') || '')) }} className="mt-7 grid gap-4"><input required name="email" type="email" autoComplete="email" placeholder="Authorized email" className="h-12 rounded-xl border border-white/10 bg-black/20 px-4 outline-none focus:border-white/20" /><button className="h-12 rounded-xl bg-cyan-500 font-bold text-slate-950">Send password reset link</button><button type="button" onClick={() => setForgotten(false)} className="text-sm text-[#2997ff]">Back to sign in</button></form> : <><form onSubmit={onPasswordSubmit} className="mt-7 grid gap-4"><input required name="email" type="email" autoComplete="email" placeholder="Authorized email" className="h-12 rounded-xl border border-white/10 bg-black/20 px-4 outline-none focus:border-white/20" /><input required name="password" type="password" autoComplete="current-password" placeholder="Password" className="h-12 rounded-xl border border-white/10 bg-black/20 px-4 outline-none focus:border-white/20" /><button className="h-12 rounded-xl bg-cyan-500 font-bold">Sign in securely</button><button type="button" onClick={() => setForgotten(true)} className="text-sm text-[#2997ff]">Forgot password?</button></form><div className="my-6 flex items-center gap-3 text-xs uppercase tracking-[0.2em] text-[#86868b]"><span className="h-px flex-1 bg-white/10" />or<span className="h-px flex-1 bg-white/10" /></div><form onSubmit={onMagicLinkSubmit} className="grid gap-3"><input required name="email" type="email" autoComplete="email" placeholder="Authorized email" className="h-12 rounded-xl border border-white/10 bg-black/20 px-4 outline-none focus:border-white/20" /><button className="h-12 rounded-xl border border-white/20 font-bold text-[#2997ff]">Email me a sign-in link</button></form></>}{message && <p role="alert" className="mt-4 text-sm text-[#2997ff]">{message}</p>}</div></main>
+  return (
+    <main className="flex min-h-screen items-center justify-center bg-black px-4 py-10 text-white">
+      <SEO title="True Legacy CRM Sign In" description="Private team CRM sign in." noIndex />
+      <div className="w-full max-w-md rounded-3xl border border-white/20 bg-white/[0.03] p-8 text-center backdrop-blur-xl shadow-2xl">
+        <img src="/logos/tl-square-white.png" alt="True Legacy" className="mx-auto h-16 w-16 object-contain" />
+        <h1 className="mt-6 text-3xl font-black">{forgotten ? 'Reset your password' : 'Sales Command Center'}</h1>
+        <p className="mt-3 text-sm leading-6 text-[#cccccc]">
+          {forgotten
+            ? 'Enter your authorized email to receive a recovery link.'
+            : 'Sign in to access your leads, follow-ups, and organization tools.'}
+        </p>
+        {forgotten ? (
+          <form
+            onSubmit={(event) => {
+              event.preventDefault()
+              onPasswordReset(String(new FormData(event.currentTarget).get('email') || ''))
+            }}
+            className="mt-7 grid gap-4"
+          >
+            <input
+              required
+              name="email"
+              type="email"
+              autoComplete="email"
+              placeholder="Authorized email"
+              className="h-12 rounded-xl border border-white/10 bg-black/40 px-4 outline-none focus:border-cyan-400 text-white"
+            />
+            <button className="h-12 rounded-xl bg-cyan-500 font-bold text-slate-950 hover:bg-cyan-400">
+              Send password reset link
+            </button>
+            <button type="button" onClick={() => setForgotten(false)} className="text-sm text-[#2997ff]">
+              Back to sign in
+            </button>
+          </form>
+        ) : (
+          <>
+            <form onSubmit={onPasswordSubmit} className="mt-7 grid gap-4">
+              <input
+                required
+                name="email"
+                type="email"
+                autoComplete="email"
+                placeholder="Authorized email"
+                className="h-12 rounded-xl border border-white/10 bg-black/40 px-4 outline-none focus:border-cyan-400 text-white"
+              />
+              <input
+                required
+                name="password"
+                type="password"
+                autoComplete="current-password"
+                placeholder="Password"
+                className="h-12 rounded-xl border border-white/10 bg-black/40 px-4 outline-none focus:border-cyan-400 text-white"
+              />
+              <button className="h-12 rounded-xl bg-cyan-500 font-bold text-slate-950 hover:bg-cyan-400">
+                Sign in securely
+              </button>
+              <button type="button" onClick={() => setForgotten(true)} className="text-sm text-[#2997ff]">
+                Forgot password?
+              </button>
+            </form>
+            <div className="my-6 flex items-center gap-3 text-xs uppercase tracking-[0.2em] text-[#86868b]">
+              <span className="h-px flex-1 bg-white/10" />
+              or
+              <span className="h-px flex-1 bg-white/10" />
+            </div>
+            <form onSubmit={onMagicLinkSubmit} className="grid gap-3">
+              <input
+                required
+                name="email"
+                type="email"
+                autoComplete="email"
+                placeholder="Authorized email"
+                className="h-12 rounded-xl border border-white/10 bg-black/40 px-4 outline-none focus:border-cyan-400 text-white"
+              />
+              <button className="h-12 rounded-xl border border-white/20 font-bold text-[#2997ff] hover:bg-white/5">
+                Email me a sign-in link
+              </button>
+            </form>
+          </>
+        )}
+        {message && (
+          <p role="alert" className="mt-4 text-sm text-[#2997ff]">
+            {message}
+          </p>
+        )}
+      </div>
+    </main>
+  )
 }
 
 function PasswordRecovery({ onComplete }: { onComplete: () => void }) {
   const [message, setMessage] = useState('')
-  const submit = async (event: FormEvent<HTMLFormElement>) => { event.preventDefault(); if (!crmSupabase) return; const form = event.currentTarget; const data = new FormData(form); const password = String(data.get('password') || ''); const confirmation = String(data.get('confirmation') || ''); if (password.length < 12) return setMessage('Use at least 12 characters.'); if (password !== confirmation) return setMessage('The two passwords do not match.'); const { error } = await crmSupabase.auth.updateUser({ password }); if (error) return setMessage('Your password could not be updated. Please request a new recovery link.'); setMessage('Password updated successfully.'); window.setTimeout(onComplete, 900) }
-  return <main className="flex min-h-screen items-center justify-center bg-black px-4 py-10 text-white"><section className="w-full max-w-md rounded-3xl border border-white/20 bg-white/[0.03] p-8"><img src="/logos/tl-square-white.png" alt="True Legacy" className="mx-auto h-16 w-16 object-contain"/><h1 className="mt-6 text-center text-3xl font-black">Create a new password</h1><p className="mt-3 text-center text-sm text-[#cccccc]">Choose a secure password with at least 12 characters.</p><form onSubmit={submit} className="mt-7 grid gap-4"><input required minLength={12} name="password" type="password" autoComplete="new-password" placeholder="New password" className="h-12 rounded-xl border border-white/10 bg-black/20 px-4 outline-none focus:border-white/20"/><input required minLength={12} name="confirmation" type="password" autoComplete="new-password" placeholder="Confirm new password" className="h-12 rounded-xl border border-white/10 bg-black/20 px-4 outline-none focus:border-white/20"/><button className="h-12 rounded-xl bg-cyan-500 font-bold text-slate-950">Update password</button>{message && <p role="status" className="text-center text-sm text-[#2997ff]">{message}</p>}</form></section></main>
+  const [updating, setUpdating] = useState(false)
+
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+    if (!crmSupabase) return
+    const form = event.currentTarget
+    const formData = new FormData(form)
+    const password = String(formData.get('newPassword') || '')
+    const confirmation = String(formData.get('confirmPassword') || '')
+
+    if (password.length < 12) {
+      setMessage('Use at least 12 characters.')
+      return
+    }
+    if (password !== confirmation) {
+      setMessage('The passwords do not match.')
+      return
+    }
+
+    setUpdating(true)
+    try {
+      const { error } = await crmSupabase.auth.updateUser({ password })
+      if (error) setMessage('Failed to update password. Please try again.')
+      else onComplete()
+    } finally {
+      setUpdating(false)
+    }
+  }
+
+  return (
+    <main className="flex min-h-screen items-center justify-center bg-black px-4 py-10 text-white">
+      <div className="w-full max-w-md rounded-3xl border border-white/20 bg-white/[0.03] p-8 text-center">
+        <h1 className="text-2xl font-black">Choose a new password</h1>
+        <p className="mt-2 text-sm text-[#cccccc]">Enter your new secure CRM password below.</p>
+        <form onSubmit={handleSubmit} className="mt-6 grid gap-3">
+          <input
+            required
+            minLength={12}
+            name="newPassword"
+            type="password"
+            placeholder="New password (12+ characters)"
+            className="h-12 rounded-xl border border-white/10 bg-black/40 px-4 text-white outline-none focus:border-cyan-400"
+          />
+          <input
+            required
+            minLength={12}
+            name="confirmPassword"
+            type="password"
+            placeholder="Confirm new password"
+            className="h-12 rounded-xl border border-white/10 bg-black/40 px-4 text-white outline-none focus:border-cyan-400"
+          />
+          <button
+            disabled={updating}
+            className="h-12 rounded-xl bg-cyan-500 font-bold text-slate-950 hover:bg-cyan-400 disabled:opacity-50"
+          >
+            {updating ? 'Updating...' : 'Set new password'}
+          </button>
+        </form>
+        {message && <p className="mt-3 text-xs text-rose-300">{message}</p>}
+      </div>
+    </main>
+  )
 }
 
 function CrmMessage({ title, body, action }: { title: string; body: string; action?: React.ReactNode }) {
-  return <main className="flex min-h-screen items-center justify-center bg-black px-4 text-white"><SEO title={`${title} | True Legacy CRM`} description={body} noIndex /><div className="w-full max-w-lg rounded-3xl border border-amber-400/20 bg-white/[0.03] p-8 text-center"><img src="/logos/tl-square-white.png" alt="True Legacy" className="mx-auto h-14 w-14 object-contain" /><h1 className="mt-6 text-3xl font-black">{title}</h1><p className="mt-4 text-sm leading-6 text-[#cccccc]">{body}</p>{action && <div className="mt-6">{action}</div>}</div></main>
+  return (
+    <main className="grid min-h-screen place-items-center bg-black p-5 text-white">
+      <div className="max-w-md text-center">
+        <Sparkles className="mx-auto h-12 w-12 text-[#2997ff]" />
+        <h1 className="mt-5 text-3xl font-black">{title}</h1>
+        <p className="mt-4 leading-7 text-[#cccccc]">{body}</p>
+        {action ? <div className="mt-7">{action}</div> : null}
+      </div>
+    </main>
+  )
 }
