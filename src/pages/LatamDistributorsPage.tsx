@@ -153,7 +153,7 @@ function DistributorCard({
         )}
       </div>
       <div className="flex-1 min-w-0">
-        <h2 className="text-xl font-bold text-white mb-1">{dist.name}</h2>
+        <h2 className="text-lg sm:text-xl font-bold text-white mb-1 leading-snug">{dist.name}</h2>
         <p className="text-[#cccccc] text-sm mb-4">{dist.title}</p>
         <p className="text-[#86868b] text-xs mb-4">{dist.region}</p>
         <div className="flex flex-wrap gap-2 sm:gap-3">

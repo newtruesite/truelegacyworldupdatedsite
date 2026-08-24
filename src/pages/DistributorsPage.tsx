@@ -297,7 +297,7 @@ function DistributorCard({ dist, index, profileLabel, locale }: { dist: Distribu
         </span>
       </Link>
       <div className="flex flex-1 flex-col p-5">
-        <h2 className="text-xl font-black text-white">{dist.name}</h2>
+        <h2 className="text-lg sm:text-xl font-black text-white leading-snug">{dist.name}</h2>
         <p className="mt-1 min-h-10 text-sm leading-5 text-[#2997ff]/80">{dist.title}</p>
         <div className="mt-4 space-y-2 text-xs leading-5 text-[#cccccc]">
           <p className="flex items-start gap-2"><MapPin className="mt-0.5 h-4 w-4 shrink-0 text-[#2997ff]" /><span>{dist.regions.join(" · ")}</span></p>

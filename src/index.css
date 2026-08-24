@@ -2335,10 +2335,10 @@ h1, h2, h3, h4, h5, h6,
   color: var(--color-silk);
 }
 [class*="font-black"], [class*="font-extrabold"] { font-weight: 600 !important; }
-h1, .hero-title { font-size: clamp(44px, 7vw, 80px); line-height: 1.05; letter-spacing: -0.015em; }
-h2, .section-heading, .section-title { font-size: clamp(36px, 5vw, 56px); line-height: 1.07; letter-spacing: -0.005em; }
-h3 { font-size: clamp(24px, 3vw, 32px); line-height: 1.13; letter-spacing: 0.004em; }
-p { font-size: 17px; line-height: 1.47; letter-spacing: -0.022em; }
+:where(h1:not([class*="text-"])), .hero-title { font-size: clamp(44px, 7vw, 80px); line-height: 1.05; letter-spacing: -0.015em; }
+:where(h2:not([class*="text-"])), .section-heading, .section-title { font-size: clamp(36px, 5vw, 56px); line-height: 1.07; letter-spacing: -0.005em; }
+:where(h3:not([class*="text-"])) { font-size: clamp(24px, 3vw, 32px); line-height: 1.13; letter-spacing: 0.004em; }
+:where(p:not([class*="text-"])) { font-size: 17px; line-height: 1.47; letter-spacing: -0.022em; }
 
 a { color: inherit; }
 a:not([class*="bg-"]):not(.btn-primary):hover { color: var(--color-link-blue); }
@@ -2481,8 +2481,8 @@ a[class*="bg-cyan"], a[class*="bg-blue"], button[class*="bg-cyan"], button[class
 
 @media (max-width: 768px) {
   body { font-size: 16px; }
-  h1, .hero-title { font-size: clamp(40px, 12vw, 56px); line-height: 1.06; }
-  h2, .section-heading, .section-title { font-size: clamp(32px, 9vw, 44px); line-height: 1.1; }
+  :where(h1:not([class*="text-"])), .hero-title { font-size: clamp(40px, 12vw, 56px); line-height: 1.06; }
+  :where(h2:not([class*="text-"])), .section-heading, .section-title { font-size: clamp(32px, 9vw, 44px); line-height: 1.1; }
   .section-padding { padding-top: 72px; padding-bottom: 72px; }
   .product-card, .pdf-card, .country-btn { margin-inline: 0; }
   .hero, .hero-section { padding-inline: max(20px, env(safe-area-inset-left)); }
