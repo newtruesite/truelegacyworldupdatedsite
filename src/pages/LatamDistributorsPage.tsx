@@ -137,17 +137,24 @@ function DistributorCard({
       transition={{ delay: 0.1 + index * 0.1 }}
       className="rounded-2xl border border-white/10 bg-[rgba(5,16,48,0.8)] p-4 sm:p-6 md:p-8 flex flex-col sm:flex-row gap-5 sm:gap-6 items-start"
     >
-      <div className="shrink-0 w-full sm:w-56 h-[460px] sm:h-[350px] md:h-[420px] rounded-2xl border-4 border-white/20 overflow-hidden bg-neutral-900/50 flex items-center justify-center">
+      <div className="shrink-0 w-full sm:w-56 h-[380px] sm:h-[320px] md:h-[360px] rounded-2xl border border-white/15 overflow-hidden bg-gradient-to-b from-[#141926] via-[#0d121c] to-[#07090f] relative flex items-center justify-center">
+        <div
+          className="absolute inset-0 pointer-events-none opacity-80"
+          style={{
+            background:
+              'radial-gradient(circle at 50% 36%, rgba(255, 255, 255, 0.10) 0%, rgba(56, 189, 248, 0.05) 35%, rgba(15, 23, 42, 0.01) 70%)',
+          }}
+        />
         {!imgError ? (
           <img
             src={dist.photo}
             alt={dist.name}
-            className="w-full h-full object-cover object-top"
+            className="w-full h-full object-contain object-top relative z-10 transition duration-500 hover:scale-105"
             onError={() => setImgError(true)}
           />
         ) : null}
         {(imgError || !dist.photo) && (
-          <span className="text-[#2997ff] font-bold text-2xl">
+          <span className="text-[#2997ff] font-bold text-2xl relative z-10">
             {dist.fallbackInitial}
           </span>
         )}

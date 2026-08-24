@@ -2,16 +2,12 @@ import { Footer } from "@/components/layout/Footer";
 import { Navbar } from "@/components/layout/Navbar";
 import { SEO } from "@/components/SEO";
 import { TLBackground } from "@/components/ui/TLBackground";
+import { LeaderCard } from "@/components/ui/LeaderCard";
 import { useLocaleContext } from "@/contexts/LocaleContext";
 import { getPublicDistributors } from "@/lib/crm";
 import { motion } from "framer-motion";
 import {
   ArrowRight,
-  BadgeCheck,
-  Globe2,
-  Instagram,
-  Languages,
-  MapPin,
   Search,
   Users,
 } from "lucide-react";
@@ -259,7 +255,15 @@ export default function DistributorsPage() {
 
             {filtered.length ? (
               <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-                {filtered.map((dist, index) => <DistributorCard key={dist.slug} dist={dist} index={index} profileLabel={copy.profile} locale={locale} />)}
+                {filtered.map((dist, index) => (
+                  <LeaderCard
+                    key={dist.slug}
+                    dist={dist}
+                    index={index}
+                    profileLabel={copy.profile}
+                    locale={locale}
+                  />
+                ))}
               </div>
             ) : (
               <div className="rounded-3xl border border-white/10 bg-white/[0.03] p-12 text-center">
@@ -283,35 +287,5 @@ export default function DistributorsPage() {
       </main>
       <Footer />
     </div>
-  );
-}
-
-function DistributorCard({ dist, index, profileLabel, locale }: { dist: Distributor; index: number; profileLabel: string; locale: string }) {
-  const [imgError, setImgError] = useState(false);
-  return (
-    <motion.article initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: Math.min(index, 7) * 0.05 }} className="group flex h-full flex-col overflow-hidden rounded-3xl border border-white/10 bg-black transition-all duration-300 hover:-translate-y-1 hover:border-white/20 hover:shadow-2xl hover:shadow-cyan-950/20">
-      <Link to={`/d/${dist.slug}`} className="relative block aspect-[4/5] overflow-hidden bg-neutral-900/50">
-        {!imgError && dist.photo ? <img src={dist.photo} alt={dist.name} className="h-full w-full object-cover object-top transition duration-500 scale-[1.05] group-hover:scale-[1.1]" onError={() => setImgError(true)} /> : <span className="flex h-full items-center justify-center text-5xl font-black text-[#2997ff]">{dist.fallbackInitial}</span>}
-        <span className="absolute left-4 top-4 inline-flex items-center gap-1.5 rounded-full border border-white/20 bg-black/85 px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.13em] text-[#2997ff] backdrop-blur">
-          <BadgeCheck className="h-4 w-4 text-[#2997ff]" /> {locale === 'es' ? 'Verificado' : locale === 'fr' ? 'Vérifié' : locale === 'pt' ? 'Verificado' : 'Verified'}
-        </span>
-      </Link>
-      <div className="flex flex-1 flex-col p-5">
-        <h2 className="text-lg sm:text-xl font-black text-white leading-snug">{dist.name}</h2>
-        <p className="mt-1 min-h-10 text-sm leading-5 text-[#2997ff]/80">{dist.title}</p>
-        <div className="mt-4 space-y-2 text-xs leading-5 text-[#cccccc]">
-          <p className="flex items-start gap-2"><MapPin className="mt-0.5 h-4 w-4 shrink-0 text-[#2997ff]" /><span>{dist.regions.join(" · ")}</span></p>
-          <p className="flex items-start gap-2"><Languages className="mt-0.5 h-4 w-4 shrink-0 text-[#2997ff]" /><span>{dist.languages.map((item) => LANGUAGE_NAMES[locale]?.[item] || item.toUpperCase()).join(" · ")}</span></p>
-          <p className="flex items-center gap-2"><Globe2 className="h-4 w-4 shrink-0 text-[#2997ff]" /> {locale === 'es' ? 'Equipo True Legacy' : locale === 'fr' ? 'Équipe True Legacy' : locale === 'pt' ? 'Equipe True Legacy' : 'True Legacy team'}</p>
-        </div>
-        <div className="mt-auto flex items-center gap-2 pt-6">
-          <Link to={`/d/${dist.slug}`} className="inline-flex min-h-11 flex-1 items-center justify-center gap-2 rounded-xl bg-cyan-500 px-4 text-sm font-bold text-slate-950 hover:bg-cyan-400">
-            {profileLabel} <ArrowRight className="h-4 w-4" />
-          </Link>
-          {dist.whatsapp && <a href={dist.whatsapp} target="_blank" rel="noreferrer" aria-label={`WhatsApp ${dist.name}`} className="grid h-11 w-11 shrink-0 place-items-center rounded-xl border border-emerald-300/25 bg-emerald-400/10 text-[#cccccc] hover:bg-emerald-400/20"><IconWhatsApp className="h-5 w-5" /></a>}
-          {dist.instagram && <a href={dist.instagram} target="_blank" rel="noreferrer" aria-label={`Instagram ${dist.name}`} className="grid h-11 w-11 shrink-0 place-items-center rounded-xl border border-pink-300/20 bg-pink-400/10 text-pink-300 hover:bg-pink-400/20"><Instagram className="h-5 w-5" /></a>}
-        </div>
-      </div>
-    </motion.article>
   );
 }
