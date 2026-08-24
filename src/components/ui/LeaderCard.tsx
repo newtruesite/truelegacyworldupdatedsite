@@ -25,62 +25,62 @@ export interface LeaderPortraitConfig {
 
 export const LEADER_PORTRAIT_REGISTRY: Record<string, LeaderPortraitConfig> = {
   'mehdi-cohen': {
-    src: '/leaders/standardized/mehdi-cohen.png',
-    scale: 1.0,
+    src: '/leaders/mehdi-hero.png',
+    scale: 1.02,
     offsetY: '0%',
     objectPosition: 'top center',
   },
   'simon-loh': {
-    src: '/leaders/standardized/simon-loh-v2.png',
-    scale: 1.0,
+    src: '/leaders/simon-hero.png',
+    scale: 1.03,
     offsetY: '0%',
     objectPosition: 'top center',
   },
   'ming-way-sia': {
-    src: '/leaders/standardized/ming-way-sia.png',
-    scale: 1.0,
+    src: '/leaders/mingway-hero.png',
+    scale: 1.02,
     offsetY: '0%',
     objectPosition: 'top center',
   },
   'zah-naderi': {
-    src: '/leaders/standardized/zah-naderi-v3.png',
-    scale: 1.0,
+    src: '/leaders/zah-hero-v3.png',
+    scale: 1.02,
     offsetY: '0%',
     objectPosition: 'top center',
   },
   'alex-gonzalez': {
-    src: '/leaders/standardized/alex-gonzalez.png',
-    scale: 1.0,
+    src: '/leaders/alex-hero-transparent.png',
+    scale: 1.03,
     offsetY: '0%',
     objectPosition: 'top center',
   },
   'ryan-pool': {
-    src: '/leaders/standardized/ryan-pool-sr.png',
-    scale: 1.0,
+    src: '/leaders/ryan-hero.png',
+    scale: 1.03,
     offsetY: '0%',
     objectPosition: 'top center',
   },
   'magaly-cardona': {
-    src: '/leaders/standardized/magaly-cardona.png',
-    scale: 1.0,
-    offsetY: '0%',
+    src: '/leaders/magaly-hero.png',
+    scale: 1.05,
+    offsetY: '1%',
     objectPosition: 'top center',
   },
   emanuela: {
-    src: '/leaders/standardized/emanuela-doustova.png',
-    scale: 1.0,
+    src: '/leaders/emanuela-hero-transparent.png',
+    scale: 1.03,
     offsetY: '0%',
     objectPosition: 'top center',
   },
   'jesse-schexnayder': {
-    src: '/leaders/standardized/jesse-schexnayder.png',
-    scale: 1.0,
+    src: '/leaders/jesse-hero-transparent.png',
+    scale: 1.04,
     offsetY: '0%',
     objectPosition: 'top center',
   },
   'angel-mok': {
     src: '/leaders/standardized/angel-mok-v2.png',
-    scale: 1.0,
+    scale: 1.02,
     offsetY: '0%',
     objectPosition: 'top center',
   },
@@ -167,7 +167,7 @@ export function LeaderCard({
             src={imageSource}
             alt={dist.name}
             onError={() => setImgError(true)}
-            className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.05]"
+            className="absolute inset-0 h-full w-full object-contain transition-transform duration-500 ease-out group-hover:scale-[1.06]"
             style={{
               transform: `scale(${scale}) translate(${offsetX}, ${offsetY})`,
               objectPosition,
