@@ -1140,7 +1140,8 @@ export default function TrainingPage() {
                         onClick={(event) => {
                           if (!window.confirm(companyResourcesData.portalWarning)) event.preventDefault();
                         }}
-                        className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 border border-emerald-400/30 px-5 font-bold text-xs text-white transition hover:-translate-y-0.5 shadow-lg shadow-emerald-500/20"
+                        className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl !bg-[#10b981] hover:!bg-[#059669] !text-white border border-emerald-400/50 px-5 font-bold text-xs transition-all duration-200 hover:-translate-y-0.5 shadow-lg shadow-emerald-500/30 active:scale-95 cursor-pointer"
+                        style={{ backgroundColor: '#10b981', color: '#ffffff' }}
                       >
                         {companyResourcesData.portal}
                         <ExternalLink className="h-3.5 w-3.5 text-white" />
