@@ -351,7 +351,7 @@ export default function CrmPage() {
           </div>
           {message && <p role="alert" className="border-b border-amber-400/20 bg-amber-400/10 px-5 py-3 text-sm text-amber-100">{message}</p>}
           {view === 'board' ? <PipelineBoard leads={filtered} working={working} onStatusChange={changeStatus} onOpen={leadId=>{setView('table');toggleDetails(leadId)}} /> : <div className="overflow-x-auto"><table className="w-full min-w-[1120px] text-left text-sm"><thead className="bg-black/20 text-[10px] uppercase tracking-wider text-[#86868b]"><tr>{['Submitted', 'Lead', 'Interest', 'Attribution', 'Assigned to', 'Status', 'Contact', 'Details'].map(label => <th key={label} className="px-5 py-4 font-medium">{label}</th>)}</tr></thead><tbody className="divide-y divide-white/10">{filtered.map(lead => [
-            <tr key={lead.id}><td className="whitespace-nowrap px-5 py-4 text-[#cccccc]">{new Date(lead.submitted_at).toLocaleString()}</td><td className="px-5 py-4"><p className="font-bold">{lead.full_name}</p><a href={`mailto:${lead.email}`} className="text-xs text-[#2997ff]">{lead.email}</a><p className="mt-1 text-xs text-[#86868b]">{lead.country}</p></td><td className="px-5 py-4 capitalize">{lead.interest}</td><td className="px-5 py-4"><p className="capitalize">{lead.attribution_method.replaceAll('_', ' ')}</p><p className="mt-1 text-xs text-[#86868b]">{lead.referrer_name || lead.referral_code || '—'}</p></td><td className="px-5 py-4">{membership?.role === 'admin' ? <select disabled={working === lead.id} value={lead.assigned_distributor_id || ''} onChange={event => changeAssignment(lead.id, event.target.value)} className="rounded-lg border border-white/10 bg-black px-3 py-2 text-xs"><option value="">Unassigned</option>{distributors.filter(item => item.active).map(item => <option key={item.id} value={item.id}>{item.display_name}</option>)}</select> : assignedName(lead.assigned_distributor_id)}</td><td className="px-5 py-4"><select disabled={working === lead.id} value={lead.status} onChange={event => changeStatus(lead, event.target.value as LeadStatus)} className={`rounded-lg border border-white/10 px-3 py-2 text-xs capitalize ${STATUS_STYLES[lead.status]}`}>{STATUSES.map(status => <option className="bg-black text-white" key={status} value={status}>{status}</option>)}</select></td><td className="px-5 py-4"><div className="flex gap-2"><a href={`mailto:${lead.email}`} className="rounded-lg border border-white/10 px-3 py-2 text-xs hover:text-[#2997ff]">Email</a>{lead.phone && <a href={`https://wa.me/${lead.phone.replace(/\D/g, '')}`} target="_blank" rel="noreferrer" className="rounded-lg border border-emerald-400/20 px-3 py-2 text-xs text-[#cccccc]">WhatsApp</a>}</div></td><td className="px-5 py-4"><button onClick={() => toggleDetails(lead.id)} className="inline-flex items-center gap-2 rounded-lg border border-white/10 px-3 py-2 text-xs">View {expanded === lead.id ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}</button></td></tr>,
+            <tr key={lead.id}><td className="whitespace-nowrap px-5 py-4 text-[#cccccc]">{new Date(lead.submitted_at).toLocaleString()}</td><td className="px-5 py-4"><p className="font-bold">{lead.full_name}</p><a href={getGmailComposeUrl(lead.email, `True Legacy · Follow-Up with ${lead.full_name}`)} target="_blank" rel="noopener noreferrer" className="text-xs text-[#2997ff] hover:underline" title="Email via Gmail">{lead.email}</a><p className="mt-1 text-xs text-[#86868b]">{lead.country}</p></td><td className="px-5 py-4 capitalize">{lead.interest}</td><td className="px-5 py-4"><p className="capitalize">{lead.attribution_method.replaceAll('_', ' ')}</p><p className="mt-1 text-xs text-[#86868b]">{lead.referrer_name || lead.referral_code || '—'}</p></td><td className="px-5 py-4">{membership?.role === 'admin' ? <select disabled={working === lead.id} value={lead.assigned_distributor_id || ''} onChange={event => changeAssignment(lead.id, event.target.value)} className="rounded-lg border border-white/10 bg-black px-3 py-2 text-xs"><option value="">Unassigned</option>{distributors.filter(item => item.active).map(item => <option key={item.id} value={item.id}>{item.display_name}</option>)}</select> : assignedName(lead.assigned_distributor_id)}</td><td className="px-5 py-4"><select disabled={working === lead.id} value={lead.status} onChange={event => changeStatus(lead, event.target.value as LeadStatus)} className={`rounded-lg border border-white/10 px-3 py-2 text-xs capitalize ${STATUS_STYLES[lead.status]}`}>{STATUSES.map(status => <option className="bg-black text-white" key={status} value={status}>{status}</option>)}</select></td><td className="px-5 py-4"><div className="flex flex-wrap items-center gap-1.5"><a href={getGmailComposeUrl(lead.email, `True Legacy Follow-Up · ${lead.full_name}`)} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 rounded-lg border border-red-500/30 bg-red-500/10 hover:bg-red-500/20 px-2.5 py-1.5 text-xs font-bold text-red-300 transition-colors" title="Compose in Gmail"><Mail className="h-3.5 w-3.5" />Gmail</a><a href={`mailto:${lead.email}`} className="rounded-lg border border-white/10 bg-white/5 hover:bg-white/10 px-2 py-1.5 text-xs text-[#cccccc] hover:text-white transition-colors" title="Open default email app">Mail</a>{lead.phone && <a href={`https://wa.me/${lead.phone.replace(/\D/g, '')}`} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 rounded-lg border border-emerald-400/20 bg-emerald-500/10 hover:bg-emerald-500/20 px-2.5 py-1.5 text-xs font-bold text-emerald-300 transition-colors"><MessageCircle className="h-3.5 w-3.5" />WhatsApp</a>}</div></td><td className="px-5 py-4"><button onClick={() => toggleDetails(lead.id)} className="inline-flex items-center gap-2 rounded-lg border border-white/10 px-3 py-2 text-xs">View {expanded === lead.id ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}</button></td></tr>,
             expanded === lead.id ? <tr key={`${lead.id}-details`}><td colSpan={8} className="bg-black/20 p-5"><div className="grid gap-5 xl:grid-cols-[0.8fr_1.2fr_1fr]"><div><h3 className="text-sm font-bold">Lead details</h3><div className="mt-3 grid gap-3 sm:grid-cols-2 xl:grid-cols-1"><Detail label="Phone" value={lead.phone} /><Detail label="Referral code" value={lead.referral_code} /><Detail label="Referrer" value={lead.referrer_name} /><Detail label="Source" value={lead.source_path} /><Detail label="Language" value={lead.locale.toUpperCase()} /></div><form onSubmit={event => scheduleFollowUp(event, lead)} className="mt-4 rounded-xl border border-white/10 p-4"><label className="flex items-center gap-2 text-xs font-bold text-[#2997ff]"><CalendarClock className="h-4 w-4" />Next follow-up</label><input name="followUp" type="datetime-local" defaultValue={lead.next_follow_up_at ? new Date(new Date(lead.next_follow_up_at).getTime() - new Date().getTimezoneOffset() * 60000).toISOString().slice(0,16) : ''} className="mt-3 h-10 w-full rounded-lg border border-white/10 bg-black px-3 text-xs" /><button disabled={working === lead.id} className="mt-3 w-full rounded-lg bg-cyan-500 px-3 py-2 text-xs font-bold">Save follow-up</button></form></div><NurtureCenter lead={lead} distributor={assignedDistributor(lead)} onOpen={recordOutreach} /><div><h3 className="text-sm font-bold">Contact history & notes</h3><form onSubmit={event => saveNote(event, lead.id)} className="mt-3 grid gap-2"><textarea required name="note" maxLength={3000} placeholder="Add a call, WhatsApp, email, or follow-up note" className="min-h-20 rounded-xl border border-white/10 bg-black/20 p-3 text-sm outline-none focus:border-white/20" /><button disabled={working === lead.id} className="justify-self-end rounded-xl bg-cyan-500 px-4 py-3 text-sm font-bold">Save note</button></form><div className="mt-3 max-h-72 space-y-2 overflow-y-auto">{(notes[lead.id] || []).map(note => <div key={note.id} className="rounded-xl border border-white/10 p-3"><p className="text-sm text-[#cccccc]">{note.body}</p><p className="mt-2 text-[10px] text-[#86868b]">{new Date(note.created_at).toLocaleString()}</p></div>)}{notes[lead.id]?.length === 0 && <p className="text-xs text-[#86868b]">No contact history yet.</p>}</div></div></div></td></tr> : null,
           ])}</tbody></table></div>}
           {!loading && !filtered.length && <div className="p-12 text-center text-sm text-[#86868b]">No leads match this view.</div>}
@@ -479,6 +479,16 @@ const NURTURE_STEPS: Record<string, Array<{ label: string; campaign: 'duo' | 'bu
   ],
 }
 
+function getGmailComposeUrl(to: string, subject: string = '', body: string = '') {
+  const params = new URLSearchParams()
+  params.set('view', 'cm')
+  params.set('fs', '1')
+  params.set('to', to)
+  if (subject) params.set('su', subject)
+  if (body) params.set('body', body)
+  return `https://mail.google.com/mail/?${params.toString()}`
+}
+
 function nurtureMessage(lead: CrmLead, distributor: CrmDistributor, campaign: string, url: string) {
   const firstName = lead.full_name.trim().split(/\s+/)[0]
   if (lead.locale === 'es') return `Hola ${firstName}, soy ${distributor.display_name} de True Legacy. Gracias por tu interés. Preparé esta información sobre ${campaign === 'duo' ? 'K8 y emGuarde GO' : campaign === 'business' ? 'el modelo de negocio' : campaign === 'training' ? 'nuestro sistema de entrenamiento' : 'nuestros eventos en vivo'} para ti: ${url}\n\nRevísala cuando puedas y dime qué preguntas tienes.`
@@ -534,7 +544,9 @@ function NurtureCenter({ lead, distributor, onOpen }: { lead: CrmLead; distribut
           const landingUrl = `${window.location.origin}/d/${distributor.slug}/${page.campaign}`
           const text = nurtureMessage(lead, distributor, page.campaign, landingUrl)
           const whatsAppUrl = lead.phone ? `https://wa.me/${lead.phone.replace(/\D/g, '')}?text=${encodeURIComponent(text)}` : `https://wa.me/?text=${encodeURIComponent(text)}`
-          const emailUrl = `mailto:${lead.email}?subject=${encodeURIComponent(`Information from ${distributor.display_name} · True Legacy`)}&body=${encodeURIComponent(text)}`
+          const emailSubject = `Information from ${distributor.display_name} · True Legacy`
+          const gmailUrl = getGmailComposeUrl(lead.email, emailSubject, text)
+          const emailUrl = `mailto:${lead.email}?subject=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(text)}`
           const isPrimary = lead.interest === page.campaign || (lead.interest === 'product' && page.campaign === 'duo') || (lead.interest === 'distributor' && page.campaign === 'business')
 
           return (
@@ -571,12 +583,22 @@ function NurtureCenter({ lead, distributor, onOpen }: { lead: CrmLead; distribut
                   WhatsApp
                 </a>
                 <a
+                  href={gmailUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={() => onOpen(lead, 'Email', landingUrl)}
+                  className="inline-flex items-center gap-1.5 rounded-lg border border-red-500/30 bg-red-500/10 hover:bg-red-500/20 px-3 py-1.5 text-xs font-bold text-red-300 transition-colors"
+                >
+                  <Mail className="h-3.5 w-3.5" />
+                  Gmail
+                </a>
+                <a
                   href={emailUrl}
                   onClick={() => onOpen(lead, 'Email', landingUrl)}
-                  className="inline-flex items-center gap-1.5 rounded-lg border border-white/20 bg-white/5 hover:bg-white/10 px-3 py-1.5 text-xs font-bold text-white transition-colors"
+                  className="inline-flex items-center gap-1.5 rounded-lg border border-white/15 bg-white/5 hover:bg-white/10 px-2.5 py-1.5 text-xs text-[#cccccc] hover:text-white transition-colors"
+                  title="Open default email app"
                 >
-                  <Mail className="h-3.5 w-3.5 text-[#2997ff]" />
-                  Email
+                  Default Mail
                 </a>
                 <button
                   type="button"

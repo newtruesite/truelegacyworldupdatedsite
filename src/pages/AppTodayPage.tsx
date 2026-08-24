@@ -2,7 +2,7 @@ import { SEO } from '@/components/SEO'
 import { crmConfigured, crmSupabase, getCrmDistributors, getCrmLeads, getCrmMembership } from '@/lib/crm'
 import type { CrmDistributor, CrmLead, CrmMembership } from '@/lib/crm'
 import type { Session } from '@supabase/supabase-js'
-import { ArrowRight, BookOpenCheck, CalendarCheck2, CheckCircle2, Clock3, GraduationCap, MessageCircle, Sparkles, UserPlus, Users } from 'lucide-react'
+import { ArrowRight, BookOpenCheck, CalendarCheck2, CheckCircle2, Clock3, GraduationCap, Mail, MessageCircle, Sparkles, UserPlus, Users } from 'lucide-react'
 import { useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 
@@ -127,7 +127,50 @@ export default function AppTodayPage() {
 
 function LeadAction({ lead }: { lead: CrmLead }) {
   const overdue = Boolean(lead.next_follow_up_at && new Date(lead.next_follow_up_at) < new Date())
-  return <article className="flex flex-col gap-4 rounded-2xl border border-white/[.08] bg-black/15 p-4 sm:flex-row sm:items-center"><span className={`grid h-11 w-11 shrink-0 place-items-center rounded-xl ${overdue ? 'bg-rose-400/10 text-rose-300' : 'bg-cyan-400/10 text-[#2997ff]'}`}><Users className="h-5 w-5" /></span><div className="min-w-0 flex-1"><div className="flex flex-wrap items-center gap-2"><h3 className="truncate font-black">{lead.full_name}</h3><span className="rounded-full bg-white/[.06] px-2 py-1 text-[10px] font-bold uppercase text-[#cccccc]">{lead.interest}</span></div><p className="mt-1 text-xs text-[#86868b]">{overdue ? 'Follow-up overdue' : lead.next_follow_up_at ? `Follow up ${new Date(lead.next_follow_up_at).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })}` : 'New contact — make the first connection'}</p></div><div className="flex gap-2"><a href={lead.phone ? `https://wa.me/${lead.phone.replace(/\D/g, '')}` : `mailto:${lead.email}`} target="_blank" rel="noreferrer" className="rounded-lg border border-emerald-300/20 px-3 py-2 text-xs font-bold text-[#cccccc]">Contact</a><Link to={`/crm?contact=${lead.id}`} className="rounded-lg border border-white/10 px-3 py-2 text-xs font-bold">Open</Link></div></article>
+  const gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(lead.email)}&su=${encodeURIComponent(`True Legacy Follow-Up · ${lead.full_name}`)}`
+
+  return (
+    <article className="flex flex-col gap-4 rounded-2xl border border-white/[.08] bg-black/15 p-4 sm:flex-row sm:items-center">
+      <span className={`grid h-11 w-11 shrink-0 place-items-center rounded-xl ${overdue ? 'bg-rose-400/10 text-rose-300' : 'bg-cyan-400/10 text-[#2997ff]'}`}>
+        <Users className="h-5 w-5" />
+      </span>
+      <div className="min-w-0 flex-1">
+        <div className="flex flex-wrap items-center gap-2">
+          <h3 className="truncate font-black">{lead.full_name}</h3>
+          <span className="rounded-full bg-white/[.06] px-2 py-1 text-[10px] font-bold uppercase text-[#cccccc]">{lead.interest}</span>
+        </div>
+        <p className="mt-1 text-xs text-[#86868b]">
+          {overdue ? 'Follow-up overdue' : lead.next_follow_up_at ? `Follow up ${new Date(lead.next_follow_up_at).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })}` : 'New contact — make the first connection'}
+        </p>
+      </div>
+      <div className="flex flex-wrap items-center gap-2">
+        {lead.phone && (
+          <a
+            href={`https://wa.me/${lead.phone.replace(/\D/g, '')}`}
+            target="_blank"
+            rel="noreferrer"
+            className="inline-flex items-center gap-1 rounded-lg border border-emerald-300/25 bg-emerald-500/10 hover:bg-emerald-500/20 px-3 py-1.5 text-xs font-bold text-emerald-300 transition-colors"
+          >
+            <MessageCircle className="h-3.5 w-3.5" />
+            WhatsApp
+          </a>
+        )}
+        <a
+          href={gmailUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-1 rounded-lg border border-red-500/25 bg-red-500/10 hover:bg-red-500/20 px-3 py-1.5 text-xs font-bold text-red-300 transition-colors"
+          title="Compose in Gmail"
+        >
+          <Mail className="h-3.5 w-3.5" />
+          Gmail
+        </a>
+        <Link to={`/crm?contact=${lead.id}`} className="rounded-lg border border-white/10 bg-white/5 hover:bg-white/10 px-3 py-1.5 text-xs font-bold text-white transition-colors">
+          Open
+        </Link>
+      </div>
+    </article>
+  )
 }
 const METRIC_TONES: Record<string, string> = { rose: 'text-rose-300', amber: 'text-amber-300', cyan: 'text-[#2997ff]', emerald: 'text-[#cccccc]' }
 function Metric({ icon, value, label, tone }: { icon: React.ReactNode; value: string | number; label: string; tone: string }) { return <div className="rounded-2xl border border-white/10 bg-white/[.03] p-5"><span className={METRIC_TONES[tone]}>{icon}</span><p className="mt-4 text-3xl font-black">{value}</p><p className="mt-1 text-xs font-bold uppercase tracking-wider text-[#86868b]">{label}</p></div> }
