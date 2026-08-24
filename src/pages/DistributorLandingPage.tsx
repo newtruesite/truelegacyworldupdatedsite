@@ -145,21 +145,78 @@ export default function DistributorLandingPage() {
     <main className="flex-1">
       <section className="relative overflow-hidden border-b border-white/10 px-4 pb-16 pt-28 sm:px-6 md:pb-24 md:pt-36">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(6,182,212,0.18),transparent_34%),radial-gradient(circle_at_80%_10%,rgba(79,70,229,0.2),transparent_32%)]" />
-        <div className="relative mx-auto grid max-w-6xl items-center gap-10 lg:grid-cols-[1fr_390px]">
-          <div>
-            <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-white/20 bg-cyan-400/10 px-4 py-2 text-xs font-bold uppercase tracking-[0.18em] text-[#2997ff]"><Icon className="h-4 w-4" />{copy?.eyebrow}</div>
-            <h1 className="max-w-4xl text-4xl font-black leading-[1.05] sm:text-6xl">{copy?.headline(profile?.display_name || 'your True Legacy distributor')}</h1>
-            <p className="mt-6 max-w-3xl text-lg leading-8 text-[#cccccc]">{copy?.subheadline}</p>
-            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-              {whatsapp && <a href={whatsapp} target="_blank" rel="noreferrer" className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-emerald-500 px-6 py-3 font-bold hover:bg-emerald-400"><MessageCircle className="h-5 w-5" />Connect with {profile?.display_name}</a>}
-              <Link to={applyUrl} className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-cyan-500 px-6 py-3 font-bold hover:bg-cyan-400">Request information <ArrowRight className="h-5 w-5" /></Link>
-              <button onClick={share} className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl border border-white/15 bg-white/5 px-5 py-3 text-sm font-semibold hover:bg-white/10"><Copy className="h-4 w-4" />{copied ? 'Link copied' : 'Share this page'}</button>
+        <div className="relative mx-auto max-w-6xl">
+          {/* Top Header Bar: Eyebrow + Minimized Top-Right Distributor Badge */}
+          <div className="mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-cyan-400/10 px-4 py-2 text-xs font-bold uppercase tracking-[0.18em] text-[#2997ff] w-fit">
+              <Icon className="h-4 w-4" />
+              {copy?.eyebrow}
+            </div>
+
+            {profile && (
+              <Link
+                to={`/d/${profile.slug}`}
+                className="group inline-flex items-center gap-3.5 rounded-2xl border border-white/15 bg-black/60 p-2.5 pr-4 backdrop-blur-xl shadow-xl hover:border-cyan-400/40 hover:bg-black/80 transition-all duration-300 w-fit self-start sm:self-auto"
+              >
+                <div className="relative h-12 w-12 sm:h-14 sm:w-14 shrink-0 overflow-hidden rounded-xl border border-white/20 bg-gradient-to-b from-[#141926] to-[#07090f]">
+                  <img
+                    src={profile.avatar_url || '/logos/tl-square-white.png'}
+                    alt={profile.display_name}
+                    className="h-full w-full object-cover object-top transition duration-300 group-hover:scale-105"
+                  />
+                  <span className="absolute bottom-0.5 right-0.5 h-2.5 w-2.5 rounded-full bg-emerald-500 border border-black" title="Verified Distributor" />
+                </div>
+                <div className="text-left">
+                  <div className="flex items-center gap-1.5">
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-[#2997ff]">Your Guide</span>
+                    <ShieldCheck className="h-3 w-3 text-[#2997ff]" />
+                  </div>
+                  <p className="text-sm font-bold !text-white group-hover:text-cyan-300 transition-colors leading-tight">
+                    {profile.display_name}
+                  </p>
+                  <p className="text-[11px] text-[#86868b] leading-tight mt-0.5">
+                    {profile.title}
+                  </p>
+                </div>
+              </Link>
+            )}
+          </div>
+
+          {/* Main Hero Content */}
+          <div className="max-w-4xl">
+            <h1 className="text-4xl font-black leading-[1.05] sm:text-6xl md:text-7xl !text-white">
+              {copy?.headline(profile?.display_name || 'your True Legacy distributor')}
+            </h1>
+            <p className="mt-6 max-w-3xl text-lg sm:text-xl leading-8 text-[#cccccc]">
+              {copy?.subheadline}
+            </p>
+            <div className="mt-8 flex flex-wrap gap-3">
+              {whatsapp && (
+                <a
+                  href={whatsapp}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 px-6 py-3 font-bold text-slate-950 transition-colors shadow-lg shadow-emerald-500/10"
+                >
+                  <MessageCircle className="h-5 w-5" />
+                  Connect with {profile?.display_name}
+                </a>
+              )}
+              <Link
+                to={applyUrl}
+                className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-cyan-500 hover:bg-cyan-400 px-6 py-3 font-bold text-slate-950 transition-colors shadow-lg shadow-cyan-500/10"
+              >
+                Request information <ArrowRight className="h-5 w-5" />
+              </Link>
+              <button
+                onClick={share}
+                className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl border border-white/15 bg-white/5 px-5 py-3 text-sm font-semibold hover:bg-white/10 transition-colors"
+              >
+                <Copy className="h-4 w-4" />
+                {copied ? 'Link copied' : 'Share this page'}
+              </button>
             </div>
           </div>
-          {profile ? <aside className="rounded-3xl border border-white/10 bg-white/[0.05] p-5 shadow-2xl shadow-cyan-950/30">
-            <img src={profile.avatar_url || '/logos/tl-square-white.png'} alt={profile.display_name} className="h-[430px] w-full rounded-2xl object-cover object-top" />
-            <div className="px-2 pb-1 pt-5"><p className="text-2xl font-black">{profile.display_name}</p><p className="mt-1 text-sm text-[#cccccc]">{profile.title} · {profile.regions.join(' · ')}</p><div className="mt-4 flex flex-wrap gap-3">{profile.instagram_url && <a href={profile.instagram_url} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 text-sm text-pink-300 hover:text-white"><Instagram className="h-4 w-4" />Instagram</a>}<Link to={`/d/${profile.slug}`} className="text-sm text-[#2997ff] hover:text-white">Full profile</Link></div></div>
-          </aside> : <div className="h-[520px] animate-pulse rounded-3xl bg-white/5" />}
         </div>
       </section>
 
