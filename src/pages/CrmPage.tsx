@@ -487,17 +487,125 @@ function nurtureMessage(lead: CrmLead, distributor: CrmDistributor, campaign: st
   return `Hi ${firstName}, this is ${distributor.display_name} with True Legacy. Thanks for your interest. I prepared this information for you: ${url}\n\nTake a look when you can and let me know what questions you have.`
 }
 
+const ALL_LANDING_PAGES = [
+  {
+    campaign: 'business' as const,
+    label: '1 · Business Opportunity Page',
+    purpose: 'Independent distributor model, compensation, and duplication.',
+    badge: 'BUSINESS',
+  },
+  {
+    campaign: 'duo' as const,
+    label: '2 · Duo Products Page (K8 + emGuarde)',
+    purpose: 'Leveluk K8 Kangen Water system & emGuarde GO demonstrations.',
+    badge: 'PRODUCTS',
+  },
+  {
+    campaign: 'training' as const,
+    label: '3 · Leadership Academy & Training',
+    purpose: 'Preview the education system, skills, and community resources.',
+    badge: 'TRAINING',
+  },
+  {
+    campaign: 'events' as const,
+    label: '4 · Weekly Live Events',
+    purpose: 'Live Zoom presentations in English and Spanish.',
+    badge: 'EVENTS',
+  },
+]
+
 function NurtureCenter({ lead, distributor, onOpen }: { lead: CrmLead; distributor?: CrmDistributor; onOpen: (lead: CrmLead, channel: 'WhatsApp' | 'Email', landingUrl: string) => void }) {
   const [copied, setCopied] = useState('')
   if (!distributor) return <div className="rounded-2xl border border-amber-400/20 bg-amber-400/[0.05] p-5"><h3 className="font-bold">Nurture center</h3><p className="mt-2 text-sm text-[#cccccc]">Assign this lead to a distributor before sending personalized landing pages.</p></div>
-  const steps = NURTURE_STEPS[lead.interest] || NURTURE_STEPS.product
-  return <div><h3 className="text-sm font-bold">Recommended nurture path</h3><p className="mt-1 text-xs text-[#86868b]">Based on interest: <span className="capitalize text-[#2997ff]">{lead.interest}</span></p><div className="mt-3 space-y-3">{steps.map((step, index) => {
-    const landingUrl = `${window.location.origin}/d/${distributor.slug}/${step.campaign}`
-    const text = nurtureMessage(lead, distributor, step.campaign, landingUrl)
-    const whatsAppUrl = lead.phone ? `https://wa.me/${lead.phone.replace(/\D/g, '')}?text=${encodeURIComponent(text)}` : ''
-    const emailUrl = `mailto:${lead.email}?subject=${encodeURIComponent(`Information from ${distributor.display_name} · True Legacy`)}&body=${encodeURIComponent(text)}`
-    return <article key={step.campaign} className="rounded-xl border border-white/10 bg-white/[0.02] p-4"><p className="text-[10px] font-bold uppercase tracking-wider text-[#2997ff]">Step {index + 1}</p><p className="mt-1 font-bold">{step.label}</p><p className="mt-1 text-xs text-[#86868b]">{step.purpose}</p><div className="mt-3 flex flex-wrap gap-2">{whatsAppUrl && <a href={whatsAppUrl} target="_blank" rel="noreferrer" onClick={() => onOpen(lead, 'WhatsApp', landingUrl)} className="inline-flex items-center gap-1.5 rounded-lg border border-emerald-400/25 px-3 py-2 text-xs text-[#cccccc]"><MessageCircle className="h-3.5 w-3.5" />WhatsApp</a>}<a href={emailUrl} onClick={() => onOpen(lead, 'Email', landingUrl)} className="inline-flex items-center gap-1.5 rounded-lg border border-white/20 px-3 py-2 text-xs text-[#2997ff]"><Mail className="h-3.5 w-3.5" />Email</a><button onClick={async () => { await navigator.clipboard.writeText(text); setCopied(step.campaign); window.setTimeout(() => setCopied(''), 1500) }} className="inline-flex items-center gap-1.5 rounded-lg border border-white/10 px-3 py-2 text-xs"><Copy className="h-3.5 w-3.5" />{copied === step.campaign ? 'Copied' : 'Copy'}</button><a href={landingUrl} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1.5 rounded-lg border border-white/10 px-3 py-2 text-xs"><ExternalLink className="h-3.5 w-3.5" />Preview</a></div></article>
-  })}</div></div>
+
+  return (
+    <div>
+      <div className="flex items-center justify-between">
+        <div>
+          <h3 className="text-sm font-bold text-white">Send Landing Pages</h3>
+          <p className="mt-0.5 text-xs text-[#86868b]">
+            Choose a presentation page to send to <span className="font-semibold text-white">{lead.full_name}</span> (Interest: <span className="capitalize text-[#2997ff]">{lead.interest}</span>)
+          </p>
+        </div>
+      </div>
+
+      <div className="mt-3 grid gap-3 sm:grid-cols-2">
+        {ALL_LANDING_PAGES.map((page) => {
+          const landingUrl = `${window.location.origin}/d/${distributor.slug}/${page.campaign}`
+          const text = nurtureMessage(lead, distributor, page.campaign, landingUrl)
+          const whatsAppUrl = lead.phone ? `https://wa.me/${lead.phone.replace(/\D/g, '')}?text=${encodeURIComponent(text)}` : `https://wa.me/?text=${encodeURIComponent(text)}`
+          const emailUrl = `mailto:${lead.email}?subject=${encodeURIComponent(`Information from ${distributor.display_name} · True Legacy`)}&body=${encodeURIComponent(text)}`
+          const isPrimary = lead.interest === page.campaign || (lead.interest === 'product' && page.campaign === 'duo') || (lead.interest === 'distributor' && page.campaign === 'business')
+
+          return (
+            <article
+              key={page.campaign}
+              className={`rounded-xl border p-4 transition-all ${
+                isPrimary
+                  ? 'border-cyan-400/40 bg-cyan-400/[0.04]'
+                  : 'border-white/10 bg-white/[0.02]'
+              }`}
+            >
+              <div className="flex items-center justify-between">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-[#2997ff]">
+                  {page.badge}
+                </span>
+                {isPrimary && (
+                  <span className="text-[9px] font-bold uppercase tracking-wider bg-cyan-400/20 text-[#2997ff] border border-cyan-400/30 px-1.5 py-0.5 rounded">
+                    Matched Interest
+                  </span>
+                )}
+              </div>
+              <p className="mt-1 font-bold text-white text-sm">{page.label}</p>
+              <p className="mt-1 text-xs text-[#86868b] line-clamp-2 leading-relaxed">{page.purpose}</p>
+
+              <div className="mt-3.5 flex flex-wrap gap-2 pt-2.5 border-t border-white/10">
+                <a
+                  href={whatsAppUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  onClick={() => onOpen(lead, 'WhatsApp', landingUrl)}
+                  className="inline-flex items-center gap-1.5 rounded-lg border border-emerald-400/30 bg-emerald-500/10 hover:bg-emerald-500/20 px-3 py-1.5 text-xs font-bold text-emerald-300 transition-colors"
+                >
+                  <MessageCircle className="h-3.5 w-3.5" />
+                  WhatsApp
+                </a>
+                <a
+                  href={emailUrl}
+                  onClick={() => onOpen(lead, 'Email', landingUrl)}
+                  className="inline-flex items-center gap-1.5 rounded-lg border border-white/20 bg-white/5 hover:bg-white/10 px-3 py-1.5 text-xs font-bold text-white transition-colors"
+                >
+                  <Mail className="h-3.5 w-3.5 text-[#2997ff]" />
+                  Email
+                </a>
+                <button
+                  type="button"
+                  onClick={async () => {
+                    await navigator.clipboard.writeText(text)
+                    setCopied(page.campaign)
+                    window.setTimeout(() => setCopied(''), 1500)
+                  }}
+                  className="inline-flex items-center gap-1.5 rounded-lg border border-white/10 bg-white/5 hover:bg-white/10 px-2.5 py-1.5 text-xs text-[#cccccc] transition-colors"
+                >
+                  <Copy className="h-3.5 w-3.5" />
+                  {copied === page.campaign ? 'Copied' : 'Copy'}
+                </button>
+                <a
+                  href={landingUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex items-center gap-1.5 rounded-lg border border-white/10 bg-white/5 hover:bg-white/10 px-2.5 py-1.5 text-xs text-[#cccccc] transition-colors"
+                >
+                  <ExternalLink className="h-3.5 w-3.5" />
+                  Preview
+                </a>
+              </div>
+            </article>
+          )
+        })}
+      </div>
+    </div>
+  )
 }
 
 function CrmLogin({ onPasswordSubmit, onMagicLinkSubmit, onPasswordReset, message }: { onPasswordSubmit: (event: FormEvent<HTMLFormElement>) => void; onMagicLinkSubmit: (event: FormEvent<HTMLFormElement>) => void; onPasswordReset: (email: string) => void; message: string }) {
