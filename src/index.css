@@ -2234,11 +2234,19 @@ canvas,
 .tl-app-nav a { display:flex; min-width:0; min-height:52px; flex-direction:column; align-items:center; justify-content:center; gap:3px; border-radius:16px; color:#71809a; font-size:9.5px; font-weight:700; text-decoration:none }
 .tl-app-nav a svg { width:19px; height:19px }.tl-app-nav a.is-active { color:#67e8f9; background:rgba(34,211,238,.11) }
 @media(max-width:720px){.tl-app-nav{grid-auto-flow:row;grid-template-columns:repeat(5,1fr)}.tl-app-nav a:nth-child(n+6){display:none}}
-.app-home-card { position:relative; min-height:180px; overflow:hidden; border:1px solid rgba(255,255,255,.1); border-radius:22px; padding:18px; background:rgba(255,255,255,.035); color:#fff }
-.app-home-card>span { display:grid; width:42px; height:42px; place-items:center; border-radius:13px; background:rgba(255,255,255,.07) }.app-home-card>span svg { width:21px }.app-home-card p { margin-top:24px; font-size:10px; font-weight:800; letter-spacing:.16em; text-transform:uppercase; color:#8ca0bc }.app-home-card h3 { margin-top:3px; font-size:22px; font-weight:900 }.app-home-card small { display:block; margin-top:3px; color:#7f8da5 }.app-home-card>svg { position:absolute; right:16px; bottom:16px; width:17px; color:#65758f }
+.app-home-card { position:relative; min-height:175px; overflow:hidden; border:1px solid rgba(255,255,255,.1); border-radius:20px; padding:16px 14px; background:rgba(255,255,255,.035); color:#fff; transition:all .2s ease }
+.app-home-card:hover { border-color:rgba(255,255,255,.2); background:rgba(255,255,255,.06); transform:translateY(-2px) }
+.app-home-card>span { display:grid; width:38px; height:38px; place-items:center; border-radius:12px; background:rgba(255,255,255,.07) }
+.app-home-card>span svg { width:19px; height:19px }
+.app-home-card p { margin-top:16px; font-size:10px; font-weight:800; letter-spacing:.14em; text-transform:uppercase; color:#8ca0bc }
+.app-home-card h3 { margin-top:3px; font-size:17px; font-weight:900; white-space:nowrap; letter-spacing:-0.01em }
+.app-home-card small { display:block; margin-top:3px; font-size:11px; line-height:1.35; color:#7f8da5; white-space:nowrap; overflow:hidden; text-overflow:ellipsis }
+.app-home-card>svg { position:absolute; right:14px; bottom:14px; width:15px; height:15px; color:#65758f; transition:transform .2s ease }
+.app-home-card:hover>svg { transform:translateX(2px); color:#fff }
 .app-home-card--cyan>span{color:#67e8f9;background:rgba(34,211,238,.1)}.app-home-card--amber>span{color:#fcd34d;background:rgba(251,191,36,.1)}.app-home-card--violet>span{color:#c4b5fd;background:rgba(139,92,246,.12)}.app-home-card--emerald>span{color:#6ee7b7;background:rgba(16,185,129,.11)}
 .app-action { display:flex; min-height:48px; align-items:center; justify-content:center; gap:6px; border:1px solid rgba(255,255,255,.1); border-radius:12px; color:#dbe7f7; background:rgba(255,255,255,.035); font-size:12px; font-weight:800 }.app-action svg{width:16px;height:16px}
-@media(min-width:700px){.app-home-card{min-height:210px;padding:22px}.app-home-card h3{font-size:26px}}
+@media(min-width:700px){.app-home-card{min-height:185px;padding:18px 14px}.app-home-card h3{font-size:17px}}
+@media(min-width:1100px){.app-home-card{min-height:190px;padding:20px 16px}.app-home-card h3{font-size:18px}}
 .share-choice { position:relative; min-height:180px; display:flex; flex-direction:column; align-items:flex-start; gap:10px; border:1px solid rgba(255,255,255,.1); border-radius:20px; padding:16px; text-align:left; color:#fff; background:rgba(255,255,255,.03) }.share-choice>span{display:grid;width:40px;height:40px;place-items:center;border-radius:12px;color:#67e8f9;background:rgba(34,211,238,.1)}.share-choice>span svg{width:20px}.share-choice strong{font-size:16px}.share-choice small{line-height:1.45;color:#7f8da5}.share-choice.is-active{border-color:rgba(103,232,249,.55);background:rgba(34,211,238,.09);box-shadow:0 16px 50px rgba(8,145,178,.12)}.share-choice__check{position:absolute;right:13px;top:13px;width:18px;color:#67e8f9}
 .share-primary,.share-secondary{display:flex;min-height:52px;align-items:center;justify-content:center;gap:7px;border-radius:13px;font-size:13px;font-weight:900}.share-primary{border:0;color:#03111f;background:#22d3ee}.share-secondary{border:1px solid rgba(255,255,255,.12);color:#e6eef9;background:rgba(255,255,255,.04)}.share-primary svg,.share-secondary svg{width:17px;height:17px}
 
