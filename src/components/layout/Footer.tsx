@@ -1,233 +1,366 @@
 import TrueLegacyLogo from '@/components/ui/TrueLegacyLogo'
 import { useLocaleContext } from '@/contexts/LocaleContext'
 import { COUNTRIES, getFlagSrcSet } from '@/lib/countries'
-import { Facebook, Youtube } from 'lucide-react'
+import { ArrowRight, Globe, Youtube } from 'lucide-react'
 import { useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 
-const LATAM_SLUGS = ['colombia', 'mexico', 'paraguay', 'brazil']
-const COUNTRY_SLUGS = COUNTRIES.map((c) => c.slug)
-
-function getFooterLabels(locale: 'en' | 'es' | 'fr' | 'pt') {
-    const shared = {
-        home: locale === 'es' ? 'Inicio' : locale === 'fr' ? 'Accueil' : locale === 'pt' ? 'Início' : 'Home',
-        training: locale === 'es' ? 'Capacitación' : locale === 'fr' ? 'Formation' : locale === 'pt' ? 'Treinamento' : 'Leadership Training',
-        products: locale === 'es' ? 'Productos' : locale === 'fr' ? 'Produits' : locale === 'pt' ? 'Produtos' : 'Products',
-        kangenWater: locale === 'es' ? 'Agua Kangen' : locale === 'fr' ? 'Eau Kangen' : locale === 'pt' ? 'Água Kangen' : 'Kangen Water',
-        emguarde: 'emGuarde Technology',
-        ourStory: locale === 'es' ? 'Nuestra historia' : locale === 'fr' ? 'Notre histoire' : locale === 'pt' ? 'Nossa história' : 'Our Story',
-    }
-    const localized = {
-        en: {
-            description: 'A team platform for product education, community, leadership development, and responsible distributor support.', joinCommunity: 'Join Our Facebook Community', regions: 'Global Regions', company: 'Company', follow: 'Follow Us', authorized: 'Authorized Enagic Distributor', team: 'True Legacy World — Global Team', innovation: 'Enagic has been pioneering water ionization technology since 1974 — 52 years of innovation.', privacy: 'Privacy', terms: 'Terms', medical: 'Medical Disclaimer', earnings: 'Earnings Disclosure', distributor: 'Distributor Disclosure', rights: 'All rights reserved.', platform: 'Independent team education and lead-routing platform.',
-        },
-        es: {
-            description: 'Una plataforma de equipo para educación sobre productos, comunidad, desarrollo de liderazgo y apoyo responsable de distribuidores.', joinCommunity: 'Únete a nuestra comunidad de Facebook', regions: 'Regiones globales', company: 'Compañía', follow: 'Síguenos', authorized: 'Distribuidor autorizado de Enagic', team: 'True Legacy World — Equipo global', innovation: 'Enagic ha sido pionera en tecnología de ionización de agua desde 1974 — 52 años de innovación.', privacy: 'Privacidad', terms: 'Términos', medical: 'Aviso médico', earnings: 'Divulgación de ingresos', distributor: 'Divulgación del distribuidor', rights: 'Todos los derechos reservados.', platform: 'Plataforma independiente de educación del equipo y asignación de prospectos.',
-        },
-        fr: {
-            description: "Une plateforme d’équipe dédiée à l’éducation sur les produits, à la communauté, au développement du leadership et au soutien responsable des distributeurs.", joinCommunity: 'Rejoignez notre communauté Facebook', regions: 'Régions mondiales', company: 'Entreprise', follow: 'Suivez-nous', authorized: 'Distributeur Enagic autorisé', team: 'True Legacy World — Équipe mondiale', innovation: "Enagic est un pionnier de la technologie d’ionisation de l’eau depuis 1974 — 52 ans d’innovation.", privacy: 'Confidentialité', terms: 'Conditions', medical: 'Avertissement médical', earnings: 'Déclaration sur les revenus', distributor: 'Déclaration du distributeur', rights: 'Tous droits réservés.', platform: "Plateforme indépendante d’éducation d’équipe et d’orientation des prospects.",
-        },
-        pt: {
-            description: 'Uma plataforma de equipe para educação sobre produtos, comunidade, desenvolvimento de liderança e suporte responsável aos distribuidores.', joinCommunity: 'Participe da nossa comunidade no Facebook', regions: 'Regiões globais', company: 'Empresa', follow: 'Siga-nos', authorized: 'Distribuidor autorizado Enagic', team: 'True Legacy World — Equipe global', innovation: 'A Enagic é pioneira em tecnologia de ionização da água desde 1974 — 52 anos de inovação.', privacy: 'Privacidade', terms: 'Termos', medical: 'Aviso médico', earnings: 'Divulgação de rendimentos', distributor: 'Divulgação do distribuidor', rights: 'Todos os direitos reservados.', platform: 'Plataforma independente de educação da equipe e direcionamento de contatos.',
-        },
-    }[locale]
-    return { ...shared, ...localized }
+function IconInstagram({ className }: { className?: string }) {
+  return (
+    <svg
+      className={className}
+      width="16"
+      height="16"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <rect x="2" y="2" width="20" height="20" rx="5" />
+      <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+      <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none" />
+    </svg>
+  )
 }
 
-function IconInstagram({ className }: { className?: string }) {
-    return (
-        <svg className={className} width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <rect x="2" y="2" width="20" height="20" rx="5" />
-            <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
-            <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none" />
-        </svg>
-    )
+function getFooterLabels(locale: 'en' | 'es' | 'fr' | 'pt') {
+  return {
+    en: {
+      tagline: 'A global platform for product education, leadership development, community, and responsible independent business building.',
+      joinCommunity: 'Join the Community',
+      explore: 'EXPLORE',
+      globalPresence: 'GLOBAL PRESENCE',
+      marketCount: 'Leaders across 14 featured markets',
+      exploreNetwork: 'Explore Our Global Network',
+      connect: 'CONNECT',
+      home: 'Home',
+      business: 'Explore the Business',
+      duo: 'True Legacy Duo',
+      training: 'Leadership Training',
+      events: 'Live Events',
+      products: 'Products',
+      authorized: 'Authorized Enagic Distributor · True Legacy World · Independent Distributor Organization',
+      privacy: 'Privacy',
+      terms: 'Terms',
+      medical: 'Medical Disclaimer',
+      earnings: 'Earnings Disclosure',
+      distributor: 'Distributor Disclosure',
+      disclosure: 'This website is independently owned and operated by authorized Enagic independent distributors. True Legacy is an independent global team and educational platform, not Enagic corporate. Product statements have not been evaluated by the FDA or medical authorities and are not intended to diagnose, treat, cure, or prevent any disease. Business results depend on individual skill, effort, and market conditions.',
+      rights: 'All rights reserved.',
+    },
+    es: {
+      tagline: 'Una plataforma global para educación sobre productos, desarrollo de liderazgo, comunidad y creación responsable de negocios independientes.',
+      joinCommunity: 'Únete a la Comunidad',
+      explore: 'EXPLORAR',
+      globalPresence: 'PRESENCIA GLOBAL',
+      marketCount: 'Líderes en 14 mercados destacados',
+      exploreNetwork: 'Explorar Nuestra Red Global',
+      connect: 'CONECTAR',
+      home: 'Inicio',
+      business: 'Explorar el Negocio',
+      duo: 'True Legacy Duo',
+      training: 'Capacitación y Liderazgo',
+      events: 'Eventos en Vivo',
+      products: 'Productos',
+      authorized: 'Distribuidor Autorizado de Enagic · True Legacy World · Organización Independiente de Distribuidores',
+      privacy: 'Privacidad',
+      terms: 'Términos',
+      medical: 'Aviso Médico',
+      earnings: 'Divulgación de Ingresos',
+      distributor: 'Divulgación de Distribuidor',
+      disclosure: 'Este sitio web es propiedad y está operado de forma independiente por distribuidores autorizados de Enagic. True Legacy es un equipo global y plataforma educativa independiente, no la corporación Enagic. Las declaraciones sobre productos no han sido evaluadas por la FDA o autoridades médicas. Los resultados dependen del esfuerzo y habilidades individuales.',
+      rights: 'Todos los derechos reservados.',
+    },
+    fr: {
+      tagline: 'Une plateforme mondiale dédiée à l’éducation sur les produits, au développement du leadership, à la communauté et au développement d’activités responsables.',
+      joinCommunity: 'Rejoindre la Communauté',
+      explore: 'EXPLORER',
+      globalPresence: 'PRÉSENCE MONDIALE',
+      marketCount: 'Leaders sur 14 marchés majeurs',
+      exploreNetwork: 'Explorer Notre Réseau Mondial',
+      connect: 'CONNECTER',
+      home: 'Accueil',
+      business: 'Découvrir l’Activité',
+      duo: 'True Legacy Duo',
+      training: 'Formation & Leadership',
+      events: 'Événements en Direct',
+      products: 'Produits',
+      authorized: 'Distributeur Agréé Enagic · True Legacy World · Organisation Indépendante de Distributeurs',
+      privacy: 'Confidentialité',
+      terms: 'Conditions',
+      medical: 'Avertissement Médical',
+      earnings: 'Déclaration sur les Revenus',
+      distributor: 'Déclaration du Distributeur',
+      disclosure: 'Ce site web est exploité de manière indépendante par des distributeurs agréés Enagic. True Legacy est une équipe mondiale et une plateforme éducative indépendante, distincte d’Enagic corporate. Les déclarations relatives aux produits n’ont pas été évaluées par les autorités médicales.',
+      rights: 'Tous droits réservés.',
+    },
+    pt: {
+      tagline: 'Uma plataforma global para educação de produtos, desenvolvimento de liderança, comunidade e construção responsável de negócios independentes.',
+      joinCommunity: 'Participe da Comunidade',
+      explore: 'EXPLORAR',
+      globalPresence: 'PRESENÇA GLOBAL',
+      marketCount: 'Líderes em 14 mercados em destaque',
+      exploreNetwork: 'Explorar Nossa Rede Global',
+      connect: 'CONECTAR',
+      home: 'Início',
+      business: 'Explorar o Negócio',
+      duo: 'True Legacy Duo',
+      training: 'Treinamento & Liderança',
+      events: 'Eventos ao Vivo',
+      products: 'Produtos',
+      authorized: 'Distribuidor Autorizado Enagic · True Legacy World · Organização Independente de Distribuidores',
+      privacy: 'Privacidade',
+      terms: 'Termos',
+      medical: 'Aviso Médico',
+      earnings: 'Divulgação de Rendimentos',
+      distributor: 'Divulgação do Distribuidor',
+      disclosure: 'Este site é propriedade e operado de forma independente por distribuidores autorizados da Enagic. True Legacy é uma equipe global e plataforma educacional independente. As declarações de produtos não foram avaliadas por autoridades médicas.',
+      rights: 'Todos os direitos reservados.',
+    },
+  }[locale]
 }
 
 export function Footer() {
-    const currentYear = new Date().getFullYear()
-    const [failedFlagSlugs, setFailedFlagSlugs] = useState<Set<string>>(new Set())
-    const location = useLocation()
-    const { locale } = useLocaleContext()
-    const isLATAM = location.pathname.startsWith('/events/latam') || LATAM_SLUGS.some((s) => location.pathname.startsWith(`/${s}`) || location.pathname.startsWith(`/events/${s}`))
-    const firstSegment = location.pathname.slice(1).split('/')[0]
-    const footerCountrySlug = firstSegment && COUNTRY_SLUGS.includes(firstSegment) ? firstSegment : null
-    const trainingHref = footerCountrySlug ? `/${footerCountrySlug}/training` : '/training'
-    const productsHref = footerCountrySlug ? `/${footerCountrySlug}/products` : '/products'
-    const labels = getFooterLabels(locale)
+  const currentYear = new Date().getFullYear()
+  const [failedFlagSlugs, setFailedFlagSlugs] = useState<Set<string>>(new Set())
+  const location = useLocation()
+  const { locale } = useLocaleContext()
+  const labels = getFooterLabels(locale)
 
-    return (
-        <footer className="relative border-t border-white/10 bg-black">
-            <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-                <div className="grid grid-cols-1 gap-12 lg:grid-cols-4">
-                    {/* Brand */}
-                    <div className="lg:col-span-1">
-                        <Link
-                            to="/"
-                            className="group mb-4 logo-container inline-flex items-center"
-                            style={{ display: 'flex', alignItems: 'center', textDecoration: 'none', background: 'transparent', border: 'none', padding: 0, gap: 0 }}
-                        >
-                            <TrueLegacyLogo variant="footer" />
-                        </Link>
-                        <p className="text-sm text-[#cccccc] leading-relaxed mb-6">
-                            {labels.description}
-                        </p>
-                        {/* Community CTA */}
-                        <a
-                            href="https://www.facebook.com/groups/truelegacycommunity"
-                            target="_blank" rel="noopener noreferrer"
-                            className="inline-flex items-center gap-2 rounded-xl bg-[#1877F2] px-5 py-3 text-sm font-semibold text-white transition-all hover:bg-[#166FE5] hover:scale-105 shadow-lg"
-                        >
-                            <Facebook className="h-4 w-4" />
-                            {labels.joinCommunity}
-                        </a>
-                    </div>
-
-                    {/* Countries */}
-                    <div>
-                        <h3 className="mb-4 text-sm font-semibold uppercase tracking-wider text-[#cccccc]">
-                            {labels.regions}
-                        </h3>
-                        <ul className="space-y-2">
-                            {COUNTRIES.map((country) => (
-                                <li key={country.slug}>
-                                    <Link
-                                        to={`/${country.slug}`}
-                                        className="flex items-center gap-2 text-sm text-[#cccccc] transition-colors hover:text-white"
-                                    >
-                                        <span className="inline-flex h-4 w-6 shrink-0 overflow-hidden rounded border border-white/20 bg-black">
-                                            {failedFlagSlugs.has(country.slug) ? (
-                                                <span className="flex h-full w-full items-center justify-center text-xs leading-none">{country.flagEmoji}</span>
-                                            ) : (
-                                                <img {...getFlagSrcSet(country.slug)} alt="" className="h-full w-full object-cover" loading="lazy" onError={() => setFailedFlagSlugs((prev) => new Set(prev).add(country.slug))} />
-                                            )}
-                                        </span>
-                                        <span>{country.name}</span>
-                                    </Link>
-                                </li>
-                            ))}
-                        </ul>
-                    </div>
-
-                    {/* Quick Links */}
-                    <div>
-                        <h3 className="mb-4 text-sm font-semibold uppercase tracking-wider text-[#cccccc]">
-                            {labels.company}
-                        </h3>
-                        <ul className="space-y-2">
-                            {[
-                                { label: labels.home, href: '/' },
-                                { label: labels.training, href: trainingHref },
-                                { label: labels.products, href: productsHref },
-                                { label: labels.kangenWater, href: '/k8' },
-                                { label: labels.emguarde, href: '/emguarde' },
-                            ].map((link) => (
-                                <li key={link.href}>
-                                    <Link
-                                        to={link.href}
-                                        className="text-sm text-[#cccccc] transition-colors hover:text-white"
-                                    >
-                                        {link.label}
-                                    </Link>
-                                </li>
-                            ))}
-                        </ul>
-                    </div>
-
-                    {/* Socials — Instagram, LATAM first on LATAM pages */}
-                    <div>
-                        <h3 className="mb-4 text-sm font-semibold uppercase tracking-wider text-[#cccccc]">
-                            {labels.follow}
-                        </h3>
-                        <div className="footer-social flex flex-wrap gap-5 justify-start items-center mb-4" style={{ width: '190px', paddingRight: '25px', transform: 'rotate(360deg)' }}>
-                            {isLATAM && (
-                                <a
-                                    href="https://www.instagram.com/truelegacylatam?igsh=MTgxZW9yMTMxd2FpbQ=="
-                                    target="_blank" rel="noopener noreferrer"
-                                    className="footer-social-link inline-flex items-center gap-2 text-sm font-semibold no-underline transition-colors hover:text-white min-h-[44px]"
-                                    style={{ color: '#c13584' }}
-                                >
-                                    <IconInstagram />
-                                    @truelegacylatam
-                                </a>
-                            )}
-                            <a
-                                href="https://www.instagram.com/truelegacyworld/"
-                                target="_blank" rel="noopener noreferrer"
-                                className="footer-social-link inline-flex items-center gap-2 text-sm font-semibold text-[#cccccc] no-underline transition-colors hover:text-white min-h-[44px]"
-                            >
-                                <IconInstagram />
-                                @truelegacyworld
-                            </a>
-                            {!isLATAM && (
-                                <a
-                                    href="https://www.instagram.com/truelegacylatam?igsh=MTgxZW9yMTMxd2FpbQ=="
-                                    target="_blank" rel="noopener noreferrer"
-                                    className="footer-social-link inline-flex items-center gap-2 text-sm font-semibold text-[#cccccc] no-underline transition-colors hover:text-white min-h-[44px]"
-                                >
-                                    <IconInstagram />
-                                    @truelegacylatam
-                                </a>
-                            )}
-                        </div>
-                        <div className="space-y-3">
-                            <a
-                                href="https://youtube.com/@TrueLegacyWorld"
-                                target="_blank" rel="noopener noreferrer"
-                                className="flex items-center gap-3 text-sm text-[#cccccc] transition-colors hover:text-white group min-h-[44px]"
-                            >
-                                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-white/5 transition-colors group-hover:bg-red-500/20">
-                                    <Youtube className="h-4 w-4 text-red-400" />
-                                </div>
-                                @TrueLegacyWorld
-                            </a>
-                            <a
-                                href="https://youtube.com/@TrueLegacyLATAM"
-                                target="_blank" rel="noopener noreferrer"
-                                className="flex items-center gap-3 text-sm text-[#cccccc] transition-colors hover:text-white group min-h-[44px]"
-                            >
-                                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-white/5 transition-colors group-hover:bg-red-500/20">
-                                    <Youtube className="h-4 w-4 text-red-400" />
-                                </div>
-                                @TrueLegacyLATAM
-                            </a>
-                        </div>
-
-                        <div className="mt-8">
-                            <h3 className="mb-3 text-sm font-semibold uppercase tracking-wider text-[#cccccc]">
-                                {labels.products}
-                            </h3>
-                            <div className="space-y-1">
-                                <Link to={productsHref} className="block text-sm text-[#cccccc] transition-colors hover:text-white">Kangen Water (Enagic)</Link>
-                                <Link to={productsHref} className="block text-sm text-[#cccccc] transition-colors hover:text-white">emGuarde Technology</Link>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                {/* Trust signals */}
-                <div className="mt-8 flex flex-wrap items-center justify-center gap-6 text-sm text-[#86868b]">
-                    <span className="text-center">{labels.authorized}</span>
-                    <span className="text-white/40 hidden sm:inline">·</span>
-                    <span className="text-center">{labels.team}</span>
-                    <span className="text-white/40 hidden sm:inline">·</span>
-                    <span className="text-center">{labels.innovation}</span>
-                </div>
-                <nav aria-label="Legal" className="mt-6 flex flex-wrap justify-center gap-x-5 gap-y-2 text-xs text-[#86868b]">
-                    <Link to="/legal/privacy" className="hover:text-white">{labels.privacy}</Link>
-                    <Link to="/legal/terms" className="hover:text-white">{labels.terms}</Link>
-                    <Link to="/legal/medical" className="hover:text-white">{labels.medical}</Link>
-                    <Link to="/legal/earnings" className="hover:text-white">{labels.earnings}</Link>
-                    <Link to="/legal/distributor" className="hover:text-white">{labels.distributor}</Link>
-                </nav>
-                {/* Bottom Bar */}
-                <div className="mt-8 border-t border-white/10 pt-8 flex flex-col items-center gap-4 sm:flex-row sm:justify-between">
-                    <p className="text-sm text-[#86868b] text-center sm:text-left">
-                        © {currentYear} True Legacy World. {labels.rights}
-                    </p>
-                    <p className="text-xs text-[#86868b] text-center sm:text-right">{labels.platform}</p>
-                </div>
+  return (
+    <footer className="relative border-t border-white/10 bg-[#05070c] text-white pt-12 pb-8 sm:pt-14 sm:pb-10">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        {/* Main 4-Column Desktop Grid / Stacked Mobile */}
+        <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-12 lg:gap-10 pb-10">
+          {/* COLUMN 1 — BRAND (4 cols) */}
+          <div className="lg:col-span-4 flex flex-col justify-between">
+            <div>
+              <Link
+                to="/"
+                className="group logo-container inline-flex items-center mb-4 transition-opacity hover:opacity-90"
+                style={{ textDecoration: 'none', background: 'transparent', border: 'none', padding: 0 }}
+              >
+                <TrueLegacyLogo variant="footer" />
+              </Link>
+              <p className="text-xs sm:text-sm text-[#86868b] leading-relaxed max-w-sm">
+                {labels.tagline}
+              </p>
             </div>
-        </footer>
-    )
+
+            <div className="mt-5">
+              <a
+                href="https://www.facebook.com/groups/truelegacycommunity"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group inline-flex items-center gap-2 rounded-xl border border-white/15 bg-white/[0.04] px-4 py-2.5 text-xs font-semibold text-white transition-all hover:bg-white/[0.08] hover:border-white/30 active:scale-95"
+              >
+                <span>{labels.joinCommunity}</span>
+                <ArrowRight className="h-3.5 w-3.5 text-[#2997ff] transition-transform duration-300 group-hover:translate-x-1" />
+              </a>
+            </div>
+          </div>
+
+          {/* COLUMN 2 — EXPLORE (2 cols) */}
+          <div className="lg:col-span-2">
+            <h3 className="mb-3.5 text-xs font-bold uppercase tracking-[0.2em] text-white">
+              {labels.explore}
+            </h3>
+            <ul className="space-y-2 text-xs sm:text-sm">
+              <li>
+                <Link to="/" className="text-[#86868b] transition-colors hover:text-white">
+                  {labels.home}
+                </Link>
+              </li>
+              <li>
+                <Link to="/business" className="text-[#86868b] transition-colors hover:text-white">
+                  {labels.business}
+                </Link>
+              </li>
+              <li>
+                <Link to="/duo" className="text-[#86868b] transition-colors hover:text-white">
+                  {labels.duo}
+                </Link>
+              </li>
+              <li>
+                <Link to="/training" className="text-[#86868b] transition-colors hover:text-white">
+                  {labels.training}
+                </Link>
+              </li>
+              <li>
+                <Link to="/events" className="text-[#86868b] transition-colors hover:text-white">
+                  {labels.events}
+                </Link>
+              </li>
+              <li>
+                <Link to="/products" className="text-[#86868b] transition-colors hover:text-white">
+                  {labels.products}
+                </Link>
+              </li>
+            </ul>
+          </div>
+
+          {/* COLUMN 3 — GLOBAL PRESENCE (3 cols) */}
+          <div className="lg:col-span-3">
+            <h3 className="mb-1 text-xs font-bold uppercase tracking-[0.2em] text-white">
+              {labels.globalPresence}
+            </h3>
+            <p className="text-xs text-[#86868b] mb-3">
+              {labels.marketCount}
+            </p>
+
+            {/* Compact Flag Grid */}
+            <div className="grid grid-cols-7 gap-1.5 max-w-[260px] mb-3.5">
+              {COUNTRIES.map((country) => (
+                <Link
+                  key={country.slug}
+                  to={`/${country.slug}`}
+                  title={country.name}
+                  className="group relative flex h-7 w-8 items-center justify-center rounded-md border border-white/10 bg-black/60 p-0.5 transition-all hover:border-cyan-400/50 hover:bg-black/90 hover:scale-105"
+                >
+                  <span className="inline-flex h-4 w-6 shrink-0 overflow-hidden rounded-[3px] border border-white/10">
+                    {failedFlagSlugs.has(country.slug) ? (
+                      <span className="flex h-full w-full items-center justify-center text-[10px] leading-none">
+                        {country.flagEmoji}
+                      </span>
+                    ) : (
+                      <img
+                        {...getFlagSrcSet(country.slug)}
+                        alt={country.name}
+                        className="h-full w-full object-cover"
+                        loading="lazy"
+                        onError={() => setFailedFlagSlugs((prev) => new Set(prev).add(country.slug))}
+                      />
+                    )}
+                  </span>
+                </Link>
+              ))}
+            </div>
+
+            <Link
+              to="/distributors"
+              className="group inline-flex items-center gap-1.5 text-xs font-semibold text-[#2997ff] hover:text-cyan-300 transition-colors"
+            >
+              <span>{labels.exploreNetwork}</span>
+              <ArrowRight className="h-3 w-3 transition-transform duration-300 group-hover:translate-x-1" />
+            </Link>
+          </div>
+
+          {/* COLUMN 4 — CONNECT (3 cols) */}
+          <div className="lg:col-span-3">
+            <h3 className="mb-3.5 text-xs font-bold uppercase tracking-[0.2em] text-white">
+              {labels.connect}
+            </h3>
+
+            <div className="space-y-4">
+              {/* True Legacy World */}
+              <div>
+                <p className="text-[11px] font-bold uppercase tracking-wider text-[#cccccc] mb-1.5">
+                  True Legacy World
+                </p>
+                <div className="flex flex-col space-y-1.5">
+                  <a
+                    href="https://www.instagram.com/truelegacyworld/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group inline-flex items-center gap-2 text-xs text-[#86868b] transition-colors hover:text-white"
+                  >
+                    <div className="flex h-5 w-5 items-center justify-center rounded bg-white/5 transition-colors group-hover:bg-pink-500/20 group-hover:text-pink-400">
+                      <IconInstagram className="h-3 w-3 text-pink-400 transition-transform duration-200 group-hover:-translate-y-0.5" />
+                    </div>
+                    <span>@truelegacyworld</span>
+                  </a>
+                  <a
+                    href="https://youtube.com/@TrueLegacyWorld"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group inline-flex items-center gap-2 text-xs text-[#86868b] transition-colors hover:text-white"
+                  >
+                    <div className="flex h-5 w-5 items-center justify-center rounded bg-white/5 transition-colors group-hover:bg-red-500/20 group-hover:text-red-400">
+                      <Youtube className="h-3 w-3 text-red-400 transition-transform duration-200 group-hover:-translate-y-0.5" />
+                    </div>
+                    <span>@TrueLegacyWorld</span>
+                  </a>
+                </div>
+              </div>
+
+              {/* True Legacy LATAM */}
+              <div>
+                <p className="text-[11px] font-bold uppercase tracking-wider text-[#cccccc] mb-1.5">
+                  True Legacy LATAM
+                </p>
+                <div className="flex flex-col space-y-1.5">
+                  <a
+                    href="https://www.instagram.com/truelegacylatam?igsh=MTgxZW9yMTMxd2FpbQ=="
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group inline-flex items-center gap-2 text-xs text-[#86868b] transition-colors hover:text-white"
+                  >
+                    <div className="flex h-5 w-5 items-center justify-center rounded bg-white/5 transition-colors group-hover:bg-pink-500/20 group-hover:text-pink-400">
+                      <IconInstagram className="h-3 w-3 text-pink-400 transition-transform duration-200 group-hover:-translate-y-0.5" />
+                    </div>
+                    <span>@truelegacylatam</span>
+                  </a>
+                  <a
+                    href="https://youtube.com/@TrueLegacyLATAM"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group inline-flex items-center gap-2 text-xs text-[#86868b] transition-colors hover:text-white"
+                  >
+                    <div className="flex h-5 w-5 items-center justify-center rounded bg-white/5 transition-colors group-hover:bg-red-500/20 group-hover:text-red-400">
+                      <Youtube className="h-3 w-3 text-red-400 transition-transform duration-200 group-hover:-translate-y-0.5" />
+                    </div>
+                    <span>@TrueLegacyLATAM</span>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* BOTTOM BAR & COMPLIANCE SECTION */}
+        <div className="border-t border-white/10 pt-6">
+          {/* Row 1 — Organization */}
+          <p className="text-center text-xs font-medium text-[#cccccc] tracking-tight">
+            {labels.authorized}
+          </p>
+
+          {/* Row 2 — Legal Links */}
+          <nav aria-label="Legal" className="mt-3 flex flex-wrap justify-center gap-x-5 gap-y-1 text-xs text-[#86868b]">
+            <Link to="/legal/privacy" className="hover:text-white transition-colors">
+              {labels.privacy}
+            </Link>
+            <span className="text-white/20">·</span>
+            <Link to="/legal/terms" className="hover:text-white transition-colors">
+              {labels.terms}
+            </Link>
+            <span className="text-white/20">·</span>
+            <Link to="/legal/medical" className="hover:text-white transition-colors">
+              {labels.medical}
+            </Link>
+            <span className="text-white/20">·</span>
+            <Link to="/legal/earnings" className="hover:text-white transition-colors">
+              {labels.earnings}
+            </Link>
+            <span className="text-white/20">·</span>
+            <Link to="/legal/distributor" className="hover:text-white transition-colors">
+              {labels.distributor}
+            </Link>
+          </nav>
+
+          {/* Row 3 — Enagic Disclosure */}
+          <p className="mx-auto mt-4 max-w-4xl text-center text-[11px] leading-relaxed text-[#66666e]">
+            {labels.disclosure}
+          </p>
+
+          {/* Row 4 — Copyright */}
+          <p className="mt-3 text-center text-xs text-[#86868b]">
+            © {currentYear} True Legacy World. {labels.rights}
+          </p>
+        </div>
+      </div>
+    </footer>
+  )
 }
+
