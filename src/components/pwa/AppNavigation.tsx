@@ -7,6 +7,7 @@ import {
   Home,
   LayoutDashboard,
   Share2,
+  Settings,
   Users,
 } from 'lucide-react'
 import { useEffect, useState } from 'react'
@@ -22,6 +23,7 @@ const ITEMS = [
   { to: '/training', label: 'Academy', icon: BookOpen },
   { to: '/crm/growth', label: 'Team', icon: Users },
   { to: '/crm/platform', label: 'Analytics', icon: BarChart3 },
+  { to: '/app/settings', label: 'Settings', icon: Settings },
 ]
 
 export function AppNavigation() {
@@ -105,6 +107,5 @@ export function AppNavigation() {
     </nav>
   )
 }
-
 
 

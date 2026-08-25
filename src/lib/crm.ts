@@ -24,6 +24,17 @@ export type CrmDistributor = PublicDistributor & {
   login_email: string | null
 }
 
+export type DistributorProfileUpdate = {
+  displayName: string
+  title: string
+  bio: string
+  phone: string
+  instagramUrl: string
+  regions: string[]
+  languages: string[]
+  acceptingLeads: boolean
+}
+
 export type CrmMembership = {
   user_id: string
   role: CrmRole
@@ -202,7 +213,7 @@ export async function getPublicDistributors(): Promise<PublicDistributor[]> {
   if (error || !Array.isArray(data)) return FALLBACK_DISTRIBUTORS
   const remoteDistributors = (data as PublicDistributor[]).map(profile => {
     const confirmed = FALLBACK_DISTRIBUTORS.find(item => item.slug === profile.slug)
-    return confirmed ? { ...profile, ...confirmed, id: profile.id } : profile
+    return confirmed ? { ...confirmed, ...profile, id: profile.id } : profile
   })
   const remoteSlugs = new Set(remoteDistributors.map(profile => profile.slug))
   return [...remoteDistributors, ...FALLBACK_DISTRIBUTORS.filter(profile => !remoteSlugs.has(profile.slug))]
@@ -242,6 +253,23 @@ export async function getCrmDistributors(): Promise<CrmDistributor[]> {
   const { data, error } = await crmSupabase.from('crm_distributors').select('*').order('display_name')
   if (error) throw error
   return (data || []) as CrmDistributor[]
+}
+
+export async function updateDistributorProfile(distributorId: string, payload: DistributorProfileUpdate) {
+  if (!crmSupabase) throw new Error('CRM_NOT_CONFIGURED')
+  const { data, error } = await crmSupabase.rpc('crm_update_distributor_profile', {
+    p_distributor_id: distributorId,
+    p_payload: payload,
+  })
+  if (error) throw error
+  return data as CrmDistributor
+}
+
+export async function submitLeaderApplication(payload: Record<string, unknown>) {
+  if (!crmSupabase) throw new Error('CRM_NOT_CONFIGURED')
+  const { data, error } = await crmSupabase.rpc('submit_crm_leader_application', { p_payload: payload })
+  if (error) throw error
+  return data as string
 }
 
 export async function getLeadNotes(leadId: string): Promise<CrmLeadNote[]> {

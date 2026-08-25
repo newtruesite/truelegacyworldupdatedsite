@@ -33,6 +33,8 @@ import AppLibraryPage from "@/pages/AppLibraryPage";
 import SagaLibraryPage from "@/pages/SagaLibraryPage";
 import AppSharePage from "@/pages/AppSharePage";
 import AppBookingsPage from "@/pages/AppBookingsPage";
+import AppAccountPage from "@/pages/AppAccountPage";
+import LeaderApplicationPage from "@/pages/LeaderApplicationPage";
 import BookingPage from "@/pages/BookingPage";
 import { GlobalCursorGlow } from "@/components/ui/GlobalCursorGlow";
 import { AnimatePresence, motion } from "framer-motion";
@@ -97,6 +99,7 @@ function AnimatedRoutes() {
           <Route path="/app/saga-library" element={<SagaLibraryPage />} />
           <Route path="/app/share" element={<AppSharePage />} />
           <Route path="/app/bookings" element={<AppBookingsPage />} />
+          <Route path="/app/settings" element={<AppAccountPage />} />
           <Route path="/resource/:resourceId/:slug" element={<ResourceSharePage />} />
           <Route path="/book/:slug/:typeSlug" element={<BookingPage />} />
           {/* Static pages first — so they don't get matched by /:country */}
@@ -185,7 +188,15 @@ function AnimatedRoutes() {
           />
           <Route
             path="/settings"
-            element={<Navigate to="/training" replace />}
+            element={<Navigate to="/app/settings" replace />}
+          />
+          <Route
+            path="/leaders/apply"
+            element={
+              <PageTransitionWrapper>
+                <LeaderApplicationPage />
+              </PageTransitionWrapper>
+            }
           />
           <Route
             path="/apply"

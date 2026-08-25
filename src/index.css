@@ -2515,3 +2515,18 @@ a[class*="bg-cyan"], a[class*="bg-blue"], button[class*="bg-cyan"], button[class
   }
 }
 
+/* Authenticated leader account forms */
+.account-input {
+  width: 100%;
+  min-height: 48px;
+  border: 1px solid rgba(255, 255, 255, .14) !important;
+  border-radius: 12px !important;
+  background: rgba(0, 0, 0, .38) !important;
+  padding: .75rem 1rem;
+  color: #f5f5f7 !important;
+  font-size: .875rem !important;
+  line-height: 1.5 !important;
+}
+
+textarea.account-input { min-height: 11rem; }
+.account-input:disabled { cursor: not-allowed; }
