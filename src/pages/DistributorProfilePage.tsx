@@ -392,33 +392,29 @@ export default function DistributorProfilePage() {
       <main className="mx-auto flex w-full max-w-6xl flex-1 flex-col px-4 pt-24 pb-16 sm:px-6 md:pt-28 md:pb-24">
         {profile ? (
           <>
-            {/* 1. COMPRESSED TOP HERO CARD (Answers Who, Why Invited, Next Step immediately) */}
+            {/* 1. COMPRESSED TOP HERO CARD (Consistent deep dark aesthetic matching cards below) */}
             <header
               onMouseMove={handleMouseMove}
               onMouseEnter={() => setIsHovered(true)}
               onMouseLeave={() => setIsHovered(false)}
-              className="group relative mb-10 overflow-hidden rounded-3xl border border-white/15 bg-gradient-to-b from-[#0e1320] via-[#090d16] to-[#06080d] p-6 sm:p-8 shadow-2xl backdrop-blur-xl transition-all duration-300 hover:border-cyan-500/30"
+              className="group relative mb-10 overflow-hidden rounded-2xl sm:rounded-3xl border border-white/10 bg-[#090d16] p-6 sm:p-8 shadow-2xl transition-all duration-300 hover:border-cyan-500/30"
             >
-              {/* Interactive dynamic cursor spotlight */}
+              {/* Interactive dynamic subtle cursor spotlight (Clean, sharp, no gray blur) */}
               <div
                 className="pointer-events-none absolute -inset-px transition-opacity duration-300 z-0"
                 style={{
                   opacity: isHovered ? 1 : 0,
-                  background: `radial-gradient(650px circle at ${mousePos.x}px ${mousePos.y}px, rgba(6, 182, 212, 0.16), rgba(79, 70, 229, 0.08) 40%, transparent 80%)`,
+                  background: `radial-gradient(400px circle at ${mousePos.x}px ${mousePos.y}px, rgba(41, 151, 255, 0.09), transparent 80%)`,
                 }}
               />
 
-              {/* Subtle background ambient light */}
-              <div className="pointer-events-none absolute -right-20 -top-20 h-64 w-64 rounded-full bg-cyan-500/10 blur-3xl" />
-              <div className="pointer-events-none absolute -left-20 -bottom-20 h-64 w-64 rounded-full bg-indigo-500/10 blur-3xl" />
-
               {/* Invitation & Attribution Top Banner */}
               <div className="relative z-10 mb-6 flex flex-wrap items-center justify-between gap-3 border-b border-white/10 pb-4">
-                <div className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/[0.04] px-3.5 py-1 text-xs font-semibold text-[#2997ff]">
+                <div className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-black/50 px-3.5 py-1 text-xs font-semibold text-[#2997ff]">
                   <UserCheck className="h-3.5 w-3.5 text-[#2997ff]" />
                   {ui.invitationBadge}
                 </div>
-                <div className="inline-flex items-center gap-1.5 text-xs text-[#86868b]">
+                <div className="inline-flex items-center gap-1.5 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3 py-1 text-xs font-semibold text-emerald-400">
                   <ShieldCheck className="h-3.5 w-3.5 text-emerald-400" />
                   <span>{ui.attributionAssurance}</span>
                 </div>
@@ -427,14 +423,14 @@ export default function DistributorProfilePage() {
               {/* Balanced 3-Column Hero Grid */}
               <div className="relative z-10 grid gap-6 sm:grid-cols-[160px_1fr] md:grid-cols-[190px_1fr] lg:grid-cols-[200px_1fr_270px] items-center">
                 {/* Standardized Studio Portrait */}
-                <div className="relative mx-auto sm:mx-0 h-52 w-44 sm:h-60 sm:w-full max-w-[200px] shrink-0 overflow-hidden rounded-2xl border border-white/20 bg-gradient-to-b from-[#141926] to-[#07090f] shadow-xl group/photo transition-all duration-300 hover:border-cyan-400/40">
+                <div className="relative mx-auto sm:mx-0 h-52 w-44 sm:h-60 sm:w-full max-w-[200px] shrink-0 overflow-hidden rounded-2xl border border-white/15 bg-black/60 shadow-xl group/photo transition-all duration-300 hover:border-cyan-400/40">
                   <img
                     src={leaderPhoto}
                     alt={profile.display_name}
                     className="h-full w-full object-cover object-top transition duration-500 group-hover/photo:scale-105"
                   />
-                  <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
-                  <span className="absolute bottom-2 left-2 inline-flex items-center gap-1 rounded-full border border-white/20 bg-black/80 px-2.5 py-1 text-[9px] font-bold uppercase tracking-wider text-[#2997ff] backdrop-blur-md shadow-lg">
+                  <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
+                  <span className="absolute bottom-2 left-2 inline-flex items-center gap-1 rounded-full border border-white/20 bg-black/90 px-2.5 py-1 text-[9px] font-bold uppercase tracking-wider text-[#2997ff] backdrop-blur-md shadow-lg">
                     <BadgeCheck className="h-3 w-3 text-[#2997ff]" />
                     {ui.verifiedLeader}
                   </span>
@@ -458,11 +454,11 @@ export default function DistributorProfilePage() {
 
                   {/* Metadata Tags: Markets & Languages */}
                   <div className="mt-4 flex flex-wrap items-center justify-center sm:justify-start gap-2 text-xs text-[#86868b]">
-                    <span className="inline-flex items-center gap-1.5 rounded-lg border border-white/10 bg-white/[0.03] px-2.5 py-1 text-slate-300">
+                    <span className="inline-flex items-center gap-1.5 rounded-lg border border-white/10 bg-black/40 px-2.5 py-1 text-slate-300">
                       <MapPin className="h-3.5 w-3.5 text-[#2997ff]" />
                       {profile.regions.join(' · ')}
                     </span>
-                    <span className="inline-flex items-center gap-1.5 rounded-lg border border-white/10 bg-white/[0.03] px-2.5 py-1 text-slate-300">
+                    <span className="inline-flex items-center gap-1.5 rounded-lg border border-white/10 bg-black/40 px-2.5 py-1 text-slate-300">
                       <Languages className="h-3.5 w-3.5 text-[#2997ff]" />
                       {profile.languages.map(code => languageNames[code] ?? code.toUpperCase()).join(' · ')}
                     </span>
@@ -492,7 +488,7 @@ export default function DistributorProfilePage() {
 
                     <Link
                       to={applyUrl}
-                      className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-white/15 bg-white/5 hover:bg-white/10 px-4 py-2.5 text-sm font-semibold text-white transition-all hover:border-white/30 active:scale-95"
+                      className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-white/15 bg-black/40 hover:bg-white/10 px-4 py-2.5 text-sm font-semibold text-white transition-all hover:border-white/30 active:scale-95"
                     >
                       {ui.requestInfo}
                       <ArrowRight className="h-4 w-4" />
@@ -501,7 +497,7 @@ export default function DistributorProfilePage() {
                 </div>
 
                 {/* Right Column: Verified Channels & Links Glass Card */}
-                <div className="flex flex-col gap-2.5 rounded-2xl border border-white/10 bg-white/[0.03] p-4 backdrop-blur-md shadow-xl sm:col-span-2 lg:col-span-1">
+                <div className="flex flex-col gap-2.5 rounded-2xl border border-white/10 bg-black/40 p-4 shadow-xl sm:col-span-2 lg:col-span-1">
                   <div className="flex items-center justify-between border-b border-white/10 pb-2.5">
                     <span className="text-[11px] font-bold uppercase tracking-wider text-[#86868b]">Verified Channels</span>
                     <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 text-[10px] font-bold text-emerald-400">
@@ -553,7 +549,7 @@ export default function DistributorProfilePage() {
                     </a>
                   )}
 
-                  <div className="flex items-center gap-2 rounded-xl border border-white/5 bg-black/40 px-3 py-2 text-[11px] text-[#86868b]">
+                  <div className="flex items-center gap-2 rounded-xl border border-white/5 bg-black/60 px-3 py-2 text-[11px] text-[#86868b]">
                     <ShieldCheck className="h-3.5 w-3.5 text-emerald-400 shrink-0" />
                     <span className="truncate">Ref ID: <strong className="text-white font-mono">{profile.referral_code || profile.slug}</strong></span>
                   </div>
