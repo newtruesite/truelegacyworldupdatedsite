@@ -239,7 +239,6 @@ html {
   }
 
   /* Legacy nav logo overrides */
-  header img:first-child,
   nav img:first-child {
     max-height: 48px;
     width: auto;
