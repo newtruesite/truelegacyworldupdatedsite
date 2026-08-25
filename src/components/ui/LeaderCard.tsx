@@ -26,25 +26,25 @@ export interface LeaderPortraitConfig {
 export const LEADER_PORTRAIT_REGISTRY: Record<string, LeaderPortraitConfig> = {
   'mehdi-cohen': {
     src: '/leaders/standardized/mehdi-cohen.png',
-    scale: 1.08,
+    scale: 1.05,
     offsetY: '0%',
     objectPosition: 'top center',
   },
   'simon-loh': {
     src: '/leaders/standardized/simon-loh-v2.png',
-    scale: 1.06,
+    scale: 1.18,
     offsetY: '0%',
     objectPosition: 'top center',
   },
   'ming-way-sia': {
     src: '/leaders/standardized/ming-way-sia.png',
-    scale: 1.07,
+    scale: 1.0,
     offsetY: '0%',
     objectPosition: 'top center',
   },
   'zah-naderi': {
     src: '/leaders/standardized/zah-naderi-v3.png',
-    scale: 1.18,
+    scale: 1.0,
     offsetY: '0%',
     objectPosition: 'top center',
   },
@@ -56,19 +56,19 @@ export const LEADER_PORTRAIT_REGISTRY: Record<string, LeaderPortraitConfig> = {
   },
   'ryan-pool': {
     src: '/leaders/standardized/ryan-pool-sr.png',
-    scale: 1.05,
+    scale: 1.12,
     offsetY: '0%',
     objectPosition: 'top center',
   },
   'magaly-cardona': {
     src: '/leaders/standardized/magaly-cardona.png',
-    scale: 1.1,
+    scale: 1.0,
     offsetY: '0%',
     objectPosition: 'top center',
   },
   emanuela: {
     src: '/leaders/standardized/emanuela-doustova.png',
-    scale: 1.12,
+    scale: 1.0,
     offsetY: '0%',
     objectPosition: 'top center',
   },
@@ -80,7 +80,7 @@ export const LEADER_PORTRAIT_REGISTRY: Record<string, LeaderPortraitConfig> = {
   },
   'angel-mok': {
     src: '/leaders/standardized/angel-mok-v2.png',
-    scale: 1.16,
+    scale: 1.18,
     offsetY: '0%',
     objectPosition: 'top center',
   },
