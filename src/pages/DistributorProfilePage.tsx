@@ -25,6 +25,19 @@ import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import NotFoundPage from './NotFoundPage'
 
+const LEADER_PORTRAITS: Record<string, string> = {
+  'mehdi-cohen': '/leaders/standardized/mehdi-cohen.png',
+  'simon-loh': '/leaders/standardized/simon-loh-v2.png',
+  'ming-way-sia': '/leaders/standardized/ming-way-sia.png',
+  'zah-naderi': '/leaders/standardized/zah-naderi-v3.png',
+  'alex-gonzalez': '/leaders/standardized/alex-gonzalez.png',
+  'ryan-pool': '/leaders/standardized/ryan-pool-sr.png',
+  'magaly-cardona': '/leaders/standardized/magaly-cardona.png',
+  emanuela: '/leaders/standardized/emanuela-doustova.png',
+  'jesse-schexnayder': '/leaders/standardized/jesse-schexnayder.png',
+  'angel-mok': '/leaders/standardized/angel-mok-v2.png',
+}
+
 const PROFILE_TRANSLATIONS: Record<string, Record<'es' | 'fr' | 'pt', { title: string; bio: string }>> = {
   'simon-loh': {
     es: { title: 'Líder True Legacy 6A2-4', bio: 'Contador de formación y emprendedor por vocación. Simon salió de la carrera tradicional en 2016 y construyó su negocio Enagic en mercados internacionales. Hoy viaja por el mundo compartiendo su experiencia y capacitando a emprendedores para alcanzar la libertad financiera a través de Enagic y la comunidad True Legacy.' },
@@ -32,9 +45,9 @@ const PROFILE_TRANSLATIONS: Record<string, Record<'es' | 'fr' | 'pt', { title: s
     pt: { title: 'Líder True Legacy 6A2-4', bio: 'Contador por formação e empreendedor por vocação, Simon deixou a corrida tradicional em 2016 e construiu seu negócio Enagic em mercados internacionais. Hoje, viaja pelo mundo compartilhando sua experiência e treinando empreendedores para buscar liberdade financeira por meio da Enagic e da comunidade True Legacy.' },
   },
   'mehdi-cohen': {
-    es: { title: 'True Legacy World', bio: 'Educación global y para LATAM sobre productos, liderazgo y apoyo al equipo.' },
-    fr: { title: 'True Legacy World', bio: 'Éducation produit mondiale et LATAM, leadership et soutien d’équipe.' },
-    pt: { title: 'True Legacy World', bio: 'Educação global e para a América Latina sobre produtos, liderança e suporte à equipe.' },
+    es: { title: 'Líder True Legacy 6A', bio: 'Educación global y para LATAM sobre productos, liderazgo y apoyo al equipo.' },
+    fr: { title: 'Leader True Legacy 6A', bio: 'Éducation produit mondiale et LATAM, leadership et soutien d’équipe.' },
+    pt: { title: 'Líder True Legacy 6A', bio: 'Educação global e para a América Latina sobre produtos, liderança e suporte à equipe.' },
   },
   'ryan-pool': {
     es: { title: 'Líder True Legacy', bio: 'Ryan es emprendedor, exatleta y líder comunitario en Los Ángeles. Se enfoca en el bienestar, el desarrollo personal, la libertad financiera y en construir un legado familiar duradero.' },
@@ -42,9 +55,9 @@ const PROFILE_TRANSLATIONS: Record<string, Record<'es' | 'fr' | 'pt', { title: s
     pt: { title: 'Líder True Legacy', bio: 'Ryan é empreendedor, ex-atleta e líder comunitário em Los Angeles. Seu foco está no bem-estar, desenvolvimento pessoal, liberdade financeira e na construção de um legado familiar duradouro.' },
   },
   'magaly-cardona': {
-    es: { title: 'Distribuidora True Legacy', bio: 'Magaly ayuda a las personas a diseñar un trabajo alineado con sus valores y guía a líderes de Estados Unidos y Latinoamérica para construir negocios intencionales mediante Enagic y la comunidad.' },
-    fr: { title: 'Distributrice True Legacy', bio: 'Magaly aide les personnes à concevoir un travail aligné avec leurs valeurs et accompagne des leaders aux États-Unis et en Amérique latine dans la création d’activités intentionnelles grâce à Enagic et à la communauté.' },
-    pt: { title: 'Distribuidora True Legacy', bio: 'Magaly ajuda pessoas a criarem um trabalho alinhado aos seus valores e orienta líderes nos Estados Unidos e na América Latina a desenvolverem negócios intencionais por meio da Enagic e da comunidade.' },
+    es: { title: 'Líder True Legacy 6A', bio: 'Magaly ayuda a las personas a diseñar un trabajo alineado con sus valores y guía a líderes de Estados Unidos y Latinoamérica para construir negocios intencionales mediante Enagic y la comunidad.' },
+    fr: { title: 'Leader True Legacy 6A', bio: 'Magaly aide les personnes à concevoir un travail aligné avec leurs valeurs et accompagne des leaders aux États-Unis et en Amérique latine dans la création d’activités intentionnelles grâce à Enagic et à la communauté.' },
+    pt: { title: 'Líder True Legacy 6A', bio: 'Magaly ajuda pessoas a criarem um trabalho alinhado aos seus valores e orienta líderes nos Estados Unidos e na América Latina a desenvolverem negócios intencionais por meio da Enagic e da comunidade.' },
   },
   'ming-way-sia': {
     es: { title: 'Líder True Legacy 6A2-5', bio: 'Ming-Way construyó desde cero junto a su padre, desarrollando disciplina y resiliencia que hoy utiliza para ayudar a otros a crear negocios responsables y orientados al legado.' },
@@ -106,6 +119,7 @@ export default function DistributorProfilePage() {
 
   const firstName = profile?.display_name.split(' ')[0] || 'Leader'
   const localizedProfile = profile && locale !== 'en' ? PROFILE_TRANSLATIONS[profile.slug]?.[locale] : undefined
+  const leaderPhoto = (profile?.slug && LEADER_PORTRAITS[profile.slug]) || profile?.avatar_url || '/logos/tl-square-white.png'
   const activeTitle = localizedProfile?.title || profile?.title || 'Independent Distributor'
   const activeBio = localizedProfile?.bio || profile?.bio || ''
   const shortPositioning = getShortPositioning(activeBio)
@@ -385,7 +399,7 @@ export default function DistributorProfilePage() {
                 {/* Standardized Studio Portrait */}
                 <div className="relative mx-auto sm:mx-0 h-48 w-40 sm:h-56 sm:w-full shrink-0 overflow-hidden rounded-2xl border border-white/20 bg-gradient-to-b from-[#141926] to-[#07090f] shadow-xl">
                   <img
-                    src={profile.avatar_url || '/logos/tl-square-white.png'}
+                    src={leaderPhoto}
                     alt={profile.display_name}
                     className="h-full w-full object-cover object-top"
                   />
@@ -583,7 +597,7 @@ export default function DistributorProfilePage() {
               <div className="relative mx-auto max-w-2xl">
                 <div className="mx-auto mb-4 h-16 w-16 overflow-hidden rounded-full border-2 border-cyan-400/30 p-0.5 shadow-lg">
                   <img
-                    src={profile.avatar_url || '/logos/tl-square-white.png'}
+                    src={leaderPhoto}
                     alt={profile.display_name}
                     className="h-full w-full rounded-full object-cover object-top"
                   />

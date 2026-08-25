@@ -92,6 +92,19 @@ const MEHDI_EVENT_PAGES = [
   },
 ] as const
 
+const LEADER_PORTRAITS: Record<string, string> = {
+  'mehdi-cohen': '/leaders/standardized/mehdi-cohen.png',
+  'simon-loh': '/leaders/standardized/simon-loh-v2.png',
+  'ming-way-sia': '/leaders/standardized/ming-way-sia.png',
+  'zah-naderi': '/leaders/standardized/zah-naderi-v3.png',
+  'alex-gonzalez': '/leaders/standardized/alex-gonzalez.png',
+  'ryan-pool': '/leaders/standardized/ryan-pool-sr.png',
+  'magaly-cardona': '/leaders/standardized/magaly-cardona.png',
+  emanuela: '/leaders/standardized/emanuela-doustova.png',
+  'jesse-schexnayder': '/leaders/standardized/jesse-schexnayder.png',
+  'angel-mok': '/leaders/standardized/angel-mok-v2.png',
+}
+
 function whatsappUrl(profile: PublicDistributor, variant: LandingVariant) {
   if (!profile.phone) return null
   const subject = variant === 'duo' ? 'the Duo products' : variant === 'business' ? 'the True Legacy business' : variant === 'events' ? 'the weekly True Legacy events' : 'the True Legacy training system'
@@ -129,6 +142,7 @@ export default function DistributorLandingPage() {
   const copy = useMemo(() => variant ? VARIANTS[variant] : null, [variant])
   if (!variant || profile === null) return <NotFoundPage />
 
+  const leaderPhoto = (profile?.slug && LEADER_PORTRAITS[profile.slug]) || profile?.avatar_url || '/logos/tl-square-white.png'
   const Icon = copy?.icon || Sparkles
   const applyUrl = `/apply?ref=${profile?.referral_code || slug}&interest=${copy?.interest || 'duo'}&source=${variant}`
   const whatsapp = profile ? whatsappUrl(profile, variant) : null
@@ -139,7 +153,7 @@ export default function DistributorLandingPage() {
     <SEO
       title={`${profile?.display_name || 'True Legacy'} | ${variant === 'duo' ? 'Duo Products' : variant === 'business' ? 'Business Presentation' : variant === 'events' ? 'Weekly Events' : 'Training'}`}
       description={copy?.subheadline || ''}
-      image={profile?.avatar_url || undefined}
+      image={leaderPhoto}
     />
     <Navbar />
     <main className="flex-1">
@@ -154,7 +168,7 @@ export default function DistributorLandingPage() {
             >
               <div className="relative h-11 w-11 sm:h-12 sm:w-12 shrink-0 overflow-hidden rounded-full border border-white/20 bg-gradient-to-b from-[#141926] to-[#07090f]">
                 <img
-                  src={profile.avatar_url || '/logos/tl-square-white.png'}
+                  src={leaderPhoto}
                   alt={profile.display_name}
                   className="h-full w-full object-cover object-top transition duration-300 group-hover:scale-105"
                 />
@@ -238,7 +252,7 @@ export default function DistributorLandingPage() {
             <div className="relative">
               <div className="mx-auto mb-4 h-16 w-16 overflow-hidden rounded-full border-2 border-cyan-400/30 p-0.5 shadow-lg">
                 <img
-                  src={profile.avatar_url || '/logos/tl-square-white.png'}
+                  src={leaderPhoto}
                   alt={profile.display_name}
                   className="h-full w-full rounded-full object-cover object-top"
                 />

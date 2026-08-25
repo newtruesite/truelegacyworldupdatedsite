@@ -69,7 +69,7 @@ const FALLBACK_DISTRIBUTORS: PublicDistributor[] = [
     slug: 'mehdi-cohen',
     referral_code: 'mehdi-cohen',
     display_name: 'Mehdi Cohen',
-    title: 'True Legacy World',
+    title: 'True Legacy 6A Leader',
     bio: 'Global and LATAM product education, leadership, and team support.',
     avatar_url: '/leaders/standardized/mehdi-cohen.png',
     regions: ['Global', 'LATAM', 'Morocco', 'USA', 'Canada'],
@@ -95,7 +95,7 @@ const FALLBACK_DISTRIBUTORS: PublicDistributor[] = [
     slug: 'magaly-cardona',
     referral_code: 'magaly-cardona',
     display_name: 'Magaly Cardona',
-    title: 'True Legacy Distributor',
+    title: 'True Legacy 6A Leader',
     bio: 'Magaly helps people design work that aligns with their values—guiding leaders across the U.S. and Latin America to build intentional businesses through Enagic and community.',
     avatar_url: '/leaders/standardized/magaly-cardona.png',
     regions: ['USA', 'LATAM'],
@@ -201,7 +201,6 @@ export async function getPublicDistributors(): Promise<PublicDistributor[]> {
   const { data, error } = await crmSupabase.rpc('get_public_crm_distributors')
   if (error || !Array.isArray(data)) return FALLBACK_DISTRIBUTORS
   const remoteDistributors = (data as PublicDistributor[]).map(profile => {
-    if (!['mehdi-cohen', 'simon-loh', 'ming-way-sia', 'zah-naderi', 'emanuela', 'jesse-schexnayder', 'angel-mok'].includes(profile.slug)) return profile
     const confirmed = FALLBACK_DISTRIBUTORS.find(item => item.slug === profile.slug)
     return confirmed ? { ...profile, ...confirmed, id: profile.id } : profile
   })

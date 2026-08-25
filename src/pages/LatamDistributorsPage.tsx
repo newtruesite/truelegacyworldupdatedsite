@@ -17,7 +17,7 @@ const DISTRIBUTORS: Distributor[] = [
   {
     slug: "mehdi-cohen",
     name: "Mehdi Cohen",
-    title: "True Legacy World",
+    title: "Líder True Legacy 6A",
     photo: "/leaders/standardized/mehdi-cohen.png",
     fallbackInitial: "M",
     website: "https://mehdicohen.com",

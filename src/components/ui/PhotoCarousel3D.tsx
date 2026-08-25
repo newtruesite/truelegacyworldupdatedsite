@@ -12,7 +12,7 @@ const LEADERS = [
         handle: '@mehdicohen_',
         instagramUrl: 'https://www.instagram.com/mehdicohen_/',
         region: 'Morocco · Colombia · USA',
-        role: 'Global Founder & Market Builder',
+        role: 'True Legacy 6A Leader',
         intro: 'After 24 years in the U.S., Mehdi expanded into Morocco and now Colombia — opening new markets while mentoring leaders who want more intentional, flexible lives with Enagic.',
         bio: [
             'After spending 24 years living and working in the United States, I built my life the traditional way — career, routine, and a clear idea of what success was supposed to look like.',
@@ -49,7 +49,7 @@ const LEADERS = [
         handle: '@mcardonita',
         instagramUrl: 'https://www.instagram.com/mcardonita/',
         region: 'USA · LATAM',
-        role: 'Coach & Impact-Driven Entrepreneur',
+        role: 'True Legacy 6A Leader',
         intro: 'Magaly helps people design work that aligns with their values — guiding leaders across the U.S. and Latin America to build intentional businesses through Enagic and community.',
         bio: [
             'After years of trying to create a life that felt both meaningful and balanced, I realized I wanted a way of working that aligned more deeply with my values. That journey led me to Enagic and a community centered around growth, education, and contribution.',
