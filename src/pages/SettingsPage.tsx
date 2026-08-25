@@ -1,6 +1,6 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
-import { User, Mail, Phone, Globe, Settings, Star, Edit3, Save, X, Shield } from 'lucide-react'
+import { User, Mail, Phone, Globe, Settings, Star, Edit3, Save, X, Shield, Link2, ExternalLink, Plus, Trash2, CheckCircle2 } from 'lucide-react'
 import { AuroraBackground } from '@/components/ui/AuroraBackground'
 import { Navbar } from '@/components/layout/Navbar'
 import { Footer } from '@/components/layout/Footer'
@@ -9,16 +9,24 @@ import { cn } from '@/lib/utils'
 import { LeadershipPanel } from '@/components/LeadershipPanel'
 
 const MOCK_USER = {
-    name: 'Alex Johnson',
-    email: 'alex@example.com',
-    phone: '+1 (555) 123-4567',
+    name: 'Mehdi Cohen',
+    email: 'mehdi@truelegacyworld.com',
+    phone: '+1 (864) 907-2149',
     country: 'usa',
-    sponsorName: 'Mehdi Cohen',
-    sponsorInstagram: '@mehdicohen',
-    rank: 'Gold Leader',
-    joinDate: 'January 2025',
-    teamSize: 24,
-    monthlyVolume: '$12,450',
+    website: 'https://mehdicohen.com',
+    instagram: 'https://www.instagram.com/mehdicohen_/',
+    telegram: 'https://t.me/mehdicohen',
+    calendly: 'https://calendly.com/aquacharged/true-legacy-one-on-one',
+    customLinks: [
+        { label: 'Official Website', url: 'https://mehdicohen.com' },
+        { label: 'Strategy Session', url: 'https://calendly.com/aquacharged/true-legacy-one-on-one' }
+    ],
+    sponsorName: 'Simon Loh',
+    sponsorInstagram: '@simonloh_',
+    rank: '6A Leader',
+    joinDate: 'January 2024',
+    teamSize: 240,
+    monthlyVolume: '$148,000',
 }
 
 const RANKS = [
@@ -26,12 +34,14 @@ const RANKS = [
     { name: 'Bronze Leader', color: 'text-amber-600', bg: 'bg-amber-600/20' },
     { name: 'Silver Leader', color: 'text-[#cccccc]', bg: 'bg-slate-400/20' },
     { name: 'Gold Leader', color: 'text-yellow-400', bg: 'bg-yellow-500/20' },
+    { name: '6A Leader', color: 'text-[#2997ff]', bg: 'bg-cyan-500/20' },
     { name: 'Platinum Director', color: 'text-[#2997ff]', bg: 'bg-cyan-500/20' },
     { name: 'Legacy Master', color: 'text-[#2997ff]', bg: 'bg-purple-500/20' },
 ]
 
 const NAV_ITEMS = [
     { label: 'Profile', icon: User, id: 'profile' },
+    { label: 'Websites & Links', icon: Link2, id: 'links' },
     { label: 'Settings', icon: Settings, id: 'settings' },
     { label: 'My Status', icon: Star, id: 'status' },
     { label: 'Leadership', icon: Shield, id: 'leadership' },
@@ -149,6 +159,9 @@ export default function SettingsPage() {
                                             { label: 'Full Name', key: 'name', icon: User, type: 'text' },
                                             { label: 'Email Address', key: 'email', icon: Mail, type: 'email' },
                                             { label: 'Phone Number', key: 'phone', icon: Phone, type: 'tel' },
+                                            { label: 'Personal Website', key: 'website', icon: Globe, type: 'url' },
+                                            { label: 'Instagram Profile', key: 'instagram', icon: Link2, type: 'url' },
+                                            { label: 'Booking / Calendly', key: 'calendly', icon: ExternalLink, type: 'url' },
                                         ].map(({ label, key, icon: Icon, type }) => (
                                             <div key={key}>
                                                 <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-[#86868b]">
@@ -159,18 +172,19 @@ export default function SettingsPage() {
                                                         <Icon className="absolute left-3 top-3 h-4 w-4 text-[#86868b]" />
                                                         <input
                                                             type={type}
-                                                            value={formData[key as keyof typeof formData]}
+                                                            value={formData[key as keyof typeof formData] as string || ''}
                                                             onChange={(e) =>
                                                                 setFormData({ ...formData, [key]: e.target.value })
                                                             }
+                                                            placeholder={key === 'website' ? 'https://yourwebsite.com' : key === 'instagram' ? 'https://instagram.com/yourhandle' : ''}
                                                             className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 pl-10 text-sm text-white outline-none focus:border-white/20 focus:ring-1 focus:ring-cyan-500/30"
                                                         />
                                                     </div>
                                                 ) : (
                                                     <div className="flex items-center gap-2 rounded-xl border border-white/5 bg-white/3 px-4 py-2.5">
                                                         <Icon className="h-4 w-4 text-[#86868b]" />
-                                                        <span className="text-sm text-[#cccccc]">
-                                                            {formData[key as keyof typeof formData]}
+                                                        <span className="text-sm text-[#cccccc] truncate">
+                                                            {(formData[key as keyof typeof formData] as string) || <span className="text-white/30 italic">Not set</span>}
                                                         </span>
                                                     </div>
                                                 )}
@@ -239,6 +253,228 @@ export default function SettingsPage() {
                                             </div>
                                             <Star className="ml-auto h-5 w-5 text-yellow-400" />
                                         </div>
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* Websites & Links Tab */}
+                            {activeTab === 'links' && (
+                                <div className="glass rounded-2xl border border-white/10 p-6 sm:p-8">
+                                    <div className="flex items-center justify-between mb-6 pb-4 border-b border-white/10">
+                                        <div>
+                                            <h3 className="text-lg font-bold text-white">Public Profile Links & Websites</h3>
+                                            <p className="text-xs sm:text-sm text-[#86868b] mt-1">
+                                                Add your personal website, social channels, and custom strategy links to your verified distributor page.
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    {/* Primary Links Grid */}
+                                    <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 mb-8">
+                                        <div>
+                                            <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-[#86868b]">
+                                                Personal Website / Portfolio
+                                            </label>
+                                            <div className="relative">
+                                                <Globe className="absolute left-3 top-3 h-4 w-4 text-cyan-400" />
+                                                <input
+                                                    type="url"
+                                                    value={formData.website}
+                                                    onChange={(e) => setFormData({ ...formData, website: e.target.value })}
+                                                    placeholder="https://yourwebsite.com"
+                                                    className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 pl-10 pr-24 text-sm text-white outline-none focus:border-cyan-500/40 focus:ring-1 focus:ring-cyan-500/30"
+                                                />
+                                                {formData.website && (
+                                                    <a
+                                                        href={formData.website}
+                                                        target="_blank"
+                                                        rel="noreferrer"
+                                                        className="absolute right-2.5 top-2 inline-flex items-center gap-1 rounded-lg bg-white/10 hover:bg-white/20 px-2 py-1 text-[11px] font-semibold text-cyan-300 transition-colors"
+                                                    >
+                                                        Test <ExternalLink className="h-3 w-3" />
+                                                    </a>
+                                                )}
+                                            </div>
+                                        </div>
+
+                                        <div>
+                                            <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-[#86868b]">
+                                                Instagram Profile URL
+                                            </label>
+                                            <div className="relative">
+                                                <Link2 className="absolute left-3 top-3 h-4 w-4 text-pink-400" />
+                                                <input
+                                                    type="url"
+                                                    value={formData.instagram}
+                                                    onChange={(e) => setFormData({ ...formData, instagram: e.target.value })}
+                                                    placeholder="https://instagram.com/yourhandle"
+                                                    className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 pl-10 pr-24 text-sm text-white outline-none focus:border-pink-500/40 focus:ring-1 focus:ring-pink-500/30"
+                                                />
+                                                {formData.instagram && (
+                                                    <a
+                                                        href={formData.instagram}
+                                                        target="_blank"
+                                                        rel="noreferrer"
+                                                        className="absolute right-2.5 top-2 inline-flex items-center gap-1 rounded-lg bg-white/10 hover:bg-white/20 px-2 py-1 text-[11px] font-semibold text-pink-300 transition-colors"
+                                                    >
+                                                        Test <ExternalLink className="h-3 w-3" />
+                                                    </a>
+                                                )}
+                                            </div>
+                                        </div>
+
+                                        <div>
+                                            <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-[#86868b]">
+                                                Calendly / Booking Link
+                                            </label>
+                                            <div className="relative">
+                                                <ExternalLink className="absolute left-3 top-3 h-4 w-4 text-amber-400" />
+                                                <input
+                                                    type="url"
+                                                    value={formData.calendly}
+                                                    onChange={(e) => setFormData({ ...formData, calendly: e.target.value })}
+                                                    placeholder="https://calendly.com/yourname/30min"
+                                                    className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 pl-10 pr-24 text-sm text-white outline-none focus:border-amber-500/40 focus:ring-1 focus:ring-amber-500/30"
+                                                />
+                                                {formData.calendly && (
+                                                    <a
+                                                        href={formData.calendly}
+                                                        target="_blank"
+                                                        rel="noreferrer"
+                                                        className="absolute right-2.5 top-2 inline-flex items-center gap-1 rounded-lg bg-white/10 hover:bg-white/20 px-2 py-1 text-[11px] font-semibold text-amber-300 transition-colors"
+                                                    >
+                                                        Test <ExternalLink className="h-3 w-3" />
+                                                    </a>
+                                                )}
+                                            </div>
+                                        </div>
+
+                                        <div>
+                                            <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-[#86868b]">
+                                                Telegram Channel / DM Link
+                                            </label>
+                                            <div className="relative">
+                                                <Link2 className="absolute left-3 top-3 h-4 w-4 text-blue-400" />
+                                                <input
+                                                    type="url"
+                                                    value={formData.telegram}
+                                                    onChange={(e) => setFormData({ ...formData, telegram: e.target.value })}
+                                                    placeholder="https://t.me/yourusername"
+                                                    className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 pl-10 pr-24 text-sm text-white outline-none focus:border-blue-500/40 focus:ring-1 focus:ring-blue-500/30"
+                                                />
+                                                {formData.telegram && (
+                                                    <a
+                                                        href={formData.telegram}
+                                                        target="_blank"
+                                                        rel="noreferrer"
+                                                        className="absolute right-2.5 top-2 inline-flex items-center gap-1 rounded-lg bg-white/10 hover:bg-white/20 px-2 py-1 text-[11px] font-semibold text-blue-300 transition-colors"
+                                                    >
+                                                        Test <ExternalLink className="h-3 w-3" />
+                                                    </a>
+                                                )}
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {/* Custom Additional Links Section */}
+                                    <div className="mb-8 rounded-2xl border border-white/10 bg-white/[0.02] p-5">
+                                        <div className="flex items-center justify-between mb-4">
+                                            <h4 className="text-sm font-bold uppercase tracking-wider text-cyan-400">
+                                                Additional Custom Links & Resources
+                                            </h4>
+                                            <button
+                                                type="button"
+                                                onClick={() => {
+                                                    setFormData({
+                                                        ...formData,
+                                                        customLinks: [...formData.customLinks, { label: 'New Link', url: 'https://' }]
+                                                    })
+                                                }}
+                                                className="inline-flex items-center gap-1.5 rounded-lg border border-cyan-500/30 bg-cyan-500/10 hover:bg-cyan-500/20 px-3 py-1.5 text-xs font-bold text-cyan-300 transition-all"
+                                            >
+                                                <Plus className="h-3.5 w-3.5" /> Add Link
+                                            </button>
+                                        </div>
+
+                                        <div className="space-y-3">
+                                            {formData.customLinks.map((link, idx) => (
+                                                <div key={idx} className="flex items-center gap-3 rounded-xl border border-white/10 bg-black/40 p-3">
+                                                    <input
+                                                        type="text"
+                                                        value={link.label}
+                                                        onChange={(e) => {
+                                                            const updated = [...formData.customLinks]
+                                                            updated[idx].label = e.target.value
+                                                            setFormData({ ...formData, customLinks: updated })
+                                                        }}
+                                                        placeholder="Link Title (e.g., Blog)"
+                                                        className="w-1/3 rounded-lg border border-white/10 bg-white/5 px-3 py-1.5 text-xs text-white outline-none focus:border-cyan-500/40"
+                                                    />
+                                                    <input
+                                                        type="url"
+                                                        value={link.url}
+                                                        onChange={(e) => {
+                                                            const updated = [...formData.customLinks]
+                                                            updated[idx].url = e.target.value
+                                                            setFormData({ ...formData, customLinks: updated })
+                                                        }}
+                                                        placeholder="https://..."
+                                                        className="flex-1 rounded-lg border border-white/10 bg-white/5 px-3 py-1.5 text-xs text-white outline-none focus:border-cyan-500/40"
+                                                    />
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => {
+                                                            const updated = formData.customLinks.filter((_, i) => i !== idx)
+                                                            setFormData({ ...formData, customLinks: updated })
+                                                        }}
+                                                        className="flex h-8 w-8 items-center justify-center rounded-lg border border-white/10 hover:border-red-500/30 hover:bg-red-500/10 text-[#86868b] hover:text-red-400 transition-colors"
+                                                    >
+                                                        <Trash2 className="h-3.5 w-3.5" />
+                                                    </button>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+
+                                    {/* Live Preview Card */}
+                                    <div className="mb-6 rounded-2xl border border-white/10 bg-gradient-to-b from-[#141926] to-[#07090f] p-5">
+                                        <p className="text-[11px] font-bold uppercase tracking-wider text-[#86868b] mb-3">
+                                            Live Public Profile Preview
+                                        </p>
+                                        <div className="flex flex-wrap items-center gap-3">
+                                            {formData.website && (
+                                                <div className="inline-flex items-center gap-2 rounded-xl border border-cyan-500/30 bg-cyan-500/10 px-3.5 py-2 text-xs font-bold text-cyan-300">
+                                                    <Globe className="h-4 w-4" />
+                                                    {formData.website.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/, '')}
+                                                </div>
+                                            )}
+                                            {formData.instagram && (
+                                                <div className="inline-flex items-center gap-2 rounded-xl border border-pink-500/30 bg-pink-500/10 px-3.5 py-2 text-xs font-bold text-pink-300">
+                                                    <Link2 className="h-4 w-4" />
+                                                    Instagram Channel
+                                                </div>
+                                            )}
+                                            {formData.calendly && (
+                                                <div className="inline-flex items-center gap-2 rounded-xl border border-amber-500/30 bg-amber-500/10 px-3.5 py-2 text-xs font-bold text-amber-300">
+                                                    <ExternalLink className="h-4 w-4" />
+                                                    Booking Schedule
+                                                </div>
+                                            )}
+                                        </div>
+                                    </div>
+
+                                    {/* Save Button */}
+                                    <div className="flex justify-end">
+                                        <button
+                                            type="button"
+                                            onClick={() => {
+                                                alert('✓ Profile links successfully saved and updated on your public page!')
+                                            }}
+                                            className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-500 hover:to-cyan-400 px-6 py-2.5 text-sm font-bold text-white shadow-lg shadow-cyan-500/20 transition-all hover:scale-105 active:scale-95"
+                                        >
+                                            <Save className="h-4 w-4" />
+                                            Save Profile Links
+                                        </button>
                                     </div>
                                 </div>
                             )}

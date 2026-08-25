@@ -11,6 +11,8 @@ import {
   BookOpen,
   BriefcaseBusiness,
   CalendarDays,
+  ExternalLink,
+  Globe,
   Globe2,
   Instagram,
   Languages,
@@ -107,6 +109,13 @@ export default function DistributorProfilePage() {
   const { slug } = useParams()
   const { locale } = useLocaleContext()
   const [profile, setProfile] = useState<PublicDistributor | null | undefined>(undefined)
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 })
+  const [isHovered, setIsHovered] = useState(false)
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect()
+    setMousePos({ x: e.clientX - rect.left, y: e.clientY - rect.top })
+  }
 
   useEffect(() => {
     getPublicDistributors().then(items => setProfile(items.find(item => item.slug === slug) || null))
@@ -122,6 +131,7 @@ export default function DistributorProfilePage() {
   const firstName = profile?.display_name.split(' ')[0] || 'Leader'
   const localizedProfile = profile && locale !== 'en' ? PROFILE_TRANSLATIONS[profile.slug]?.[locale] : undefined
   const leaderPhoto = (profile?.slug && LEADER_PORTRAITS[profile.slug]) || profile?.avatar_url || '/logos/tl-square-white.png'
+  const websiteUrl = profile?.website_url || (profile?.slug === 'mehdi-cohen' ? 'https://mehdicohen.com' : null)
   const activeTitle = localizedProfile?.title || profile?.title || 'Independent Distributor'
   const activeBio = localizedProfile?.bio || profile?.bio || ''
   const shortPositioning = getShortPositioning(activeBio)
@@ -140,6 +150,7 @@ export default function DistributorProfilePage() {
       connectDirectly: `Direct Connection`,
       phoneLabel: 'Direct Phone',
       instagramLabel: 'Instagram Profile',
+      websiteLabel: 'Personal Website',
       attributionNote: 'When you submit an inquiry through this page, you are attributed directly to this distributor inside True Legacy CRM.',
       reconnectHeading: `Ready to take your next step with ${firstName}?`,
       reconnectSub: 'Whether you want to learn more about the products or explore the business, we are here to support your journey.',
@@ -183,6 +194,7 @@ export default function DistributorProfilePage() {
       connectDirectly: `Conexión Directa`,
       phoneLabel: 'Teléfono Directo',
       instagramLabel: 'Perfil de Instagram',
+      websiteLabel: 'Sitio Web Personal',
       attributionNote: 'Al enviar una solicitud a través de esta página, tu registro queda atribuido directamente a este distribuidor dentro del CRM de True Legacy.',
       reconnectHeading: `¿Listo para dar el siguiente paso con ${firstName}?`,
       reconnectSub: 'Ya sea que desees conocer más sobre los productos o explorar el negocio, estamos aquí para acompañarte.',
@@ -226,6 +238,7 @@ export default function DistributorProfilePage() {
       connectDirectly: `Contact Direct`,
       phoneLabel: 'Téléphone Direct',
       instagramLabel: 'Profil Instagram',
+      websiteLabel: 'Site Web Personnel',
       attributionNote: 'En soumettant une demande sur cette page, votre contact est directement attribué à ce distributeur dans le CRM True Legacy.',
       reconnectHeading: `Prêt à franchir l’étape suivante avec ${firstName} ?`,
       reconnectSub: 'Que vous souhaitiez en savoir plus sur les produits ou découvrir l’activité, nous sommes là pour vous accompagner.',
@@ -269,6 +282,7 @@ export default function DistributorProfilePage() {
       connectDirectly: `Conexão Direta`,
       phoneLabel: 'Telefone Direto',
       instagramLabel: 'Perfil no Instagram',
+      websiteLabel: 'Site Pessoal',
       attributionNote: 'Ao enviar uma solicitação através desta página, você fica atribuído diretamente a este distribuidor no CRM True Legacy.',
       reconnectHeading: `Pronto para dar o próximo passo com ${firstName}?`,
       reconnectSub: 'Seja para conhecer mais sobre os produtos ou explorar o negócio, estamos prontos para apoiar sua jornada.',
@@ -379,13 +393,27 @@ export default function DistributorProfilePage() {
         {profile ? (
           <>
             {/* 1. COMPRESSED TOP HERO CARD (Answers Who, Why Invited, Next Step immediately) */}
-            <header className="relative mb-10 overflow-hidden rounded-3xl border border-white/15 bg-gradient-to-b from-[#0e1320] via-[#090d16] to-[#06080d] p-6 sm:p-8 shadow-2xl backdrop-blur-xl">
+            <header
+              onMouseMove={handleMouseMove}
+              onMouseEnter={() => setIsHovered(true)}
+              onMouseLeave={() => setIsHovered(false)}
+              className="group relative mb-10 overflow-hidden rounded-3xl border border-white/15 bg-gradient-to-b from-[#0e1320] via-[#090d16] to-[#06080d] p-6 sm:p-8 shadow-2xl backdrop-blur-xl transition-all duration-300 hover:border-cyan-500/30"
+            >
+              {/* Interactive dynamic cursor spotlight */}
+              <div
+                className="pointer-events-none absolute -inset-px transition-opacity duration-300 z-0"
+                style={{
+                  opacity: isHovered ? 1 : 0,
+                  background: `radial-gradient(650px circle at ${mousePos.x}px ${mousePos.y}px, rgba(6, 182, 212, 0.16), rgba(79, 70, 229, 0.08) 40%, transparent 80%)`,
+                }}
+              />
+
               {/* Subtle background ambient light */}
               <div className="pointer-events-none absolute -right-20 -top-20 h-64 w-64 rounded-full bg-cyan-500/10 blur-3xl" />
               <div className="pointer-events-none absolute -left-20 -bottom-20 h-64 w-64 rounded-full bg-indigo-500/10 blur-3xl" />
 
               {/* Invitation & Attribution Top Banner */}
-              <div className="mb-6 flex flex-wrap items-center justify-between gap-3 border-b border-white/10 pb-4">
+              <div className="relative z-10 mb-6 flex flex-wrap items-center justify-between gap-3 border-b border-white/10 pb-4">
                 <div className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/[0.04] px-3.5 py-1 text-xs font-semibold text-[#2997ff]">
                   <UserCheck className="h-3.5 w-3.5 text-[#2997ff]" />
                   {ui.invitationBadge}
@@ -396,17 +424,17 @@ export default function DistributorProfilePage() {
                 </div>
               </div>
 
-              {/* Compressed Hero Grid */}
-              <div className="grid gap-6 sm:grid-cols-[160px_1fr] md:grid-cols-[190px_1fr] lg:grid-cols-[210px_1fr] items-center">
+              {/* Balanced 3-Column Hero Grid */}
+              <div className="relative z-10 grid gap-6 sm:grid-cols-[160px_1fr] md:grid-cols-[190px_1fr] lg:grid-cols-[200px_1fr_270px] items-center">
                 {/* Standardized Studio Portrait */}
-                <div className="relative mx-auto sm:mx-0 h-52 w-44 sm:h-60 sm:w-full max-w-[200px] shrink-0 overflow-hidden rounded-2xl border border-white/20 bg-gradient-to-b from-[#141926] to-[#07090f] shadow-xl">
+                <div className="relative mx-auto sm:mx-0 h-52 w-44 sm:h-60 sm:w-full max-w-[200px] shrink-0 overflow-hidden rounded-2xl border border-white/20 bg-gradient-to-b from-[#141926] to-[#07090f] shadow-xl group/photo transition-all duration-300 hover:border-cyan-400/40">
                   <img
                     src={leaderPhoto}
                     alt={profile.display_name}
-                    className="h-full w-full object-cover object-top transition duration-500 hover:scale-105"
+                    className="h-full w-full object-cover object-top transition duration-500 group-hover/photo:scale-105"
                   />
                   <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
-                  <span className="absolute bottom-2 left-2 inline-flex items-center gap-1 rounded-full border border-white/20 bg-black/80 px-2.5 py-1 text-[9px] font-bold uppercase tracking-wider text-[#2997ff] backdrop-blur-md">
+                  <span className="absolute bottom-2 left-2 inline-flex items-center gap-1 rounded-full border border-white/20 bg-black/80 px-2.5 py-1 text-[9px] font-bold uppercase tracking-wider text-[#2997ff] backdrop-blur-md shadow-lg">
                     <BadgeCheck className="h-3 w-3 text-[#2997ff]" />
                     {ui.verifiedLeader}
                   </span>
@@ -447,7 +475,7 @@ export default function DistributorProfilePage() {
                         href={whatsappUrl}
                         target="_blank"
                         rel="noreferrer"
-                        className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 px-5 py-2.5 text-sm font-bold text-slate-950 transition-colors shadow-lg shadow-emerald-500/10 active:scale-95"
+                        className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 px-5 py-2.5 text-sm font-bold text-slate-950 transition-all shadow-lg shadow-emerald-500/10 hover:shadow-emerald-500/20 active:scale-95"
                       >
                         <MessageCircle className="h-4 w-4" />
                         {ui.primaryMessage}
@@ -455,7 +483,7 @@ export default function DistributorProfilePage() {
                     ) : (
                       <Link
                         to={applyUrl}
-                        className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-cyan-500 hover:bg-cyan-400 px-5 py-2.5 text-sm font-bold text-slate-950 transition-colors shadow-lg shadow-cyan-500/10 active:scale-95"
+                        className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-cyan-500 hover:bg-cyan-400 px-5 py-2.5 text-sm font-bold text-slate-950 transition-all shadow-lg shadow-cyan-500/10 hover:shadow-cyan-500/20 active:scale-95"
                       >
                         {ui.requestInfo}
                         <ArrowRight className="h-4 w-4" />
@@ -464,11 +492,70 @@ export default function DistributorProfilePage() {
 
                     <Link
                       to={applyUrl}
-                      className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-white/15 bg-white/5 hover:bg-white/10 px-4 py-2.5 text-sm font-semibold text-white transition-colors"
+                      className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-white/15 bg-white/5 hover:bg-white/10 px-4 py-2.5 text-sm font-semibold text-white transition-all hover:border-white/30 active:scale-95"
                     >
                       {ui.requestInfo}
                       <ArrowRight className="h-4 w-4" />
                     </Link>
+                  </div>
+                </div>
+
+                {/* Right Column: Verified Channels & Links Glass Card */}
+                <div className="flex flex-col gap-2.5 rounded-2xl border border-white/10 bg-white/[0.03] p-4 backdrop-blur-md shadow-xl sm:col-span-2 lg:col-span-1">
+                  <div className="flex items-center justify-between border-b border-white/10 pb-2.5">
+                    <span className="text-[11px] font-bold uppercase tracking-wider text-[#86868b]">Verified Channels</span>
+                    <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 text-[10px] font-bold text-emerald-400">
+                      <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" /> Active Guide
+                    </span>
+                  </div>
+
+                  {websiteUrl && (
+                    <a
+                      href={websiteUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="group/link flex items-center justify-between rounded-xl border border-cyan-500/20 bg-cyan-500/[0.06] p-2.5 hover:border-cyan-400/50 hover:bg-cyan-400/15 transition-all shadow-sm"
+                    >
+                      <div className="flex items-center gap-2.5 min-w-0">
+                        <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-cyan-400/20 text-cyan-400 group-hover/link:bg-cyan-400 group-hover/link:text-black transition-colors">
+                          <Globe className="h-4 w-4" />
+                        </div>
+                        <div className="text-left min-w-0">
+                          <p className="text-[10px] uppercase font-bold text-[#86868b]">{ui.websiteLabel}</p>
+                          <p className="text-xs font-bold text-white group-hover/link:text-cyan-300 transition-colors truncate">
+                            {websiteUrl.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/, '')}
+                          </p>
+                        </div>
+                      </div>
+                      <ExternalLink className="h-3.5 w-3.5 shrink-0 text-[#86868b] group-hover/link:text-cyan-300 transition-colors" />
+                    </a>
+                  )}
+
+                  {profile.instagram_url && (
+                    <a
+                      href={profile.instagram_url}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="group/ig flex items-center justify-between rounded-xl border border-white/10 bg-white/[0.04] p-2.5 hover:border-pink-400/40 hover:bg-pink-400/10 transition-all shadow-sm"
+                    >
+                      <div className="flex items-center gap-2.5 min-w-0">
+                        <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-pink-400/10 text-pink-400 group-hover/ig:bg-pink-400 group-hover/ig:text-black transition-colors">
+                          <Instagram className="h-4 w-4" />
+                        </div>
+                        <div className="text-left min-w-0">
+                          <p className="text-[10px] uppercase font-bold text-[#86868b]">{ui.instagramLabel}</p>
+                          <p className="text-xs font-bold text-white group-hover/ig:text-pink-300 transition-colors truncate">
+                            @{profile.instagram_url.replace(/https?:\/\/(www\.)?instagram\.com\//, '').replace(/\/$/, '')}
+                          </p>
+                        </div>
+                      </div>
+                      <ExternalLink className="h-3.5 w-3.5 shrink-0 text-[#86868b] group-hover/ig:text-pink-300 transition-colors" />
+                    </a>
+                  )}
+
+                  <div className="flex items-center gap-2 rounded-xl border border-white/5 bg-black/40 px-3 py-2 text-[11px] text-[#86868b]">
+                    <ShieldCheck className="h-3.5 w-3.5 text-emerald-400 shrink-0" />
+                    <span className="truncate">Ref ID: <strong className="text-white font-mono">{profile.referral_code || profile.slug}</strong></span>
                   </div>
                 </div>
               </div>
@@ -577,6 +664,24 @@ export default function DistributorProfilePage() {
                           className="font-medium text-white hover:text-pink-300 transition-colors"
                         >
                           @{profile.instagram_url.replace(/https?:\/\/(www\.)?instagram\.com\//, '').replace(/\/$/, '')}
+                        </a>
+                      </div>
+                    </div>
+                  )}
+
+                  {websiteUrl && (
+                    <div className="flex items-center gap-3">
+                      <Globe className="h-4 w-4 text-cyan-400" />
+                      <div>
+                        <p className="text-[11px] text-[#86868b]">{ui.websiteLabel}</p>
+                        <a
+                          href={websiteUrl}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="inline-flex items-center gap-1.5 font-medium text-white hover:text-cyan-300 transition-colors"
+                        >
+                          {websiteUrl.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/, '')}
+                          <ExternalLink className="h-3 w-3 text-[#86868b]" />
                         </a>
                       </div>
                     </div>

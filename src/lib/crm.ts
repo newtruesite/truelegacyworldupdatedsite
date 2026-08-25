@@ -16,6 +16,8 @@ export type PublicDistributor = {
   languages: string[]
   phone?: string | null
   instagram_url?: string | null
+  website_url?: string | null
+  custom_links?: { label: string; url: string }[]
 }
 
 export type CrmDistributor = PublicDistributor & {
@@ -87,6 +89,7 @@ const FALLBACK_DISTRIBUTORS: PublicDistributor[] = [
     languages: ['en', 'es', 'fr', 'ar'],
     phone: '+1 (864) 907-2149',
     instagram_url: 'https://www.instagram.com/mehdicohen_/',
+    website_url: 'https://mehdicohen.com',
   },
   {
     id: 'preview-ryan',
@@ -100,6 +103,7 @@ const FALLBACK_DISTRIBUTORS: PublicDistributor[] = [
     languages: ['en'],
     phone: '213-733-6286',
     instagram_url: 'https://www.instagram.com/ryanpoolsr/',
+    website_url: 'https://ryanpool.com',
   },
   {
     id: 'preview-magaly',
