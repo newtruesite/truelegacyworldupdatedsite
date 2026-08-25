@@ -30,6 +30,8 @@ import {
   LayoutDashboard,
   Calendar,
   Radio,
+  Eye,
+  EyeOff,
 } from "lucide-react";
 import { useRef, useState } from "react";
 import { useParams } from "react-router-dom";
@@ -531,8 +533,9 @@ export default function TrainingPage() {
   const countrySlug = params.countrySlug;
 
   const [secretCode, setSecretCode] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [isSecretCodeValid, setIsSecretCodeValid] = useState(
-    () => typeof window !== "undefined" && sessionStorage.getItem("tl_secret_code_valid") === "true",
+    () => typeof window !== "undefined" && (localStorage.getItem("tl_secret_code_valid") === "true" || sessionStorage.getItem("tl_secret_code_valid") === "true"),
   );
   const [secretCodeError, setSecretCodeError] = useState("");
   const [hasCompletedDuoIntro, setHasCompletedDuoIntro] = useState(
@@ -543,21 +546,41 @@ export default function TrainingPage() {
   const accessRef = useRef<HTMLDivElement>(null);
 
   const handleResetAccess = () => {
+    localStorage.removeItem("tl_secret_code_valid");
     sessionStorage.removeItem("tl_secret_code_valid");
     setIsSecretCodeValid(false);
     setSecretCode("");
   };
 
+  const VALID_CODES = [
+    "truelegacyworld1!",
+    "truelegacyworld1",
+    "truelegacyworld",
+    "truelegacy",
+    "truelegacy1!",
+    "truelegacy1",
+    "tl2025",
+    "tl2026",
+    "6aleader",
+    "kangen",
+  ];
+
   const handleSecretCodeSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (secretCode === "Truelegacyworld1!") {
+    const clean = secretCode.trim().toLowerCase();
+    if (VALID_CODES.includes(clean) || secretCode.trim() === "Truelegacyworld1!") {
       setIsSecretCodeValid(true);
       setSecretCodeError("");
-      sessionStorage.setItem("tl_secret_code_valid", "true");
+      setHasCompletedDuoIntro(true);
+      if (typeof window !== "undefined") {
+        localStorage.setItem("tl_secret_code_valid", "true");
+        localStorage.setItem("tl_training_duo_intro", "complete");
+        sessionStorage.setItem("tl_secret_code_valid", "true");
+      }
     } else {
       const copy = t[locale] || t.en;
       setSecretCodeError(
-        copy.training?.access_error || "Incorrect code. Join the Facebook group to get the code.",
+        copy.training?.access_error || "Incorrect code. Please enter 'Truelegacyworld1!' or join our Facebook group.",
       );
     }
   };
@@ -1044,7 +1067,7 @@ export default function TrainingPage() {
                   </button>
                 </section>
 
-                <div ref={accessRef} className={`max-w-md mx-auto mt-10 min-h-[400px] rounded-2xl border bg-white/[0.04] backdrop-blur-xl p-8 shadow-[0_24px_80px_rgba(0,0,0,0.6)] transition-all ${hasCompletedDuoIntro ? "border-tl-gold/30" : "border-white/10 opacity-60"}`}>
+                <div ref={accessRef} className="max-w-md mx-auto mt-10 min-h-[400px] rounded-2xl border border-white/20 bg-white/[0.04] backdrop-blur-xl p-8 shadow-[0_24px_80px_rgba(0,0,0,0.6)] transition-all">
                 <div className="text-center mb-8">
                   <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-cyan-500/20 to-indigo-600/20 border border-white/20 text-[#2997ff] mb-4 shadow-[0_0_30px_rgba(6,182,212,0.15)]">
                     <Key className="w-8 h-8" />
@@ -1066,15 +1089,22 @@ export default function TrainingPage() {
                 </div>
 
                 <form onSubmit={handleSecretCodeSubmit} className="space-y-4">
-                  <div>
+                  <div className="relative">
                     <input
-                      type="password"
-                      placeholder={copy.training?.access_placeholder || "Secret Code"}
+                      type={showPassword ? "text" : "password"}
+                      placeholder={copy.training?.access_placeholder || "Secret Code (e.g. Truelegacyworld1!)"}
                       value={secretCode}
                       onChange={(e) => setSecretCode(e.target.value)}
-                      className="w-full px-4 py-3 rounded-xl bg-black/40 border border-white/10 text-white placeholder-slate-500 focus:outline-none focus:border-white/20 transition-colors"
+                      className="w-full px-4 py-3 pr-12 rounded-xl bg-black/40 border border-white/15 text-white placeholder-slate-500 focus:outline-none focus:border-cyan-400/50 transition-colors"
                       required
                     />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute right-3 top-3 text-[#86868b] hover:text-white transition-colors"
+                    >
+                      {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                    </button>
                   </div>
                   {secretCodeError && (
                     <div className="p-3 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 text-sm text-center">
@@ -1083,8 +1113,7 @@ export default function TrainingPage() {
                   )}
                   <button
                     type="submit"
-                    disabled={!hasCompletedDuoIntro}
-                    className="w-full min-h-[52px] flex items-center justify-center gap-2 px-6 py-3 text-base font-semibold text-white bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 hover:shadow-lg hover:shadow-cyan-500/20 hover:-translate-y-0.5 rounded-xl transition-all disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:translate-y-0"
+                    className="w-full min-h-[52px] flex items-center justify-center gap-2 px-6 py-3 text-base font-semibold text-white bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 hover:shadow-lg hover:shadow-cyan-500/20 hover:-translate-y-0.5 rounded-xl transition-all cursor-pointer active:scale-95"
                   >
                     {copy.training?.access_unlock || "Unlock Training"}
                   </button>
