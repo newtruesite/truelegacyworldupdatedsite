@@ -57,17 +57,21 @@ export default function AppHomePage() {
   return <main className="min-h-screen bg-black px-4 pb-28 pt-[max(24px,env(safe-area-inset-top))] text-white sm:px-6"><SEO title="True Legacy App" description="Private True Legacy distributor home." noIndex />
     <div className="mx-auto max-w-6xl">
       <header className="flex items-center justify-between gap-3 min-w-0">
-        <div className="flex items-center gap-2.5 min-w-0 flex-1">
-          <img src="/icons/icon-192.png" alt="True Legacy" className="h-9 w-9 sm:h-11 sm:w-11 shrink-0 rounded-xl object-cover" />
+        <Link to="/" className="flex items-center gap-3.5 min-w-0 transition-opacity hover:opacity-90">
+          <img
+            src="/icons/icon-192.png"
+            alt="True Legacy"
+            className="h-12 w-12 sm:h-14 sm:w-14 shrink-0 rounded-2xl border border-white/15 bg-white/[0.04] p-1.5 shadow-lg object-contain"
+          />
           <div className="min-w-0 flex-1">
-            <p className="truncate text-[10px] font-bold uppercase tracking-[.22em] text-[#2997ff] sm:text-xs leading-none mb-1">
+            <p className="truncate text-[11px] font-bold uppercase tracking-[.24em] text-[#2997ff] sm:text-xs leading-none mb-1">
               True Legacy
             </p>
-            <h1 className="text-base sm:text-lg font-black leading-tight text-white truncate">
+            <h1 className="text-lg sm:text-xl font-black leading-tight text-white truncate">
               Distributor App
             </h1>
           </div>
-        </div>
+        </Link>
         <div className="flex shrink-0 items-center gap-1.5 sm:gap-2">
           <button
             aria-label="Notifications"
