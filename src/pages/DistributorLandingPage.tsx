@@ -231,7 +231,50 @@ export default function DistributorLandingPage() {
 
       {variant === 'events' && <section className="border-y border-white/10 bg-black px-4 py-16 sm:px-6 md:py-24"><div className="mx-auto max-w-6xl"><div className="mb-12 text-center"><p className="text-xs font-bold uppercase tracking-[0.24em] text-[#2997ff]">The two official MehdiCohen.com event presentations</p><h2 className="mt-3 text-3xl font-black sm:text-4xl">Choose your live experience.</h2><p className="mx-auto mt-4 max-w-2xl text-[#cccccc]">Join the English global presentation or the Spanish LATAM presentation, then follow up directly with {profile?.display_name}.</p></div><div className="space-y-12">{MEHDI_EVENT_PAGES.map((event, index) => <article key={event.id} className="grid overflow-hidden rounded-3xl border border-white/10 bg-white/[0.04] lg:grid-cols-2"><div className={index % 2 ? 'lg:order-2' : ''}><img src={event.image} alt={event.imageAlt} className="h-full min-h-[420px] w-full object-cover object-top" /></div><div className="flex flex-col justify-center p-7 sm:p-10"><p className="text-xs font-bold uppercase tracking-[0.2em] text-[#2997ff]">{event.micro} · {event.language}</p><h3 className="mt-3 text-3xl font-black">{event.headline}</h3><p className="mt-2 text-lg font-bold text-slate-200">{event.subheadline}</p><p className="mt-5 leading-7 text-[#cccccc]">{event.description}</p><div className="mt-6 grid gap-3 rounded-2xl border border-white/10 bg-black/20 p-5 text-sm text-[#cccccc] sm:grid-cols-2"><span className="inline-flex items-start gap-2"><CalendarDays className="mt-0.5 h-4 w-4 shrink-0 text-[#2997ff]" />{event.date}</span><span className="inline-flex items-start gap-2"><Clock3 className="mt-0.5 h-4 w-4 shrink-0 text-[#2997ff]" />{event.time}</span><span>Meeting ID: <strong className="text-white">{event.meetingId}</strong></span><span>Passcode: <strong className="text-white">{event.passcode}</strong></span></div><div className="mt-6 space-y-3">{event.topics.map(topic => <p key={topic} className="flex gap-3 text-sm text-[#cccccc]"><Check className="mt-0.5 h-4 w-4 shrink-0 text-[#2997ff]" />{topic}</p>)}</div><div className="mt-7 flex flex-col gap-3 sm:flex-row"><a href={event.zoomUrl} target="_blank" rel="noreferrer" className="rounded-xl bg-cyan-500 px-5 py-3 text-center font-bold hover:bg-cyan-400">{event.id === 'latam' ? 'Entrar a Zoom' : 'Join Zoom Meeting'}</a><Link to={applyUrl} className="rounded-xl border border-white/15 px-5 py-3 text-center font-bold hover:bg-white/5">Connect with {profile?.display_name}</Link></div></div></article>)}</div></div></section>}
 
-      <section className="px-4 py-16 text-center sm:px-6 md:py-24"><div className="mx-auto max-w-3xl"><h2 className="text-3xl font-black">Ready to continue with {profile?.display_name}?</h2><p className="mt-4 text-[#cccccc]">Your inquiry will be attributed directly to this distributor inside the True Legacy team CRM.</p><div className="mt-7 flex flex-col justify-center gap-3 sm:flex-row">{whatsapp && <a href={whatsapp} target="_blank" rel="noreferrer" className="rounded-xl bg-emerald-500 px-6 py-3 font-bold hover:bg-emerald-400">Message on WhatsApp</a>}<Link to={applyUrl} className="rounded-xl bg-cyan-500 px-6 py-3 font-bold hover:bg-cyan-400">Submit my interest</Link></div><p className="mt-8 text-xs leading-5 text-[#86868b]">Independent distributor presentation. Product information is educational and not medical advice. Earnings are not guaranteed; individual results vary.</p></div></section>
+      {profile && (
+        <section className="px-4 py-16 sm:px-6 md:py-20">
+          <div className="relative mx-auto max-w-3xl overflow-hidden rounded-3xl border border-white/15 bg-gradient-to-b from-[#141926] via-[#090d16] to-[#04060a] p-8 sm:p-12 text-center shadow-2xl">
+            <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(6,182,212,0.15),transparent_60%)]" />
+            <div className="relative">
+              <div className="mx-auto mb-4 h-16 w-16 overflow-hidden rounded-full border-2 border-cyan-400/30 p-0.5 shadow-lg">
+                <img
+                  src={profile.avatar_url || '/logos/tl-square-white.png'}
+                  alt={profile.display_name}
+                  className="h-full w-full rounded-full object-cover object-top"
+                />
+              </div>
+              <h2 className="text-2xl sm:text-3xl font-black text-white">
+                Ready to continue with {profile.display_name}?
+              </h2>
+              <p className="mt-3 text-sm sm:text-base text-[#cccccc] leading-relaxed max-w-xl mx-auto">
+                Your inquiry will be attributed directly to this leader inside the True Legacy team CRM.
+              </p>
+              <div className="mt-7 flex flex-wrap items-center justify-center gap-3">
+                {whatsapp && (
+                  <a
+                    href={whatsapp}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 px-6 py-3 font-bold text-slate-950 transition-colors shadow-lg shadow-emerald-500/10 active:scale-95"
+                  >
+                    <MessageCircle className="h-5 w-5" />
+                    Message {profile.display_name.split(' ')[0]} on WhatsApp
+                  </a>
+                )}
+                <Link
+                  to={applyUrl}
+                  className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-cyan-500 hover:bg-cyan-400 px-6 py-3 font-bold text-slate-950 transition-colors shadow-lg shadow-cyan-500/10 active:scale-95"
+                >
+                  Submit my interest <ArrowRight className="h-5 w-5" />
+                </Link>
+              </div>
+              <p className="mt-6 text-[11px] text-[#86868b]">
+                Independent distributor presentation. Product information is educational and not medical advice. Earnings are not guaranteed; individual results vary.
+              </p>
+            </div>
+          </div>
+        </section>
+      )}
     </main>
     <Footer />
   </div>
