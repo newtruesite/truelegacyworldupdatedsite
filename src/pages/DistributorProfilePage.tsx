@@ -32,8 +32,10 @@ const LEADER_PORTRAITS: Record<string, string> = {
   'zah-naderi': '/leaders/standardized/zah-naderi-v3.png',
   'alex-gonzalez': '/leaders/standardized/alex-gonzalez.png',
   'ryan-pool': '/leaders/standardized/ryan-pool-sr.png',
+  'ryan-pool-sr': '/leaders/standardized/ryan-pool-sr.png',
   'magaly-cardona': '/leaders/standardized/magaly-cardona.png',
   emanuela: '/leaders/standardized/emanuela-doustova.png',
+  'emanuela-braj': '/leaders/standardized/emanuela-doustova.png',
   'jesse-schexnayder': '/leaders/standardized/jesse-schexnayder.png',
   'angel-mok': '/leaders/standardized/angel-mok-v2.png',
 }
@@ -397,13 +399,13 @@ export default function DistributorProfilePage() {
               {/* Compressed Hero Grid */}
               <div className="grid gap-6 sm:grid-cols-[160px_1fr] md:grid-cols-[190px_1fr] lg:grid-cols-[210px_1fr] items-center">
                 {/* Standardized Studio Portrait */}
-                <div className="relative mx-auto sm:mx-0 h-48 w-40 sm:h-56 sm:w-full shrink-0 overflow-hidden rounded-2xl border border-white/20 bg-gradient-to-b from-[#141926] to-[#07090f] shadow-xl">
+                <div className="relative mx-auto sm:mx-0 h-52 w-44 sm:h-60 sm:w-full max-w-[200px] shrink-0 overflow-hidden rounded-2xl border border-white/20 bg-gradient-to-b from-[#141926] to-[#07090f] shadow-xl">
                   <img
                     src={leaderPhoto}
                     alt={profile.display_name}
-                    className="h-full w-full object-cover object-top"
+                    className="h-full w-full object-cover object-top transition duration-500 hover:scale-105"
                   />
-                  <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+                  <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
                   <span className="absolute bottom-2 left-2 inline-flex items-center gap-1 rounded-full border border-white/20 bg-black/80 px-2.5 py-1 text-[9px] font-bold uppercase tracking-wider text-[#2997ff] backdrop-blur-md">
                     <BadgeCheck className="h-3 w-3 text-[#2997ff]" />
                     {ui.verifiedLeader}
