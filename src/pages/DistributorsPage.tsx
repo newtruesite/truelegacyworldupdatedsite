@@ -9,6 +9,7 @@ import { motion } from "framer-motion";
 import {
   ArrowRight,
   Search,
+  Sparkles,
   Users,
 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
@@ -296,9 +297,14 @@ export default function DistributorsPage() {
                 <h2 className="mt-3 text-2xl font-black md:text-3xl">{copy.leaderApplyTitle}</h2>
                 <p className="mt-3 max-w-2xl leading-7 text-[#cccccc]">{copy.leaderApplyBody}</p>
               </div>
-              <Link to="/leaders/apply" className="inline-flex min-h-13 items-center justify-center gap-2 rounded-xl border border-white/20 px-6 py-3.5 font-bold text-white transition hover:border-white/35 hover:bg-white/[0.06]">
-                {copy.leaderApplyButton} <ArrowRight className="h-5 w-5" />
-              </Link>
+              <div className="flex flex-wrap items-center gap-3">
+                <Link to="/leaders/portrait" className="inline-flex min-h-13 items-center justify-center gap-2 rounded-xl border border-[#2997ff]/40 bg-[#2997ff]/10 px-5 py-3.5 font-bold text-[#2997ff] transition hover:bg-[#2997ff]/20">
+                  <Sparkles className="h-5 w-5" /> Portrait Studio
+                </Link>
+                <Link to="/leaders/apply" className="inline-flex min-h-13 items-center justify-center gap-2 rounded-xl border border-white/20 px-6 py-3.5 font-bold text-white transition hover:border-white/35 hover:bg-white/[0.06]">
+                  {copy.leaderApplyButton} <ArrowRight className="h-5 w-5" />
+                </Link>
+              </div>
             </div>
           </div>
         </section>

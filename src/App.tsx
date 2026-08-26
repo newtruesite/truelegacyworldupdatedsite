@@ -35,6 +35,7 @@ import AppSharePage from "@/pages/AppSharePage";
 import AppBookingsPage from "@/pages/AppBookingsPage";
 import AppAccountPage from "@/pages/AppAccountPage";
 import LeaderApplicationPage from "@/pages/LeaderApplicationPage";
+import LeaderPortraitStudioPage from "@/pages/LeaderPortraitStudioPage";
 import BookingPage from "@/pages/BookingPage";
 import { GlobalCursorGlow } from "@/components/ui/GlobalCursorGlow";
 import { AnimatePresence, motion } from "framer-motion";
@@ -189,6 +190,22 @@ function AnimatedRoutes() {
           <Route
             path="/settings"
             element={<Navigate to="/app/settings" replace />}
+          />
+          <Route
+            path="/leaders/portrait"
+            element={
+              <PageTransitionWrapper>
+                <LeaderPortraitStudioPage />
+              </PageTransitionWrapper>
+            }
+          />
+          <Route
+            path="/app/portrait"
+            element={
+              <PageTransitionWrapper>
+                <LeaderPortraitStudioPage />
+              </PageTransitionWrapper>
+            }
           />
           <Route
             path="/leaders/apply"
