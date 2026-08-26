@@ -6,58 +6,70 @@ import {
   Check,
   RotateCcw,
   Trash2,
-  Image as ImageIcon,
   AlertCircle,
   CheckCircle2,
   BadgeCheck,
-  Download,
   Camera,
   Info,
   ChevronDown,
   ChevronUp,
   FileImage,
   Layers,
+  Loader2,
+  RefreshCw,
+  UserCheck,
 } from 'lucide-react'
 import {
   getOfficialLeaderPortraitPrompt,
   validatePortraitFile,
   type LeaderPortraitData,
   type LeaderPortraitStatus,
-  MAX_PORTRAIT_FILE_SIZE_BYTES,
 } from '@/config/portraitStandard'
+import { generateLeaderPortraitAI } from '@/services/portraitGenerationService'
 
-interface LeaderPortraitGeneratorProps {
+export interface LeaderPortraitGeneratorProps {
   onPortraitChange?: (portraitData: LeaderPortraitData) => void
+  onApprovePortrait?: (approvedUrl: string, portraitData: LeaderPortraitData) => void
   initialPortrait?: LeaderPortraitData
+  title?: string
+  supportingCopy?: string
+  guidanceNote?: string
   className?: string
 }
 
 export function LeaderPortraitGenerator({
   onPortraitChange,
+  onApprovePortrait,
   initialPortrait,
+  title = 'Leader Portrait',
+  supportingCopy = 'Upload your photo and generate a professional True Legacy leader portrait that matches the leadership directory standard.',
+  guidanceNote = 'Your final portrait will keep your real identity, outfit, and recognizable appearance while standardizing the crop, background, lighting, and finish.',
   className = '',
 }: LeaderPortraitGeneratorProps) {
   const [originalFile, setOriginalFile] = useState<File | null>(initialPortrait?.originalFile || null)
   const [originalPreviewUrl, setOriginalPreviewUrl] = useState<string>(initialPortrait?.originalPreviewUrl || '')
   const [originalFileName, setOriginalFileName] = useState<string>(initialPortrait?.originalFileName || '')
   const [originalFileSize, setOriginalFileSize] = useState<number>(initialPortrait?.originalFileSize || 0)
-  
+
   const [generatedPortraitUrl, setGeneratedPortraitUrl] = useState<string>(initialPortrait?.generatedPortraitUrl || '')
   const [approvedPortraitUrl, setApprovedPortraitUrl] = useState<string>(initialPortrait?.approvedPortraitUrl || '')
   const [status, setStatus] = useState<LeaderPortraitStatus>(initialPortrait?.status || 'not_generated')
   const [promptText, setPromptText] = useState<string>(initialPortrait?.promptUsed || getOfficialLeaderPortraitPrompt())
-  
+
   const [isPromptExpanded, setIsPromptExpanded] = useState(false)
   const [isCopied, setIsCopied] = useState(false)
   const [errorMessage, setErrorMessage] = useState<string>('')
   const [isDragging, setIsDragging] = useState(false)
   const [isValidating, setIsValidating] = useState(false)
-  const [isGeneratingAI, setIsGeneratingAI] = useState(false)
+  const [isGenerating, setIsGenerating] = useState(false)
+  const [generationStage, setGenerationStage] = useState<string>('')
+  const [generationProgress, setGenerationProgress] = useState<number>(0)
   const [qualityPassed, setQualityPassed] = useState(false)
   const [imageDimensions, setImageDimensions] = useState<{ width: number; height: number } | null>(null)
 
   const fileInputRef = useRef<HTMLInputElement>(null)
   const generatedFileInputRef = useRef<HTMLInputElement>(null)
+  const abortControllerRef = useRef<AbortController | null>(null)
 
   // Notify parent component of portrait state changes
   const notifyParent = useCallback(
@@ -100,6 +112,9 @@ export function LeaderPortraitGenerator({
       if (generatedPortraitUrl && generatedPortraitUrl.startsWith('blob:')) {
         URL.revokeObjectURL(generatedPortraitUrl)
       }
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort()
+      }
     }
   }, [originalPreviewUrl, generatedPortraitUrl])
 
@@ -116,7 +131,6 @@ export function LeaderPortraitGenerator({
         return
       }
 
-      // Cleanup previous blob URL if any
       if (originalPreviewUrl && originalPreviewUrl.startsWith('blob:')) {
         URL.revokeObjectURL(originalPreviewUrl)
       }
@@ -129,13 +143,16 @@ export function LeaderPortraitGenerator({
       setQualityPassed(true)
       setImageDimensions(validation.dimensions || null)
       setStatus('not_generated')
-      setIsPromptExpanded(false)
+      setGeneratedPortraitUrl('')
+      setApprovedPortraitUrl('')
 
       notifyParent({
         originalFile: file,
         originalFileName: file.name,
         originalFileSize: file.size,
         originalPreviewUrl: previewUrl,
+        generatedPortraitUrl: '',
+        approvedPortraitUrl: '',
         status: 'not_generated',
         qualityPassed: true,
       })
@@ -188,7 +205,6 @@ export function LeaderPortraitGenerator({
       const sampleFile = new File([blob], 'leader-reference-sample.jpg', { type: 'image/jpeg' })
       await handleProcessFile(sampleFile)
     } catch {
-      // Fallback
       setOriginalPreviewUrl('/leaders/alex-gonzalez.jpg')
       setOriginalFileName('leader-reference-sample.jpg')
       setOriginalFileSize(60841)
@@ -244,18 +260,52 @@ export function LeaderPortraitGenerator({
     })
   }
 
-  // Generate Prompt handler
-  const handleGeneratePrompt = () => {
-    if (!originalFile && !originalPreviewUrl) return
-    const officialPrompt = getOfficialLeaderPortraitPrompt()
-    setPromptText(officialPrompt)
-    setIsPromptExpanded(true)
-    const newStatus: LeaderPortraitStatus = 'prompt_ready'
-    setStatus(newStatus)
-    notifyParent({
-      promptUsed: officialPrompt,
-      status: newStatus,
-    })
+  // Direct AI Generation workflow
+  const handleGenerateAIPortrait = async () => {
+    if (isGenerating || (!originalFile && !originalPreviewUrl)) return
+    setIsGenerating(true)
+    setErrorMessage('')
+    setGenerationProgress(10)
+    setGenerationStage('Initializing True Legacy leader portrait engine...')
+
+    const source = originalFile || originalPreviewUrl
+    const controller = new AbortController()
+    abortControllerRef.current = controller
+
+    try {
+      const result = await generateLeaderPortraitAI({
+        sourceImage: source,
+        prompt: promptText,
+        onProgress: (stage, percent) => {
+          setGenerationStage(stage)
+          setGenerationProgress(percent)
+        },
+        signal: controller.signal,
+      })
+
+      if (result.success && result.portraitUrl) {
+        setGeneratedPortraitUrl(result.portraitUrl)
+        setStatus('generated')
+        notifyParent({
+          generatedPortraitUrl: result.portraitUrl,
+          status: 'generated',
+          promptUsed: promptText,
+        })
+      } else {
+        setErrorMessage(
+          result.error ||
+            "We couldn't generate your portrait this time. Please try again or upload a different photo."
+        )
+      }
+    } catch (err: unknown) {
+      if (err instanceof Error && err.name === 'AbortError') return
+      setErrorMessage(
+        "We couldn't generate your portrait this time. Your original photo is safe. Please try again or upload a different photo."
+      )
+    } finally {
+      setIsGenerating(false)
+      abortControllerRef.current = null
+    }
   }
 
   // Copy prompt handler
@@ -267,7 +317,7 @@ export function LeaderPortraitGenerator({
         copiedSuccessfully = true
       }
     } catch {
-      // Ignore and proceed to fallback
+      // Proceed to fallback
     }
 
     if (!copiedSuccessfully) {
@@ -283,7 +333,7 @@ export function LeaderPortraitGenerator({
         document.execCommand('copy')
         document.body.removeChild(textArea)
       } catch {
-        // Fallback catch
+        // Ignored
       }
     }
 
@@ -298,7 +348,7 @@ export function LeaderPortraitGenerator({
     notifyParent({ promptUsed: prompt })
   }
 
-  // Handle uploading a generated portrait (e.g. created via Midjourney / DALL-E / Gemini / AI studio)
+  // Handle uploading a generated portrait manually if desired
   const handleGeneratedPhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
       const file = e.target.files[0]
@@ -320,31 +370,20 @@ export function LeaderPortraitGenerator({
     setApprovedPortraitUrl(portraitUrlToUse)
     const newStatus: LeaderPortraitStatus = 'applicant_approved'
     setStatus(newStatus)
-    notifyParent({
+    const updatedData: LeaderPortraitData = {
+      originalFile,
+      originalFileName,
+      originalFileSize,
+      originalPreviewUrl,
+      generatedPortraitUrl,
       approvedPortraitUrl: portraitUrlToUse,
+      promptUsed: promptText,
       status: newStatus,
-    })
-  }
-
-  // Phase 2: Direct AI Generation API interface (extensible backend connection)
-  const handleDirectAIGenerate = async () => {
-    if (isGeneratingAI || !originalFile) return
-    setIsGeneratingAI(true)
-    setErrorMessage('')
-
-    try {
-      // Direct AI API hook point for Phase 2:
-      // When an API key or backend endpoint is connected, call the image transformation API here.
-      // In the absence of a live endpoint, we guide the user seamlessly through the standardized prompt workflow.
-      await new Promise((resolve) => setTimeout(resolve, 800))
-      setIsPromptExpanded(true)
-      setStatus('prompt_ready')
-    } catch {
-      setErrorMessage(
-        "We couldn't create your portrait this time. Your original photo is safe. Please try again or copy the prompt."
-      )
-    } finally {
-      setIsGeneratingAI(false)
+      qualityPassed,
+    }
+    notifyParent(updatedData)
+    if (onApprovePortrait) {
+      onApprovePortrait(portraitUrlToUse, updatedData)
     }
   }
 
@@ -370,11 +409,10 @@ export function LeaderPortraitGenerator({
             <span>Official Portrait Standardization</span>
           </div>
           <h2 id="leader-portrait-title" className="mt-2 text-2xl sm:text-3xl font-black text-white">
-            Create Your Leader Portrait
+            {title}
           </h2>
           <p className="mt-2 text-sm leading-relaxed text-[#aeb4c0] max-w-2xl">
-            Upload a clear photo of yourself and use our True Legacy portrait standard to create a
-            professional image that matches the leadership directory.
+            {supportingCopy}
           </p>
         </div>
 
@@ -384,27 +422,31 @@ export function LeaderPortraitGenerator({
             <CheckCircle2 className="h-4 w-4 text-emerald-400" />
             Portrait Approved
           </div>
-        ) : originalPreviewUrl ? (
+        ) : generatedPortraitUrl ? (
           <div className="inline-flex items-center gap-2 self-start rounded-full border border-[#2997ff]/30 bg-[#2997ff]/10 px-4 py-1.5 text-xs font-bold text-[#2997ff]">
+            <Sparkles className="h-4 w-4 text-[#2997ff]" />
+            AI Portrait Generated
+          </div>
+        ) : originalPreviewUrl ? (
+          <div className="inline-flex items-center gap-2 self-start rounded-full border border-white/20 bg-white/10 px-4 py-1.5 text-xs font-bold text-white">
             <BadgeCheck className="h-4 w-4 text-[#2997ff]" />
             Photo Loaded
           </div>
         ) : null}
       </div>
 
-      {/* Guidance Note */}
+      {/* Explanatory Note */}
       <div className="mt-5 flex items-start gap-3 rounded-2xl border border-white/5 bg-white/[0.025] p-4 text-xs leading-relaxed text-[#8f96a3]">
         <Info className="mt-0.5 h-4 w-4 shrink-0 text-[#2997ff]" />
         <span>
-          <strong className="text-white">For best results:</strong> Upload a clear front-facing or
-          slightly angled photo with your face, shoulders, clothing, and hairstyle clearly visible.
+          <strong className="text-white">Directory Quality Guarantee:</strong> {guidanceNote}
         </span>
       </div>
 
       {/* Main Upload / Review Area */}
       <div className="mt-6">
         {!originalPreviewUrl ? (
-          /* ================= DRAG & DROP UPLOAD AREA ================= */
+          /* ================= STEP 1: DRAG & DROP UPLOAD AREA ================= */
           <div
             onDragOver={handleDragOver}
             onDragLeave={handleDragLeave}
@@ -430,7 +472,7 @@ export function LeaderPortraitGenerator({
             </div>
 
             <h3 className="mt-5 text-lg font-bold text-white group-hover:text-[#2997ff] transition-colors">
-              {isDragging ? 'Drop your photo here' : 'Drag and drop your photo here'}
+              {isDragging ? 'Drop your photo here' : 'Drag and drop your source photo here'}
             </h3>
 
             <p className="mt-1 text-xs text-[#868c98]">
@@ -456,7 +498,7 @@ export function LeaderPortraitGenerator({
                 }}
                 className="inline-flex items-center justify-center rounded-xl border border-white/10 bg-transparent px-4 py-2.5 text-xs font-medium text-[#868c98] transition hover:border-white/25 hover:text-white"
               >
-                Use sample portrait
+                Try sample photo
               </button>
             </div>
 
@@ -467,7 +509,7 @@ export function LeaderPortraitGenerator({
             ) : null}
           </div>
         ) : (
-          /* ================= ACTIVE PHOTO VIEW (2-COLUMN ON DESKTOP) ================= */
+          /* ================= STEP 2 & 3: ACTIVE PHOTO & AI GENERATION VIEW ================= */
           <div className="space-y-6">
             {/* Top File Summary Bar */}
             <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-white/10 bg-white/[0.03] p-4 text-xs">
@@ -525,19 +567,19 @@ export function LeaderPortraitGenerator({
               <div className="mt-3 grid gap-2 sm:grid-cols-2 text-xs text-[#8f96a3]">
                 <div className="flex items-center gap-2">
                   <CheckCircle2 className="h-3.5 w-3.5 text-emerald-400 shrink-0" />
-                  <span>Face is clearly visible & front-facing / slight angle</span>
+                  <span>Face clearly visible & natural expression</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <CheckCircle2 className="h-3.5 w-3.5 text-emerald-400 shrink-0" />
-                  <span>Single primary person in composition</span>
+                  <span>Single primary subject in composition</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <CheckCircle2 className="h-3.5 w-3.5 text-emerald-400 shrink-0" />
-                  <span>Original clothing and natural features preserved</span>
+                  <span>Clothing and authentic styling preserved</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <CheckCircle2 className="h-3.5 w-3.5 text-emerald-400 shrink-0" />
-                  <span>Clear lighting, not excessively blurry</span>
+                  <span>High clarity, not excessively blurry</span>
                 </div>
               </div>
             </div>
@@ -565,16 +607,18 @@ export function LeaderPortraitGenerator({
                 </div>
               </div>
 
-              {/* Right Column: Standardized Studio Portrait Canvas Preview */}
+              {/* Right Column: AI Generated Leader Portrait Canvas Preview */}
               <div className="flex flex-col rounded-2xl border border-white/10 bg-white/[0.02] p-4">
                 <div className="flex items-center justify-between pb-3 border-b border-white/10">
                   <div className="flex items-center gap-1.5">
                     <Layers className="h-3.5 w-3.5 text-[#2997ff]" />
                     <span className="text-xs font-bold uppercase tracking-wider text-white">
-                      True Legacy Standard Canvas (4:5)
+                      {generatedPortraitUrl ? 'AI Portrait Preview' : 'True Legacy Standard (4:5)'}
                     </span>
                   </div>
-                  <span className="text-[11px] text-[#2997ff] font-semibold">Studio Standard</span>
+                  <span className="text-[11px] text-[#2997ff] font-semibold">
+                    {approvedPortraitUrl ? 'Approved' : generatedPortraitUrl ? 'Ready for Review' : 'Studio Canvas'}
+                  </span>
                 </div>
 
                 {/* Luxury Studio Canvas matching LeaderCard.tsx */}
@@ -600,8 +644,22 @@ export function LeaderPortraitGenerator({
                     }}
                   />
 
-                  {/* Layer 4: Display Approved/Generated or Reference Overlay */}
-                  {approvedPortraitUrl || generatedPortraitUrl ? (
+                  {/* Layer 4: Display Generated/Approved or Loading / Placeholder State */}
+                  {isGenerating ? (
+                    <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center bg-black/60 backdrop-blur-sm z-10">
+                      <div className="relative flex items-center justify-center">
+                        <div className="h-16 w-16 rounded-full border-2 border-[#2997ff]/20 border-t-[#2997ff] animate-spin" />
+                        <Sparkles className="absolute h-6 w-6 text-[#2997ff] animate-pulse" />
+                      </div>
+                      <p className="mt-5 text-sm font-bold text-white">Generating your portrait...</p>
+                      <p className="mt-1 text-xs text-[#aeb4c0]">This may take a few moments.</p>
+                      {generationStage ? (
+                        <p className="mt-3 text-[11px] text-[#2997ff] max-w-[240px] leading-relaxed">
+                          {generationStage}
+                        </p>
+                      ) : null}
+                    </div>
+                  ) : approvedPortraitUrl || generatedPortraitUrl ? (
                     <img
                       src={approvedPortraitUrl || generatedPortraitUrl}
                       alt="True Legacy Standardized Leader Portrait"
@@ -636,75 +694,107 @@ export function LeaderPortraitGenerator({
                   <div className="absolute inset-x-0 bottom-0 h-12 bg-gradient-to-t from-[#090d16]/90 via-[#090d16]/30 to-transparent pointer-events-none" />
                 </div>
 
-                {/* Portrait Actions Under Canvas */}
-                <div className="mt-4 flex flex-wrap items-center gap-2">
+                {/* Actions Under Canvas */}
+                <div className="mt-4 space-y-2">
                   {generatedPortraitUrl && !approvedPortraitUrl ? (
-                    <button
-                      type="button"
-                      onClick={() => handleApprovePortrait(generatedPortraitUrl)}
-                      className="inline-flex flex-1 items-center justify-center gap-2 rounded-xl bg-cyan-400 px-4 py-2.5 text-xs font-black text-slate-950 transition hover:bg-cyan-300"
-                    >
-                      <Check className="h-4 w-4" />
-                      Use This Portrait
-                    </button>
-                  ) : null}
-
-                  {approvedPortraitUrl ? (
-                    <div className="flex w-full items-center justify-between rounded-xl border border-emerald-400/30 bg-emerald-400/10 px-3 py-2 text-xs font-bold text-emerald-300">
-                      <span className="flex items-center gap-1.5">
-                        <CheckCircle2 className="h-4 w-4 text-emerald-400" />
-                        Attached to application
-                      </span>
+                    <div className="flex flex-wrap items-center gap-2">
                       <button
                         type="button"
-                        onClick={() => {
-                          setApprovedPortraitUrl('')
-                          setStatus('generated')
-                          notifyParent({ approvedPortraitUrl: '', status: 'generated' })
-                        }}
-                        className="text-[11px] underline text-emerald-300/80 hover:text-white"
+                        onClick={() => handleApprovePortrait(generatedPortraitUrl)}
+                        className="inline-flex flex-1 items-center justify-center gap-2 rounded-xl bg-cyan-400 px-4 py-2.5 text-xs font-black text-slate-950 transition hover:bg-cyan-300 shadow-md shadow-cyan-950/20"
                       >
-                        Change
+                        <UserCheck className="h-4 w-4" />
+                        Use This Portrait
+                      </button>
+                      <button
+                        type="button"
+                        disabled={isGenerating}
+                        onClick={handleGenerateAIPortrait}
+                        className="inline-flex items-center justify-center gap-1.5 rounded-xl border border-white/15 bg-white/[0.04] px-3.5 py-2.5 text-xs font-bold text-white hover:bg-white/10 transition"
+                      >
+                        <RefreshCw className="h-3.5 w-3.5 text-[#2997ff]" />
+                        Generate Again
                       </button>
                     </div>
                   ) : null}
 
-                  {/* Option to upload generated result if created in external AI studio */}
-                  <button
-                    type="button"
-                    onClick={() => generatedFileInputRef.current?.click()}
-                    className="inline-flex items-center justify-center gap-1.5 rounded-xl border border-white/15 bg-white/[0.04] px-3.5 py-2 text-xs font-semibold text-[#c3c8d1] hover:border-white/30 hover:bg-white/10"
-                  >
-                    <UploadCloud className="h-3.5 w-3.5 text-[#2997ff]" />
-                    {generatedPortraitUrl ? 'Upload Revised Portrait' : 'Upload Generated Portrait'}
-                  </button>
-                  <input
-                    ref={generatedFileInputRef}
-                    type="file"
-                    accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp"
-                    onChange={handleGeneratedPhotoUpload}
-                    className="hidden"
-                    aria-label="Upload generated portrait"
-                  />
+                  {approvedPortraitUrl ? (
+                    <div className="rounded-xl border border-emerald-400/30 bg-emerald-400/10 p-3 text-xs font-bold text-emerald-300">
+                      <div className="flex items-center justify-between">
+                        <span className="flex items-center gap-1.5">
+                          <CheckCircle2 className="h-4 w-4 text-emerald-400" />
+                          Approved as Profile Portrait
+                        </span>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setApprovedPortraitUrl('')
+                            setStatus('generated')
+                            notifyParent({ approvedPortraitUrl: '', status: 'generated' })
+                          }}
+                          className="text-[11px] underline text-emerald-300/80 hover:text-white"
+                        >
+                          Change
+                        </button>
+                      </div>
+                    </div>
+                  ) : null}
+
+                  <div className="flex items-center justify-between pt-1">
+                    <button
+                      type="button"
+                      onClick={() => fileInputRef.current?.click()}
+                      className="text-xs text-[#8f96a3] hover:text-white underline"
+                    >
+                      Upload Different Photo
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => generatedFileInputRef.current?.click()}
+                      className="text-xs text-[#2997ff] hover:underline"
+                    >
+                      Upload custom 4:5
+                    </button>
+                    <input
+                      ref={generatedFileInputRef}
+                      type="file"
+                      accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp"
+                      onChange={handleGeneratedPhotoUpload}
+                      className="hidden"
+                      aria-label="Upload custom portrait"
+                    />
+                  </div>
                 </div>
               </div>
             </div>
 
-            {/* Primary Action: Generate Portrait Prompt */}
-            <div className="pt-2">
-              <button
-                type="button"
-                onClick={handleGeneratePrompt}
-                className="inline-flex min-h-13 w-full items-center justify-center gap-2.5 rounded-xl bg-cyan-400 px-6 font-black text-slate-950 transition hover:bg-cyan-300 active:scale-[0.99] shadow-lg shadow-cyan-950/20"
-              >
-                <Sparkles className="h-4 w-4" />
-                Generate True Legacy Portrait Prompt
-              </button>
-            </div>
+            {/* Primary Action Button: Generate My Leader Portrait */}
+            {!generatedPortraitUrl ? (
+              <div className="pt-2">
+                <button
+                  type="button"
+                  disabled={isGenerating}
+                  onClick={handleGenerateAIPortrait}
+                  className="inline-flex min-h-13 w-full items-center justify-center gap-2.5 rounded-xl bg-cyan-400 px-6 font-black text-slate-950 transition hover:bg-cyan-300 active:scale-[0.99] disabled:opacity-60 shadow-lg shadow-cyan-950/20"
+                >
+                  {isGenerating ? (
+                    <>
+                      <Loader2 className="h-5 w-5 animate-spin text-slate-950" />
+                      <span>Generating your portrait...</span>
+                    </>
+                  ) : (
+                    <>
+                      <Sparkles className="h-4 w-4" />
+                      <span>Generate My Leader Portrait</span>
+                    </>
+                  )}
+                </button>
+              </div>
+            ) : null}
           </div>
         )}
 
-        {/* Validation / General Error Banner */}
+        {/* Validation / Error Banner */}
         {errorMessage ? (
           <div
             role="alert"
@@ -715,89 +805,66 @@ export function LeaderPortraitGenerator({
           </div>
         ) : null}
 
-        {/* ================= GENERATED PROMPT PANEL ================= */}
-        {isPromptExpanded && (
-          <div className="mt-6 overflow-hidden rounded-2xl border border-white/15 bg-black/40 transition-all duration-300">
-            {/* Header bar of prompt panel */}
-            <div className="flex flex-wrap items-center justify-between gap-3 border-b border-white/10 bg-white/[0.03] p-4">
-              <div className="flex items-center gap-2">
-                <Sparkles className="h-4 w-4 text-[#2997ff]" />
-                <span className="text-xs font-bold uppercase tracking-wider text-white">
-                  Official True Legacy Transformation Prompt
-                </span>
+        {/* ================= OPTIONAL COLLAPSIBLE PROMPT STANDARD PANEL ================= */}
+        <div className="mt-6 border-t border-white/10 pt-4">
+          <button
+            type="button"
+            onClick={() => setIsPromptExpanded(!isPromptExpanded)}
+            className="flex items-center justify-between w-full text-xs font-semibold text-[#868c98] hover:text-white py-1 transition"
+          >
+            <span className="flex items-center gap-2">
+              <Sparkles className="h-3.5 w-3.5 text-[#2997ff]" />
+              Official True Legacy Portrait Transformation Prompt
+            </span>
+            {isPromptExpanded ? (
+              <ChevronUp className="h-4 w-4" />
+            ) : (
+              <ChevronDown className="h-4 w-4" />
+            )}
+          </button>
+
+          {isPromptExpanded && (
+            <div className="mt-3 overflow-hidden rounded-2xl border border-white/15 bg-black/40 p-4">
+              <div className="flex items-center justify-between pb-3 border-b border-white/10">
+                <span className="text-[11px] text-[#868c98]">Centralized Prompt Standard</span>
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={handleCopyPrompt}
+                    className={`inline-flex items-center gap-1.5 rounded-lg px-3 py-1 text-xs font-bold transition ${
+                      isCopied
+                        ? 'bg-emerald-400 text-slate-950'
+                        : 'border border-white/20 bg-white/10 text-white hover:bg-[#2997ff]/20'
+                    }`}
+                  >
+                    {isCopied ? (
+                      <>
+                        <Check className="h-3.5 w-3.5" />
+                        Copied ✓
+                      </>
+                    ) : (
+                      <>
+                        <Copy className="h-3.5 w-3.5" />
+                        Copy Prompt
+                      </>
+                    )}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleRegeneratePrompt}
+                    className="inline-flex items-center gap-1 rounded-lg border border-white/10 bg-white/[0.03] px-2 py-1 text-xs text-[#8f96a3] hover:text-white"
+                  >
+                    <RotateCcw className="h-3 w-3" />
+                    Reset
+                  </button>
+                </div>
               </div>
-
-              <div className="flex items-center gap-2">
-                <button
-                  type="button"
-                  onClick={handleCopyPrompt}
-                  className={`inline-flex items-center gap-1.5 rounded-lg px-3.5 py-1.5 text-xs font-bold transition ${
-                    isCopied
-                      ? 'bg-emerald-400 text-slate-950 shadow-md shadow-emerald-900/30'
-                      : 'border border-white/20 bg-white/10 text-white hover:border-[#2997ff] hover:bg-[#2997ff]/20'
-                  }`}
-                >
-                  {isCopied ? (
-                    <>
-                      <Check className="h-3.5 w-3.5" />
-                      Copied ✓
-                    </>
-                  ) : (
-                    <>
-                      <Copy className="h-3.5 w-3.5" />
-                      Copy Prompt
-                    </>
-                  )}
-                </button>
-
-                <button
-                  type="button"
-                  onClick={handleRegeneratePrompt}
-                  title="Restore standardized prompt"
-                  className="inline-flex items-center gap-1 rounded-lg border border-white/10 bg-white/[0.03] px-2.5 py-1.5 text-xs font-semibold text-[#8f96a3] hover:text-white"
-                >
-                  <RotateCcw className="h-3.5 w-3.5" />
-                  Regenerate
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => setIsPromptExpanded(!isPromptExpanded)}
-                  className="text-[#8f96a3] hover:text-white p-1"
-                  aria-label="Toggle prompt visibility"
-                >
-                  {isPromptExpanded ? (
-                    <ChevronUp className="h-4 w-4" />
-                  ) : (
-                    <ChevronDown className="h-4 w-4" />
-                  )}
-                </button>
-              </div>
-            </div>
-
-            {/* Prompt Content Body */}
-            <div className="p-4 sm:p-5">
-              <p className="text-xs font-semibold text-[#868c98] mb-2">
-                Standardized prompt configuration (references your uploaded photo as source):
-              </p>
-              <pre className="max-h-72 overflow-y-auto whitespace-pre-wrap rounded-xl border border-white/10 bg-[#050811] p-4 font-mono text-[12px] leading-relaxed text-[#d1d7e0] selection:bg-[#2997ff]/30 selection:text-white">
+              <pre className="mt-3 max-h-60 overflow-y-auto whitespace-pre-wrap rounded-xl border border-white/10 bg-[#050811] p-3 font-mono text-[11px] leading-relaxed text-[#d1d7e0]">
                 {promptText}
               </pre>
-
-              {/* Instructions footer inside prompt card */}
-              <div className="mt-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs text-[#868c98] pt-3 border-t border-white/5">
-                <span>
-                  💡 <strong>Workflow:</strong> Copy this prompt, provide your photo to your
-                  preferred AI image tool (Midjourney, DALL-E, Gemini, Flux), then upload the 4:5
-                  result above.
-                </span>
-                <span className="shrink-0 text-[11px] text-[#2997ff] font-semibold">
-                  Standardized Across All Leaders
-                </span>
-              </div>
             </div>
-          </div>
-        )}
+          )}
+        </div>
       </div>
     </section>
   )
