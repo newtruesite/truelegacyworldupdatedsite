@@ -1,26 +1,27 @@
 /**
  * True Legacy Official AI Leader Portrait Generation Service.
  * Centralized service for transforming source photos into standardized 4:5 studio leader portraits.
- * Enforces dual-input generation:
- *   - Input 1: Identity Source (Uploaded candidate photo)
- *   - Input 2: Style & Composition Reference (Approved True Legacy leader portrait)
- * Features high-precision neural segmentation, professional studio halo/backlight compositing,
- * editorial studio grading, and production 4:5 resolution normalization (1536x1920).
+ * Enforces multi-reference guided generation:
+ *   - Image A: Identity Source (Uploaded candidate photo)
+ *   - Images B-E: Approved True Legacy Style References (Mehdi Cohen, Ryan Pool Sr, Magaly Cardona, Zah Naderi)
+ * Features high-precision neural segmentation, soft smoky halo compositing,
+ * studio lighting balance, edge vignette, and production 4:5 normalization (1536x1920).
  */
 
 import { removeBackground } from '@imgly/background-removal'
 import {
   TRUE_LEGACY_LEADER_PORTRAIT_PROMPT,
-  TRUE_LEGACY_STYLE_REFERENCE_IMAGE,
+  TRUE_LEGACY_PORTRAIT_STYLE_REFERENCES,
   PRODUCTION_PORTRAIT_WIDTH,
   PRODUCTION_PORTRAIT_HEIGHT,
   validateGeneratedPortrait,
   type LeaderPortraitStatus,
+  type PortraitStyleReference,
 } from '@/config/portraitStandard'
 
 export interface GeneratePortraitOptions {
   sourceImage: File | Blob | string
-  styleReferenceImage?: string
+  styleReferences?: PortraitStyleReference[]
   prompt?: string
   aspectRatio?: '4:5'
   targetWidth?: number
@@ -36,6 +37,7 @@ export interface PortraitGenerationResult {
   promptUsed: string
   generationTimestamp: string
   status: LeaderPortraitStatus
+  validationNotes?: string[]
   error?: string
 }
 
@@ -47,7 +49,7 @@ export async function generateLeaderPortraitAI(
 ): Promise<PortraitGenerationResult> {
   const {
     sourceImage,
-    styleReferenceImage = TRUE_LEGACY_STYLE_REFERENCE_IMAGE,
+    styleReferences = TRUE_LEGACY_PORTRAIT_STYLE_REFERENCES,
     prompt = TRUE_LEGACY_LEADER_PORTRAIT_PROMPT,
     targetWidth = PRODUCTION_PORTRAIT_WIDTH,
     targetHeight = PRODUCTION_PORTRAIT_HEIGHT, // 1536x1920 (4:5)
@@ -59,7 +61,7 @@ export async function generateLeaderPortraitAI(
     if (onProgress) onProgress(stage, percent)
   }
 
-  report('Loading identity photo (Image 1) and approved style reference (Image 2)...', 10)
+  report('Loading identity photo (Image A) & official style references (Images B-E)...', 10)
 
   if (signal?.aborted) {
     throw new Error('Generation aborted by user.')
@@ -71,7 +73,7 @@ export async function generateLeaderPortraitAI(
 
   if (apiEndpoint && apiKey) {
     try {
-      report('Connecting to True Legacy Studio AI engine with dual-reference lock...', 25)
+      report('Connecting to True Legacy Studio AI with multi-reference lock...', 25)
 
       let sourceBase64 = ''
       if (typeof sourceImage === 'string') {
@@ -80,7 +82,7 @@ export async function generateLeaderPortraitAI(
         sourceBase64 = await fileToBase64(sourceImage)
       }
 
-      report('Matching composition, halo lighting, and color balance to style reference...', 55)
+      report('Calibrating studio lighting, head scale, and charcoal background across references...', 55)
 
       const response = await fetch(apiEndpoint, {
         method: 'POST',
@@ -90,8 +92,12 @@ export async function generateLeaderPortraitAI(
         },
         body: JSON.stringify({
           prompt,
-          image_1_identity: sourceBase64,
-          image_2_style_reference: styleReferenceImage,
+          image_a_identity: sourceBase64,
+          style_references: styleReferences.map((ref) => ({
+            label: ref.label,
+            name: ref.name,
+            url: ref.url,
+          })),
           aspect_ratio: '4:5',
           target_resolution: `${targetWidth}x${targetHeight}`,
           num_outputs: 1,
@@ -109,20 +115,21 @@ export async function generateLeaderPortraitAI(
       const resultUrl = data.image_url || data.output?.[0] || data.result
 
       if (resultUrl) {
-        report('Verifying portrait quality standards and 4:5 ratio...', 90)
+        report('Running quality & dimension verification...', 90)
         const qualityCheck = await validateGeneratedPortrait(resultUrl)
 
         if (!qualityCheck.valid) {
           throw new Error(qualityCheck.error || 'Quality validation check failed.')
         }
 
-        report('Finalizing editorial finish...', 100)
+        report('Portrait standardized & ready for review.', 100)
         return {
           success: true,
           portraitUrl: resultUrl,
           promptUsed: prompt,
           generationTimestamp: new Date().toISOString(),
-          status: 'generated',
+          status: 'ready_for_review',
+          validationNotes: qualityCheck.notes,
         }
       }
     } catch (err) {
@@ -150,7 +157,7 @@ export async function generateLeaderPortraitAI(
     }
 
     report('Rendering official True Legacy charcoal & slate backdrop with smoky halo...', 80)
-    await delay(120, signal)
+    await delay(100, signal)
 
     report('Applying soft key lighting, shoulder balance, and vignette...', 90)
     const imageToRender = cutoutBlob || sourceImage
@@ -160,14 +167,14 @@ export async function generateLeaderPortraitAI(
       targetHeight
     )
 
-    report('Performing automated quality validation...', 95)
+    report('Running automated quality & directory standards check...', 95)
     const qualityCheck = await validateGeneratedPortrait(processedBlob)
     if (!qualityCheck.valid) {
       throw new Error(qualityCheck.error || 'Output validation failed. Please try another photo.')
     }
 
     const resultUrl = URL.createObjectURL(processedBlob)
-    await delay(80, signal)
+    await delay(60, signal)
     report('Portrait generation complete. Ready for review.', 100)
 
     return {
@@ -176,7 +183,8 @@ export async function generateLeaderPortraitAI(
       blob: processedBlob,
       promptUsed: prompt,
       generationTimestamp: new Date().toISOString(),
-      status: 'generated',
+      status: 'ready_for_review',
+      validationNotes: qualityCheck.notes,
     }
   } catch (error) {
     const errMessage =
@@ -188,14 +196,14 @@ export async function generateLeaderPortraitAI(
       portraitUrl: '',
       promptUsed: prompt,
       generationTimestamp: new Date().toISOString(),
-      status: 'not_generated',
+      status: 'generation_failed',
       error: errMessage,
     }
   }
 }
 
 /**
- * High-resolution canvas transformation engine calibrated to the approved True Legacy style reference.
+ * High-resolution canvas transformation engine calibrated to the approved True Legacy style references.
  * Output: Normalized 1536 × 1920 (4:5) uncompressed PNG.
  */
 async function renderStudioCanvasPortrait(
@@ -260,7 +268,6 @@ async function renderStudioCanvasPortrait(
         ctx.fillRect(0, 0, targetWidth, targetHeight)
 
         // ================= LAYER 3: Subtle Photographic Studio Texture =================
-        // Render subtle fine grain to avoid flat solid banding
         ctx.fillStyle = 'rgba(255, 255, 255, 0.012)'
         for (let i = 0; i < 200; i++) {
           const rx = (Math.sin(i * 997) * 0.5 + 0.5) * targetWidth
@@ -270,30 +277,22 @@ async function renderStudioCanvasPortrait(
         }
 
         // ================= LAYER 4: Reference-Calibrated Composition & Subject Placement =================
-        // Composition locks:
-        // - Top of head: ~8% - 10% below upper edge
-        // - Eyes: ~28% - 32% from top
-        // - Balanced upper-body / mid-torso framing
         const srcW = img.naturalWidth || img.width
         const srcH = img.naturalHeight || img.height
 
-        // Calculate scale to comfortably fit upper torso with natural negative space
         const targetCropRatio = 0.8 // 4:5
         const srcRatio = srcW / srcH
 
         let scale: number
         if (srcRatio < targetCropRatio) {
-          // Taller than 4:5
           scale = (targetWidth / srcW) * 0.96
         } else {
-          // Wider than 4:5
           scale = Math.max(targetWidth / srcW, (targetHeight * 0.88) / srcH)
         }
 
         const drawW = srcW * scale
         const drawH = srcH * scale
         const drawX = (targetWidth - drawW) / 2
-        // Position top of head ~8-10% from the top
         const drawY = Math.min(targetHeight * 0.08, (targetHeight - drawH) * 0.25)
 
         // Draw segmented subject onto canvas

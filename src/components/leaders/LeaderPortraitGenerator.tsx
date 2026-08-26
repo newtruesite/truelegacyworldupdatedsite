@@ -18,12 +18,13 @@ import {
   Loader2,
   RefreshCw,
   UserCheck,
-  Image as ImageIcon,
+  ShieldCheck,
+  Sliders,
 } from 'lucide-react'
 import {
   getOfficialLeaderPortraitPrompt,
   validatePortraitFile,
-  TRUE_LEGACY_STYLE_REFERENCE_IMAGE,
+  TRUE_LEGACY_PORTRAIT_STYLE_REFERENCES,
   TRUE_LEGACY_SAMPLE_REFERENCE_IMAGE,
   type LeaderPortraitData,
   type LeaderPortraitStatus,
@@ -56,12 +57,14 @@ export function LeaderPortraitGenerator({
 
   const [generatedPortraitUrl, setGeneratedPortraitUrl] = useState<string>(initialPortrait?.generatedPortraitUrl || '')
   const [approvedPortraitUrl, setApprovedPortraitUrl] = useState<string>(initialPortrait?.approvedPortraitUrl || '')
-  const [status, setStatus] = useState<LeaderPortraitStatus>(initialPortrait?.status || 'not_generated')
+  const [status, setStatus] = useState<LeaderPortraitStatus>(initialPortrait?.status || 'not_uploaded')
   const [promptText, setPromptText] = useState<string>(initialPortrait?.promptUsed || getOfficialLeaderPortraitPrompt())
 
   const [isPromptExpanded, setIsPromptExpanded] = useState(false)
+  const [isReferencesExpanded, setIsReferencesExpanded] = useState(false)
   const [isCopied, setIsCopied] = useState(false)
   const [errorMessage, setErrorMessage] = useState<string>('')
+  const [validationNotes, setValidationNotes] = useState<string[]>(initialPortrait?.validationNotes || [])
   const [isDragging, setIsDragging] = useState(false)
   const [isValidating, setIsValidating] = useState(false)
   const [isGenerating, setIsGenerating] = useState(false)
@@ -87,6 +90,7 @@ export function LeaderPortraitGenerator({
         promptUsed: promptText,
         status,
         qualityPassed,
+        validationNotes,
         ...updatedState,
       }
       onPortraitChange(currentData)
@@ -102,6 +106,7 @@ export function LeaderPortraitGenerator({
       promptText,
       status,
       qualityPassed,
+      validationNotes,
     ]
   )
 
@@ -144,9 +149,10 @@ export function LeaderPortraitGenerator({
       setOriginalFileSize(file.size)
       setQualityPassed(true)
       setImageDimensions(validation.dimensions || null)
-      setStatus('not_generated')
+      setStatus('photo_uploaded')
       setGeneratedPortraitUrl('')
       setApprovedPortraitUrl('')
+      setValidationNotes([])
 
       notifyParent({
         originalFile: file,
@@ -155,8 +161,9 @@ export function LeaderPortraitGenerator({
         originalPreviewUrl: previewUrl,
         generatedPortraitUrl: '',
         approvedPortraitUrl: '',
-        status: 'not_generated',
+        status: 'photo_uploaded',
         qualityPassed: true,
+        validationNotes: [],
       })
     } catch {
       setErrorMessage('Failed to read and validate the uploaded photo. Please try another image.')
@@ -212,12 +219,12 @@ export function LeaderPortraitGenerator({
       setOriginalFileSize(60841)
       setQualityPassed(true)
       setImageDimensions({ width: 600, height: 750 })
-      setStatus('not_generated')
+      setStatus('photo_uploaded')
       notifyParent({
         originalFileName: 'leader-reference-sample.jpg',
         originalFileSize: 60841,
         originalPreviewUrl: TRUE_LEGACY_SAMPLE_REFERENCE_IMAGE,
-        status: 'not_generated',
+        status: 'photo_uploaded',
         qualityPassed: true,
       })
     } finally {
@@ -240,9 +247,10 @@ export function LeaderPortraitGenerator({
     setOriginalFileSize(0)
     setGeneratedPortraitUrl('')
     setApprovedPortraitUrl('')
-    setStatus('not_generated')
+    setStatus('not_uploaded')
     setIsPromptExpanded(false)
     setErrorMessage('')
+    setValidationNotes([])
     setQualityPassed(false)
     setImageDimensions(null)
 
@@ -257,17 +265,19 @@ export function LeaderPortraitGenerator({
       originalPreviewUrl: '',
       generatedPortraitUrl: '',
       approvedPortraitUrl: '',
-      status: 'not_generated',
+      status: 'not_uploaded',
       qualityPassed: false,
+      validationNotes: [],
     })
   }
 
-  // Direct AI Generation workflow with dual-input reference lock
+  // Direct AI Generation workflow with multi-reference lock
   const handleGenerateAIPortrait = async () => {
     if (isGenerating || (!originalFile && !originalPreviewUrl)) return
     setIsGenerating(true)
+    setStatus('generating')
     setErrorMessage('')
-    setGenerationStage('Initializing reference-based True Legacy studio pipeline...')
+    setGenerationStage('Loading Image A & reference standards (Images B-E)...')
 
     const source = originalFile || originalPreviewUrl
     const controller = new AbortController()
@@ -276,7 +286,7 @@ export function LeaderPortraitGenerator({
     try {
       const result = await generateLeaderPortraitAI({
         sourceImage: source,
-        styleReferenceImage: TRUE_LEGACY_STYLE_REFERENCE_IMAGE,
+        styleReferences: TRUE_LEGACY_PORTRAIT_STYLE_REFERENCES,
         prompt: promptText,
         onProgress: (stage) => {
           setGenerationStage(stage)
@@ -286,13 +296,16 @@ export function LeaderPortraitGenerator({
 
       if (result.success && result.portraitUrl) {
         setGeneratedPortraitUrl(result.portraitUrl)
-        setStatus('generated')
+        setStatus('ready_for_review')
+        setValidationNotes(result.validationNotes || [])
         notifyParent({
           generatedPortraitUrl: result.portraitUrl,
-          status: 'generated',
+          status: 'ready_for_review',
           promptUsed: promptText,
+          validationNotes: result.validationNotes,
         })
       } else {
+        setStatus('generation_failed')
         setErrorMessage(
           result.error ||
             "We couldn't generate your portrait this time. Please try again or upload a different photo."
@@ -300,6 +313,7 @@ export function LeaderPortraitGenerator({
       }
     } catch (err: unknown) {
       if (err instanceof Error && err.name === 'AbortError') return
+      setStatus('generation_failed')
       setErrorMessage(
         "We couldn't generate your portrait this time. Your original photo is safe. Please try again or upload a different photo."
       )
@@ -358,10 +372,10 @@ export function LeaderPortraitGenerator({
       }
       const preview = URL.createObjectURL(file)
       setGeneratedPortraitUrl(preview)
-      setStatus('generated')
+      setStatus('ready_for_review')
       notifyParent({
         generatedPortraitUrl: preview,
-        status: 'generated',
+        status: 'ready_for_review',
       })
     }
   }
@@ -381,6 +395,7 @@ export function LeaderPortraitGenerator({
       promptUsed: promptText,
       status: newStatus,
       qualityPassed,
+      validationNotes,
     }
     notifyParent(updatedData)
     if (onApprovePortrait) {
@@ -395,6 +410,55 @@ export function LeaderPortraitGenerator({
     const sizes = ['B', 'KB', 'MB', 'GB']
     const i = Math.floor(Math.log(bytes) / Math.log(k))
     return `${parseFloat((bytes / Math.pow(k, i)).toFixed(1))} ${sizes[i]}`
+  }
+
+  // Human-readable status badge mapping
+  const renderStatusBadge = () => {
+    switch (status) {
+      case 'applicant_approved':
+      case 'admin_approved':
+        return (
+          <div className="inline-flex items-center gap-1.5 self-start rounded-full border border-emerald-400/30 bg-emerald-400/10 px-3.5 py-1.5 text-xs font-bold text-emerald-300 shrink-0">
+            <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-400" />
+            <span className="whitespace-nowrap">Portrait Approved</span>
+          </div>
+        )
+      case 'ready_for_review':
+        return (
+          <div className="inline-flex items-center gap-1.5 self-start rounded-full border border-[#2997ff]/30 bg-[#2997ff]/10 px-3.5 py-1.5 text-xs font-bold text-[#2997ff] shrink-0">
+            <Sparkles className="h-4 w-4 shrink-0 text-[#2997ff]" />
+            <span className="whitespace-nowrap">Ready for Review</span>
+          </div>
+        )
+      case 'generating':
+        return (
+          <div className="inline-flex items-center gap-1.5 self-start rounded-full border border-amber-400/30 bg-amber-400/10 px-3.5 py-1.5 text-xs font-bold text-amber-300 shrink-0">
+            <Loader2 className="h-4 w-4 animate-spin shrink-0 text-amber-400" />
+            <span className="whitespace-nowrap">Generating Portrait</span>
+          </div>
+        )
+      case 'photo_uploaded':
+        return (
+          <div className="inline-flex items-center gap-1.5 self-start rounded-full border border-white/20 bg-white/10 px-3.5 py-1.5 text-xs font-bold text-white shrink-0">
+            <BadgeCheck className="h-4 w-4 shrink-0 text-[#2997ff]" />
+            <span className="whitespace-nowrap">Photo Uploaded</span>
+          </div>
+        )
+      case 'generation_failed':
+        return (
+          <div className="inline-flex items-center gap-1.5 self-start rounded-full border border-rose-400/30 bg-rose-400/10 px-3.5 py-1.5 text-xs font-bold text-rose-300 shrink-0">
+            <AlertCircle className="h-4 w-4 shrink-0 text-rose-400" />
+            <span className="whitespace-nowrap">Generation Failed</span>
+          </div>
+        )
+      default:
+        return (
+          <div className="inline-flex items-center gap-1.5 self-start rounded-full border border-white/10 bg-white/[0.04] px-3.5 py-1.5 text-xs font-medium text-[#868c98] shrink-0">
+            <Camera className="h-4 w-4 shrink-0 text-[#868c98]" />
+            <span className="whitespace-nowrap">No Photo Uploaded</span>
+          </div>
+        )
+    }
   }
 
   return (
@@ -417,26 +481,11 @@ export function LeaderPortraitGenerator({
           </p>
         </div>
 
-        {/* Status Badge */}
-        {status === 'applicant_approved' ? (
-          <div className="inline-flex items-center gap-1.5 self-start rounded-full border border-emerald-400/30 bg-emerald-400/10 px-3.5 py-1.5 text-xs font-bold text-emerald-300 shrink-0">
-            <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-400" />
-            <span>Portrait Approved</span>
-          </div>
-        ) : generatedPortraitUrl ? (
-          <div className="inline-flex items-center gap-1.5 self-start rounded-full border border-[#2997ff]/30 bg-[#2997ff]/10 px-3.5 py-1.5 text-xs font-bold text-[#2997ff] shrink-0">
-            <Sparkles className="h-4 w-4 shrink-0 text-[#2997ff]" />
-            <span>AI Portrait Generated</span>
-          </div>
-        ) : originalPreviewUrl ? (
-          <div className="inline-flex items-center gap-1.5 self-start rounded-full border border-white/20 bg-white/10 px-3.5 py-1.5 text-xs font-bold text-white shrink-0">
-            <BadgeCheck className="h-4 w-4 shrink-0 text-[#2997ff]" />
-            <span>Photo Loaded</span>
-          </div>
-        ) : null}
+        {/* Dynamic Status Badge */}
+        {renderStatusBadge()}
       </div>
 
-      {/* Explanatory Note & Style Reference Indicator */}
+      {/* Explanatory Note & Style Reference Gallery */}
       <div className="mt-5 space-y-3 min-w-0">
         <div className="flex items-start gap-3 rounded-2xl border border-white/5 bg-white/[0.025] p-3.5 sm:p-4 text-xs leading-relaxed text-[#8f96a3] min-w-0">
           <Info className="mt-0.5 h-4 w-4 shrink-0 text-[#2997ff]" />
@@ -445,24 +494,56 @@ export function LeaderPortraitGenerator({
           </span>
         </div>
 
-        {/* Dual-Reference Info Bar */}
-        <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-[#2997ff]/20 bg-[#2997ff]/[0.04] p-3 sm:p-4 text-xs min-w-0">
-          <div className="flex items-center gap-2.5 min-w-0">
-            <div className="relative h-10 w-8 shrink-0 overflow-hidden rounded-lg border border-white/20 bg-black/60">
-              <img
-                src={TRUE_LEGACY_STYLE_REFERENCE_IMAGE}
-                alt="Approved True Legacy Style Reference"
-                className="h-full w-full object-cover object-top"
-              />
+        {/* Multi-Image Style References Info Bar */}
+        <div className="rounded-2xl border border-[#2997ff]/20 bg-[#2997ff]/[0.03] p-3.5 sm:p-4 min-w-0">
+          <div className="flex flex-wrap items-center justify-between gap-3 min-w-0">
+            <div className="flex items-center gap-3 min-w-0">
+              {/* Stacked Avatars of Approved Style References */}
+              <div className="flex -space-x-2 shrink-0">
+                {TRUE_LEGACY_PORTRAIT_STYLE_REFERENCES.map((ref) => (
+                  <img
+                    key={ref.id}
+                    src={ref.url}
+                    alt={ref.name}
+                    title={`${ref.label}: ${ref.name}`}
+                    className="h-9 w-7 rounded-md border border-white/20 object-cover object-top shadow-sm"
+                  />
+                ))}
+              </div>
+              <div className="min-w-0">
+                <p className="font-bold text-xs text-white truncate">
+                  Approved Reference Library (Images B–E)
+                </p>
+                <p className="text-[11px] text-[#8f96a3] truncate">
+                  4:5 Charcoal Studio · Smoky Halo · Balanced Lighting · Upper-Torso Framing
+                </p>
+              </div>
             </div>
-            <div className="min-w-0">
-              <p className="font-bold text-white truncate">Locked Studio Reference Active</p>
-              <p className="text-[#8f96a3] truncate">4:5 Charcoal Studio · Smoky Halo · Balanced Lighting</p>
-            </div>
+
+            <button
+              type="button"
+              onClick={() => setIsReferencesExpanded(!isReferencesExpanded)}
+              className="inline-flex items-center gap-1 text-[11px] font-semibold text-[#2997ff] hover:underline shrink-0"
+            >
+              <Sliders className="h-3 w-3" />
+              <span>{isReferencesExpanded ? 'Hide References' : 'View References'}</span>
+            </button>
           </div>
-          <span className="text-[11px] font-semibold text-[#2997ff] flex items-center gap-1 shrink-0">
-            <BadgeCheck className="h-3.5 w-3.5" /> Reference-Locked Generation
-          </span>
+
+          {/* Collapsible reference preview strip */}
+          {isReferencesExpanded && (
+            <div className="mt-4 pt-4 border-t border-white/10 grid grid-cols-2 sm:grid-cols-4 gap-3">
+              {TRUE_LEGACY_PORTRAIT_STYLE_REFERENCES.map((ref) => (
+                <div key={ref.id} className="text-center">
+                  <div className="aspect-[4/5] w-full rounded-xl overflow-hidden border border-white/15 bg-black/60">
+                    <img src={ref.url} alt={ref.name} className="h-full w-full object-cover object-top" />
+                  </div>
+                  <p className="mt-1.5 text-[11px] font-bold text-white truncate">{ref.label}</p>
+                  <p className="text-[10px] text-[#868c98] truncate">{ref.name}</p>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </div>
 
@@ -509,7 +590,7 @@ export function LeaderPortraitGenerator({
                   e.stopPropagation()
                   fileInputRef.current?.click()
                 }}
-                className="inline-flex min-h-[48px] items-center justify-center rounded-xl border border-white/20 bg-white/10 px-5 py-2.5 text-xs font-bold text-white backdrop-blur-md transition-all hover:border-[#2997ff]/50 hover:bg-[#2997ff]/20 active:scale-[0.99]"
+                className="inline-flex min-h-[48px] sm:min-h-[52px] items-center justify-center rounded-xl border border-white/20 bg-white/10 px-6 py-2.5 text-xs font-bold text-white backdrop-blur-md transition-all hover:border-[#2997ff]/50 hover:bg-[#2997ff]/20 active:scale-[0.99]"
               >
                 Choose Photo
               </button>
@@ -519,7 +600,7 @@ export function LeaderPortraitGenerator({
                   e.stopPropagation()
                   handleLoadSamplePhoto()
                 }}
-                className="inline-flex min-h-[48px] items-center justify-center rounded-xl border border-white/10 bg-transparent px-4 py-2.5 text-xs font-medium text-[#868c98] transition hover:border-white/25 hover:text-white"
+                className="inline-flex min-h-[48px] sm:min-h-[52px] items-center justify-center rounded-xl border border-white/10 bg-transparent px-5 py-2.5 text-xs font-medium text-[#868c98] transition hover:border-white/25 hover:text-white"
               >
                 Try sample photo
               </button>
@@ -553,7 +634,7 @@ export function LeaderPortraitGenerator({
                 <button
                   type="button"
                   onClick={() => fileInputRef.current?.click()}
-                  className="inline-flex flex-1 sm:flex-initial min-h-[40px] items-center justify-center gap-1.5 rounded-lg border border-white/15 bg-white/[0.05] px-3 py-1.5 font-semibold text-white transition hover:border-white/30 hover:bg-white/10"
+                  className="inline-flex flex-1 sm:flex-initial min-h-[40px] items-center justify-center gap-1.5 rounded-lg border border-white/15 bg-white/[0.05] px-3.5 py-1.5 font-semibold text-white transition hover:border-white/30 hover:bg-white/10"
                 >
                   <RotateCcw className="h-3.5 w-3.5 shrink-0" />
                   <span>Replace Photo</span>
@@ -577,11 +658,11 @@ export function LeaderPortraitGenerator({
               </div>
             </div>
 
-            {/* Quality Checklist Recommendations */}
+            {/* Quality Verification Checklist */}
             <div className="rounded-2xl border border-white/5 bg-black/30 p-3.5 sm:p-4 min-w-0">
               <div className="flex flex-wrap items-center justify-between gap-2">
                 <p className="text-xs font-bold uppercase tracking-wider text-[#aeb4c0]">
-                  Photo Quality Verification
+                  Portrait Quality Verification
                 </p>
                 <span className="text-[11px] font-semibold text-emerald-400 flex items-center gap-1">
                   <Check className="h-3.5 w-3.5" /> Resolution Ready
@@ -602,20 +683,20 @@ export function LeaderPortraitGenerator({
                 </div>
                 <div className="flex items-center gap-2 min-w-0">
                   <CheckCircle2 className="h-3.5 w-3.5 text-emerald-400 shrink-0" />
-                  <span className="truncate">High clarity, not excessively blurry</span>
+                  <span className="truncate">Both shoulders visible & balanced scale</span>
                 </div>
               </div>
             </div>
 
             {/* Side-by-Side on Desktop / Vertical Stack on Mobile */}
             <div className="grid gap-6 md:grid-cols-2 min-w-0 w-full">
-              {/* 1. Original Uploaded Photo */}
-              <div className="flex flex-col rounded-2xl border border-white/10 bg-white/[0.02] p-3.5 sm:p-4 min-w-0 w-full">
+              {/* 1. Left Card: Original Reference Photo */}
+              <div className="flex flex-col rounded-2xl border border-white/10 bg-white/[0.02] p-4 min-w-0 w-full shadow-lg">
                 <div className="flex flex-wrap items-center justify-between gap-2 pb-3 border-b border-white/10">
                   <span className="text-xs font-bold uppercase tracking-wider text-[#aeb4c0]">
                     Original Reference Photo
                   </span>
-                  <span className="text-[11px] text-[#747b88]">Source Identity (Image 1)</span>
+                  <span className="text-[11px] text-[#747b88] font-medium">Source identity photo</span>
                 </div>
 
                 <div className="relative mt-3 aspect-[4/5] w-full max-w-full overflow-hidden rounded-xl bg-black/60 border border-white/5 select-none">
@@ -624,23 +705,27 @@ export function LeaderPortraitGenerator({
                     alt="Uploaded candidate reference"
                     className="block h-full w-full object-cover object-top"
                   />
-                  <div className="absolute bottom-2 left-2 rounded-md bg-black/75 px-2 py-1 text-[10px] font-bold text-white/90 backdrop-blur-md">
-                    Unmodified Original
+                  <div className="absolute bottom-2 left-2 rounded-md bg-black/75 px-2.5 py-1 text-[10px] font-bold text-white/90 backdrop-blur-md">
+                    Image A · Identity Source
                   </div>
                 </div>
               </div>
 
-              {/* 2. AI Generated Leader Portrait Canvas Preview */}
-              <div className="flex flex-col rounded-2xl border border-white/10 bg-white/[0.02] p-3.5 sm:p-4 min-w-0 w-full">
+              {/* 2. Right Card: AI Portrait Preview */}
+              <div className="flex flex-col rounded-2xl border border-white/10 bg-white/[0.02] p-4 min-w-0 w-full shadow-lg">
                 <div className="flex flex-wrap items-center justify-between gap-2 pb-3 border-b border-white/10 min-w-0">
                   <div className="flex items-center gap-1.5 min-w-0">
                     <Layers className="h-3.5 w-3.5 shrink-0 text-[#2997ff]" />
                     <span className="text-xs font-bold uppercase tracking-wider text-white truncate">
-                      {generatedPortraitUrl ? 'AI Portrait Preview' : 'True Legacy Standard (4:5)'}
+                      AI Portrait Preview
                     </span>
                   </div>
                   <span className="text-[11px] text-[#2997ff] font-semibold shrink-0">
-                    {approvedPortraitUrl ? 'Approved' : generatedPortraitUrl ? 'Ready for Review' : 'Style Reference (Image 2)'}
+                    {approvedPortraitUrl
+                      ? 'Portrait Approved'
+                      : generatedPortraitUrl
+                      ? 'Ready for Review'
+                      : 'Standardization Studio'}
                   </span>
                 </div>
 
@@ -669,7 +754,7 @@ export function LeaderPortraitGenerator({
 
                   {/* Layer 4: Display Generated/Approved or Loading / Placeholder State */}
                   {isGenerating ? (
-                    <div className="absolute inset-0 flex flex-col items-center justify-center p-4 sm:p-6 text-center bg-black/70 backdrop-blur-sm z-10 min-w-0">
+                    <div className="absolute inset-0 flex flex-col items-center justify-center p-4 sm:p-6 text-center bg-black/75 backdrop-blur-sm z-10 min-w-0">
                       <div className="relative flex items-center justify-center shrink-0">
                         <div className="h-14 w-14 sm:h-16 sm:w-16 rounded-full border-2 border-[#2997ff]/20 border-t-[#2997ff] animate-spin" />
                         <Sparkles className="absolute h-6 w-6 text-[#2997ff] animate-pulse" />
@@ -693,7 +778,7 @@ export function LeaderPortraitGenerator({
                     <div className="absolute inset-0 flex flex-col items-center justify-center p-4 sm:p-6 text-center min-w-0">
                       <div className="relative h-24 w-20 sm:h-28 sm:w-24 overflow-hidden rounded-xl border border-dashed border-[#2997ff]/50 p-0.5 bg-black/40">
                         <img
-                          src={TRUE_LEGACY_STYLE_REFERENCE_IMAGE}
+                          src={TRUE_LEGACY_PORTRAIT_STYLE_REFERENCES[0].url}
                           alt="Style Reference"
                           className="h-full w-full rounded-lg object-cover object-top opacity-50"
                         />
@@ -702,7 +787,7 @@ export function LeaderPortraitGenerator({
                         Standard 4:5 Reference Lock
                       </p>
                       <p className="mt-1 text-[11px] leading-relaxed text-[#8f96a3] max-w-[220px]">
-                        Charcoal gradient background, soft halo, upper-body framing & calibrated skin tone.
+                        Charcoal studio gradient, smoky halo, upper-torso crop & balanced lighting.
                       </p>
                     </div>
                   )}
@@ -717,29 +802,29 @@ export function LeaderPortraitGenerator({
                   <div className="absolute inset-x-0 bottom-0 h-12 bg-gradient-to-t from-[#06080e]/90 via-[#06080e]/30 to-transparent pointer-events-none" />
                 </div>
 
-                {/* Mobile & Desktop Actions Under Canvas */}
+                {/* ================= PROPORTIONATE POLISHED ACTION BUTTON AREA ================= */}
                 <div className="mt-4 space-y-3 min-w-0">
                   {generatedPortraitUrl && !approvedPortraitUrl ? (
-                    <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 min-w-0">
-                      {/* Primary Use This Portrait Button */}
+                    <div className="flex flex-col space-y-2.5 min-w-0 w-full">
+                      {/* Primary Full-Width CTA: Use This Portrait */}
                       <button
                         type="button"
                         onClick={() => handleApprovePortrait(generatedPortraitUrl)}
-                        className="inline-flex min-h-[48px] w-full sm:flex-1 items-center justify-center gap-2 rounded-xl bg-cyan-400 px-5 py-2.5 text-xs sm:text-sm font-black text-slate-950 transition hover:bg-cyan-300 active:scale-[0.99] shadow-md shadow-cyan-950/20"
+                        className="inline-flex min-h-[52px] w-full items-center justify-center gap-2.5 rounded-xl bg-cyan-400 px-6 py-3 text-sm font-black text-slate-950 transition hover:bg-cyan-300 active:scale-[0.99] shadow-lg shadow-cyan-950/20 whitespace-nowrap"
                       >
                         <UserCheck className="h-4 w-4 shrink-0" />
-                        <span>Use This Portrait</span>
+                        <span className="whitespace-nowrap">Use This Portrait</span>
                       </button>
 
-                      {/* Secondary Generate Again Button */}
+                      {/* Secondary Action: Generate Again */}
                       <button
                         type="button"
                         disabled={isGenerating}
                         onClick={handleGenerateAIPortrait}
-                        className="inline-flex min-h-[48px] w-full sm:w-auto items-center justify-center gap-1.5 rounded-xl border border-white/15 bg-white/[0.04] px-4 py-2.5 text-xs sm:text-sm font-bold text-white hover:bg-white/10 active:scale-[0.99] transition"
+                        className="inline-flex min-h-[48px] w-full items-center justify-center gap-2 rounded-xl border border-white/15 bg-white/[0.04] px-5 py-2.5 text-xs sm:text-sm font-bold text-white hover:bg-white/10 active:scale-[0.99] transition whitespace-nowrap"
                       >
-                        <RefreshCw className="h-3.5 w-3.5 shrink-0 text-[#2997ff]" />
-                        <span>Generate Again</span>
+                        <RefreshCw className="h-4 w-4 shrink-0 text-[#2997ff]" />
+                        <span className="whitespace-nowrap">Generate Again</span>
                       </button>
                     </div>
                   ) : null}
@@ -749,14 +834,14 @@ export function LeaderPortraitGenerator({
                       <div className="flex flex-wrap items-center justify-between gap-2">
                         <span className="flex items-center gap-1.5">
                           <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-400" />
-                          <span>Approved as Profile Portrait</span>
+                          <span>Approved as Official Leader Portrait</span>
                         </span>
                         <button
                           type="button"
                           onClick={() => {
                             setApprovedPortraitUrl('')
-                            setStatus('generated')
-                            notifyParent({ approvedPortraitUrl: '', status: 'generated' })
+                            setStatus('ready_for_review')
+                            notifyParent({ approvedPortraitUrl: '', status: 'ready_for_review' })
                           }}
                           className="text-[11px] underline text-emerald-300/80 hover:text-white"
                         >
@@ -766,6 +851,7 @@ export function LeaderPortraitGenerator({
                     </div>
                   ) : null}
 
+                  {/* Tertiary Action Links */}
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pt-1 text-xs">
                     <button
                       type="button"
@@ -801,7 +887,7 @@ export function LeaderPortraitGenerator({
                   type="button"
                   disabled={isGenerating}
                   onClick={handleGenerateAIPortrait}
-                  className="inline-flex min-h-[48px] sm:min-h-[52px] w-full items-center justify-center gap-2.5 rounded-xl bg-cyan-400 px-6 py-3 font-black text-xs sm:text-sm text-slate-950 transition hover:bg-cyan-300 active:scale-[0.99] disabled:opacity-60 shadow-lg shadow-cyan-950/20"
+                  className="inline-flex min-h-[52px] w-full items-center justify-center gap-2.5 rounded-xl bg-cyan-400 px-6 py-3 font-black text-sm text-slate-950 transition hover:bg-cyan-300 active:scale-[0.99] disabled:opacity-60 shadow-lg shadow-cyan-950/20 whitespace-nowrap"
                 >
                   {isGenerating ? (
                     <>
@@ -857,7 +943,7 @@ export function LeaderPortraitGenerator({
                   <button
                     type="button"
                     onClick={handleCopyPrompt}
-                    className={`inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-bold transition ${
+                    className={`inline-flex items-center gap-1.5 rounded-lg px-3.5 py-1.5 text-xs font-bold transition ${
                       isCopied
                         ? 'bg-emerald-400 text-slate-950'
                         : 'border border-white/20 bg-white/10 text-white hover:bg-[#2997ff]/20'

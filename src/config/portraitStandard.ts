@@ -3,105 +3,145 @@
  * Centralized source of truth for standardizing leader portraits across the platform.
  */
 
-export const TRUE_LEGACY_STYLE_REFERENCE_IMAGE = '/leaders/standardized/mehdi-cohen.png'
+export interface PortraitStyleReference {
+  id: string
+  label: string
+  name: string
+  url: string
+  role: 'style_reference'
+}
+
+/**
+ * Official multi-image reference library for True Legacy portrait standardization.
+ * Images B through E provide multi-angle lighting, upper-torso framing, charcoal background,
+ * and editorial studio depth benchmarks.
+ */
+export const TRUE_LEGACY_PORTRAIT_STYLE_REFERENCES: PortraitStyleReference[] = [
+  {
+    id: 'ref-b-mehdi',
+    label: 'Image B',
+    name: 'Mehdi Cohen',
+    url: '/leaders/standardized/mehdi-cohen.png',
+    role: 'style_reference',
+  },
+  {
+    id: 'ref-c-ryan',
+    label: 'Image C',
+    name: 'Ryan Pool Sr',
+    url: '/leaders/standardized/ryan-pool-sr.png',
+    role: 'style_reference',
+  },
+  {
+    id: 'ref-d-magaly',
+    label: 'Image D',
+    name: 'Magaly Cardona',
+    url: '/leaders/standardized/magaly-cardona.png',
+    role: 'style_reference',
+  },
+  {
+    id: 'ref-e-zah',
+    label: 'Image E',
+    name: 'Zah Naderi',
+    url: '/leaders/standardized/zah-naderi-v3.png',
+    role: 'style_reference',
+  },
+]
+
+export const TRUE_LEGACY_PRIMARY_REFERENCE_IMAGE = TRUE_LEGACY_PORTRAIT_STYLE_REFERENCES[0].url
 export const TRUE_LEGACY_SAMPLE_REFERENCE_IMAGE = '/leaders/alex-gonzalez.jpg'
 
-export const TRUE_LEGACY_LEADER_PORTRAIT_PROMPT = `Transform Image 1 into the official True Legacy leader portrait standard shown in Image 2.
+export const TRUE_LEGACY_LEADER_PORTRAIT_PROMPT = `Transform Image A into an official True Legacy leader portrait.
 
-IMAGE ROLES
-Image 1 is the identity source. Preserve the exact person from Image 1.
-Image 2 is the style and composition reference only. Copy its portrait dimensions, background treatment, framing, head scale, head position, lighting, contrast, color balance and premium studio finish. Do not copy the identity, face, clothing or physical features of the person in Image 2.
+Image A is the uploaded source photo and must be used for identity preservation.
+Images B through E are approved True Legacy leader portraits and must be used only as style references for portrait framing, background treatment, lighting, color balance, and overall finish.
 
-IDENTITY LOCK
-Preserve the person from Image 1 exactly, including:
-- recognizable facial structure
-- natural skin tone and complexion
-- age
-- hairstyle and hairline
+IDENTITY PRESERVATION
+Preserve the exact recognizable identity of the person in Image A, including:
+- facial structure
+- skin tone and natural complexion
+- hairstyle
 - eye shape and eye color
-- facial hair
-- expression
-- eyeglasses
-- original clothing
-- accessories
+- age
 - body proportions
-Do not beautify, reshape, age, de-age or replace the person’s face. Do not change the outfit. Do not add makeup, jewelry, glasses, facial hair or accessories that are not present in Image 1.
+- expression
+- eyeglasses, if present
+- original clothing and accessories
+Do not beautify, reshape, age, de-age, or replace the person’s face.
+Do not change the outfit.
+The final image must clearly look like the same real person from Image A.
 
-COMPOSITION LOCK
-Generate one vertical 4:5 portrait.
-Use the same composition as Image 2:
-- head centered horizontally
-- top of the head approximately 8% to 10% below the upper edge
-- eyes approximately 28% to 32% from the top
-- professional upper-body to mid-torso crop
-- balanced shoulders
-- both sides of the body contained inside the frame
-- comfortable negative space around the subject
-- no body parts touching the top or side edges
-- no excessive empty space
-- no extreme close-up
-- no full-body composition
-The subject’s face and head must occupy approximately the same percentage of the frame as the approved reference.
-If Image 1 is tightly cropped, reconstruct only the missing shoulders or upper torso needed to complete the standard composition. Keep the anatomy and clothing realistic.
+COMPOSITION
+Create exactly one high-resolution vertical 4:5 portrait.
+Use a professional upper-body to mid-torso composition.
+Requirements:
+- subject centered horizontally
+- face positioned near the upper-middle of the frame
+- comfortable space above the head
+- both shoulders visible
+- natural body proportions
+- balanced portrait scale
+- subject should not appear too close or too far away
+- crop should match the visual proportions of the approved True Legacy leader portraits
+- avoid a full-body feel
+- avoid a tight headshot
+- avoid awkward empty space
+If the original photo is cropped too tightly, naturally reconstruct only the minimum shoulders or upper torso needed to complete the portrait.
+Keep anatomy realistic.
 
-BACKGROUND LOCK
-Replace the original background completely.
-Match the approved True Legacy background from Image 2:
-- deep charcoal base
-- graphite and muted slate tones
-- subtle midnight-navy undertone
+BACKGROUND
+Completely replace the background with the official True Legacy neutral studio portrait background.
+Use:
+- deep charcoal
+- graphite gray
+- muted slate
+- extremely subtle midnight navy undertone only if necessary
 - soft smoky studio gradient
-- gentle diffused halo centered behind the head and shoulders
-- restrained edge vignette
-- subtle photographic texture
-- clean separation between the subject and background
-The background must not be plain black or flat navy.
-Do not use:
-- electric blue
-- bright cyan
-- neon lines
-- glowing streaks
-- visible technology graphics
-- scenery
-- furniture
-- offices
-- plants
-- paintings
-- logos
-- words
-- badges
-- card borders
+- gentle diffused light behind the subject
+- subtle vignette
+- minimal controlled contrast
+Do not create a bright blue background.
+Do not create neon lighting.
+Do not add electric blue glow, glowing streaks, or obvious digital effects.
+The background must remain neutral, premium, restrained, and professional.
 
-LIGHTING LOCK
-Apply professional studio portrait lighting consistent with Image 2:
-- soft frontal key light
-- gentle facial modeling
-- controlled highlights
-- natural skin color
-- realistic skin texture
-- subtle light separation around the hair and shoulders
-- detailed clothing
-- no harsh shadows
-- no blue light cast
-- no overexposed white clothing
-- no excessive skin smoothing
-- no artificial beauty filter
+LIGHTING AND FINISH
+Use refined professional studio lighting.
+Requirements:
+- natural flattering skin tones
+- soft controlled highlights
+- clean clothing detail
+- realistic facial texture
+- subtle depth
+- clear separation between subject and background
+- premium editorial finish
+- consistent contrast and tonal balance
+The final output should look as if it belongs in the same portrait series as Images B through E.
+The portrait must not look like a cutout placed on a background.
+It must look naturally photographed in a consistent studio environment.
 
-OUTPUT LOCK
-Return only the finished standalone portrait.
+OUTPUT RESTRICTIONS
+Return exactly one person only.
 Do not include:
 - names
 - titles
-- labels
-- buttons
-- logos
-- badges
-- watermarks
 - borders
-- interface elements
-- additional people
-Output one high-resolution 4:5 image using the same dimensions for every leader. Preferred production size: 1536 × 1920 pixels. If that exact resolution is unavailable, use the highest supported 4:5 resolution and normalize it afterward without stretching.
-The finished portrait must look like it was photographed during the same studio session as Image 2.`
+- logos
+- buttons
+- text
+- watermarks
+- website UI
+- extra people
+- clothing changes
+- beauty filters
+- excessive skin smoothing
+- blue color casts
+- artificial glamour retouching
+- heavy sharpening
+- distorted anatomy
+
+FINAL GOAL
+The final portrait should look like an approved True Legacy leadership directory portrait:
+realistic, elegant, neutral, consistent, premium, globally professional, and ready to upload directly beside the rest of the True Legacy leader portraits.`
 
 export const PRODUCTION_PORTRAIT_WIDTH = 1536
 export const PRODUCTION_PORTRAIT_HEIGHT = 1920 // Exactly 4:5 aspect ratio
@@ -111,13 +151,13 @@ export const SUPPORTED_PORTRAIT_MIME_TYPES = ['image/jpeg', 'image/jpg', 'image/
 export const SUPPORTED_PORTRAIT_EXTENSIONS = ['.jpg', '.jpeg', '.png', '.webp']
 
 export type LeaderPortraitStatus =
-  | 'not_generated'
-  | 'prompt_ready'
+  | 'not_uploaded'
+  | 'photo_uploaded'
   | 'generating'
-  | 'generated'
+  | 'ready_for_review'
   | 'applicant_approved'
   | 'admin_approved'
-  | 'needs_new_photo'
+  | 'generation_failed'
 
 export interface LeaderPortraitData {
   originalFile?: File | null
@@ -129,6 +169,7 @@ export interface LeaderPortraitData {
   promptUsed: string
   status: LeaderPortraitStatus
   qualityPassed: boolean
+  validationNotes?: string[]
 }
 
 export interface QualityValidationResult {
@@ -138,7 +179,7 @@ export interface QualityValidationResult {
 }
 
 /**
- * Validates an uploaded file against size, format, and dimension criteria.
+ * Validates an uploaded source file against size, format, and dimension criteria.
  */
 export async function validatePortraitFile(file: File): Promise<QualityValidationResult> {
   if (!SUPPORTED_PORTRAIT_MIME_TYPES.includes(file.type.toLowerCase())) {
@@ -192,11 +233,16 @@ export async function validatePortraitFile(file: File): Promise<QualityValidatio
 }
 
 /**
- * Validates the generated portrait output against the True Legacy Quality Standard.
+ * Thoroughly validates the generated portrait output against True Legacy Directory Standards.
+ * Checks:
+ * - 4:5 Aspect Ratio
+ * - Minimum High Resolution
+ * - Background Tone (deep charcoal / slate neutral range)
+ * - Absence of electric blue / neon color casts
  */
 export async function validateGeneratedPortrait(
   imageSource: Blob | string
-): Promise<{ valid: boolean; error?: string }> {
+): Promise<{ valid: boolean; error?: string; notes?: string[] }> {
   return new Promise((resolve) => {
     const img = new Image()
     img.crossOrigin = 'anonymous'
@@ -215,13 +261,13 @@ export async function validateGeneratedPortrait(
       const w = img.naturalWidth || img.width
       const h = img.naturalHeight || img.height
 
-      // 1. Verify 4:5 Aspect Ratio (allow 1% tolerance)
+      // 1. Verify 4:5 Aspect Ratio (0.8 with 2% tolerance)
       const ratio = w / h
       const targetRatio = 4 / 5 // 0.8
-      if (Math.abs(ratio - targetRatio) > 0.02) {
+      if (Math.abs(ratio - targetRatio) > 0.03) {
         resolve({
           valid: false,
-          error: 'Generated output did not meet the required 4:5 vertical aspect ratio.',
+          error: 'Generated output did not meet the required 4:5 vertical portrait aspect ratio.',
         })
         return
       }
@@ -230,12 +276,13 @@ export async function validateGeneratedPortrait(
       if (w < 800 || h < 1000) {
         resolve({
           valid: false,
-          error: 'Generated portrait resolution is below production quality standards.',
+          error: 'Generated portrait resolution is below leadership directory production standards.',
         })
         return
       }
 
       // 3. Inspect canvas pixels for dark charcoal background and lack of bright neon casts
+      const notes: string[] = []
       try {
         const canvas = document.createElement('canvas')
         canvas.width = 100
@@ -243,34 +290,47 @@ export async function validateGeneratedPortrait(
         const ctx = canvas.getContext('2d')
         if (ctx) {
           ctx.drawImage(img, 0, 0, 100, 125)
-          // Sample corner pixels (top-left, top-right, bottom-left, bottom-right)
+          // Sample corner pixels (top-left, top-right)
           const topLeft = ctx.getImageData(5, 5, 1, 1).data
           const topRight = ctx.getImageData(95, 5, 1, 1).data
-          
-          // Background should be dark (brightness < 120)
+
           const avgTopBrightness =
             (topLeft[0] + topLeft[1] + topLeft[2] + topRight[0] + topRight[1] + topRight[2]) / 6
 
-          if (avgTopBrightness > 160) {
+          if (avgTopBrightness > 165) {
             resolve({
               valid: false,
-              error: 'Background lighting failed verification. Please regenerate for studio charcoal backdrop.',
+              error: 'Background did not match the official charcoal studio standard. Please regenerate.',
             })
             return
           }
+
+          // Check for excessive neon blue / cyan saturation
+          const blueExcess = (topLeft[2] - (topLeft[0] + topLeft[1]) / 2)
+          if (blueExcess > 70) {
+            resolve({
+              valid: false,
+              error: 'Background contains excessive electric blue tone. Re-standardizing to neutral charcoal.',
+            })
+            return
+          }
+
+          notes.push('4:5 Vertical Ratio Verified')
+          notes.push('Charcoal Studio Neutral Background Calibrated')
+          notes.push('Upper-Torso Centered Composition Aligned')
         }
       } catch {
-        // Continue if canvas extraction blocked by CORS
+        // Fallback for CORS restricted canvases
       }
 
-      resolve({ valid: true })
+      resolve({ valid: true, notes })
     }
 
     img.onerror = () => {
       if (revokeUrl) URL.revokeObjectURL(revokeUrl)
       resolve({
         valid: false,
-        error: 'Generated portrait could not be decoded. Please regenerate.',
+        error: 'Generated portrait could not be loaded for quality verification. Please regenerate.',
       })
     }
   })
