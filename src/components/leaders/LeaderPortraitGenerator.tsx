@@ -2,8 +2,6 @@ import { useState, useRef, useCallback, useEffect } from 'react'
 import {
   UploadCloud,
   Sparkles,
-  Copy,
-  Check,
   RotateCcw,
   Trash2,
   AlertCircle,
@@ -11,20 +9,14 @@ import {
   BadgeCheck,
   Camera,
   Info,
-  ChevronDown,
-  ChevronUp,
   FileImage,
   Layers,
   Loader2,
   RefreshCw,
   UserCheck,
-  ShieldCheck,
-  Sliders,
 } from 'lucide-react'
 import {
-  getOfficialLeaderPortraitPrompt,
   validatePortraitFile,
-  TRUE_LEGACY_PORTRAIT_STYLE_REFERENCES,
   TRUE_LEGACY_SAMPLE_REFERENCE_IMAGE,
   type LeaderPortraitData,
   type LeaderPortraitStatus,
@@ -46,7 +38,7 @@ export function LeaderPortraitGenerator({
   onApprovePortrait,
   initialPortrait,
   title = 'Leader Portrait',
-  supportingCopy = 'Upload your photo and generate a professional True Legacy leader portrait that matches the leadership directory standard.',
+  supportingCopy = 'Upload your photo and generate an official True Legacy leader portrait that matches the leadership directory standard.',
   guidanceNote = 'Your final portrait will keep your real identity, outfit, and recognizable appearance while standardizing the crop, background, lighting, and finish.',
   className = '',
 }: LeaderPortraitGeneratorProps) {
@@ -58,11 +50,7 @@ export function LeaderPortraitGenerator({
   const [generatedPortraitUrl, setGeneratedPortraitUrl] = useState<string>(initialPortrait?.generatedPortraitUrl || '')
   const [approvedPortraitUrl, setApprovedPortraitUrl] = useState<string>(initialPortrait?.approvedPortraitUrl || '')
   const [status, setStatus] = useState<LeaderPortraitStatus>(initialPortrait?.status || 'not_uploaded')
-  const [promptText, setPromptText] = useState<string>(initialPortrait?.promptUsed || getOfficialLeaderPortraitPrompt())
 
-  const [isPromptExpanded, setIsPromptExpanded] = useState(false)
-  const [isReferencesExpanded, setIsReferencesExpanded] = useState(false)
-  const [isCopied, setIsCopied] = useState(false)
   const [errorMessage, setErrorMessage] = useState<string>('')
   const [validationNotes, setValidationNotes] = useState<string[]>(initialPortrait?.validationNotes || [])
   const [isDragging, setIsDragging] = useState(false)
@@ -87,7 +75,7 @@ export function LeaderPortraitGenerator({
         originalPreviewUrl,
         generatedPortraitUrl,
         approvedPortraitUrl,
-        promptUsed: promptText,
+        promptUsed: '',
         status,
         qualityPassed,
         validationNotes,
@@ -103,7 +91,6 @@ export function LeaderPortraitGenerator({
       originalPreviewUrl,
       generatedPortraitUrl,
       approvedPortraitUrl,
-      promptText,
       status,
       qualityPassed,
       validationNotes,
@@ -203,7 +190,7 @@ export function LeaderPortraitGenerator({
     }
   }
 
-  // Load a demo reference sample photo
+  // Load sample reference photo for quick testing
   const handleLoadSamplePhoto = async () => {
     setErrorMessage('')
     setIsValidating(true)
@@ -248,7 +235,6 @@ export function LeaderPortraitGenerator({
     setGeneratedPortraitUrl('')
     setApprovedPortraitUrl('')
     setStatus('not_uploaded')
-    setIsPromptExpanded(false)
     setErrorMessage('')
     setValidationNotes([])
     setQualityPassed(false)
@@ -271,13 +257,13 @@ export function LeaderPortraitGenerator({
     })
   }
 
-  // Direct AI Generation workflow with multi-reference lock
+  // Direct AI Generation workflow with automatic reference attachment & auto-retry
   const handleGenerateAIPortrait = async () => {
     if (isGenerating || (!originalFile && !originalPreviewUrl)) return
     setIsGenerating(true)
     setStatus('generating')
     setErrorMessage('')
-    setGenerationStage('Loading Image A & reference standards (Images B-E)...')
+    setGenerationStage('Attaching approved True Legacy portrait references & analyzing source photo...')
 
     const source = originalFile || originalPreviewUrl
     const controller = new AbortController()
@@ -286,8 +272,6 @@ export function LeaderPortraitGenerator({
     try {
       const result = await generateLeaderPortraitAI({
         sourceImage: source,
-        styleReferences: TRUE_LEGACY_PORTRAIT_STYLE_REFERENCES,
-        prompt: promptText,
         onProgress: (stage) => {
           setGenerationStage(stage)
         },
@@ -301,66 +285,25 @@ export function LeaderPortraitGenerator({
         notifyParent({
           generatedPortraitUrl: result.portraitUrl,
           status: 'ready_for_review',
-          promptUsed: promptText,
           validationNotes: result.validationNotes,
         })
       } else {
         setStatus('generation_failed')
         setErrorMessage(
           result.error ||
-            "We couldn't generate your portrait this time. Please try again or upload a different photo."
+            "We couldn't create a portrait that meets the True Legacy standard from this photo. Try uploading another clear photo."
         )
       }
     } catch (err: unknown) {
       if (err instanceof Error && err.name === 'AbortError') return
       setStatus('generation_failed')
       setErrorMessage(
-        "We couldn't generate your portrait this time. Your original photo is safe. Please try again or upload a different photo."
+        "We couldn't create a portrait that meets the True Legacy standard from this photo. Try uploading another clear photo."
       )
     } finally {
       setIsGenerating(false)
       abortControllerRef.current = null
     }
-  }
-
-  // Copy prompt handler
-  const handleCopyPrompt = async () => {
-    let copiedSuccessfully = false
-    try {
-      if (navigator.clipboard && window.isSecureContext) {
-        await navigator.clipboard.writeText(promptText)
-        copiedSuccessfully = true
-      }
-    } catch {
-      // Proceed to fallback
-    }
-
-    if (!copiedSuccessfully) {
-      try {
-        const textArea = document.createElement('textarea')
-        textArea.value = promptText
-        textArea.style.position = 'fixed'
-        textArea.style.opacity = '0'
-        textArea.style.left = '-9999px'
-        document.body.appendChild(textArea)
-        textArea.focus()
-        textArea.select()
-        document.execCommand('copy')
-        document.body.removeChild(textArea)
-      } catch {
-        // Ignored
-      }
-    }
-
-    setIsCopied(true)
-    setTimeout(() => setIsCopied(false), 2500)
-  }
-
-  // Regenerate prompt handler
-  const handleRegeneratePrompt = () => {
-    const prompt = getOfficialLeaderPortraitPrompt()
-    setPromptText(prompt)
-    notifyParent({ promptUsed: prompt })
   }
 
   // Handle uploading custom approved portrait manually if desired
@@ -392,7 +335,7 @@ export function LeaderPortraitGenerator({
       originalPreviewUrl,
       generatedPortraitUrl,
       approvedPortraitUrl: portraitUrlToUse,
-      promptUsed: promptText,
+      promptUsed: '',
       status: newStatus,
       qualityPassed,
       validationNotes,
@@ -412,7 +355,7 @@ export function LeaderPortraitGenerator({
     return `${parseFloat((bytes / Math.pow(k, i)).toFixed(1))} ${sizes[i]}`
   }
 
-  // Human-readable status badge mapping
+  // Status badge mapping
   const renderStatusBadge = () => {
     switch (status) {
       case 'applicant_approved':
@@ -485,65 +428,13 @@ export function LeaderPortraitGenerator({
         {renderStatusBadge()}
       </div>
 
-      {/* Explanatory Note & Style Reference Gallery */}
-      <div className="mt-5 space-y-3 min-w-0">
+      {/* Explanatory Note */}
+      <div className="mt-5 min-w-0">
         <div className="flex items-start gap-3 rounded-2xl border border-white/5 bg-white/[0.025] p-3.5 sm:p-4 text-xs leading-relaxed text-[#8f96a3] min-w-0">
           <Info className="mt-0.5 h-4 w-4 shrink-0 text-[#2997ff]" />
           <span className="min-w-0">
             <strong className="text-white">Directory Quality Guarantee:</strong> {guidanceNote}
           </span>
-        </div>
-
-        {/* Multi-Image Style References Info Bar */}
-        <div className="rounded-2xl border border-[#2997ff]/20 bg-[#2997ff]/[0.03] p-3.5 sm:p-4 min-w-0">
-          <div className="flex flex-wrap items-center justify-between gap-3 min-w-0">
-            <div className="flex items-center gap-3 min-w-0">
-              {/* Stacked Avatars of Approved Style References */}
-              <div className="flex -space-x-2 shrink-0">
-                {TRUE_LEGACY_PORTRAIT_STYLE_REFERENCES.map((ref) => (
-                  <img
-                    key={ref.id}
-                    src={ref.url}
-                    alt={ref.name}
-                    title={`${ref.label}: ${ref.name}`}
-                    className="h-9 w-7 rounded-md border border-white/20 object-cover object-top shadow-sm"
-                  />
-                ))}
-              </div>
-              <div className="min-w-0">
-                <p className="font-bold text-xs text-white truncate">
-                  Approved Reference Library (Images B–E)
-                </p>
-                <p className="text-[11px] text-[#8f96a3] truncate">
-                  4:5 Charcoal Studio · Smoky Halo · Balanced Lighting · Upper-Torso Framing
-                </p>
-              </div>
-            </div>
-
-            <button
-              type="button"
-              onClick={() => setIsReferencesExpanded(!isReferencesExpanded)}
-              className="inline-flex items-center gap-1 text-[11px] font-semibold text-[#2997ff] hover:underline shrink-0"
-            >
-              <Sliders className="h-3 w-3" />
-              <span>{isReferencesExpanded ? 'Hide References' : 'View References'}</span>
-            </button>
-          </div>
-
-          {/* Collapsible reference preview strip */}
-          {isReferencesExpanded && (
-            <div className="mt-4 pt-4 border-t border-white/10 grid grid-cols-2 sm:grid-cols-4 gap-3">
-              {TRUE_LEGACY_PORTRAIT_STYLE_REFERENCES.map((ref) => (
-                <div key={ref.id} className="text-center">
-                  <div className="aspect-[4/5] w-full rounded-xl overflow-hidden border border-white/15 bg-black/60">
-                    <img src={ref.url} alt={ref.name} className="h-full w-full object-cover object-top" />
-                  </div>
-                  <p className="mt-1.5 text-[11px] font-bold text-white truncate">{ref.label}</p>
-                  <p className="text-[10px] text-[#868c98] truncate">{ref.name}</p>
-                </div>
-              ))}
-            </div>
-          )}
         </div>
       </div>
 
@@ -576,7 +467,7 @@ export function LeaderPortraitGenerator({
             </div>
 
             <h3 className="mt-4 sm:mt-5 text-base sm:text-lg font-bold text-white group-hover:text-[#2997ff] transition-colors px-2">
-              {isDragging ? 'Drop your photo here' : 'Drag and drop your source photo here'}
+              {isDragging ? 'Drop your photo here' : 'Upload Your Photo'}
             </h3>
 
             <p className="mt-1 text-xs text-[#868c98] px-2">
@@ -658,66 +549,36 @@ export function LeaderPortraitGenerator({
               </div>
             </div>
 
-            {/* Quality Verification Checklist */}
-            <div className="rounded-2xl border border-white/5 bg-black/30 p-3.5 sm:p-4 min-w-0">
-              <div className="flex flex-wrap items-center justify-between gap-2">
-                <p className="text-xs font-bold uppercase tracking-wider text-[#aeb4c0]">
-                  Portrait Quality Verification
-                </p>
-                <span className="text-[11px] font-semibold text-emerald-400 flex items-center gap-1">
-                  <Check className="h-3.5 w-3.5" /> Resolution Ready
-                </span>
-              </div>
-              <div className="mt-3 grid gap-2 sm:grid-cols-2 text-xs text-[#8f96a3]">
-                <div className="flex items-center gap-2 min-w-0">
-                  <CheckCircle2 className="h-3.5 w-3.5 text-emerald-400 shrink-0" />
-                  <span className="truncate">Face clearly visible & natural expression</span>
-                </div>
-                <div className="flex items-center gap-2 min-w-0">
-                  <CheckCircle2 className="h-3.5 w-3.5 text-emerald-400 shrink-0" />
-                  <span className="truncate">Single primary subject in composition</span>
-                </div>
-                <div className="flex items-center gap-2 min-w-0">
-                  <CheckCircle2 className="h-3.5 w-3.5 text-emerald-400 shrink-0" />
-                  <span className="truncate">Clothing and authentic styling preserved</span>
-                </div>
-                <div className="flex items-center gap-2 min-w-0">
-                  <CheckCircle2 className="h-3.5 w-3.5 text-emerald-400 shrink-0" />
-                  <span className="truncate">Both shoulders visible & balanced scale</span>
-                </div>
-              </div>
-            </div>
-
             {/* Side-by-Side on Desktop / Vertical Stack on Mobile */}
             <div className="grid gap-6 md:grid-cols-2 min-w-0 w-full">
-              {/* 1. Left Card: Original Reference Photo */}
+              {/* 1. Left Card: Original Photo */}
               <div className="flex flex-col rounded-2xl border border-white/10 bg-white/[0.02] p-4 min-w-0 w-full shadow-lg">
                 <div className="flex flex-wrap items-center justify-between gap-2 pb-3 border-b border-white/10">
                   <span className="text-xs font-bold uppercase tracking-wider text-[#aeb4c0]">
-                    Original Reference Photo
+                    Original Photo
                   </span>
-                  <span className="text-[11px] text-[#747b88] font-medium">Source identity photo</span>
+                  <span className="text-[11px] text-[#747b88] font-medium">Source identity</span>
                 </div>
 
                 <div className="relative mt-3 aspect-[4/5] w-full max-w-full overflow-hidden rounded-xl bg-black/60 border border-white/5 select-none">
                   <img
                     src={originalPreviewUrl}
-                    alt="Uploaded candidate reference"
+                    alt="Uploaded candidate source"
                     className="block h-full w-full object-cover object-top"
                   />
                   <div className="absolute bottom-2 left-2 rounded-md bg-black/75 px-2.5 py-1 text-[10px] font-bold text-white/90 backdrop-blur-md">
-                    Image A · Identity Source
+                    Original Source
                   </div>
                 </div>
               </div>
 
-              {/* 2. Right Card: AI Portrait Preview */}
+              {/* 2. Right Card: True Legacy Portrait */}
               <div className="flex flex-col rounded-2xl border border-white/10 bg-white/[0.02] p-4 min-w-0 w-full shadow-lg">
                 <div className="flex flex-wrap items-center justify-between gap-2 pb-3 border-b border-white/10 min-w-0">
                   <div className="flex items-center gap-1.5 min-w-0">
                     <Layers className="h-3.5 w-3.5 shrink-0 text-[#2997ff]" />
                     <span className="text-xs font-bold uppercase tracking-wider text-white truncate">
-                      AI Portrait Preview
+                      True Legacy Portrait
                     </span>
                   </div>
                   <span className="text-[11px] text-[#2997ff] font-semibold shrink-0">
@@ -725,7 +586,7 @@ export function LeaderPortraitGenerator({
                       ? 'Portrait Approved'
                       : generatedPortraitUrl
                       ? 'Ready for Review'
-                      : 'Standardization Studio'}
+                      : '4:5 Studio Standard'}
                   </span>
                 </div>
 
@@ -760,7 +621,7 @@ export function LeaderPortraitGenerator({
                         <Sparkles className="absolute h-6 w-6 text-[#2997ff] animate-pulse" />
                       </div>
                       <p className="mt-4 text-sm font-bold text-white">Generating your portrait...</p>
-                      <p className="mt-1 text-xs text-[#aeb4c0]">This may take a few moments.</p>
+                      <p className="mt-1 text-xs text-[#aeb4c0]">Applying True Legacy studio standards.</p>
                       {generationStage ? (
                         <p className="mt-3 text-[11px] text-[#2997ff] max-w-[240px] leading-relaxed break-words">
                           {generationStage}
@@ -778,13 +639,13 @@ export function LeaderPortraitGenerator({
                     <div className="absolute inset-0 flex flex-col items-center justify-center p-4 sm:p-6 text-center min-w-0">
                       <div className="relative h-24 w-20 sm:h-28 sm:w-24 overflow-hidden rounded-xl border border-dashed border-[#2997ff]/50 p-0.5 bg-black/40">
                         <img
-                          src={TRUE_LEGACY_PORTRAIT_STYLE_REFERENCES[0].url}
+                          src="/leaders/standardized/alex-gonzalez.png"
                           alt="Style Reference"
                           className="h-full w-full rounded-lg object-cover object-top opacity-50"
                         />
                       </div>
                       <p className="mt-3 text-xs font-bold text-white">
-                        Standard 4:5 Reference Lock
+                        Standard 4:5 Studio Portrait
                       </p>
                       <p className="mt-1 text-[11px] leading-relaxed text-[#8f96a3] max-w-[220px]">
                         Charcoal studio gradient, smoky halo, upper-torso crop & balanced lighting.
@@ -916,67 +777,6 @@ export function LeaderPortraitGenerator({
             <span className="break-words min-w-0">{errorMessage}</span>
           </div>
         ) : null}
-
-        {/* ================= OPTIONAL COLLAPSIBLE PROMPT STANDARD PANEL ================= */}
-        <div className="mt-6 border-t border-white/10 pt-4 min-w-0">
-          <button
-            type="button"
-            onClick={() => setIsPromptExpanded(!isPromptExpanded)}
-            className="flex items-center justify-between w-full text-xs font-semibold text-[#868c98] hover:text-white py-1.5 transition min-w-0 text-left"
-          >
-            <span className="flex items-center gap-2 min-w-0 pr-2 truncate">
-              <Sparkles className="h-3.5 w-3.5 shrink-0 text-[#2997ff]" />
-              <span className="truncate">Official Dual-Reference Portrait Transformation Prompt</span>
-            </span>
-            {isPromptExpanded ? (
-              <ChevronUp className="h-4 w-4 shrink-0" />
-            ) : (
-              <ChevronDown className="h-4 w-4 shrink-0" />
-            )}
-          </button>
-
-          {isPromptExpanded && (
-            <div className="mt-3 overflow-hidden rounded-2xl border border-white/15 bg-black/40 p-3.5 sm:p-4 min-w-0">
-              <div className="flex flex-wrap items-center justify-between gap-2 pb-3 border-b border-white/10">
-                <span className="text-[11px] text-[#868c98]">Locked System Prompt</span>
-                <div className="flex items-center gap-2">
-                  <button
-                    type="button"
-                    onClick={handleCopyPrompt}
-                    className={`inline-flex items-center gap-1.5 rounded-lg px-3.5 py-1.5 text-xs font-bold transition ${
-                      isCopied
-                        ? 'bg-emerald-400 text-slate-950'
-                        : 'border border-white/20 bg-white/10 text-white hover:bg-[#2997ff]/20'
-                    }`}
-                  >
-                    {isCopied ? (
-                      <>
-                        <Check className="h-3.5 w-3.5 shrink-0" />
-                        <span>Copied ✓</span>
-                      </>
-                    ) : (
-                      <>
-                        <Copy className="h-3.5 w-3.5 shrink-0" />
-                        <span>Copy Prompt</span>
-                      </>
-                    )}
-                  </button>
-                  <button
-                    type="button"
-                    onClick={handleRegeneratePrompt}
-                    className="inline-flex items-center gap-1 rounded-lg border border-white/10 bg-white/[0.03] px-2.5 py-1.5 text-xs text-[#8f96a3] hover:text-white"
-                  >
-                    <RotateCcw className="h-3 w-3 shrink-0" />
-                    <span>Reset</span>
-                  </button>
-                </div>
-              </div>
-              <pre className="mt-3 max-h-60 overflow-y-auto whitespace-pre-wrap rounded-xl border border-white/10 bg-[#050811] p-3 font-mono text-[11px] leading-relaxed text-[#d1d7e0] break-words">
-                {promptText}
-              </pre>
-            </div>
-          )}
-        </div>
       </div>
     </section>
   )

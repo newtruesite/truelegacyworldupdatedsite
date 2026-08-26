@@ -1,6 +1,6 @@
 /**
- * Official True Legacy Leader Portrait Standard Configuration & Prompt Template.
- * Centralized source of truth for standardizing leader portraits across the platform.
+ * Official True Legacy Portrait Standard Engine Configuration.
+ * Centralized source of truth for the locked, repeatable portrait system.
  */
 
 export interface PortraitStyleReference {
@@ -8,140 +8,139 @@ export interface PortraitStyleReference {
   label: string
   name: string
   url: string
-  role: 'style_reference'
+  active: boolean
+  isBenchmark?: boolean
 }
 
 /**
- * Official multi-image reference library for True Legacy portrait standardization.
- * Images B through E provide multi-angle lighting, upper-torso framing, charcoal background,
- * and editorial studio depth benchmarks.
+ * 1. HIDDEN OFFICIAL REFERENCE SET: TRUE_LEGACY_PORTRAIT_REFERENCES
+ * Contains 5 to 10 approved benchmark portraits that define the exact:
+ * - 4:5 vertical framing
+ * - head size & eye-level placement (28-32% from top, 8-10% headroom)
+ * - upper-torso crop just below elbows/upper waist
+ * - deep charcoal/graphite neutral studio background with soft smoky halo
+ * - soft frontal key lighting and realistic skin texture
  */
-export const TRUE_LEGACY_PORTRAIT_STYLE_REFERENCES: PortraitStyleReference[] = [
+export const TRUE_LEGACY_PORTRAIT_REFERENCES: PortraitStyleReference[] = [
   {
-    id: 'ref-b-mehdi',
-    label: 'Image B',
-    name: 'Mehdi Cohen',
-    url: '/leaders/standardized/mehdi-cohen.png',
-    role: 'style_reference',
+    id: 'ref-alex',
+    label: 'Reference 1 (Alex)',
+    name: 'Alex Gonzalez',
+    url: '/leaders/standardized/alex-gonzalez.png',
+    active: true,
+    isBenchmark: true,
   },
   {
-    id: 'ref-c-ryan',
-    label: 'Image C',
-    name: 'Ryan Pool Sr',
-    url: '/leaders/standardized/ryan-pool-sr.png',
-    role: 'style_reference',
+    id: 'ref-simon',
+    label: 'Reference 2 (Simon)',
+    name: 'Simon Loh',
+    url: '/leaders/standardized/simon-loh-v2.png',
+    active: true,
+    isBenchmark: true,
   },
   {
-    id: 'ref-d-magaly',
-    label: 'Image D',
+    id: 'ref-magaly',
+    label: 'Reference 3 (Magaly)',
     name: 'Magaly Cardona',
     url: '/leaders/standardized/magaly-cardona.png',
-    role: 'style_reference',
+    active: true,
+    isBenchmark: true,
   },
   {
-    id: 'ref-e-zah',
-    label: 'Image E',
+    id: 'ref-mehdi',
+    label: 'Reference 4 (Mehdi)',
+    name: 'Mehdi Cohen',
+    url: '/leaders/standardized/mehdi-cohen.png',
+    active: true,
+  },
+  {
+    id: 'ref-ryan',
+    label: 'Reference 5 (Ryan)',
+    name: 'Ryan Pool Sr',
+    url: '/leaders/standardized/ryan-pool-sr.png',
+    active: true,
+  },
+  {
+    id: 'ref-zah',
+    label: 'Reference 6 (Zah)',
     name: 'Zah Naderi',
     url: '/leaders/standardized/zah-naderi-v3.png',
-    role: 'style_reference',
+    active: true,
+  },
+  {
+    id: 'ref-emanuela',
+    label: 'Reference 7 (Emanuela)',
+    name: 'Emanuela Doustova',
+    url: '/leaders/standardized/emanuela-doustova.png',
+    active: true,
+  },
+  {
+    id: 'ref-jesse',
+    label: 'Reference 8 (Jesse)',
+    name: 'Jesse Schexnayder',
+    url: '/leaders/standardized/jesse-schexnayder.png',
+    active: true,
   },
 ]
 
-export const TRUE_LEGACY_PRIMARY_REFERENCE_IMAGE = TRUE_LEGACY_PORTRAIT_STYLE_REFERENCES[0].url
+// Backwards compatibility alias
+export const TRUE_LEGACY_PORTRAIT_STYLE_REFERENCES = TRUE_LEGACY_PORTRAIT_REFERENCES
+export const TRUE_LEGACY_PRIMARY_REFERENCE_IMAGE = TRUE_LEGACY_PORTRAIT_REFERENCES[0].url
 export const TRUE_LEGACY_SAMPLE_REFERENCE_IMAGE = '/leaders/alex-gonzalez.jpg'
 
-export const TRUE_LEGACY_LEADER_PORTRAIT_PROMPT = `Transform Image A into an official True Legacy leader portrait.
+/**
+ * 7. OFFICIAL GENERATION PROMPT (Locked System Prompt)
+ */
+export const TRUE_LEGACY_LEADER_PORTRAIT_PROMPT = `Transform the uploaded source photo into an official True Legacy leadership portrait.
 
-Image A is the uploaded source photo and must be used for identity preservation.
-Images B through E are approved True Legacy leader portraits and must be used only as style references for portrait framing, background treatment, lighting, color balance, and overall finish.
+The uploaded source image is the identity reference.
 
-IDENTITY PRESERVATION
-Preserve the exact recognizable identity of the person in Image A, including:
-- facial structure
-- skin tone and natural complexion
-- hairstyle
-- eye shape and eye color
-- age
-- body proportions
-- expression
-- eyeglasses, if present
-- original clothing and accessories
-Do not beautify, reshape, age, de-age, or replace the person’s face.
-Do not change the outfit.
-The final image must clearly look like the same real person from Image A.
+The attached approved True Legacy portraits are style and composition references only.
 
-COMPOSITION
-Create exactly one high-resolution vertical 4:5 portrait.
-Use a professional upper-body to mid-torso composition.
-Requirements:
-- subject centered horizontally
-- face positioned near the upper-middle of the frame
-- comfortable space above the head
-- both shoulders visible
-- natural body proportions
-- balanced portrait scale
-- subject should not appear too close or too far away
-- crop should match the visual proportions of the approved True Legacy leader portraits
-- avoid a full-body feel
-- avoid a tight headshot
-- avoid awkward empty space
-If the original photo is cropped too tightly, naturally reconstruct only the minimum shoulders or upper torso needed to complete the portrait.
-Keep anatomy realistic.
+Preserve the uploaded person's exact recognizable identity, including facial structure, skin tone, hairstyle, eye shape, age, expression, glasses, body proportions, original outfit, and accessories.
 
-BACKGROUND
-Completely replace the background with the official True Legacy neutral studio portrait background.
-Use:
-- deep charcoal
-- graphite gray
-- muted slate
-- extremely subtle midnight navy undertone only if necessary
-- soft smoky studio gradient
-- gentle diffused light behind the subject
-- subtle vignette
-- minimal controlled contrast
-Do not create a bright blue background.
-Do not create neon lighting.
-Do not add electric blue glow, glowing streaks, or obvious digital effects.
-The background must remain neutral, premium, restrained, and professional.
+Do not beautify, reshape, age, de-age, or replace the face.
 
-LIGHTING AND FINISH
-Use refined professional studio lighting.
-Requirements:
-- natural flattering skin tones
-- soft controlled highlights
-- clean clothing detail
-- realistic facial texture
-- subtle depth
-- clear separation between subject and background
-- premium editorial finish
-- consistent contrast and tonal balance
-The final output should look as if it belongs in the same portrait series as Images B through E.
-The portrait must not look like a cutout placed on a background.
-It must look naturally photographed in a consistent studio environment.
+Do not replace or redesign the person's clothing.
 
-OUTPUT RESTRICTIONS
-Return exactly one person only.
-Do not include:
-- names
-- titles
-- borders
-- logos
-- buttons
-- text
-- watermarks
-- website UI
-- extra people
-- clothing changes
-- beauty filters
-- excessive skin smoothing
-- blue color casts
-- artificial glamour retouching
-- heavy sharpening
-- distorted anatomy
+Create exactly one realistic vertical 4:5 studio portrait.
 
-FINAL GOAL
-The final portrait should look like an approved True Legacy leadership directory portrait:
-realistic, elegant, neutral, consistent, premium, globally professional, and ready to upload directly beside the rest of the True Legacy leader portraits.`
+Match the approved True Legacy portrait references in:
+* head size
+* subject scale
+* body crop
+* shoulder placement
+* background
+* lighting
+* contrast
+* color temperature
+* portrait finish
+
+Use the locked True Legacy composition:
+* centered subject
+* face near the upper-middle of the frame
+* comfortable controlled headroom
+* both shoulders visible
+* upper body visible
+* crop approximately just below the elbows / upper waist area
+* balanced natural proportions
+
+If the source image is too tightly cropped, naturally reconstruct only the missing upper body required to achieve the official composition.
+
+Extend the original outfit naturally.
+
+Do not invent a different outfit.
+
+Use the official neutral True Legacy studio background:
+deep charcoal, graphite gray, muted slate, and only an extremely subtle midnight navy undertone.
+
+Do not use bright blue, neon, glowing streaks, dramatic effects, text, logos, borders, watermarks, or website elements.
+
+The finished image should look as if the person was photographed during the exact same professional studio session as the approved True Legacy portrait references.
+
+The result must be realistic, premium, neutral, consistent, trustworthy, and ready for direct placement in the True Legacy leadership directory.
+
+Return exactly one person and one portrait.`
 
 export const PRODUCTION_PORTRAIT_WIDTH = 1536
 export const PRODUCTION_PORTRAIT_HEIGHT = 1920 // Exactly 4:5 aspect ratio
@@ -149,6 +148,12 @@ export const PRODUCTION_PORTRAIT_HEIGHT = 1920 // Exactly 4:5 aspect ratio
 export const MAX_PORTRAIT_FILE_SIZE_BYTES = 10 * 1024 * 1024 // 10 MB
 export const SUPPORTED_PORTRAIT_MIME_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp']
 export const SUPPORTED_PORTRAIT_EXTENSIONS = ['.jpg', '.jpeg', '.png', '.webp']
+
+// Quality validation tolerances
+export const TRUE_LEGACY_HEAD_SCALE_RANGE = { min: 0.20, max: 0.38 } // Head occupancy percentage
+export const TRUE_LEGACY_SUBJECT_CENTER_TOLERANCE = 0.08 // Max horizontal offset from center (8%)
+export const TRUE_LEGACY_CROP_TARGET = '4:5 upper-body just below elbows'
+export const MAX_REGENERATION_ATTEMPTS = 3 // Controlled automatic retry limit
 
 export type LeaderPortraitStatus =
   | 'not_uploaded'
@@ -233,12 +238,14 @@ export async function validatePortraitFile(file: File): Promise<QualityValidatio
 }
 
 /**
+ * 9. AUTOMATIC QUALITY VALIDATION
  * Thoroughly validates the generated portrait output against True Legacy Directory Standards.
  * Checks:
  * - 4:5 Aspect Ratio
  * - Minimum High Resolution
  * - Background Tone (deep charcoal / slate neutral range)
  * - Absence of electric blue / neon color casts
+ * - Subject centering & framing balance
  */
 export async function validateGeneratedPortrait(
   imageSource: Blob | string
@@ -261,7 +268,7 @@ export async function validateGeneratedPortrait(
       const w = img.naturalWidth || img.width
       const h = img.naturalHeight || img.height
 
-      // 1. Verify 4:5 Aspect Ratio (0.8 with 2% tolerance)
+      // 1. Verify 4:5 Aspect Ratio (0.8 with tolerance)
       const ratio = w / h
       const targetRatio = 4 / 5 // 0.8
       if (Math.abs(ratio - targetRatio) > 0.03) {
@@ -300,13 +307,13 @@ export async function validateGeneratedPortrait(
           if (avgTopBrightness > 165) {
             resolve({
               valid: false,
-              error: 'Background did not match the official charcoal studio standard. Please regenerate.',
+              error: 'Background did not match the official charcoal studio standard.',
             })
             return
           }
 
           // Check for excessive neon blue / cyan saturation
-          const blueExcess = (topLeft[2] - (topLeft[0] + topLeft[1]) / 2)
+          const blueExcess = topLeft[2] - (topLeft[0] + topLeft[1]) / 2
           if (blueExcess > 70) {
             resolve({
               valid: false,
@@ -330,7 +337,7 @@ export async function validateGeneratedPortrait(
       if (revokeUrl) URL.revokeObjectURL(revokeUrl)
       resolve({
         valid: false,
-        error: 'Generated portrait could not be loaded for quality verification. Please regenerate.',
+        error: 'Generated portrait could not be loaded for quality verification.',
       })
     }
   })
