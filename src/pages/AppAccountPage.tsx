@@ -138,8 +138,8 @@ export default function AppAccountPage() {
 
       {membership?.role === 'admin' ? <label className="mt-7 block max-w-sm text-sm text-[#aeb4c0]">Profile to manage<select value={selectedId} onChange={event => { setSelectedId(event.target.value); setMessage(''); setError('') }} className="account-input mt-2"><option value="">Choose a leader</option>{distributors.map(item => <option key={item.id} value={item.id}>{item.display_name}</option>)}</select></label> : null}
 
-      <div className="mt-8 grid gap-8 lg:grid-cols-[280px_1fr] lg:items-start">
-        <aside className="lg:sticky lg:top-10 h-fit rounded-[28px] border border-white/10 bg-white/[.035] p-5 text-center shadow-xl">
+      <div className="mt-8 grid gap-8 lg:grid-cols-[280px_1fr] lg:items-start w-full max-w-full min-w-0">
+        <aside className="lg:sticky lg:top-10 h-fit rounded-[28px] border border-white/10 bg-white/[.035] p-5 text-center shadow-xl w-full min-w-0">
           <div className="relative group">
             <img src={currentAvatar} alt={distributor.display_name} className="mx-auto aspect-[4/5] w-full rounded-2xl border border-white/10 bg-[#0a0d13] object-cover object-top" />
             <div className="mt-3 text-center">
@@ -150,7 +150,7 @@ export default function AppAccountPage() {
           <p className="mt-3 text-xs leading-5 text-[#868c98]">Your portrait is standardized to the True Legacy 4:5 luxury studio format for consistency across the directory.</p>
         </aside>
 
-        <div className="space-y-8">
+        <div className="space-y-8 w-full max-w-full min-w-0">
           {/* Integrated AI Leader Portrait Generator */}
           <LeaderPortraitGenerator
             title="Leader Portrait"

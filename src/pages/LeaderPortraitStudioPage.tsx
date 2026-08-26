@@ -38,9 +38,9 @@ export default function LeaderPortraitStudioPage() {
           </p>
         </div>
 
-        <div className="grid gap-8 lg:grid-cols-[1.35fr_.65fr] lg:items-start">
+        <div className="grid gap-8 lg:grid-cols-[1.35fr_.65fr] lg:items-start w-full max-w-full min-w-0">
           {/* Main Portrait Generator */}
-          <div className="space-y-6">
+          <div className="space-y-6 w-full max-w-full min-w-0">
             <LeaderPortraitGenerator onPortraitChange={setPortraitData} />
 
             {portraitData?.approvedPortraitUrl ? (
