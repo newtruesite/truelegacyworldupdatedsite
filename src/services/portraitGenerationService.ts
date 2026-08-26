@@ -3,6 +3,7 @@
  * Centralized service for transforming source photos into standardized 4:5 studio leader portraits.
  * Enforces:
  *   - Automatic background attachment of TRUE_LEGACY_PORTRAIT_REFERENCES
+ *   - Intelligent detection of already-standardized studio portraits to preserve exact lighting & colors
  *   - Controlled outpainting / body reconstruction for tight crops/selfies
  *   - Reference-locked composition: head centered, 8-10% headroom, crop just below elbows/upper waist
  *   - Automatic multi-attempt regeneration on quality failure (up to 3 attempts)
@@ -155,32 +156,45 @@ export async function generateLeaderPortraitAI(
 
     // 2. High-Precision In-Browser Neural AI Segmentation + Reference-Calibrated Outpainting & Studio Compositing
     try {
-      report('Running neural subject segmentation (isolating person and outfit)...', 35)
+      report('Analyzing background & subject composition...', 25)
 
-      let cutoutBlob: Blob | null = null
-      try {
-        cutoutBlob = await removeBackground(sourceImage, {
-          progress: (_key: string, current: number, total: number) => {
-            if (total > 0) {
-              const pct = Math.min(75, Math.round(35 + (current / total) * 40))
-              report('Removing background clutter & preserving identity locks...', pct)
-            }
-          },
-        })
-      } catch (segErr) {
-        console.warn('Neural background removal fallback to direct source:', segErr)
+      // Check if image is already a standardized True Legacy studio portrait (dark neutral background)
+      const isAlreadyStandardized = await checkIfAlreadyStudioStandard(sourceImage)
+
+      let processedBlob: Blob
+
+      if (isAlreadyStandardized) {
+        report('Preserving authentic studio lighting & normalizing to 4:5 standard (1536x1920)...', 70)
+        await delay(150, signal)
+        processedBlob = await normalizeStudioPortrait(sourceImage, targetWidth, targetHeight)
+      } else {
+        report('Running neural subject segmentation (isolating person and outfit)...', 35)
+
+        let cutoutBlob: Blob | null = null
+        try {
+          cutoutBlob = await removeBackground(sourceImage, {
+            progress: (_key: string, current: number, total: number) => {
+              if (total > 0) {
+                const pct = Math.min(75, Math.round(35 + (current / total) * 40))
+                report('Removing background clutter & preserving identity locks...', pct)
+              }
+            },
+          })
+        } catch (segErr) {
+          console.warn('Neural background removal fallback to direct source:', segErr)
+        }
+
+        report('Reconstructing upper-torso crop & rendering charcoal studio backdrop with halo...', 80)
+        await delay(100, signal)
+
+        report('Applying soft key lighting, shoulder balance, and vignette...', 90)
+        const imageToRender = cutoutBlob || sourceImage
+        processedBlob = await renderStudioCanvasPortrait(
+          imageToRender,
+          targetWidth,
+          targetHeight
+        )
       }
-
-      report('Reconstructing upper-torso crop & rendering charcoal studio backdrop with halo...', 80)
-      await delay(100, signal)
-
-      report('Applying soft key lighting, shoulder balance, and vignette...', 90)
-      const imageToRender = cutoutBlob || sourceImage
-      const processedBlob = await renderStudioCanvasPortrait(
-        imageToRender,
-        targetWidth,
-        targetHeight
-      )
 
       report('Running automated quality & directory standards check...', 95)
       const qualityCheck = await validateGeneratedPortrait(processedBlob)
@@ -222,6 +236,127 @@ export async function generateLeaderPortraitAI(
     error:
       "We couldn't create a portrait that meets the True Legacy standard from this photo. Try uploading another clear photo.",
   }
+}
+
+/**
+ * Checks if the source photo is already a studio portrait with a dark neutral background.
+ */
+async function checkIfAlreadyStudioStandard(source: File | Blob | string): Promise<boolean> {
+  return new Promise((resolve) => {
+    try {
+      const img = new Image()
+      img.crossOrigin = 'anonymous'
+
+      let revokeUrl = ''
+      if (typeof source === 'string') {
+        img.src = source
+      } else {
+        revokeUrl = URL.createObjectURL(source)
+        img.src = revokeUrl
+      }
+
+      img.onload = () => {
+        if (revokeUrl) URL.revokeObjectURL(revokeUrl)
+        const canvas = document.createElement('canvas')
+        canvas.width = 100
+        canvas.height = 125
+        const ctx = canvas.getContext('2d')
+        if (!ctx) {
+          resolve(false)
+          return
+        }
+
+        ctx.drawImage(img, 0, 0, 100, 125)
+        // Check corner background brightness & saturation
+        const tl = ctx.getImageData(5, 5, 1, 1).data
+        const tr = ctx.getImageData(95, 5, 1, 1).data
+        const avgCornerBrightness = (tl[0] + tl[1] + tl[2] + tr[0] + tr[1] + tr[2]) / 6
+
+        // If top corners are dark neutral charcoal/slate (< 80 brightness), it is already a studio portrait
+        if (avgCornerBrightness < 80) {
+          resolve(true)
+        } else {
+          resolve(false)
+        }
+      }
+
+      img.onerror = () => {
+        if (revokeUrl) URL.revokeObjectURL(revokeUrl)
+        resolve(false)
+      }
+    } catch {
+      resolve(false)
+    }
+  })
+}
+
+/**
+ * Normalizes an already-standardized portrait to exact 1536x1920 (4:5) without degrading original colors.
+ */
+async function normalizeStudioPortrait(
+  source: File | Blob | string,
+  targetWidth: number,
+  targetHeight: number
+): Promise<Blob> {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const img = new Image()
+      img.crossOrigin = 'anonymous'
+
+      let objectUrlToRevoke = ''
+      if (typeof source === 'string') {
+        img.src = source
+      } else {
+        objectUrlToRevoke = URL.createObjectURL(source)
+        img.src = objectUrlToRevoke
+      }
+
+      img.onload = () => {
+        if (objectUrlToRevoke) URL.revokeObjectURL(objectUrlToRevoke)
+
+        const canvas = document.createElement('canvas')
+        canvas.width = targetWidth
+        canvas.height = targetHeight
+        const ctx = canvas.getContext('2d', { willReadFrequently: true })
+
+        if (!ctx) {
+          reject(new Error('Failed to obtain 2D canvas context.'))
+          return
+        }
+
+        const srcW = img.naturalWidth || img.width
+        const srcH = img.naturalHeight || img.height
+
+        // Calculate scale to fill 4:5 comfortably
+        const scale = Math.max(targetWidth / srcW, targetHeight / srcH)
+        const drawW = srcW * scale
+        const drawH = srcH * scale
+        const drawX = (targetWidth - drawW) / 2
+        const drawY = (targetHeight - drawH) / 2
+
+        ctx.drawImage(img, drawX, drawY, drawW, drawH)
+
+        canvas.toBlob(
+          (blob) => {
+            if (blob) {
+              resolve(blob)
+            } else {
+              reject(new Error('Failed to encode normalized 4:5 PNG blob.'))
+            }
+          },
+          'image/png',
+          0.99
+        )
+      }
+
+      img.onerror = () => {
+        if (objectUrlToRevoke) URL.revokeObjectURL(objectUrlToRevoke)
+        reject(new Error('Could not load image source for normalization.'))
+      }
+    } catch (err) {
+      reject(err)
+    }
+  })
 }
 
 /**
@@ -326,7 +461,6 @@ async function renderStudioCanvasPortrait(
 
         // If source is a tight crop, naturally reconstruct lower torso fade onto backdrop
         if (drawY + drawH < targetHeight) {
-          // Subtle torso extension gradient
           const torsoExtend = ctx.createLinearGradient(0, drawY + drawH - 80, 0, targetHeight)
           torsoExtend.addColorStop(0, 'rgba(10, 14, 22, 0.95)')
           torsoExtend.addColorStop(1, 'rgba(6, 8, 14, 1.0)')
@@ -339,11 +473,11 @@ async function renderStudioCanvasPortrait(
 
         // ================= LAYER 5: Studio Key Lighting & Facial Modeling Tone =================
         const studioLighting = ctx.createLinearGradient(0, 0, 0, targetHeight)
-        studioLighting.addColorStop(0, 'rgba(255, 255, 255, 0.03)')
-        studioLighting.addColorStop(0.40, 'rgba(255, 255, 255, 0.01)')
+        studioLighting.addColorStop(0, 'rgba(255, 255, 255, 0.02)')
+        studioLighting.addColorStop(0.40, 'rgba(255, 255, 255, 0.005)')
         studioLighting.addColorStop(0.70, 'rgba(0, 0, 0, 0)')
-        studioLighting.addColorStop(0.90, 'rgba(6, 8, 14, 0.45)')
-        studioLighting.addColorStop(1, 'rgba(4, 6, 12, 0.80)')
+        studioLighting.addColorStop(0.90, 'rgba(6, 8, 14, 0.35)')
+        studioLighting.addColorStop(1, 'rgba(4, 6, 12, 0.65)')
         ctx.fillStyle = studioLighting
         ctx.fillRect(0, 0, targetWidth, targetHeight)
 
@@ -357,8 +491,8 @@ async function renderStudioCanvasPortrait(
           targetWidth * 0.88
         )
         vignette.addColorStop(0, 'rgba(0, 0, 0, 0)')
-        vignette.addColorStop(0.70, 'rgba(4, 7, 13, 0.35)')
-        vignette.addColorStop(1, 'rgba(3, 5, 10, 0.75)')
+        vignette.addColorStop(0.70, 'rgba(4, 7, 13, 0.30)')
+        vignette.addColorStop(1, 'rgba(3, 5, 10, 0.65)')
         ctx.fillStyle = vignette
         ctx.fillRect(0, 0, targetWidth, targetHeight)
 
