@@ -154,8 +154,6 @@ export default function AppAccountPage() {
           {/* Integrated AI Leader Portrait Generator */}
           <LeaderPortraitGenerator
             title="Leader Portrait"
-            supportingCopy="Upload your photo and generate a professional True Legacy leader portrait that matches the leadership directory standard."
-            guidanceNote="Your final portrait will keep your real identity, outfit, and recognizable appearance while standardizing the crop, background, lighting, and finish."
             onPortraitChange={handlePortraitChange}
             onApprovePortrait={(approvedUrl) => {
               setCustomAvatarUrl(approvedUrl)

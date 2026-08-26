@@ -1,35 +1,39 @@
 /**
- * True Legacy Official AI Leader Portrait Generation Service.
- * Centralized service for transforming source photos into standardized 4:5 studio leader portraits.
- * Enforces:
- *   - Automatic background attachment of TRUE_LEGACY_PORTRAIT_REFERENCES
- *   - Intelligent detection of already-standardized studio portraits to preserve exact lighting & colors
- *   - Controlled outpainting / body reconstruction for tight crops/selfies
- *   - Reference-locked composition: head centered, 8-10% headroom, crop just below elbows/upper waist
- *   - Automatic multi-attempt regeneration on quality failure (up to 3 attempts)
- *   - 1536x1920 normalized 4:5 production output
+ * True Legacy Portrait Standard Engine — AI Generation Service
+ *
+ * Provider hierarchy:
+ *   1. OpenAI gpt-image-1 edit (multi-reference, identity-preserved portrait edit)
+ *   2. In-browser canvas composite (fallback / preview only — clearly labeled)
+ *
+ * Auto-retry: Up to MAX_AUTO_RETRY_ATTEMPTS attempts, validating after each.
+ * Only returns a result once it passes all quality checks.
  */
 
 import { removeBackground } from '@imgly/background-removal'
 import {
   TRUE_LEGACY_LEADER_PORTRAIT_PROMPT,
-  TRUE_LEGACY_PORTRAIT_REFERENCES,
-  PRODUCTION_PORTRAIT_WIDTH,
-  PRODUCTION_PORTRAIT_HEIGHT,
-  MAX_REGENERATION_ATTEMPTS,
+  ACTIVE_STYLE_REFERENCES,
+  PORTRAIT_ASPECT_RATIO,
+  MAX_AUTO_RETRY_ATTEMPTS,
+  AUTO_RETRY_FAILURE_REASONS,
   validateGeneratedPortrait,
   type LeaderPortraitStatus,
+  type QualityValidationResult,
   type PortraitStyleReference,
 } from '@/config/portraitStandard'
+
+// ---------------------------------------------------------------------------
+// PUBLIC TYPES
+// ---------------------------------------------------------------------------
+
+export type PortraitProviderCapability =
+  | 'openai_image_edit'   // Full reference-guided identity edit (best)
+  | 'canvas_fallback'     // In-browser compositing (preview only)
 
 export interface GeneratePortraitOptions {
   sourceImage: File | Blob | string
   styleReferences?: PortraitStyleReference[]
   prompt?: string
-  aspectRatio?: '4:5'
-  targetWidth?: number
-  targetHeight?: number
-  maxRetries?: number
   onProgress?: (stageText: string, percent: number) => void
   signal?: AbortSignal
 }
@@ -39,479 +43,446 @@ export interface PortraitGenerationResult {
   portraitUrl: string
   blob?: Blob
   promptUsed: string
+  provider: PortraitProviderCapability
+  attemptCount: number
   generationTimestamp: string
   status: LeaderPortraitStatus
-  attemptsMade: number
   validationNotes?: string[]
   error?: string
 }
 
+// ---------------------------------------------------------------------------
+// MAIN PUBLIC FUNCTION: Generate with auto-retry
+// ---------------------------------------------------------------------------
+
 /**
- * Transforms an uploaded photo into the standardized True Legacy 4:5 leader portrait.
- * Includes automatic retry on validation failure.
+ * Generates a True Legacy standardized portrait with automatic retry on validation failure.
+ * Returns only once the portrait passes quality validation, or after max retries.
  */
 export async function generateLeaderPortraitAI(
   options: GeneratePortraitOptions
 ): Promise<PortraitGenerationResult> {
   const {
     sourceImage,
-    styleReferences = TRUE_LEGACY_PORTRAIT_REFERENCES.filter((r) => r.active),
+    styleReferences = ACTIVE_STYLE_REFERENCES,
     prompt = TRUE_LEGACY_LEADER_PORTRAIT_PROMPT,
-    targetWidth = PRODUCTION_PORTRAIT_WIDTH,
-    targetHeight = PRODUCTION_PORTRAIT_HEIGHT, // 1536x1920 (4:5)
-    maxRetries = MAX_REGENERATION_ATTEMPTS,
     onProgress,
     signal,
   } = options
 
-  const report = (stage: string, percent: number) => {
-    if (onProgress) onProgress(stage, percent)
-  }
+  const report = (stage: string, pct: number) => onProgress?.(stage, pct)
 
-  let attempt = 0
-  let lastError = ''
+  let lastResult: PortraitGenerationResult | null = null
+  let lastValidation: QualityValidationResult | null = null
 
-  while (attempt < maxRetries) {
-    attempt++
-
+  for (let attempt = 1; attempt <= MAX_AUTO_RETRY_ATTEMPTS; attempt++) {
     if (signal?.aborted) {
-      throw new Error('Generation aborted by user.')
+      throw new Error('Generation cancelled.')
     }
 
-    if (attempt > 1) {
-      report(`Auto-refining portrait standard (Attempt ${attempt} of ${maxRetries})...`, 20)
-      await delay(200, signal)
+    const isRetry = attempt > 1
+    const basePercent = isRetry ? 10 : 0
+
+    if (isRetry) {
+      report(
+        `Auto-retrying (attempt ${attempt} of ${MAX_AUTO_RETRY_ATTEMPTS})…`,
+        5
+      )
+      await delay(400, signal)
+    }
+
+    // Determine provider
+    const openaiApiKey = import.meta.env.VITE_OPENAI_API_KEY as string | undefined
+
+    if (openaiApiKey) {
+      lastResult = await generateWithOpenAI({
+        sourceImage,
+        styleReferences,
+        prompt,
+        apiKey: openaiApiKey,
+        attempt,
+        maxAttempts: MAX_AUTO_RETRY_ATTEMPTS,
+        onProgress: (stage, pct) => report(stage, basePercent + pct * 0.85),
+        signal,
+      })
     } else {
-      report('Attaching approved True Legacy portrait references & analyzing source photo...', 10)
+      lastResult = await generateWithCanvasFallback({
+        sourceImage,
+        prompt,
+        attempt,
+        maxAttempts: MAX_AUTO_RETRY_ATTEMPTS,
+        onProgress: (stage, pct) => report(stage, basePercent + pct * 0.85),
+        signal,
+      })
     }
 
-    // 1. Check if an external Cloud AI endpoint is configured (Gemini / Imagen 3 / Fal / Replicate)
-    const apiEndpoint = import.meta.env.VITE_AI_IMAGE_ENDPOINT as string | undefined
-    const apiKey = import.meta.env.VITE_AI_IMAGE_API_KEY as string | undefined
-
-    if (apiEndpoint && apiKey) {
-      try {
-        report('Connecting to True Legacy Studio AI with locked reference standard...', 30)
-
-        let sourceBase64 = ''
-        if (typeof sourceImage === 'string') {
-          sourceBase64 = sourceImage
-        } else {
-          sourceBase64 = await fileToBase64(sourceImage)
-        }
-
-        report('Calibrating studio lighting, head scale, and charcoal background across references...', 60)
-
-        const response = await fetch(apiEndpoint, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${apiKey}`,
-          },
-          body: JSON.stringify({
-            prompt,
-            image_identity: sourceBase64,
-            style_references: styleReferences.map((ref) => ({
-              name: ref.name,
-              url: ref.url,
-            })),
-            aspect_ratio: '4:5',
-            target_resolution: `${targetWidth}x${targetHeight}`,
-            outpainting: true,
-            preserve_identity: true,
-            style_lock: true,
-          }),
-          signal,
-        })
-
-        if (response.ok) {
-          const data = await response.json()
-          const resultUrl = data.image_url || data.output?.[0] || data.result
-
-          if (resultUrl) {
-            report('Validating portrait standards & framing...', 90)
-            const qualityCheck = await validateGeneratedPortrait(resultUrl)
-
-            if (qualityCheck.valid) {
-              report('Portrait standardized & ready for review.', 100)
-              return {
-                success: true,
-                portraitUrl: resultUrl,
-                promptUsed: prompt,
-                generationTimestamp: new Date().toISOString(),
-                status: 'ready_for_review',
-                attemptsMade: attempt,
-                validationNotes: qualityCheck.notes,
-              }
-            } else {
-              lastError = qualityCheck.error || 'Quality validation check failed.'
-              continue // Trigger automatic retry
-            }
-          }
-        }
-      } catch (err) {
-        console.warn('Direct Cloud AI API failed or not reachable, using neural studio pipeline:', err)
-      }
+    if (!lastResult.success) {
+      // Non-retriable failure (abort, file error, API auth)
+      return lastResult
     }
 
-    // 2. High-Precision In-Browser Neural AI Segmentation + Reference-Calibrated Outpainting & Studio Compositing
-    try {
-      report('Analyzing background & subject composition...', 25)
+    // Validate output
+    report('Verifying portrait against True Legacy directory standards…', 90)
+    lastValidation = await validateGeneratedPortrait(lastResult.blob || lastResult.portraitUrl)
 
-      // Check if image is already a standardized True Legacy studio portrait (dark neutral background)
-      const isAlreadyStandardized = await checkIfAlreadyStudioStandard(sourceImage)
-
-      let processedBlob: Blob
-
-      if (isAlreadyStandardized) {
-        report('Preserving authentic studio lighting & normalizing to 4:5 standard (1536x1920)...', 70)
-        await delay(150, signal)
-        processedBlob = await normalizeStudioPortrait(sourceImage, targetWidth, targetHeight)
-      } else {
-        report('Running neural subject segmentation (isolating person and outfit)...', 35)
-
-        let cutoutBlob: Blob | null = null
-        try {
-          cutoutBlob = await removeBackground(sourceImage, {
-            progress: (_key: string, current: number, total: number) => {
-              if (total > 0) {
-                const pct = Math.min(75, Math.round(35 + (current / total) * 40))
-                report('Removing background clutter & preserving identity locks...', pct)
-              }
-            },
-          })
-        } catch (segErr) {
-          console.warn('Neural background removal fallback to direct source:', segErr)
-        }
-
-        report('Reconstructing upper-torso crop & rendering charcoal studio backdrop with halo...', 80)
-        await delay(100, signal)
-
-        report('Applying soft key lighting, shoulder balance, and vignette...', 90)
-        const imageToRender = cutoutBlob || sourceImage
-        processedBlob = await renderStudioCanvasPortrait(
-          imageToRender,
-          targetWidth,
-          targetHeight
-        )
-      }
-
-      report('Running automated quality & directory standards check...', 95)
-      const qualityCheck = await validateGeneratedPortrait(processedBlob)
-      if (!qualityCheck.valid) {
-        lastError = qualityCheck.error || 'Output validation failed.'
-        continue // Retry
-      }
-
-      const resultUrl = URL.createObjectURL(processedBlob)
-      await delay(60, signal)
-      report('Portrait generation complete. Ready for review.', 100)
-
+    if (lastValidation.valid) {
+      report('Portrait ready for review.', 100)
       return {
-        success: true,
-        portraitUrl: resultUrl,
-        blob: processedBlob,
-        promptUsed: prompt,
-        generationTimestamp: new Date().toISOString(),
+        ...lastResult,
+        attemptCount: attempt,
         status: 'ready_for_review',
-        attemptsMade: attempt,
-        validationNotes: qualityCheck.notes,
+        validationNotes: lastValidation.notes,
       }
-    } catch (error) {
-      lastError =
-        error instanceof Error
-          ? error.message
-          : "We couldn't generate your portrait this time."
     }
+
+    // Check if this failure type warrants a retry
+    const shouldRetry = lastValidation.failureReason
+      ? (AUTO_RETRY_FAILURE_REASONS as readonly string[]).includes(lastValidation.failureReason)
+      : true
+
+    if (!shouldRetry || attempt >= MAX_AUTO_RETRY_ATTEMPTS) {
+      break
+    }
+
+    report(`Quality check failed (${lastValidation.failureReason}) — retrying…`, 95)
   }
 
-  // If retries exhausted
+  // All attempts failed — return last result with failure status
   return {
     success: false,
-    portraitUrl: '',
+    portraitUrl: lastResult?.portraitUrl ?? '',
+    blob: lastResult?.blob,
     promptUsed: prompt,
+    provider: lastResult?.provider ?? 'canvas_fallback',
+    attemptCount: MAX_AUTO_RETRY_ATTEMPTS,
     generationTimestamp: new Date().toISOString(),
     status: 'generation_failed',
-    attemptsMade: attempt,
     error:
+      lastValidation?.error ??
       "We couldn't create a portrait that meets the True Legacy standard from this photo. Try uploading another clear photo.",
   }
 }
 
-/**
- * Checks if the source photo is already a studio portrait with a dark neutral background.
- */
-async function checkIfAlreadyStudioStandard(source: File | Blob | string): Promise<boolean> {
-  return new Promise((resolve) => {
+// ---------------------------------------------------------------------------
+// PROVIDER: OpenAI gpt-image-1 image edit
+// ---------------------------------------------------------------------------
+
+interface OpenAIGenerateArgs {
+  sourceImage: File | Blob | string
+  styleReferences: PortraitStyleReference[]
+  prompt: string
+  apiKey: string
+  attempt: number
+  maxAttempts: number
+  onProgress: (stage: string, pct: number) => void
+  signal?: AbortSignal
+}
+
+async function generateWithOpenAI(args: OpenAIGenerateArgs): Promise<PortraitGenerationResult> {
+  const { sourceImage, prompt, apiKey, attempt, maxAttempts, onProgress, signal } = args
+
+  onProgress(
+    attempt === 1
+      ? 'Connecting to True Legacy Portrait Studio AI…'
+      : `Regenerating portrait (attempt ${attempt} of ${maxAttempts})…`,
+    10
+  )
+
+  try {
+    // Convert source to PNG Blob for the OpenAI API
+    const sourceBlob = await toBlob(sourceImage)
+    const sourceFile = new File([sourceBlob], 'portrait-source.png', { type: 'image/png' })
+
+    onProgress('Uploading identity source and applying studio standard…', 35)
+
+    // Build multipart form for gpt-image-1 edits endpoint
+    const form = new FormData()
+    form.append('model', 'gpt-image-1')
+    form.append('image[]', sourceFile, 'portrait-source.png')
+
+    // Attach up to 3 active style reference images as additional inputs
+    // OpenAI image edit supports multiple image[] inputs
+    const refsToAttach = ACTIVE_STYLE_REFERENCES.slice(0, 3)
+    for (const ref of refsToAttach) {
+      try {
+        const refBlob = await fetchUrlAsBlob(ref.url)
+        const refFile = new File([refBlob], `${ref.id}.png`, { type: 'image/png' })
+        form.append('image[]', refFile, `${ref.id}.png`)
+      } catch {
+        console.warn(`Could not attach style reference ${ref.name} — skipping.`)
+      }
+    }
+
+    form.append('prompt', prompt)
+    form.append('n', '1')
+    form.append('size', PORTRAIT_ASPECT_RATIO) // '1024x1536' — portrait orientation
+    form.append('quality', 'high')
+
+    onProgress('AI is reconstructing your studio portrait…', 55)
+
+    const response = await fetch('https://api.openai.com/v1/images/edits', {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${apiKey}`,
+      },
+      body: form,
+      signal,
+    })
+
+    if (!response.ok) {
+      const errorText = await response.text().catch(() => response.statusText)
+      let userMessage = 'The AI portrait service is temporarily unavailable. Please try again shortly.'
+
+      if (response.status === 401) {
+        userMessage = 'OpenAI API key is invalid or expired. Please check your VITE_OPENAI_API_KEY setting.'
+      } else if (response.status === 429) {
+        userMessage = 'AI service rate limit reached. Please wait a moment and try again.'
+      } else if (response.status === 400) {
+        userMessage = 'This photo could not be processed. Please try a different, clearer photo.'
+      }
+
+      console.error('OpenAI API error:', response.status, errorText)
+      return {
+        success: false,
+        portraitUrl: '',
+        promptUsed: prompt,
+        provider: 'openai_image_edit',
+        attemptCount: attempt,
+        generationTimestamp: new Date().toISOString(),
+        status: 'generation_failed',
+        error: userMessage,
+      }
+    }
+
+    onProgress('Processing AI studio output…', 80)
+
+    const data = await response.json()
+    const imageData = data?.data?.[0]
+
+    if (!imageData) {
+      throw new Error('No image data returned from OpenAI.')
+    }
+
+    let blob: Blob
+    let portraitUrl: string
+
+    if (imageData.b64_json) {
+      // Base64 response — convert to Blob
+      blob = base64ToBlob(imageData.b64_json, 'image/png')
+      portraitUrl = URL.createObjectURL(blob)
+    } else if (imageData.url) {
+      // URL response — fetch as blob for local use
+      blob = await fetchUrlAsBlob(imageData.url)
+      portraitUrl = URL.createObjectURL(blob)
+    } else {
+      throw new Error('OpenAI returned an unrecognized image format.')
+    }
+
+    onProgress('Portrait generated — running quality verification…', 90)
+
+    return {
+      success: true,
+      portraitUrl,
+      blob,
+      promptUsed: prompt,
+      provider: 'openai_image_edit',
+      attemptCount: attempt,
+      generationTimestamp: new Date().toISOString(),
+      status: 'ready_for_review',
+    }
+  } catch (err) {
+    if (err instanceof Error && err.name === 'AbortError') throw err
+
+    console.error('OpenAI portrait generation error:', err)
+    return {
+      success: false,
+      portraitUrl: '',
+      promptUsed: prompt,
+      provider: 'openai_image_edit',
+      attemptCount: attempt,
+      generationTimestamp: new Date().toISOString(),
+      status: 'generation_failed',
+      error:
+        err instanceof Error
+          ? err.message
+          : "Portrait generation failed. Please try again.",
+    }
+  }
+}
+
+// ---------------------------------------------------------------------------
+// PROVIDER: In-Browser Canvas Fallback (preview quality only)
+// ---------------------------------------------------------------------------
+
+interface CanvasFallbackArgs {
+  sourceImage: File | Blob | string
+  prompt: string
+  attempt: number
+  maxAttempts: number
+  onProgress: (stage: string, pct: number) => void
+  signal?: AbortSignal
+}
+
+async function generateWithCanvasFallback(
+  args: CanvasFallbackArgs
+): Promise<PortraitGenerationResult> {
+  const { sourceImage, prompt, attempt, maxAttempts, onProgress, signal } = args
+
+  onProgress(
+    attempt === 1
+      ? 'Running in-browser portrait preview (no AI API configured)…'
+      : `Retrying canvas preview (attempt ${attempt} of ${maxAttempts})…`,
+    20
+  )
+
+  try {
+    let cutoutBlob: Blob | null = null
     try {
-      const img = new Image()
-      img.crossOrigin = 'anonymous'
-
-      let revokeUrl = ''
-      if (typeof source === 'string') {
-        img.src = source
-      } else {
-        revokeUrl = URL.createObjectURL(source)
-        img.src = revokeUrl
-      }
-
-      img.onload = () => {
-        if (revokeUrl) URL.revokeObjectURL(revokeUrl)
-        const canvas = document.createElement('canvas')
-        canvas.width = 100
-        canvas.height = 125
-        const ctx = canvas.getContext('2d')
-        if (!ctx) {
-          resolve(false)
-          return
-        }
-
-        ctx.drawImage(img, 0, 0, 100, 125)
-        // Check corner background brightness & saturation
-        const tl = ctx.getImageData(5, 5, 1, 1).data
-        const tr = ctx.getImageData(95, 5, 1, 1).data
-        const avgCornerBrightness = (tl[0] + tl[1] + tl[2] + tr[0] + tr[1] + tr[2]) / 6
-
-        // If top corners are dark neutral charcoal/slate (< 80 brightness), it is already a studio portrait
-        if (avgCornerBrightness < 80) {
-          resolve(true)
-        } else {
-          resolve(false)
-        }
-      }
-
-      img.onerror = () => {
-        if (revokeUrl) URL.revokeObjectURL(revokeUrl)
-        resolve(false)
-      }
+      cutoutBlob = await removeBackground(sourceImage, {
+        progress: (_key: string, current: number, total: number) => {
+          if (total > 0) {
+            const pct = Math.min(65, Math.round(20 + (current / total) * 45))
+            onProgress('Removing background…', pct)
+          }
+        },
+      })
     } catch {
-      resolve(false)
+      console.warn('Background removal failed — using original image.')
     }
-  })
+
+    onProgress('Compositing True Legacy studio backdrop…', 75)
+    await delay(150, signal)
+
+    const source = cutoutBlob ?? sourceImage
+    const blob = await renderStudioCanvas(source)
+
+    onProgress('Canvas portrait ready (preview only — connect OpenAI for studio quality).', 100)
+
+    return {
+      success: true,
+      portraitUrl: URL.createObjectURL(blob),
+      blob,
+      promptUsed: prompt,
+      provider: 'canvas_fallback',
+      attemptCount: attempt,
+      generationTimestamp: new Date().toISOString(),
+      status: 'ready_for_review',
+    }
+  } catch (err) {
+    if (err instanceof Error && err.name === 'AbortError') throw err
+    return {
+      success: false,
+      portraitUrl: '',
+      promptUsed: prompt,
+      provider: 'canvas_fallback',
+      attemptCount: attempt,
+      generationTimestamp: new Date().toISOString(),
+      status: 'generation_failed',
+      error: 'Canvas portrait rendering failed. Please try again.',
+    }
+  }
 }
 
-/**
- * Normalizes an already-standardized portrait to exact 1536x1920 (4:5) without degrading original colors.
- */
-async function normalizeStudioPortrait(
-  source: File | Blob | string,
-  targetWidth: number,
-  targetHeight: number
-): Promise<Blob> {
+// ---------------------------------------------------------------------------
+// CANVAS RENDERING ENGINE
+// Produces a best-effort 4:5 charcoal studio composite for preview purposes.
+// ---------------------------------------------------------------------------
+
+async function renderStudioCanvas(source: File | Blob | string): Promise<Blob> {
+  const W = 768
+  const H = 960 // 4:5
+
   return new Promise(async (resolve, reject) => {
     try {
       const img = new Image()
       img.crossOrigin = 'anonymous'
 
-      let objectUrlToRevoke = ''
+      let blobUrl = ''
       if (typeof source === 'string') {
         img.src = source
       } else {
-        objectUrlToRevoke = URL.createObjectURL(source)
-        img.src = objectUrlToRevoke
+        blobUrl = URL.createObjectURL(source)
+        img.src = blobUrl
       }
 
       img.onload = () => {
-        if (objectUrlToRevoke) URL.revokeObjectURL(objectUrlToRevoke)
+        if (blobUrl) URL.revokeObjectURL(blobUrl)
 
         const canvas = document.createElement('canvas')
-        canvas.width = targetWidth
-        canvas.height = targetHeight
-        const ctx = canvas.getContext('2d', { willReadFrequently: true })
+        canvas.width = W
+        canvas.height = H
+        const ctx = canvas.getContext('2d', { willReadFrequently: true })!
 
-        if (!ctx) {
-          reject(new Error('Failed to obtain 2D canvas context.'))
-          return
-        }
+        // Layer 1: Charcoal base gradient
+        const bg = ctx.createLinearGradient(0, 0, 0, H)
+        bg.addColorStop(0, '#181c27')
+        bg.addColorStop(0.4, '#10141e')
+        bg.addColorStop(0.8, '#0b0f18')
+        bg.addColorStop(1, '#070910')
+        ctx.fillStyle = bg
+        ctx.fillRect(0, 0, W, H)
 
-        const srcW = img.naturalWidth || img.width
-        const srcH = img.naturalHeight || img.height
+        // Layer 2: Soft halo centered at 28% from top (head area)
+        const haloX = W * 0.5
+        const haloY = H * 0.28
+        const halo = ctx.createRadialGradient(haloX, haloY, W * 0.04, haloX, haloY, W * 0.72)
+        halo.addColorStop(0, 'rgba(240,242,248,0.18)')
+        halo.addColorStop(0.28, 'rgba(210,220,238,0.10)')
+        halo.addColorStop(0.58, 'rgba(180,190,215,0.04)')
+        halo.addColorStop(1, 'rgba(0,0,0,0)')
+        ctx.fillStyle = halo
+        ctx.fillRect(0, 0, W, H)
 
-        // Calculate scale to fill 4:5 comfortably
-        const scale = Math.max(targetWidth / srcW, targetHeight / srcH)
-        const drawW = srcW * scale
-        const drawH = srcH * scale
-        const drawX = (targetWidth - drawW) / 2
-        const drawY = (targetHeight - drawH) / 2
-
-        ctx.drawImage(img, drawX, drawY, drawW, drawH)
-
-        canvas.toBlob(
-          (blob) => {
-            if (blob) {
-              resolve(blob)
-            } else {
-              reject(new Error('Failed to encode normalized 4:5 PNG blob.'))
-            }
-          },
-          'image/png',
-          0.99
-        )
-      }
-
-      img.onerror = () => {
-        if (objectUrlToRevoke) URL.revokeObjectURL(objectUrlToRevoke)
-        reject(new Error('Could not load image source for normalization.'))
-      }
-    } catch (err) {
-      reject(err)
-    }
-  })
-}
-
-/**
- * High-resolution canvas transformation engine calibrated to the approved True Legacy style references.
- * Implements:
- * - 4:5 vertical framing (1536x1920)
- * - Controlled outpainting / torso reconstruction for tight selfie crops
- * - Head placed at 8-10% below top, eye-level at ~30%
- * - Charcoal studio backdrop with soft smoky halo and subtle vignette
- */
-async function renderStudioCanvasPortrait(
-  source: File | Blob | string,
-  targetWidth: number,
-  targetHeight: number
-): Promise<Blob> {
-  return new Promise(async (resolve, reject) => {
-    try {
-      const img = new Image()
-      img.crossOrigin = 'anonymous'
-
-      let objectUrlToRevoke = ''
-      if (typeof source === 'string') {
-        img.src = source
-      } else {
-        objectUrlToRevoke = URL.createObjectURL(source)
-        img.src = objectUrlToRevoke
-      }
-
-      img.onload = () => {
-        if (objectUrlToRevoke) URL.revokeObjectURL(objectUrlToRevoke)
-
-        const canvas = document.createElement('canvas')
-        canvas.width = targetWidth
-        canvas.height = targetHeight
-        const ctx = canvas.getContext('2d', { willReadFrequently: true })
-
-        if (!ctx) {
-          reject(new Error('Failed to obtain 2D canvas context.'))
-          return
-        }
-
-        // ================= LAYER 1: Deep Neutral Charcoal & Slate Base =================
-        const baseGradient = ctx.createLinearGradient(0, 0, 0, targetHeight)
-        baseGradient.addColorStop(0, '#141824')     // Deep charcoal slate
-        baseGradient.addColorStop(0.35, '#0e121d')  // Muted graphite slate
-        baseGradient.addColorStop(0.70, '#0a0d16')  // Subtle midnight undertone
-        baseGradient.addColorStop(1, '#06080e')     // Rich bottom shadow
-        ctx.fillStyle = baseGradient
-        ctx.fillRect(0, 0, targetWidth, targetHeight)
-
-        // ================= LAYER 2: Soft Diffused Smoky Halo Centered Behind Head & Upper Torso =================
-        const centerX = targetWidth * 0.5
-        const haloY = targetHeight * 0.32
-        const haloRadius = targetWidth * 0.70
-        const haloGradient = ctx.createRadialGradient(
-          centerX,
-          haloY,
-          haloRadius * 0.05,
-          centerX,
-          haloY,
-          haloRadius
-        )
-        haloGradient.addColorStop(0, 'rgba(255, 255, 255, 0.18)')    // Soft key glow
-        haloGradient.addColorStop(0.25, 'rgba(210, 225, 245, 0.10)') // Smoky halo
-        haloGradient.addColorStop(0.50, 'rgba(41, 151, 255, 0.035)') // Very subtle brand undertone
-        haloGradient.addColorStop(0.75, 'rgba(15, 23, 42, 0.01)')
-        haloGradient.addColorStop(1, 'rgba(0, 0, 0, 0)')
-        ctx.fillStyle = haloGradient
-        ctx.fillRect(0, 0, targetWidth, targetHeight)
-
-        // ================= LAYER 3: Subtle Photographic Studio Texture =================
-        ctx.fillStyle = 'rgba(255, 255, 255, 0.012)'
-        for (let i = 0; i < 200; i++) {
-          const rx = (Math.sin(i * 997) * 0.5 + 0.5) * targetWidth
-          const ry = (Math.cos(i * 613) * 0.5 + 0.5) * targetHeight
-          const rw = 4 + (i % 8)
-          ctx.fillRect(rx, ry, rw, rw)
-        }
-
-        // ================= LAYER 4: Controlled Outpainting / Torso Framing =================
-        // Benchmark composition metrics:
-        // - Top of head: 8% to 10% below upper edge
-        // - Eyes: 28% to 32% from top
-        // - Upper-torso crop just below elbows/upper waist
-        const srcW = img.naturalWidth || img.width
-        const srcH = img.naturalHeight || img.height
-
-        const targetCropRatio = 0.8 // 4:5
-        const srcRatio = srcW / srcH
+        // Layer 3: Subject placement — scale to fill frame with 4:5 crop alignment
+        const sw = img.naturalWidth || img.width
+        const sh = img.naturalHeight || img.height
+        const srcRatio = sw / sh
 
         let scale: number
-        if (srcRatio < targetCropRatio) {
-          scale = (targetWidth / srcW) * 0.96
+        let drawX: number
+        let drawY: number
+
+        if (srcRatio < 0.8) {
+          // Portrait-shaped — scale to width
+          scale = W / sw
         } else {
-          scale = Math.max(targetWidth / srcW, (targetHeight * 0.88) / srcH)
+          // Square or landscape — scale to height with some headroom
+          scale = (H * 0.92) / sh
         }
 
-        const drawW = srcW * scale
-        const drawH = srcH * scale
-        const drawX = (targetWidth - drawW) / 2
-        const drawY = Math.min(targetHeight * 0.08, (targetHeight - drawH) * 0.25)
+        const drawW = sw * scale
+        const drawH = sh * scale
+        drawX = (W - drawW) / 2
+        drawY = Math.max(H * 0.05, (H - drawH) * 0.18)
 
-        // If source is a tight crop, naturally reconstruct lower torso fade onto backdrop
-        if (drawY + drawH < targetHeight) {
-          const torsoExtend = ctx.createLinearGradient(0, drawY + drawH - 80, 0, targetHeight)
-          torsoExtend.addColorStop(0, 'rgba(10, 14, 22, 0.95)')
-          torsoExtend.addColorStop(1, 'rgba(6, 8, 14, 1.0)')
-          ctx.fillStyle = torsoExtend
-          ctx.fillRect(drawX + drawW * 0.2, drawY + drawH - 80, drawW * 0.6, targetHeight - (drawY + drawH - 80))
-        }
-
-        // Draw segmented subject onto canvas
         ctx.drawImage(img, drawX, drawY, drawW, drawH)
 
-        // ================= LAYER 5: Studio Key Lighting & Facial Modeling Tone =================
-        const studioLighting = ctx.createLinearGradient(0, 0, 0, targetHeight)
-        studioLighting.addColorStop(0, 'rgba(255, 255, 255, 0.02)')
-        studioLighting.addColorStop(0.40, 'rgba(255, 255, 255, 0.005)')
-        studioLighting.addColorStop(0.70, 'rgba(0, 0, 0, 0)')
-        studioLighting.addColorStop(0.90, 'rgba(6, 8, 14, 0.35)')
-        studioLighting.addColorStop(1, 'rgba(4, 6, 12, 0.65)')
-        ctx.fillStyle = studioLighting
-        ctx.fillRect(0, 0, targetWidth, targetHeight)
+        // Layer 4: Bottom fade gradient
+        const fade = ctx.createLinearGradient(0, H * 0.68, 0, H)
+        fade.addColorStop(0, 'rgba(0,0,0,0)')
+        fade.addColorStop(0.6, 'rgba(7,9,16,0.4)')
+        fade.addColorStop(1, 'rgba(5,7,12,0.85)')
+        ctx.fillStyle = fade
+        ctx.fillRect(0, H * 0.68, W, H * 0.32)
 
-        // ================= LAYER 6: Restrained Editorial Edge Vignette =================
-        const vignette = ctx.createRadialGradient(
-          centerX,
-          targetHeight * 0.48,
-          targetWidth * 0.40,
-          centerX,
-          targetHeight * 0.48,
-          targetWidth * 0.88
-        )
-        vignette.addColorStop(0, 'rgba(0, 0, 0, 0)')
-        vignette.addColorStop(0.70, 'rgba(4, 7, 13, 0.30)')
-        vignette.addColorStop(1, 'rgba(3, 5, 10, 0.65)')
-        ctx.fillStyle = vignette
-        ctx.fillRect(0, 0, targetWidth, targetHeight)
+        // Layer 5: Edge vignette
+        const vig = ctx.createRadialGradient(W / 2, H * 0.46, W * 0.38, W / 2, H * 0.46, W * 0.90)
+        vig.addColorStop(0, 'rgba(0,0,0,0)')
+        vig.addColorStop(0.72, 'rgba(3,5,10,0.30)')
+        vig.addColorStop(1, 'rgba(3,5,10,0.72)')
+        ctx.fillStyle = vig
+        ctx.fillRect(0, 0, W, H)
 
         canvas.toBlob(
-          (blob) => {
-            if (blob) {
-              resolve(blob)
-            } else {
-              reject(new Error('Failed to encode normalized 4:5 PNG blob.'))
-            }
-          },
+          (blob) => (blob ? resolve(blob) : reject(new Error('Canvas encoding failed.'))),
           'image/png',
-          0.98
+          0.96
         )
       }
 
       img.onerror = () => {
-        if (objectUrlToRevoke) URL.revokeObjectURL(objectUrlToRevoke)
-        reject(new Error('Could not load image source for reference-based portrait generation.'))
+        if (blobUrl) URL.revokeObjectURL(blobUrl)
+        reject(new Error('Could not load source image.'))
       }
     } catch (err) {
       reject(err)
@@ -519,22 +490,69 @@ async function renderStudioCanvasPortrait(
   })
 }
 
-function fileToBase64(file: File | Blob): Promise<string> {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader()
-    reader.onload = () => resolve(reader.result as string)
-    reader.onerror = reject
-    reader.readAsDataURL(file)
-  })
+// ---------------------------------------------------------------------------
+// UTILITIES
+// ---------------------------------------------------------------------------
+
+async function toBlob(source: File | Blob | string): Promise<Blob> {
+  if (source instanceof Blob) return source
+  if (typeof source === 'string') {
+    if (source.startsWith('data:')) {
+      const parts = source.split(',')
+      const mime = parts[0].match(/:(.*?);/)?.[1] ?? 'image/png'
+      const binary = atob(parts[1])
+      const bytes = new Uint8Array(binary.length)
+      for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i)
+      return new Blob([bytes], { type: mime })
+    }
+    const res = await fetch(source)
+    return res.blob()
+  }
+  return source
+}
+
+async function fetchUrlAsBlob(url: string): Promise<Blob> {
+  const res = await fetch(url)
+  if (!res.ok) throw new Error(`Failed to fetch: ${url}`)
+  return res.blob()
+}
+
+function base64ToBlob(base64: string, mime: string): Blob {
+  const binary = atob(base64)
+  const bytes = new Uint8Array(binary.length)
+  for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i)
+  return new Blob([bytes], { type: mime })
 }
 
 function delay(ms: number, signal?: AbortSignal): Promise<void> {
   return new Promise((resolve, reject) => {
     if (signal?.aborted) return reject(new Error('Aborted'))
-    const timer = setTimeout(resolve, ms)
-    signal?.addEventListener('abort', () => {
-      clearTimeout(timer)
-      reject(new Error('Aborted'))
-    })
+    const t = setTimeout(resolve, ms)
+    signal?.addEventListener('abort', () => { clearTimeout(t); reject(new Error('Aborted')) })
   })
+}
+
+/** Returns whether an OpenAI API key is configured */
+export function isOpenAIConfigured(): boolean {
+  return Boolean(import.meta.env.VITE_OPENAI_API_KEY)
+}
+
+/** Returns a human-readable description of the active provider and quality level */
+export function getProviderStatus(): { provider: PortraitProviderCapability; label: string; quality: 'studio' | 'preview' } {
+  if (isOpenAIConfigured()) {
+    return { provider: 'openai_image_edit', label: 'OpenAI gpt-image-1', quality: 'studio' }
+  }
+  return { provider: 'canvas_fallback', label: 'Browser Preview (no AI key)', quality: 'preview' }
+}
+
+/** Downloads a portrait blob as a PNG file */
+export function downloadPortrait(blob: Blob, filename = 'true-legacy-portrait.png'): void {
+  const url = URL.createObjectURL(blob)
+  const a = document.createElement('a')
+  a.href = url
+  a.download = filename
+  document.body.appendChild(a)
+  a.click()
+  document.body.removeChild(a)
+  setTimeout(() => URL.revokeObjectURL(url), 5000)
 }

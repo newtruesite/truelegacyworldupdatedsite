@@ -1,4 +1,5 @@
 import { SEO } from '@/components/SEO'
+import { PortraitReferenceAdmin } from '@/components/leaders/PortraitReferenceAdmin'
 import { SponsorGate } from '@/components/crm/SponsorGate'
 import { addLeadNote, assignLead, crmConfigured, crmSupabase, getCrmDistributors, getCrmLeads, getCrmMembership, getLeadNotes, updateLeadStatus, submitCrmApplication } from '@/lib/crm'
 import type { CrmDistributor, CrmLead, CrmLeadNote, CrmMembership, LeadStatus } from '@/lib/crm'
@@ -491,6 +492,9 @@ export default function CrmPage() {
             <MetricCard icon={<ShieldCheck className="h-4 w-4 text-amber-400" />} value={unassigned} label="Needs Assignment" tone="amber" />
             <MetricCard icon={<MessageCircle className="h-4 w-4 text-rose-400" />} value={dueCount} label="Follow-ups Due" tone="rose" />
           </section>
+
+          {/* Portrait Standard Admin Panel (admin-only) */}
+          {membership?.role === 'admin' && <PortraitReferenceAdmin />}
 
           {/* Lead Alerts Banner */}
           {(newCount > 0 || dueCount > 0) && (

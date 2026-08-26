@@ -1,783 +1,727 @@
+/**
+ * True Legacy Leader Portrait Generator
+ *
+ * Three clean states:
+ *   1. Upload  — User drags or selects their photo
+ *   2. Generating — Full-width progress, auto-retry counter
+ *   3. Review — Side-by-side comparison with proportionate action buttons
+ *
+ * Users never see: prompts, reference images, crop settings, AI parameters.
+ * Everything is hidden inside the engine.
+ */
+
 import { useState, useRef, useCallback, useEffect } from 'react'
 import {
   UploadCloud,
   Sparkles,
-  RotateCcw,
-  Trash2,
   AlertCircle,
   CheckCircle2,
-  BadgeCheck,
   Camera,
-  Info,
-  FileImage,
-  Layers,
   Loader2,
   RefreshCw,
   UserCheck,
+  Download,
+  RotateCcw,
+  Trash2,
+  ShieldCheck,
+  BadgeCheck,
+  Zap,
 } from 'lucide-react'
 import {
+  getOfficialLeaderPortraitPrompt,
   validatePortraitFile,
-  TRUE_LEGACY_SAMPLE_REFERENCE_IMAGE,
+  ACTIVE_STYLE_REFERENCES,
   type LeaderPortraitData,
   type LeaderPortraitStatus,
 } from '@/config/portraitStandard'
-import { generateLeaderPortraitAI } from '@/services/portraitGenerationService'
+import {
+  generateLeaderPortraitAI,
+  downloadPortrait,
+  getProviderStatus,
+} from '@/services/portraitGenerationService'
 
 export interface LeaderPortraitGeneratorProps {
-  onPortraitChange?: (portraitData: LeaderPortraitData) => void
-  onApprovePortrait?: (approvedUrl: string, portraitData: LeaderPortraitData) => void
+  onPortraitChange?: (data: LeaderPortraitData) => void
+  onApprovePortrait?: (approvedUrl: string, data: LeaderPortraitData) => void
   initialPortrait?: LeaderPortraitData
   title?: string
-  supportingCopy?: string
-  guidanceNote?: string
   className?: string
 }
+
+type UIState = 'upload' | 'generating' | 'review'
 
 export function LeaderPortraitGenerator({
   onPortraitChange,
   onApprovePortrait,
   initialPortrait,
   title = 'Leader Portrait',
-  supportingCopy = 'Upload your photo and generate an official True Legacy leader portrait that matches the leadership directory standard.',
-  guidanceNote = 'Your final portrait will keep your real identity, outfit, and recognizable appearance while standardizing the crop, background, lighting, and finish.',
   className = '',
 }: LeaderPortraitGeneratorProps) {
-  const [originalFile, setOriginalFile] = useState<File | null>(initialPortrait?.originalFile || null)
-  const [originalPreviewUrl, setOriginalPreviewUrl] = useState<string>(initialPortrait?.originalPreviewUrl || '')
-  const [originalFileName, setOriginalFileName] = useState<string>(initialPortrait?.originalFileName || '')
-  const [originalFileSize, setOriginalFileSize] = useState<number>(initialPortrait?.originalFileSize || 0)
+  // ── Source photo state ────────────────────────────────────────────────────
+  const [originalFile, setOriginalFile] = useState<File | null>(
+    initialPortrait?.originalFile ?? null
+  )
+  const [originalUrl, setOriginalUrl] = useState(initialPortrait?.originalPreviewUrl ?? '')
+  const [originalName, setOriginalName] = useState(initialPortrait?.originalFileName ?? '')
 
-  const [generatedPortraitUrl, setGeneratedPortraitUrl] = useState<string>(initialPortrait?.generatedPortraitUrl || '')
-  const [approvedPortraitUrl, setApprovedPortraitUrl] = useState<string>(initialPortrait?.approvedPortraitUrl || '')
-  const [status, setStatus] = useState<LeaderPortraitStatus>(initialPortrait?.status || 'not_uploaded')
+  // ── Generated portrait state ──────────────────────────────────────────────
+  const [generatedUrl, setGeneratedUrl] = useState(initialPortrait?.generatedPortraitUrl ?? '')
+  const [generatedBlob, setGeneratedBlob] = useState<Blob | undefined>()
+  const [approvedUrl, setApprovedUrl] = useState(initialPortrait?.approvedPortraitUrl ?? '')
+  const [validationNotes, setValidationNotes] = useState<string[]>(
+    initialPortrait?.validationNotes ?? []
+  )
 
-  const [errorMessage, setErrorMessage] = useState<string>('')
-  const [validationNotes, setValidationNotes] = useState<string[]>(initialPortrait?.validationNotes || [])
+  // ── UI / status state ─────────────────────────────────────────────────────
+  const [uiState, setUiState] = useState<UIState>(
+    initialPortrait?.generatedPortraitUrl ? 'review' : 'upload'
+  )
+  const [status, setStatus] = useState<LeaderPortraitStatus>(
+    initialPortrait?.status ?? 'not_uploaded'
+  )
   const [isDragging, setIsDragging] = useState(false)
   const [isValidating, setIsValidating] = useState(false)
   const [isGenerating, setIsGenerating] = useState(false)
-  const [generationStage, setGenerationStage] = useState<string>('')
-  const [qualityPassed, setQualityPassed] = useState(false)
-  const [imageDimensions, setImageDimensions] = useState<{ width: number; height: number } | null>(null)
+  const [generationStage, setGenerationStage] = useState('')
+  const [generationPercent, setGenerationPercent] = useState(0)
+  const [attemptCount, setAttemptCount] = useState(0)
+  const [errorMessage, setErrorMessage] = useState('')
+  const [isApproved, setIsApproved] = useState(Boolean(initialPortrait?.approvedPortraitUrl))
 
   const fileInputRef = useRef<HTMLInputElement>(null)
-  const generatedFileInputRef = useRef<HTMLInputElement>(null)
-  const abortControllerRef = useRef<AbortController | null>(null)
+  const customUploadRef = useRef<HTMLInputElement>(null)
+  const abortRef = useRef<AbortController | null>(null)
+  const providerStatus = getProviderStatus()
 
-  // Notify parent component of portrait state changes
-  const notifyParent = useCallback(
-    (updatedState: Partial<LeaderPortraitData>) => {
-      if (!onPortraitChange) return
-      const currentData: LeaderPortraitData = {
-        originalFile,
-        originalFileName,
-        originalFileSize,
-        originalPreviewUrl,
-        generatedPortraitUrl,
-        approvedPortraitUrl,
-        promptUsed: '',
-        status,
-        qualityPassed,
-        validationNotes,
-        ...updatedState,
-      }
-      onPortraitChange(currentData)
-    },
-    [
-      onPortraitChange,
-      originalFile,
-      originalFileName,
-      originalFileSize,
-      originalPreviewUrl,
-      generatedPortraitUrl,
-      approvedPortraitUrl,
-      status,
-      qualityPassed,
-      validationNotes,
-    ]
-  )
-
-  // Cleanup object URLs on unmount
+  // ── Cleanup ───────────────────────────────────────────────────────────────
   useEffect(() => {
     return () => {
-      if (originalPreviewUrl && originalPreviewUrl.startsWith('blob:')) {
-        URL.revokeObjectURL(originalPreviewUrl)
-      }
-      if (generatedPortraitUrl && generatedPortraitUrl.startsWith('blob:')) {
-        URL.revokeObjectURL(generatedPortraitUrl)
-      }
-      if (abortControllerRef.current) {
-        abortControllerRef.current.abort()
-      }
+      abortRef.current?.abort()
+      if (originalUrl.startsWith('blob:')) URL.revokeObjectURL(originalUrl)
+      if (generatedUrl.startsWith('blob:')) URL.revokeObjectURL(generatedUrl)
     }
-  }, [originalPreviewUrl, generatedPortraitUrl])
+  }, [originalUrl, generatedUrl])
 
-  // Handle uploaded original image file
-  const handleProcessFile = async (file: File) => {
+  // ── Parent notification ───────────────────────────────────────────────────
+  const notify = useCallback(
+    (patch: Partial<LeaderPortraitData>) => {
+      onPortraitChange?.({
+        originalFile,
+        originalFileName: originalName,
+        originalFileSize: originalFile?.size,
+        originalPreviewUrl: originalUrl,
+        generatedPortraitUrl: generatedUrl,
+        approvedPortraitUrl: approvedUrl,
+        promptUsed: getOfficialLeaderPortraitPrompt(),
+        status,
+        qualityPassed: validationNotes.length > 0,
+        validationNotes,
+        ...patch,
+      })
+    },
+    [onPortraitChange, originalFile, originalName, originalUrl, generatedUrl, approvedUrl, status, validationNotes]
+  )
+
+  // ── File processing ───────────────────────────────────────────────────────
+  const processFile = async (file: File) => {
     setErrorMessage('')
     setIsValidating(true)
-
     try {
-      const validation = await validatePortraitFile(file)
-      if (!validation.valid) {
-        setErrorMessage(validation.error || 'Invalid image file.')
+      const result = await validatePortraitFile(file)
+      if (!result.valid) {
+        setErrorMessage(result.error ?? 'Invalid photo.')
         setIsValidating(false)
         return
       }
 
-      if (originalPreviewUrl && originalPreviewUrl.startsWith('blob:')) {
-        URL.revokeObjectURL(originalPreviewUrl)
-      }
+      if (originalUrl.startsWith('blob:')) URL.revokeObjectURL(originalUrl)
+      if (generatedUrl.startsWith('blob:')) URL.revokeObjectURL(generatedUrl)
 
-      const previewUrl = URL.createObjectURL(file)
+      const url = URL.createObjectURL(file)
       setOriginalFile(file)
-      setOriginalPreviewUrl(previewUrl)
-      setOriginalFileName(file.name)
-      setOriginalFileSize(file.size)
-      setQualityPassed(true)
-      setImageDimensions(validation.dimensions || null)
-      setStatus('photo_uploaded')
-      setGeneratedPortraitUrl('')
-      setApprovedPortraitUrl('')
+      setOriginalUrl(url)
+      setOriginalName(file.name)
+      setGeneratedUrl('')
+      setApprovedUrl('')
+      setGeneratedBlob(undefined)
+      setIsApproved(false)
       setValidationNotes([])
-
-      notifyParent({
-        originalFile: file,
-        originalFileName: file.name,
-        originalFileSize: file.size,
-        originalPreviewUrl: previewUrl,
-        generatedPortraitUrl: '',
-        approvedPortraitUrl: '',
-        status: 'photo_uploaded',
-        qualityPassed: true,
-        validationNotes: [],
-      })
-    } catch {
-      setErrorMessage('Failed to read and validate the uploaded photo. Please try another image.')
+      setAttemptCount(0)
+      setStatus('photo_uploaded')
+      setUiState('upload') // stay on upload — user clicks Generate
+      notify({ originalFile: file, originalPreviewUrl: url, status: 'photo_uploaded' })
     } finally {
       setIsValidating(false)
     }
   }
 
-  // Drag and drop handlers
-  const handleDragOver = (e: React.DragEvent) => {
-    e.preventDefault()
-    e.stopPropagation()
-    setIsDragging(true)
-  }
-
-  const handleDragLeave = (e: React.DragEvent) => {
-    e.preventDefault()
-    e.stopPropagation()
-    setIsDragging(false)
+  const handleFileInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const f = e.target.files?.[0]
+    if (f) processFile(f)
+    e.target.value = ''
   }
 
   const handleDrop = (e: React.DragEvent) => {
     e.preventDefault()
-    e.stopPropagation()
     setIsDragging(false)
-
-    if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
-      const file = e.dataTransfer.files[0]
-      handleProcessFile(file)
-    }
+    const f = e.dataTransfer.files?.[0]
+    if (f) processFile(f)
   }
 
-  const handleFileInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files.length > 0) {
-      const file = e.target.files[0]
-      handleProcessFile(file)
-    }
-  }
-
-  // Load sample reference photo for quick testing
-  const handleLoadSamplePhoto = async () => {
-    setErrorMessage('')
-    setIsValidating(true)
-    try {
-      const sampleUrl = TRUE_LEGACY_SAMPLE_REFERENCE_IMAGE
-      const response = await fetch(sampleUrl)
-      const blob = await response.blob()
-      const sampleFile = new File([blob], 'leader-reference-sample.jpg', { type: 'image/jpeg' })
-      await handleProcessFile(sampleFile)
-    } catch {
-      setOriginalPreviewUrl(TRUE_LEGACY_SAMPLE_REFERENCE_IMAGE)
-      setOriginalFileName('leader-reference-sample.jpg')
-      setOriginalFileSize(60841)
-      setQualityPassed(true)
-      setImageDimensions({ width: 600, height: 750 })
-      setStatus('photo_uploaded')
-      notifyParent({
-        originalFileName: 'leader-reference-sample.jpg',
-        originalFileSize: 60841,
-        originalPreviewUrl: TRUE_LEGACY_SAMPLE_REFERENCE_IMAGE,
-        status: 'photo_uploaded',
-        qualityPassed: true,
-      })
-    } finally {
-      setIsValidating(false)
-    }
-  }
-
-  // Handle removing the photo
-  const handleRemovePhoto = () => {
-    if (originalPreviewUrl && originalPreviewUrl.startsWith('blob:')) {
-      URL.revokeObjectURL(originalPreviewUrl)
-    }
-    if (generatedPortraitUrl && generatedPortraitUrl.startsWith('blob:')) {
-      URL.revokeObjectURL(generatedPortraitUrl)
-    }
-
+  // ── Remove photo ──────────────────────────────────────────────────────────
+  const handleRemove = () => {
+    abortRef.current?.abort()
+    if (originalUrl.startsWith('blob:')) URL.revokeObjectURL(originalUrl)
+    if (generatedUrl.startsWith('blob:')) URL.revokeObjectURL(generatedUrl)
     setOriginalFile(null)
-    setOriginalPreviewUrl('')
-    setOriginalFileName('')
-    setOriginalFileSize(0)
-    setGeneratedPortraitUrl('')
-    setApprovedPortraitUrl('')
+    setOriginalUrl('')
+    setOriginalName('')
+    setGeneratedUrl('')
+    setApprovedUrl('')
+    setGeneratedBlob(undefined)
+    setIsApproved(false)
     setStatus('not_uploaded')
+    setUiState('upload')
     setErrorMessage('')
     setValidationNotes([])
-    setQualityPassed(false)
-    setImageDimensions(null)
-
-    if (fileInputRef.current) {
-      fileInputRef.current.value = ''
-    }
-
-    notifyParent({
-      originalFile: null,
-      originalFileName: '',
-      originalFileSize: 0,
-      originalPreviewUrl: '',
-      generatedPortraitUrl: '',
-      approvedPortraitUrl: '',
-      status: 'not_uploaded',
-      qualityPassed: false,
-      validationNotes: [],
-    })
+    setAttemptCount(0)
   }
 
-  // Direct AI Generation workflow with automatic reference attachment & auto-retry
-  const handleGenerateAIPortrait = async () => {
-    if (isGenerating || (!originalFile && !originalPreviewUrl)) return
+  // ── Generate portrait ─────────────────────────────────────────────────────
+  const handleGenerate = async () => {
+    if (isGenerating || !originalFile) return
+
     setIsGenerating(true)
     setStatus('generating')
+    setUiState('generating')
     setErrorMessage('')
-    setGenerationStage('Attaching approved True Legacy portrait references & analyzing source photo...')
+    setGenerationPercent(0)
+    setGenerationStage('Starting True Legacy Portrait Studio…')
 
-    const source = originalFile || originalPreviewUrl
     const controller = new AbortController()
-    abortControllerRef.current = controller
+    abortRef.current = controller
 
     try {
       const result = await generateLeaderPortraitAI({
-        sourceImage: source,
-        onProgress: (stage) => {
+        sourceImage: originalFile,
+        styleReferences: ACTIVE_STYLE_REFERENCES,
+        onProgress: (stage, pct) => {
           setGenerationStage(stage)
+          setGenerationPercent(pct)
+          // Track retry attempts from stage text
+          const match = stage.match(/attempt (\d+) of/)
+          if (match) setAttemptCount(parseInt(match[1]) - 1)
         },
         signal: controller.signal,
       })
 
       if (result.success && result.portraitUrl) {
-        setGeneratedPortraitUrl(result.portraitUrl)
+        if (generatedUrl.startsWith('blob:')) URL.revokeObjectURL(generatedUrl)
+        setGeneratedUrl(result.portraitUrl)
+        setGeneratedBlob(result.blob)
+        setAttemptCount(result.attemptCount)
+        setValidationNotes(result.validationNotes ?? [])
         setStatus('ready_for_review')
-        setValidationNotes(result.validationNotes || [])
-        notifyParent({
+        setUiState('review')
+        notify({
           generatedPortraitUrl: result.portraitUrl,
           status: 'ready_for_review',
           validationNotes: result.validationNotes,
+          attemptCount: result.attemptCount,
         })
       } else {
-        setStatus('generation_failed')
         setErrorMessage(
-          result.error ||
+          result.error ??
             "We couldn't create a portrait that meets the True Legacy standard from this photo. Try uploading another clear photo."
         )
+        setStatus('generation_failed')
+        setUiState('upload') // Return to upload state with error shown
+        notify({ status: 'generation_failed' })
       }
-    } catch (err: unknown) {
-      if (err instanceof Error && err.name === 'AbortError') return
-      setStatus('generation_failed')
-      setErrorMessage(
-        "We couldn't create a portrait that meets the True Legacy standard from this photo. Try uploading another clear photo."
-      )
+    } catch (err) {
+      if (err instanceof Error && err.name !== 'AbortError') {
+        setErrorMessage("Generation was interrupted. Please try again.")
+        setStatus('generation_failed')
+        setUiState('upload')
+      }
+      // AbortError — user cancelled, stay put
     } finally {
       setIsGenerating(false)
-      abortControllerRef.current = null
+      abortRef.current = null
     }
   }
 
-  // Handle uploading custom approved portrait manually if desired
-  const handleGeneratedPhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files.length > 0) {
-      const file = e.target.files[0]
-      if (generatedPortraitUrl && generatedPortraitUrl.startsWith('blob:')) {
-        URL.revokeObjectURL(generatedPortraitUrl)
-      }
-      const preview = URL.createObjectURL(file)
-      setGeneratedPortraitUrl(preview)
-      setStatus('ready_for_review')
-      notifyParent({
-        generatedPortraitUrl: preview,
-        status: 'ready_for_review',
-      })
-    }
-  }
-
-  // Approve / Use This Portrait handler
-  const handleApprovePortrait = (portraitUrlToUse: string) => {
-    setApprovedPortraitUrl(portraitUrlToUse)
-    const newStatus: LeaderPortraitStatus = 'applicant_approved'
-    setStatus(newStatus)
-    const updatedData: LeaderPortraitData = {
+  // ── Approve portrait ──────────────────────────────────────────────────────
+  const handleApprove = () => {
+    const url = generatedUrl
+    setApprovedUrl(url)
+    setIsApproved(true)
+    setStatus('applicant_approved')
+    const data: LeaderPortraitData = {
       originalFile,
-      originalFileName,
-      originalFileSize,
-      originalPreviewUrl,
-      generatedPortraitUrl,
-      approvedPortraitUrl: portraitUrlToUse,
-      promptUsed: '',
-      status: newStatus,
-      qualityPassed,
+      originalFileName: originalName,
+      originalPreviewUrl: originalUrl,
+      generatedPortraitUrl: url,
+      approvedPortraitUrl: url,
+      promptUsed: getOfficialLeaderPortraitPrompt(),
+      status: 'applicant_approved',
+      qualityPassed: true,
       validationNotes,
     }
-    notifyParent(updatedData)
-    if (onApprovePortrait) {
-      onApprovePortrait(portraitUrlToUse, updatedData)
+    notify(data)
+    onApprovePortrait?.(url, data)
+  }
+
+  // ── Download ──────────────────────────────────────────────────────────────
+  const handleDownload = () => {
+    const blob = generatedBlob
+    if (blob) {
+      downloadPortrait(blob, `true-legacy-portrait-${Date.now()}.png`)
+    } else if (generatedUrl) {
+      const a = document.createElement('a')
+      a.href = generatedUrl
+      a.download = `true-legacy-portrait-${Date.now()}.png`
+      a.click()
     }
   }
 
-  // Format file size helper
-  const formatFileSize = (bytes: number) => {
-    if (bytes === 0) return '0 B'
-    const k = 1024
-    const sizes = ['B', 'KB', 'MB', 'GB']
-    const i = Math.floor(Math.log(bytes) / Math.log(k))
-    return `${parseFloat((bytes / Math.pow(k, i)).toFixed(1))} ${sizes[i]}`
+  // ── Custom portrait upload ────────────────────────────────────────────────
+  const handleCustomUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const f = e.target.files?.[0]
+    if (!f) return
+    const url = URL.createObjectURL(f)
+    if (generatedUrl.startsWith('blob:')) URL.revokeObjectURL(generatedUrl)
+    setGeneratedBlob(undefined)
+    setGeneratedUrl(url)
+    setStatus('ready_for_review')
+    setUiState('review')
+    setIsApproved(false)
+    e.target.value = ''
   }
 
-  // Status badge mapping
-  const renderStatusBadge = () => {
-    switch (status) {
-      case 'applicant_approved':
-      case 'admin_approved':
-        return (
-          <div className="inline-flex items-center gap-1.5 self-start rounded-full border border-emerald-400/30 bg-emerald-400/10 px-3.5 py-1.5 text-xs font-bold text-emerald-300 shrink-0">
-            <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-400" />
-            <span className="whitespace-nowrap">Portrait Approved</span>
-          </div>
-        )
-      case 'ready_for_review':
-        return (
-          <div className="inline-flex items-center gap-1.5 self-start rounded-full border border-[#2997ff]/30 bg-[#2997ff]/10 px-3.5 py-1.5 text-xs font-bold text-[#2997ff] shrink-0">
-            <Sparkles className="h-4 w-4 shrink-0 text-[#2997ff]" />
-            <span className="whitespace-nowrap">Ready for Review</span>
-          </div>
-        )
-      case 'generating':
-        return (
-          <div className="inline-flex items-center gap-1.5 self-start rounded-full border border-amber-400/30 bg-amber-400/10 px-3.5 py-1.5 text-xs font-bold text-amber-300 shrink-0">
-            <Loader2 className="h-4 w-4 animate-spin shrink-0 text-amber-400" />
-            <span className="whitespace-nowrap">Generating Portrait</span>
-          </div>
-        )
-      case 'photo_uploaded':
-        return (
-          <div className="inline-flex items-center gap-1.5 self-start rounded-full border border-white/20 bg-white/10 px-3.5 py-1.5 text-xs font-bold text-white shrink-0">
-            <BadgeCheck className="h-4 w-4 shrink-0 text-[#2997ff]" />
-            <span className="whitespace-nowrap">Photo Uploaded</span>
-          </div>
-        )
-      case 'generation_failed':
-        return (
-          <div className="inline-flex items-center gap-1.5 self-start rounded-full border border-rose-400/30 bg-rose-400/10 px-3.5 py-1.5 text-xs font-bold text-rose-300 shrink-0">
-            <AlertCircle className="h-4 w-4 shrink-0 text-rose-400" />
-            <span className="whitespace-nowrap">Generation Failed</span>
-          </div>
-        )
-      default:
-        return (
-          <div className="inline-flex items-center gap-1.5 self-start rounded-full border border-white/10 bg-white/[0.04] px-3.5 py-1.5 text-xs font-medium text-[#868c98] shrink-0">
-            <Camera className="h-4 w-4 shrink-0 text-[#868c98]" />
-            <span className="whitespace-nowrap">No Photo Uploaded</span>
-          </div>
-        )
-    }
-  }
-
+  // ── RENDER ────────────────────────────────────────────────────────────────
   return (
     <section
-      className={`w-full max-w-full min-w-0 box-border overflow-x-clip rounded-[28px] sm:rounded-[32px] border border-white/10 bg-[#090d16]/95 p-4 sm:p-7 md:p-8 backdrop-blur-xl shadow-2xl ${className}`}
-      aria-labelledby="leader-portrait-title"
+      className={`w-full min-w-0 box-border overflow-x-clip rounded-3xl border border-white/10 bg-[#070b14]/95 shadow-2xl ${className}`}
+      aria-labelledby="portrait-section-title"
     >
-      {/* Section Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-white/10 pb-5 sm:pb-6 min-w-0">
+      {/* ── Header ── */}
+      <div className="flex flex-wrap items-center justify-between gap-4 border-b border-white/8 px-5 py-5 sm:px-7 sm:py-6">
         <div className="min-w-0">
-          <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-[0.2em] text-[#2997ff]">
-            <Camera className="h-4 w-4 shrink-0 text-[#2997ff]" />
-            <span className="truncate">Official Portrait Standardization</span>
+          <div className="flex items-center gap-2 text-[11px] font-black uppercase tracking-[0.18em] text-[#2997ff]">
+            <Camera className="h-3.5 w-3.5 shrink-0" />
+            <span>Official Portrait Standardization</span>
           </div>
-          <h2 id="leader-portrait-title" className="mt-2 text-xl sm:text-2xl md:text-3xl font-black text-white break-words">
+          <h2
+            id="portrait-section-title"
+            className="mt-1.5 text-xl font-black text-white sm:text-2xl"
+          >
             {title}
           </h2>
-          <p className="mt-2 text-xs sm:text-sm leading-relaxed text-[#aeb4c0] max-w-2xl">
-            {supportingCopy}
-          </p>
         </div>
 
-        {/* Dynamic Status Badge */}
-        {renderStatusBadge()}
-      </div>
-
-      {/* Explanatory Note */}
-      <div className="mt-5 min-w-0">
-        <div className="flex items-start gap-3 rounded-2xl border border-white/5 bg-white/[0.025] p-3.5 sm:p-4 text-xs leading-relaxed text-[#8f96a3] min-w-0">
-          <Info className="mt-0.5 h-4 w-4 shrink-0 text-[#2997ff]" />
-          <span className="min-w-0">
-            <strong className="text-white">Directory Quality Guarantee:</strong> {guidanceNote}
+        {/* Provider badge */}
+        <div
+          className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-[11px] font-bold shrink-0 ${
+            providerStatus.quality === 'studio'
+              ? 'border-emerald-400/25 bg-emerald-400/10 text-emerald-300'
+              : 'border-amber-400/25 bg-amber-400/10 text-amber-300'
+          }`}
+        >
+          <Zap className="h-3 w-3 shrink-0" />
+          <span className="whitespace-nowrap">
+            {providerStatus.quality === 'studio' ? 'Studio AI Active' : 'Preview Mode'}
           </span>
         </div>
       </div>
 
-      {/* Main Upload / Review Area */}
-      <div className="mt-6 min-w-0">
-        {!originalPreviewUrl ? (
-          /* ================= STEP 1: DRAG & DROP UPLOAD AREA ================= */
-          <div
-            onDragOver={handleDragOver}
-            onDragLeave={handleDragLeave}
-            onDrop={handleDrop}
-            onClick={() => fileInputRef.current?.click()}
-            className={`group relative flex flex-col items-center justify-center rounded-2xl border-2 border-dashed p-6 sm:p-10 md:p-12 text-center cursor-pointer transition-all duration-300 w-full min-w-0 box-border ${
-              isDragging
-                ? 'border-[#2997ff] bg-[#2997ff]/[0.08] shadow-lg shadow-[#2997ff]/10'
-                : 'border-white/15 bg-white/[0.02] hover:border-white/30 hover:bg-white/[0.04]'
-            }`}
-          >
-            <input
-              ref={fileInputRef}
-              type="file"
-              accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp"
-              onChange={handleFileInputChange}
-              className="hidden"
-              aria-label="Upload leader photo"
-            />
+      {/* ── Canvas area ── */}
+      <div className="p-4 sm:p-6 md:p-7">
+        {/* ===================== STATE: UPLOAD ===================== */}
+        {uiState === 'upload' && (
+          <div className="space-y-5">
+            {/* Drag & drop zone */}
+            <div
+              role="button"
+              tabIndex={0}
+              onDragOver={(e) => { e.preventDefault(); setIsDragging(true) }}
+              onDragLeave={() => setIsDragging(false)}
+              onDrop={handleDrop}
+              onClick={() => fileInputRef.current?.click()}
+              onKeyDown={(e) => e.key === 'Enter' && fileInputRef.current?.click()}
+              aria-label="Upload your photo to generate a True Legacy leader portrait"
+              className={`group relative flex flex-col items-center justify-center rounded-2xl border-2 border-dashed p-8 sm:p-12 text-center cursor-pointer select-none transition-all duration-200 ${
+                isDragging
+                  ? 'border-[#2997ff] bg-[#2997ff]/8 shadow-lg shadow-[#2997ff]/10'
+                  : originalUrl
+                  ? 'border-white/20 bg-white/[0.015] hover:border-white/30'
+                  : 'border-white/12 bg-white/[0.018] hover:border-white/25 hover:bg-white/[0.025]'
+              }`}
+            >
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/jpeg,image/png,image/webp"
+                onChange={handleFileInput}
+                className="hidden"
+              />
 
-            <div className="grid h-14 w-14 sm:h-16 sm:w-16 place-items-center rounded-2xl border border-white/10 bg-white/[0.04] text-[#2997ff] shadow-inner group-hover:scale-105 group-hover:border-[#2997ff]/40 transition-all duration-300 shrink-0">
-              <UploadCloud className="h-7 w-7 sm:h-8 sm:w-8" />
-            </div>
-
-            <h3 className="mt-4 sm:mt-5 text-base sm:text-lg font-bold text-white group-hover:text-[#2997ff] transition-colors px-2">
-              {isDragging ? 'Drop your photo here' : 'Upload Your Photo'}
-            </h3>
-
-            <p className="mt-1 text-xs text-[#868c98] px-2">
-              Supports JPG, JPEG, PNG, or WEBP up to 10 MB
-            </p>
-
-            <div className="mt-5 flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-2.5 sm:gap-3 w-full sm:w-auto px-4">
-              <button
-                type="button"
-                onClick={(e) => {
-                  e.stopPropagation()
-                  fileInputRef.current?.click()
-                }}
-                className="inline-flex min-h-[48px] sm:min-h-[52px] items-center justify-center rounded-xl border border-white/20 bg-white/10 px-6 py-2.5 text-xs font-bold text-white backdrop-blur-md transition-all hover:border-[#2997ff]/50 hover:bg-[#2997ff]/20 active:scale-[0.99]"
-              >
-                Choose Photo
-              </button>
-              <button
-                type="button"
-                onClick={(e) => {
-                  e.stopPropagation()
-                  handleLoadSamplePhoto()
-                }}
-                className="inline-flex min-h-[48px] sm:min-h-[52px] items-center justify-center rounded-xl border border-white/10 bg-transparent px-5 py-2.5 text-xs font-medium text-[#868c98] transition hover:border-white/25 hover:text-white"
-              >
-                Try sample photo
-              </button>
-            </div>
-
-            {isValidating ? (
-              <p className="mt-4 text-xs font-semibold text-[#2997ff] animate-pulse">
-                Checking photo resolution and quality…
-              </p>
-            ) : null}
-          </div>
-        ) : (
-          /* ================= STEP 2 & 3: ACTIVE PHOTO & AI GENERATION VIEW ================= */
-          <div className="space-y-6 min-w-0">
-            {/* Top File Summary Bar */}
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 rounded-2xl border border-white/10 bg-white/[0.03] p-3.5 sm:p-4 text-xs min-w-0">
-              <div className="flex items-center gap-3 min-w-0">
-                <div className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-cyan-400/10 text-[#2997ff]">
-                  <FileImage className="h-5 w-5" />
-                </div>
-                <div className="min-w-0">
-                  <p className="truncate font-bold text-white">{originalFileName || 'Uploaded Photo'}</p>
-                  <p className="text-[#868c98] truncate">
-                    {formatFileSize(originalFileSize)}
-                    {imageDimensions ? ` · ${imageDimensions.width}×${imageDimensions.height}px` : ''}
-                  </p>
-                </div>
-              </div>
-
-              <div className="flex flex-wrap items-center gap-2 min-w-0">
-                <button
-                  type="button"
-                  onClick={() => fileInputRef.current?.click()}
-                  className="inline-flex flex-1 sm:flex-initial min-h-[40px] items-center justify-center gap-1.5 rounded-lg border border-white/15 bg-white/[0.05] px-3.5 py-1.5 font-semibold text-white transition hover:border-white/30 hover:bg-white/10"
-                >
-                  <RotateCcw className="h-3.5 w-3.5 shrink-0" />
-                  <span>Replace Photo</span>
-                </button>
-                <button
-                  type="button"
-                  onClick={handleRemovePhoto}
-                  className="inline-flex min-h-[40px] items-center justify-center gap-1.5 rounded-lg border border-rose-500/20 bg-rose-500/10 px-3 py-1.5 font-semibold text-rose-300 transition hover:bg-rose-500/20"
-                >
-                  <Trash2 className="h-3.5 w-3.5 shrink-0" />
-                  <span>Remove</span>
-                </button>
-                <input
-                  ref={fileInputRef}
-                  type="file"
-                  accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp"
-                  onChange={handleFileInputChange}
-                  className="hidden"
-                  aria-label="Replace photo"
-                />
-              </div>
-            </div>
-
-            {/* Side-by-Side on Desktop / Vertical Stack on Mobile */}
-            <div className="grid gap-6 md:grid-cols-2 min-w-0 w-full">
-              {/* 1. Left Card: Original Photo */}
-              <div className="flex flex-col rounded-2xl border border-white/10 bg-white/[0.02] p-4 min-w-0 w-full shadow-lg">
-                <div className="flex flex-wrap items-center justify-between gap-2 pb-3 border-b border-white/10">
-                  <span className="text-xs font-bold uppercase tracking-wider text-[#aeb4c0]">
-                    Original Photo
-                  </span>
-                  <span className="text-[11px] text-[#747b88] font-medium">Source identity</span>
-                </div>
-
-                <div className="relative mt-3 aspect-[4/5] w-full max-w-full overflow-hidden rounded-xl bg-black/60 border border-white/5 select-none">
-                  <img
-                    src={originalPreviewUrl}
-                    alt="Uploaded candidate source"
-                    className="block h-full w-full object-cover object-top"
-                  />
-                  <div className="absolute bottom-2 left-2 rounded-md bg-black/75 px-2.5 py-1 text-[10px] font-bold text-white/90 backdrop-blur-md">
-                    Original Source
+              {originalUrl ? (
+                /* ── Photo already loaded — show preview + actions ── */
+                <div className="w-full flex flex-col sm:flex-row items-center gap-5 sm:gap-6 text-left" onClick={(e) => e.stopPropagation()}>
+                  <div className="shrink-0 aspect-[4/5] w-28 sm:w-32 rounded-xl overflow-hidden border border-white/12 bg-black/60 shadow-lg">
+                    <img
+                      src={originalUrl}
+                      alt="Uploaded source"
+                      className="h-full w-full object-cover object-top"
+                    />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-xs font-bold text-[#aeb4c0]">Photo ready to generate</p>
+                    <p className="mt-0.5 text-sm font-black text-white truncate">{originalName}</p>
+                    <div className="mt-3 flex flex-wrap gap-2">
+                      <button
+                        type="button"
+                        onClick={() => fileInputRef.current?.click()}
+                        className="inline-flex items-center gap-1.5 rounded-lg border border-white/15 bg-white/[0.05] px-3.5 py-2 text-xs font-bold text-white hover:bg-white/10 transition"
+                      >
+                        <RotateCcw className="h-3.5 w-3.5 shrink-0" />
+                        Replace
+                      </button>
+                      <button
+                        type="button"
+                        onClick={handleRemove}
+                        className="inline-flex items-center gap-1.5 rounded-lg border border-rose-400/20 bg-rose-400/8 px-3.5 py-2 text-xs font-bold text-rose-300 hover:bg-rose-400/15 transition"
+                      >
+                        <Trash2 className="h-3.5 w-3.5 shrink-0" />
+                        Remove
+                      </button>
+                    </div>
                   </div>
                 </div>
+              ) : (
+                /* ── Empty upload zone ── */
+                <>
+                  <div className="grid h-14 w-14 sm:h-16 sm:w-16 place-items-center rounded-2xl border border-white/8 bg-white/[0.04] text-[#2997ff] group-hover:scale-[1.04] transition-transform shrink-0">
+                    <UploadCloud className="h-7 w-7 sm:h-8 sm:w-8" />
+                  </div>
+                  <h3 className="mt-4 text-base sm:text-lg font-black text-white group-hover:text-[#2997ff] transition-colors">
+                    {isDragging ? 'Drop your photo here' : 'Upload Your Photo'}
+                  </h3>
+                  <p className="mt-1 max-w-xs text-xs text-[#778090]">
+                    Drag & drop or click to choose. JPG, PNG, or WEBP up to 10 MB.
+                  </p>
+                  <button
+                    type="button"
+                    onClick={(e) => { e.stopPropagation(); fileInputRef.current?.click() }}
+                    className="mt-5 inline-flex min-h-[48px] items-center justify-center gap-2 rounded-xl border border-white/20 bg-white/8 px-7 py-2.5 text-sm font-bold text-white hover:border-[#2997ff]/50 hover:bg-[#2997ff]/15 transition"
+                  >
+                    Choose Photo
+                  </button>
+                  {isValidating && (
+                    <p className="mt-4 text-xs text-[#2997ff] animate-pulse">
+                      Checking photo quality…
+                    </p>
+                  )}
+                </>
+              )}
+            </div>
+
+            {/* Quality checklist (shown after photo is loaded) */}
+            {originalUrl && (
+              <div className="rounded-2xl border border-white/6 bg-black/25 p-4 sm:p-5">
+                <p className="text-[11px] font-black uppercase tracking-wider text-[#6b7480] mb-3">
+                  Portrait Requirements
+                </p>
+                <div className="grid sm:grid-cols-2 gap-2 text-xs text-[#8d939e]">
+                  {[
+                    'Face clearly visible & natural expression',
+                    'Single person in the photo',
+                    'Photo taken in reasonable lighting',
+                    'Clothing you want to keep in the portrait',
+                  ].map((item) => (
+                    <div key={item} className="flex items-center gap-2 min-w-0">
+                      <CheckCircle2 className="h-3.5 w-3.5 text-emerald-400 shrink-0" />
+                      <span>{item}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Error display */}
+            {errorMessage && (
+              <div
+                role="alert"
+                className="flex items-start gap-3 rounded-xl border border-rose-300/18 bg-rose-300/[0.07] p-4 text-xs leading-relaxed text-rose-100"
+              >
+                <AlertCircle className="mt-0.5 h-4 w-4 shrink-0 text-rose-400" />
+                <span>{errorMessage}</span>
+              </div>
+            )}
+
+            {/* Generate button */}
+            {originalUrl && (
+              <button
+                type="button"
+                disabled={isGenerating || !originalFile}
+                onClick={handleGenerate}
+                className="inline-flex min-h-[56px] w-full items-center justify-center gap-2.5 rounded-xl bg-cyan-400 px-6 py-3.5 text-sm font-black text-slate-950 transition hover:bg-cyan-300 active:scale-[0.99] disabled:opacity-50 shadow-lg shadow-cyan-950/20 whitespace-nowrap"
+              >
+                <Sparkles className="h-4.5 w-4.5 shrink-0" />
+                <span>Generate My Leader Portrait</span>
+              </button>
+            )}
+          </div>
+        )}
+
+        {/* ===================== STATE: GENERATING ===================== */}
+        {uiState === 'generating' && (
+          <div className="flex flex-col items-center justify-center py-12 sm:py-16 text-center space-y-6">
+            {/* Spinner */}
+            <div className="relative h-20 w-20 shrink-0">
+              <div className="absolute inset-0 rounded-full border-2 border-[#2997ff]/15 border-t-[#2997ff] animate-spin" />
+              <div className="absolute inset-3 rounded-full border border-[#2997ff]/8 border-t-[#2997ff]/40 animate-spin [animation-duration:1.5s] [animation-direction:reverse]" />
+              <div className="absolute inset-0 flex items-center justify-center">
+                <Sparkles className="h-7 w-7 text-[#2997ff] animate-pulse" />
+              </div>
+            </div>
+
+            <div>
+              <p className="text-lg font-black text-white">Generating your portrait…</p>
+              <p className="mt-1.5 max-w-sm text-xs leading-relaxed text-[#778090]">
+                The AI is calibrating your portrait to the official True Legacy studio standard.
+                This usually takes 20–40 seconds.
+              </p>
+            </div>
+
+            {/* Progress bar */}
+            <div className="w-full max-w-sm space-y-2">
+              <div className="relative h-1.5 w-full overflow-hidden rounded-full bg-white/8">
+                <div
+                  className="absolute left-0 top-0 h-full rounded-full bg-[#2997ff] transition-all duration-700"
+                  style={{ width: `${Math.max(8, generationPercent)}%` }}
+                />
+              </div>
+              {generationStage && (
+                <p className="text-[11px] text-[#5d6673] leading-relaxed">{generationStage}</p>
+              )}
+              {attemptCount > 0 && (
+                <p className="text-[11px] font-semibold text-amber-400">
+                  Auto-refining result (attempt {attemptCount + 1} of 3)…
+                </p>
+              )}
+            </div>
+
+            <button
+              type="button"
+              onClick={() => {
+                abortRef.current?.abort()
+                setIsGenerating(false)
+                setUiState('upload')
+                setStatus(originalFile ? 'photo_uploaded' : 'not_uploaded')
+              }}
+              className="text-xs text-[#5d6673] hover:text-white underline transition"
+            >
+              Cancel
+            </button>
+          </div>
+        )}
+
+        {/* ===================== STATE: REVIEW ===================== */}
+        {uiState === 'review' && (
+          <div className="space-y-5">
+            {/* Side-by-side portrait comparison */}
+            <div className="grid gap-4 sm:grid-cols-2">
+              {/* Left: Original photo */}
+              <div className="flex flex-col min-w-0">
+                <div className="flex items-center justify-between pb-2.5 border-b border-white/8">
+                  <span className="text-[11px] font-black uppercase tracking-wider text-[#6b7480]">
+                    Your Photo
+                  </span>
+                  <span className="text-[11px] text-[#4d5560]">Identity source</span>
+                </div>
+                <div className="mt-3 aspect-[4/5] w-full overflow-hidden rounded-xl border border-white/8 bg-black/60">
+                  <img
+                    src={originalUrl}
+                    alt="Original uploaded photo"
+                    className="h-full w-full object-cover object-top"
+                  />
+                </div>
               </div>
 
-              {/* 2. Right Card: True Legacy Portrait */}
-              <div className="flex flex-col rounded-2xl border border-white/10 bg-white/[0.02] p-4 min-w-0 w-full shadow-lg">
-                <div className="flex flex-wrap items-center justify-between gap-2 pb-3 border-b border-white/10 min-w-0">
-                  <div className="flex items-center gap-1.5 min-w-0">
-                    <Layers className="h-3.5 w-3.5 shrink-0 text-[#2997ff]" />
-                    <span className="text-xs font-bold uppercase tracking-wider text-white truncate">
+              {/* Right: Generated portrait */}
+              <div className="flex flex-col min-w-0">
+                <div className="flex items-center justify-between pb-2.5 border-b border-white/8">
+                  <div className="flex items-center gap-1.5">
+                    <span className="text-[11px] font-black uppercase tracking-wider text-white">
                       True Legacy Portrait
                     </span>
                   </div>
-                  <span className="text-[11px] text-[#2997ff] font-semibold shrink-0">
-                    {approvedPortraitUrl
-                      ? 'Portrait Approved'
-                      : generatedPortraitUrl
-                      ? 'Ready for Review'
-                      : '4:5 Studio Standard'}
-                  </span>
+                  {isApproved ? (
+                    <span className="inline-flex items-center gap-1 text-[11px] font-bold text-emerald-400">
+                      <CheckCircle2 className="h-3.5 w-3.5" />
+                      Approved
+                    </span>
+                  ) : (
+                    <span className="text-[11px] text-[#2997ff] font-semibold">Ready for review</span>
+                  )}
                 </div>
 
-                {/* 4:5 Portrait Output Studio Canvas */}
-                <div className="relative mt-3 aspect-[4/5] w-full max-w-full overflow-hidden rounded-xl border border-white/15 select-none shadow-xl">
-                  {/* Layer 1: Deep Neutral Charcoal / Slate Base */}
-                  <div className="absolute inset-0 bg-gradient-to-b from-[#141824] via-[#0e121d] to-[#06080e]" />
-
-                  {/* Layer 2: Soft Diffused Smoky Halo */}
-                  <div
-                    className="absolute inset-0 pointer-events-none opacity-90"
-                    style={{
-                      background:
-                        'radial-gradient(circle at 50% 32%, rgba(255, 255, 255, 0.16) 0%, rgba(210, 225, 245, 0.08) 25%, rgba(41, 151, 255, 0.03) 50%, transparent 75%)',
-                    }}
-                  />
-
-                  {/* Layer 3: Subtle Studio Edge Vignette */}
+                <div className="relative mt-3 aspect-[4/5] w-full overflow-hidden rounded-xl border border-white/12 bg-black shadow-xl">
+                  {/* Studio background layers */}
+                  <div className="absolute inset-0 bg-gradient-to-b from-[#181c27] via-[#10141e] to-[#070910]" />
                   <div
                     className="absolute inset-0 pointer-events-none"
                     style={{
                       background:
-                        'radial-gradient(ellipse at 50% 50%, transparent 45%, rgba(3, 5, 10, 0.70) 100%)',
+                        'radial-gradient(ellipse at 50% 28%, rgba(240,242,248,0.16) 0%, rgba(200,215,235,0.07) 30%, transparent 65%)',
                     }}
                   />
 
-                  {/* Layer 4: Display Generated/Approved or Loading / Placeholder State */}
-                  {isGenerating ? (
-                    <div className="absolute inset-0 flex flex-col items-center justify-center p-4 sm:p-6 text-center bg-black/75 backdrop-blur-sm z-10 min-w-0">
-                      <div className="relative flex items-center justify-center shrink-0">
-                        <div className="h-14 w-14 sm:h-16 sm:w-16 rounded-full border-2 border-[#2997ff]/20 border-t-[#2997ff] animate-spin" />
-                        <Sparkles className="absolute h-6 w-6 text-[#2997ff] animate-pulse" />
-                      </div>
-                      <p className="mt-4 text-sm font-bold text-white">Generating your portrait...</p>
-                      <p className="mt-1 text-xs text-[#aeb4c0]">Applying True Legacy studio standards.</p>
-                      {generationStage ? (
-                        <p className="mt-3 text-[11px] text-[#2997ff] max-w-[240px] leading-relaxed break-words">
-                          {generationStage}
-                        </p>
-                      ) : null}
-                    </div>
-                  ) : approvedPortraitUrl || generatedPortraitUrl ? (
-                    <img
-                      src={approvedPortraitUrl || generatedPortraitUrl}
-                      alt="True Legacy Standardized Leader Portrait"
-                      className="block absolute inset-0 h-full w-full object-cover"
-                      style={{ objectPosition: 'center top' }}
-                    />
-                  ) : (
-                    <div className="absolute inset-0 flex flex-col items-center justify-center p-4 sm:p-6 text-center min-w-0">
-                      <div className="relative h-24 w-20 sm:h-28 sm:w-24 overflow-hidden rounded-xl border border-dashed border-[#2997ff]/50 p-0.5 bg-black/40">
-                        <img
-                          src="/leaders/standardized/alex-gonzalez.png"
-                          alt="Style Reference"
-                          className="h-full w-full rounded-lg object-cover object-top opacity-50"
-                        />
-                      </div>
-                      <p className="mt-3 text-xs font-bold text-white">
-                        Standard 4:5 Studio Portrait
-                      </p>
-                      <p className="mt-1 text-[11px] leading-relaxed text-[#8f96a3] max-w-[220px]">
-                        Charcoal studio gradient, smoky halo, upper-torso crop & balanced lighting.
-                      </p>
+                  {/* Portrait image */}
+                  <img
+                    src={generatedUrl}
+                    alt="True Legacy standardized leader portrait"
+                    className="relative z-10 h-full w-full object-cover object-top"
+                  />
+
+                  {/* Directory standard badge */}
+                  <div className="absolute top-2.5 left-2.5 z-20 inline-flex items-center gap-1 rounded-full border border-white/15 bg-black/80 px-2 py-1 text-[9px] font-bold uppercase tracking-wider text-[#2997ff] backdrop-blur-md">
+                    <BadgeCheck className="h-3 w-3" />
+                    Directory Standard
+                  </div>
+
+                  {/* Validation check badges */}
+                  {validationNotes.length > 0 && (
+                    <div className="absolute bottom-2.5 left-2.5 right-2.5 z-20 flex flex-wrap gap-1">
+                      {validationNotes.slice(0, 2).map((note) => (
+                        <span
+                          key={note}
+                          className="inline-flex items-center gap-1 rounded-md bg-black/80 px-1.5 py-0.5 text-[9px] font-bold text-emerald-300 backdrop-blur-md"
+                        >
+                          <CheckCircle2 className="h-2.5 w-2.5" />
+                          {note}
+                        </span>
+                      ))}
                     </div>
                   )}
 
-                  {/* Layer 5: Verified Directory Standard Badge */}
-                  <span className="absolute left-2.5 top-2.5 sm:left-3 sm:top-3 inline-flex items-center gap-1 rounded-full border border-white/20 bg-black/80 px-2 sm:px-2.5 py-0.5 sm:py-1 text-[9px] font-bold uppercase tracking-wider text-[#2997ff] backdrop-blur-md shadow-lg">
-                    <BadgeCheck className="h-3 w-3 sm:h-3.5 sm:w-3.5 text-[#2997ff]" />
-                    <span>Directory Standard</span>
-                  </span>
-
-                  {/* Bottom Vignette */}
-                  <div className="absolute inset-x-0 bottom-0 h-12 bg-gradient-to-t from-[#06080e]/90 via-[#06080e]/30 to-transparent pointer-events-none" />
-                </div>
-
-                {/* ================= PROPORTIONATE POLISHED ACTION BUTTON AREA ================= */}
-                <div className="mt-4 space-y-3 min-w-0">
-                  {generatedPortraitUrl && !approvedPortraitUrl ? (
-                    <div className="flex flex-col space-y-2.5 min-w-0 w-full">
-                      {/* Primary Full-Width CTA: Use This Portrait */}
-                      <button
-                        type="button"
-                        onClick={() => handleApprovePortrait(generatedPortraitUrl)}
-                        className="inline-flex min-h-[52px] w-full items-center justify-center gap-2.5 rounded-xl bg-cyan-400 px-6 py-3 text-sm font-black text-slate-950 transition hover:bg-cyan-300 active:scale-[0.99] shadow-lg shadow-cyan-950/20 whitespace-nowrap"
-                      >
-                        <UserCheck className="h-4 w-4 shrink-0" />
-                        <span className="whitespace-nowrap">Use This Portrait</span>
-                      </button>
-
-                      {/* Secondary Action: Generate Again */}
-                      <button
-                        type="button"
-                        disabled={isGenerating}
-                        onClick={handleGenerateAIPortrait}
-                        className="inline-flex min-h-[48px] w-full items-center justify-center gap-2 rounded-xl border border-white/15 bg-white/[0.04] px-5 py-2.5 text-xs sm:text-sm font-bold text-white hover:bg-white/10 active:scale-[0.99] transition whitespace-nowrap"
-                      >
-                        <RefreshCw className="h-4 w-4 shrink-0 text-[#2997ff]" />
-                        <span className="whitespace-nowrap">Generate Again</span>
-                      </button>
-                    </div>
-                  ) : null}
-
-                  {approvedPortraitUrl ? (
-                    <div className="rounded-xl border border-emerald-400/30 bg-emerald-400/10 p-3 text-xs font-bold text-emerald-300 min-w-0">
-                      <div className="flex flex-wrap items-center justify-between gap-2">
-                        <span className="flex items-center gap-1.5">
-                          <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-400" />
-                          <span>Approved as Official Leader Portrait</span>
-                        </span>
-                        <button
-                          type="button"
-                          onClick={() => {
-                            setApprovedPortraitUrl('')
-                            setStatus('ready_for_review')
-                            notifyParent({ approvedPortraitUrl: '', status: 'ready_for_review' })
-                          }}
-                          className="text-[11px] underline text-emerald-300/80 hover:text-white"
-                        >
-                          Change
-                        </button>
+                  {/* Approved overlay */}
+                  {isApproved && (
+                    <div className="absolute inset-0 z-30 flex items-center justify-center rounded-xl border-2 border-emerald-400/50 bg-emerald-400/[0.06]">
+                      <div className="rounded-full border border-emerald-400/30 bg-black/80 px-4 py-2 text-xs font-black text-emerald-300 backdrop-blur-md flex items-center gap-2">
+                        <ShieldCheck className="h-4 w-4" />
+                        Portrait Approved
                       </div>
                     </div>
-                  ) : null}
-
-                  {/* Tertiary Action Links */}
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pt-1 text-xs">
-                    <button
-                      type="button"
-                      onClick={() => fileInputRef.current?.click()}
-                      className="text-[#8f96a3] hover:text-white underline text-left"
-                    >
-                      Upload Different Photo
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => generatedFileInputRef.current?.click()}
-                      className="text-[#2997ff] hover:underline text-left sm:text-right"
-                    >
-                      Upload Custom Approved Portrait
-                    </button>
-                    <input
-                      ref={generatedFileInputRef}
-                      type="file"
-                      accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp"
-                      onChange={handleGeneratedPhotoUpload}
-                      className="hidden"
-                      aria-label="Upload custom portrait"
-                    />
-                  </div>
+                  )}
                 </div>
               </div>
             </div>
 
-            {/* Primary Action Button: Generate My Leader Portrait */}
-            {!generatedPortraitUrl ? (
-              <div className="pt-2 min-w-0">
+            {/* ── Action buttons ── */}
+            <div className="space-y-2.5 pt-1">
+              {!isApproved ? (
+                <>
+                  {/* Primary: Use This Portrait */}
+                  <button
+                    type="button"
+                    onClick={handleApprove}
+                    className="inline-flex min-h-[52px] w-full items-center justify-center gap-2.5 rounded-xl bg-cyan-400 px-6 py-3 text-sm font-black text-slate-950 transition hover:bg-cyan-300 active:scale-[0.99] shadow-lg shadow-cyan-950/15 whitespace-nowrap"
+                  >
+                    <UserCheck className="h-4.5 w-4.5 shrink-0" />
+                    <span className="whitespace-nowrap">Use This Portrait</span>
+                  </button>
+
+                  {/* Secondary: Generate Again */}
+                  <button
+                    type="button"
+                    disabled={isGenerating}
+                    onClick={handleGenerate}
+                    className="inline-flex min-h-[48px] w-full items-center justify-center gap-2 rounded-xl border border-white/15 bg-white/[0.03] px-5 py-2.5 text-sm font-bold text-white hover:bg-white/8 active:scale-[0.99] transition whitespace-nowrap"
+                  >
+                    <RefreshCw className="h-4 w-4 shrink-0 text-[#2997ff]" />
+                    <span className="whitespace-nowrap">Generate Again</span>
+                  </button>
+                </>
+              ) : (
+                <>
+                  {/* Approved state: Download */}
+                  <button
+                    type="button"
+                    onClick={handleDownload}
+                    className="inline-flex min-h-[52px] w-full items-center justify-center gap-2.5 rounded-xl bg-emerald-400 px-6 py-3 text-sm font-black text-slate-950 transition hover:bg-emerald-300 active:scale-[0.99] whitespace-nowrap"
+                  >
+                    <Download className="h-4.5 w-4.5 shrink-0" />
+                    <span className="whitespace-nowrap">Download Your Portrait</span>
+                  </button>
+
+                  {/* Change mind */}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setIsApproved(false)
+                      setApprovedUrl('')
+                      setStatus('ready_for_review')
+                    }}
+                    className="inline-flex min-h-[44px] w-full items-center justify-center gap-2 rounded-xl border border-white/12 bg-transparent px-5 py-2.5 text-xs font-bold text-[#8d939e] hover:text-white hover:border-white/25 transition whitespace-nowrap"
+                  >
+                    Review Portrait Again
+                  </button>
+                </>
+              )}
+
+              {/* Tertiary text links */}
+              <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-1 pt-0.5">
                 <button
                   type="button"
-                  disabled={isGenerating}
-                  onClick={handleGenerateAIPortrait}
-                  className="inline-flex min-h-[52px] w-full items-center justify-center gap-2.5 rounded-xl bg-cyan-400 px-6 py-3 font-black text-sm text-slate-950 transition hover:bg-cyan-300 active:scale-[0.99] disabled:opacity-60 shadow-lg shadow-cyan-950/20 whitespace-nowrap"
+                  onClick={() => fileInputRef.current?.click()}
+                  className="text-xs text-[#6b7480] hover:text-white underline transition text-left"
                 >
-                  {isGenerating ? (
-                    <>
-                      <Loader2 className="h-5 w-5 animate-spin shrink-0 text-slate-950" />
-                      <span className="truncate">Generating your portrait...</span>
-                    </>
-                  ) : (
-                    <>
-                      <Sparkles className="h-4 w-4 shrink-0" />
-                      <span>Generate My Leader Portrait</span>
-                    </>
-                  )}
+                  Upload Different Photo
+                </button>
+                <button
+                  type="button"
+                  onClick={() => customUploadRef.current?.click()}
+                  className="text-xs text-[#2997ff] hover:underline transition text-right"
+                >
+                  Upload Custom Portrait
                 </button>
               </div>
-            ) : null}
+            </div>
+
+            {/* Provider disclosure (canvas mode only) */}
+            {providerStatus.quality === 'preview' && (
+              <div className="rounded-xl border border-amber-400/15 bg-amber-400/[0.05] p-3.5 text-xs leading-relaxed text-amber-200/80">
+                <strong className="text-amber-300">Preview mode:</strong> No AI API is configured.
+                This portrait was generated using in-browser compositing and may not fully match the
+                True Legacy studio standard. To enable studio-quality generation, add{' '}
+                <code className="font-mono text-amber-300">VITE_OPENAI_API_KEY</code> to your
+                environment.
+              </div>
+            )}
           </div>
         )}
-
-        {/* Validation / Error Banner */}
-        {errorMessage ? (
-          <div
-            role="alert"
-            className="mt-4 flex items-start gap-3 rounded-xl border border-rose-300/20 bg-rose-300/[0.08] p-3.5 sm:p-4 text-xs leading-relaxed text-rose-100 min-w-0"
-          >
-            <AlertCircle className="mt-0.5 h-4 w-4 shrink-0 text-rose-300" />
-            <span className="break-words min-w-0">{errorMessage}</span>
-          </div>
-        ) : null}
       </div>
+
+      {/* Hidden file inputs */}
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept="image/jpeg,image/png,image/webp"
+        onChange={handleFileInput}
+        className="hidden"
+        aria-label="Upload new photo"
+      />
+      <input
+        ref={customUploadRef}
+        type="file"
+        accept="image/jpeg,image/png,image/webp"
+        onChange={handleCustomUpload}
+        className="hidden"
+        aria-label="Upload custom approved portrait"
+      />
     </section>
   )
 }
