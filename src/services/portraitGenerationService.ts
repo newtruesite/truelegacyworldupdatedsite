@@ -1,8 +1,11 @@
 /**
  * True Legacy Official AI Leader Portrait Generation Service.
  * Centralized service for transforming source photos into standardized 4:5 studio leader portraits.
+ * Features in-browser neural background segmentation & True Legacy luxury studio compositing,
+ * as well as direct cloud AI image API connectivity.
  */
 
+import { removeBackground } from '@imgly/background-removal'
 import {
   TRUE_LEGACY_LEADER_PORTRAIT_PROMPT,
   type LeaderPortraitStatus,
@@ -47,19 +50,19 @@ export async function generateLeaderPortraitAI(
     if (onProgress) onProgress(stage, percent)
   }
 
-  report('Analyzing facial structure and source composition...', 15)
+  report('Analyzing facial structure and subject boundaries...', 15)
 
   if (signal?.aborted) {
     throw new Error('Generation aborted by user.')
   }
 
-  // Check if an external AI image generation endpoint is configured
+  // 1. Check if an external Cloud AI endpoint is configured (e.g. Gemini, Imagen, Fal, Replicate)
   const apiEndpoint = import.meta.env.VITE_AI_IMAGE_ENDPOINT as string | undefined
   const apiKey = import.meta.env.VITE_AI_IMAGE_API_KEY as string | undefined
 
   if (apiEndpoint && apiKey) {
     try {
-      report('Connecting to True Legacy AI Studio engine...', 35)
+      report('Connecting to True Legacy Cloud AI Studio engine...', 30)
 
       let sourceBase64 = ''
       if (typeof sourceImage === 'string') {
@@ -68,7 +71,7 @@ export async function generateLeaderPortraitAI(
         sourceBase64 = await fileToBase64(sourceImage)
       }
 
-      report('Rendering standardized studio lighting and background...', 60)
+      report('Rendering standardized studio lighting and background with AI...', 60)
 
       const response = await fetch(apiEndpoint, {
         method: 'POST',
@@ -104,29 +107,44 @@ export async function generateLeaderPortraitAI(
         }
       }
     } catch (err) {
-      console.warn('Direct AI API failed or not reachable, using studio rendering pipeline:', err)
+      console.warn('Direct Cloud AI API failed, using neural in-browser portrait segmentation:', err)
     }
   }
 
-  // Built-in True Legacy Studio Rendering Pipeline
-  // Creates high-resolution 4:5 vertical portrait with authentic brand studio layers
+  // 2. In-Browser Neural AI Segmentation + True Legacy Studio Rendering Engine
+  // Automatically isolates the subject, strips away room background, and composites
+  // the person onto the True Legacy deep charcoal studio backdrop with backlight & vignette.
   try {
-    report('Calibrating upper-torso 4:5 composition...', 40)
-    await delay(350, signal)
+    report('Running AI subject segmentation & background removal...', 35)
 
-    report('Rendering True Legacy charcoal & slate neutral studio backdrop...', 65)
-    await delay(400, signal)
+    let cutoutBlob: Blob | null = null
+    try {
+      cutoutBlob = await removeBackground(sourceImage, {
+        progress: (_key: string, current: number, total: number) => {
+          if (total > 0) {
+            const pct = Math.min(80, Math.round(35 + (current / total) * 45))
+            report('Removing background clutter & preserving identity...', pct)
+          }
+        },
+      })
+    } catch (segErr) {
+      console.warn('Neural background removal encountered error, fallback to direct canvas:', segErr)
+    }
 
-    report('Applying diffused studio lighting and subtle vignette...', 85)
+    report('Rendering True Legacy charcoal & slate neutral studio backdrop...', 85)
+    await delay(150, signal)
+
+    report('Applying diffused studio lighting, backlight, and vignette...', 92)
+    const imageToRender = cutoutBlob || sourceImage
     const processedBlob = await renderStudioCanvasPortrait(
-      sourceImage,
+      imageToRender,
       targetWidth,
       targetHeight
     )
     const resultUrl = URL.createObjectURL(processedBlob)
 
-    await delay(250, signal)
-    report('Portrait generation complete.', 100)
+    await delay(100, signal)
+    report('Leader portrait generation complete.', 100)
 
     return {
       success: true,
@@ -194,7 +212,7 @@ async function renderStudioCanvasPortrait(
         ctx.fillStyle = baseGradient
         ctx.fillRect(0, 0, targetWidth, targetHeight)
 
-        // Layer 2: Soft Diffused Radial Studio Backlight
+        // Layer 2: Soft Diffused Radial Studio Backlight behind subject
         const centerX = targetWidth * 0.5
         const centerY = targetHeight * 0.38
         const radius = targetWidth * 0.65
@@ -206,8 +224,8 @@ async function renderStudioCanvasPortrait(
           centerY,
           radius
         )
-        radialGradient.addColorStop(0, 'rgba(255, 255, 255, 0.14)')
-        radialGradient.addColorStop(0.35, 'rgba(41, 151, 255, 0.07)')
+        radialGradient.addColorStop(0, 'rgba(255, 255, 255, 0.16)')
+        radialGradient.addColorStop(0.35, 'rgba(41, 151, 255, 0.08)')
         radialGradient.addColorStop(0.7, 'rgba(15, 23, 42, 0.02)')
         radialGradient.addColorStop(1, 'rgba(0, 0, 0, 0)')
         ctx.fillStyle = radialGradient
@@ -217,15 +235,13 @@ async function renderStudioCanvasPortrait(
         const srcW = img.naturalWidth || img.width
         const srcH = img.naturalHeight || img.height
 
-        // Calculate scale to fill comfortably with space above head
         const scale = Math.max(targetWidth / srcW, targetHeight / srcH) * 1.02
         const drawW = srcW * scale
         const drawH = srcH * scale
         const drawX = (targetWidth - drawW) / 2
-        // Position face towards upper middle
         const drawY = Math.min(0, (targetHeight - drawH) * 0.28)
 
-        // Draw image onto canvas
+        // Draw segmented subject onto canvas
         ctx.drawImage(img, drawX, drawY, drawW, drawH)
 
         // Layer 4: Subtle editorial studio lighting & depth overlay
