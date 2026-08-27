@@ -24,20 +24,18 @@ import {
   EyeOff,
   ExternalLink,
   Info,
-  Settings2,
   ShieldCheck,
   Sparkles,
   Zap,
 } from 'lucide-react'
 import {
   TRUE_LEGACY_PORTRAIT_REFERENCES,
-  ACTIVE_STYLE_REFERENCES,
   TRUE_LEGACY_LEADER_PORTRAIT_PROMPT,
   MAX_AUTO_RETRY_ATTEMPTS,
   PORTRAIT_TOLERANCES,
   type PortraitStyleReference,
 } from '@/config/portraitStandard'
-import { getProviderStatus } from '@/services/portraitGenerationService'
+import { getProviderStatus, getProviderStatusAsync } from '@/services/portraitGenerationService'
 import { Link } from 'react-router-dom'
 
 const STORAGE_KEY = 'tl-portrait-admin-active-ids'
@@ -66,10 +64,17 @@ export function PortraitReferenceAdmin() {
   const [isPromptExpanded, setIsPromptExpanded] = useState(false)
   const [isTolerancesExpanded, setIsTolerancesExpanded] = useState(false)
 
-  const providerStatus = getProviderStatus()
+  const [providerStatus, setProviderStatus] = useState(getProviderStatus())
+
+  useEffect(() => {
+    let active = true
+    getProviderStatusAsync().then((status) => {
+      if (active) setProviderStatus(status)
+    })
+    return () => { active = false }
+  }, [])
 
   const activeRefs = TRUE_LEGACY_PORTRAIT_REFERENCES.filter((r) => activeIds.has(r.id))
-  const inactiveRefs = TRUE_LEGACY_PORTRAIT_REFERENCES.filter((r) => !activeIds.has(r.id))
 
   const toggleRef = (ref: PortraitStyleReference) => {
     setActiveIds((prev) => {

@@ -533,6 +533,14 @@ export function getProviderStatus(): { provider: PortraitProviderCapability; lab
   return { provider: 'canvas_fallback', label: 'Browser Preview (no AI key)', quality: 'preview' }
 }
 
+/** Resolves the provider status after checking the current authenticated session. */
+export async function getProviderStatusAsync(): Promise<{ provider: PortraitProviderCapability; label: string; quality: 'studio' | 'preview' }> {
+  const accessToken = await getPortraitAccessToken()
+  return accessToken
+    ? { provider: 'openai_image_edit', label: 'Secure OpenAI Studio', quality: 'studio' }
+    : { provider: 'canvas_fallback', label: 'Sign in for Studio AI', quality: 'preview' }
+}
+
 /** Downloads a portrait blob as a PNG file */
 export function downloadPortrait(blob: Blob, filename = 'true-legacy-portrait.png'): void {
   const url = URL.createObjectURL(blob)

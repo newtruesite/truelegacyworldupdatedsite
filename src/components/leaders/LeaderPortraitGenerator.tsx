@@ -17,7 +17,6 @@ import {
   AlertCircle,
   CheckCircle2,
   Camera,
-  Loader2,
   RefreshCw,
   UserCheck,
   Download,
@@ -38,6 +37,7 @@ import {
   generateLeaderPortraitAI,
   downloadPortrait,
   getProviderStatus,
+  getProviderStatusAsync,
 } from '@/services/portraitGenerationService'
 
 export interface LeaderPortraitGeneratorProps {
@@ -91,7 +91,15 @@ export function LeaderPortraitGenerator({
   const fileInputRef = useRef<HTMLInputElement>(null)
   const customUploadRef = useRef<HTMLInputElement>(null)
   const abortRef = useRef<AbortController | null>(null)
-  const providerStatus = getProviderStatus()
+  const [providerStatus, setProviderStatus] = useState(getProviderStatus())
+
+  useEffect(() => {
+    let active = true
+    getProviderStatusAsync().then((status) => {
+      if (active) setProviderStatus(status)
+    })
+    return () => { active = false }
+  }, [])
 
   // ── Cleanup ───────────────────────────────────────────────────────────────
   useEffect(() => {
