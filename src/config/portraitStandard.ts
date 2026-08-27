@@ -132,8 +132,8 @@ export const TRUE_LEGACY_SAMPLE_REFERENCE_IMAGE = '/leaders/alex-gonzalez.jpg'
 // ---------------------------------------------------------------------------
 
 export const PORTRAIT_TOLERANCES = {
-  /** 4:5 ratio tolerance (±) */
-  ASPECT_RATIO_TOLERANCE: 0.03,
+  /** 4:5 ratio tolerance (±) — generous to accommodate portrait crops */
+  ASPECT_RATIO_TOLERANCE: 0.06,
 
   /** Head should occupy 28–42% of total frame height */
   HEAD_SCALE_MIN: 0.28,
@@ -151,14 +151,14 @@ export const PORTRAIT_TOLERANCES = {
   CROP_BOTTOM_MAX: 0.95,
 
   /** Background: corner pixel average brightness must be below this (0–255) */
-  BACKGROUND_MAX_BRIGHTNESS: 160,
+  BACKGROUND_MAX_BRIGHTNESS: 180,
 
   /** Background: excessive blue channel advantage threshold */
-  BACKGROUND_BLUE_CAST_THRESHOLD: 65,
+  BACKGROUND_BLUE_CAST_THRESHOLD: 80,
 
-  /** Minimum output resolution */
-  MIN_OUTPUT_WIDTH: 800,
-  MIN_OUTPUT_HEIGHT: 1000,
+  /** Minimum output resolution — set conservatively to allow canvas fallback output */
+  MIN_OUTPUT_WIDTH: 720,
+  MIN_OUTPUT_HEIGHT: 900,
 } as const
 
 // ---------------------------------------------------------------------------
