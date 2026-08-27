@@ -15,7 +15,6 @@
 import {
   TRUE_LEGACY_LEADER_PORTRAIT_PROMPT,
   ACTIVE_STYLE_REFERENCES,
-  PORTRAIT_ASPECT_RATIO,
   MAX_AUTO_RETRY_ATTEMPTS,
   AUTO_RETRY_FAILURE_REASONS,
   validateGeneratedPortrait,
@@ -23,6 +22,7 @@ import {
   type QualityValidationResult,
   type PortraitStyleReference,
 } from '@/config/portraitStandard'
+import { crmSupabase } from '@/integrations/supabase/client'
 
 // ---------------------------------------------------------------------------
 // PUBLIC TYPES
@@ -96,14 +96,14 @@ export async function generateLeaderPortraitAI(
     }
 
     // Determine provider
-    const openaiApiKey = import.meta.env.VITE_OPENAI_API_KEY as string | undefined
+    const accessToken = await getPortraitAccessToken()
 
-    if (openaiApiKey) {
+    if (accessToken) {
       lastResult = await generateWithOpenAI({
         sourceImage,
         styleReferences,
         prompt,
-        apiKey: openaiApiKey,
+        accessToken,
         attempt,
         maxAttempts: MAX_AUTO_RETRY_ATTEMPTS,
         onProgress: (stage, pct) => report(stage, basePercent + pct * 0.85),
@@ -182,7 +182,7 @@ interface OpenAIGenerateArgs {
   sourceImage: File | Blob | string
   styleReferences: PortraitStyleReference[]
   prompt: string
-  apiKey: string
+  accessToken: string
   attempt: number
   maxAttempts: number
   onProgress: (stage: string, pct: number) => void
@@ -190,7 +190,7 @@ interface OpenAIGenerateArgs {
 }
 
 async function generateWithOpenAI(args: OpenAIGenerateArgs): Promise<PortraitGenerationResult> {
-  const { sourceImage, prompt, apiKey, attempt, maxAttempts, onProgress, signal } = args
+  const { sourceImage, prompt, accessToken, attempt, maxAttempts, onProgress, signal } = args
 
   onProgress(
     attempt === 1
@@ -206,35 +206,17 @@ async function generateWithOpenAI(args: OpenAIGenerateArgs): Promise<PortraitGen
 
     onProgress('Uploading identity source and applying studio standard…', 35)
 
-    // Build multipart form for gpt-image-1 edits endpoint
+    // Send only the identity source to the authenticated server endpoint.
+    // The server owns the prompt, reference library, model settings, and provider key.
     const form = new FormData()
-    form.append('model', 'gpt-image-1')
-    form.append('image[]', sourceFile, 'portrait-source.png')
-
-    // Attach up to 3 active style reference images as additional inputs
-    // OpenAI image edit supports multiple image[] inputs
-    const refsToAttach = ACTIVE_STYLE_REFERENCES.slice(0, 3)
-    for (const ref of refsToAttach) {
-      try {
-        const refBlob = await fetchUrlAsBlob(ref.url)
-        const refFile = new File([refBlob], `${ref.id}.png`, { type: 'image/png' })
-        form.append('image[]', refFile, `${ref.id}.png`)
-      } catch {
-        console.warn(`Could not attach style reference ${ref.name} — skipping.`)
-      }
-    }
-
-    form.append('prompt', prompt)
-    form.append('n', '1')
-    form.append('size', PORTRAIT_ASPECT_RATIO) // '1024x1536' — portrait orientation
-    form.append('quality', 'high')
+    form.append('source', sourceFile, 'portrait-source.png')
 
     onProgress('AI is reconstructing your studio portrait…', 55)
 
-    const response = await fetch('https://api.openai.com/v1/images/edits', {
+    const response = await fetch('/api/portrait', {
       method: 'POST',
       headers: {
-        Authorization: `Bearer ${apiKey}`,
+        Authorization: `Bearer ${accessToken}`,
       },
       body: form,
       signal,
@@ -245,7 +227,7 @@ async function generateWithOpenAI(args: OpenAIGenerateArgs): Promise<PortraitGen
       let userMessage = 'The AI portrait service is temporarily unavailable. Please try again shortly.'
 
       if (response.status === 401) {
-        userMessage = 'OpenAI API key is invalid or expired. Please check your VITE_OPENAI_API_KEY setting.'
+        userMessage = 'Your session expired. Sign in again before generating a portrait.'
       } else if (response.status === 429) {
         userMessage = 'AI service rate limit reached. Please wait a moment and try again.'
       } else if (response.status === 400) {
@@ -395,7 +377,7 @@ async function renderStudioCanvas(source: File | Blob | string): Promise<Blob> {
   const W = 800
   const H = 1000 // exactly 4:5 — passes MIN_OUTPUT_WIDTH 720 and MIN_OUTPUT_HEIGHT 900
 
-  return new Promise(async (resolve, reject) => {
+  return new Promise((resolve, reject) => {
     try {
       const img = new Image()
       img.crossOrigin = 'anonymous'
@@ -442,8 +424,6 @@ async function renderStudioCanvas(source: File | Blob | string): Promise<Blob> {
         const srcRatio = sw / sh
 
         let scale: number
-        let drawX: number
-        let drawY: number
 
         if (srcRatio < 0.8) {
           // Portrait-shaped — scale to width
@@ -455,9 +435,8 @@ async function renderStudioCanvas(source: File | Blob | string): Promise<Blob> {
 
         const drawW = sw * scale
         const drawH = sh * scale
-        drawX = (W - drawW) / 2
-        drawY = Math.max(H * 0.05, (H - drawH) * 0.18)
-
+        const drawX = (W - drawW) / 2
+        const drawY = Math.max(H * 0.05, (H - drawH) * 0.18)
         ctx.drawImage(img, drawX, drawY, drawW, drawH)
 
         // Layer 4: Bottom fade gradient
@@ -535,9 +514,15 @@ function delay(ms: number, signal?: AbortSignal): Promise<void> {
   })
 }
 
+async function getPortraitAccessToken(): Promise<string | null> {
+  if (!crmSupabase) return null
+  const { data } = await crmSupabase.auth.getSession()
+  return data.session?.access_token ?? null
+}
+
 /** Returns whether an OpenAI API key is configured */
 export function isOpenAIConfigured(): boolean {
-  return Boolean(import.meta.env.VITE_OPENAI_API_KEY)
+  return false
 }
 
 /** Returns a human-readable description of the active provider and quality level */

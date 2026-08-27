@@ -74,6 +74,7 @@ const LANGUAGE_NAMES: Record<string, Record<string, string>> = {
 export default function DistributorsPage() {
   const { locale } = useLocaleContext();
   const [distributors, setDistributors] = useState<Distributor[]>(FALLBACK_DISTRIBUTORS);
+  const [isLoadingDistributors, setIsLoadingDistributors] = useState(true);
   const [query, setQuery] = useState("");
   const [region, setRegion] = useState("all");
   const [language, setLanguage] = useState("all");
@@ -95,6 +96,9 @@ export default function DistributorsPage() {
           instagram: profile.instagram_url || undefined,
         })),
       );
+      setIsLoadingDistributors(false);
+    }).catch(() => {
+      if (active) setIsLoadingDistributors(false);
     });
     return () => {
       active = false;
@@ -257,7 +261,7 @@ export default function DistributorsPage() {
                 </select>
               </div>
               <div className="mt-4 flex items-center justify-between gap-4 text-xs text-[#cccccc]">
-                <p><strong className="text-white">{filtered.length}</strong> {copy.showing}</p>
+                <p>{isLoadingDistributors ? <span className="text-[#86868b]">Loading verified leaders…</span> : <><strong className="text-white">{filtered.length}</strong> {copy.showing}</>}</p>
                 {(query || region !== "all" || language !== "all") && <button type="button" onClick={resetFilters} className="font-semibold text-[#2997ff] hover:text-[#2997ff]">{copy.clear}</button>}
               </div>
             </div>
