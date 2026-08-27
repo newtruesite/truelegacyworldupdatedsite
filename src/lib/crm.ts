@@ -76,6 +76,35 @@ export type CrmLeadNote = {
   created_at: string
 }
 
+export type LeaderApplicationStatus = 'pending' | 'reviewing' | 'approved' | 'declined'
+
+export type LeaderApplication = {
+  id: string
+  full_name: string
+  email: string
+  phone: string | null
+  country: string
+  enagic_distributor_id: string
+  current_rank: string
+  years_active: number
+  active_team_size: number
+  sponsor_name: string
+  instagram_url: string | null
+  regions: string[]
+  languages: string[]
+  leadership_summary: string
+  verified_distributor: boolean
+  true_legacy_team_member: boolean
+  information_accurate: boolean
+  consent: boolean
+  status: LeaderApplicationStatus
+  review_notes: string | null
+  reviewed_by: string | null
+  reviewed_at: string | null
+  submitted_at: string
+  updated_at: string
+}
+
 const FALLBACK_DISTRIBUTORS: PublicDistributor[] = [
   {
     id: 'preview-mehdi',
@@ -303,6 +332,31 @@ export async function addLeadNote(leadId: string, body: string) {
   if (!crmSupabase) throw new Error('CRM_NOT_CONFIGURED')
   const { error } = await crmSupabase.rpc('crm_add_lead_note', { p_lead_id: leadId, p_body: body })
   if (error) throw error
+}
+
+export async function getLeaderApplications(): Promise<LeaderApplication[]> {
+  if (!crmSupabase) return []
+  const { data, error } = await crmSupabase
+    .from('crm_leader_applications')
+    .select('*')
+    .order('submitted_at', { ascending: false })
+  if (error) throw error
+  return (data || []) as LeaderApplication[]
+}
+
+export async function reviewLeaderApplication(
+  applicationId: string,
+  status: LeaderApplicationStatus,
+  reviewNotes?: string
+): Promise<LeaderApplication> {
+  if (!crmSupabase) throw new Error('CRM_NOT_CONFIGURED')
+  const { data, error } = await crmSupabase.rpc('crm_review_leader_application', {
+    p_application_id: applicationId,
+    p_status: status,
+    p_review_notes: reviewNotes ?? null,
+  })
+  if (error) throw error
+  return data as LeaderApplication
 }
 
 export { crmConfigured, crmSupabase }
