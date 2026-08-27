@@ -200,16 +200,19 @@ async function generateWithOpenAI(args: OpenAIGenerateArgs): Promise<PortraitGen
   )
 
   try {
-    // Convert source to PNG Blob for the OpenAI API
+    // Preserve the source MIME type. Relabeling JPEG/WebP bytes as PNG causes
+    // the image-edit endpoint to reject an otherwise valid portrait.
     const sourceBlob = await toBlob(sourceImage)
-    const sourceFile = new File([sourceBlob], 'portrait-source.png', { type: 'image/png' })
+    const sourceType = sourceBlob.type || 'image/png'
+    const sourceExtension = sourceType === 'image/jpeg' ? 'jpg' : sourceType === 'image/webp' ? 'webp' : 'png'
+    const sourceFile = new File([sourceBlob], `portrait-source.${sourceExtension}`, { type: sourceType })
 
     onProgress('Uploading identity source and applying studio standard…', 35)
 
     // Send only the identity source to the authenticated server endpoint.
     // The server owns the prompt, reference library, model settings, and provider key.
     const form = new FormData()
-    form.append('source', sourceFile, 'portrait-source.png')
+    form.append('source', sourceFile, sourceFile.name)
 
     onProgress('AI is reconstructing your studio portrait…', 55)
 

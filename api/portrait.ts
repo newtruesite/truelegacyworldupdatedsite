@@ -39,7 +39,8 @@ export default async function handler(request: Request) {
 
   const form = new FormData()
   form.append('model', 'gpt-image-1')
-  form.append('image[]', source, 'portrait-source.png')
+  const sourceExtension = source.type === 'image/jpeg' ? 'jpg' : source.type === 'image/webp' ? 'webp' : 'png'
+  form.append('image[]', source, `portrait-source.${sourceExtension}`)
 
   const origin = new URL(request.url).origin
   for (const reference of ACTIVE_STYLE_REFERENCES.slice(0, 3)) {
@@ -62,6 +63,24 @@ export default async function handler(request: Request) {
   })
 
   const body = await openaiResponse.text()
+  if (!openaiResponse.ok) {
+    let errorCode = 'unknown_error'
+    let errorMessage = body.slice(0, 500)
+    try {
+      const parsed = JSON.parse(body) as { error?: { code?: string; message?: string } }
+      errorCode = parsed.error?.code || errorCode
+      errorMessage = parsed.error?.message || errorMessage
+    } catch {
+      // Keep the bounded response text for diagnostics.
+    }
+    console.error('OpenAI portrait edit rejected', {
+      status: openaiResponse.status,
+      code: errorCode,
+      message: errorMessage,
+      sourceType: source.type,
+      sourceSize: source.size,
+    })
+  }
   return new Response(body, {
     status: openaiResponse.status,
     headers: {
