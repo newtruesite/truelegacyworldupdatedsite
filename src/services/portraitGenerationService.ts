@@ -227,9 +227,18 @@ async function generateWithOpenAI(args: OpenAIGenerateArgs): Promise<PortraitGen
 
     if (!response.ok) {
       const errorText = await response.text().catch(() => response.statusText)
+      let errorCode = ''
+      try {
+        const parsed = JSON.parse(errorText) as { error?: { code?: string } }
+        errorCode = parsed.error?.code || ''
+      } catch {
+        // Use the status-based fallback below when the response is not JSON.
+      }
       let userMessage = 'The AI portrait service is temporarily unavailable. Please try again shortly.'
 
-      if (response.status === 401) {
+      if (errorCode === 'billing_hard_limit_reached' || errorCode === 'insufficient_quota') {
+        userMessage = 'AI portrait generation is paused because the OpenAI API billing limit has been reached. An administrator must add API credit or raise the project spending limit.'
+      } else if (response.status === 401) {
         userMessage = 'Your session expired. Sign in again before generating a portrait.'
       } else if (response.status === 429) {
         userMessage = 'AI service rate limit reached. Please wait a moment and try again.'
