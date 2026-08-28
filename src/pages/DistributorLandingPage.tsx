@@ -3,6 +3,7 @@ import { Navbar } from '@/components/layout/Navbar'
 import { SEO } from '@/components/SEO'
 import { YouTubeEmbed } from '@/components/ui/YouTubeEmbed'
 import { DuoLandingPage } from '@/components/duo/DuoLandingPage'
+import { BusinessLandingPage } from '@/components/business/BusinessLandingPage'
 import { crmSupabase, getPublicDistributors, getLeaderPortrait } from '@/lib/crm'
 import type { PublicDistributor } from '@/lib/crm'
 import { useLocaleContext } from '@/contexts/LocaleContext'
@@ -159,6 +160,10 @@ export default function DistributorLandingPage() {
     return <DuoLandingPage profile={profile} distributorSlug={slug} />
   }
 
+  if (variant === 'business') {
+    return <BusinessLandingPage profile={profile} distributorSlug={slug} />
+  }
+
   const leaderPhoto = profile?.avatar_url || (profile?.slug && getLeaderPortrait(profile.slug, LEADER_PORTRAITS[profile.slug])) || '/logos/tl-square-white.png'
   const Icon = copy?.icon || Sparkles
   const applyUrl = `/apply?ref=${profile?.referral_code || slug}&interest=${copy?.interest || 'duo'}&source=${variant}`
@@ -168,7 +173,7 @@ export default function DistributorLandingPage() {
 
   return <div className="page-wrapper bg-black text-white">
     <SEO
-      title={`${profile?.display_name || 'True Legacy'} | ${variant === 'business' ? 'Business Presentation' : variant === 'events' ? 'Weekly Events' : 'Training'}`}
+      title={`${profile?.display_name || 'True Legacy'} | ${variant === 'events' ? 'Weekly Events' : 'Training'}`}
       description={copy?.subheadline || ''}
       image={leaderPhoto}
     />
@@ -253,8 +258,6 @@ export default function DistributorLandingPage() {
         <div><p className="text-xs font-bold uppercase tracking-[0.24em] text-[#2997ff]">Why {profile.display_name} shared this</p><h2 className="mt-3 text-3xl font-black">A personal introduction—not a generic advertisement.</h2><div className="mt-6 whitespace-pre-line leading-7 text-[#cccccc]">{profile.bio}</div></div>
         <div className="grid gap-3 sm:grid-cols-2">{BENEFITS[variant].map(item => <div key={item} className="flex gap-3 rounded-2xl border border-white/10 bg-white/[0.04] p-5 text-sm text-slate-200"><Check className="mt-0.5 h-5 w-5 shrink-0 text-[#2997ff]" />{item}</div>)}</div>
       </div></section>}
-
-      {variant === 'business' && <section className="border-y border-white/10 bg-black px-4 py-16 sm:px-6 md:py-24"><div className="mx-auto grid max-w-6xl gap-10 lg:grid-cols-[1.1fr_0.9fr] lg:items-center"><YouTubeEmbed url={locale === 'es' ? "https://youtu.be/t1OtNA4p8y4" : "https://youtu.be/lB5fW55DmaI?si=HzPbgiwUup9u5UN-"} title="True Legacy Duo business presentation" /><div><p className="text-xs font-bold uppercase tracking-[0.24em] text-[#2997ff]">Business through education</p><h2 className="mt-3 text-3xl font-black">Share products. Develop people. Duplicate a clear process.</h2><p className="mt-5 leading-7 text-[#cccccc]">True Legacy supports independent distributors with product education, presentations, mentoring, and CRM-based referral attribution. This is an independent business opportunity—not employment or guaranteed income.</p><Link to={applyUrl} className="mt-7 inline-flex items-center gap-2 rounded-xl bg-cyan-500 px-6 py-3 font-bold hover:bg-cyan-400">Explore with {profile?.display_name}<ArrowRight className="h-5 w-5" /></Link></div></div></section>}
 
       {variant === 'training' && <section className="border-y border-white/10 bg-black px-4 py-16 sm:px-6 md:py-24"><div className="mx-auto max-w-6xl"><div className="grid gap-8 md:grid-cols-3">{[['Product mastery','Build confidence with structured product and presentation education.'],['Leadership systems','Learn prospecting, follow-up, communication, media, and duplication.'],['Global community','Join weekly calls and learn alongside leaders across featured markets.']].map(([title,text],i)=><article key={title} className="rounded-3xl border border-white/10 bg-white/[0.04] p-7"><div className="mb-5 flex h-11 w-11 items-center justify-center rounded-xl bg-cyan-400/10 text-[#2997ff]">{i===0?<PlayCircle />:i===1?<BookOpen />:<ShieldCheck />}</div><h3 className="text-xl font-bold">{title}</h3><p className="mt-3 text-sm leading-6 text-[#cccccc]">{text}</p></article>)}</div><div className="mt-10 flex flex-col items-center rounded-3xl border border-white/20 bg-cyan-400/[0.06] p-8 text-center"><h2 className="text-3xl font-black">Preview the system. Join through your distributor.</h2><p className="mt-4 max-w-2xl text-[#cccccc]">Training content remains protected by the current team access code. Submit your interest through {profile?.display_name} to learn about access and team support.</p><div className="mt-7 flex flex-col gap-3 sm:flex-row"><Link to={applyUrl} className="rounded-xl bg-cyan-500 px-6 py-3 font-bold hover:bg-cyan-400">Request training information</Link><Link to="/training" className="rounded-xl border border-white/15 px-6 py-3 font-bold hover:bg-white/5">Training login</Link></div></div></div></section>}
 

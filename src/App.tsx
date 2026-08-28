@@ -10,6 +10,7 @@ import DistributorsPage from "@/pages/DistributorsPage";
 import DistributorProfilePage from "@/pages/DistributorProfilePage";
 import DistributorLandingPage from "@/pages/DistributorLandingPage";
 import { DuoLandingPage } from "@/components/duo/DuoLandingPage";
+import { BusinessLandingPage } from "@/components/business/BusinessLandingPage";
 import EmGuardePage from "@/pages/EmGuardePage";
 import EventsPage from "@/pages/EventsPage";
 import EventsHubPage from "@/pages/EventsHubPage";
@@ -138,6 +139,14 @@ function AnimatedRoutes() {
             element={
               <PageTransitionWrapper>
                 <DuoLandingPage distributorSlug="mehdi-cohen" />
+              </PageTransitionWrapper>
+            }
+          />
+          <Route
+            path="/business"
+            element={
+              <PageTransitionWrapper>
+                <BusinessLandingPage distributorSlug="mehdi-cohen" />
               </PageTransitionWrapper>
             }
           />
