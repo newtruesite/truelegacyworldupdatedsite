@@ -23,7 +23,7 @@ BEGIN
         WHEN slug = 'jesse-schexnayder' THEN 'jesse@hotshotzpromo.com'
         WHEN slug = 'magaly-cardona' THEN 'magyc14@hotmail.com'
         WHEN slug = 'mehdi-cohen' THEN 'mehdicohen1@proton.me'
-        WHEN slug = 'ming-way-sia' THEN 'mingwaysia@gmail.com'
+        WHEN slug = 'ming-way-sia' THEN 'elle26@gmail.com'
         WHEN slug = 'ryan-pool' THEN 'ryanpool9@yahoo.com'
         WHEN slug = 'simon-loh' THEN 'symenloh@gmail.com'
         WHEN slug = 'veronica-calafat' THEN 'verocalafat@yahoo.es'

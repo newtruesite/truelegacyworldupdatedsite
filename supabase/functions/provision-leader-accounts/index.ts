@@ -12,7 +12,7 @@ export const leadersList = [
   { slug: 'jesse-schexnayder', name: 'Jesse Schexnayder', email: 'jesse@hotshotzpromo.com', pass: 'Legacy@Jesse2026!' },
   { slug: 'magaly-cardona', name: 'Magaly Cardona', email: 'magyc14@hotmail.com', pass: 'Legacy@Magaly2026!' },
   { slug: 'mehdi-cohen', name: 'Mehdi Cohen', email: 'mehdicohen1@proton.me', pass: 'Legacy@Mehdi2026!' },
-  { slug: 'ming-way-sia', name: 'Ming-Way Sia', email: 'mingwaysia@gmail.com', pass: 'Legacy@Ming2026!' },
+  { slug: 'ming-way-sia', name: 'Ming-Way Sia', email: 'elle26@gmail.com', pass: 'Legacy@Ming2026!' },
   { slug: 'ryan-pool', name: 'Ryan Pool Sr', email: 'ryanpool9@yahoo.com', pass: 'Legacy@Ryan2026!' },
   { slug: 'simon-loh', name: 'Simon Loh', email: 'symenloh@gmail.com', pass: 'Legacy@Simon2026!' },
   { slug: 'veronica-calafat', name: 'Veronica Calafat', email: 'verocalafat@yahoo.es', pass: 'Legacy@Veronica2026!' },
