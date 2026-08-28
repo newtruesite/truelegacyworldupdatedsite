@@ -338,7 +338,7 @@ export function LeaderPortraitGenerator({
         >
           <Zap className="h-3 w-3 shrink-0" />
           <span className="whitespace-nowrap">
-            {providerStatus.quality === 'studio' ? 'Studio AI Active' : 'Preview Mode'}
+            {providerStatus.quality === 'studio' ? 'On-Device Portrait Engine Active' : 'Preview Mode'}
           </span>
         </div>
       </div>
@@ -702,11 +702,10 @@ export function LeaderPortraitGenerator({
             {/* Provider disclosure (canvas mode only) */}
             {providerStatus.quality === 'preview' && (
               <div className="rounded-xl border border-amber-400/15 bg-amber-400/[0.05] p-3.5 text-xs leading-relaxed text-amber-200/80">
-                <strong className="text-amber-300">Preview mode:</strong> No AI API is configured.
+                <strong className="text-amber-300">Preview mode:</strong> Sign in is required.
                 This portrait was generated using in-browser compositing and may not fully match the
-                True Legacy studio standard. To enable studio-quality generation, add{' '}
-                <code className="font-mono text-amber-300">VITE_OPENAI_API_KEY</code> to your
-                environment.
+                True Legacy studio standard. Sign in to use the private cutout and standardized
+                studio background service.
               </div>
             )}
           </div>

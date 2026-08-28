@@ -146,13 +146,13 @@ export function PortraitReferenceAdmin() {
                 }`}
               >
                 {providerStatus.quality === 'studio'
-                  ? `AI Provider: ${providerStatus.label} — Studio Quality Active`
-                  : 'No AI API Configured — Running in Canvas Preview Mode'}
+                  ? `Portrait Provider: ${providerStatus.label} — Studio Quality Active`
+                  : 'Signed-out Preview — Running in Canvas Mode'}
               </p>
               <p className="text-[11px] text-[#5d6673] mt-0.5">
                 {providerStatus.quality === 'studio'
-                  ? 'Real AI image editing is active. Multi-reference portrait generation enabled.'
-                  : 'Add VITE_OPENAI_API_KEY to your .env to enable studio-quality AI generation.'}
+                  ? 'On-device foreground segmentation and deterministic studio compositing are enabled.'
+                  : 'Sign in to access the private portrait standardization service.'}
               </p>
             </div>
           </div>

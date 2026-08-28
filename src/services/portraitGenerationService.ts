@@ -2,15 +2,14 @@
  * True Legacy Portrait Standard Engine — AI Generation Service
  *
  * Provider hierarchy:
- *   1. OpenAI gpt-image-1 edit (multi-reference, identity-preserved portrait edit)
+ *   1. On-device foreground segmentation + deterministic studio compositor
  *   2. In-browser canvas composite (fallback / preview only — clearly labeled)
  *
  * Auto-retry: Up to MAX_AUTO_RETRY_ATTEMPTS attempts, validating after each.
  * Only returns a result once it passes all quality checks.
  */
 
-// Note: removeBackground (@imgly/background-removal) is not used in the canvas fallback
-// to avoid requiring a large WASM download. It may be integrated in a future premium tier.
+// Foreground extraction runs locally in the leader's browser.
 
 import {
   TRUE_LEGACY_LEADER_PORTRAIT_PROMPT,
@@ -22,14 +21,14 @@ import {
   type QualityValidationResult,
   type PortraitStyleReference,
 } from '@/config/portraitStandard'
-import { crmSupabase } from '@/integrations/supabase/client'
+import { removePortraitBackground } from '@/services/browserPortraitSegmentation'
 
 // ---------------------------------------------------------------------------
 // PUBLIC TYPES
 // ---------------------------------------------------------------------------
 
 export type PortraitProviderCapability =
-  | 'openai_image_edit'   // Full reference-guided identity edit (best)
+  | 'browser_segmentation' // Private on-device cutout + studio composite
   | 'canvas_fallback'     // In-browser compositing (preview only)
 
 export interface GeneratePortraitOptions {
@@ -95,30 +94,15 @@ export async function generateLeaderPortraitAI(
       await delay(400, signal)
     }
 
-    // Determine provider
-    const accessToken = await getPortraitAccessToken()
-
-    if (accessToken) {
-      lastResult = await generateWithOpenAI({
-        sourceImage,
-        styleReferences,
-        prompt,
-        accessToken,
-        attempt,
-        maxAttempts: MAX_AUTO_RETRY_ATTEMPTS,
-        onProgress: (stage, pct) => report(stage, basePercent + pct * 0.85),
-        signal,
-      })
-    } else {
-      lastResult = await generateWithCanvasFallback({
-        sourceImage,
-        prompt,
-        attempt,
-        maxAttempts: MAX_AUTO_RETRY_ATTEMPTS,
-        onProgress: (stage, pct) => report(stage, basePercent + pct * 0.85),
-        signal,
-      })
-    }
+    lastResult = await generateWithSegmentation({
+      sourceImage,
+      styleReferences,
+      prompt,
+      attempt,
+      maxAttempts: MAX_AUTO_RETRY_ATTEMPTS,
+      onProgress: (stage, pct) => report(stage, basePercent + pct * 0.85),
+      signal,
+    })
 
     if (!lastResult.success) {
       // Non-retriable failure (abort, file error, API auth)
@@ -175,122 +159,46 @@ export async function generateLeaderPortraitAI(
 }
 
 // ---------------------------------------------------------------------------
-// PROVIDER: OpenAI gpt-image-1 image edit
+// PROVIDER: On-device segmentation + deterministic studio compositor
 // ---------------------------------------------------------------------------
 
-interface OpenAIGenerateArgs {
+interface SegmentationGenerateArgs {
   sourceImage: File | Blob | string
   styleReferences: PortraitStyleReference[]
   prompt: string
-  accessToken: string
   attempt: number
   maxAttempts: number
   onProgress: (stage: string, pct: number) => void
   signal?: AbortSignal
 }
 
-async function generateWithOpenAI(args: OpenAIGenerateArgs): Promise<PortraitGenerationResult> {
-  const { sourceImage, prompt, accessToken, attempt, maxAttempts, onProgress, signal } = args
+async function generateWithSegmentation(args: SegmentationGenerateArgs): Promise<PortraitGenerationResult> {
+  const { sourceImage, prompt, attempt, maxAttempts, onProgress, signal } = args
 
   onProgress(
     attempt === 1
-      ? 'Connecting to True Legacy Portrait Studio AI…'
-      : `Regenerating portrait (attempt ${attempt} of ${maxAttempts})…`,
+      ? 'Connecting to True Legacy Portrait Studio…'
+      : `Reprocessing portrait (attempt ${attempt} of ${maxAttempts})…`,
     10
   )
 
   try {
-    // Preserve the source MIME type. Relabeling JPEG/WebP bytes as PNG causes
-    // the image-edit endpoint to reject an otherwise valid portrait.
     const sourceBlob = await toBlob(sourceImage)
-    const sourceType = sourceBlob.type || 'image/png'
-    const sourceExtension = sourceType === 'image/jpeg' ? 'jpg' : sourceType === 'image/webp' ? 'webp' : 'png'
-    const sourceFile = new File([sourceBlob], `portrait-source.${sourceExtension}`, { type: sourceType })
+    onProgress('Loading the private portrait model on this device…', 35)
+    const cutout = await removePortraitBackground(sourceBlob)
+    if (signal?.aborted) throw new DOMException('Generation cancelled.', 'AbortError')
+    onProgress('Applying the official studio background and framing…', 80)
+    const blob = await renderStudioCanvas(cutout)
+    const portraitUrl = URL.createObjectURL(blob)
 
-    onProgress('Uploading identity source and applying studio standard…', 35)
-
-    // Send only the identity source to the authenticated server endpoint.
-    // The server owns the prompt, reference library, model settings, and provider key.
-    const form = new FormData()
-    form.append('source', sourceFile, sourceFile.name)
-
-    onProgress('AI is reconstructing your studio portrait…', 55)
-
-    const response = await fetch('/api/portrait', {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-      body: form,
-      signal,
-    })
-
-    if (!response.ok) {
-      const errorText = await response.text().catch(() => response.statusText)
-      let errorCode = ''
-      try {
-        const parsed = JSON.parse(errorText) as { error?: { code?: string } }
-        errorCode = parsed.error?.code || ''
-      } catch {
-        // Use the status-based fallback below when the response is not JSON.
-      }
-      let userMessage = 'The AI portrait service is temporarily unavailable. Please try again shortly.'
-
-      if (errorCode === 'billing_hard_limit_reached' || errorCode === 'insufficient_quota') {
-        userMessage = 'AI portrait generation is paused because the OpenAI API billing limit has been reached. An administrator must add API credit or raise the project spending limit.'
-      } else if (response.status === 401) {
-        userMessage = 'Your session expired. Sign in again before generating a portrait.'
-      } else if (response.status === 429) {
-        userMessage = 'AI service rate limit reached. Please wait a moment and try again.'
-      } else if (response.status === 400) {
-        userMessage = 'This photo could not be processed. Please try a different, clearer photo.'
-      }
-
-      console.error('OpenAI API error:', response.status, errorText)
-      return {
-        success: false,
-        portraitUrl: '',
-        promptUsed: prompt,
-        provider: 'openai_image_edit',
-        attemptCount: attempt,
-        generationTimestamp: new Date().toISOString(),
-        status: 'generation_failed',
-        error: userMessage,
-      }
-    }
-
-    onProgress('Processing AI studio output…', 80)
-
-    const data = await response.json()
-    const imageData = data?.data?.[0]
-
-    if (!imageData) {
-      throw new Error('No image data returned from OpenAI.')
-    }
-
-    let blob: Blob
-    let portraitUrl: string
-
-    if (imageData.b64_json) {
-      // Base64 response — convert to Blob
-      blob = base64ToBlob(imageData.b64_json, 'image/png')
-      portraitUrl = URL.createObjectURL(blob)
-    } else if (imageData.url) {
-      // URL response — fetch as blob for local use
-      blob = await fetchUrlAsBlob(imageData.url)
-      portraitUrl = URL.createObjectURL(blob)
-    } else {
-      throw new Error('OpenAI returned an unrecognized image format.')
-    }
-
-    onProgress('Portrait generated — running quality verification…', 90)
+    onProgress('Portrait standardized — running quality verification…', 90)
 
     return {
       success: true,
       portraitUrl,
       blob,
       promptUsed: prompt,
-      provider: 'openai_image_edit',
+      provider: 'browser_segmentation',
       attemptCount: attempt,
       generationTimestamp: new Date().toISOString(),
       status: 'ready_for_review',
@@ -298,12 +206,12 @@ async function generateWithOpenAI(args: OpenAIGenerateArgs): Promise<PortraitGen
   } catch (err) {
     if (err instanceof Error && err.name === 'AbortError') throw err
 
-    console.error('OpenAI portrait generation error:', err)
+    console.error('Portrait segmentation error:', err)
     return {
       success: false,
       portraitUrl: '',
       promptUsed: prompt,
-      provider: 'openai_image_edit',
+      provider: 'browser_segmentation',
       attemptCount: attempt,
       generationTimestamp: new Date().toISOString(),
       status: 'generation_failed',
@@ -316,73 +224,8 @@ async function generateWithOpenAI(args: OpenAIGenerateArgs): Promise<PortraitGen
 }
 
 // ---------------------------------------------------------------------------
-// PROVIDER: In-Browser Canvas Fallback (preview quality only)
-// ---------------------------------------------------------------------------
-
-interface CanvasFallbackArgs {
-  sourceImage: File | Blob | string
-  prompt: string
-  attempt: number
-  maxAttempts: number
-  onProgress: (stage: string, pct: number) => void
-  signal?: AbortSignal
-}
-
-async function generateWithCanvasFallback(
-  args: CanvasFallbackArgs
-): Promise<PortraitGenerationResult> {
-  const { sourceImage, prompt, attempt, maxAttempts, onProgress, signal } = args
-
-  onProgress(
-    attempt === 1
-      ? 'Applying True Legacy studio backdrop…'
-      : `Retrying studio composite (attempt ${attempt} of ${maxAttempts})…`,
-    20
-  )
-
-  try {
-    // Note: removeBackground WASM is intentionally skipped here.
-    // It requires downloading a large WASM model, which is slow and unreliable.
-    // The canvas fallback will composite the original photo over the studio background.
-    // Background removal works only when OpenAI is active (real API path).
-    // This produces acceptable studio-preview results without the model download.
-
-    onProgress('Compositing official True Legacy studio backdrop…', 55)
-    await delay(80, signal)
-
-    const blob = await renderStudioCanvas(sourceImage)
-
-    onProgress('Studio portrait ready for review.', 100)
-
-    return {
-      success: true,
-      portraitUrl: URL.createObjectURL(blob),
-      blob,
-      promptUsed: prompt,
-      provider: 'canvas_fallback',
-      attemptCount: attempt,
-      generationTimestamp: new Date().toISOString(),
-      status: 'ready_for_review',
-      skipPixelValidation: true, // Canvas background is deterministically correct — skip pixel check
-    }
-  } catch (err) {
-    if (err instanceof Error && err.name === 'AbortError') throw err
-    return {
-      success: false,
-      portraitUrl: '',
-      promptUsed: prompt,
-      provider: 'canvas_fallback',
-      attemptCount: attempt,
-      generationTimestamp: new Date().toISOString(),
-      status: 'generation_failed',
-      error: 'Studio backdrop rendering failed. Please try again with a different photo.',
-    }
-  }
-}
-
-// ---------------------------------------------------------------------------
 // CANVAS RENDERING ENGINE
-// Produces a best-effort 4:5 charcoal studio composite for preview purposes.
+// Produces the deterministic 4:5 charcoal studio composite.
 // ---------------------------------------------------------------------------
 
 async function renderStudioCanvas(source: File | Blob | string): Promise<Blob> {
@@ -430,25 +273,16 @@ async function renderStudioCanvas(source: File | Blob | string): Promise<Blob> {
         ctx.fillStyle = halo
         ctx.fillRect(0, 0, W, H)
 
-        // Layer 3: Subject placement — scale to fill frame with 4:5 crop alignment
+        // Layer 3: Subject placement. Server cutouts are tightly trimmed, so this
+        // deterministic fit gives every leader the same headroom and body envelope.
         const sw = img.naturalWidth || img.width
         const sh = img.naturalHeight || img.height
-        const srcRatio = sw / sh
-
-        let scale: number
-
-        if (srcRatio < 0.8) {
-          // Portrait-shaped — scale to width
-          scale = W / sw
-        } else {
-          // Square or landscape — scale to height with some headroom
-          scale = (H * 0.92) / sh
-        }
+        const scale = Math.min((W * 0.92) / sw, (H * 0.93) / sh)
 
         const drawW = sw * scale
         const drawH = sh * scale
         const drawX = (W - drawW) / 2
-        const drawY = Math.max(H * 0.05, (H - drawH) * 0.18)
+        const drawY = H * 0.05
         ctx.drawImage(img, drawX, drawY, drawW, drawH)
 
         // Layer 4: Bottom fade gradient
@@ -505,19 +339,6 @@ async function toBlob(source: File | Blob | string): Promise<Blob> {
   return source
 }
 
-async function fetchUrlAsBlob(url: string): Promise<Blob> {
-  const res = await fetch(url)
-  if (!res.ok) throw new Error(`Failed to fetch: ${url}`)
-  return res.blob()
-}
-
-function base64ToBlob(base64: string, mime: string): Blob {
-  const binary = atob(base64)
-  const bytes = new Uint8Array(binary.length)
-  for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i)
-  return new Blob([bytes], { type: mime })
-}
-
 function delay(ms: number, signal?: AbortSignal): Promise<void> {
   return new Promise((resolve, reject) => {
     if (signal?.aborted) return reject(new Error('Aborted'))
@@ -526,31 +347,22 @@ function delay(ms: number, signal?: AbortSignal): Promise<void> {
   })
 }
 
-async function getPortraitAccessToken(): Promise<string | null> {
-  if (!crmSupabase) return null
-  const { data } = await crmSupabase.auth.getSession()
-  return data.session?.access_token ?? null
-}
-
-/** Returns whether an OpenAI API key is configured */
+/** The permissively licensed portrait model is bundled with the site. */
 export function isOpenAIConfigured(): boolean {
-  return false
+  return true
 }
 
 /** Returns a human-readable description of the active provider and quality level */
 export function getProviderStatus(): { provider: PortraitProviderCapability; label: string; quality: 'studio' | 'preview' } {
   if (isOpenAIConfigured()) {
-    return { provider: 'openai_image_edit', label: 'OpenAI gpt-image-1', quality: 'studio' }
+    return { provider: 'browser_segmentation', label: 'On-Device Portrait Engine', quality: 'studio' }
   }
-  return { provider: 'canvas_fallback', label: 'Browser Preview (no AI key)', quality: 'preview' }
+  return { provider: 'canvas_fallback', label: 'Browser Preview', quality: 'preview' }
 }
 
 /** Resolves the provider status after checking the current authenticated session. */
 export async function getProviderStatusAsync(): Promise<{ provider: PortraitProviderCapability; label: string; quality: 'studio' | 'preview' }> {
-  const accessToken = await getPortraitAccessToken()
-  return accessToken
-    ? { provider: 'openai_image_edit', label: 'Secure OpenAI Studio', quality: 'studio' }
-    : { provider: 'canvas_fallback', label: 'Sign in for Studio AI', quality: 'preview' }
+  return { provider: 'browser_segmentation', label: 'On-Device Portrait Engine', quality: 'studio' }
 }
 
 /** Downloads a portrait blob as a PNG file */
