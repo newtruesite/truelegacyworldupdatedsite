@@ -56,7 +56,7 @@ export default function AppTodayPage() {
         ])
         if (!current) return
         setLeads(leadRows)
-        setDistributor(distributorRows.find(item => item.id === member.distributor_id) || null)
+        setDistributor(distributorRows.find(item => item.id === member.distributor_id) || (session?.user ? distributorRows.find(item => item.auth_user_id === session.user.id) : null) || (session?.user?.email ? distributorRows.find(item => item.login_email?.toLowerCase() === session.user.email!.toLowerCase()) : null) || null)
         setModules((modulesResult.data || []) as Module[])
         setItems((itemsResult.data || []) as OnboardingItem[])
         setTraining((trainingResult.data || []) as Progress[])

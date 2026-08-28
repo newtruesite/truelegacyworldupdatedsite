@@ -44,8 +44,7 @@ export default function AppBookingsPage() {
           crmSupabase!.from('crm_availability_windows').select('*').eq('active', true).order('weekday'),
           crmSupabase!.from('crm_meetings').select('*').order('starts_at', { ascending: true }).limit(500),
         ])
-        if (!current) return
-        const owner = distributors.find(item => item.id === member.distributor_id) || (member.role === 'admin' ? distributors.find(item => item.slug === 'mehdi-cohen') || distributors[0] : null) || null
+        const owner = distributors.find(item => item.id === member.distributor_id) || (session?.user ? distributors.find(item => item.auth_user_id === session.user.id) : null) || (session?.user?.email ? distributors.find(item => item.login_email?.toLowerCase() === session.user.email!.toLowerCase()) : null) || (member.role === 'admin' ? distributors.find(item => item.slug === 'mehdi-cohen') || distributors[0] : null) || null
         setDistributor(owner)
         setBookingType(((typesResult.data || []) as BookingType[]).find(item => item.distributor_id === owner?.id) || null)
         setWindows(((windowsResult.data || []) as WindowRow[]).filter(item => item.distributor_id === owner?.id))

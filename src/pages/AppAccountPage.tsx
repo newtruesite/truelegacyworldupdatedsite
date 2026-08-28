@@ -35,35 +35,87 @@ export default function AppAccountPage() {
       return
     }
 
-    crmSupabase.auth.getSession().then(({ data }) => {
-      setSession(data.session)
-      getCrmDistributors().then((rows) => {
+    let active = true
+
+    const loadProfile = async () => {
+      try {
+        const { data: authData } = await crmSupabase!.auth.getSession()
+        const currentSession = authData.session
+        if (!active) return
+        setSession(currentSession)
+
+        const [rows, member] = await Promise.all([
+          getCrmDistributors(),
+          currentSession?.user ? getCrmMembership(currentSession.user.id).catch(() => null) : Promise.resolve(null),
+        ])
+        if (!active) return
+
         setDistributors(rows)
-        const ownId = rows.find((item) => item.slug === 'mehdi-cohen')?.id || rows[0]?.id
-        setSelectedId(ownId || '')
-        setLoading(false)
-      })
-    })
+        setMembership(member)
+
+        if (currentSession?.user) {
+          // 1. Match by membership distributor_id
+          let targetDistributor = rows.find((item) => item.id === member?.distributor_id)
+
+          // 2. Match by auth_user_id
+          if (!targetDistributor) {
+            targetDistributor = rows.find((item) => item.auth_user_id === currentSession.user.id)
+          }
+
+          // 3. Match by login email
+          if (!targetDistributor && currentSession.user.email) {
+            const cleanUserEmail = currentSession.user.email.toLowerCase()
+            targetDistributor = rows.find((item) => item.login_email?.toLowerCase() === cleanUserEmail)
+          }
+
+          // 4. If admin user without direct link, match admin profile
+          if (!targetDistributor && member?.role === 'admin') {
+            targetDistributor = rows.find((item) => item.slug === 'mehdi-cohen') || rows[0]
+          }
+
+          if (targetDistributor) {
+            setSelectedId(targetDistributor.id)
+          } else if (rows.length > 0) {
+            setSelectedId(rows[0].id)
+          }
+        } else if (rows.length > 0) {
+          setSelectedId(rows[0].id)
+        }
+      } finally {
+        if (active) setLoading(false)
+      }
+    }
+
+    loadProfile()
 
     const { data } = crmSupabase.auth.onAuthStateChange((_event, next) => {
       setSession(next)
+      if (next?.user) {
+        loadProfile()
+      }
     })
-    return () => data.subscription.unsubscribe()
+    return () => {
+      active = false
+      data.subscription.unsubscribe()
+    }
   }, [])
 
-  useEffect(() => {
-    if (!session) return
-    getCrmMembership(session.user.id)
-      .then((member) => {
-        setMembership(member)
-        if (member?.distributor_id) {
-          setSelectedId(member.distributor_id)
-        }
-      })
-      .catch(() => {})
-  }, [session])
-
-  const distributor = useMemo(() => distributors.find(item => item.id === selectedId) || distributors[0] || null, [distributors, selectedId])
+  const distributor = useMemo(() => {
+    if (selectedId) {
+      const found = distributors.find((item) => item.id === selectedId)
+      if (found) return found
+    }
+    if (session?.user) {
+      const byUser = distributors.find(
+        (item) =>
+          item.id === membership?.distributor_id ||
+          item.auth_user_id === session.user.id ||
+          (item.login_email && item.login_email.toLowerCase() === session.user.email?.toLowerCase())
+      )
+      if (byUser) return byUser
+    }
+    return distributors[0] || null
+  }, [distributors, selectedId, session, membership])
 
   const submit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()

@@ -19,6 +19,7 @@ export type PublicDistributor = {
   website_url?: string | null
   custom_links?: { label: string; url: string }[]
   last_access_email_sent_at?: string | null
+  auth_user_id?: string | null
 }
 
 export type CrmDistributor = PublicDistributor & {
@@ -26,6 +27,7 @@ export type CrmDistributor = PublicDistributor & {
   accepting_leads: boolean
   login_email: string | null
   last_access_email_sent_at?: string | null
+  auth_user_id?: string | null
 }
 
 export type DistributorProfileUpdate = {
