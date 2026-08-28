@@ -52,10 +52,39 @@ const LEADER_PORTRAITS: Record<string, string> = {
   'zah-naderi': '/leaders/standardized/zah-naderi-v3.png',
   'alex-gonzalez': '/leaders/standardized/alex-gonzalez.png',
   'ryan-pool': '/leaders/standardized/ryan-pool-sr.png',
+  'ryan-pool-sr': '/leaders/standardized/ryan-pool-sr.png',
   'magaly-cardona': '/leaders/standardized/magaly-cardona.png',
   emanuela: '/leaders/standardized/emanuela-doustova.png',
+  'emanuela-braj': '/leaders/standardized/emanuela-doustova.png',
+  'emanuela-doustova': '/leaders/standardized/emanuela-doustova.png',
   'jesse-schexnayder': '/leaders/standardized/jesse-schexnayder.png',
   'angel-mok': '/leaders/standardized/angel-mok-v2.png',
+  'angel-mok-e-lin': '/leaders/standardized/angel-mok-v2.png',
+}
+
+function resolveLeaderPhoto(nameOrSlug: string): string {
+  const normalized = nameOrSlug
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9]/g, '-')
+    .replace(/-+/g, '-')
+
+  if (LEADER_PORTRAITS[normalized]) {
+    return LEADER_PORTRAITS[normalized]
+  }
+
+  if (normalized.includes('ryan')) return '/leaders/standardized/ryan-pool-sr.png'
+  if (normalized.includes('emanuela')) return '/leaders/standardized/emanuela-doustova.png'
+  if (normalized.includes('mehdi')) return '/leaders/standardized/mehdi-cohen.png'
+  if (normalized.includes('magaly')) return '/leaders/standardized/magaly-cardona.png'
+  if (normalized.includes('simon')) return '/leaders/standardized/simon-loh-v2.png'
+  if (normalized.includes('ming')) return '/leaders/standardized/ming-way-sia.png'
+  if (normalized.includes('zah')) return '/leaders/standardized/zah-naderi-v3.png'
+  if (normalized.includes('alex')) return '/leaders/standardized/alex-gonzalez.png'
+  if (normalized.includes('angel')) return '/leaders/standardized/angel-mok-v2.png'
+  if (normalized.includes('jesse')) return '/leaders/standardized/jesse-schexnayder.png'
+
+  return getLeaderPortrait(normalized, '/logos/tl-square-white.png')
 }
 
 const I18N = {
@@ -1521,18 +1550,31 @@ export function BusinessLandingPage({ profile: initialProfile, distributorSlug }
         <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
           <div className="rounded-3xl border border-amber-400/20 bg-gradient-to-b from-[#12100d] via-[#09080c] to-[#04060d] p-8 sm:p-12 shadow-2xl">
             <div className="grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
-              {/* Photo Composition */}
-              <div className="relative flex flex-col items-center">
-                <div className="relative rounded-3xl overflow-hidden border-2 border-amber-400/30 shadow-2xl">
+              {/* Photo Composition - Dual Leaders Mehdi & Magaly */}
+              <div className="relative grid grid-cols-2 gap-3 sm:gap-4">
+                <div className="relative rounded-2xl sm:rounded-3xl overflow-hidden border border-amber-400/30 bg-black/40 shadow-2xl">
                   <img
                     src="/leaders/standardized/mehdi-cohen.png"
                     alt="Mehdi Cohen"
-                    className="h-72 sm:h-96 w-full object-cover object-top"
+                    className="h-56 sm:h-80 w-full object-cover object-top"
                     loading="lazy"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent flex flex-col justify-end p-5">
-                    <p className="text-base font-black text-white">Mehdi Cohen & Magaly Cardona</p>
-                    <p className="text-xs text-amber-300">6A Leaders & International Builders</p>
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent flex flex-col justify-end p-3 sm:p-4">
+                    <p className="text-xs sm:text-sm font-black text-white">Mehdi Cohen</p>
+                    <p className="text-[10px] sm:text-xs text-amber-300 font-semibold">6A Leader</p>
+                  </div>
+                </div>
+
+                <div className="relative rounded-2xl sm:rounded-3xl overflow-hidden border border-amber-400/30 bg-black/40 shadow-2xl">
+                  <img
+                    src="/leaders/standardized/magaly-cardona.png"
+                    alt="Magaly Cardona"
+                    className="h-56 sm:h-80 w-full object-cover object-top"
+                    loading="lazy"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent flex flex-col justify-end p-3 sm:p-4">
+                    <p className="text-xs sm:text-sm font-black text-white">Magaly Cardona</p>
+                    <p className="text-[10px] sm:text-xs text-amber-300 font-semibold">6A Leader</p>
                   </div>
                 </div>
               </div>
@@ -1727,7 +1769,7 @@ export function BusinessLandingPage({ profile: initialProfile, distributorSlug }
 
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
             {t.leadersList.map((leader, i) => {
-              const photo = LEADER_PORTRAITS[leader.name.toLowerCase().replace(/\s+/g, '-')] || '/logos/tl-square-white.png'
+              const photo = resolveLeaderPhoto(leader.name)
               return (
                 <div
                   key={i}
