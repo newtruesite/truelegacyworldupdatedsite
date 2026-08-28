@@ -84,7 +84,12 @@ export function LeaderAccessPanel() {
     setQuickSendingId(dist.id)
     setBannerMessage('')
     try {
-      const res = await sendLeaderLoginAccess(dist.login_email)
+      const res = await sendLeaderLoginAccess({
+        email: dist.login_email,
+        displayName: dist.display_name,
+        slug: dist.slug,
+        tempPassword: 'TrueLegacy2026!',
+      })
       if (res.success) {
         await recordLeaderAccessEmailSent(dist.id)
         setDistributors((prev) =>
@@ -94,7 +99,7 @@ export function LeaderAccessPanel() {
               : d
           )
         )
-        setBannerMessage(`Login access email dispatched to ${dist.display_name} (${dist.login_email})!`)
+        setBannerMessage(`Complete login & app setup guide dispatched to ${dist.display_name} (${dist.login_email})!`)
         setTimeout(() => setBannerMessage(''), 4000)
       } else {
         setBannerMessage(`Failed to send email: ${res.error}`)

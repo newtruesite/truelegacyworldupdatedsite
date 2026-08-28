@@ -127,7 +127,12 @@ Welcome to the True Legacy Global Team! 🚀`
     setIsSending(true)
     setSendResults(null)
     try {
-      const res = await sendLeaderLoginAccess(singleTarget.email)
+      const res = await sendLeaderLoginAccess({
+        email: singleTarget.email,
+        displayName: singleTarget.displayName,
+        slug: singleTarget.slug,
+        tempPassword: includeTempPassword ? tempPassword : 'TrueLegacy2026!',
+      })
       if (res.success) {
         if (singleTarget.id) {
           await recordLeaderAccessEmailSent(singleTarget.id)
@@ -169,7 +174,12 @@ Welcome to the True Legacy Global Team! 🚀`
     for (const dist of targets) {
       if (!dist.login_email) continue
       try {
-        const res = await sendLeaderLoginAccess(dist.login_email)
+        const res = await sendLeaderLoginAccess({
+          email: dist.login_email,
+          displayName: dist.display_name,
+          slug: dist.slug,
+          tempPassword: includeTempPassword ? tempPassword : 'TrueLegacy2026!',
+        })
         if (res.success) {
           succeeded++
           await recordLeaderAccessEmailSent(dist.id)
