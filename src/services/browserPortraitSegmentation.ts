@@ -1,15 +1,17 @@
+// @ts-ignore
 import type * as Ort from 'onnxruntime-web'
 
 const MODEL_URL = '/models/modnet-photographic-portrait-matting.onnx'
 const REFERENCE_SIZE = 512
 const ALPHA_THRESHOLD = 10
 
-type OrtModule = typeof Ort
+type OrtModule = any
 
 let ortPromise: Promise<OrtModule> | null = null
-let sessionPromise: Promise<Ort.InferenceSession> | null = null
+let sessionPromise: Promise<any> | null = null
 
 function getOrt(): Promise<OrtModule> {
+  // @ts-ignore
   ortPromise ??= import('onnxruntime-web')
   return ortPromise
 }

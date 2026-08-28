@@ -1,7 +1,7 @@
 import { SEO } from '@/components/SEO'
 import { LeaderPortraitGenerator } from '@/components/leaders/LeaderPortraitGenerator'
 import type { LeaderPortraitData } from '@/config/portraitStandard'
-import { crmConfigured, crmSupabase, getCrmDistributors, getCrmMembership, updateDistributorProfile, setCustomLeaderAvatar } from '@/lib/crm'
+import { crmConfigured, crmSupabase, getCrmDistributors, getCrmMembership, updateDistributorProfile, setCustomLeaderAvatar, convertToPermanentDataUrl } from '@/lib/crm'
 import type { CrmDistributor, CrmMembership, DistributorProfileUpdate } from '@/lib/crm'
 import type { Session } from '@supabase/supabase-js'
 import { CheckCircle2, ExternalLink, LoaderCircle, Save, Settings2, ShieldCheck, Sparkles, UserRound } from 'lucide-react'
@@ -68,28 +68,35 @@ export default function AppAccountPage() {
   const submit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     if (!distributor) return
-    const data = new FormData(event.currentTarget)
-    const finalAvatar = customAvatarUrl || distributor.avatar_url || null
-    const payload: DistributorProfileUpdate = {
-      displayName: String(data.get('displayName') || ''),
-      title: String(data.get('title') || ''),
-      bio: String(data.get('bio') || ''),
-      phone: String(data.get('phone') || ''),
-      instagramUrl: String(data.get('instagramUrl') || ''),
-      avatarUrl: finalAvatar,
-      regions: String(data.get('regions') || '').split(',').map(item => item.trim()).filter(Boolean),
-      languages: data.getAll('languages').map(String),
-      acceptingLeads: data.get('acceptingLeads') === 'on',
-    }
     setSaving(true); setError(''); setMessage('')
+
     try {
-      if (finalAvatar && distributor.slug) {
-        setCustomLeaderAvatar(distributor.slug, finalAvatar)
+      const data = new FormData(event.currentTarget)
+      const rawAvatar = customAvatarUrl || distributor.avatar_url || null
+      // Convert transient blob: to permanent Base64 Data URL so it survives page reloads
+      const permanentAvatar = rawAvatar ? await convertToPermanentDataUrl(rawAvatar) : null
+
+      const payload: DistributorProfileUpdate = {
+        displayName: String(data.get('displayName') || ''),
+        title: String(data.get('title') || ''),
+        bio: String(data.get('bio') || ''),
+        phone: String(data.get('phone') || ''),
+        instagramUrl: String(data.get('instagramUrl') || ''),
+        avatarUrl: permanentAvatar,
+        regions: String(data.get('regions') || '').split(',').map(item => item.trim()).filter(Boolean),
+        languages: data.getAll('languages').map(String),
+        acceptingLeads: data.get('acceptingLeads') === 'on',
       }
+
+      if (permanentAvatar && distributor.slug) {
+        setCustomLeaderAvatar(distributor.slug, permanentAvatar)
+        setCustomAvatarUrl(permanentAvatar)
+      }
+
       if (session && crmConfigured) {
         const updated = await updateDistributorProfile(distributor.id, payload)
-        setDistributors(rows => rows.map(item => item.id === updated.id ? { ...updated, avatar_url: finalAvatar || updated.avatar_url } : item))
-        setMessage('Your public leader profile and photo have been updated across all leader sections.')
+        setDistributors(rows => rows.map(item => item.id === updated.id ? { ...updated, avatar_url: permanentAvatar || updated.avatar_url } : item))
+        setMessage('Your public leader profile and permanent photo have been saved across all leader sections.')
       } else {
         // Local preview update
         setDistributors(rows =>
@@ -105,12 +112,12 @@ export default function AppAccountPage() {
                   regions: payload.regions,
                   languages: payload.languages,
                   accepting_leads: payload.acceptingLeads,
-                  avatar_url: finalAvatar || item.avatar_url,
+                  avatar_url: permanentAvatar || item.avatar_url,
                 }
               : item
           )
         )
-        setMessage('Leader photo and profile updated across all leader sections.')
+        setMessage('Leader photo and profile updated permanently across all leader sections.')
       }
     } catch {
       setError('Your changes could not be saved. Check the fields and try again.')

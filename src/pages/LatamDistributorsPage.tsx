@@ -164,7 +164,23 @@ function DistributorCard({
   whatsappLabel: string;
   websiteLabel: string;
 }) {
+  const fallbackSrc = `/leaders/standardized/${dist.slug}.png`;
+  const [currentImg, setCurrentImg] = useState(dist.photo || fallbackSrc);
   const [imgError, setImgError] = useState(false);
+
+  useEffect(() => {
+    setCurrentImg(dist.photo || fallbackSrc);
+    setImgError(false);
+  }, [dist.photo, fallbackSrc]);
+
+  const handleImgError = () => {
+    if (currentImg !== fallbackSrc) {
+      setCurrentImg(fallbackSrc);
+    } else {
+      setImgError(true);
+    }
+  };
+
   return (
     <motion.article
       initial={{ opacity: 0, y: 20 }}
@@ -180,15 +196,15 @@ function DistributorCard({
               'radial-gradient(circle at 50% 36%, rgba(255, 255, 255, 0.10) 0%, rgba(56, 189, 248, 0.05) 35%, rgba(15, 23, 42, 0.01) 70%)',
           }}
         />
-        {!imgError ? (
+        {!imgError && currentImg ? (
           <img
-            src={dist.photo}
+            src={currentImg}
             alt={dist.name}
             className="w-full h-full object-contain object-top relative z-10 transition duration-500 hover:scale-105"
-            onError={() => setImgError(true)}
+            onError={handleImgError}
           />
         ) : null}
-        {(imgError || !dist.photo) && (
+        {(imgError || !currentImg) && (
           <span className="text-[#2997ff] font-bold text-2xl relative z-10">
             {dist.fallbackInitial}
           </span>

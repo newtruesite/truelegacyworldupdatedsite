@@ -123,16 +123,25 @@ export function LeaderCard({
   portraitPositionY,
   className = '',
 }: LeaderCardProps) {
+  const config = LEADER_PORTRAIT_REGISTRY[dist.slug] || {}
+  const fallbackSrc = config.src || `/leaders/standardized/${dist.slug}.png`
+  const initialPhoto = dist.photo || getLeaderPortrait(dist.slug, fallbackSrc) || fallbackSrc
+
+  const [currentImg, setCurrentImg] = useState(initialPhoto)
   const [imgError, setImgError] = useState(false)
 
-  // Resolve best portrait asset and framing configuration
-  const config = LEADER_PORTRAIT_REGISTRY[dist.slug] || {}
-  const resolvedPhoto = getLeaderPortrait(dist.slug, dist.photo || config.src)
-  const imageSource = !imgError && (dist.photo || resolvedPhoto || config.src)
   const scale = portraitScale ?? config.scale ?? 1.03
   const offsetY = portraitPositionY ?? config.offsetY ?? '0%'
   const offsetX = portraitPositionX ?? config.offsetX ?? '0%'
   const objectPosition = config.objectPosition ?? 'top center'
+
+  const handleImgError = () => {
+    if (currentImg !== fallbackSrc) {
+      setCurrentImg(fallbackSrc)
+    } else {
+      setImgError(true)
+    }
+  }
 
   return (
     <motion.article
@@ -164,11 +173,11 @@ export function LeaderCard({
         />
 
         {/* Layer 4: Standardized Leader Portrait with Calibrated Framing */}
-        {imageSource ? (
+        {!imgError && currentImg ? (
           <img
-            src={imageSource}
+            src={currentImg}
             alt={dist.name}
-            onError={() => setImgError(true)}
+            onError={handleImgError}
             className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 ease-out"
             style={{
               transform: `scale(${scale}) translate(${offsetX}, ${offsetY})`,

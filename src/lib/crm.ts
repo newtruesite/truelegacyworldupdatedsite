@@ -47,11 +47,103 @@ export type CrmMembership = {
 
 const AVATAR_STORAGE_KEY = 'true_legacy_custom_avatars'
 
+/**
+ * Converts a Blob, File, or transient Image URL into a permanent Base64 Data URL
+ * that survives page refreshes and browser restarts.
+ */
+export async function convertToPermanentDataUrl(
+  source: Blob | File | string,
+  maxWidth = 800,
+  maxHeight = 1000,
+  quality = 0.9
+): Promise<string> {
+  if (!source) return ''
+  // If it's already a permanent URL (http, https, permanent relative path, or data URL), return it directly
+  if (
+    typeof source === 'string' &&
+    (source.startsWith('data:image/') ||
+      source.startsWith('http://') ||
+      source.startsWith('https://') ||
+      source.startsWith('/leaders/'))
+  ) {
+    return source
+  }
+
+  return new Promise((resolve) => {
+    const img = new Image()
+    img.crossOrigin = 'anonymous'
+    let objectUrlToRevoke = ''
+
+    img.onload = () => {
+      if (objectUrlToRevoke) URL.revokeObjectURL(objectUrlToRevoke)
+      try {
+        const canvas = document.createElement('canvas')
+        let w = img.naturalWidth || img.width || maxWidth
+        let h = img.naturalHeight || img.height || maxHeight
+
+        if (w > maxWidth || h > maxHeight) {
+          const ratio = Math.min(maxWidth / w, maxHeight / h)
+          w = Math.round(w * ratio)
+          h = Math.round(h * ratio)
+        }
+
+        canvas.width = w
+        canvas.height = h
+        const ctx = canvas.getContext('2d')
+        if (!ctx) {
+          throw new Error('Canvas context unavailable')
+        }
+
+        ctx.drawImage(img, 0, 0, w, h)
+        const dataUrl = canvas.toDataURL('image/webp', quality)
+        resolve(dataUrl)
+      } catch {
+        if (source instanceof Blob) {
+          const reader = new FileReader()
+          reader.onloadend = () => resolve(reader.result as string)
+          reader.onerror = () => resolve('')
+          reader.readAsDataURL(source)
+        } else {
+          resolve(typeof source === 'string' ? source : '')
+        }
+      }
+    }
+
+    img.onerror = () => {
+      if (objectUrlToRevoke) URL.revokeObjectURL(objectUrlToRevoke)
+      if (source instanceof Blob) {
+        const reader = new FileReader()
+        reader.onloadend = () => resolve(reader.result as string)
+        reader.onerror = () => resolve('')
+        reader.readAsDataURL(source)
+      } else {
+        resolve('')
+      }
+    }
+
+    if (typeof source === 'string') {
+      img.src = source
+    } else {
+      objectUrlToRevoke = URL.createObjectURL(source)
+      img.src = objectUrlToRevoke
+    }
+  })
+}
+
 export function getCustomLeaderAvatars(): Record<string, string> {
   if (typeof window === 'undefined') return {}
   try {
     const raw = localStorage.getItem(AVATAR_STORAGE_KEY)
-    return raw ? JSON.parse(raw) : {}
+    if (!raw) return {}
+    const map = JSON.parse(raw)
+    // Filter out transient blob: URLs that expire upon page refresh
+    const cleaned: Record<string, string> = {}
+    for (const [key, val] of Object.entries(map)) {
+      if (typeof val === 'string' && val.trim() !== '' && !val.startsWith('blob:')) {
+        cleaned[key] = val
+      }
+    }
+    return cleaned
   } catch {
     return {}
   }
@@ -63,7 +155,7 @@ export function getCustomLeaderAvatar(slug: string): string | null {
 }
 
 export function setCustomLeaderAvatar(slug: string, avatarUrl: string): void {
-  if (typeof window === 'undefined') return
+  if (typeof window === 'undefined' || !slug || !avatarUrl) return
   try {
     const map = getCustomLeaderAvatars()
     map[slug] = avatarUrl
@@ -74,7 +166,7 @@ export function setCustomLeaderAvatar(slug: string, avatarUrl: string): void {
 
 export function getLeaderPortrait(slug: string, fallback?: string): string {
   const custom = getCustomLeaderAvatar(slug)
-  if (custom) return custom
+  if (custom && !custom.startsWith('blob:')) return custom
   return fallback || `/leaders/standardized/${slug}.png`
 }
 
