@@ -2,7 +2,7 @@ import { Footer } from '@/components/layout/Footer'
 import { Navbar } from '@/components/layout/Navbar'
 import { SEO } from '@/components/SEO'
 import { YouTubeEmbed } from '@/components/ui/YouTubeEmbed'
-import { crmSupabase, getPublicDistributors } from '@/lib/crm'
+import { crmSupabase, getPublicDistributors, getLeaderPortrait } from '@/lib/crm'
 import type { PublicDistributor } from '@/lib/crm'
 import { useLocaleContext } from '@/contexts/LocaleContext'
 import { localizedProductVideo } from '@/lib/productVideos'
@@ -120,7 +120,19 @@ export default function DistributorLandingPage() {
   const variant = campaign && campaign in VARIANTS ? campaign as LandingVariant : null
 
   useEffect(() => {
-    getPublicDistributors().then(items => setProfile(items.find(item => item.slug === slug) || null))
+    let active = true
+    const loadProfile = () => {
+      getPublicDistributors().then(items => {
+        if (!active) return
+        setProfile(items.find(item => item.slug === slug) || null)
+      })
+    }
+    loadProfile()
+    window.addEventListener('truelegacy:leader-portrait-updated', loadProfile)
+    return () => {
+      active = false
+      window.removeEventListener('truelegacy:leader-portrait-updated', loadProfile)
+    }
   }, [slug])
 
   useEffect(() => {
@@ -142,7 +154,7 @@ export default function DistributorLandingPage() {
   const copy = useMemo(() => variant ? VARIANTS[variant] : null, [variant])
   if (!variant || profile === null) return <NotFoundPage />
 
-  const leaderPhoto = (profile?.slug && LEADER_PORTRAITS[profile.slug]) || profile?.avatar_url || '/logos/tl-square-white.png'
+  const leaderPhoto = profile?.avatar_url || (profile?.slug && getLeaderPortrait(profile.slug, LEADER_PORTRAITS[profile.slug])) || '/logos/tl-square-white.png'
   const Icon = copy?.icon || Sparkles
   const applyUrl = `/apply?ref=${profile?.referral_code || slug}&interest=${copy?.interest || 'duo'}&source=${variant}`
   const whatsapp = profile ? whatsappUrl(profile, variant) : null

@@ -2,7 +2,7 @@ import { Footer } from '@/components/layout/Footer'
 import { Navbar } from '@/components/layout/Navbar'
 import { SEO } from '@/components/SEO'
 import { useLocaleContext } from '@/contexts/LocaleContext'
-import { crmSupabase, getPublicDistributors } from '@/lib/crm'
+import { crmSupabase, getPublicDistributors, getLeaderPortrait } from '@/lib/crm'
 import type { PublicDistributor } from '@/lib/crm'
 import {
   ArrowRight,
@@ -118,7 +118,19 @@ export default function DistributorProfilePage() {
   }
 
   useEffect(() => {
-    getPublicDistributors().then(items => setProfile(items.find(item => item.slug === slug) || null))
+    let active = true
+    const loadProfile = () => {
+      getPublicDistributors().then(items => {
+        if (!active) return
+        setProfile(items.find(item => item.slug === slug) || null)
+      })
+    }
+    loadProfile()
+    window.addEventListener('truelegacy:leader-portrait-updated', loadProfile)
+    return () => {
+      active = false
+      window.removeEventListener('truelegacy:leader-portrait-updated', loadProfile)
+    }
   }, [slug])
 
   useEffect(() => {
@@ -130,7 +142,7 @@ export default function DistributorProfilePage() {
 
   const firstName = profile?.display_name.split(' ')[0] || 'Leader'
   const localizedProfile = profile && locale !== 'en' ? PROFILE_TRANSLATIONS[profile.slug]?.[locale] : undefined
-  const leaderPhoto = (profile?.slug && LEADER_PORTRAITS[profile.slug]) || profile?.avatar_url || '/logos/tl-square-white.png'
+  const leaderPhoto = profile?.avatar_url || (profile?.slug && getLeaderPortrait(profile.slug, LEADER_PORTRAITS[profile.slug])) || '/logos/tl-square-white.png'
   const websiteUrl = profile?.website_url || (profile?.slug === 'mehdi-cohen' ? 'https://mehdicohen.com' : null)
   const activeTitle = localizedProfile?.title || profile?.title || 'Independent Distributor'
   const activeBio = localizedProfile?.bio || profile?.bio || ''

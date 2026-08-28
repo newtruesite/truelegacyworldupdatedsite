@@ -1,7 +1,7 @@
 import { SEO } from '@/components/SEO'
 import { LeaderPortraitGenerator } from '@/components/leaders/LeaderPortraitGenerator'
 import type { LeaderPortraitData } from '@/config/portraitStandard'
-import { crmConfigured, crmSupabase, getCrmDistributors, getCrmMembership, updateDistributorProfile } from '@/lib/crm'
+import { crmConfigured, crmSupabase, getCrmDistributors, getCrmMembership, updateDistributorProfile, setCustomLeaderAvatar } from '@/lib/crm'
 import type { CrmDistributor, CrmMembership, DistributorProfileUpdate } from '@/lib/crm'
 import type { Session } from '@supabase/supabase-js'
 import { CheckCircle2, ExternalLink, LoaderCircle, Save, Settings2, ShieldCheck, Sparkles, UserRound } from 'lucide-react'
@@ -69,22 +69,27 @@ export default function AppAccountPage() {
     event.preventDefault()
     if (!distributor) return
     const data = new FormData(event.currentTarget)
+    const finalAvatar = customAvatarUrl || distributor.avatar_url || null
     const payload: DistributorProfileUpdate = {
       displayName: String(data.get('displayName') || ''),
       title: String(data.get('title') || ''),
       bio: String(data.get('bio') || ''),
       phone: String(data.get('phone') || ''),
       instagramUrl: String(data.get('instagramUrl') || ''),
+      avatarUrl: finalAvatar,
       regions: String(data.get('regions') || '').split(',').map(item => item.trim()).filter(Boolean),
       languages: data.getAll('languages').map(String),
       acceptingLeads: data.get('acceptingLeads') === 'on',
     }
     setSaving(true); setError(''); setMessage('')
     try {
+      if (finalAvatar && distributor.slug) {
+        setCustomLeaderAvatar(distributor.slug, finalAvatar)
+      }
       if (session && crmConfigured) {
         const updated = await updateDistributorProfile(distributor.id, payload)
-        setDistributors(rows => rows.map(item => item.id === updated.id ? updated : item))
-        setMessage('Your public leader information has been saved.')
+        setDistributors(rows => rows.map(item => item.id === updated.id ? { ...updated, avatar_url: finalAvatar || updated.avatar_url } : item))
+        setMessage('Your public leader profile and photo have been updated across all leader sections.')
       } else {
         // Local preview update
         setDistributors(rows =>
@@ -100,12 +105,12 @@ export default function AppAccountPage() {
                   regions: payload.regions,
                   languages: payload.languages,
                   accepting_leads: payload.acceptingLeads,
-                  avatar_url: customAvatarUrl || item.avatar_url,
+                  avatar_url: finalAvatar || item.avatar_url,
                 }
               : item
           )
         )
-        setMessage('Preview profile updated successfully.')
+        setMessage('Leader photo and profile updated across all leader sections.')
       }
     } catch {
       setError('Your changes could not be saved. Check the fields and try again.')

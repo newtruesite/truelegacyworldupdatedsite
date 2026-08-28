@@ -81,27 +81,33 @@ export default function DistributorsPage() {
 
   useEffect(() => {
     let active = true;
-    getPublicDistributors().then((profiles) => {
-      if (!active) return;
-      setDistributors(
-        profiles.map((profile) => ({
-          slug: profile.slug,
-          name: profile.display_name,
-          title: profile.title,
-          photo: profile.avatar_url || "",
-          fallbackInitial: profile.display_name.charAt(0),
-          regions: profile.regions,
-          languages: profile.languages,
-          whatsapp: profile.phone ? `https://wa.me/${profile.phone.replace(/\D/g, "")}` : undefined,
-          instagram: profile.instagram_url || undefined,
-        })),
-      );
-      setIsLoadingDistributors(false);
-    }).catch(() => {
-      if (active) setIsLoadingDistributors(false);
-    });
+    const loadDistributors = () => {
+      getPublicDistributors().then((profiles) => {
+        if (!active) return;
+        setDistributors(
+          profiles.map((profile) => ({
+            slug: profile.slug,
+            name: profile.display_name,
+            title: profile.title,
+            photo: profile.avatar_url || "",
+            fallbackInitial: profile.display_name.charAt(0),
+            regions: profile.regions,
+            languages: profile.languages,
+            whatsapp: profile.phone ? `https://wa.me/${profile.phone.replace(/\D/g, "")}` : undefined,
+            instagram: profile.instagram_url || undefined,
+          })),
+        );
+        setIsLoadingDistributors(false);
+      }).catch(() => {
+        if (active) setIsLoadingDistributors(false);
+      });
+    };
+
+    loadDistributors();
+    window.addEventListener("truelegacy:leader-portrait-updated", loadDistributors);
     return () => {
       active = false;
+      window.removeEventListener("truelegacy:leader-portrait-updated", loadDistributors);
     };
   }, []);
 

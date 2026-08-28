@@ -2,6 +2,7 @@ import { motion } from 'framer-motion'
 import { ArrowRight, BadgeCheck, Globe2, Instagram, Languages, MapPin } from 'lucide-react'
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
+import { getLeaderPortrait } from '@/lib/crm'
 
 export interface LeaderCardData {
   slug: string
@@ -126,7 +127,8 @@ export function LeaderCard({
 
   // Resolve best portrait asset and framing configuration
   const config = LEADER_PORTRAIT_REGISTRY[dist.slug] || {}
-  const imageSource = !imgError && (config.src || dist.photo)
+  const resolvedPhoto = getLeaderPortrait(dist.slug, dist.photo || config.src)
+  const imageSource = !imgError && (dist.photo || resolvedPhoto || config.src)
   const scale = portraitScale ?? config.scale ?? 1.03
   const offsetY = portraitPositionY ?? config.offsetY ?? '0%'
   const offsetX = portraitPositionX ?? config.offsetX ?? '0%'

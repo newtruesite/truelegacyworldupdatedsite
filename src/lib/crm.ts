@@ -32,6 +32,7 @@ export type DistributorProfileUpdate = {
   bio: string
   phone: string
   instagramUrl: string
+  avatarUrl?: string | null
   regions: string[]
   languages: string[]
   acceptingLeads: boolean
@@ -43,6 +44,40 @@ export type CrmMembership = {
   distributor_id: string | null
   active: boolean
 }
+
+const AVATAR_STORAGE_KEY = 'true_legacy_custom_avatars'
+
+export function getCustomLeaderAvatars(): Record<string, string> {
+  if (typeof window === 'undefined') return {}
+  try {
+    const raw = localStorage.getItem(AVATAR_STORAGE_KEY)
+    return raw ? JSON.parse(raw) : {}
+  } catch {
+    return {}
+  }
+}
+
+export function getCustomLeaderAvatar(slug: string): string | null {
+  const map = getCustomLeaderAvatars()
+  return map[slug] || null
+}
+
+export function setCustomLeaderAvatar(slug: string, avatarUrl: string): void {
+  if (typeof window === 'undefined') return
+  try {
+    const map = getCustomLeaderAvatars()
+    map[slug] = avatarUrl
+    localStorage.setItem(AVATAR_STORAGE_KEY, JSON.stringify(map))
+    window.dispatchEvent(new CustomEvent('truelegacy:leader-portrait-updated', { detail: { slug, avatarUrl } }))
+  } catch {}
+}
+
+export function getLeaderPortrait(slug: string, fallback?: string): string {
+  const custom = getCustomLeaderAvatar(slug)
+  if (custom) return custom
+  return fallback || `/leaders/standardized/${slug}.png`
+}
+
 
 export type CrmLead = {
   id: string
@@ -241,15 +276,32 @@ const FALLBACK_DISTRIBUTORS: PublicDistributor[] = [
 ]
 
 export async function getPublicDistributors(): Promise<PublicDistributor[]> {
-  if (!crmSupabase) return FALLBACK_DISTRIBUTORS
-  const { data, error } = await crmSupabase.rpc('get_public_crm_distributors')
-  if (error || !Array.isArray(data)) return FALLBACK_DISTRIBUTORS
-  const remoteDistributors = (data as PublicDistributor[]).map(profile => {
-    const confirmed = FALLBACK_DISTRIBUTORS.find(item => item.slug === profile.slug)
-    return confirmed ? { ...confirmed, ...profile, id: profile.id } : profile
-  })
-  const remoteSlugs = new Set(remoteDistributors.map(profile => profile.slug))
-  return [...remoteDistributors, ...FALLBACK_DISTRIBUTORS.filter(profile => !remoteSlugs.has(profile.slug))]
+  const customAvatars = getCustomLeaderAvatars()
+  const applyCustomAvatars = (list: PublicDistributor[]): PublicDistributor[] => {
+    return list.map((item) => ({
+      ...item,
+      avatar_url: customAvatars[item.slug] || item.avatar_url || `/leaders/standardized/${item.slug}.png`,
+    }))
+  }
+
+  if (!crmSupabase) return applyCustomAvatars(FALLBACK_DISTRIBUTORS)
+  try {
+    const { data, error } = await crmSupabase.rpc('get_public_crm_distributors')
+    if (error || !Array.isArray(data)) return applyCustomAvatars(FALLBACK_DISTRIBUTORS)
+    const remoteDistributors = (data as PublicDistributor[]).map((profile) => {
+      const confirmed = FALLBACK_DISTRIBUTORS.find((item) => item.slug === profile.slug)
+      const base = confirmed ? { ...confirmed, ...profile, id: profile.id } : profile
+      return {
+        ...base,
+        avatar_url: customAvatars[profile.slug] || profile.avatar_url || base.avatar_url || `/leaders/standardized/${profile.slug}.png`,
+      }
+    })
+    const remoteSlugs = new Set(remoteDistributors.map((profile) => profile.slug))
+    const merged = [...remoteDistributors, ...FALLBACK_DISTRIBUTORS.filter((profile) => !remoteSlugs.has(profile.slug))]
+    return applyCustomAvatars(merged)
+  } catch {
+    return applyCustomAvatars(FALLBACK_DISTRIBUTORS)
+  }
 }
 
 export async function submitCrmApplication(payload: Record<string, unknown>) {
@@ -282,10 +334,32 @@ export async function getCrmLeads(): Promise<CrmLead[]> {
 }
 
 export async function getCrmDistributors(): Promise<CrmDistributor[]> {
-  if (!crmSupabase) return []
-  const { data, error } = await crmSupabase.from('crm_distributors').select('*').order('display_name')
-  if (error) throw error
-  return (data || []) as CrmDistributor[]
+  const customAvatars = getCustomLeaderAvatars()
+  if (!crmSupabase) {
+    return FALLBACK_DISTRIBUTORS.map((d) => ({
+      ...d,
+      active: true,
+      accepting_leads: true,
+      login_email: null,
+      avatar_url: customAvatars[d.slug] || d.avatar_url || `/leaders/standardized/${d.slug}.png`,
+    }))
+  }
+  try {
+    const { data, error } = await crmSupabase.from('crm_distributors').select('*').order('display_name')
+    if (error) throw error
+    return ((data || []) as CrmDistributor[]).map((d) => ({
+      ...d,
+      avatar_url: customAvatars[d.slug] || d.avatar_url || `/leaders/standardized/${d.slug}.png`,
+    }))
+  } catch {
+    return FALLBACK_DISTRIBUTORS.map((d) => ({
+      ...d,
+      active: true,
+      accepting_leads: true,
+      login_email: null,
+      avatar_url: customAvatars[d.slug] || d.avatar_url || `/leaders/standardized/${d.slug}.png`,
+    }))
+  }
 }
 
 export async function updateDistributorProfile(distributorId: string, payload: DistributorProfileUpdate) {

@@ -4,8 +4,9 @@ import { SEO } from "@/components/SEO";
 import { TLBackground } from "@/components/ui/TLBackground";
 import { motion } from "framer-motion";
 import { Calendar, Globe, Instagram, MessageCircle } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { getPublicDistributors, getLeaderPortrait } from "@/lib/crm";
 
 type Distributor = {
   slug: string; name: string; title: string; photo: string; fallbackInitial: string; region: string;
@@ -13,7 +14,7 @@ type Distributor = {
   calendly?: string; telegram?: string; instagram?: string;
 };
 
-const DISTRIBUTORS: Distributor[] = [
+const DEFAULT_DISTRIBUTORS: Distributor[] = [
   {
     slug: "mehdi-cohen",
     name: "Mehdi Cohen",
@@ -56,6 +57,40 @@ function IconWhatsApp({ className }: { className?: string }) {
 }
 
 export default function LatamDistributorsPage() {
+  const [distributors, setDistributors] = useState<Distributor[]>(() =>
+    DEFAULT_DISTRIBUTORS.map((d) => ({
+      ...d,
+      photo: getLeaderPortrait(d.slug, d.photo),
+    }))
+  );
+
+  useEffect(() => {
+    let active = true;
+    const refresh = () => {
+      getPublicDistributors().then((profiles) => {
+        if (!active) return;
+        setDistributors((prev) =>
+          prev.map((d) => {
+            const remote = profiles.find((p) => p.slug === d.slug);
+            return {
+              ...d,
+              name: remote?.display_name || d.name,
+              title: remote?.title || d.title,
+              photo: remote?.avatar_url || getLeaderPortrait(d.slug, d.photo),
+            };
+          })
+        );
+      });
+    };
+
+    refresh();
+    window.addEventListener("truelegacy:leader-portrait-updated", refresh);
+    return () => {
+      active = false;
+      window.removeEventListener("truelegacy:leader-portrait-updated", refresh);
+    };
+  }, []);
+
   const title = "Distribuidores True Legacy";
   const subtitle =
     "Conecta con un líder cerca de ti. WhatsApp, sitio web y redes para comenzar tu camino.";
@@ -101,7 +136,7 @@ export default function LatamDistributorsPage() {
 
         <section className="py-12 md:py-16" style={{ background: "#070c1a" }}>
           <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 space-y-8">
-            {DISTRIBUTORS.map((dist, index) => (
+            {distributors.map((dist, index) => (
               <DistributorCard
                 key={dist.name}
                 dist={dist}
@@ -124,7 +159,7 @@ function DistributorCard({
   whatsappLabel,
   websiteLabel,
 }: {
-  dist: (typeof DISTRIBUTORS)[0];
+  dist: Distributor;
   index: number;
   whatsappLabel: string;
   websiteLabel: string;

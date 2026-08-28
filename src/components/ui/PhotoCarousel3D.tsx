@@ -3,6 +3,7 @@ import { ChevronLeft, ChevronRight, Globe, Star, Trophy, Users, Zap } from 'luci
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useLocaleContext } from '@/contexts/LocaleContext'
+import { getPublicDistributors, getLeaderPortrait } from '@/lib/crm'
 
 const LEADERS = [
     {
@@ -225,6 +226,7 @@ const LEADER_COPY = {
 export function PhotoCarousel3D() {
     const { locale } = useLocaleContext()
     const [active, setActive] = useState(0)
+    const [livePortraits, setLivePortraits] = useState<Record<string, string>>({})
     const count = LEADERS.length
 
     const prev = () => {
@@ -234,6 +236,26 @@ export function PhotoCarousel3D() {
     const next = () => {
         setActive((a) => (a + 1) % count)
     }
+
+    useEffect(() => {
+        let isMounted = true
+        const updateAvatars = () => {
+            getPublicDistributors().then((profiles) => {
+                if (!isMounted) return
+                const map: Record<string, string> = {}
+                profiles.forEach((p) => {
+                    if (p.avatar_url) map[p.slug] = p.avatar_url
+                })
+                setLivePortraits(map)
+            })
+        }
+        updateAvatars()
+        window.addEventListener('truelegacy:leader-portrait-updated', updateAvatars)
+        return () => {
+            isMounted = false
+            window.removeEventListener('truelegacy:leader-portrait-updated', updateAvatars)
+        }
+    }, [])
 
     useEffect(() => {
         const t = setInterval(next, 10000)
@@ -265,7 +287,12 @@ export function PhotoCarousel3D() {
     }
 
     const localized = locale === 'en' ? null : LEADER_COPY[locale]
-    const leaders = LEADERS.map((leader, index) => localized ? { ...leader, role: localized.roles[index], bio: [localized.bios[index]] } : leader)
+    const leaders = LEADERS.map((leader, index) => {
+        const slug = leader.profileUrl.replace('/d/', '')
+        const dynamicImage = livePortraits[slug] || getLeaderPortrait(slug, leader.image)
+        const base = localized ? { ...leader, role: localized.roles[index], bio: [localized.bios[index]] } : leader
+        return { ...base, image: dynamicImage }
+    })
     const activeLeader = leaders[active]
 
     return (
