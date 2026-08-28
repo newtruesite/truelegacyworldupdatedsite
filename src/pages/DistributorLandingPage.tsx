@@ -2,6 +2,7 @@ import { Footer } from '@/components/layout/Footer'
 import { Navbar } from '@/components/layout/Navbar'
 import { SEO } from '@/components/SEO'
 import { YouTubeEmbed } from '@/components/ui/YouTubeEmbed'
+import { DuoLandingPage } from '@/components/duo/DuoLandingPage'
 import { crmSupabase, getPublicDistributors, getLeaderPortrait } from '@/lib/crm'
 import type { PublicDistributor } from '@/lib/crm'
 import { useLocaleContext } from '@/contexts/LocaleContext'
@@ -154,6 +155,10 @@ export default function DistributorLandingPage() {
   const copy = useMemo(() => variant ? VARIANTS[variant] : null, [variant])
   if (!variant || profile === null) return <NotFoundPage />
 
+  if (variant === 'duo') {
+    return <DuoLandingPage profile={profile} distributorSlug={slug} />
+  }
+
   const leaderPhoto = profile?.avatar_url || (profile?.slug && getLeaderPortrait(profile.slug, LEADER_PORTRAITS[profile.slug])) || '/logos/tl-square-white.png'
   const Icon = copy?.icon || Sparkles
   const applyUrl = `/apply?ref=${profile?.referral_code || slug}&interest=${copy?.interest || 'duo'}&source=${variant}`
@@ -163,7 +168,7 @@ export default function DistributorLandingPage() {
 
   return <div className="page-wrapper bg-black text-white">
     <SEO
-      title={`${profile?.display_name || 'True Legacy'} | ${variant === 'duo' ? 'Duo Products' : variant === 'business' ? 'Business Presentation' : variant === 'events' ? 'Weekly Events' : 'Training'}`}
+      title={`${profile?.display_name || 'True Legacy'} | ${variant === 'business' ? 'Business Presentation' : variant === 'events' ? 'Weekly Events' : 'Training'}`}
       description={copy?.subheadline || ''}
       image={leaderPhoto}
     />
@@ -248,8 +253,6 @@ export default function DistributorLandingPage() {
         <div><p className="text-xs font-bold uppercase tracking-[0.24em] text-[#2997ff]">Why {profile.display_name} shared this</p><h2 className="mt-3 text-3xl font-black">A personal introduction—not a generic advertisement.</h2><div className="mt-6 whitespace-pre-line leading-7 text-[#cccccc]">{profile.bio}</div></div>
         <div className="grid gap-3 sm:grid-cols-2">{BENEFITS[variant].map(item => <div key={item} className="flex gap-3 rounded-2xl border border-white/10 bg-white/[0.04] p-5 text-sm text-slate-200"><Check className="mt-0.5 h-5 w-5 shrink-0 text-[#2997ff]" />{item}</div>)}</div>
       </div></section>}
-
-      {variant === 'duo' && <section className="border-y border-white/10 bg-black px-4 py-16 sm:px-6 md:py-24"><div className="mx-auto max-w-6xl"><div className="mx-auto mb-10 max-w-3xl text-center"><p className="text-xs font-bold uppercase tracking-[0.24em] text-[#2997ff]">The Duo product presentation</p><h2 className="mt-3 text-3xl font-black sm:text-4xl">See the Duo. Then watch each product story.</h2><p className="mt-4 text-[#cccccc]">These videos provide an introduction. Product availability and official specifications vary by market, so confirm details directly with {profile?.display_name}.</p></div><div className="mx-auto mb-12 grid max-w-4xl grid-cols-[1fr_auto_1fr] items-center gap-3 rounded-3xl border border-white/20 bg-gradient-to-br from-cyan-400/10 to-indigo-500/10 p-4 sm:gap-6 sm:p-8"><div className="rounded-2xl border border-white/10 bg-black/20 p-4 text-center"><img src="/products/k8.png" alt="Leveluk K8 Kangen Water ionizer" className="mx-auto h-40 w-full object-contain sm:h-64" /><h3 className="mt-3 font-bold">Leveluk K8</h3><p className="mt-1 text-xs text-[#cccccc]">Flagship water ionizer</p></div><div className="flex h-10 w-10 items-center justify-center rounded-full border border-white/20 bg-cyan-400/15 text-[#2997ff] sm:h-14 sm:w-14"><Plus className="h-6 w-6" /></div><div className="rounded-2xl border border-white/10 bg-black/20 p-4 text-center"><img src="/products/emguarde-go.png" alt="emGuarde GO set of two" className="mx-auto h-40 w-full object-contain sm:h-64" /><h3 className="mt-3 font-bold">emGuarde GO</h3><p className="mt-1 text-xs text-[#cccccc]">Portable set of two</p></div></div><div className="grid gap-8 lg:grid-cols-2"><div><YouTubeEmbed url={waterDemoUrl} title="Leveluk K8 Kangen Water system" /><h3 className="mt-4 text-xl font-bold">Leveluk K8</h3><p className="mt-2 text-sm leading-6 text-[#cccccc]">The featured flagship Kangen Water ionizer for home water education.</p></div><div><YouTubeEmbed url={emguardeDemoUrl} title="emGuarde GO portable product" /><h3 className="mt-4 text-xl font-bold">emGuarde GO</h3><p className="mt-2 text-sm leading-6 text-[#cccccc]">A compact, rechargeable set of two designed for portable use. Availability varies by market.</p></div></div></div></section>}
 
       {variant === 'business' && <section className="border-y border-white/10 bg-black px-4 py-16 sm:px-6 md:py-24"><div className="mx-auto grid max-w-6xl gap-10 lg:grid-cols-[1.1fr_0.9fr] lg:items-center"><YouTubeEmbed url={locale === 'es' ? "https://youtu.be/t1OtNA4p8y4" : "https://youtu.be/lB5fW55DmaI?si=HzPbgiwUup9u5UN-"} title="True Legacy Duo business presentation" /><div><p className="text-xs font-bold uppercase tracking-[0.24em] text-[#2997ff]">Business through education</p><h2 className="mt-3 text-3xl font-black">Share products. Develop people. Duplicate a clear process.</h2><p className="mt-5 leading-7 text-[#cccccc]">True Legacy supports independent distributors with product education, presentations, mentoring, and CRM-based referral attribution. This is an independent business opportunity—not employment or guaranteed income.</p><Link to={applyUrl} className="mt-7 inline-flex items-center gap-2 rounded-xl bg-cyan-500 px-6 py-3 font-bold hover:bg-cyan-400">Explore with {profile?.display_name}<ArrowRight className="h-5 w-5" /></Link></div></div></section>}
 

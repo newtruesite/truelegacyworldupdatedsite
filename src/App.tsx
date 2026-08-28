@@ -9,6 +9,7 @@ import ApplicationPage from "@/pages/ApplicationPage";
 import DistributorsPage from "@/pages/DistributorsPage";
 import DistributorProfilePage from "@/pages/DistributorProfilePage";
 import DistributorLandingPage from "@/pages/DistributorLandingPage";
+import { DuoLandingPage } from "@/components/duo/DuoLandingPage";
 import EmGuardePage from "@/pages/EmGuardePage";
 import EventsPage from "@/pages/EventsPage";
 import EventsHubPage from "@/pages/EventsHubPage";
@@ -129,6 +130,14 @@ function AnimatedRoutes() {
             element={
               <PageTransitionWrapper>
                 <DistributorsPage />
+              </PageTransitionWrapper>
+            }
+          />
+          <Route
+            path="/duo"
+            element={
+              <PageTransitionWrapper>
+                <DuoLandingPage distributorSlug="mehdi-cohen" />
               </PageTransitionWrapper>
             }
           />
