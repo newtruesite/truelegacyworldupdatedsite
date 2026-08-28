@@ -462,12 +462,14 @@ export default function CrmPage() {
               </p>
             </div>
             <div className="flex flex-wrap items-center gap-2.5">
-              <Link
-                to="/crm/growth"
-                className="inline-flex items-center gap-1.5 rounded-xl border border-white/15 bg-white/[0.04] px-4 py-2 text-xs font-bold text-white hover:bg-white/10 transition-colors"
-              >
-                Growth Center
-              </Link>
+              {membership?.role === 'admin' && (
+                <Link
+                  to="/crm/growth"
+                  className="inline-flex items-center gap-1.5 rounded-xl border border-white/15 bg-white/[0.04] px-4 py-2 text-xs font-bold text-white hover:bg-white/10 transition-colors"
+                >
+                  Growth Center
+                </Link>
+              )}
               <button
                 onClick={() => {
                   setShowAddLeadModal(true)

@@ -12,6 +12,7 @@ import {
 } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { NavLink, useLocation } from 'react-router-dom'
+import { crmSupabase, getCrmMembership } from '@/lib/crm'
 
 const ITEMS = [
   { to: '/app', label: 'Home', icon: Home, exact: true },
@@ -21,13 +22,14 @@ const ITEMS = [
   { to: '/app/bookings', label: 'Bookings', icon: CalendarCheck2 },
   { to: '/app/library', label: 'Library', icon: BookOpen },
   { to: '/training', label: 'Academy', icon: BookOpen },
-  { to: '/crm/growth', label: 'Team', icon: Users },
-  { to: '/crm/platform', label: 'Analytics', icon: BarChart3 },
+  { to: '/crm/growth', label: 'Team', icon: Users, adminOnly: true },
+  { to: '/crm/platform', label: 'Analytics', icon: BarChart3, adminOnly: true },
   { to: '/app/settings', label: 'Settings', icon: Settings },
 ]
 
 export function AppNavigation() {
   const { pathname } = useLocation()
+  const [isAdmin, setIsAdmin] = useState(false)
   const appRoute =
     pathname.startsWith('/app') ||
     pathname === '/crm' ||
@@ -48,6 +50,25 @@ export function AppNavigation() {
       // ignore storage errors
     }
   }
+
+  useEffect(() => {
+    if (!crmSupabase) return
+    crmSupabase.auth.getSession().then(async ({ data }) => {
+      if (data.session?.user?.id) {
+        const member = await getCrmMembership(data.session.user.id)
+        setIsAdmin(member?.role === 'admin')
+      }
+    })
+    const { data } = crmSupabase.auth.onAuthStateChange(async (_event, session) => {
+      if (session?.user?.id) {
+        const member = await getCrmMembership(session.user.id)
+        setIsAdmin(member?.role === 'admin')
+      } else {
+        setIsAdmin(false)
+      }
+    })
+    return () => data.subscription.unsubscribe()
+  }, [])
 
   useEffect(() => {
     document.body.classList.toggle('tl-app-route', appRoute)
@@ -79,6 +100,8 @@ export function AppNavigation() {
     )
   }
 
+  const visibleItems = ITEMS.filter(item => !item.adminOnly || isAdmin)
+
   return (
     <nav className="tl-app-nav" aria-label="True Legacy app navigation">
       {/* Sleek top-right collapse handle positioned cleanly at the outer right edge */}
@@ -93,7 +116,7 @@ export function AppNavigation() {
         <ChevronDown className="w-3 h-3" />
       </button>
 
-      {ITEMS.map(({ to, label, icon: Icon, exact }) => (
+      {visibleItems.map(({ to, label, icon: Icon, exact }) => (
         <NavLink
           key={to}
           to={to}
