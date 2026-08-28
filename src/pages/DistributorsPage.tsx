@@ -4,7 +4,7 @@ import { SEO } from "@/components/SEO";
 import { TLBackground } from "@/components/ui/TLBackground";
 import { LeaderCard } from "@/components/ui/LeaderCard";
 import { useLocaleContext } from "@/contexts/LocaleContext";
-import { getPublicDistributors } from "@/lib/crm";
+import { getPublicDistributors, getLeaderPortrait } from "@/lib/crm";
 import { motion } from "framer-motion";
 import {
   ArrowRight,
@@ -73,7 +73,12 @@ const LANGUAGE_NAMES: Record<string, Record<string, string>> = {
 
 export default function DistributorsPage() {
   const { locale } = useLocaleContext();
-  const [distributors, setDistributors] = useState<Distributor[]>(FALLBACK_DISTRIBUTORS);
+  const [distributors, setDistributors] = useState<Distributor[]>(() =>
+    FALLBACK_DISTRIBUTORS.map((d) => ({
+      ...d,
+      photo: getLeaderPortrait(d.slug, d.photo),
+    }))
+  );
   const [isLoadingDistributors, setIsLoadingDistributors] = useState(true);
   const [query, setQuery] = useState("");
   const [region, setRegion] = useState("all");

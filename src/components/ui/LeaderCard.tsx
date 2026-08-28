@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion'
 import { ArrowRight, BadgeCheck, Globe2, Instagram, Languages, MapPin } from 'lucide-react'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { getLeaderPortrait } from '@/lib/crm'
 
@@ -125,21 +125,24 @@ export function LeaderCard({
 }: LeaderCardProps) {
   const config = LEADER_PORTRAIT_REGISTRY[dist.slug] || {}
   const fallbackSrc = config.src || `/leaders/standardized/${dist.slug}.png`
-  const initialPhoto = dist.photo || getLeaderPortrait(dist.slug, fallbackSrc) || fallbackSrc
+  const dynamicPhoto = getLeaderPortrait(dist.slug, dist.photo)
+  const primaryPhoto = dist.photo || dynamicPhoto || fallbackSrc
 
-  const [currentImg, setCurrentImg] = useState(initialPhoto)
-  const [imgError, setImgError] = useState(false)
+  const [imgFailed, setImgFailed] = useState(false)
 
+  useEffect(() => {
+    setImgFailed(false)
+  }, [dist.photo, dist.slug])
+
+  const imageSource = imgFailed ? fallbackSrc : primaryPhoto
   const scale = portraitScale ?? config.scale ?? 1.03
   const offsetY = portraitPositionY ?? config.offsetY ?? '0%'
   const offsetX = portraitPositionX ?? config.offsetX ?? '0%'
   const objectPosition = config.objectPosition ?? 'top center'
 
   const handleImgError = () => {
-    if (currentImg !== fallbackSrc) {
-      setCurrentImg(fallbackSrc)
-    } else {
-      setImgError(true)
+    if (!imgFailed && imageSource !== fallbackSrc) {
+      setImgFailed(true)
     }
   }
 
@@ -173,9 +176,9 @@ export function LeaderCard({
         />
 
         {/* Layer 4: Standardized Leader Portrait with Calibrated Framing */}
-        {!imgError && currentImg ? (
+        {imageSource ? (
           <img
-            src={currentImg}
+            src={imageSource}
             alt={dist.name}
             onError={handleImgError}
             className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 ease-out"
