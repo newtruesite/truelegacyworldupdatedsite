@@ -139,16 +139,16 @@ Deno.serve(async (request) => {
                 </div>
 
                 <div style="margin-bottom: 16px;">
-                  <p style="margin: 0; color: #ffffff; font-size: 14px; font-weight: bold;">3. Upload or Generate Your Studio Portrait</p>
+                  <p style="margin: 0; color: #ffffff; font-size: 14px; font-weight: bold;">3. Share Your Custom Link & Track Leads</p>
                   <p style="margin: 4px 0 0 0; color: #94a3b8; font-size: 13px; line-height: 1.5;">
-                    Go to <a href="${settingsUrl}" style="color: #38bdf8; text-decoration: none;">Account Settings (${settingsUrl})</a> to upload or generate your official luxury True Legacy studio portrait so you look consistent alongside all leaders.
+                    Your personal verified landing page is live at <a href="${publicProfileUrl}" style="color: #38bdf8; text-decoration: none;">${publicProfileUrl}</a>. Every prospect who connects with you through this link will automatically route directly into your private CRM leads list!
                   </p>
                 </div>
 
                 <div style="margin-bottom: 0;">
-                  <p style="margin: 0; color: #ffffff; font-size: 14px; font-weight: bold;">4. Share Your Custom Link & Track Leads</p>
+                  <p style="margin: 0; color: #ffffff; font-size: 14px; font-weight: bold;">4. (Optional) Update Your Profile & Photo Anytime</p>
                   <p style="margin: 4px 0 0 0; color: #94a3b8; font-size: 13px; line-height: 1.5;">
-                    Your personal verified landing page is live at <a href="${publicProfileUrl}" style="color: #38bdf8; text-decoration: none;">${publicProfileUrl}</a>. Every prospect who connects with you through this link will automatically route directly into your private CRM leads list!
+                    Your verified leader photo and bio are already active. If you ever want to update your portrait, WhatsApp number, or bio in the future, you can do so in <a href="${settingsUrl}" style="color: #38bdf8; text-decoration: none;">Account Settings (${settingsUrl})</a>.
                   </p>
                 </div>
               </div>

@@ -103,12 +103,13 @@ export function LeaderAccessDispatcherModal({
 Your verified leadership portal is now live:
 🔗 *Your Public Link:* ${origin}/d/${singleTarget.slug}
 
-*Quick Setup Steps:*
-1️⃣ Sign in to your portal: ${origin}/app
-2️⃣ Use your email: ${singleTarget.email}
-3️⃣ Upload your standardized portrait: ${origin}/app/settings
+*Quick Start Guide:*
+1️⃣ Sign in to your CRM: ${origin}/app
+2️⃣ Use your email: ${singleTarget.email} (Temp Pass: TrueLegacy2026!)
+3️⃣ Install the Web App: Add to Home Screen on your phone
+4️⃣ (Optional) Update your bio or photo anytime in Settings: ${origin}/app/settings
 
-All customer inquiries from your link flow directly into your private CRM!
+All customer inquiries and business leads from your personal link route directly into your private CRM!
 
 Welcome to the True Legacy Global Team! 🚀`
   }, [singleTarget])

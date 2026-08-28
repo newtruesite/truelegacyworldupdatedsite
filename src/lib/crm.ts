@@ -632,14 +632,14 @@ Get 1-tap instant access to your True Legacy CRM directly from your phone's home
 • iPhone (Safari): Open ${loginUrl} in Safari -> Tap the Share button (square with arrow) -> Tap "Add to Home Screen".
 • Android (Chrome): Open ${loginUrl} in Chrome -> Tap the three dots (menu) -> Tap "Install App" or "Add to Home screen".
 
-3. UPLOAD OR GENERATE YOUR OFFICIAL STUDIO PORTRAIT
-Visit ${settingsUrl} to generate or upload your standardized True Legacy studio portrait. This ensures your card matches the luxury studio standard across the entire website directory.
-
-4. SHARE YOUR PERSONAL LINK & CAPTURE LEADS
+3. SHARE YOUR PERSONAL LINK & CAPTURE LEADS
 Your verified personal link is live at:
 ${publicProfileUrl}
 
 All customer inquiries, water demo requests, and distributor applications submitted through your link will route directly into your private CRM leads dashboard!
+
+4. (OPTIONAL) UPDATE YOUR PROFILE & PHOTO ANYTIME
+Your verified profile and photo are already set up and live on the website. If you ever want to update your portrait, bio, WhatsApp, or Instagram in the future, you can do so anytime in Account Settings (${settingsUrl}).
 
 Welcome to the True Legacy Global Leadership Team!
 
@@ -679,8 +679,8 @@ https://www.truelegacyworld.com
         <li><em>Android:</em> Open Chrome &rarr; Go to <a href="${loginUrl}" style="color: #38bdf8;">${loginUrl}</a> &rarr; Tap Menu &rarr; <strong>"Install App"</strong>.</li>
       </ul>
     </li>
-    <li><strong>Studio Portrait:</strong> Visit <a href="${settingsUrl}" style="color: #38bdf8;">Account Settings</a> to upload or generate your True Legacy studio portrait.</li>
-    <li><strong>Capture Leads:</strong> Share <a href="${publicProfileUrl}" style="color: #38bdf8;">your personal page</a>. Inquiries flow directly into your CRM.</li>
+    <li><strong>Capture Leads:</strong> Share <a href="${publicProfileUrl}" style="color: #38bdf8;">your personal page</a>. All customer inquiries flow directly into your CRM.</li>
+    <li><strong>(Optional) Profile & Photo Updates:</strong> Your photo and bio are already active. If you ever want to update your portrait or contact details, visit <a href="${settingsUrl}" style="color: #38bdf8;">Account Settings</a> anytime.</li>
   </ol>
 
   <div style="border-top: 1px solid rgba(255,255,255,0.1); margin-top: 32px; padding-top: 16px; text-align: center; font-size: 11px; color: #64748b;">
