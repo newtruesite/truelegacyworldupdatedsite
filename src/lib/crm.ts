@@ -620,27 +620,33 @@ YOUR LEADER LOGIN CREDENTIALS
 • Username / Email: ${data.email}
 • Temporary Password: ${tempPass}
 • Personal Public Page: ${publicProfileUrl}
+• Leadership Academy (Training): ${origin}/training (Secret Code: Truelegacyworld1!)
 • Studio Portrait & Settings: ${settingsUrl}
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-HOW TO ACCESS YOUR CRM (4 SIMPLE STEPS)
+QUICK START GUIDE
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 1. SIGN IN TO YOUR CRM
-Go to ${loginUrl} and log in with your email (${data.email}) and temporary password (${tempPass}). You can also reset or update your permanent password inside your settings.
+Go to ${loginUrl} and log in with your email (${data.email}) and temporary password (${tempPass}). You can reset or change your password anytime inside your settings.
 
 2. HOW TO DOWNLOAD & INSTALL THE APP ON YOUR PHONE
 Get 1-tap instant access to your True Legacy CRM directly from your phone's home screen:
 • iPhone (Safari): Open ${loginUrl} in Safari -> Tap the Share button (square with arrow) -> Tap "Add to Home Screen".
 • Android (Chrome): Open ${loginUrl} in Chrome -> Tap the three dots (menu) -> Tap "Install App" or "Add to Home screen".
 
-3. SHARE YOUR PERSONAL LINK & CAPTURE LEADS
+3. ACCESS THE LEADERSHIP ACADEMY & TRAINING
+Unlock the complete video modules, presentation slides, PDF guides, and masterclasses:
+• Training Portal: ${origin}/training
+• Secret Access Code: Truelegacyworld1!
+
+4. SHARE YOUR PERSONAL LINK & CAPTURE LEADS
 Your verified personal link is live at:
 ${publicProfileUrl}
 
 All customer inquiries, water demo requests, and distributor applications submitted through your link will route directly into your private CRM leads dashboard!
 
-4. (OPTIONAL) UPDATE YOUR PROFILE & PHOTO ANYTIME
+5. (OPTIONAL) UPDATE YOUR PROFILE & PHOTO ANYTIME
 Your verified profile and photo are already set up and live on the website. If you ever want to update your portrait, bio, WhatsApp, or Instagram in the future, you can do so anytime in Account Settings (${settingsUrl}).
 
 Welcome to the True Legacy Global Leadership Team!
@@ -665,6 +671,7 @@ https://www.truelegacyworld.com
     <p style="margin: 6px 0; color: #ffffff; font-size: 14px;"><strong>Portal URL:</strong> <a href="${loginUrl}" style="color: #38bdf8; text-decoration: none;">${loginUrl}</a></p>
     <p style="margin: 6px 0; color: #ffffff; font-size: 14px;"><strong>Username / Email:</strong> <span style="color: #38bdf8; font-weight: bold;">${data.email}</span></p>
     <p style="margin: 6px 0; color: #ffffff; font-size: 14px;"><strong>Temporary Password:</strong> <span style="font-family: monospace; background: rgba(255,255,255,0.1); padding: 3px 8px; border-radius: 4px; color: #facc15; font-weight: bold;">${tempPass}</span></p>
+    <p style="margin: 6px 0; color: #ffffff; font-size: 14px;"><strong>Leadership Academy:</strong> <a href="${origin}/training" style="color: #38bdf8; text-decoration: none;">${origin}/training</a> (Code: <span style="color: #a78bfa; font-weight: bold;">Truelegacyworld1!</span>)</p>
     <p style="margin: 6px 0; color: #ffffff; font-size: 14px;"><strong>Personal Public Page:</strong> <a href="${publicProfileUrl}" style="color: #38bdf8; text-decoration: none;">${publicProfileUrl}</a></p>
   </div>
 
@@ -672,15 +679,16 @@ https://www.truelegacyworld.com
     <a href="${loginUrl}" style="background-color: #2997ff; color: #000000; font-weight: 800; font-size: 14px; text-decoration: none; padding: 14px 28px; border-radius: 10px; display: inline-block;">Sign In to Leader Portal &rarr;</a>
   </div>
 
-  <h3 style="color: #ffffff; font-size: 14px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 8px; margin-top: 32px;">Quick Setup & App Installation</h3>
+  <h3 style="color: #ffffff; font-size: 14px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 8px; margin-top: 32px;">Quick Setup & Training Guide</h3>
   <ol style="color: #cbd5e1; font-size: 13px; line-height: 1.8; padding-left: 20px;">
-    <li><strong>Sign In:</strong> Visit <a href="${loginUrl}" style="color: #38bdf8;">${loginUrl}</a> with your email (<strong>${data.email}</strong>) and temporary password (<strong>${tempPass}</strong>).</li>
+    <li><strong>Sign In:</strong> Visit <a href="${loginUrl}" style="color: #38bdf8;">${loginUrl}</a> with your email (<strong>${data.email}</strong>) and password (<strong>${tempPass}</strong>).</li>
     <li><strong>Install on Mobile:</strong>
       <ul style="margin: 4px 0;">
         <li><em>iPhone:</em> Open Safari &rarr; Go to <a href="${loginUrl}" style="color: #38bdf8;">${loginUrl}</a> &rarr; Tap Share &rarr; <strong>"Add to Home Screen"</strong>.</li>
         <li><em>Android:</em> Open Chrome &rarr; Go to <a href="${loginUrl}" style="color: #38bdf8;">${loginUrl}</a> &rarr; Tap Menu &rarr; <strong>"Install App"</strong>.</li>
       </ul>
     </li>
+    <li><strong>Leadership Academy & Training:</strong> Visit <a href="${origin}/training" style="color: #38bdf8;">${origin}/training</a> and enter the secret code <strong style="color: #a78bfa;">Truelegacyworld1!</strong> to unlock your curriculum, PDF guides, and masterclasses.</li>
     <li><strong>Capture Leads:</strong> Share <a href="${publicProfileUrl}" style="color: #38bdf8;">your personal page</a>. All customer inquiries flow directly into your CRM.</li>
     <li><strong>(Optional) Profile & Photo Updates:</strong> Your photo and bio are already active. If you ever want to update your portrait or contact details, visit <a href="${settingsUrl}" style="color: #38bdf8;">Account Settings</a> anytime.</li>
   </ol>

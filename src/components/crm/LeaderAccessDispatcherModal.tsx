@@ -105,9 +105,10 @@ Your verified leadership portal is now live:
 
 *Quick Start Guide:*
 1️⃣ Sign in to your CRM: ${origin}/app
-2️⃣ Use your email: ${singleTarget.email} (Temp Pass: TrueLegacy2026!)
-3️⃣ Install the Web App: Add to Home Screen on your phone
-4️⃣ (Optional) Update your bio or photo anytime in Settings: ${origin}/app/settings
+2️⃣ Use your email: ${singleTarget.email} (Password: ${includeTempPassword ? tempPassword : 'Legacy@Leader2026!'})
+3️⃣ Install Web App: Open ${origin}/app & tap "Add to Home Screen"
+4️⃣ Leadership Academy & Training: ${origin}/training (Secret Code: *Truelegacyworld1!*)
+5️⃣ (Optional) Update bio or photo anytime: ${origin}/app/settings
 
 All customer inquiries and business leads from your personal link route directly into your private CRM!
 

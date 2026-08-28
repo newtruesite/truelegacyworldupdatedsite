@@ -99,6 +99,10 @@ Deno.serve(async (request) => {
                         <td style="padding: 4px 0; color: #ffffff; font-size: 13px;"><span style="font-family: monospace; background: rgba(255,255,255,0.1); padding: 3px 8px; border-radius: 6px; font-weight: bold; color: #facc15;">${escapeHtml(tempPassword)}</span></td>
                       </tr>
                       <tr>
+                        <td style="padding: 4px 0; color: #94a3b8; font-size: 13px;"><strong>Leadership Academy:</strong></td>
+                        <td style="padding: 4px 0; color: #ffffff; font-size: 13px;"><a href="${appUrl}/training" style="color: #38bdf8; text-decoration: none;">${appUrl}/training</a> (Secret Code: <strong style="color: #a78bfa;">Truelegacyworld1!</strong>)</td>
+                      </tr>
+                      <tr>
                         <td style="padding: 4px 0; color: #94a3b8; font-size: 13px;"><strong>Your Public Link:</strong></td>
                         <td style="padding: 4px 0; color: #ffffff; font-size: 13px;"><a href="${publicProfileUrl}" style="color: #38bdf8; text-decoration: none;">${publicProfileUrl}</a></td>
                       </tr>
@@ -117,7 +121,7 @@ Deno.serve(async (request) => {
               <!-- Step-by-Step Instructions -->
               <div style="border-top: 1px solid rgba(255,255,255,0.1); padding-top: 24px; margin-bottom: 28px;">
                 <h3 style="margin: 0 0 16px 0; color: #ffffff; font-size: 15px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px;">
-                  Quick Start Guide (4 Simple Steps)
+                  Quick Start Guide
                 </h3>
                 
                 <div style="margin-bottom: 16px;">
@@ -139,14 +143,21 @@ Deno.serve(async (request) => {
                 </div>
 
                 <div style="margin-bottom: 16px;">
-                  <p style="margin: 0; color: #ffffff; font-size: 14px; font-weight: bold;">3. Share Your Custom Link & Track Leads</p>
+                  <p style="margin: 0; color: #ffffff; font-size: 14px; font-weight: bold;">3. Access the Leadership Academy & Training</p>
+                  <p style="margin: 4px 0 0 0; color: #94a3b8; font-size: 13px; line-height: 1.5;">
+                    Go to <a href="${appUrl}/training" style="color: #38bdf8; text-decoration: none;">${appUrl}/training</a> and enter the secret access code <strong style="color: #a78bfa;">Truelegacyworld1!</strong> to unlock all video modules, slide decks, and training resources.
+                  </p>
+                </div>
+
+                <div style="margin-bottom: 16px;">
+                  <p style="margin: 0; color: #ffffff; font-size: 14px; font-weight: bold;">4. Share Your Custom Link & Track Leads</p>
                   <p style="margin: 4px 0 0 0; color: #94a3b8; font-size: 13px; line-height: 1.5;">
                     Your personal verified landing page is live at <a href="${publicProfileUrl}" style="color: #38bdf8; text-decoration: none;">${publicProfileUrl}</a>. Every prospect who connects with you through this link will automatically route directly into your private CRM leads list!
                   </p>
                 </div>
 
                 <div style="margin-bottom: 0;">
-                  <p style="margin: 0; color: #ffffff; font-size: 14px; font-weight: bold;">4. (Optional) Update Your Profile & Photo Anytime</p>
+                  <p style="margin: 0; color: #ffffff; font-size: 14px; font-weight: bold;">5. (Optional) Update Your Profile & Photo Anytime</p>
                   <p style="margin: 4px 0 0 0; color: #94a3b8; font-size: 13px; line-height: 1.5;">
                     Your verified leader photo and bio are already active. If you ever want to update your portrait, WhatsApp number, or bio in the future, you can do so in <a href="${settingsUrl}" style="color: #38bdf8; text-decoration: none;">Account Settings (${settingsUrl})</a>.
                   </p>
