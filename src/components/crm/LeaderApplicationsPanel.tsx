@@ -37,6 +37,10 @@ import {
   type LeaderApplication,
   type LeaderApplicationStatus,
 } from '@/lib/crm'
+import {
+  LeaderAccessDispatcherModal,
+  type LeaderAccessTarget,
+} from './LeaderAccessDispatcherModal'
 
 // ── Status config ─────────────────────────────────────────────────────────────
 
@@ -118,6 +122,7 @@ function ApplicationRow({
   const [localStatus, setLocalStatus] = useState<LeaderApplicationStatus>(app.status)
   const [saving, setSaving] = useState(false)
   const [saveMsg, setSaveMsg] = useState('')
+  const [showAccessModal, setShowAccessModal] = useState(false)
   const noteRef = useRef<HTMLTextAreaElement>(null)
 
   // Sync if parent updates
@@ -324,6 +329,17 @@ function ApplicationRow({
                 </button>
               )}
 
+              {localStatus === 'approved' && (
+                <button
+                  type="button"
+                  onClick={() => setShowAccessModal(true)}
+                  className="inline-flex items-center gap-2 rounded-xl bg-[#2997ff] hover:bg-[#2997ff]/90 px-4 py-2 text-xs font-black text-black transition shadow-lg shadow-cyan-500/20 whitespace-nowrap"
+                >
+                  <Mail className="h-3.5 w-3.5" />
+                  Send Login Access & Instructions
+                </button>
+              )}
+
               {localStatus !== 'declined' && localStatus !== 'approved' && (
                 <button
                   type="button"
@@ -356,6 +372,18 @@ function ApplicationRow({
           </div>
         </div>
       )}
+
+      {/* Access Dispatcher Modal for Approved Applicant */}
+      <LeaderAccessDispatcherModal
+        target={{
+          displayName: app.full_name,
+          email: app.email,
+          slug: app.full_name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, ''),
+          phone: app.phone,
+        }}
+        isOpen={showAccessModal}
+        onClose={() => setShowAccessModal(false)}
+      />
     </div>
   )
 }

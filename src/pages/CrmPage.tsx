@@ -1,6 +1,7 @@
 import { SEO } from '@/components/SEO'
 import { PortraitReferenceAdmin } from '@/components/leaders/PortraitReferenceAdmin'
 import { LeaderApplicationsPanel } from '@/components/crm/LeaderApplicationsPanel'
+import { LeaderAccessPanel } from '@/components/crm/LeaderAccessPanel'
 import { SponsorGate } from '@/components/crm/SponsorGate'
 import { addLeadNote, assignLead, crmConfigured, crmSupabase, getCrmDistributors, getCrmLeads, getCrmMembership, getLeadNotes, updateLeadStatus, submitCrmApplication } from '@/lib/crm'
 import type { CrmDistributor, CrmLead, CrmLeadNote, CrmMembership, LeadStatus } from '@/lib/crm'
@@ -496,6 +497,9 @@ export default function CrmPage() {
 
           {/* Leader Applications (admin-only — shown first so pending alerts are visible) */}
           {membership?.role === 'admin' && <LeaderApplicationsPanel />}
+
+          {/* Leader Access & Credentials Dispatcher (admin-only) */}
+          {membership?.role === 'admin' && <LeaderAccessPanel />}
 
           {/* Portrait Standard Admin Panel (admin-only) */}
           {membership?.role === 'admin' && <PortraitReferenceAdmin />}
