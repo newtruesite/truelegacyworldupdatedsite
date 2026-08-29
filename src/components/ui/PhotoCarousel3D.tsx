@@ -1,13 +1,31 @@
 import { AnimatePresence, motion } from 'framer-motion'
-import { ChevronLeft, ChevronRight, Globe, Star, Trophy, Users, Zap } from 'lucide-react'
-import { useEffect, useState } from 'react'
+import { ChevronLeft, ChevronRight, Globe, Star, Trophy, Users, Zap, Award, Sparkles } from 'lucide-react'
+import { useEffect, useState, useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import { useLocaleContext } from '@/contexts/LocaleContext'
-import { getPublicDistributors, getLeaderPortrait } from '@/lib/crm'
+import { getPublicDistributors, getLeaderPortrait, type PublicDistributor } from '@/lib/crm'
 
-const LEADERS = [
+interface LeaderItem {
+    id: number | string
+    slug: string
+    name: string
+    profileUrl: string
+    handle?: string
+    instagramUrl?: string
+    region: string
+    role: string
+    intro: string
+    bio: string[]
+    image: string
+    icon: typeof Globe
+    gradient: string
+    glow: string
+}
+
+const CORE_LEADERS: LeaderItem[] = [
     {
         id: 1,
+        slug: 'mehdi-cohen',
         name: 'Coach Mehdi',
         profileUrl: '/d/mehdi-cohen',
         handle: '@mehdicohen_',
@@ -27,67 +45,13 @@ const LEADERS = [
     },
     {
         id: 2,
-        name: 'Ryan Pool Sr',
-        profileUrl: '/d/ryan-pool',
-        handle: '@ryanpoolsr',
-        instagramUrl: 'https://www.instagram.com/ryanpoolsr/',
-        region: 'Los Angeles · USA',
-        role: 'Entrepreneur & Community Leader',
-        intro: 'Ryan is an entrepreneur, former athlete, and community-minded leader focused on wellness, personal development, financial freedom, and building a lasting family legacy.',
-        bio: [
-            'Ryan Pool is an entrepreneur, former athlete, and community-minded leader based in Los Angeles. Passionate about health, fitness, personal development, and entrepreneurship, Ryan is focused on building businesses, connecting with like-minded people, and creating opportunities for others.',
-            'As an independent entrepreneur in the wellness space, Ryan is expanding his network and helping people discover new ways to prioritize hydration, wellness, and a healthier lifestyle. His vision goes beyond business—he wants to build a strong legacy for his family, create financial freedom, and inspire others to pursue their own goals with purpose, discipline, and consistency.',
-        ],
-        image: '/leaders/standardized/ryan-pool-sr.png',
-        icon: Users,
-        gradient: 'from-blue-600 to-indigo-600',
-        glow: 'rgba(37,99,235,0.5)',
-    },
-    {
-        id: 3,
-        name: 'Coach Magaly',
-        profileUrl: '/d/magaly-cardona',
-        handle: '@mcardonita',
-        instagramUrl: 'https://www.instagram.com/mcardonita/',
-        region: 'USA · LATAM',
-        role: 'True Legacy 6A Leader',
-        intro: 'Magaly helps people design work that aligns with their values — guiding leaders across the U.S. and Latin America to build intentional businesses through Enagic and community.',
-        bio: [
-            'After years of trying to create a life that felt both meaningful and balanced, I realized I wanted a way of working that aligned more deeply with my values. That journey led me to Enagic and a community centered around growth, education, and contribution.',
-            'What began as a personal shift became a professional calling. Today, as a coach and entrepreneur, I support people in the U.S. and around the world who want to build with more intention — whether that\'s in their health, their work, or the direction of their lives.',
-        ],
-        image: '/leaders/standardized/magaly-cardona.png',
-        icon: Trophy,
-        gradient: 'from-indigo-500 to-purple-600',
-        glow: 'rgba(99,102,241,0.5)',
-    },
-    {
-        id: 4,
-        name: 'Coach Ming Way',
-        profileUrl: '/d/ming-way-sia',
-        handle: '@mingwaysia',
-        instagramUrl: 'https://www.instagram.com/mingwaysia/',
-        region: 'Malaysia · India',
-        role: 'Business Builder & Mentor',
-        intro: 'Ming Way built from the ground up alongside his father, developing discipline and resilience that he now uses to help others build responsible, legacy-focused businesses.',
-        bio: [
-            'I made the decision to step away from a traditional academic path and work alongside my father to build a business from the ground up. It wasn\'t glamorous — for two years, I worked relentlessly, navigating challenges that tested my discipline, resilience, and character.',
-            'That period became the foundation for everything that followed. What began as uncertainty turned into a long-term vision — a business and a legacy built through consistency, responsibility, and commitment.',
-            'Today, I focus on helping others think beyond default paths, take ownership of their decisions, and build lives and businesses that reflect their values, not just society\'s expectations.',
-        ],
-        image: '/leaders/standardized/ming-way-sia.png',
-        icon: Zap,
-        gradient: 'from-amber-500 to-orange-600',
-        glow: 'rgba(245,158,11,0.5)',
-    },
-    {
-        id: 5,
+        slug: 'simon-loh',
         name: 'Coach Simon Loh',
         profileUrl: '/d/simon-loh',
         handle: '@simonloh_',
         instagramUrl: 'https://www.instagram.com/simonloh_/',
         region: 'Malaysia · UAE · Nigeria',
-        role: 'Global Entrepreneur & Strategist',
+        role: 'Global Entrepreneur & Strategist (6A2-4)',
         intro: 'Since 2016 Simon has supported more than 10,000 entrepreneurs and over $30M in sales volume — helping leaders in markets like Malaysia, India, UAE, Turkey, and Nigeria build sustainable businesses.',
         bio: [
             "I'm a global entrepreneur who has spent the last several years building and scaling businesses across multiple international markets.",
@@ -100,7 +64,47 @@ const LEADERS = [
         glow: 'rgba(6,182,212,0.5)',
     },
     {
-        id: 6,
+        id: 3,
+        slug: 'ming-way-sia',
+        name: 'Coach Ming Way',
+        profileUrl: '/d/ming-way-sia',
+        handle: '@mingwaysia',
+        instagramUrl: 'https://www.instagram.com/mingwaysia/',
+        region: 'Malaysia · India · Global',
+        role: 'Business Builder & Mentor (6A2-5)',
+        intro: 'Ming Way built from the ground up alongside his father, developing discipline and resilience that he now uses to help others build responsible, legacy-focused businesses.',
+        bio: [
+            'I made the decision to step away from a traditional academic path and work alongside my father to build a business from the ground up. It wasn\'t glamorous — for two years, I worked relentlessly, navigating challenges that tested my discipline, resilience, and character.',
+            'That period became the foundation for everything that followed. What began as uncertainty turned into a long-term vision — a business and a legacy built through consistency, responsibility, and commitment.',
+            'Today, I focus on helping others think beyond default paths, take ownership of their decisions, and build lives and businesses that reflect their values, not just society\'s expectations.',
+        ],
+        image: '/leaders/standardized/ming-way-sia.png',
+        icon: Zap,
+        gradient: 'from-amber-500 to-orange-600',
+        glow: 'rgba(245,158,11,0.5)',
+    },
+    {
+        id: 4,
+        slug: 'zah-naderi',
+        name: 'Zah Naderi',
+        profileUrl: '/d/zah-naderi',
+        handle: '@zahphysique',
+        instagramUrl: 'https://www.instagram.com/zahphysique/',
+        region: 'USA · Global',
+        role: 'Performance Coach & Legacy Builder',
+        intro: 'For more than a decade, Zah has coached elite athletes, celebrities, and executives—bringing lessons in leadership, leverage, and collaboration to True Legacy.',
+        bio: [
+            'For more than a decade, I’ve had the privilege of coaching some of the world’s top performers—elite athletes, celebrities, and C-suite executives. What I discovered along that journey went beyond training: it was about mastering leadership, understanding leverage, and embracing a vision bigger than yourself.',
+            'I realized true, lasting impact comes from connecting with the right people and choosing the right vehicle. That led me to Enagic and to a space where like-minded leaders unite, blend their strengths, and leverage our collective expertise to build generational wealth and a lasting legacy.',
+        ],
+        image: '/leaders/standardized/zah-naderi-v3.png',
+        icon: Trophy,
+        gradient: 'from-indigo-600 to-blue-700',
+        glow: 'rgba(79,70,229,0.5)',
+    },
+    {
+        id: 5,
+        slug: 'alex-gonzalez',
         name: 'Alex Gonzalez',
         profileUrl: '/d/alex-gonzalez',
         handle: '@alexgonzalez_vp',
@@ -118,30 +122,51 @@ const LEADERS = [
         glow: 'rgba(14,165,233,0.5)',
     },
     {
-        id: 7,
-        name: 'Zah Naderi',
-        profileUrl: '/d/zah-naderi',
-        handle: '@zahphysique',
-        instagramUrl: 'https://www.instagram.com/zahphysique/',
-        region: 'USA',
-        role: 'Performance Coach & Legacy Builder',
-        intro: 'For more than a decade, Zah has coached elite athletes, celebrities, and executives—bringing lessons in leadership, leverage, and collaboration to True Legacy.',
+        id: 6,
+        slug: 'ryan-pool',
+        name: 'Ryan Pool Sr',
+        profileUrl: '/d/ryan-pool',
+        handle: '@ryanpoolsr',
+        instagramUrl: 'https://www.instagram.com/ryanpoolsr/',
+        region: 'Los Angeles · USA',
+        role: 'Entrepreneur & Community Leader',
+        intro: 'Ryan is an entrepreneur, former athlete, and community-minded leader focused on wellness, personal development, financial freedom, and building a lasting family legacy.',
         bio: [
-            'For more than a decade, I’ve had the privilege of coaching some of the world’s top performers—elite athletes, celebrities, and C-suite executives. What I discovered along that journey went beyond training: it was about mastering leadership, understanding leverage, and embracing a vision bigger than yourself.',
-            'I realized true, lasting impact comes from connecting with the right people and choosing the right vehicle. That led me to Enagic and to a space where like-minded leaders unite, blend their strengths, and leverage our collective expertise to build generational wealth and a lasting legacy.',
+            'Ryan Pool is an entrepreneur, former athlete, and community-minded leader based in Los Angeles. Passionate about health, fitness, personal development, and entrepreneurship, Ryan is focused on building businesses, connecting with like-minded people, and creating opportunities for others.',
+            'As an independent entrepreneur in the wellness space, Ryan is expanding his network and helping people discover new ways to prioritize hydration, wellness, and a healthier lifestyle. His vision goes beyond business—he wants to build a strong legacy for his family, create financial freedom, and inspire others to pursue their own goals with purpose, discipline, and consistency.',
         ],
-        image: '/leaders/standardized/zah-naderi-v3.png',
+        image: '/leaders/standardized/ryan-pool-sr.png',
+        icon: Users,
+        gradient: 'from-blue-600 to-indigo-600',
+        glow: 'rgba(37,99,235,0.5)',
+    },
+    {
+        id: 7,
+        slug: 'magaly-cardona',
+        name: 'Coach Magaly',
+        profileUrl: '/d/magaly-cardona',
+        handle: '@mcardonita',
+        instagramUrl: 'https://www.instagram.com/mcardonita/',
+        region: 'USA · LATAM',
+        role: 'True Legacy 6A Leader',
+        intro: 'Magaly helps people design work that aligns with their values — guiding leaders across the U.S. and Latin America to build intentional businesses through Enagic and community.',
+        bio: [
+            'After years of trying to create a life that felt both meaningful and balanced, I realized I wanted a way of working that aligned more deeply with my values. That journey led me to Enagic and a community centered around growth, education, and contribution.',
+            'What began as a personal shift became a professional calling. Today, as a coach and entrepreneur, I support people in the U.S. and around the world who want to build with more intention — whether that\'s in their health, their work, or the direction of their lives.',
+        ],
+        image: '/leaders/standardized/magaly-cardona.png',
         icon: Trophy,
-        gradient: 'from-indigo-600 to-blue-700',
-        glow: 'rgba(79,70,229,0.5)',
+        gradient: 'from-indigo-500 to-purple-600',
+        glow: 'rgba(99,102,241,0.5)',
     },
     {
         id: 8,
+        slug: 'emanuela',
         name: 'Emanuela Braj',
         profileUrl: '/d/emanuela',
         handle: '@emanuelabraj',
         instagramUrl: 'https://www.instagram.com/emanuelabraj/',
-        region: 'USA',
+        region: 'USA · Global',
         role: 'True Legacy Distributor',
         intro: 'With more than a decade of experience in sales and marketing, Emanuela builds international growth while empowering purpose-driven entrepreneurs to transform their health, leadership, and generational legacy.',
         bio: [
@@ -156,11 +181,32 @@ const LEADERS = [
     },
     {
         id: 9,
+        slug: 'jesse-schexnayder',
+        name: 'Jesse Schexnayder',
+        profileUrl: '/d/jesse-schexnayder',
+        handle: '@jessehotshotz',
+        instagramUrl: '',
+        region: 'California · USA',
+        role: 'Serial Entrepreneur & True Legacy Leader',
+        intro: 'Jesse is a serial entrepreneur and CEO of HotShotz Reusable Heat Packs, bringing boundless energy, passion for life, and leadership to the True Legacy community.',
+        bio: [
+            'You could say I am a serial entrepreneur. Most know me for my latest venture, HotShotz Reusable Heat Packs. I have a love for life and the universe, and I’m the CEO of Let’s Go!!',
+            'As an independent entrepreneur with Enagic and the True Legacy community, I help people discover freedom, vitality, and high-impact business opportunities built on true Japanese quality.',
+            'My passion is bringing people together, leading with authentic energy, and creating generational freedom through proven duplication.',
+        ],
+        image: '/leaders/standardized/jesse-schexnayder.png',
+        icon: Zap,
+        gradient: 'from-amber-600 to-yellow-600',
+        glow: 'rgba(217,119,6,0.5)',
+    },
+    {
+        id: 10,
+        slug: 'angel-mok',
         name: 'Angel Mok E Lin',
         profileUrl: '/d/angel-mok',
         handle: '',
         instagramUrl: '',
-        region: 'Malaysia · Singapore · Global',
+        region: 'Malaysia · Singapore · Dubai · Global',
         role: 'Global Entrepreneur & True Legacy Distributor',
         intro: 'Angel moved from a successful equity-trading career toward a more meaningful path of entrepreneurship, freedom, impact, and international growth through True Legacy and Enagic.',
         bio: [
@@ -175,59 +221,162 @@ const LEADERS = [
     },
 ]
 
-const LEADER_COPY = {
+const LEADER_COPY: Record<string, { viewProfile: string; roles: string[]; bios: string[] }> = {
     es: {
         viewProfile: 'Ver perfil',
-        roles: ['Fundador global y desarrollador de mercados', 'Emprendedor y líder comunitario', 'Coach y emprendedora con propósito', 'Constructor de negocios y mentor', 'Emprendedor global y estratega', 'Líder de marketing y bienestar', 'Coach de rendimiento y creador de legado', 'Distribuidora de True Legacy', 'Emprendedora global y distribuidora True Legacy'],
+        roles: [
+            'Fundador global y desarrollador de mercados',
+            'Emprendedor global y estratega (6A2-4)',
+            'Constructor de negocios y mentor (6A2-5)',
+            'Coach de rendimiento y creador de legado',
+            'Líder de marketing y bienestar',
+            'Emprendedor y líder comunitario',
+            'Coach y emprendedora con propósito',
+            'Distribuidora de True Legacy',
+            'Emprendedor en serie y líder True Legacy',
+            'Emprendedora global y distribuidora True Legacy',
+        ],
         bios: [
             'Después de 24 años en Estados Unidos, Mehdi ahora ayuda a abrir mercados en Marruecos y Colombia mientras acompaña a personas que desean construir con propósito y visión a largo plazo.',
+            'Desde 2016, Simon ha apoyado a más de 10.000 emprendedores en mercados internacionales y enseña estrategias prácticas para crear vidas profesionales más flexibles y sostenibles.',
+            'Ming Way construyó un negocio desde cero junto a su padre. Hoy ayuda a otros a desarrollar disciplina, asumir sus decisiones y crear negocios responsables que reflejen sus valores.',
+            'Durante más de una década, Zah ha entrenado a atletas de élite, celebridades y ejecutivos, uniendo liderazgo, visión y colaboración para construir un legado auténtico.',
+            'Alex aporta más de 35 años de experiencia en marketing dentro de la industria de suplementos y un compromiso permanente con la salud, el bienestar y una vida plena.',
             'Ryan es emprendedor, exatleta y líder comunitario en Los Ángeles. Su visión es crear libertad financiera, un legado familiar sólido e inspirar a otros con propósito, disciplina y constancia.',
             'Magaly acompaña a personas en Estados Unidos y otros mercados para que construyan su salud, su trabajo y su vida con mayor intención, equilibrio y conexión con sus valores.',
-            'Ming Way construyó un negocio desde cero junto a su padre. Hoy ayuda a otros a desarrollar disciplina, asumir sus decisiones y crear negocios responsables que reflejen sus valores.',
-            'Desde 2016, Simon ha apoyado a más de 10.000 emprendedores en mercados internacionales y enseña estrategias prácticas para crear vidas profesionales más flexibles y sostenibles.',
-            'Alex aporta más de 35 años de experiencia en marketing dentro de la industria de suplementos y un compromiso permanente con la salud, el bienestar y una vida plena.',
-            'Durante más de una década, Zah ha entrenado a atletas de élite, celebridades y ejecutivos, uniendo liderazgo, visión y colaboración para construir un legado auténtico.',
             'Con más de una década de experiencia en ventas y marketing, Emanuela construye un negocio internacional mientras empodera a emprendedores con propósito para transformar su salud, desarrollar liderazgo y crear un legado duradero.',
+            'Jesse es un emprendedor en serie y creador de HotShotz. Aporta energía positiva, pasión por la vida y liderazgo para ayudar a otros a construir libertad y bienestar duradero.',
             'Angel pasó de una exitosa carrera en el mercado de acciones a un camino con mayor propósito, libertad e impacto, desarrollando una organización internacional mediante True Legacy y Enagic.',
         ],
     },
     fr: {
         viewProfile: 'Voir le profil',
-        roles: ['Fondateur mondial et développeur de marchés', 'Entrepreneur et leader communautaire', 'Coach et entrepreneure engagée', 'Bâtisseur d’entreprise et mentor', 'Entrepreneur mondial et stratège', 'Leader en marketing et bien-être', 'Coach de performance et bâtisseur d’héritage', 'Distributrice True Legacy', 'Entrepreneure mondiale et distributrice True Legacy'],
+        roles: [
+            'Fondateur mondial et développeur de marchés',
+            'Entrepreneur mondial et stratège (6A2-4)',
+            'Bâtisseur d’entreprise et mentor (6A2-5)',
+            'Coach de performance et bâtisseur d’héritage',
+            'Leader en marketing et bien-être',
+            'Entrepreneur et leader communautaire',
+            'Coach et entrepreneure engagée',
+            'Distributrice True Legacy',
+            'Entrepreneur en série et leader True Legacy',
+            'Entrepreneure mondiale et distributrice True Legacy',
+        ],
         bios: [
             'Après 24 ans aux États-Unis, Mehdi contribue aujourd’hui à ouvrir des marchés au Maroc et en Colombie tout en accompagnant ceux qui souhaitent bâtir avec vision et détermination.',
+            'Depuis 2016, Simon a accompagné plus de 10 000 entrepreneurs sur plusieurs marchés et partage des stratégies pratiques pour bâtir une vie professionnelle plus libre et durable.',
+            'Ming Way a bâti une entreprise avec son père. Aujourd’hui, il aide les autres à développer leur discipline et à créer des activités responsables, alignées avec leurs valeurs.',
+            'Depuis plus de dix ans, Zah accompagne des athlètes d’élite, des célébrités et des dirigeants, en réunissant leadership, vision et collaboration pour bâtir un héritage authentique.',
+            'Alex apporte plus de 35 ans d’expérience en marketing dans l’industrie des compléments alimentaires et un engagement constant envers la santé et le bien-être.',
             'Ryan est entrepreneur, ancien athlète et leader communautaire à Los Angeles. Sa vision est de créer une liberté financière, un héritage familial durable et d’inspirer les autres.',
             'Magaly accompagne des personnes aux États-Unis et ailleurs afin qu’elles construisent leur santé, leur travail et leur vie avec davantage d’intention et d’équilibre.',
-            'Ming Way a bâti une entreprise avec son père. Aujourd’hui, il aide les autres à développer leur discipline et à créer des activités responsables, alignées avec leurs valeurs.',
-            'Depuis 2016, Simon a accompagné plus de 10 000 entrepreneurs sur plusieurs marchés et partage des stratégies pratiques pour bâtir une vie professionnelle plus libre et durable.',
-            'Alex apporte plus de 35 ans d’expérience en marketing dans l’industrie des compléments alimentaires et un engagement constant envers la santé et le bien-être.',
-            'Depuis plus de dix ans, Zah accompagne des athlètes d’élite, des célébrités et des dirigeants, en réunissant leadership, vision et collaboration pour bâtir un héritage authentique.',
             'Forte de plus de dix ans d’expérience dans la vente et le marketing, Emanuela développe une activité internationale tout en accompagnant des entrepreneurs engagés à renforcer leur leadership et bâtir un héritage transgénérationnel.',
+            'Jesse est un entrepreneur dynamique et fondateur de HotShotz. Il apporte une énergie communicative, un amour de la vie et un leadership engagé au sein de True Legacy.',
             'Angel a quitté une carrière florissante dans le trading pour suivre une voie davantage tournée vers le sens, la liberté et l’impact, en développant une organisation internationale avec True Legacy et Enagic.',
         ],
     },
     pt: {
         viewProfile: 'Ver perfil',
-        roles: ['Fundador global e desenvolvedor de mercados', 'Empreendedor e líder comunitário', 'Coach e empreendedora de impacto', 'Construtor de negócios e mentor', 'Empreendedor global e estrategista', 'Líder de marketing e bem-estar', 'Coach de performance e construtor de legado', 'Distribuidora True Legacy', 'Empreendedora global e distribuidora True Legacy'],
+        roles: [
+            'Fundador global e desenvolvedor de mercados',
+            'Empreendedor global e estrategista (6A2-4)',
+            'Construtor de negócios e mentor (6A2-5)',
+            'Coach de performance e construtor de legado',
+            'Líder de marketing e bem-estar',
+            'Empreendedor e líder comunitário',
+            'Coach e empreendedora de impacto',
+            'Distribuidora True Legacy',
+            'Empreendedor em série e líder True Legacy',
+            'Empreendedora global e distribuidora True Legacy',
+        ],
         bios: [
             'Depois de 24 anos nos Estados Unidos, Mehdi agora ajuda a abrir mercados no Marrocos e na Colômbia e apoia pessoas que desejam construir com propósito e visão de longo prazo.',
+            'Desde 2016, Simon já apoiou mais de 10 mil empreendedores em mercados internacionais e ensina estratégias práticas para criar vidas profissionais mais flexíveis e sustentáveis.',
+            'Ming Way construiu um negócio ao lado do pai. Hoje ajuda outras pessoas a desenvolverem disciplina e criarem negócios responsáveis, alinhados aos seus valores.',
+            'Há mais de uma década, Zah treina atletas de elite, celebridades e executivos, unindo liderança, visão e colaboração para construir um legado autêntico.',
+            'Alex reúne mais de 35 anos de experiência em marketing na indústria de suplementos e um compromisso permanente com saúde, bem-estar e uma vida plena.',
             'Ryan é empreendedor, ex-atleta e líder comunitário em Los Angeles. Sua visão é criar liberdade financeira, um legado familiar sólido e inspirar outras pessoas.',
             'Magaly apoia pessoas nos Estados Unidos e em outros mercados a construírem sua saúde, seu trabalho e sua vida com mais intenção, equilíbrio e alinhamento com seus valores.',
-            'Ming Way construiu um negócio ao lado do pai. Hoje ajuda outras pessoas a desenvolverem disciplina e criarem negócios responsáveis, alinhados aos seus valores.',
-            'Desde 2016, Simon já apoiou mais de 10 mil empreendedores em mercados internacionais e ensina estratégias práticas para criar vidas profissionais mais flexíveis e sustentáveis.',
-            'Alex reúne mais de 35 anos de experiência em marketing na indústria de suplementos e um compromisso permanente com saúde, bem-estar e uma vida plena.',
-            'Há mais de uma década, Zah treina atletas de elite, celebridades e executivos, unindo liderança, visão e colaboração para construir um legado autêntico.',
             'Com mais de uma década de experiência em vendas e marketing, Emanuela constrói um negócio internacional enquanto capacita empreendedores com propósito a transformar sua saúde, desenvolver liderança e criar um legado duradouro.',
+            'Jesse é um empreendedor em série e criador da HotShotz. Ele traz energia contagiante, paixão pela vida e liderança ativa para a comunidade True Legacy.',
             'Angel trocou uma carreira de sucesso no mercado de ações por um caminho com mais propósito, liberdade e impacto, desenvolvendo uma organização internacional por meio da True Legacy e da Enagic.',
         ],
     },
-} as const
+}
 
 export function PhotoCarousel3D() {
     const { locale } = useLocaleContext()
     const [active, setActive] = useState(0)
+    const [publicDistributors, setPublicDistributors] = useState<PublicDistributor[]>([])
     const [livePortraits, setLivePortraits] = useState<Record<string, string>>({})
-    const count = LEADERS.length
+
+    useEffect(() => {
+        let isMounted = true
+        const updateData = () => {
+            getPublicDistributors().then((profiles) => {
+                if (!isMounted) return
+                setPublicDistributors(profiles)
+                const map: Record<string, string> = {}
+                profiles.forEach((p) => {
+                    if (p.avatar_url) map[p.slug] = p.avatar_url
+                })
+                setLivePortraits(map)
+            })
+        }
+        updateData()
+        window.addEventListener('truelegacy:leader-portrait-updated', updateData)
+        return () => {
+            isMounted = false
+            window.removeEventListener('truelegacy:leader-portrait-updated', updateData)
+        }
+    }, [])
+
+    // Merge core leaders with any additional public distributors from CRM database
+    const leaders = useMemo(() => {
+        const localized = locale === 'en' ? null : LEADER_COPY[locale]
+        const coreMap = new Map<string, LeaderItem>()
+
+        CORE_LEADERS.forEach((leader, index) => {
+            const dynamicImage = livePortraits[leader.slug] || getLeaderPortrait(leader.slug, leader.image)
+            const role = (localized?.roles && localized.roles[index]) || leader.role
+            const bio = (localized?.bios && localized.bios[index]) ? [localized.bios[index]] : leader.bio
+            coreMap.set(leader.slug, {
+                ...leader,
+                role,
+                bio,
+                image: dynamicImage,
+            })
+        })
+
+        // Add any newly registered/approved distributors from CRM that aren't in the core list
+        const extraLeaders: LeaderItem[] = []
+        publicDistributors.forEach((dist, idx) => {
+            if (!coreMap.has(dist.slug)) {
+                const dynamicImage = livePortraits[dist.slug] || dist.avatar_url || getLeaderPortrait(dist.slug, `/leaders/standardized/${dist.slug}.png`)
+                extraLeaders.push({
+                    id: 100 + idx,
+                    slug: dist.slug,
+                    name: dist.display_name,
+                    profileUrl: `/d/${dist.slug}`,
+                    handle: dist.instagram_url ? `@${dist.instagram_url.split('instagram.com/')[1]?.replace('/', '')}` : '',
+                    instagramUrl: dist.instagram_url || '',
+                    region: dist.regions?.join(' · ') || 'Global',
+                    role: dist.title || 'True Legacy Leader',
+                    intro: dist.bio || 'Independent Distributor with True Legacy & Enagic.',
+                    bio: dist.bio ? dist.bio.split('\n\n') : ['Independent Distributor with True Legacy & Enagic.'],
+                    image: dynamicImage,
+                    icon: Sparkles,
+                    gradient: 'from-blue-600 to-indigo-700',
+                    glow: 'rgba(37,99,235,0.45)',
+                })
+            }
+        })
+
+        return [...Array.from(coreMap.values()), ...extraLeaders]
+    }, [locale, livePortraits, publicDistributors])
+
+    const count = leaders.length
 
     const prev = () => {
         setActive((a) => (a - 1 + count) % count)
@@ -238,30 +387,10 @@ export function PhotoCarousel3D() {
     }
 
     useEffect(() => {
-        let isMounted = true
-        const updateAvatars = () => {
-            getPublicDistributors().then((profiles) => {
-                if (!isMounted) return
-                const map: Record<string, string> = {}
-                profiles.forEach((p) => {
-                    if (p.avatar_url) map[p.slug] = p.avatar_url
-                })
-                setLivePortraits(map)
-            })
-        }
-        updateAvatars()
-        window.addEventListener('truelegacy:leader-portrait-updated', updateAvatars)
-        return () => {
-            isMounted = false
-            window.removeEventListener('truelegacy:leader-portrait-updated', updateAvatars)
-        }
-    }, [])
-
-    useEffect(() => {
         const t = setInterval(next, 10000)
         return () => clearInterval(t)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
+    }, [count])
 
     const getCardStyle = (idx: number) => {
         const diff = ((idx - active + count) % count + count) % count
@@ -286,14 +415,7 @@ export function PhotoCarousel3D() {
         }
     }
 
-    const localized = locale === 'en' ? null : LEADER_COPY[locale]
-    const leaders = LEADERS.map((leader, index) => {
-        const slug = leader.profileUrl.replace('/d/', '')
-        const dynamicImage = livePortraits[slug] || getLeaderPortrait(slug, leader.image)
-        const base = localized ? { ...leader, role: localized.roles[index], bio: [localized.bios[index]] } : leader
-        return { ...base, image: dynamicImage }
-    })
-    const activeLeader = leaders[active]
+    const activeLeader = leaders[active] || leaders[0]
 
     return (
         <div className="w-full px-4 md:px-8 pb-12 overflow-visible" style={{ touchAction: 'pan-y' }}>
@@ -307,7 +429,7 @@ export function PhotoCarousel3D() {
                     const LIcon = leader.icon
                     return (
                         <motion.div
-                            key={leader.id}
+                            key={leader.id || leader.slug}
                             animate={{
                                 x: style.x,
                                 scale: style.scale,
@@ -372,8 +494,8 @@ export function PhotoCarousel3D() {
                     <ChevronLeft className="h-5 w-5" />
                 </button>
 
-                <div className="flex shrink-0 flex-nowrap items-center justify-center gap-1.5 sm:gap-2">
-                    {LEADERS.map((_, idx) => (
+                <div className="flex shrink-0 flex-nowrap items-center justify-center gap-1.5 sm:gap-2 max-w-full overflow-x-auto py-1 scrollbar-none">
+                    {leaders.map((_, idx) => (
                         <button
                             key={idx}
                             onClick={() => setActive(idx)}
@@ -396,46 +518,47 @@ export function PhotoCarousel3D() {
             </div>
 
             {/* Leader intro (below 3D cards): full bio + Instagram */}
-            <AnimatePresence mode="wait">
-                <motion.div
-                    key={active}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -10 }}
-                    transition={{ duration: 0.4 }}
-                    className="mt-6 max-w-2xl mx-auto text-center px-4"
-                >
-                    <div className="flex justify-center mb-1">
-                        <span className="text-xs font-bold uppercase tracking-[0.2em] text-orange-400">{activeLeader.role}</span>
-                    </div>
-                    <h3 className="text-xl font-black text-white mb-0.5">{activeLeader.name}</h3>
-                    <div className="mb-3 flex flex-wrap items-center justify-center gap-3">
-                        {activeLeader.instagramUrl && (
-                            <a
-                                href={activeLeader.instagramUrl}
-                                target="_blank" rel="noopener noreferrer"
-                                className="inline-flex items-center justify-center gap-1.5 text-sm text-tl-gold hover:text-white transition-colors"
-                            >
-                                <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
-                                    <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
-                                    <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
-                                    <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
-                                </svg>
-                                <span>{activeLeader.handle}</span>
-                            </a>
-                        )}
-                        <Link to={activeLeader.profileUrl} className="text-sm font-semibold text-[#2997ff] transition-colors hover:text-white">
-                            {localized?.viewProfile ?? 'View profile'}
-                        </Link>
-                    </div>
-                    <div className="text-[#cccccc] text-sm leading-relaxed text-left space-y-3">
-                        {activeLeader.bio.map((para, idx) => (
-                            <p key={idx}>{para}</p>
-                        ))}
-                    </div>
-                </motion.div>
-            </AnimatePresence>
-
+            {activeLeader && (
+                <AnimatePresence mode="wait">
+                    <motion.div
+                        key={activeLeader.slug || active}
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -10 }}
+                        transition={{ duration: 0.4 }}
+                        className="mt-6 max-w-2xl mx-auto text-center px-4"
+                    >
+                        <div className="flex justify-center mb-1">
+                            <span className="text-xs font-bold uppercase tracking-[0.2em] text-orange-400">{activeLeader.role}</span>
+                        </div>
+                        <h3 className="text-xl font-black text-white mb-0.5">{activeLeader.name}</h3>
+                        <div className="mb-3 flex flex-wrap items-center justify-center gap-3">
+                            {activeLeader.instagramUrl && (
+                                <a
+                                    href={activeLeader.instagramUrl}
+                                    target="_blank" rel="noopener noreferrer"
+                                    className="inline-flex items-center justify-center gap-1.5 text-sm text-tl-gold hover:text-white transition-colors"
+                                >
+                                    <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+                                        <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
+                                        <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+                                        <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
+                                    </svg>
+                                    <span>{activeLeader.handle}</span>
+                                </a>
+                            )}
+                            <Link to={activeLeader.profileUrl} className="text-sm font-semibold text-[#2997ff] transition-colors hover:text-white">
+                                {locale !== 'en' && LEADER_COPY[locale] ? LEADER_COPY[locale].viewProfile : 'View profile'}
+                            </Link>
+                        </div>
+                        <div className="text-[#cccccc] text-sm leading-relaxed text-left space-y-3">
+                            {activeLeader.bio.map((para, idx) => (
+                                <p key={idx}>{para}</p>
+                            ))}
+                        </div>
+                    </motion.div>
+                </AnimatePresence>
+            )}
         </div>
     )
 }
