@@ -41,6 +41,7 @@ import {
   BarChart3,
   Calendar,
   Share2,
+  KeyRound,
 } from 'lucide-react'
 import { Navbar } from '@/components/layout/Navbar'
 import { Footer } from '@/components/layout/Footer'
@@ -81,22 +82,21 @@ function resolveLeaderPhoto(slug: string, customUrl?: string | null): string {
   return '/logos/tl-square-white.png'
 }
 
-// 10 Real Training Modules with Real Video & Resource Links
-interface AcademyModule {
+// 10 Real Training Curriculum Modules (Syllabus Outlines for Private Academy)
+interface AcademyCurriculumModule {
   id: string
   title: Record<string, string>
   instructor: string
-  instructorSlug?: string
-  category: 'foundation' | 'product' | 'communication' | 'systems' | 'leadership' | 'market'
+  category: 'foundation' | 'product' | 'communication' | 'systems' | 'leadership'
   duration: string
   level: 'Beginner' | 'Intermediate' | 'Advanced'
-  videoUrl: string
   description: Record<string, string>
-  keyTakeaways: Record<string, string[]>
-  resources?: Array<{ title: string; url: string; type: 'pdf' | 'doc' | 'link' }>
+  keyTopics: Record<string, string[]>
+  hasResources: boolean
+  resourceCount: number
 }
 
-const REAL_ACADEMY_MODULES: AcademyModule[] = [
+const ACADEMY_CURRICULUM: AcademyCurriculumModule[] = [
   {
     id: 'purpose-vision',
     title: {
@@ -105,70 +105,52 @@ const REAL_ACADEMY_MODULES: AcademyModule[] = [
       fr: 'Le Pouvoir de Votre Mission dans Enagic',
       pt: 'O Poder do Seu Propósito na Enagic',
     },
-    instructor: 'True Legacy Leadership',
+    instructor: 'True Legacy Executive Leaders',
     category: 'foundation',
     duration: '45 min',
     level: 'Beginner',
-    videoUrl: 'https://www.youtube.com/watch?v=2O7DboiJBdE',
     description: {
-      en: 'Rediscover your Why, uncover your deeper purpose, and build your 3-Year Vision roadmap with a guided framework to shape your leadership path.',
-      es: 'Redescubriremos tu Porqué, descubriremos tu propósito más profundo y elaboraremos tu Visión a 3 Años con un marco guiado para tu camino al liderazgo.',
-      fr: 'Redécouvrez votre Pourquoi, définissez votre vision à 3 ans et construisez les bases solides de votre parcours de leadership.',
+      en: 'Uncover your deeper purpose, align your personal goals, and build your 3-Year Vision roadmap with a guided framework to shape your leadership path.',
+      es: 'Redescubre tu Porqué, define tu propósito más profundo y elabora tu Visión a 3 Años con un marco guiado para tu camino al liderazgo.',
+      fr: 'Redécouvrez votre Pourquoi, définissez votre vision à 3 ans et construisez les bases solides de votre leadership.',
       pt: 'Redescubra seu Porquê, defina sua visão de 3 anos e construa uma base sólida para sua liderança.',
     },
-    keyTakeaways: {
-      en: ['Defining the Core "Why"', '3-Year Vision Crafting', 'Mindset for Long-Term Duplication'],
+    keyTopics: {
+      en: ['Defining the Core "Why"', '3-Year Vision Framework', 'Mindset for Multi-Year Duplication'],
       es: ['Definición del "Porqué" Central', 'Creación de Visión a 3 Años', 'Mentalidad para Duplicación a Largo Plazo'],
     },
-    resources: [
-      {
-        title: 'Template: Letter to Your Future Self',
-        url: 'https://drive.google.com/file/d/1_yOHfNqi2pomD28jeqSWjpjnFy4xIlY0/view',
-        type: 'pdf',
-      },
-    ],
+    hasResources: true,
+    resourceCount: 2,
   },
   {
     id: 'kangen-science',
     title: {
-      en: 'Mastering the $10B Flagship Technologies: LeveLuk & emGuarde',
-      es: 'Dominando los Productos de $10 Billones: LeveLuk y emGuarde',
+      en: 'Mastering the Flagship Technologies: LeveLuk & emGuarde',
+      es: 'Dominando los Productos Principales: LeveLuk y emGuarde',
       fr: 'Maîtriser les Technologies Phares: LeveLuk et emGuarde',
       pt: 'Dominando as Tecnologias Principais: LeveLuk e emGuarde',
     },
     instructor: 'Simon Loh & Mehdi Cohen',
-    instructorSlug: 'simon-loh',
     category: 'product',
     duration: '60 min',
     level: 'Beginner',
-    videoUrl: 'https://youtu.be/_LcCVpKnVxk',
     description: {
-      en: 'Position the LeveLuk K8 series confidently against competitors and understand how emGuarde GO uniquely protects against ambient EMF radiation.',
+      en: 'Position the LeveLuk K8 series confidently against standard filtration and understand how emGuarde GO uniquely protects against ambient EMF radiation.',
       es: 'Posiciona la serie LeveLuk frente a la competencia y descubre por qué emGuarde GO es único en la protección contra radiación electromagnética ambiental.',
       fr: 'Positionnez la série LeveLuk avec assurance et comprenez les avantages uniques de la technologie emGuarde GO.',
       pt: 'Posicione a série LeveLuk com autoridade e compreenda as vantagens exclusivas do emGuarde GO.',
     },
-    keyTakeaways: {
-      en: ['Medical Device Certifications & Standards', 'emGuarde Frequency Harmonization', 'Clear, Compliant Product Demos'],
+    keyTopics: {
+      en: ['Medical Device Certifications & Standards', 'emGuarde Frequency Harmonization Physics', 'Approved Compliant Product Demonstrations'],
       es: ['Certificaciones de Dispositivo Médico', 'Armonización de Frecuencias emGuarde', 'Demostraciones Claras y Cumplidas'],
     },
-    resources: [
-      {
-        title: 'Kangen Water Ionizers Product Guide',
-        url: 'https://www.enagic.com/pdf/1096/Kangen_Water_Ionizers_Product_Guide.pdf',
-        type: 'pdf',
-      },
-      {
-        title: 'Machine Maintenance & Care Guide',
-        url: 'https://www.enagic.com/pdf/1099/Machine_Care_and_Maintenance_Guide.pdf',
-        type: 'pdf',
-      },
-    ],
+    hasResources: true,
+    resourceCount: 3,
   },
   {
     id: 'product-lineup',
     title: {
-      en: 'The 8-Point Compensation System & Action Architecture',
+      en: 'The 8-Point Compensation Plan & Action Blueprint',
       es: 'El Sistema de 8 Puntos y Plan de Acción',
       fr: 'Le Système de Rémunération à 8 Points et le Plan d’Action',
       pt: 'O Sistema de Compensação de 8 Pontos e o Plano de Ação',
@@ -177,29 +159,18 @@ const REAL_ACADEMY_MODULES: AcademyModule[] = [
     category: 'foundation',
     duration: '60 min',
     level: 'Intermediate',
-    videoUrl: 'https://www.youtube.com/watch?v=FndRvUtZXL0',
     description: {
       en: "Break down Enagic's patented 8-Point compensation model and how top leaders use it to build sustainable, multi-generational organization revenue.",
       es: 'Analiza el programa patentado de 8 Puntos de Enagic y descubre cómo estructurar rangos y construir ingresos sostenibles.',
       fr: 'Comprenez le modèle de rémunération breveté à 8 points pour structurer votre organisation de façon pérenne.',
       pt: 'Analise o plano patenteado de 8 pontos para estruturar sua organização com sustentabilidade.',
     },
-    keyTakeaways: {
-      en: ['Direct vs Indirect Point Distribution', '6A Milestone Pathways', 'Maximizing Market Leverage'],
+    keyTopics: {
+      en: ['Direct vs Indirect Point Distribution', '6A Milestone Pathways', 'Strategic Depth & Leverage Architecture'],
       es: ['Distribución Directa vs Indirecta', 'Caminos al Rango 6A', 'Apalancamiento de Mercado'],
     },
-    resources: [
-      {
-        title: 'Enagic 8-Point Compensation Guide',
-        url: 'https://www.enagic.com/pdf/1095/Compensation_Plan_Guide.pdf',
-        type: 'pdf',
-      },
-      {
-        title: '6-Month Projection Spreadsheet',
-        url: 'https://docs.google.com/spreadsheets/d/1zvfw-oBtkKLdSfVTquQw8J3g0ptTvBGT68weJF93MzA/edit',
-        type: 'doc',
-      },
-    ],
+    hasResources: true,
+    resourceCount: 2,
   },
   {
     id: 'leadership-structure',
@@ -210,21 +181,21 @@ const REAL_ACADEMY_MODULES: AcademyModule[] = [
       pt: 'O Plano para Construir seu Legado com a Enagic',
     },
     instructor: 'Coach Ming-Way Sia & Simon Loh',
-    instructorSlug: 'ming-way-sia',
     category: 'leadership',
     duration: '75 min',
     level: 'Intermediate',
-    videoUrl: 'https://youtu.be/Jz1LFvYTonI',
     description: {
-      en: 'Why 8 Points is just the entry point, 6A2 is the baseline, and true legacy builds across 6A2-3 through 6A2-8 with structural stability.',
+      en: 'Why 8 Points is just the foundation, 6A2 is the baseline, and true legacy builds across 6A2-3 through 6A2-8 with structural stability.',
       es: 'Por qué los 8 Puntos son solo el comienzo, 6A2 es la entrada y el verdadero legado se construye en 6A2-3 en adelante con solidez estructural.',
       fr: 'Pourquoi les 8 points ne sont que le début et comment construire une organisation autonome et pérenne.',
       pt: 'Por que os 8 pontos são o início e como estruturar uma organização autônoma e duradoura.',
     },
-    keyTakeaways: {
-      en: ['Structural Stability Frameworks', 'Developing Independent Hubs', 'Generational Wealth Systems'],
+    keyTopics: {
+      en: ['Structural Stability Frameworks', 'Developing Independent Hubs', 'Generational Legacy Systems'],
       es: ['Estructuras de Estabilidad', 'Desarrollo de Centros Independientes', 'Sistemas de Riqueza Generacional'],
     },
+    hasResources: true,
+    resourceCount: 2,
   },
   {
     id: 'systems-funnels',
@@ -235,33 +206,21 @@ const REAL_ACADEMY_MODULES: AcademyModule[] = [
       pt: 'O Sistema para Atingir 6A Mais Rápido (Sem Esgotamento)',
     },
     instructor: 'Mehdi Cohen',
-    instructorSlug: 'mehdi-cohen',
     category: 'systems',
     duration: '90 min',
     level: 'Advanced',
-    videoUrl: 'https://youtu.be/tL5KtgzCB74',
     description: {
       en: 'Master the True Legacy workflow: attract the right builders, convert them into leaders, and scale duplicate systems that operate seamlessly.',
       es: 'Cómo atraer a los prospectos ideales, convertirlos en líderes y escalar sistemas duplicables que operen sin fricción.',
       fr: 'Attirez les bons profils, formez-les en leaders et mettez en place des systèmes qui tournent avec fluidité.',
       pt: 'Atraia os perfis certos, transforme-os em líderes e aplique sistemas duplicáveis.',
     },
-    keyTakeaways: {
-      en: ['Initial Contact to Duplication Funnel', 'CRM Follow-up Cadence', 'Time Leverage for Builders'],
+    keyTopics: {
+      en: ['Contact to Duplication Funnel', 'CRM Follow-up Cadence', 'Time Leverage & Automation for Builders'],
       es: ['Embudo de Contacto a Duplicación', 'Cadencia de Seguimiento CRM', 'Apalancamiento de Tiempo'],
     },
-    resources: [
-      {
-        title: 'Conversation & Invitation Script Framework',
-        url: 'https://drive.google.com/file/d/1EePq-zNaNgUPnPBdnsg_FKyUelYXZJKR/view',
-        type: 'doc',
-      },
-      {
-        title: 'Duo Presentation Slide Deck',
-        url: 'https://drive.google.com/file/d/1983E6d1pi6GW0bKZi_6KNkaDBf7zyyNd/view',
-        type: 'doc',
-      },
-    ],
+    hasResources: true,
+    resourceCount: 4,
   },
   {
     id: 'prospecting-basics',
@@ -275,24 +234,18 @@ const REAL_ACADEMY_MODULES: AcademyModule[] = [
     category: 'communication',
     duration: '20 min',
     level: 'Beginner',
-    videoUrl: 'https://www.youtube.com/watch?v=OAKaQqLIwmg',
     description: {
       en: 'Learn the PRIME 6 target archetypes, the 4 Decision Models, and the 48-Hour Momentum Rule to identify high-caliber entrepreneurial partners.',
       es: 'Aprende los 6 grupos objetivo, los 4 arquetipos de decisión y la Regla de las 48 Horas para identificar líderes en lugar de solo coleccionar contactos.',
       fr: 'Identifiez les 6 profils cibles et les 4 modèles de décision pour trouver de vrais partenaires engagés.',
       pt: 'Identifique os 6 perfis ideais e aplique a regra das 48 horas para recrutar parceiros qualificados.',
     },
-    keyTakeaways: {
-      en: ['The 4 Buyer Archetypes', 'The True Legacy Quadrant Matrix', '48-Hour Momentum Activation'],
+    keyTopics: {
+      en: ['The 4 Decision Archetypes', 'The True Legacy Quadrant Matrix', '48-Hour Momentum Rule'],
       es: ['Los 4 Arquetipos de Decisión', 'Matriz de Cuadrantes True Legacy', 'Activación de Impulso en 48 Horas'],
     },
-    resources: [
-      {
-        title: 'True Legacy Prospect List Mastery Doc',
-        url: 'https://docs.google.com/document/d/18JD9AseUR_7gmdSbsrHXge5WqdfQhXTuvTfXOxk5hLA/edit',
-        type: 'doc',
-      },
-    ],
+    hasResources: true,
+    resourceCount: 2,
   },
   {
     id: 'social-media-prospecting',
@@ -303,21 +256,21 @@ const REAL_ACADEMY_MODULES: AcademyModule[] = [
       pt: 'Transforme Cada Apresentação em um Ímã de Construtores',
     },
     instructor: 'Magaly Cardona & Mehdi Cohen',
-    instructorSlug: 'magaly-cardona',
     category: 'communication',
     duration: '90 min',
     level: 'Intermediate',
-    videoUrl: 'https://www.youtube.com/watch?v=l8Uk9Mbegsk',
     description: {
       en: 'How to craft presentation language that attracts active builders rather than passive consumers, using ethical communication and high-trust storytelling.',
       es: 'El lenguaje que utilizas determina a quién atraes. Aprende la psicología de presentación de alta conversión y cómo el DUO activa a los constructores clave.',
       fr: 'Le langage utilisé détermine qui vous attirez. Maîtrisez la psychologie de présentation pour attirer des bâtisseurs sérieux.',
       pt: 'A linguagem certa atrai os líderes certos. Domine a psicologia da apresentação de alta conversão.',
     },
-    keyTakeaways: {
+    keyTopics: {
       en: ['Presentation Archetype Alignment', 'High-Trust Problem Framing', 'Natural Transition to Opportunity'],
       es: ['Alineación de Arquetipos', 'Planteamiento de Problemas de Alta Confianza', 'Transición Natural a la Oportunidad'],
     },
+    hasResources: true,
+    resourceCount: 2,
   },
   {
     id: 'closing-techniques',
@@ -331,17 +284,18 @@ const REAL_ACADEMY_MODULES: AcademyModule[] = [
     category: 'communication',
     duration: '15 min',
     level: 'Advanced',
-    videoUrl: 'https://www.youtube.com/watch?v=ie-tFol7F4Q',
     description: {
       en: 'Most people talk too much; leaders ask precise diagnostic questions. Master the 14-minute frame, the 11 diagnostic questions, and high-integrity closing.',
       es: 'La mayoría habla demasiado; los líderes preguntan con precisión diagnóstica. Domina el marco de 14 minutos y las 11 preguntas clave de claridad.',
       fr: 'Posez les bonnes questions diagnostiques pour amener le prospect à une décision claire et sereine.',
       pt: 'Faça perguntas diagnósticas precisas para conduzir o prospecto a uma decisão segura e consciente.',
     },
-    keyTakeaways: {
+    keyTopics: {
       en: ['The 14-Minute Diagnostic Frame', '11 Clarity Diagnostic Questions', 'Frictionless Decision Facilitation'],
       es: ['Marco Diagnóstico de 14 Minutos', '11 Preguntas Clave de Claridad', 'Facilitación de Decisiones sin Fricción'],
     },
+    hasResources: true,
+    resourceCount: 2,
   },
   {
     id: 'business-media',
@@ -352,21 +306,21 @@ const REAL_ACADEMY_MODULES: AcademyModule[] = [
       pt: 'Por Que Objeções São Boas e Como Resolvê-las',
     },
     instructor: 'Simon Loh',
-    instructorSlug: 'simon-loh',
     category: 'communication',
     duration: '60 min',
     level: 'Intermediate',
-    videoUrl: 'https://www.youtube.com/watch?v=ut9H9n9dE70',
     description: {
       en: 'Turn resistance into clarity. Address the 4 root categories of objections: money, spouse, time, and uncertainty with deep empathy and logic.',
       es: 'Convierte la resistencia en claridad. Domina las 4 categorías principales: dinero, pareja, tiempo e incertidumbre con empatía y lógica.',
       fr: 'Transformez les doutes en clarté en traitant les 4 grandes catégories d’objections avec méthode.',
       pt: 'Transforme dúvidas em clareza abordando as 4 categorias de objeções com segurança e empatia.',
     },
-    keyTakeaways: {
+    keyTopics: {
       en: ['4 Core Root Objections', 'The Empathy-Reflect-Solve Method', 'Handling "I Need to Research"'],
       es: ['4 Objeciones Raíz Principales', 'Método Empatía-Reflexión-Solución', 'Manejo del "Necesito Investigar"'],
     },
+    hasResources: true,
+    resourceCount: 2,
   },
   {
     id: 'income-projection',
@@ -380,17 +334,18 @@ const REAL_ACADEMY_MODULES: AcademyModule[] = [
     category: 'systems',
     duration: '45 min',
     level: 'Beginner',
-    videoUrl: 'https://www.youtube.com/watch?v=fjD6atjMN2g',
     description: {
       en: 'Stop chasing vanity likes. Turn your online presence into a digital storefront that builds institutional trust and attracts high-caliber leaders 24/7.',
       es: 'Deja de perseguir likes y usa los medios digitales para construir un escaparate que genera confianza y atrae líderes continuamente.',
       fr: 'Transformez votre présence en ligne en un véritable outil d’attraction de profils de haut niveau.',
       pt: 'Transforme sua presença online em uma vitrine profissional de alta conversão para atrair líderes.',
     },
-    keyTakeaways: {
+    keyTopics: {
       en: ['The 3-Pillar Magnetic Content Engine', 'Bio & Positioning Architecture', 'Attracting High-Performers'],
       es: ['Motor de Contenido Magnético de 3 Pilares', 'Arquitectura de Biografía y Marca', 'Atracción de Líderes de Alto Nivel'],
     },
+    hasResources: true,
+    resourceCount: 2,
   },
 ]
 
@@ -406,10 +361,9 @@ export function AcademyLandingPage({
 
   const [activeCategory, setActiveCategory] = useState<string>('all')
   const [searchQuery, setSearchQuery] = useState<string>('')
-  const [selectedVideo, setSelectedVideo] = useState<AcademyModule | null>(null)
+  const [selectedModule, setSelectedModule] = useState<AcademyCurriculumModule | null>(null)
   const [activeDeviceView, setActiveDeviceView] = useState<'desktop' | 'tablet' | 'mobile'>('desktop')
   const [isLoggedIn, setIsLoggedIn] = useState(false)
-  const [activeWeek, setActiveWeek] = useState(1)
 
   useEffect(() => {
     if (crmSupabase) {
@@ -425,7 +379,7 @@ export function AcademyLandingPage({
   }, [profile])
 
   const filteredModules = useMemo(() => {
-    return REAL_ACADEMY_MODULES.filter((m) => {
+    return ACADEMY_CURRICULUM.filter((m) => {
       const matchCat = activeCategory === 'all' || m.category === activeCategory
       const titleText = (m.title[lang] || m.title.en).toLowerCase()
       const descText = (m.description[lang] || m.description.en).toLowerCase()
@@ -436,18 +390,6 @@ export function AcademyLandingPage({
     })
   }, [activeCategory, searchQuery, lang])
 
-  const getEmbedUrl = (url: string) => {
-    if (url.includes('youtube.com/watch')) {
-      const id = new URL(url).searchParams.get('v')
-      return `https://www.youtube.com/embed/${id}?autoplay=1&rel=0`
-    }
-    if (url.includes('youtu.be/')) {
-      const id = url.split('youtu.be/')[1]?.split(/[?&]/)[0]
-      return `https://www.youtube.com/embed/${id}?autoplay=1&rel=0`
-    }
-    return url
-  }
-
   const applyUrl = `/apply?ref=${profile?.referral_code || distributorSlug || 'truelegacy'}&interest=training&source=academy`
   const opportunityUrl = profile ? `/d/${profile.slug}/business` : '/business'
   const crmPortalUrl = isLoggedIn ? '/crm' : '/app'
@@ -455,8 +397,8 @@ export function AcademyLandingPage({
   return (
     <div className="page-wrapper bg-[#050608] text-white min-h-screen selection:bg-[#2997ff] selection:text-black">
       <SEO
-        title="True Legacy Academy | Global Leadership & Business-Building Education"
-        description="Enagic provides the vehicle. True Legacy helps develop the builder. Access structured onboarding, product mastery, leadership training, and systems."
+        title="True Legacy Academy | Private Leadership & Business-Building Education"
+        description="Enagic provides the vehicle. True Legacy helps develop the builder. Access our private, structured onboarding, product mastery, leadership training, and systems."
         image={leaderPhoto}
       />
       <Navbar />
@@ -469,7 +411,7 @@ export function AcademyLandingPage({
           {/* Ambient Lighting Background */}
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_60%_at_50%_-10%,rgba(41,151,255,0.18),transparent_65%),radial-gradient(ellipse_60%_40%_at_80%_60%,rgba(168,85,247,0.12),transparent_60%)]" />
           <div className="absolute inset-0 bg-[linear-gradient(to_bottom,transparent_0%,rgba(5,6,8,0.8)_80%,#050608_100%)]" />
-          
+
           <div className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center flex flex-col items-center">
             {/* Guide Badge (if personalized) */}
             {profile && (
@@ -494,7 +436,7 @@ export function AcademyLandingPage({
             {/* Eyebrow */}
             <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-cyan-500/30 bg-cyan-500/10 text-cyan-400 text-xs font-extrabold uppercase tracking-[0.28em] mb-6 shadow-inner">
               <GraduationCap className="h-4 w-4" />
-              <span>True Legacy Academy</span>
+              <span>True Legacy Academy · Exclusive Team Resource</span>
             </div>
 
             {/* Main Headline */}
@@ -509,7 +451,7 @@ export function AcademyLandingPage({
 
             {/* Supporting Body */}
             <p className="mt-5 text-sm sm:text-base text-[#94a3b8] max-w-2xl leading-relaxed">
-              Enagic gives independent distributors access to an established global company, patented medical technologies, and a proven business model. True Legacy provides the education, systems, leadership development, and practical training designed to help you execute responsibly.
+              Enagic gives independent distributors access to an established global company, patented medical technologies, and a proven business model. True Legacy adds the private education, systems, leadership development, and practical training designed to help our distributors execute responsibly.
             </p>
 
             {/* Punchline Statement Banner */}
@@ -526,6 +468,7 @@ export function AcademyLandingPage({
                   href={crmPortalUrl}
                   className="w-full sm:w-auto flex-1 inline-flex items-center justify-center gap-2.5 px-8 py-4 rounded-xl bg-gradient-to-r from-[#2997ff] to-cyan-400 text-slate-950 font-black text-sm tracking-wide hover:shadow-[0_0_30px_rgba(41,151,255,0.4)] transition-all active:scale-95"
                 >
+                  <KeyRound className="h-4 w-4" />
                   <span>Continue My Training</span>
                   <ArrowRight className="h-4 w-4" />
                 </a>
@@ -534,7 +477,7 @@ export function AcademyLandingPage({
                   href="#curriculum-preview"
                   className="w-full sm:w-auto flex-1 inline-flex items-center justify-center gap-2.5 px-8 py-4 rounded-xl bg-gradient-to-r from-[#2997ff] to-cyan-400 text-slate-950 font-black text-sm tracking-wide hover:shadow-[0_0_30px_rgba(41,151,255,0.4)] transition-all active:scale-95"
                 >
-                  <span>Explore the Academy</span>
+                  <span>Preview the Syllabus</span>
                   <ArrowRight className="h-4 w-4" />
                 </a>
               )}
@@ -549,23 +492,26 @@ export function AcademyLandingPage({
 
             {/* Micro Badge Notice */}
             <p className="mt-5 text-[11px] text-[#64748b]">
-              Access included for authorized True Legacy independent distributors · Independent education platform
+              🔒 Private training infrastructure included exclusively for authorized True Legacy distributors
             </p>
           </div>
         </section>
 
         {/* =========================================================================
-            SECTION 2: ACADEMY PREVIEW (Interactive Interface Sneak Peek)
+            SECTION 2: ACADEMY PREVIEW (Curriculum Teaser & Locked Vault Sneak Peek)
         ========================================================================= */}
         <section id="curriculum-preview" className="py-20 md:py-28 px-4 sm:px-6 lg:px-8 border-b border-white/[0.08] relative">
           <div className="max-w-6xl mx-auto">
             <div className="text-center max-w-3xl mx-auto mb-14">
-              <p className="text-xs font-black uppercase tracking-[0.25em] text-[#2997ff] mb-3">Live Platform Preview</p>
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-amber-500/30 bg-amber-500/10 text-amber-300 text-xs font-black uppercase tracking-wider mb-3">
+                <Lock className="h-3 w-3" />
+                <span>Proprietary Team Curriculum</span>
+              </div>
               <h2 className="text-2xl sm:text-4xl md:text-5xl font-black text-white tracking-tight">
                 WELCOME TO YOUR BUSINESS-BUILDING ROADMAP
               </h2>
               <p className="mt-4 text-sm sm:text-base text-[#94a3b8] leading-relaxed">
-                This is a structured, end-to-end learning ecosystem. Video training, progress tracking, downloadable PDF scripts, and live interactive mentorship—all unified in one place.
+                Here is a preview of the proprietary curriculum available inside the private True Legacy portal. Full video masterclasses, diagnostic frameworks, and downloadable templates are unlocked for verified distributors.
               </p>
             </div>
 
@@ -577,7 +523,7 @@ export function AcademyLandingPage({
                   <div className="h-3 w-3 rounded-full bg-rose-500/80" />
                   <div className="h-3 w-3 rounded-full bg-amber-500/80" />
                   <div className="h-3 w-3 rounded-full bg-emerald-500/80" />
-                  <span className="ml-3 text-xs font-mono text-[#64748b] hidden sm:inline">truelegacyworld.com/academy · Leadership Portal</span>
+                  <span className="ml-3 text-xs font-mono text-[#64748b] hidden sm:inline">truelegacyworld.com/academy · Private Leadership Portal</span>
                 </div>
 
                 {/* Filter / Search inside mockup */}
@@ -586,7 +532,7 @@ export function AcademyLandingPage({
                     <Search className="h-3.5 w-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-[#64748b]" />
                     <input
                       type="text"
-                      placeholder="Search lessons & scripts..."
+                      placeholder="Search syllabus topics..."
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
                       className="h-9 pl-9 pr-3 rounded-lg border border-white/10 bg-black/60 text-xs text-white placeholder:text-[#475569] focus:outline-none focus:border-cyan-400/50 w-48 sm:w-60"
@@ -598,11 +544,11 @@ export function AcademyLandingPage({
               {/* Category Pills */}
               <div className="flex items-center gap-2 overflow-x-auto pb-4 mb-6 scrollbar-none">
                 {[
-                  { id: 'all', label: 'All Modules' },
+                  { id: 'all', label: 'All Pillars' },
                   { id: 'foundation', label: 'Foundation' },
                   { id: 'product', label: 'Product Mastery' },
                   { id: 'communication', label: 'Communication & Closing' },
-                  { id: 'systems', label: 'Systems & Funnels' },
+                  { id: 'systems', label: 'Systems & CRM' },
                   { id: 'leadership', label: 'Leadership Structure' },
                 ].map((cat) => (
                   <button
@@ -619,59 +565,63 @@ export function AcademyLandingPage({
                 ))}
               </div>
 
-              {/* Grid of Real Training Modules */}
+              {/* Grid of Locked Curriculum Syllabus Cards */}
               <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                 {filteredModules.slice(0, 6).map((m, idx) => (
                   <div
                     key={m.id}
-                    onClick={() => setSelectedVideo(m)}
-                    className="group relative rounded-2xl border border-white/10 bg-white/[0.02] p-4 sm:p-5 hover:border-cyan-500/40 hover:bg-white/[0.05] transition-all cursor-pointer flex flex-col justify-between"
+                    onClick={() => setSelectedModule(m)}
+                    className="group relative rounded-2xl border border-white/10 bg-white/[0.02] p-5 hover:border-cyan-500/40 hover:bg-white/[0.05] transition-all cursor-pointer flex flex-col justify-between"
                   >
                     <div>
-                      {/* Card Thumbnail / Preview Banner */}
-                      <div className="relative aspect-video rounded-xl bg-[#0e1626] overflow-hidden mb-4 border border-white/10 flex items-center justify-center">
-                        <img
-                          src={`https://img.youtube.com/vi/${m.videoUrl.includes('v=') ? m.videoUrl.split('v=')[1]?.split('&')[0] : m.videoUrl.split('youtu.be/')[1]?.split('?')[0]}/hqdefault.jpg`}
-                          alt={m.title[lang] || m.title.en}
-                          className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-500 opacity-80"
-                        />
-                        <div className="absolute inset-0 bg-black/40 flex items-center justify-center group-hover:bg-black/20 transition-colors">
-                          <div className="h-12 w-12 rounded-full bg-[#2997ff] text-slate-950 flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
-                            <Play className="h-5 w-5 fill-slate-950 ml-0.5" />
-                          </div>
-                        </div>
-                        <span className="absolute bottom-2 right-2 px-2 py-0.5 rounded-md bg-black/80 text-[10px] font-bold text-white">
-                          {m.duration}
-                        </span>
-                      </div>
-
-                      {/* Tags */}
-                      <div className="flex items-center gap-2 mb-2">
-                        <span className="text-[10px] font-extrabold uppercase tracking-wider text-cyan-400 bg-cyan-400/10 px-2 py-0.5 rounded">
+                      {/* Header Badge */}
+                      <div className="flex items-center justify-between gap-2 mb-3">
+                        <span className="text-[10px] font-extrabold uppercase tracking-wider text-cyan-400 bg-cyan-400/10 px-2.5 py-1 rounded">
                           {m.category}
                         </span>
-                        <span className="text-[10px] text-[#64748b]">Level: {m.level}</span>
+                        <span className="inline-flex items-center gap-1 text-[11px] font-bold text-amber-300 bg-amber-400/10 border border-amber-400/20 px-2 py-0.5 rounded-full">
+                          <Lock className="h-3 w-3" />
+                          <span>Team Exclusive</span>
+                        </span>
                       </div>
 
                       {/* Title */}
-                      <h3 className="font-bold text-sm sm:text-base text-white group-hover:text-cyan-300 transition-colors line-clamp-2">
+                      <h3 className="font-bold text-base text-white group-hover:text-cyan-300 transition-colors leading-snug">
                         {m.title[lang] || m.title.en}
                       </h3>
 
-                      {/* Instructor */}
-                      <p className="mt-1 text-xs text-[#94a3b8] line-clamp-1">
-                        Trainer: <span className="text-white font-medium">{m.instructor}</span>
+                      {/* Instructor & Duration */}
+                      <div className="mt-2 flex items-center gap-3 text-xs text-[#94a3b8]">
+                        <span>Instructor: <strong className="text-white">{m.instructor}</strong></span>
+                        <span>·</span>
+                        <span>{m.duration}</span>
+                      </div>
+
+                      {/* Description Excerpt */}
+                      <p className="mt-3 text-xs text-[#94a3b8] line-clamp-2 leading-relaxed">
+                        {m.description[lang] || m.description.en}
                       </p>
+
+                      {/* Key Topics bullets preview */}
+                      <div className="mt-4 pt-3 border-t border-white/5 space-y-1.5">
+                        <p className="text-[10px] font-mono text-[#64748b] uppercase tracking-wider">Curriculum Preview:</p>
+                        {(m.keyTopics[lang] || m.keyTopics.en || []).slice(0, 2).map((top, ti) => (
+                          <p key={ti} className="text-xs text-[#cbd5e1] flex items-center gap-1.5 truncate">
+                            <Check className="h-3 w-3 text-cyan-400 shrink-0" />
+                            <span>{top}</span>
+                          </p>
+                        ))}
+                      </div>
                     </div>
 
                     {/* Bottom Action Bar */}
-                    <div className="mt-4 pt-3 border-t border-white/10 flex items-center justify-between text-xs text-cyan-400 font-bold">
+                    <div className="mt-5 pt-3 border-t border-white/10 flex items-center justify-between text-xs text-cyan-400 font-bold">
                       <span className="inline-flex items-center gap-1">
-                        Watch Lesson <ChevronRight className="h-3.5 w-3.5 group-hover:translate-x-1 transition-transform" />
+                        View Syllabus Outline <ChevronRight className="h-3.5 w-3.5 group-hover:translate-x-1 transition-transform" />
                       </span>
-                      {m.resources && m.resources.length > 0 && (
-                        <span className="text-[11px] text-[#94a3b8] flex items-center gap-1 font-normal">
-                          <Download className="h-3 w-3" /> {m.resources.length} resource{m.resources.length > 1 ? 's' : ''}
+                      {m.hasResources && (
+                        <span className="text-[11px] text-[#64748b] flex items-center gap-1 font-normal">
+                          <FileText className="h-3 w-3" /> {m.resourceCount} PDF guides
                         </span>
                       )}
                     </div>
@@ -682,7 +632,7 @@ export function AcademyLandingPage({
               {/* View Full Academy CTA inside preview */}
               <div className="mt-8 pt-6 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4">
                 <div className="text-xs text-[#94a3b8] text-center sm:text-left">
-                  Showing 6 of 10+ core foundation modules · Regular live additions & global masterclasses
+                  10+ core foundation modules · Live weekly global masterclasses · Private CRM vault
                 </div>
                 <a
                   href="#all-categories"
@@ -1051,7 +1001,7 @@ export function AcademyLandingPage({
 
                 <div className="mt-6 grid grid-cols-2 gap-3 text-xs text-[#cbd5e1]">
                   <div className="p-3 rounded-xl border border-white/10 bg-white/[0.02]">
-                    <p className="font-bold text-white">Full Screen Videos</p>
+                    <p className="font-bold text-white">Private Streaming Vault</p>
                     <p className="text-[#64748b] text-[11px] mt-0.5">Optimized 16:9 streaming</p>
                   </div>
                   <div className="p-3 rounded-xl border border-white/10 bg-white/[0.02]">
@@ -1127,7 +1077,7 @@ export function AcademyLandingPage({
                   </p>
                   <ul className="mt-6 space-y-3 text-sm text-[#cbd5e1]">
                     {[
-                      'High-definition recorded video masterclasses',
+                      'Private recorded video masterclasses & playbooks',
                       'Downloadable objection handling & invitation scripts',
                       'Product science breakdown & certification archives',
                       'Patent & 8-Point compensation plan video models',
@@ -1141,7 +1091,7 @@ export function AcademyLandingPage({
                   </ul>
                 </div>
                 <div className="mt-8 pt-4 border-t border-white/10 text-xs text-[#64748b] font-mono">
-                  Available 24/7/365 worldwide
+                  Available 24/7/365 for team members
                 </div>
               </div>
 
@@ -1594,6 +1544,7 @@ export function AcademyLandingPage({
                   href={crmPortalUrl}
                   className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-9 py-4 rounded-xl bg-gradient-to-r from-[#2997ff] to-cyan-400 text-slate-950 font-black text-sm tracking-wide hover:shadow-[0_0_35px_rgba(41,151,255,0.5)] transition-all active:scale-95"
                 >
+                  <KeyRound className="h-4 w-4" />
                   <span>Continue My Training in CRM</span>
                   <ArrowRight className="h-4 w-4" />
                 </a>
@@ -1609,7 +1560,7 @@ export function AcademyLandingPage({
 
               {profile?.phone && (
                 <a
-                  href={`https://wa.me/${profile.phone.replace(/[^0-9]/g, '')}?text=Hi%20${encodeURIComponent(profile.display_name)},%20I'm%20exploring%20the%20True%20Legacy%20Academy%20and%20would%20like%20to%20learn%20more!`}
+                  href={`https://wa.me/${profile.phone.replace(/[^0-9]/g, '')}?text=Hi%20${encodeURIComponent(profile.display_name)},%20I'm%20interested%20in%20joining%20True%20Legacy%20and%20unlocking%20the%20Academy%20training!`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-7 py-4 rounded-xl border border-emerald-500/30 bg-emerald-500/10 text-emerald-300 font-bold text-sm hover:bg-emerald-500/20 transition-all active:scale-95"
@@ -1629,72 +1580,104 @@ export function AcademyLandingPage({
       </main>
 
       {/* =========================================================================
-          VIDEO MODAL VIEWER
+          PROPRIETARY ACCESS MODAL GATEWAY (Hints and Teases the Training)
       ========================================================================= */}
       <AnimatePresence>
-        {selectedVideo && (
+        {selectedModule && (
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/90 backdrop-blur-md">
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.95 }}
-              className="w-full max-w-4xl rounded-3xl border border-white/20 bg-[#070b14] overflow-hidden shadow-2xl flex flex-col max-h-[90vh]"
+              className="w-full max-w-2xl rounded-3xl border border-cyan-500/30 bg-[#080d1a] overflow-hidden shadow-[0_0_60px_rgba(41,151,255,0.2)] flex flex-col"
             >
               {/* Modal Header */}
-              <div className="flex items-center justify-between p-4 sm:p-6 border-b border-white/10">
-                <div>
-                  <span className="text-[10px] font-black uppercase tracking-wider text-cyan-400">
-                    {selectedVideo.category} · {selectedVideo.duration}
-                  </span>
-                  <h3 className="text-base sm:text-xl font-bold text-white line-clamp-1">
-                    {selectedVideo.title[lang] || selectedVideo.title.en}
-                  </h3>
+              <div className="flex items-center justify-between p-5 sm:p-6 border-b border-white/10 bg-white/[0.02]">
+                <div className="flex items-center gap-2.5">
+                  <div className="h-8 w-8 rounded-lg bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400">
+                    <Lock className="h-4 w-4" />
+                  </div>
+                  <div>
+                    <span className="text-[10px] font-black uppercase tracking-wider text-amber-400 block">
+                      Proprietary Leadership Curriculum · Level: {selectedModule.level}
+                    </span>
+                    <h3 className="text-base sm:text-lg font-bold text-white line-clamp-1">
+                      {selectedModule.title[lang] || selectedModule.title.en}
+                    </h3>
+                  </div>
                 </div>
                 <button
-                  onClick={() => setSelectedVideo(null)}
+                  onClick={() => setSelectedModule(null)}
                   className="p-2 rounded-xl bg-white/5 hover:bg-white/10 text-[#94a3b8] hover:text-white transition-colors"
                 >
                   <X className="h-5 w-5" />
                 </button>
               </div>
 
-              {/* Video Player */}
-              <div className="relative w-full pt-[56.25%] bg-black">
-                <iframe
-                  src={getEmbedUrl(selectedVideo.videoUrl)}
-                  title={selectedVideo.title[lang] || selectedVideo.title.en}
-                  className="absolute inset-0 w-full h-full border-0"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                  allowFullScreen
-                />
-              </div>
+              {/* Modal Body */}
+              <div className="p-6 sm:p-8 space-y-6">
+                <div>
+                  <p className="text-xs font-mono text-[#64748b] uppercase tracking-wider">Module Overview:</p>
+                  <p className="mt-1 text-sm text-[#cbd5e1] leading-relaxed">
+                    {selectedModule.description[lang] || selectedModule.description.en}
+                  </p>
+                </div>
 
-              {/* Modal Footer with Resources */}
-              <div className="p-4 sm:p-6 overflow-y-auto space-y-4">
-                <p className="text-xs sm:text-sm text-[#cbd5e1] leading-relaxed">
-                  {selectedVideo.description[lang] || selectedVideo.description.en}
-                </p>
+                {/* Topics Covered */}
+                <div className="p-4 rounded-2xl border border-white/10 bg-white/[0.02] space-y-2">
+                  <p className="text-xs font-bold text-white flex items-center gap-2">
+                    <Sparkles className="h-3.5 w-3.5 text-cyan-400" />
+                    <span>Key Concepts Taught Inside This Session:</span>
+                  </p>
+                  <ul className="space-y-1.5 text-xs text-[#94a3b8]">
+                    {(selectedModule.keyTopics[lang] || selectedModule.keyTopics.en || []).map((t, idx) => (
+                      <li key={idx} className="flex items-center gap-2">
+                        <Check className="h-3.5 w-3.5 text-cyan-400 shrink-0" />
+                        <span>{t}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
 
-                {selectedVideo.resources && selectedVideo.resources.length > 0 && (
-                  <div className="pt-3 border-t border-white/10">
-                    <p className="text-xs font-bold text-white mb-2">Lesson Downloads & Templates:</p>
-                    <div className="flex flex-wrap gap-2">
-                      {selectedVideo.resources.map((res, ri) => (
-                        <a
-                          key={ri}
-                          href={res.url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg border border-cyan-400/30 bg-cyan-500/10 text-cyan-300 text-xs font-bold hover:bg-cyan-500/20 transition-colors"
-                        >
-                          <FileText className="h-3.5 w-3.5" />
-                          <span>{res.title}</span>
-                          <ExternalLink className="h-3 w-3" />
-                        </a>
-                      ))}
-                    </div>
-                  </div>
-                )}
+                {/* Exclusive Gate Notice Banner */}
+                <div className="p-5 rounded-2xl border border-cyan-500/20 bg-gradient-to-r from-cyan-950/40 via-blue-950/30 to-black text-center space-y-2">
+                  <p className="text-xs font-black uppercase tracking-[0.18em] text-cyan-300">
+                    🔒 Protected True Legacy Team Asset
+                  </p>
+                  <p className="text-xs text-[#94a3b8] leading-relaxed max-w-lg mx-auto">
+                    Full video masterclasses, diagnostic frameworks, and downloadable script templates are reserved exclusively for authorized distributors building with True Legacy.
+                  </p>
+                </div>
+
+                {/* Action CTA Buttons */}
+                <div className="flex flex-col sm:flex-row items-center gap-3 pt-2">
+                  {isLoggedIn ? (
+                    <a
+                      href={crmPortalUrl}
+                      className="w-full flex-1 inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl bg-gradient-to-r from-[#2997ff] to-cyan-400 text-slate-950 font-black text-xs uppercase tracking-wider hover:shadow-lg transition-all"
+                    >
+                      <KeyRound className="h-4 w-4" />
+                      <span>Access Training in CRM</span>
+                    </a>
+                  ) : (
+                    <>
+                      <Link
+                        to={applyUrl}
+                        className="w-full flex-1 inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl bg-gradient-to-r from-[#2997ff] to-cyan-400 text-slate-950 font-black text-xs uppercase tracking-wider hover:shadow-lg transition-all"
+                      >
+                        <span>Build With Us to Unlock</span>
+                        <ArrowRight className="h-3.5 w-3.5" />
+                      </Link>
+
+                      <a
+                        href={crmPortalUrl}
+                        className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-3.5 rounded-xl border border-white/15 bg-white/5 text-xs font-bold text-white hover:bg-white/10 transition-colors"
+                      >
+                        <span>Member Sign In</span>
+                      </a>
+                    </>
+                  )}
+                </div>
               </div>
             </motion.div>
           </div>
