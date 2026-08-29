@@ -17,10 +17,13 @@ export function SponsorGate({ membership, distributors, children }: { membership
     })
   }, [membership?.distributor_id])
 
+  const currentDistributor = useMemo(() => distributors.find(d => d.id === membership?.distributor_id), [distributors, membership?.distributor_id])
+  const isTopAdmin = membership?.role === 'admin' || currentDistributor?.slug === 'ming-way-sia' || currentDistributor?.slug === 'mehdi-cohen' || currentDistributor?.slug === 'simon-loh'
+
   const choices = useMemo(() => distributors.filter(item => item.active && item.id !== membership?.distributor_id), [distributors, membership?.distributor_id])
 
   if (sponsorState === 'checking') return <main className="min-h-screen bg-black" />
-  if (!membership?.distributor_id || sponsorState === 'confirmed') return <>{children}</>
+  if (!membership?.distributor_id || isTopAdmin || sponsorState === 'confirmed') return <>{children}</>
 
   const submit = async (event: React.FormEvent) => {
     event.preventDefault()

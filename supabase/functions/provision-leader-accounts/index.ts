@@ -101,7 +101,7 @@ Deno.serve(async (request) => {
           {
             user_id: userId,
             distributor_id: dist.id,
-            role: leader.slug === 'mehdi-cohen' ? 'admin' : 'distributor',
+            role: ['mehdi-cohen', 'ming-way-sia', 'simon-loh', 'magaly-cardona', 'angel-mok'].includes(leader.slug) ? 'admin' : 'distributor',
             active: true,
           },
           { onConflict: 'user_id' }
