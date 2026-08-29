@@ -1130,10 +1130,10 @@ export function DuoLandingPage({ profile: initialProfile, distributorSlug }: Duo
           </div>
 
           {/* Action Buttons */}
-          <div className="mt-9 flex flex-col sm:flex-row items-center justify-center gap-4 w-full sm:w-auto">
+          <div className="mt-9 flex flex-col sm:flex-row flex-wrap items-center justify-center gap-3.5 sm:gap-4 w-full sm:w-auto">
             <button
               onClick={scrollToPresentations}
-              className="w-full sm:w-auto inline-flex min-h-13 items-center justify-center gap-2.5 rounded-xl bg-gradient-to-r from-cyan-500 via-blue-600 to-indigo-600 px-8 py-3.5 text-base font-bold text-white shadow-xl shadow-cyan-500/20 hover:from-cyan-400 hover:via-blue-500 hover:to-indigo-500 transition-all active:scale-95"
+              className="w-full sm:w-auto inline-flex min-h-13 items-center justify-center gap-2.5 rounded-xl bg-gradient-to-r from-cyan-500 via-blue-600 to-indigo-600 px-7 py-3.5 text-base font-bold text-white shadow-xl shadow-cyan-500/20 hover:from-cyan-400 hover:via-blue-500 hover:to-indigo-500 transition-all active:scale-95"
             >
               <PlayCircle className="h-5 w-5" />
               {t.watchPresentations}
@@ -1155,6 +1155,21 @@ export function DuoLandingPage({ profile: initialProfile, distributorSlug }: Duo
               <MessageCircle className="h-5 w-5 text-emerald-400" />
               {t.messageDistributor} {distributorFirstName}
             </a>
+
+            <Link
+              to={consultationUrl}
+              onClick={() =>
+                trackEvent('form_click', {
+                  location: 'duo_hero_consultation',
+                  distributor: distributorSlugActive,
+                  locale,
+                })
+              }
+              className="w-full sm:w-auto inline-flex min-h-13 items-center justify-center gap-2 rounded-xl border border-white/20 bg-white/10 hover:bg-white/15 px-7 py-3.5 text-base font-bold text-white transition-all shadow-lg active:scale-95"
+            >
+              {t.requestConsultation}
+              <ArrowRight className="h-5 w-5" />
+            </Link>
           </div>
 
           {/* Small Supporting Note */}
