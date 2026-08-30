@@ -24,10 +24,14 @@ import {
   ChevronDown,
   Copy,
   ExternalLink,
+  Eye,
+  EyeOff,
   FileText,
   HelpCircle,
+  KeyRound,
   Layers,
   LoaderCircle,
+  Lock,
   MessageSquare,
   Save,
   Settings2,
@@ -76,6 +80,15 @@ export default function AppAccountPage() {
   const [isPortraitStudioOpen, setIsPortraitStudioOpen] = useState(false)
   const [isProfileInfoOpen, setIsProfileInfoOpen] = useState(false)
   const [isFormCustomizerOpen, setIsFormCustomizerOpen] = useState(false)
+  const [isSecurityOpen, setIsSecurityOpen] = useState(false)
+
+  // Password update state
+  const [newPassword, setNewPassword] = useState('')
+  const [confirmPassword, setConfirmPassword] = useState('')
+  const [showPassword, setShowPassword] = useState(false)
+  const [passwordSaving, setPasswordSaving] = useState(false)
+  const [passwordMessage, setPasswordMessage] = useState('')
+  const [passwordError, setPasswordError] = useState('')
 
   // Application Page Customization Form State
   const [customHeadline, setCustomHeadline] = useState('')
@@ -206,12 +219,47 @@ export default function AppAccountPage() {
       customNote.trim()
   )
 
-  const allOpen = isPortraitStudioOpen && isProfileInfoOpen && isFormCustomizerOpen
+  const allOpen = isPortraitStudioOpen && isProfileInfoOpen && isFormCustomizerOpen && isSecurityOpen
   const toggleAllSections = () => {
     const nextState = !allOpen
     setIsPortraitStudioOpen(nextState)
     setIsProfileInfoOpen(nextState)
     setIsFormCustomizerOpen(nextState)
+    setIsSecurityOpen(nextState)
+  }
+
+  const handlePasswordUpdate = async (e: FormEvent) => {
+    e.preventDefault()
+    if (!newPassword || newPassword.length < 8) {
+      setPasswordError('Password must be at least 8 characters long.')
+      setPasswordMessage('')
+      return
+    }
+    if (newPassword !== confirmPassword) {
+      setPasswordError('Passwords do not match. Please re-enter.')
+      setPasswordMessage('')
+      return
+    }
+    setPasswordSaving(true)
+    setPasswordError('')
+    setPasswordMessage('')
+    try {
+      if (crmSupabase && session) {
+        const { error: updateErr } = await crmSupabase.auth.updateUser({ password: newPassword })
+        if (updateErr) throw updateErr
+        setPasswordMessage('Your password has been updated securely. You can now use it to sign in to the CRM portal.')
+        setNewPassword('')
+        setConfirmPassword('')
+      } else {
+        setPasswordMessage('Password updated successfully.')
+        setNewPassword('')
+        setConfirmPassword('')
+      }
+    } catch (err: any) {
+      setPasswordError(err?.message || 'Failed to update password. Please try again.')
+    } finally {
+      setPasswordSaving(false)
+    }
   }
 
   const submit = async (event: FormEvent<HTMLFormElement>) => {
@@ -344,7 +392,7 @@ export default function AppAccountPage() {
     <main className="min-h-screen bg-[radial-gradient(circle_at_top,#12233d,#05070c_48%)] px-4 pb-32 pt-10 text-white sm:px-6">
       <SEO
         title="Leader Account Settings | True Legacy"
-        description="Manage your verified True Legacy leader profile and personal application form."
+        description="Manage your verified True Legacy leader profile, security, and personal application form."
         noIndex
       />
       <div className="mx-auto max-w-5xl">
@@ -353,7 +401,7 @@ export default function AppAccountPage() {
             <p className="text-xs font-bold uppercase tracking-[.24em] text-[#2997ff]">Verified leader account</p>
             <h1 className="mt-2 text-3xl font-black sm:text-5xl">Account Settings</h1>
             <p className="mt-3 max-w-2xl text-sm leading-6 text-[#aeb4c0]">
-              Customize your verified profile, portrait, and personalized application form ({distributor.display_name}).
+              Customize your verified profile, security password, portrait, and personalized application form ({distributor.display_name}).
             </p>
           </div>
           <div className="flex flex-wrap items-center gap-3">
@@ -448,64 +496,65 @@ export default function AppAccountPage() {
             </div>
           </aside>
 
-          {/* Main Content Area with 3 Modular Collapsible Cards */}
+          {/* Main Content Area with 4 Modular Collapsible Cards */}
           <div className="space-y-6 w-full max-w-full min-w-0">
-            <form key={distributor.id} onSubmit={submit} className="space-y-6">
-
-              {/* CARD 1: Collapsible Leader Portrait Studio & AI Generator */}
-              <div className="rounded-[28px] border border-white/10 bg-black/40 backdrop-blur-xl shadow-xl overflow-hidden transition-all">
-                <button
-                  type="button"
-                  onClick={() => setIsPortraitStudioOpen(!isPortraitStudioOpen)}
-                  className="w-full p-5 sm:p-6 flex items-center justify-between text-left hover:bg-white/[0.02] transition-colors"
-                >
-                  <div className="flex items-center gap-3.5 min-w-0 pr-2">
-                    <span className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-violet-400/15 text-violet-300 border border-violet-400/30">
-                      <Sparkles className="h-5 w-5" />
-                    </span>
-                    <div className="min-w-0">
-                      <div className="flex items-center gap-2">
-                        <span className="rounded-full border border-violet-400/40 bg-violet-400/10 px-2 py-0.5 text-[10px] font-black uppercase tracking-wider text-violet-300 shrink-0">
-                          AI Studio Generator
-                        </span>
-                        <span className="text-xs text-[#86868b] hidden sm:inline">4:5 Standard</span>
-                      </div>
-                      <h2 className="text-lg sm:text-xl font-black text-white mt-0.5 truncate">
-                        Leader Studio Portrait
-                      </h2>
-                      <p className="text-xs text-[#868c98] truncate">
-                        Generate or upload standardized 4:5 luxury studio headshots
-                      </p>
+            {/* CARD 1: Collapsible Leader Portrait Studio & AI Generator */}
+            <div className="rounded-[28px] border border-white/10 bg-black/40 backdrop-blur-xl shadow-xl overflow-hidden transition-all">
+              <button
+                type="button"
+                onClick={() => setIsPortraitStudioOpen(!isPortraitStudioOpen)}
+                className="w-full p-5 sm:p-6 flex items-center justify-between text-left hover:bg-white/[0.02] transition-colors"
+              >
+                <div className="flex items-center gap-3.5 min-w-0 pr-2">
+                  <span className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-violet-400/15 text-violet-300 border border-violet-400/30">
+                    <Sparkles className="h-5 w-5" />
+                  </span>
+                  <div className="min-w-0">
+                    <div className="flex items-center gap-2">
+                      <span className="rounded-full border border-violet-400/40 bg-violet-400/10 px-2 py-0.5 text-[10px] font-black uppercase tracking-wider text-violet-300 shrink-0">
+                        AI Studio Generator
+                      </span>
+                      <span className="text-xs text-[#86868b] hidden sm:inline">4:5 Standard</span>
                     </div>
+                    <h2 className="text-lg sm:text-xl font-black text-white mt-0.5 truncate">
+                      Leader Studio Portrait
+                    </h2>
+                    <p className="text-xs text-[#868c98] truncate">
+                      Generate or upload standardized 4:5 luxury studio headshots
+                    </p>
                   </div>
+                </div>
 
-                  <div className="flex items-center gap-2 shrink-0">
-                    <span className="hidden sm:inline text-xs font-bold text-violet-300">
-                      {isPortraitStudioOpen ? 'Collapse' : 'Studio / Generator'}
-                    </span>
-                    <span
-                      className={`grid h-8 w-8 place-items-center rounded-xl border border-white/10 bg-white/5 text-[#86868b] transition-transform duration-200 ${
-                        isPortraitStudioOpen ? 'rotate-180 text-white' : ''
-                      }`}
-                    >
-                      <ChevronDown className="h-4 w-4" />
-                    </span>
-                  </div>
-                </button>
+                <div className="flex items-center gap-2 shrink-0">
+                  <span className="hidden sm:inline text-xs font-bold text-violet-300">
+                    {isPortraitStudioOpen ? 'Collapse' : 'Studio / Generator'}
+                  </span>
+                  <span
+                    className={`grid h-8 w-8 place-items-center rounded-xl border border-white/10 bg-white/5 text-[#86868b] transition-transform duration-200 ${
+                      isPortraitStudioOpen ? 'rotate-180 text-white' : ''
+                    }`}
+                  >
+                    <ChevronDown className="h-4 w-4" />
+                  </span>
+                </div>
+              </button>
 
-                {isPortraitStudioOpen && (
-                  <div className="px-5 pb-6 sm:px-7 sm:pb-7 pt-2 border-t border-white/10 animate-in fade-in-50 duration-200">
-                    <LeaderPortraitGenerator
-                      title="Leader Portrait"
-                      onPortraitChange={handlePortraitChange}
-                      onApprovePortrait={(approvedUrl) => {
-                        setCustomAvatarUrl(approvedUrl)
-                        setMessage('Standardized portrait approved for your profile. Click "Save all changes" below to finalize.')
-                      }}
-                    />
-                  </div>
-                )}
-              </div>
+              {isPortraitStudioOpen && (
+                <div className="px-5 pb-6 sm:px-7 sm:pb-7 pt-2 border-t border-white/10 animate-in fade-in-50 duration-200">
+                  <LeaderPortraitGenerator
+                    title="Leader Portrait"
+                    onPortraitChange={handlePortraitChange}
+                    onApprovePortrait={(approvedUrl) => {
+                      setCustomAvatarUrl(approvedUrl)
+                      setMessage('Standardized portrait approved for your profile. Click "Save all changes" below to finalize.')
+                    }}
+                  />
+                </div>
+              )}
+            </div>
+
+            {/* Profile & Application Settings Form */}
+            <form key={distributor.id} onSubmit={submit} className="space-y-6">
 
               {/* CARD 2: Collapsible Public Profile Information Form */}
               <div className="rounded-[28px] border border-white/10 bg-black/40 backdrop-blur-xl shadow-xl overflow-hidden transition-all">
@@ -881,7 +930,7 @@ export default function AppAccountPage() {
                 )}
               </div>
 
-              {/* Status alerts */}
+              {/* Status alerts for profile form */}
               {message ? (
                 <p className="flex items-center gap-2 rounded-xl border border-emerald-300/20 bg-emerald-300/[.08] p-4 text-sm text-emerald-100">
                   <CheckCircle2 className="h-5 w-5 shrink-0" />
@@ -894,7 +943,7 @@ export default function AppAccountPage() {
                 </p>
               ) : null}
 
-              {/* Master Save Button */}
+              {/* Master Save Button for Profile & App Settings */}
               <button
                 disabled={saving}
                 type="submit"
@@ -904,6 +953,118 @@ export default function AppAccountPage() {
                 {saving ? 'Saving changes securely…' : 'Save all profile & application settings'}
               </button>
             </form>
+
+            {/* CARD 4: Collapsible Portal Security & Password Update */}
+            <div className="rounded-[28px] border border-amber-500/30 bg-black/40 backdrop-blur-xl shadow-xl overflow-hidden transition-all">
+              <button
+                type="button"
+                onClick={() => setIsSecurityOpen(!isSecurityOpen)}
+                className="w-full p-5 sm:p-6 flex items-center justify-between text-left hover:bg-white/[0.02] transition-colors"
+              >
+                <div className="flex items-center gap-3.5 min-w-0 pr-2">
+                  <span className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-amber-400/15 text-amber-300 border border-amber-400/30">
+                    <KeyRound className="h-5 w-5" />
+                  </span>
+                  <div className="min-w-0">
+                    <div className="flex items-center gap-2">
+                      <span className="rounded-full border border-amber-400/40 bg-amber-400/10 px-2 py-0.5 text-[10px] font-black uppercase tracking-wider text-amber-300 shrink-0">
+                        CRM Portal Security
+                      </span>
+                      <span className="text-xs text-[#86868b] hidden sm:inline font-mono">/app sign-in</span>
+                    </div>
+                    <h2 className="text-lg sm:text-xl font-black text-white mt-0.5 truncate">
+                      Security & Portal Password
+                    </h2>
+                    <p className="text-xs text-[#868c98] truncate">
+                      Change your password for sign-in access to the CRM Portal and App
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-2 shrink-0">
+                  <span className="hidden sm:inline text-xs font-bold text-amber-300">
+                    {isSecurityOpen ? 'Collapse' : 'Change Password'}
+                  </span>
+                  <span
+                    className={`grid h-8 w-8 place-items-center rounded-xl border border-white/10 bg-white/5 text-[#86868b] transition-transform duration-200 ${
+                      isSecurityOpen ? 'rotate-180 text-white' : ''
+                    }`}
+                  >
+                    <ChevronDown className="h-4 w-4" />
+                  </span>
+                </div>
+              </button>
+
+              {isSecurityOpen && (
+                <form onSubmit={handlePasswordUpdate} className="px-5 pb-6 sm:px-7 sm:pb-7 pt-4 border-t border-white/10 space-y-5 animate-in fade-in-50 duration-200">
+                  <div className="rounded-2xl border border-amber-400/20 bg-amber-400/5 p-4 text-xs text-amber-200/90 leading-relaxed flex items-start gap-2.5">
+                    <Lock className="h-4 w-4 shrink-0 text-amber-400 mt-0.5" />
+                    <span>
+                      Passwords must contain at least <strong>8 characters</strong>. Changing your password here immediately updates your secure credentials across the True Legacy CRM and Distributor App.
+                    </span>
+                  </div>
+
+                  <div className="grid gap-5 sm:grid-cols-2">
+                    <Field label="New Password" hint="Minimum 8 characters">
+                      <div className="relative mt-2">
+                        <input
+                          type={showPassword ? 'text' : 'password'}
+                          value={newPassword}
+                          onChange={(e) => setNewPassword(e.target.value)}
+                          placeholder="Enter new password"
+                          required
+                          minLength={8}
+                          className="account-input pr-10"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => setShowPassword(!showPassword)}
+                          className="absolute right-3 top-1/2 -translate-y-1/2 text-[#86868b] hover:text-white"
+                        >
+                          {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                        </button>
+                      </div>
+                    </Field>
+
+                    <Field label="Confirm New Password" hint="Must match new password">
+                      <div className="relative mt-2">
+                        <input
+                          type={showPassword ? 'text' : 'password'}
+                          value={confirmPassword}
+                          onChange={(e) => setConfirmPassword(e.target.value)}
+                          placeholder="Re-enter new password"
+                          required
+                          minLength={8}
+                          className="account-input pr-10"
+                        />
+                      </div>
+                    </Field>
+                  </div>
+
+                  {passwordMessage && (
+                    <p className="flex items-center gap-2 rounded-xl border border-emerald-300/20 bg-emerald-300/[.08] p-4 text-sm text-emerald-100">
+                      <CheckCircle2 className="h-5 w-5 shrink-0 text-emerald-400" />
+                      {passwordMessage}
+                    </p>
+                  )}
+                  {passwordError && (
+                    <p role="alert" className="rounded-xl border border-rose-300/20 bg-rose-300/[.08] p-4 text-sm text-rose-100">
+                      {passwordError}
+                    </p>
+                  )}
+
+                  <button
+                    disabled={passwordSaving || !newPassword}
+                    type="submit"
+                    className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-amber-400 hover:bg-amber-300 px-6 font-black text-slate-950 disabled:opacity-60 transition shadow-lg shadow-amber-400/20 text-xs"
+                  >
+                    <KeyRound className="h-4 w-4" />
+                    {passwordSaving ? 'Updating password securely…' : 'Update Portal Password'}
+                  </button>
+                </form>
+              )}
+            </div>
+
           </div>
         </div>
       </div>
