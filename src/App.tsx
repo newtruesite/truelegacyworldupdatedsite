@@ -125,15 +125,7 @@ function AnimatedRoutes() {
             path="/products"
             element={
               <PageTransitionWrapper>
-                <ProductShowcaseLandingPage distributorSlug="mehdi-cohen" />
-              </PageTransitionWrapper>
-            }
-          />
-          <Route
-            path="/showcase"
-            element={
-              <PageTransitionWrapper>
-                <ProductShowcaseLandingPage distributorSlug="mehdi-cohen" />
+                <ProductsPage />
               </PageTransitionWrapper>
             }
           />
@@ -331,7 +323,7 @@ function AnimatedRoutes() {
             path="/:countrySlug/products"
             element={
               <PageTransitionWrapper>
-                <ProductShowcaseLandingPage distributorSlug="mehdi-cohen" />
+                <ProductsPage />
               </PageTransitionWrapper>
             }
           />
