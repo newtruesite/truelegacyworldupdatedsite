@@ -1,7 +1,7 @@
 import { SEO } from '@/components/SEO'
 import { PortraitReferenceAdmin } from '@/components/leaders/PortraitReferenceAdmin'
 import { LeaderApplicationsPanel } from '@/components/crm/LeaderApplicationsPanel'
-import { LeaderAccessPanel } from '@/components/crm/LeaderAccessPanel'
+import { LeaderAccessAdmin } from '@/components/crm/LeaderAccessAdmin'
 import { SponsorGate } from '@/components/crm/SponsorGate'
 import { addLeadNote, assignLead, crmConfigured, crmSupabase, getCrmDistributors, getCrmLeads, getCrmMembership, getLeadNotes, updateLeadStatus, submitCrmApplication } from '@/lib/crm'
 import type { CrmDistributor, CrmLead, CrmLeadNote, CrmMembership, LeadStatus } from '@/lib/crm'
@@ -121,6 +121,7 @@ export default function CrmPage() {
   const [activeTab, setActiveTab] = useState<'details' | 'nurture' | 'notes'>('details')
   const [adminScope, setAdminScope] = useState<'personal' | 'oversight'>('personal')
   const [oversightDistributorFilter, setOversightDistributorFilter] = useState<string>('all')
+  const [adminSection, setAdminSection] = useState<'leads' | 'applications' | 'security' | 'portraits'>('leads')
 
   useEffect(() => {
     if (!crmSupabase) {
@@ -377,7 +378,7 @@ export default function CrmPage() {
     }
   }
 
-  const exportCsv = () => {
+  const exportCsv = async () => {
     const header = [
       'Submitted',
       'Name',
@@ -396,23 +397,36 @@ export default function CrmPage() {
       lead.submitted_at,
       lead.full_name,
       lead.email,
-      lead.phone,
+      lead.phone || '',
       lead.country,
       lead.interest,
-      lead.referrer_name,
-      lead.referral_code,
+      lead.referrer_name || '',
+      lead.referral_code || '',
       lead.attribution_method,
-      distributors.find((item) => item.id === lead.assigned_distributor_id)?.display_name || '',
+      assignedName(lead.assigned_distributor_id),
       lead.status,
-      lead.consent_at,
+      lead.consent_at || '',
     ])
-    const csv = [header, ...rows].map((row) => row.map(csvCell).join(',')).join('\n')
-    const url = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8' }))
-    const anchor = document.createElement('a')
-    anchor.href = url
-    anchor.download = `true-legacy-crm-${new Date().toISOString().slice(0, 10)}.csv`
-    anchor.click()
-    URL.revokeObjectURL(url)
+    const csvContent = [header, ...rows]
+      .map((row) => row.map((value) => `"${String(value).replaceAll('"', '""')}"`).join(','))
+      .join('\n')
+
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' })
+    const link = document.createElement('a')
+    link.href = URL.createObjectURL(blob)
+    link.download = `true-legacy-leads-${isOversight ? 'team' : 'personal'}-${new Date().toISOString().slice(0, 10)}.csv`
+    link.click()
+
+    // Audit log the export
+    if (crmSupabase) {
+      try {
+        await crmSupabase.rpc('crm_log_export', {
+          p_count: filtered.length,
+          p_scope: isOversight ? 'team_oversight' : 'personal',
+        })
+      } catch {}
+    }
+    setMessage(`Exported ${filtered.length} leads securely.`)
   }
 
   const assignedName = (id: string | null) => distributors.find((item) => item.id === id)?.display_name || 'Unassigned'
@@ -582,144 +596,214 @@ export default function CrmPage() {
             </div>
           </header>
 
-          {/* Quick KPI Stats Bar */}
-          <section className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
-            {isOversight ? (
-              <>
-                <MetricCard icon={<Users className="h-4 w-4 text-[#2997ff]" />} value={leads.length} label="Total Team Leads" />
-                <MetricCard icon={<UserRoundCheck className="h-4 w-4 text-cyan-400" />} value={newCount} label="New Inquiries" tone="cyan" />
-                <MetricCard
-                  icon={<ShieldCheck className="h-4 w-4 text-amber-400" />}
-                  value={unassignedCount}
-                  label="Unassigned (Review)"
-                  tone={unassignedCount > 0 ? 'rose' : 'amber'}
-                />
-                <MetricCard icon={<MessageCircle className="h-4 w-4 text-rose-400" />} value={dueCount} label="Follow-ups Due" tone="rose" />
-              </>
-            ) : (
-              <>
-                <MetricCard icon={<Users className="h-4 w-4 text-[#2997ff]" />} value={personalLeads.length} label="My Active Leads" />
-                <MetricCard icon={<UserRoundCheck className="h-4 w-4 text-cyan-400" />} value={newCount} label="New Leads" tone="cyan" />
-                <MetricCard icon={<MessageCircle className="h-4 w-4 text-rose-400" />} value={dueCount} label="Follow-ups Due" tone="rose" />
-                <MetricCard
-                  icon={<Sparkles className="h-4 w-4 text-emerald-400" />}
-                  value={personalLeads.filter((l) => l.status === 'converted').length}
-                  label="Converted Customers"
-                  tone="emerald"
-                />
-              </>
-            )}
-          </section>
-
-          {/* Admin Oversight Dedicated Banner & Distributor Filter */}
-          {isOversight && (
-            <div className="mt-5 rounded-2xl border border-amber-400/30 bg-amber-400/[0.06] p-4 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-              <div className="flex items-center gap-3">
-                <div className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-amber-400/15 text-amber-300">
-                  <ShieldCheck className="h-5 w-5" />
-                </div>
-                <div>
-                  <div className="flex items-center gap-2">
-                    <span className="rounded-full border border-amber-400/40 bg-amber-400/20 px-2 py-0.5 text-[10px] font-black uppercase tracking-wider text-amber-300">
-                      Admin Oversight Mode
-                    </span>
-                    <span className="text-xs text-[#86868b]">All Team Leads ({leads.length})</span>
-                  </div>
-                  <p className="mt-1 text-xs text-[#cccccc]">
-                    Monitoring all distributor leads across True Legacy. You can reassign ownership, override statuses, and manage team attribution.
-                  </p>
-                </div>
-              </div>
-              <div className="flex flex-wrap items-center gap-2 w-full md:w-auto">
-                <select
-                  value={oversightDistributorFilter}
-                  onChange={(e) => setOversightDistributorFilter(e.target.value)}
-                  className="h-10 rounded-xl border border-amber-400/40 bg-black/80 px-3 text-xs font-bold text-amber-200 focus:border-amber-400 outline-none w-full sm:w-auto"
-                >
-                  <option value="all">All Distributors ({leads.length} leads)</option>
-                  {unassignedCount > 0 && (
-                    <option value="unassigned">⚠️ Unassigned Only ({unassignedCount} leads)</option>
-                  )}
-                  {distributors
-                    .filter((d) => d.active)
-                    .map((d) => {
-                      const count = leads.filter((l) => l.assigned_distributor_id === d.id).length
-                      return (
-                        <option key={d.id} value={d.id}>
-                          {d.display_name} ({count} leads)
-                        </option>
-                      )
-                    })}
-                </select>
-              </div>
-            </div>
-          )}
-
-          {/* Unassigned Leads Triage Banner */}
-          {isAdmin && unassignedCount > 0 && (
-            <div className="mt-4 rounded-2xl border border-rose-500/40 bg-rose-500/[0.08] p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-              <div className="flex items-center gap-3">
-                <AlertTriangle className="h-5 w-5 text-rose-400 shrink-0" />
-                <div>
-                  <p className="text-xs font-bold text-white">
-                    {unassignedCount} Unassigned Lead{unassignedCount === 1 ? '' : 's'} Require Admin Review
-                  </p>
-                  <p className="text-xs text-rose-200/80">
-                    Incoming leads without an assigned distributor owner. Assign an owner to route them to the appropriate pipeline.
-                  </p>
-                </div>
-              </div>
+          {/* Admin Navigation Hub (When Admin) */}
+          {isAdmin && (
+            <div className="mt-5 flex flex-wrap items-center gap-2 border-b border-white/10 pb-4">
               <button
-                onClick={() => {
-                  setAdminScope('oversight')
-                  setOversightDistributorFilter('unassigned')
-                }}
-                className="rounded-xl bg-rose-500 hover:bg-rose-400 px-3.5 py-1.5 text-xs font-bold text-white transition-colors shrink-0"
+                type="button"
+                onClick={() => setAdminSection('leads')}
+                className={`inline-flex items-center gap-2 rounded-xl px-4 py-2 text-xs font-bold transition-all ${
+                  adminSection === 'leads'
+                    ? 'bg-cyan-500 text-slate-950 font-black shadow-md shadow-cyan-500/20'
+                    : 'border border-white/10 bg-white/[0.03] text-[#cccccc] hover:border-white/20 hover:text-white'
+                }`}
               >
-                Review & Assign Now
+                <Users className="h-4 w-4" />
+                Contacts & Leads
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setAdminSection('applications')}
+                className={`inline-flex items-center gap-2 rounded-xl px-4 py-2 text-xs font-bold transition-all ${
+                  adminSection === 'applications'
+                    ? 'bg-cyan-500 text-slate-950 font-black shadow-md shadow-cyan-500/20'
+                    : 'border border-white/10 bg-white/[0.03] text-[#cccccc] hover:border-white/20 hover:text-white'
+                }`}
+              >
+                <UserRoundCheck className="h-4 w-4" />
+                Leader Applications
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setAdminSection('security')}
+                className={`inline-flex items-center gap-2 rounded-xl px-4 py-2 text-xs font-bold transition-all ${
+                  adminSection === 'security'
+                    ? 'bg-cyan-500 text-slate-950 font-black shadow-md shadow-cyan-500/20'
+                    : 'border border-white/10 bg-white/[0.03] text-[#cccccc] hover:border-white/20 hover:text-white'
+                }`}
+              >
+                <ShieldCheck className="h-4 w-4" />
+                Leader Access & Security
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setAdminSection('portraits')}
+                className={`inline-flex items-center gap-2 rounded-xl px-4 py-2 text-xs font-bold transition-all ${
+                  adminSection === 'portraits'
+                    ? 'bg-cyan-500 text-slate-950 font-black shadow-md shadow-cyan-500/20'
+                    : 'border border-white/10 bg-white/[0.03] text-[#cccccc] hover:border-white/20 hover:text-white'
+                }`}
+              >
+                <Sparkles className="h-4 w-4" />
+                Portrait Standard
               </button>
             </div>
           )}
 
-          {/* Leader Applications (admin-only — shown first so pending alerts are visible) */}
-          {membership?.role === 'admin' && <LeaderApplicationsPanel />}
-
-          {/* Leader Access & Credentials Dispatcher (admin-only) */}
-          {membership?.role === 'admin' && <LeaderAccessPanel />}
-
-          {/* Portrait Standard Admin Panel (admin-only) */}
-          {membership?.role === 'admin' && <PortraitReferenceAdmin />}
-
-          {/* Lead Alerts Banner */}
-          {(newCount > 0 || dueCount > 0) && (
-            <div className="mt-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 rounded-2xl border border-cyan-400/30 bg-cyan-400/[0.06] p-4">
-              <div className="flex items-center gap-3">
-                <span className="grid h-9 w-9 place-items-center rounded-xl bg-cyan-400/15 text-[#2997ff]">
-                  <BellRing className="h-4 w-4 animate-pulse" />
-                </span>
-                <div>
-                  <p className="text-xs font-black text-white">Lead Priority Queue</p>
-                  <p className="text-xs text-[#cccccc]">
-                    {newCount} new lead{newCount === 1 ? '' : 's'} · {dueCount} follow-up{dueCount === 1 ? '' : 's'} due for outreach
-                  </p>
-                </div>
-              </div>
-              <div className="flex gap-2">
-                <button
-                  onClick={() => setAttentionFilter('new')}
-                  className="rounded-lg border border-cyan-400/30 bg-cyan-400/10 px-3 py-1.5 text-xs font-bold text-cyan-300 hover:bg-cyan-400/20 transition-colors"
-                >
-                  Show New ({newCount})
-                </button>
-                <button
-                  onClick={() => setAttentionFilter('due')}
-                  className="rounded-lg border border-amber-400/30 bg-amber-400/10 px-3 py-1.5 text-xs font-bold text-amber-300 hover:bg-amber-400/20 transition-colors"
-                >
-                  Show Due ({dueCount})
-                </button>
-              </div>
+          {/* Admin Sub-Views: Applications, Security, or Portraits */}
+          {isAdmin && adminSection === 'applications' && (
+            <div className="mt-6">
+              <LeaderApplicationsPanel />
             </div>
           )}
+
+          {isAdmin && adminSection === 'security' && (
+            <div className="mt-6">
+              <LeaderAccessAdmin />
+            </div>
+          )}
+
+          {isAdmin && adminSection === 'portraits' && (
+            <div className="mt-6">
+              <PortraitReferenceAdmin />
+            </div>
+          )}
+
+          {/* Main Leads Workspace (Always for distributors, and when adminSection === 'leads' for admins) */}
+          {(!isAdmin || adminSection === 'leads') && (
+            <>
+              {/* Quick KPI Stats Bar */}
+              <section className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
+                {isOversight ? (
+                  <>
+                    <MetricCard icon={<Users className="h-4 w-4 text-[#2997ff]" />} value={leads.length} label="Total Team Leads" />
+                    <MetricCard icon={<UserRoundCheck className="h-4 w-4 text-cyan-400" />} value={newCount} label="New Inquiries" tone="cyan" />
+                    <MetricCard
+                      icon={<ShieldCheck className="h-4 w-4 text-amber-400" />}
+                      value={unassignedCount}
+                      label="Unassigned (Review)"
+                      tone={unassignedCount > 0 ? 'rose' : 'amber'}
+                    />
+                    <MetricCard icon={<MessageCircle className="h-4 w-4 text-rose-400" />} value={dueCount} label="Follow-ups Due" tone="rose" />
+                  </>
+                ) : (
+                  <>
+                    <MetricCard icon={<Users className="h-4 w-4 text-[#2997ff]" />} value={personalLeads.length} label="My Active Leads" />
+                    <MetricCard icon={<UserRoundCheck className="h-4 w-4 text-cyan-400" />} value={newCount} label="New Leads" tone="cyan" />
+                    <MetricCard icon={<MessageCircle className="h-4 w-4 text-rose-400" />} value={dueCount} label="Follow-ups Due" tone="rose" />
+                    <MetricCard
+                      icon={<Sparkles className="h-4 w-4 text-emerald-400" />}
+                      value={personalLeads.filter((l) => l.status === 'converted').length}
+                      label="Converted Customers"
+                      tone="emerald"
+                    />
+                  </>
+                )}
+              </section>
+
+              {/* Admin Oversight Dedicated Banner & Distributor Filter */}
+              {isOversight && (
+                <div className="mt-5 rounded-2xl border border-amber-400/30 bg-amber-400/[0.06] p-4 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+                  <div className="flex items-center gap-3">
+                    <div className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-amber-400/15 text-amber-300">
+                      <ShieldCheck className="h-5 w-5" />
+                    </div>
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <span className="rounded-full border border-amber-400/40 bg-amber-400/20 px-2 py-0.5 text-[10px] font-black uppercase tracking-wider text-amber-300">
+                          Admin Oversight Mode
+                        </span>
+                        <span className="text-xs text-[#86868b]">All Team Leads ({leads.length})</span>
+                      </div>
+                      <p className="mt-1 text-xs text-[#cccccc]">
+                        Monitoring all distributor leads across True Legacy. You can reassign ownership, override statuses, and manage team attribution.
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex flex-wrap items-center gap-2 w-full md:w-auto">
+                    <select
+                      value={oversightDistributorFilter}
+                      onChange={(e) => setOversightDistributorFilter(e.target.value)}
+                      className="h-10 rounded-xl border border-amber-400/40 bg-black/80 px-3 text-xs font-bold text-amber-200 focus:border-amber-400 outline-none w-full sm:w-auto"
+                    >
+                      <option value="all">All Distributors ({leads.length} leads)</option>
+                      {unassignedCount > 0 && (
+                        <option value="unassigned">⚠️ Unassigned Only ({unassignedCount} leads)</option>
+                      )}
+                      {distributors
+                        .filter((d) => d.active)
+                        .map((d) => {
+                          const count = leads.filter((l) => l.assigned_distributor_id === d.id).length
+                          return (
+                            <option key={d.id} value={d.id}>
+                              {d.display_name} ({count} leads)
+                            </option>
+                          )
+                        })}
+                    </select>
+                  </div>
+                </div>
+              )}
+
+              {/* Unassigned Leads Triage Banner */}
+              {isAdmin && unassignedCount > 0 && (
+                <div className="mt-4 rounded-2xl border border-rose-500/40 bg-rose-500/[0.08] p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+                  <div className="flex items-center gap-3">
+                    <AlertTriangle className="h-5 w-5 text-rose-400 shrink-0" />
+                    <div>
+                      <p className="text-xs font-bold text-white">
+                        {unassignedCount} Unassigned Lead{unassignedCount === 1 ? '' : 's'} Require Admin Review
+                      </p>
+                      <p className="text-xs text-rose-200/80">
+                        Incoming leads without an assigned distributor owner. Assign an owner to route them to the appropriate pipeline.
+                      </p>
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => {
+                      setAdminScope('oversight')
+                      setOversightDistributorFilter('unassigned')
+                    }}
+                    className="rounded-xl bg-rose-500 hover:bg-rose-400 px-3.5 py-1.5 text-xs font-bold text-white transition-colors shrink-0"
+                  >
+                    Review & Assign Now
+                  </button>
+                </div>
+              )}
+
+              {/* Lead Alerts Banner */}
+              {(newCount > 0 || dueCount > 0) && (
+                <div className="mt-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 rounded-2xl border border-cyan-400/30 bg-cyan-400/[0.06] p-4">
+                  <div className="flex items-center gap-3">
+                    <span className="grid h-9 w-9 place-items-center rounded-xl bg-cyan-400/15 text-[#2997ff]">
+                      <BellRing className="h-4 w-4 animate-pulse" />
+                    </span>
+                    <div>
+                      <p className="text-xs font-black text-white">Lead Priority Queue</p>
+                      <p className="text-xs text-[#cccccc]">
+                        {newCount} new lead{newCount === 1 ? '' : 's'} · {dueCount} follow-up{dueCount === 1 ? '' : 's'} due for outreach
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => setAttentionFilter('new')}
+                      className="rounded-lg border border-cyan-400/30 bg-cyan-400/10 px-3 py-1.5 text-xs font-bold text-cyan-300 hover:bg-cyan-400/20 transition-colors"
+                    >
+                      Show New ({newCount})
+                    </button>
+                    <button
+                      onClick={() => setAttentionFilter('due')}
+                      className="rounded-lg border border-amber-400/30 bg-amber-400/10 px-3 py-1.5 text-xs font-bold text-amber-300 hover:bg-amber-400/20 transition-colors"
+                    >
+                      Show Due ({dueCount})
+                    </button>
+                  </div>
+                </div>
+              )}
 
           {/* Main Command Center Container */}
           <section className="mt-6 rounded-2xl border border-white/10 bg-white/[0.025] backdrop-blur-xl shadow-2xl">
@@ -1115,7 +1199,9 @@ export default function CrmPage() {
               </div>
             )}
           </section>
-        </div>
+          </>
+        )}
+      </div>
 
         {/* Modern Slide-Over Lead Detail Drawer (attio / Linear style) */}
         {selectedLead ? (

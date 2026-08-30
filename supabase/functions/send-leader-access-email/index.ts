@@ -23,18 +23,59 @@ Deno.serve(async (request) => {
   const serviceRoleKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')
   const resendKey = Deno.env.get('RESEND_API_KEY')
 
+  if (!supabaseUrl || !serviceRoleKey) {
+    return new Response(JSON.stringify({ error: 'Supabase service configuration missing' }), {
+      status: 500,
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    })
+  }
+
+  // 1. STRICT AUTHENTICATION & ADMIN ROLE VERIFICATION
+  const authHeader = request.headers.get('Authorization')
+  if (!authHeader) {
+    return new Response(JSON.stringify({ error: 'Authorization header required' }), {
+      status: 401,
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    })
+  }
+
+  const token = authHeader.replace('Bearer ', '').trim()
+  const adminClient = createClient(supabaseUrl, serviceRoleKey)
+  const { data: userData, error: userError } = await adminClient.auth.getUser(token)
+
+  if (userError || !userData?.user) {
+    return new Response(JSON.stringify({ error: 'Invalid or expired authentication token' }), {
+      status: 401,
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    })
+  }
+
+  // Verify caller is an active admin in crm_memberships
+  const { data: membershipData, error: membershipError } = await adminClient
+    .from('crm_memberships')
+    .select('role, active')
+    .eq('user_id', userData.user.id)
+    .maybeSingle()
+
+  if (membershipError || !membershipData || !membershipData.active || membershipData.role !== 'admin') {
+    return new Response(JSON.stringify({ error: 'Administrator permissions required to send access invitations' }), {
+      status: 403,
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    })
+  }
+
+  // 2. PARSE REQUEST PAYLOAD
   const body = await request.json().catch(() => ({}))
   const {
     email,
     displayName,
     slug,
-    tempPassword = 'TrueLegacy2026!',
-    resetLink,
     appUrl = 'https://www.truelegacyworld.com',
+    linkType = 'magiclink', // 'magiclink' | 'recovery' | 'invite'
   } = body
 
-  if (!email || typeof email !== 'string') {
-    return new Response(JSON.stringify({ error: 'Valid email is required' }), {
+  if (!email || typeof email !== 'string' || !email.includes('@')) {
+    return new Response(JSON.stringify({ error: 'Valid leader email is required' }), {
       status: 400,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     })
@@ -42,10 +83,27 @@ Deno.serve(async (request) => {
 
   const cleanName = displayName || 'Leader'
   const cleanSlug = slug || 'leader'
-  const crmLoginUrl = `${appUrl}/app`
+  const crmLoginUrl = `${appUrl}/crm`
   const settingsUrl = `${appUrl}/app/settings`
   const publicProfileUrl = `${appUrl}/d/${cleanSlug}`
-  const magicLink = resetLink || crmLoginUrl
+
+  // 3. GENERATE SECURE ONE-TIME LINK VIA SUPABASE AUTH (NO RAW PASSWORDS)
+  let generatedLinkUrl = crmLoginUrl
+  try {
+    const { data: linkData, error: linkErr } = await adminClient.auth.admin.generateLink({
+      type: linkType === 'recovery' ? 'recovery' : 'magiclink',
+      email: email.trim().toLowerCase(),
+      options: {
+        redirectTo: linkType === 'recovery' ? `${appUrl}/crm?recovery=true` : `${appUrl}/app`,
+      },
+    })
+
+    if (!linkErr && linkData?.properties?.action_link) {
+      generatedLinkUrl = linkData.properties.action_link
+    }
+  } catch (err) {
+    console.error('Error generating secure authentication link:', err)
+  }
 
   const emailHtml = `
 <!DOCTYPE html>
@@ -53,7 +111,7 @@ Deno.serve(async (request) => {
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Welcome to True Legacy — Your Leader Access & CRM Guide</title>
+  <title>Your Secure True Legacy Leader Access</title>
 </head>
 <body style="margin: 0; padding: 0; background-color: #000000; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color: #ffffff;">
   <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="background-color: #000000; min-height: 100vh; padding: 32px 12px;">
@@ -64,7 +122,7 @@ Deno.serve(async (request) => {
           <!-- Header Banner -->
           <tr>
             <td style="padding: 36px 32px 24px 32px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.08); background: radial-gradient(circle at 50% 0%, rgba(41, 151, 255, 0.15) 0%, transparent 70%);">
-              <p style="margin: 0 0 8px 0; color: #2997ff; font-size: 11px; font-weight: 900; letter-spacing: 3px; text-transform: uppercase;">OFFICIAL LEADERSHIP ACCESS</p>
+              <p style="margin: 0 0 8px 0; color: #2997ff; font-size: 11px; font-weight: 900; letter-spacing: 3px; text-transform: uppercase;">SECURE LEADERSHIP ACCESS</p>
               <h1 style="margin: 0; color: #ffffff; font-size: 26px; font-weight: 900; letter-spacing: -0.5px;">TRUE LEGACY</h1>
               <p style="margin: 8px 0 0 0; color: #94a3b8; font-size: 13px;">Your Command Center, Web App & Personal Lead Pipeline</p>
             </td>
@@ -77,92 +135,43 @@ Deno.serve(async (request) => {
                 Hi <strong>${escapeHtml(cleanName)}</strong>,
               </p>
               <p style="margin: 0 0 24px 0; color: #cbd5e1; font-size: 14px; line-height: 1.6;">
-                Welcome to the official <strong>True Legacy Leadership Platform</strong>! Your verified leader profile has been activated and is live across our global directory.
+                Your verified leader portal access has been provisioned on the <strong>True Legacy Platform</strong>. Click the secure button below to authenticate directly without needing a temporary password.
               </p>
 
-              <!-- Credentials Box -->
+              <!-- Single Secure Action CTA -->
+              <div style="text-align: center; margin: 32px 0;">
+                <a href="${generatedLinkUrl}" style="background-color: #2997ff; color: #000000; font-weight: 900; font-size: 15px; text-decoration: none; padding: 16px 36px; border-radius: 12px; display: inline-block; box-shadow: 0 10px 25px -5px rgba(41, 151, 255, 0.4);">
+                  Sign In Securely to Leader Portal &rarr;
+                </a>
+              </div>
+
+              <!-- Quick Info Card -->
               <table role="presentation" width="100%" style="background-color: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); border-radius: 14px; margin-bottom: 28px;" cellspacing="0" cellpadding="0" border="0">
                 <tr>
                   <td style="padding: 20px 24px;">
-                    <p style="margin: 0 0 14px 0; color: #38bdf8; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px;">Your Portal Login Credentials</p>
+                    <p style="margin: 0 0 14px 0; color: #38bdf8; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px;">Portal Account Overview</p>
                     <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
                       <tr>
-                        <td style="padding: 4px 0; color: #94a3b8; font-size: 13px; width: 140px;"><strong>CRM Portal URL:</strong></td>
-                        <td style="padding: 4px 0; color: #ffffff; font-size: 13px;"><a href="${crmLoginUrl}" style="color: #38bdf8; text-decoration: none; font-weight: bold;">${crmLoginUrl}</a></td>
+                        <td style="padding: 4px 0; color: #94a3b8; font-size: 13px; width: 140px;"><strong>Authorized Email:</strong></td>
+                        <td style="padding: 4px 0; color: #ffffff; font-size: 13px; font-family: monospace; color: #38bdf8;">${escapeHtml(email)}</td>
                       </tr>
                       <tr>
-                        <td style="padding: 4px 0; color: #94a3b8; font-size: 13px;"><strong>Username / Email:</strong></td>
-                        <td style="padding: 4px 0; color: #ffffff; font-size: 13px; font-family: monospace; color: #38bdf8; font-weight: bold;">${escapeHtml(email)}</td>
-                      </tr>
-                      <tr>
-                        <td style="padding: 4px 0; color: #94a3b8; font-size: 13px;"><strong>Temporary Password:</strong></td>
-                        <td style="padding: 4px 0; color: #ffffff; font-size: 13px;"><span style="font-family: monospace; background: rgba(255,255,255,0.1); padding: 3px 8px; border-radius: 6px; font-weight: bold; color: #facc15;">${escapeHtml(tempPassword)}</span></td>
-                      </tr>
-                      <tr>
-                        <td style="padding: 4px 0; color: #94a3b8; font-size: 13px;"><strong>Leadership Academy:</strong></td>
-                        <td style="padding: 4px 0; color: #ffffff; font-size: 13px;"><a href="${appUrl}/training" style="color: #38bdf8; text-decoration: none;">${appUrl}/training</a> (Secret Code: <strong style="color: #a78bfa;">Truelegacyworld1!</strong>)</td>
-                      </tr>
-                      <tr>
-                        <td style="padding: 4px 0; color: #94a3b8; font-size: 13px;"><strong>Your Public Link:</strong></td>
+                        <td style="padding: 4px 0; color: #94a3b8; font-size: 13px;"><strong>Public Profile URL:</strong></td>
                         <td style="padding: 4px 0; color: #ffffff; font-size: 13px;"><a href="${publicProfileUrl}" style="color: #38bdf8; text-decoration: none;">${publicProfileUrl}</a></td>
+                      </tr>
+                      <tr>
+                        <td style="padding: 4px 0; color: #94a3b8; font-size: 13px;"><strong>Direct CRM URL:</strong></td>
+                        <td style="padding: 4px 0; color: #ffffff; font-size: 13px;"><a href="${crmLoginUrl}" style="color: #38bdf8; text-decoration: none;">${crmLoginUrl}</a></td>
                       </tr>
                     </table>
                   </td>
                 </tr>
               </table>
 
-              <!-- Main CTA Button -->
-              <div style="text-align: center; margin: 28px 0 32px 0;">
-                <a href="${crmLoginUrl}" style="background-color: #2997ff; color: #000000; font-weight: 900; font-size: 15px; text-decoration: none; padding: 16px 36px; border-radius: 12px; display: inline-block; box-shadow: 0 10px 25px -5px rgba(41, 151, 255, 0.4);">
-                  Sign In to Leader Dashboard &rarr;
-                </a>
-              </div>
-
-              <!-- Step-by-Step Instructions -->
-              <div style="border-top: 1px solid rgba(255,255,255,0.1); padding-top: 24px; margin-bottom: 28px;">
-                <h3 style="margin: 0 0 16px 0; color: #ffffff; font-size: 15px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px;">
-                  Quick Start Guide
-                </h3>
-                
-                <div style="margin-bottom: 16px;">
-                  <p style="margin: 0; color: #ffffff; font-size: 14px; font-weight: bold;">1. Sign In to Your CRM</p>
-                  <p style="margin: 4px 0 0 0; color: #94a3b8; font-size: 13px; line-height: 1.5;">
-                    Visit <a href="${crmLoginUrl}" style="color: #38bdf8; text-decoration: none;">${crmLoginUrl}</a> and enter your email (<strong style="color: #ffffff;">${escapeHtml(email)}</strong>) and temporary password (<strong style="color: #facc15;">${escapeHtml(tempPassword)}</strong>).
-                  </p>
-                </div>
-
-                <div style="margin-bottom: 16px;">
-                  <p style="margin: 0; color: #ffffff; font-size: 14px; font-weight: bold;">2. Download the App to Your Mobile Phone</p>
-                  <p style="margin: 4px 0 0 0; color: #94a3b8; font-size: 13px; line-height: 1.5;">
-                    Install the True Legacy CRM directly onto your phone for instant mobile access:
-                  </p>
-                  <ul style="margin: 6px 0 0 0; padding-left: 20px; color: #cbd5e1; font-size: 13px; line-height: 1.6;">
-                    <li><strong>iPhone (Safari):</strong> Go to <a href="${crmLoginUrl}" style="color: #38bdf8; text-decoration: none;">${crmLoginUrl}</a> &rarr; Tap the <strong>Share</strong> button (box with arrow) &rarr; Tap <strong>"Add to Home Screen"</strong>.</li>
-                    <li><strong>Android (Chrome):</strong> Go to <a href="${crmLoginUrl}" style="color: #38bdf8; text-decoration: none;">${crmLoginUrl}</a> &rarr; Tap the <strong>Three Dots (⋮)</strong> &rarr; Tap <strong>"Install App"</strong> or <strong>"Add to Home screen"</strong>.</li>
-                  </ul>
-                </div>
-
-                <div style="margin-bottom: 16px;">
-                  <p style="margin: 0; color: #ffffff; font-size: 14px; font-weight: bold;">3. Access the Leadership Academy & Training</p>
-                  <p style="margin: 4px 0 0 0; color: #94a3b8; font-size: 13px; line-height: 1.5;">
-                    Go to <a href="${appUrl}/training" style="color: #38bdf8; text-decoration: none;">${appUrl}/training</a> and enter the secret access code <strong style="color: #a78bfa;">Truelegacyworld1!</strong> to unlock all video modules, slide decks, and training resources.
-                  </p>
-                </div>
-
-                <div style="margin-bottom: 16px;">
-                  <p style="margin: 0; color: #ffffff; font-size: 14px; font-weight: bold;">4. Share Your Custom Link & Track Leads</p>
-                  <p style="margin: 4px 0 0 0; color: #94a3b8; font-size: 13px; line-height: 1.5;">
-                    Your personal verified landing page is live at <a href="${publicProfileUrl}" style="color: #38bdf8; text-decoration: none;">${publicProfileUrl}</a>. Every prospect who connects with you through this link will automatically route directly into your private CRM leads list!
-                  </p>
-                </div>
-
-                <div style="margin-bottom: 0;">
-                  <p style="margin: 0; color: #ffffff; font-size: 14px; font-weight: bold;">5. (Optional) Update Your Profile & Photo Anytime</p>
-                  <p style="margin: 4px 0 0 0; color: #94a3b8; font-size: 13px; line-height: 1.5;">
-                    Your verified leader photo and bio are already active. If you ever want to update your portrait, WhatsApp number, or bio in the future, you can do so in <a href="${settingsUrl}" style="color: #38bdf8; text-decoration: none;">Account Settings (${settingsUrl})</a>.
-                  </p>
-                </div>
-              </div>
+              <!-- Safety Note -->
+              <p style="margin: 0 0 16px 0; color: #64748b; font-size: 12px; line-height: 1.5;">
+                Note: This secure sign-in link is unique to your account and will expire automatically. Never share this link with anyone.
+              </p>
 
             </td>
           </tr>
@@ -170,7 +179,7 @@ Deno.serve(async (request) => {
           <!-- Footer -->
           <tr>
             <td style="padding: 24px 32px; background-color: #030712; border-top: 1px solid rgba(255,255,255,0.08); text-align: center;">
-              <p style="margin: 0 0 8px 0; color: #94a3b8; font-size: 12px;">Need help? Reply directly to this email or reach out to your team sponsor.</p>
+              <p style="margin: 0 0 8px 0; color: #94a3b8; font-size: 12px;">Need help? Reply directly to this email or reach out to team administration.</p>
               <p style="margin: 0; color: #475569; font-size: 11px;">&copy; ${new Date().getFullYear()} True Legacy World. World-Class Enagic Leaders.</p>
             </td>
           </tr>
@@ -183,7 +192,7 @@ Deno.serve(async (request) => {
 </html>
 `
 
-  // 1. If Resend Key is available, dispatch directly via Resend API
+  // 4. DISPATCH VIA RESEND IF CONFIGURED
   if (resendKey) {
     try {
       const fromEmail = Deno.env.get('CRM_EMAIL_FROM') || 'True Legacy <hello@updates.mehdicohen.com>'
@@ -196,13 +205,13 @@ Deno.serve(async (request) => {
         body: JSON.stringify({
           from: fromEmail,
           to: [email],
-          subject: `Welcome to True Legacy — Your Leader Portal Login & Setup Guide`,
+          subject: `Your Secure True Legacy Leader Portal Access`,
           html: emailHtml,
         }),
       })
 
       if (res.ok) {
-        return new Response(JSON.stringify({ ok: true, method: 'resend' }), {
+        return new Response(JSON.stringify({ ok: true, method: 'resend', linkUrl: generatedLinkUrl }), {
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         })
       }
@@ -211,28 +220,7 @@ Deno.serve(async (request) => {
     }
   }
 
-  // 2. If Resend not configured or failed, trigger Supabase Auth reset/invite
-  if (supabaseUrl && serviceRoleKey) {
-    try {
-      const admin = createClient(supabaseUrl, serviceRoleKey)
-      const { error: authError } = await admin.auth.admin.generateLink({
-        type: 'recovery',
-        email: email,
-        options: {
-          redirectTo: settingsUrl,
-        },
-      })
-      if (!authError) {
-        return new Response(JSON.stringify({ ok: true, method: 'supabase_auth' }), {
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        })
-      }
-    } catch (authErr) {
-      console.error('Supabase Auth recovery error:', authErr)
-    }
-  }
-
-  return new Response(JSON.stringify({ ok: true, method: 'fallback_formatted', html: emailHtml }), {
+  return new Response(JSON.stringify({ ok: true, method: 'supabase_auth', linkUrl: generatedLinkUrl }), {
     headers: { ...corsHeaders, 'Content-Type': 'application/json' },
   })
 })

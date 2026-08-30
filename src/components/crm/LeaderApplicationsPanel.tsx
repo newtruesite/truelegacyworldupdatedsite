@@ -34,13 +34,10 @@ import type { FormEvent } from 'react'
 import {
   getLeaderApplications,
   reviewLeaderApplication,
+  sendLeaderLoginAccess,
   type LeaderApplication,
   type LeaderApplicationStatus,
 } from '@/lib/crm'
-import {
-  LeaderAccessDispatcherModal,
-  type LeaderAccessTarget,
-} from './LeaderAccessDispatcherModal'
 
 // ── Status config ─────────────────────────────────────────────────────────────
 
@@ -332,11 +329,31 @@ function ApplicationRow({
               {localStatus === 'approved' && (
                 <button
                   type="button"
-                  onClick={() => setShowAccessModal(true)}
+                  disabled={saving || working}
+                  onClick={async () => {
+                    setSaving(true)
+                    try {
+                      const res = await sendLeaderLoginAccess({
+                        email: app.email,
+                        displayName: app.full_name,
+                        slug: app.full_name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, ''),
+                        linkType: 'magiclink',
+                      })
+                      if (res.success) {
+                        setSaveMsg(`✓ Secure portal invitation dispatched to ${app.email}`)
+                      } else {
+                        setSaveMsg(`Error: ${res.error || 'Failed to dispatch'}`)
+                      }
+                    } catch (e: any) {
+                      setSaveMsg(`Error: ${e?.message}`)
+                    } finally {
+                      setSaving(false)
+                    }
+                  }}
                   className="inline-flex items-center gap-2 rounded-xl bg-[#2997ff] hover:bg-[#2997ff]/90 px-4 py-2 text-xs font-black text-black transition shadow-lg shadow-cyan-500/20 whitespace-nowrap"
                 >
                   <Mail className="h-3.5 w-3.5" />
-                  Send Login Access & Instructions
+                  {saving ? 'Dispatching…' : 'Send Secure Portal Invitation'}
                 </button>
               )}
 
@@ -372,18 +389,6 @@ function ApplicationRow({
           </div>
         </div>
       )}
-
-      {/* Access Dispatcher Modal for Approved Applicant */}
-      <LeaderAccessDispatcherModal
-        target={{
-          displayName: app.full_name,
-          email: app.email,
-          slug: app.full_name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, ''),
-          phone: app.phone,
-        }}
-        isOpen={showAccessModal}
-        onClose={() => setShowAccessModal(false)}
-      />
     </div>
   )
 }

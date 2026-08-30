@@ -533,8 +533,8 @@ export type SendLeaderLoginAccessParams = {
   email: string
   displayName?: string
   slug?: string
-  tempPassword?: string
   redirectTo?: string
+  linkType?: 'magiclink' | 'recovery'
 }
 
 export async function sendLeaderLoginAccess(
@@ -545,17 +545,19 @@ export async function sendLeaderLoginAccess(
   const cleanEmail = email.trim().toLowerCase()
   const displayName = typeof params === 'object' ? params.displayName : undefined
   const slug = typeof params === 'object' ? params.slug : undefined
-  const tempPassword = typeof params === 'object' ? params.tempPassword : 'TrueLegacy2026!'
-  const targetRedirect = (typeof params === 'object' && params.redirectTo) || (typeof window !== 'undefined' ? `${window.location.origin}/app/settings` : 'https://www.truelegacyworld.com/app/settings')
-  
+  const linkType = typeof params === 'object' ? params.linkType || 'magiclink' : 'magiclink'
+  const targetRedirect =
+    (typeof params === 'object' && params.redirectTo) ||
+    (typeof window !== 'undefined' ? `${window.location.origin}/app` : 'https://www.truelegacyworld.com/app')
+
   try {
-    // 1. Try sending via Supabase Edge Function (Rich HTML email with app download guide & credentials)
+    // 1. Try sending via hardened Supabase Edge Function (Rich HTML email with secure one-time link)
     const { data, error: fnError } = await crmSupabase.functions.invoke('send-leader-access-email', {
       body: {
         email: cleanEmail,
         displayName,
         slug,
-        tempPassword,
+        linkType,
         appUrl: typeof window !== 'undefined' ? window.location.origin : 'https://www.truelegacyworld.com',
       },
     })
@@ -564,16 +566,23 @@ export async function sendLeaderLoginAccess(
       return { success: true }
     }
 
-    // 2. Fallback to Supabase Auth recovery
-    const { error: authError } = await crmSupabase.auth.resetPasswordForEmail(cleanEmail, {
-      redirectTo: targetRedirect,
-    })
-    if (authError) {
-      return { success: false, error: authError.message }
+    // 2. Direct fallback to native Supabase Auth passwordless OTP or recovery
+    if (linkType === 'recovery') {
+      const { error: authError } = await crmSupabase.auth.resetPasswordForEmail(cleanEmail, {
+        redirectTo: targetRedirect,
+      })
+      if (authError) return { success: false, error: authError.message }
+    } else {
+      const { error: authError } = await crmSupabase.auth.signInWithOtp({
+        email: cleanEmail,
+        options: { emailRedirectTo: targetRedirect },
+      })
+      if (authError) return { success: false, error: authError.message }
     }
+
     return { success: true }
   } catch (err: any) {
-    return { success: false, error: err?.message || 'Failed to send login access' }
+    return { success: false, error: err?.message || 'Failed to send secure login access' }
   }
 }
 
@@ -584,122 +593,6 @@ export async function recordLeaderAccessEmailSent(distributorId: string): Promis
       p_distributor_id: distributorId,
     })
   } catch {}
-}
-
-export type LeaderEmailTemplateData = {
-  name: string
-  email: string
-  slug: string
-  tempPassword?: string
-  appUrl?: string
-}
-
-export function formatLeaderAccessEmail(data: LeaderEmailTemplateData): {
-  subject: string
-  bodyText: string
-  bodyHtml: string
-} {
-  const origin = data.appUrl || (typeof window !== 'undefined' ? window.location.origin : 'https://www.truelegacyworld.com')
-  const loginUrl = `${origin}/app`
-  const settingsUrl = `${origin}/app/settings`
-  const publicProfileUrl = `${origin}/d/${data.slug}`
-  const tempPass = data.tempPassword || 'TrueLegacy2026!'
-
-  const subject = `Welcome to True Legacy — Your Leader Portal, Login Access & App Setup Guide`
-
-  const bodyText = `Hi ${data.name},
-
-Welcome to the official True Legacy Leadership Platform!
-
-Your leader account has been activated. Below are your dashboard login credentials, mobile app installation steps, and setup instructions.
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-YOUR LEADER LOGIN CREDENTIALS
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-• CRM Portal URL: ${loginUrl}
-• Username / Email: ${data.email}
-• Temporary Password: ${tempPass}
-• Personal Public Page: ${publicProfileUrl}
-• Leadership Academy (Training): ${origin}/training (Secret Code: Truelegacyworld1!)
-• Studio Portrait & Settings: ${settingsUrl}
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-QUICK START GUIDE
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-1. SIGN IN TO YOUR CRM
-Go to ${loginUrl} and log in with your email (${data.email}) and temporary password (${tempPass}). You can reset or change your password anytime inside your settings.
-
-2. HOW TO DOWNLOAD & INSTALL THE APP ON YOUR PHONE
-Get 1-tap instant access to your True Legacy CRM directly from your phone's home screen:
-• iPhone (Safari): Open ${loginUrl} in Safari -> Tap the Share button (square with arrow) -> Tap "Add to Home Screen".
-• Android (Chrome): Open ${loginUrl} in Chrome -> Tap the three dots (menu) -> Tap "Install App" or "Add to Home screen".
-
-3. ACCESS THE LEADERSHIP ACADEMY & TRAINING
-Unlock the complete video modules, presentation slides, PDF guides, and masterclasses:
-• Training Portal: ${origin}/training
-• Secret Access Code: Truelegacyworld1!
-
-4. SHARE YOUR PERSONAL LINK & CAPTURE LEADS
-Your verified personal link is live at:
-${publicProfileUrl}
-
-All customer inquiries, water demo requests, and distributor applications submitted through your link will route directly into your private CRM leads dashboard!
-
-5. (OPTIONAL) UPDATE YOUR PROFILE & PHOTO ANYTIME
-Your verified profile and photo are already set up and live on the website. If you ever want to update your portrait, bio, WhatsApp, or Instagram in the future, you can do so anytime in Account Settings (${settingsUrl}).
-
-Welcome to the True Legacy Global Leadership Team!
-
-Best regards,
-The True Legacy Leadership Team
-https://www.truelegacyworld.com
-`
-
-  const bodyHtml = `
-<div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; max-width: 600px; margin: 0 auto; background-color: #000000; color: #ffffff; padding: 32px 24px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.1);">
-  <div style="text-align: center; margin-bottom: 28px;">
-    <h1 style="color: #ffffff; font-size: 24px; font-weight: 900; letter-spacing: -0.5px; margin: 0 0 8px 0;">TRUE LEGACY</h1>
-    <p style="color: #2997ff; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; margin: 0;">Leadership Portal & App Access</p>
-  </div>
-
-  <p style="color: #e2e8f0; font-size: 15px; line-height: 1.6;">Hi <strong>${data.name}</strong>,</p>
-  <p style="color: #cbd5e1; font-size: 14px; line-height: 1.6;">Welcome to the official <strong>True Legacy Leadership Platform</strong>! Your verified profile and CRM dashboard are ready for you.</p>
-
-  <div style="background-color: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 20px; margin: 24px 0;">
-    <p style="color: #2997ff; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; margin: 0 0 12px 0;">Your Access Credentials</p>
-    <p style="margin: 6px 0; color: #ffffff; font-size: 14px;"><strong>Portal URL:</strong> <a href="${loginUrl}" style="color: #38bdf8; text-decoration: none;">${loginUrl}</a></p>
-    <p style="margin: 6px 0; color: #ffffff; font-size: 14px;"><strong>Username / Email:</strong> <span style="color: #38bdf8; font-weight: bold;">${data.email}</span></p>
-    <p style="margin: 6px 0; color: #ffffff; font-size: 14px;"><strong>Temporary Password:</strong> <span style="font-family: monospace; background: rgba(255,255,255,0.1); padding: 3px 8px; border-radius: 4px; color: #facc15; font-weight: bold;">${tempPass}</span></p>
-    <p style="margin: 6px 0; color: #ffffff; font-size: 14px;"><strong>Leadership Academy:</strong> <a href="${origin}/training" style="color: #38bdf8; text-decoration: none;">${origin}/training</a> (Code: <span style="color: #a78bfa; font-weight: bold;">Truelegacyworld1!</span>)</p>
-    <p style="margin: 6px 0; color: #ffffff; font-size: 14px;"><strong>Personal Public Page:</strong> <a href="${publicProfileUrl}" style="color: #38bdf8; text-decoration: none;">${publicProfileUrl}</a></p>
-  </div>
-
-  <div style="text-align: center; margin: 28px 0;">
-    <a href="${loginUrl}" style="background-color: #2997ff; color: #000000; font-weight: 800; font-size: 14px; text-decoration: none; padding: 14px 28px; border-radius: 10px; display: inline-block;">Sign In to Leader Portal &rarr;</a>
-  </div>
-
-  <h3 style="color: #ffffff; font-size: 14px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 8px; margin-top: 32px;">Quick Setup & Training Guide</h3>
-  <ol style="color: #cbd5e1; font-size: 13px; line-height: 1.8; padding-left: 20px;">
-    <li><strong>Sign In:</strong> Visit <a href="${loginUrl}" style="color: #38bdf8;">${loginUrl}</a> with your email (<strong>${data.email}</strong>) and password (<strong>${tempPass}</strong>).</li>
-    <li><strong>Install on Mobile:</strong>
-      <ul style="margin: 4px 0;">
-        <li><em>iPhone:</em> Open Safari &rarr; Go to <a href="${loginUrl}" style="color: #38bdf8;">${loginUrl}</a> &rarr; Tap Share &rarr; <strong>"Add to Home Screen"</strong>.</li>
-        <li><em>Android:</em> Open Chrome &rarr; Go to <a href="${loginUrl}" style="color: #38bdf8;">${loginUrl}</a> &rarr; Tap Menu &rarr; <strong>"Install App"</strong>.</li>
-      </ul>
-    </li>
-    <li><strong>Leadership Academy & Training:</strong> Visit <a href="${origin}/training" style="color: #38bdf8;">${origin}/training</a> and enter the secret code <strong style="color: #a78bfa;">Truelegacyworld1!</strong> to unlock your curriculum, PDF guides, and masterclasses.</li>
-    <li><strong>Capture Leads:</strong> Share <a href="${publicProfileUrl}" style="color: #38bdf8;">your personal page</a>. All customer inquiries flow directly into your CRM.</li>
-    <li><strong>(Optional) Profile & Photo Updates:</strong> Your photo and bio are already active. If you ever want to update your portrait or contact details, visit <a href="${settingsUrl}" style="color: #38bdf8;">Account Settings</a> anytime.</li>
-  </ol>
-
-  <div style="border-top: 1px solid rgba(255,255,255,0.1); margin-top: 32px; padding-top: 16px; text-align: center; font-size: 11px; color: #64748b;">
-    &copy; ${new Date().getFullYear()} True Legacy World. All rights reserved.
-  </div>
-</div>
-`
-
-  return { subject, bodyText, bodyHtml }
 }
 
 export { crmConfigured, crmSupabase }
