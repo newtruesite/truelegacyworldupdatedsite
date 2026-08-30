@@ -11,6 +11,7 @@ import {
   BookOpen,
   BriefcaseBusiness,
   CalendarDays,
+  Droplets,
   ExternalLink,
   Globe,
   Globe2,
@@ -19,6 +20,7 @@ import {
   MapPin,
   MessageCircle,
   Phone,
+  Radio,
   ShieldCheck,
   Sparkles,
   UserCheck
@@ -180,13 +182,25 @@ export default function DistributorProfilePage() {
           cta: 'Explore the Duo',
         },
         {
-          tag: '03 · Academy',
+          tag: '03 · Ionization',
+          title: 'Kangen Water®',
+          desc: 'Explore Japanese medical-grade ionization, molecular hydrogen (H2), and negative ORP antioxidant power.',
+          cta: 'Discover Kangen Water',
+        },
+        {
+          tag: '04 · Protection',
+          title: 'emGuarde® Defense',
+          desc: 'Learn how patented harmonic resonance suppresses 5G and EMF radiation noise across a 4-meter radius.',
+          cta: 'Explore emGuarde',
+        },
+        {
+          tag: '05 · Academy',
           title: 'Leadership Training',
           desc: 'Preview the practical learning systems, product education, and global mentorship community.',
           cta: 'Preview Academy',
         },
         {
-          tag: '04 · Live Events',
+          tag: '06 · Live Events',
           title: 'Weekly Live Calls',
           desc: 'Join our upcoming English or Spanish Zoom presentation with True Legacy leaders.',
           cta: 'Join Live Event',
@@ -224,13 +238,25 @@ export default function DistributorProfilePage() {
           cta: 'Explorar el Dúo',
         },
         {
-          tag: '03 · Academia',
+          tag: '03 · Ionización',
+          title: 'Agua Kangen®',
+          desc: 'Descubre la ionización médica japonesa, el hidrógeno molecular (H2) y el poder antioxidante del Leveluk K8.',
+          cta: 'Descubrir Agua Kangen',
+        },
+        {
+          tag: '04 · Protección',
+          title: 'Defensa emGuarde®',
+          desc: 'Tecnología patentada de resonancia armónica que suprime la radiación EMF y 5G en un radio de 4 metros.',
+          cta: 'Explorar emGuarde',
+        },
+        {
+          tag: '05 · Academia',
           title: 'Capacitación y Liderazgo',
           desc: 'Conoce los sistemas de aprendizaje, la educación de productos y el apoyo de la comunidad.',
           cta: 'Ver Academia',
         },
         {
-          tag: '04 · Eventos',
+          tag: '06 · Eventos',
           title: 'Eventos Semanales en Vivo',
           desc: 'Únete a nuestra próxima presentación en Zoom en inglés o español con líderes del equipo.',
           cta: 'Ver Eventos en Vivo',
@@ -268,13 +294,25 @@ export default function DistributorProfilePage() {
           cta: 'Découvrir le Duo',
         },
         {
-          tag: '03 · Académie',
+          tag: '03 · Ionisation',
+          title: 'Eau Kangen®',
+          desc: 'Explorez l’ionisation médicale japonaise, l’hydrogène moléculaire (H2) et la puissance antioxydante du Leveluk K8.',
+          cta: 'Découvrir Eau Kangen',
+        },
+        {
+          tag: '04 · Protection',
+          title: 'Défense emGuarde®',
+          desc: 'Technologie brevetée de résonance harmonique supprimant le bruit des ondes 5G et CEM sur 4 mètres.',
+          cta: 'Découvrir emGuarde',
+        },
+        {
+          tag: '05 · Académie',
           title: 'Formation & Leadership',
           desc: 'Accédez aux systèmes de formation, à l’éducation produit et au mentorat d’équipe.',
           cta: 'Voir l’Académie',
         },
         {
-          tag: '04 · Événements',
+          tag: '06 · Événements',
           title: 'Présentations en Direct',
           desc: 'Participez à notre prochaine présentation Zoom hebdomadaire en anglais ou en espagnol.',
           cta: 'Rejoindre le Direct',
@@ -312,13 +350,25 @@ export default function DistributorProfilePage() {
           cta: 'Explorar o Duo',
         },
         {
-          tag: '03 · Academia',
+          tag: '03 · Ionização',
+          title: 'Água Kangen®',
+          desc: 'Explore a ionização médica japonesa, hidrogênio molecular (H2) e o poder antioxidante do Leveluk K8.',
+          cta: 'Conhecer Água Kangen',
+        },
+        {
+          tag: '04 · Proteção',
+          title: 'Defesa emGuarde®',
+          desc: 'Tecnologia patenteada de ressonância harmônica que suprime a radiação EMF e 5G em um raio de 4 metros.',
+          cta: 'Explorar emGuarde',
+        },
+        {
+          tag: '05 · Academia',
           title: 'Treinamento e Liderança',
           desc: 'Conheça o sistema de aprendizado, educação de produtos e mentoria global da comunidade.',
           cta: 'Ver Academia',
         },
         {
-          tag: '04 · Eventos',
+          tag: '06 · Eventos',
           title: 'Apresentações Semanais',
           desc: 'Participe do nosso próximo evento Zoom ao vivo em inglês ou espanhol.',
           cta: 'Entrar no Evento',
@@ -369,12 +419,34 @@ export default function DistributorProfilePage() {
       iconBg: 'bg-sky-400/10 text-sky-400',
     },
     {
-      slug: 'training',
-      icon: BookOpen,
+      slug: 'kangen',
+      icon: Droplets,
       tag: ui.paths[2].tag,
       title: ui.paths[2].title,
       desc: ui.paths[2].desc,
       cta: ui.paths[2].cta,
+      gradient: 'from-cyan-500/20 via-sky-600/10 to-transparent',
+      borderGlow: 'hover:border-cyan-400/40',
+      iconBg: 'bg-cyan-400/10 text-cyan-300',
+    },
+    {
+      slug: 'emguarde',
+      icon: Radio,
+      tag: ui.paths[3].tag,
+      title: ui.paths[3].title,
+      desc: ui.paths[3].desc,
+      cta: ui.paths[3].cta,
+      gradient: 'from-violet-500/20 via-purple-600/10 to-transparent',
+      borderGlow: 'hover:border-violet-400/40',
+      iconBg: 'bg-violet-400/10 text-violet-300',
+    },
+    {
+      slug: 'training',
+      icon: BookOpen,
+      tag: ui.paths[4].tag,
+      title: ui.paths[4].title,
+      desc: ui.paths[4].desc,
+      cta: ui.paths[4].cta,
       gradient: 'from-blue-600/20 via-indigo-700/10 to-transparent',
       borderGlow: 'hover:border-blue-400/40',
       iconBg: 'bg-blue-400/10 text-blue-400',
@@ -382,10 +454,10 @@ export default function DistributorProfilePage() {
     {
       slug: 'events',
       icon: CalendarDays,
-      tag: ui.paths[3].tag,
-      title: ui.paths[3].title,
-      desc: ui.paths[3].desc,
-      cta: ui.paths[3].cta,
+      tag: ui.paths[5].tag,
+      title: ui.paths[5].title,
+      desc: ui.paths[5].desc,
+      cta: ui.paths[5].cta,
       gradient: 'from-amber-500/20 via-orange-600/10 to-transparent',
       borderGlow: 'hover:border-amber-400/40',
       iconBg: 'bg-amber-400/10 text-amber-400',
@@ -580,7 +652,7 @@ export default function DistributorProfilePage() {
                 </h2>
               </div>
 
-              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4 items-stretch">
+              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 items-stretch">
                 {paths.map(item => (
                   <Link
                     key={item.slug}

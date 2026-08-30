@@ -11,6 +11,8 @@ import DistributorProfilePage from "@/pages/DistributorProfilePage";
 import DistributorLandingPage from "@/pages/DistributorLandingPage";
 import { DuoLandingPage } from "@/components/duo/DuoLandingPage";
 import { BusinessLandingPage } from "@/components/business/BusinessLandingPage";
+import { KangenLandingPage } from "@/components/kangen/KangenLandingPage";
+import { EmguardeLandingPage } from "@/components/emguarde/EmguardeLandingPage";
 import EmGuardePage from "@/pages/EmGuardePage";
 import EventsPage from "@/pages/EventsPage";
 import EventsHubPage from "@/pages/EventsHubPage";
@@ -139,6 +141,30 @@ function AnimatedRoutes() {
             element={
               <PageTransitionWrapper>
                 <DuoLandingPage distributorSlug="mehdi-cohen" />
+              </PageTransitionWrapper>
+            }
+          />
+          <Route
+            path="/kangen"
+            element={
+              <PageTransitionWrapper>
+                <KangenLandingPage distributorSlug="mehdi-cohen" />
+              </PageTransitionWrapper>
+            }
+          />
+          <Route
+            path="/water"
+            element={
+              <PageTransitionWrapper>
+                <KangenLandingPage distributorSlug="mehdi-cohen" />
+              </PageTransitionWrapper>
+            }
+          />
+          <Route
+            path="/emguarde"
+            element={
+              <PageTransitionWrapper>
+                <EmguardeLandingPage distributorSlug="mehdi-cohen" />
               </PageTransitionWrapper>
             }
           />

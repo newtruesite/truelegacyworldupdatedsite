@@ -5,22 +5,40 @@ import { YouTubeEmbed } from '@/components/ui/YouTubeEmbed'
 import { DuoLandingPage } from '@/components/duo/DuoLandingPage'
 import { BusinessLandingPage } from '@/components/business/BusinessLandingPage'
 import { AcademyLandingPage } from '@/components/academy/AcademyLandingPage'
+import { KangenLandingPage } from '@/components/kangen/KangenLandingPage'
+import { EmguardeLandingPage } from '@/components/emguarde/EmguardeLandingPage'
 import { crmSupabase, getPublicDistributors, getLeaderPortrait } from '@/lib/crm'
 import type { PublicDistributor } from '@/lib/crm'
 import { useLocaleContext } from '@/contexts/LocaleContext'
 import { localizedProductVideo } from '@/lib/productVideos'
-import { ArrowRight, BookOpen, BriefcaseBusiness, CalendarDays, Check, Clock3, Copy, Instagram, MessageCircle, PlayCircle, Plus, ShieldCheck, Sparkles } from 'lucide-react'
+import {
+  ArrowRight,
+  BookOpen,
+  BriefcaseBusiness,
+  CalendarDays,
+  Check,
+  Clock3,
+  Copy,
+  Droplets,
+  Instagram,
+  MessageCircle,
+  PlayCircle,
+  Plus,
+  Radio,
+  ShieldCheck,
+  Sparkles,
+} from 'lucide-react'
 import { useEffect, useMemo, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import NotFoundPage from './NotFoundPage'
 
-type LandingVariant = 'business' | 'duo' | 'training' | 'events'
+type LandingVariant = 'business' | 'duo' | 'training' | 'events' | 'kangen' | 'water' | 'emguarde'
 
 const VARIANTS: Record<LandingVariant, {
   eyebrow: string
   headline: (name: string) => string
   subheadline: string
-  interest: 'distributor' | 'duo' | 'training' | 'events'
+  interest: 'distributor' | 'duo' | 'training' | 'events' | 'product'
   icon: typeof BriefcaseBusiness
 }> = {
   business: {
@@ -36,6 +54,27 @@ const VARIANTS: Record<LandingVariant, {
     subheadline: 'Learn about the Leveluk K8 Kangen Water system and the portable emGuarde GO set, then connect directly with the distributor who shared this page.',
     interest: 'duo',
     icon: Sparkles,
+  },
+  kangen: {
+    eyebrow: 'Enagic® Japanese Medical Ionization',
+    headline: (name) => `Discover Kangen Water® with ${name}`,
+    subheadline: 'Explore 50 years of Japanese engineering, active molecular hydrogen (H2) hydration, negative ORP antioxidant power, and the Leveluk K8.',
+    interest: 'product',
+    icon: Droplets,
+  },
+  water: {
+    eyebrow: 'Enagic® Japanese Medical Ionization',
+    headline: (name) => `Discover Kangen Water® with ${name}`,
+    subheadline: 'Explore 50 years of Japanese engineering, active molecular hydrogen (H2) hydration, negative ORP antioxidant power, and the Leveluk K8.',
+    interest: 'product',
+    icon: Droplets,
+  },
+  emguarde: {
+    eyebrow: 'Patented 5G & EMF Harmonization',
+    headline: (name) => `Harmonize Your Environment with ${name}`,
+    subheadline: 'Learn how emGuarde suppresses high-frequency electromagnetic radiation noise up to 3.6GHz+ across a 4-meter radius without blocking wireless signals.',
+    interest: 'duo',
+    icon: Radio,
   },
   training: {
     eyebrow: 'True Legacy Leadership Academy',
@@ -56,6 +95,9 @@ const VARIANTS: Record<LandingVariant, {
 const BENEFITS: Record<LandingVariant, string[]> = {
   business: ['A product-centered independent business', 'A simple system designed for duplication', 'Weekly education and leadership support', 'A global team with local distributor attribution'],
   duo: ['Kangen Water education centered on the Leveluk K8', 'Portable emGuarde GO product education', 'Two separate product videos below', 'Market availability confirmed with your distributor'],
+  kangen: ['Leveluk K8 8-plate medical-grade ionization', 'Molecular Hydrogen (H2) cellular antioxidant power', '5 distinct water types for home and health', 'Direct consultation and machine pricing'],
+  water: ['Leveluk K8 8-plate medical-grade ionization', 'Molecular Hydrogen (H2) cellular antioxidant power', '5 distinct water types for home and health', 'Direct consultation and machine pricing'],
+  emguarde: ['Patented harmonic resonance noise suppression', '4-meter radius 360° environmental protection', 'Zero interference with Wi-Fi, phone, or Bluetooth', 'Portable USB-C powered emGuarde GO edition'],
   training: ['A structured training library', 'Product and presentation education', 'Weekly English and Spanish team calls', 'Leadership, media, and follow-up development'],
   events: ['Live product and business education', 'Open to members, prospects, and guests', 'English and Spanish weekly options', 'Direct follow-up with your referring distributor'],
 }
@@ -108,26 +150,27 @@ const LEADER_PORTRAITS: Record<string, string> = {
   'angel-mok': '/leaders/standardized/angel-mok-v2.png',
 }
 
-function whatsappUrl(profile: PublicDistributor, variant: LandingVariant) {
+function whatsappUrl(profile: PublicDistributor, variant: LandingVariant): string | null {
   if (!profile.phone) return null
-  const subject = variant === 'duo' ? 'the Duo products' : variant === 'business' ? 'the True Legacy business' : variant === 'events' ? 'the weekly True Legacy events' : 'the True Legacy training system'
-  const message = `Hi ${profile.display_name}, I viewed your True Legacy page and would like to learn more about ${subject}.`
-  return `https://wa.me/${profile.phone.replace(/\D/g, '')}?text=${encodeURIComponent(message)}`
+  const number = profile.phone.replace(/\D/g, '')
+  if (!number) return null
+  const text = encodeURIComponent(`Hi ${profile.display_name}, I'm reviewing your True Legacy page (${variant}) and would like more information.`)
+  return `https://wa.me/${number}?text=${text}`
 }
 
 export default function DistributorLandingPage() {
-  const { slug, campaign } = useParams()
+  const { slug, campaign } = useParams<{ slug: string; campaign: string }>()
   const { locale } = useLocaleContext()
   const [profile, setProfile] = useState<PublicDistributor | null | undefined>(undefined)
   const [copied, setCopied] = useState(false)
-  const variant = campaign && campaign in VARIANTS ? campaign as LandingVariant : null
+  const variant = campaign && campaign in VARIANTS ? (campaign as LandingVariant) : null
 
   useEffect(() => {
     let active = true
     const loadProfile = () => {
-      getPublicDistributors().then(items => {
+      getPublicDistributors().then((items) => {
         if (!active) return
-        setProfile(items.find(item => item.slug === slug) || null)
+        setProfile(items.find((item) => item.slug === slug) || null)
       })
     }
     loadProfile()
@@ -146,7 +189,12 @@ export default function DistributorLandingPage() {
   const shareUrl = typeof window === 'undefined' ? '' : window.location.href
   const share = async () => {
     if (navigator.share) {
-      await navigator.share({ title: profile ? `Connect with ${profile.display_name} | True Legacy` : 'True Legacy', url: shareUrl }).catch(() => undefined)
+      await navigator
+        .share({
+          title: profile ? `Connect with ${profile.display_name} | True Legacy` : 'True Legacy',
+          url: shareUrl,
+        })
+        .catch(() => undefined)
       return
     }
     await navigator.clipboard.writeText(shareUrl)
@@ -154,11 +202,19 @@ export default function DistributorLandingPage() {
     window.setTimeout(() => setCopied(false), 1800)
   }
 
-  const copy = useMemo(() => variant ? VARIANTS[variant] : null, [variant])
+  const copy = useMemo(() => (variant ? VARIANTS[variant] : null), [variant])
   if (!variant || profile === null) return <NotFoundPage />
 
   if (variant === 'duo') {
     return <DuoLandingPage profile={profile} distributorSlug={slug} />
+  }
+
+  if (variant === 'kangen' || variant === 'water') {
+    return <KangenLandingPage profile={profile} distributorSlug={slug} />
+  }
+
+  if (variant === 'emguarde') {
+    return <EmguardeLandingPage profile={profile} distributorSlug={slug} />
   }
 
   if (variant === 'business') {
@@ -169,148 +225,149 @@ export default function DistributorLandingPage() {
     return <AcademyLandingPage profile={profile || null} distributorSlug={slug} />
   }
 
-  const leaderPhoto = profile?.avatar_url || (profile?.slug && getLeaderPortrait(profile.slug, LEADER_PORTRAITS[profile.slug])) || '/logos/tl-square-white.png'
+  const leaderPhoto =
+    profile?.avatar_url ||
+    (profile?.slug && getLeaderPortrait(profile.slug, LEADER_PORTRAITS[profile.slug])) ||
+    '/logos/tl-square-white.png'
   const Icon = copy?.icon || Sparkles
   const applyUrl = `/apply?ref=${profile?.referral_code || slug}&interest=${copy?.interest || 'duo'}&source=${variant}`
   const whatsapp = profile ? whatsappUrl(profile, variant) : null
   const waterDemoUrl = localizedProductVideo('kangenWater', locale)
   const emguardeDemoUrl = localizedProductVideo('emguardeGo', locale)
 
-  return <div className="page-wrapper bg-black text-white">
-    <SEO
-      title={`${profile?.display_name || 'True Legacy'} | ${variant === 'events' ? 'Weekly Events' : 'Training'}`}
-      description={copy?.subheadline || ''}
-      image={leaderPhoto}
-    />
-    <Navbar />
-    <main className="flex-1">
-      <section className="relative overflow-hidden border-b border-white/10 px-4 pb-16 pt-28 sm:px-6 md:pb-24 md:pt-36">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_20%,rgba(6,182,212,0.14),transparent_45%),radial-gradient(circle_at_50%_70%,rgba(79,70,229,0.12),transparent_50%)]" />
-        <div className="relative mx-auto max-w-4xl text-center flex flex-col items-center">
-          {/* Centered Guide Badge */}
-          {profile && (
-            <Link
-              to={`/d/${profile.slug}`}
-              className="group mb-6 inline-flex items-center gap-3.5 rounded-full border border-white/15 bg-black/60 p-1.5 pr-5 backdrop-blur-xl shadow-2xl hover:border-cyan-400/40 hover:bg-black/80 transition-all duration-300 active:scale-95"
-            >
-              <div className="relative h-11 w-11 sm:h-12 sm:w-12 shrink-0 overflow-hidden rounded-full border border-white/20 bg-gradient-to-b from-[#141926] to-[#07090f]">
-                <img
-                  src={leaderPhoto}
-                  alt={profile.display_name}
-                  className="h-full w-full object-cover object-top transition duration-300 group-hover:scale-105"
-                />
-                <span className="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full bg-emerald-500 border-2 border-black" title="Verified Distributor" />
-              </div>
-              <div className="text-left">
-                <div className="flex items-center gap-1.5">
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-[#2997ff]">Your Verified Guide</span>
-                  <ShieldCheck className="h-3 w-3 text-[#2997ff]" />
-                </div>
-                <p className="text-sm font-bold !text-white group-hover:text-cyan-300 transition-colors leading-tight">
-                  {profile.display_name}
-                </p>
-              </div>
-            </Link>
-          )}
+  return (
+    <div className="page-wrapper bg-black text-white">
+      <SEO
+        title={`${copy?.headline(profile?.display_name || 'Your Guide') || 'True Legacy'} | True Legacy`}
+        description={copy?.subheadline || 'True Legacy personalized product and business presentation.'}
+        image={leaderPhoto}
+      />
+      <Navbar />
 
-          {/* Campaign Eyebrow Pill */}
-          <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-cyan-400/10 px-4 py-2 text-xs font-bold uppercase tracking-[0.18em] text-[#2997ff]">
-            <Icon className="h-4 w-4" />
+      <main className="mx-auto flex w-full max-w-5xl flex-1 flex-col px-4 pt-24 pb-20 sm:px-6 md:pt-32">
+        <header className="rounded-3xl border border-white/10 bg-gradient-to-b from-white/[.07] to-white/[.02] p-6 text-center sm:p-12">
+          <div className="inline-flex items-center gap-2 rounded-full border border-cyan-400/30 bg-cyan-400/10 px-4 py-1 text-xs font-bold uppercase tracking-widest text-[#2997ff]">
+            <Icon className="h-3.5 w-3.5" />
             {copy?.eyebrow}
           </div>
-
-          {/* Main Hero Headline - Proportionate and Centered */}
-          <h1 className="mt-6 text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black leading-[1.12] !text-white tracking-tight max-w-3xl">
-            {copy?.headline(profile?.display_name || 'your True Legacy distributor')}
+          <h1 className="mt-4 text-3xl font-black tracking-tight sm:text-5xl">
+            {copy?.headline(profile?.display_name || 'Your Guide')}
           </h1>
-
-          {/* Subtitle */}
-          <p className="mt-5 max-w-2xl text-base sm:text-lg leading-relaxed text-[#cccccc]">
+          <p className="mx-auto mt-4 max-w-2xl text-sm leading-relaxed text-[#c9ced7] sm:text-base">
             {copy?.subheadline}
           </p>
 
-          {/* Action Buttons Row */}
-          <div className="mt-8 flex flex-wrap items-center justify-center gap-3.5">
-            {whatsapp && (
-              <a
-                href={whatsapp}
-                target="_blank"
-                rel="noreferrer"
-                className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 px-6 py-3 font-bold text-slate-950 transition-colors shadow-lg shadow-emerald-500/10"
-              >
-                <MessageCircle className="h-5 w-5" />
-                Connect with {profile?.display_name}
-              </a>
-            )}
-            <Link
-              to={applyUrl}
-              className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-cyan-500 hover:bg-cyan-400 px-6 py-3 font-bold text-slate-950 transition-colors shadow-lg shadow-cyan-500/10"
-            >
-              Request information <ArrowRight className="h-5 w-5" />
-            </Link>
-            <button
-              onClick={share}
-              className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl border border-white/15 bg-white/5 px-5 py-3 text-sm font-semibold hover:bg-white/10 transition-colors"
-            >
-              <Copy className="h-4 w-4" />
-              {copied ? 'Link copied' : 'Share this page'}
-            </button>
-          </div>
-        </div>
-      </section>
-
-      {profile && <section className="px-4 py-16 sm:px-6 md:py-24"><div className="mx-auto grid max-w-6xl gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
-        <div><p className="text-xs font-bold uppercase tracking-[0.24em] text-[#2997ff]">Why {profile.display_name} shared this</p><h2 className="mt-3 text-3xl font-black">A personal introduction—not a generic advertisement.</h2><div className="mt-6 whitespace-pre-line leading-7 text-[#cccccc]">{profile.bio}</div></div>
-        <div className="grid gap-3 sm:grid-cols-2">{BENEFITS[variant].map(item => <div key={item} className="flex gap-3 rounded-2xl border border-white/10 bg-white/[0.04] p-5 text-sm text-slate-200"><Check className="mt-0.5 h-5 w-5 shrink-0 text-[#2997ff]" />{item}</div>)}</div>
-      </div></section>}
-
-      {variant === 'events' && <section className="border-y border-white/10 bg-black px-4 py-16 sm:px-6 md:py-24"><div className="mx-auto max-w-6xl"><div className="mb-12 text-center"><p className="text-xs font-bold uppercase tracking-[0.24em] text-[#2997ff]">The two official MehdiCohen.com event presentations</p><h2 className="mt-3 text-3xl font-black sm:text-4xl">Choose your live experience.</h2><p className="mx-auto mt-4 max-w-2xl text-[#cccccc]">Join the English global presentation or the Spanish LATAM presentation, then follow up directly with {profile?.display_name}.</p></div><div className="space-y-12">{MEHDI_EVENT_PAGES.map((event, index) => <article key={event.id} className="grid overflow-hidden rounded-3xl border border-white/10 bg-white/[0.04] lg:grid-cols-2"><div className={index % 2 ? 'lg:order-2' : ''}><img src={event.image} alt={event.imageAlt} className="h-full min-h-[420px] w-full object-cover object-top" /></div><div className="flex flex-col justify-center p-7 sm:p-10"><p className="text-xs font-bold uppercase tracking-[0.2em] text-[#2997ff]">{event.micro} · {event.language}</p><h3 className="mt-3 text-3xl font-black">{event.headline}</h3><p className="mt-2 text-lg font-bold text-slate-200">{event.subheadline}</p><p className="mt-5 leading-7 text-[#cccccc]">{event.description}</p><div className="mt-6 grid gap-3 rounded-2xl border border-white/10 bg-black/20 p-5 text-sm text-[#cccccc] sm:grid-cols-2"><span className="inline-flex items-start gap-2"><CalendarDays className="mt-0.5 h-4 w-4 shrink-0 text-[#2997ff]" />{event.date}</span><span className="inline-flex items-start gap-2"><Clock3 className="mt-0.5 h-4 w-4 shrink-0 text-[#2997ff]" />{event.time}</span><span>Meeting ID: <strong className="text-white">{event.meetingId}</strong></span><span>Passcode: <strong className="text-white">{event.passcode}</strong></span></div><div className="mt-6 space-y-3">{event.topics.map(topic => <p key={topic} className="flex gap-3 text-sm text-[#cccccc]"><Check className="mt-0.5 h-4 w-4 shrink-0 text-[#2997ff]" />{topic}</p>)}</div><div className="mt-7 flex flex-col gap-3 sm:flex-row"><a href={event.zoomUrl} target="_blank" rel="noreferrer" className="rounded-xl bg-cyan-500 px-5 py-3 text-center font-bold hover:bg-cyan-400">{event.id === 'latam' ? 'Entrar a Zoom' : 'Join Zoom Meeting'}</a><Link to={applyUrl} className="rounded-xl border border-white/15 px-5 py-3 text-center font-bold hover:bg-white/5">Connect with {profile?.display_name}</Link></div></div></article>)}</div></div></section>}
-
-      {profile && (
-        <section className="px-4 py-16 sm:px-6 md:py-20">
-          <div className="relative mx-auto max-w-3xl overflow-hidden rounded-3xl border border-white/15 bg-gradient-to-b from-[#141926] via-[#090d16] to-[#04060a] p-8 sm:p-12 text-center shadow-2xl">
-            <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(6,182,212,0.15),transparent_60%)]" />
-            <div className="relative">
-              <div className="mx-auto mb-4 h-16 w-16 overflow-hidden rounded-full border-2 border-cyan-400/30 p-0.5 shadow-lg">
+          {profile ? (
+            <div className="mx-auto mt-8 flex max-w-md items-center justify-between gap-4 rounded-2xl border border-white/10 bg-black/40 p-4 text-left">
+              <div className="flex items-center gap-3">
                 <img
                   src={leaderPhoto}
                   alt={profile.display_name}
-                  className="h-full w-full rounded-full object-cover object-top"
+                  className="h-12 w-12 rounded-xl object-cover border border-white/10"
                 />
+                <div>
+                  <p className="text-xs uppercase tracking-wider text-[#868c98]">Your Verified Guide</p>
+                  <p className="font-bold text-white text-sm sm:text-base">{profile.display_name}</p>
+                  <p className="text-xs text-[#2997ff]">{profile.title}</p>
+                </div>
               </div>
-              <h2 className="text-2xl sm:text-3xl font-black text-white">
-                Ready to continue with {profile.display_name}?
-              </h2>
-              <p className="mt-3 text-sm sm:text-base text-[#cccccc] leading-relaxed max-w-xl mx-auto">
-                Your inquiry will be attributed directly to this leader inside the True Legacy team CRM.
-              </p>
-              <div className="mt-7 flex flex-wrap items-center justify-center gap-3">
-                {whatsapp && (
+              <div className="flex items-center gap-2">
+                {whatsapp ? (
                   <a
                     href={whatsapp}
                     target="_blank"
                     rel="noreferrer"
-                    className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 px-6 py-3 font-bold text-slate-950 transition-colors shadow-lg shadow-emerald-500/10 active:scale-95"
+                    className="grid h-10 w-10 place-items-center rounded-xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 hover:bg-emerald-500/20 transition-colors"
                   >
                     <MessageCircle className="h-5 w-5" />
-                    Message {profile.display_name.split(' ')[0]} on WhatsApp
                   </a>
-                )}
-                <Link
-                  to={applyUrl}
-                  className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-cyan-500 hover:bg-cyan-400 px-6 py-3 font-bold text-slate-950 transition-colors shadow-lg shadow-cyan-500/10 active:scale-95"
+                ) : null}
+                <button
+                  type="button"
+                  onClick={share}
+                  className="grid h-10 w-10 place-items-center rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors"
                 >
-                  Submit my interest <ArrowRight className="h-5 w-5" />
-                </Link>
+                  {copied ? <Check className="h-5 w-5 text-[#2997ff]" /> : <Copy className="h-5 w-5 text-white" />}
+                </button>
               </div>
-              <p className="mt-6 text-[11px] text-[#86868b]">
-                Independent distributor presentation. Product information is educational and not medical advice. Earnings are not guaranteed; individual results vary.
+            </div>
+          ) : null}
+        </header>
+
+        {variant === 'events' ? (
+          <section className="mt-12 space-y-8">
+            <div className="text-center">
+              <h2 className="text-2xl font-black">Live Presentation Schedule</h2>
+              <p className="mt-2 text-sm text-[#868c98]">
+                Join one of our weekly Zoom calls to meet the leadership team and get your questions answered live.
               </p>
+            </div>
+            <div className="grid gap-6 md:grid-cols-2">
+              {MEHDI_EVENT_PAGES.map((event) => (
+                <div
+                  key={event.id}
+                  className="overflow-hidden rounded-3xl border border-white/10 bg-white/[.02] flex flex-col justify-between"
+                >
+                  <div>
+                    <img src={event.image} alt={event.imageAlt} className="aspect-video w-full object-cover" />
+                    <div className="p-6">
+                      <div className="flex items-center justify-between gap-2">
+                        <span className="rounded-full bg-cyan-400/10 border border-cyan-400/20 px-3 py-0.5 text-xs font-bold text-[#2997ff]">
+                          {event.language} · {event.micro}
+                        </span>
+                        <span className="text-xs text-[#868c98]">{event.date}</span>
+                      </div>
+                      <h3 className="mt-3 text-xl font-black">{event.headline}</h3>
+                      <p className="mt-1 text-xs text-[#2997ff] font-bold">{event.time}</p>
+                      <p className="mt-3 text-xs leading-relaxed text-[#c9ced7]">{event.description}</p>
+                    </div>
+                  </div>
+                  <div className="p-6 pt-0">
+                    <a
+                      href={event.zoomUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-xl bg-cyan-400 px-4 text-xs font-black text-slate-950 hover:bg-cyan-300 transition-colors"
+                    >
+                      Join Zoom Meeting <ArrowRight className="h-4 w-4" />
+                    </a>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+        ) : null}
+
+        <section className="mt-12">
+          <div className="rounded-3xl border border-white/10 bg-white/[.02] p-8 text-center sm:p-12">
+            <h2 className="text-2xl font-black sm:text-3xl">Take the Next Step</h2>
+            <p className="mx-auto mt-3 max-w-xl text-sm text-[#868c98]">
+              Ready to learn more or speak directly with {profile?.display_name || 'your guide'}? Submit a short request
+              and we will connect with you shortly.
+            </p>
+            <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
+              <Link
+                to={applyUrl}
+                className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-cyan-400 px-8 text-sm font-black text-slate-950 hover:bg-cyan-300 transition-colors"
+              >
+                Send Request <ArrowRight className="h-4 w-4" />
+              </Link>
+              {whatsapp ? (
+                <a
+                  href={whatsapp}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-6 text-sm font-bold text-emerald-300 hover:bg-emerald-500/20 transition-colors"
+                >
+                  <MessageCircle className="h-4 w-4" /> Message on WhatsApp
+                </a>
+              ) : null}
             </div>
           </div>
         </section>
-      )}
-    </main>
-    <Footer />
-  </div>
+      </main>
+
+      <Footer />
+    </div>
+  )
 }

@@ -2,14 +2,16 @@ import { SEO } from '@/components/SEO'
 import { crmConfigured, crmSupabase, getCrmDistributors, getCrmMembership } from '@/lib/crm'
 import type { CrmDistributor, CrmMembership } from '@/lib/crm'
 import type { Session } from '@supabase/supabase-js'
-import { ArrowLeft, BriefcaseBusiness, CalendarDays, Check, Copy, ExternalLink, GraduationCap, QrCode, Share2, Sparkles, UserRound, Waves } from 'lucide-react'
+import { ArrowLeft, BriefcaseBusiness, CalendarDays, Check, Copy, Droplets, ExternalLink, GraduationCap, QrCode, Radio, Share2, Sparkles, UserRound, Waves } from 'lucide-react'
 import { useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 
 const PAGES = [
   { id:'profile', label:'My Profile', description:'Your biography, markets, languages, and ways to connect.', path:'', icon:UserRound },
   { id:'business', label:'Business', description:'Leadership, duplication, and the independent opportunity.', path:'/business', icon:BriefcaseBusiness },
-  { id:'duo', label:'Duo Products', description:'K8 and emGuarde GO with the product demonstrations.', path:'/duo', icon:Waves },
+  { id:'duo', label:'Duo Technologies', description:'K8 and emGuarde GO combined 360° presentation.', path:'/duo', icon:Sparkles },
+  { id:'kangen', label:'Kangen Water®', description:'Leveluk K8 Japanese ionization and molecular hydrogen demo.', path:'/kangen', icon:Droplets },
+  { id:'emguarde', label:'emGuarde® Defense', description:'Patented 5G & EMF harmonic noise suppression presentation.', path:'/emguarde', icon:Radio },
   { id:'training', label:'Training', description:'A public preview of the True Legacy education system.', path:'/training', icon:GraduationCap },
   { id:'events', label:'Live Events', description:'The current English and Spanish weekly presentations.', path:'/events', icon:CalendarDays },
 ] as const
