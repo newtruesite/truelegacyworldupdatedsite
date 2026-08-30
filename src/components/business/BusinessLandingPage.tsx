@@ -1163,7 +1163,7 @@ export function BusinessLandingPage({ profile: initialProfile, distributorSlug }
                   locale,
                 })
               }
-              className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-400 px-3.5 sm:px-4 py-2 text-xs sm:text-sm font-bold text-slate-950 shadow-lg shadow-amber-500/15 hover:brightness-110 transition-all active:scale-95"
+              className="inline-flex items-center gap-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 px-3.5 sm:px-4 py-2 text-xs sm:text-sm font-bold text-slate-950 shadow-lg shadow-emerald-500/20 transition-all active:scale-95"
             >
               <MessageCircle className="h-4 w-4" />
               <span className="hidden xs:inline">{t.contactDistributor} {distributorFirstName}</span>
@@ -1945,9 +1945,9 @@ export function BusinessLandingPage({ profile: initialProfile, distributorSlug }
                   locale,
                 })
               }
-              className="w-full sm:w-auto inline-flex min-h-14 items-center justify-center gap-2.5 rounded-2xl border border-white/20 bg-white/10 hover:bg-white/15 px-8 py-4 text-base font-bold text-white transition-all shadow-lg active:scale-95"
+              className="w-full sm:w-auto inline-flex min-h-14 items-center justify-center gap-2.5 rounded-2xl bg-emerald-500 hover:bg-emerald-400 px-8 py-4 text-base font-bold text-slate-950 transition-all shadow-xl shadow-emerald-500/20 active:scale-95"
             >
-              <MessageCircle className="h-5 w-5 text-emerald-400" />
+              <MessageCircle className="h-5 w-5" />
               {t.strategyCallBtn}
             </a>
           </div>

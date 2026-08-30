@@ -1163,9 +1163,9 @@ export function DuoLandingPage({ profile: initialProfile, distributorSlug }: Duo
                   locale,
                 })
               }
-              className="w-full sm:w-auto inline-flex min-h-13 items-center justify-center gap-2.5 rounded-xl border border-emerald-500/30 bg-emerald-500/10 hover:bg-emerald-500/20 px-7 py-3.5 text-base font-bold text-emerald-300 transition-all shadow-lg shadow-emerald-500/5 active:scale-95"
+              className="w-full sm:w-auto inline-flex min-h-13 items-center justify-center gap-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 px-7 py-3.5 text-base font-bold text-slate-950 transition-all shadow-lg shadow-emerald-500/20 active:scale-95"
             >
-              <MessageCircle className="h-5 w-5 text-emerald-400" />
+              <MessageCircle className="h-5 w-5" />
               {t.messageDistributor} {distributorFirstName}
             </a>
 
@@ -1411,7 +1411,7 @@ export function DuoLandingPage({ profile: initialProfile, distributorSlug }: Duo
                       locale,
                     })
                   }
-                  className="inline-flex items-center gap-2.5 rounded-xl bg-cyan-500 hover:bg-cyan-400 px-6 py-3.5 text-sm font-bold text-slate-950 transition-colors shadow-lg shadow-cyan-500/20 active:scale-95"
+                  className="inline-flex items-center gap-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 px-6 py-3.5 text-sm font-bold text-slate-950 transition-colors shadow-lg shadow-emerald-500/20 active:scale-95"
                 >
                   <MessageCircle className="h-4 w-4" />
                   {t.askAboutK8} {distributorFirstName} {t.aboutK8}

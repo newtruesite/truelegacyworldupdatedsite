@@ -277,7 +277,7 @@ export default function DistributorLandingPage() {
                     href={whatsapp}
                     target="_blank"
                     rel="noreferrer"
-                    className="grid h-10 w-10 place-items-center rounded-xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 hover:bg-emerald-500/20 transition-colors"
+                    className="grid h-10 w-10 place-items-center rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold shadow-md shadow-emerald-500/20 transition-all hover:scale-105 active:scale-95"
                   >
                     <MessageCircle className="h-5 w-5" />
                   </a>
@@ -357,7 +357,7 @@ export default function DistributorLandingPage() {
                   href={whatsapp}
                   target="_blank"
                   rel="noreferrer"
-                  className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-6 text-sm font-bold text-emerald-300 hover:bg-emerald-500/20 transition-colors"
+                  className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 px-6 text-sm font-bold text-slate-950 transition-colors shadow-lg shadow-emerald-500/20 active:scale-95"
                 >
                   <MessageCircle className="h-4 w-4" /> Message on WhatsApp
                 </a>

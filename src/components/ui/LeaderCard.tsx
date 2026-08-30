@@ -259,7 +259,7 @@ export function LeaderCard({
               target="_blank"
               rel="noreferrer"
               aria-label={`WhatsApp ${dist.name}`}
-              className="grid h-11 w-11 shrink-0 place-items-center rounded-xl border border-emerald-400/25 bg-emerald-500/10 text-emerald-300 hover:bg-emerald-500/20 transition-colors"
+              className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold shadow-md shadow-emerald-500/20 transition-all hover:scale-105 active:scale-95"
             >
               <IconWhatsApp className="h-5 w-5" />
             </a>

@@ -1499,7 +1499,7 @@ export default function CountryPage() {
                   {/* Coach directory — visitors choose the right team leader */}
                   <Link
                     to="/distributors"
-                    className="mb-3 flex w-full items-center justify-center gap-2 rounded-2xl border border-green-500/20 px-6 py-3 text-sm font-semibold text-green-400 hover:bg-green-500/10 transition-all"
+                    className="mb-3 flex w-full items-center justify-center gap-2 rounded-2xl bg-emerald-500 hover:bg-emerald-400 px-6 py-3 text-sm font-bold text-slate-950 transition-all shadow-md shadow-emerald-500/20 active:scale-95"
                   >
                     <IconWhatsapp size={16} /> {copy.getInTouch}
                   </Link>
