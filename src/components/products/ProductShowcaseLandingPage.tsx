@@ -367,34 +367,34 @@ export function ProductShowcaseLandingPage({
       pdfUrl: undefined,
       specs: {
         plates: 'Harmonic Resonance Chip',
-        phRange: 'Suppresses 3.6GHz+ Noise',
-        orp: '4-Meter Radius (360° Sphere)',
+        phRange: 'Suppresses High-Frequency Noise',
+        orp: '3-Meter Radius (360° Sphere)',
         warranty: '1 Year Manufacturer Warranty',
         production: 'Set of 2 Portable Units',
         power: 'USB-C / 5V Low Power',
       },
       highlights: {
         en: [
-          'Patented harmonic resonance frequency cancels high-frequency EMF radiation noise',
-          'Covers up to 4-meter (13 ft) spherical radius without blocking phone or Wi-Fi signals',
+          'Patented harmonic resonance frequency harmonizes electro smoke and EMF radiation noise',
+          'Covers up to 3-meter (10 ft) spherical radius without blocking phone or Wi-Fi signals',
           'Clinically tested at UTAR University: promotes microcirculation & reduces cellular stress',
           'Ultra-portable USB-C powered design for home, office, and travel',
         ],
         es: [
-          'Frecuencia de resonancia armónica patentada que neutraliza el ruido de radiación electromagnética',
-          'Cobertura esférica de 4 metros sin bloquear señales de telefonía o Wi-Fi',
+          'Frecuencia de resonancia armónica patentada que armoniza el electrosmog y el ruido de radiación EMF',
+          'Cobertura esférica de 3 metros sin bloquear señales de telefonía o Wi-Fi',
           'Respaldado por estudios clínicos en la Universidad UTAR: mejora la microcirculación',
           'Diseño ultra portátil alimentado por USB-C para el hogar, oficina y viajes',
         ],
         fr: [
-          'Fréquence de résonance harmonique brevetée neutralisant le bruit des ondes électromagnétiques',
-          'Protection sphérique sur 4 mètres sans altérer les signaux Wi-Fi ni cellulaires',
+          'Fréquence de résonance harmonique brevetée harmonisant l\'électrosmog et le bruit des ondes CEM',
+          'Protection sphérique sur 3 mètres sans altérer les signaux Wi-Fi ni cellulaires',
           'Validé par des études cliniques UTAR : améliore la microcirculation sanguine',
           'Format nomade USB-C compact idéal pour la maison, le bureau et les déplacements',
         ],
         pt: [
-          'Ressonância harmônica patenteada que suprime o ruído de radiação eletromagnética',
-          'Cobertura esférica de 4 metros sem bloquear sinal de celular ou Wi-Fi',
+          'Ressonância harmônica patenteada que harmoniza o electrosmog e o ruído de radiação eletromagnética',
+          'Cobertura esférica de 3 metros sem bloquear sinal de celular ou Wi-Fi',
           'Comprovado em estudos clínicos da Universidade UTAR: favorece a microcirculação',
           'Design ultraportátil alimentado por USB-C para residência, trabalho e viagens',
         ],
@@ -624,11 +624,11 @@ export function ProductShowcaseLandingPage({
     {
       model: 'emGuarde GO (Set of 2)',
       plates: 'Harmonic Resonance Chip',
-      ph: '3.6GHz+ Noise Cancellation',
-      orp: '4-Meter Spherical Protection',
+      ph: 'Suppresses Noise Frequencies',
+      orp: '3-Meter Spherical Protection',
       display: 'LED Status Indicator',
       warranty: '1 Year',
-      bestFor: '5G / EMF Environmental Defense & Travel',
+      bestFor: 'Electro Smoke & EMF Environmental Defense · Travel',
     },
   ]
 
@@ -855,7 +855,7 @@ export function ProductShowcaseLandingPage({
                     </span>
                   </h2>
                   <p className="mt-4 text-sm sm:text-base text-[#cccccc] leading-relaxed">
-                    {copy.tier1Sub} Experience 8-plate active molecular hydrogen (H₂) hydration alongside patented 4-meter harmonic resonance protection against 5G and EMF radiation noise.
+                    {copy.tier1Sub} Experience 8-plate active molecular hydrogen (H₂) hydration alongside patented 3-meter harmonic resonance technology to harmonize electro smoke and EMF radiation noise.
                   </p>
 
                   <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-3">

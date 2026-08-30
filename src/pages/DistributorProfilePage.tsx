@@ -190,7 +190,7 @@ export default function DistributorProfilePage() {
         {
           tag: '04 · Protection',
           title: 'emGuarde® Defense',
-          desc: 'Learn how patented harmonic resonance suppresses 5G and EMF radiation noise across a 4-meter radius.',
+          desc: 'Learn how patented harmonic resonance harmonizes electro smoke and EMF radiation noise across a 3-meter radius.',
           cta: 'Explore emGuarde',
         },
         {
@@ -246,7 +246,7 @@ export default function DistributorProfilePage() {
         {
           tag: '04 · Protección',
           title: 'Defensa emGuarde®',
-          desc: 'Tecnología patentada de resonancia armónica que suprime la radiación EMF y 5G en un radio de 4 metros.',
+          desc: 'Aprende cómo la resonancia armónica patentada armoniza el electrosmog y el ruido de radiación EMF en un radio de 3 metros.',
           cta: 'Explorar emGuarde',
         },
         {
@@ -302,7 +302,7 @@ export default function DistributorProfilePage() {
         {
           tag: '04 · Protection',
           title: 'Défense emGuarde®',
-          desc: 'Technologie brevetée de résonance harmonique supprimant le bruit des ondes 5G et CEM sur 4 mètres.',
+          desc: 'Découvrez comment la résonance harmonique brevetée harmonise l\'électrosmog et le bruit des rayonnements CEM sur un rayon de 3 mètres.',
           cta: 'Découvrir emGuarde',
         },
         {
@@ -358,7 +358,7 @@ export default function DistributorProfilePage() {
         {
           tag: '04 · Proteção',
           title: 'Defesa emGuarde®',
-          desc: 'Tecnologia patenteada de ressonância harmônica que suprime a radiação EMF e 5G em um raio de 4 metros.',
+          desc: 'Aprenda como a ressonância harmônica patenteada harmoniza o electrosmog e o ruído de radiação eletromagnética em um raio de 3 metros.',
           cta: 'Explorar emGuarde',
         },
         {
