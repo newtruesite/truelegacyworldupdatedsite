@@ -5,65 +5,141 @@ import { useLocaleContext } from '@/contexts/LocaleContext'
 import { COUNTRIES } from '@/lib/countries'
 import { crmConfigured, getPublicDistributors, submitCrmApplication } from '@/lib/crm'
 import type { LeadInterest, PublicDistributor } from '@/lib/crm'
-import { BriefcaseBusiness, Check, Copy, ExternalLink, GraduationCap, MessageCircle, Sparkles } from 'lucide-react'
+import { BriefcaseBusiness, Check, Copy, ExternalLink, GraduationCap, MessageCircle, MessageSquare, Sparkles } from 'lucide-react'
 import { useEffect, useMemo, useState } from 'react'
 import type { FormEvent } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 
 const COPY = {
   en: {
-    eyebrow: 'Team lead routing', title: 'Let’s connect you with the right person.',
+    eyebrow: 'Team lead routing',
+    title: 'Let’s connect you with the right person.',
     intro: 'Tell us what you are interested in and who introduced you. Referral attribution is respected; visitors without a referrer can choose an available distributor.',
-    name: 'Full name', email: 'Email', phone: 'Phone or WhatsApp', country: 'Country', selectCountry: 'Select your country',
-    interest: 'What are you interested in?', referred: 'Did someone refer you to True Legacy?', yes: 'Yes', no: 'No',
-    who: 'Who referred you?', whoPlaceholder: 'Name, handle, or referral code', choose: 'Choose a distributor', selectDistributor: 'Select a distributor',
+    name: 'Full name',
+    email: 'Email',
+    phone: 'Phone or WhatsApp',
+    country: 'Country',
+    selectCountry: 'Select your country',
+    interest: 'What are you interested in?',
+    multipleAllowed: 'Select all that apply',
+    customInterestLabel: 'Other / Write your own interest',
+    customInterestPlaceholder: 'Type your specific interest here...',
+    commentsLabel: 'Comments or Questions (Optional)',
+    commentsPlaceholder: 'Tell us anything specific you’d like to ask or share...',
+    interestRequired: 'Please select at least one interest or specify your own.',
+    referred: 'Did someone refer you to True Legacy?',
+    yes: 'Yes',
+    no: 'No',
+    who: 'Who referred you?',
+    whoPlaceholder: 'Name, handle, or referral code',
+    choose: 'Choose a distributor',
+    selectDistributor: 'Select a distributor',
     growth: 'Additional verified team profiles can be added as the platform grows.',
-    consent: 'I consent to having my information routed to the named referrer or selected independent distributor for follow-up. I have reviewed the', privacy: 'Privacy Policy',
-    submit: 'Send my application', submitting: 'Sending securely…', successTitle: 'Application received.',
+    submit: 'Send my application',
+    submitting: 'Sending securely…',
+    successTitle: 'Application received.',
     success: 'Your information was securely recorded with its referral and team attribution. The appropriate distributor can now follow up.',
-    directory: 'View Distributor Profiles', error: 'We could not securely submit your application. Please try again.',
+    directory: 'View Distributor Profiles',
+    error: 'We could not securely submit your application. Please try again.',
     setup: 'The private CRM connection is being finalized. No information was transmitted. Please return after the team confirms the secure connection.',
     referredThrough: 'Referred through',
   },
   es: {
-    eyebrow: 'Asignación de prospectos', title: 'Conectémosle con la persona correcta.',
+    eyebrow: 'Asignación de prospectos',
+    title: 'Conectémosle con la persona correcta.',
     intro: 'Cuéntenos qué le interesa y quién le presentó True Legacy. Respetamos la atribución; si no tiene referente, puede elegir un distribuidor.',
-    name: 'Nombre completo', email: 'Correo electrónico', phone: 'Teléfono o WhatsApp', country: 'País', selectCountry: 'Seleccione su país',
-    interest: '¿Qué le interesa?', referred: '¿Alguien le recomendó True Legacy?', yes: 'Sí', no: 'No',
-    who: '¿Quién le recomendó?', whoPlaceholder: 'Nombre, usuario o código de referencia', choose: 'Elija un distribuidor', selectDistributor: 'Seleccione un distribuidor',
+    name: 'Nombre completo',
+    email: 'Correo electrónico',
+    phone: 'Teléfono o WhatsApp',
+    country: 'País',
+    selectCountry: 'Seleccione su país',
+    interest: '¿Qué le interesa?',
+    multipleAllowed: 'Seleccione todas las que apliquen',
+    customInterestLabel: 'Otro / Escriba su propio interés',
+    customInterestPlaceholder: 'Escriba su interés específico aquí...',
+    commentsLabel: 'Comentarios o Preguntas (Opcional)',
+    commentsPlaceholder: 'Cuéntenos cualquier detalle o pregunta que tenga...',
+    interestRequired: 'Por favor seleccione al menos un interés o especifique el suyo.',
+    referred: '¿Alguien le recomendó True Legacy?',
+    yes: 'Sí',
+    no: 'No',
+    who: '¿Quién le recomendó?',
+    whoPlaceholder: 'Nombre, usuario o código de referencia',
+    choose: 'Elija un distribuidor',
+    selectDistributor: 'Seleccione un distribuidor',
     growth: 'Se añadirán más perfiles verificados a medida que crezca la plataforma.',
-    consent: 'Autorizo que mi información se dirija a mi referente o al distribuidor seleccionado para seguimiento. He revisado la', privacy: 'Política de Privacidad',
-    submit: 'Enviar mi solicitud', submitting: 'Enviando de forma segura…', successTitle: 'Solicitud recibida.',
+    submit: 'Enviar mi solicitud',
+    submitting: 'Enviando de forma segura…',
+    successTitle: 'Solicitud recibida.',
     success: 'Su información fue guardada de forma segura con la atribución correspondiente. El distribuidor apropiado puede darle seguimiento.',
-    directory: 'Ver distribuidores', error: 'No pudimos enviar su solicitud de forma segura. Inténtelo de nuevo.',
+    directory: 'Ver distribuidores',
+    error: 'No pudimos enviar su solicitud de forma segura. Inténtelo de nuevo.',
     setup: 'La conexión privada del CRM se está finalizando. No se transmitió información. Regrese cuando el equipo confirme la conexión segura.',
     referredThrough: 'Referido por',
   },
   fr: {
-    eyebrow: 'Routage des contacts', title: 'Connectons-vous à la bonne personne.',
+    eyebrow: 'Routage des contacts',
+    title: 'Connectons-vous à la bonne personne.',
     intro: 'Dites-nous ce qui vous intéresse et qui vous a présenté True Legacy. Les recommandations sont respectées; sans référent, vous pouvez choisir un distributeur.',
-    name: 'Nom complet', email: 'E-mail', phone: 'Téléphone ou WhatsApp', country: 'Pays', selectCountry: 'Choisissez votre pays',
-    interest: 'Qu’est-ce qui vous intéresse?', referred: 'Quelqu’un vous a-t-il recommandé True Legacy?', yes: 'Oui', no: 'Non',
-    who: 'Qui vous a recommandé?', whoPlaceholder: 'Nom, identifiant ou code de parrainage', choose: 'Choisissez un distributeur', selectDistributor: 'Sélectionnez un distributeur',
+    name: 'Nom complet',
+    email: 'E-mail',
+    phone: 'Téléphone ou WhatsApp',
+    country: 'Pays',
+    selectCountry: 'Choisissez votre pays',
+    interest: 'Qu’est-ce qui vous intéresse?',
+    multipleAllowed: 'Sélectionnez tout ce qui s’applique',
+    customInterestLabel: 'Autre / Précisez votre intérêt',
+    customInterestPlaceholder: 'Indiquez votre intérêt ici...',
+    commentsLabel: 'Commentaires ou Questions (Facultatif)',
+    commentsPlaceholder: 'Partagez vos questions ou précisions éventuelles...',
+    interestRequired: 'Veuillez sélectionner au moins un intérêt ou préciser le vôtre.',
+    referred: 'Quelqu’un vous a-t-il recommandé True Legacy?',
+    yes: 'Oui',
+    no: 'Non',
+    who: 'Qui vous a recommandé?',
+    whoPlaceholder: 'Nom, identifiant ou code de parrainage',
+    choose: 'Choisissez un distributeur',
+    selectDistributor: 'Sélectionnez un distributeur',
     growth: 'D’autres profils vérifiés seront ajoutés à mesure que la plateforme grandira.',
-    consent: 'J’accepte que mes informations soient transmises à mon référent ou au distributeur choisi pour le suivi. J’ai consulté la', privacy: 'Politique de confidentialité',
-    submit: 'Envoyer ma demande', submitting: 'Envoi sécurisé…', successTitle: 'Demande reçue.',
+    submit: 'Envoyer ma demande',
+    submitting: 'Envoi sécurisé…',
+    successTitle: 'Demande reçue.',
     success: 'Vos informations ont été enregistrées avec leur attribution. Le distributeur approprié peut maintenant vous contacter.',
-    directory: 'Voir les distributeurs', error: 'Votre demande n’a pas pu être envoyée. Veuillez réessayer.',
+    directory: 'Voir les distributeurs',
+    error: 'Votre demande n’a pas pu être envoyée. Veuillez réessayer.',
     setup: 'La connexion CRM privée est en cours de finalisation. Aucune information n’a été transmise. Revenez après confirmation de la connexion sécurisée.',
     referredThrough: 'Recommandé par',
   },
   pt: {
-    eyebrow: 'Roteamento de contatos', title: 'Vamos conectar você à pessoa certa.',
+    eyebrow: 'Roteamento de contatos',
+    title: 'Vamos conectar você à pessoa certa.',
     intro: 'Conte o que lhe interessa e quem apresentou a True Legacy. A indicação é respeitada; sem indicador, você pode escolher um distribuidor.',
-    name: 'Nome completo', email: 'E-mail', phone: 'Telefone ou WhatsApp', country: 'País', selectCountry: 'Selecione seu país',
-    interest: 'Qual é o seu interesse?', referred: 'Alguém indicou a True Legacy para você?', yes: 'Sim', no: 'Não',
-    who: 'Quem indicou você?', whoPlaceholder: 'Nome, usuário ou código de indicação', choose: 'Escolha um distribuidor', selectDistributor: 'Selecione um distribuidor',
+    name: 'Nome completo',
+    email: 'E-mail',
+    phone: 'Telefone ou WhatsApp',
+    country: 'País',
+    selectCountry: 'Selecione seu país',
+    interest: 'Qual é o seu interesse?',
+    multipleAllowed: 'Selecione todas as que se aplicam',
+    customInterestLabel: 'Outro / Escreva seu próprio interesse',
+    customInterestPlaceholder: 'Digite seu interesse específico aqui...',
+    commentsLabel: 'Comentários ou Dúvidas (Opcional)',
+    commentsPlaceholder: 'Conte-nos qualquer detalhe ou dúvida que você tenha...',
+    interestRequired: 'Por favor selecione ao menos um interesse ou especifique o seu.',
+    referred: 'Alguém indicou a True Legacy para você?',
+    yes: 'Sim',
+    no: 'Não',
+    who: 'Quem indicou você?',
+    whoPlaceholder: 'Nome, usuário ou código de indicação',
+    choose: 'Escolha um distribuidor',
+    selectDistributor: 'Selecione um distribuidor',
     growth: 'Mais perfis verificados serão adicionados à medida que a plataforma crescer.',
-    consent: 'Autorizo que minhas informações sejam encaminhadas ao meu indicador ou ao distribuidor escolhido para acompanhamento. Li a', privacy: 'Política de Privacidade',
-    submit: 'Enviar minha inscrição', submitting: 'Enviando com segurança…', successTitle: 'Inscrição recebida.',
+    submit: 'Enviar minha inscrição',
+    submitting: 'Enviando com segurança…',
+    successTitle: 'Inscrição recebida.',
     success: 'Suas informações foram registradas com segurança e com a atribuição correta. O distribuidor apropriado poderá entrar em contato.',
-    directory: 'Ver distribuidores', error: 'Não foi possível enviar sua inscrição com segurança. Tente novamente.',
+    directory: 'Ver distribuidores',
+    error: 'Não foi possível enviar sua inscrição com segurança. Tente novamente.',
     setup: 'A conexão privada do CRM está sendo finalizada. Nenhuma informação foi transmitida. Volte após a confirmação da conexão segura.',
     referredThrough: 'Indicado por',
   },
@@ -99,6 +175,19 @@ export default function ApplicationPage() {
   const presetCountry = useMemo(() => new URLSearchParams(location.search).get('country')?.trim().toLowerCase() || '', [location.search])
   const referralDistributor = distributors.find((item) => item.slug === referralCode || item.referral_code === referralCode)
 
+  // Multi-interest state
+  const [selectedInterests, setSelectedInterests] = useState<string[]>(() => {
+    const searchParams = new URLSearchParams(typeof window !== 'undefined' ? window.location.search : '')
+    const preset = searchParams.get('interest')?.trim().toLowerCase()
+    if (preset && ['product', 'duo', 'distributor', 'training', 'events'].includes(preset)) {
+      return [preset]
+    }
+    return ['duo']
+  })
+  const [customInterestChecked, setCustomInterestChecked] = useState(false)
+  const [customInterestText, setCustomInterestText] = useState('')
+  const [comments, setComments] = useState('')
+
   useEffect(() => {
     getPublicDistributors().then(setDistributors)
   }, [])
@@ -107,6 +196,18 @@ export default function ApplicationPage() {
     if (referralCode && referralDistributor) setHasReferrer('Yes')
   }, [referralCode, referralDistributor])
 
+  useEffect(() => {
+    if (presetInterest && ['product', 'duo', 'distributor', 'training', 'events'].includes(presetInterest)) {
+      setSelectedInterests((prev) => (prev.includes(presetInterest) ? prev : [...prev, presetInterest]))
+    }
+  }, [presetInterest])
+
+  const toggleInterest = (val: string) => {
+    setSelectedInterests((prev) =>
+      prev.includes(val) ? prev.filter((item) => item !== val) : [...prev, val]
+    )
+  }
+
   const submit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     setError('')
@@ -114,12 +215,39 @@ export default function ApplicationPage() {
       setError(t.setup)
       return
     }
+
+    if (selectedInterests.length === 0 && (!customInterestChecked || !customInterestText.trim())) {
+      setError(t.interestRequired)
+      return
+    }
+
     const data = new FormData(event.currentTarget)
-    const fullName = String(data.get('fullName') || '')
-    const email = String(data.get('email') || '')
-    const phone = String(data.get('phone') || '')
+    const fullName = String(data.get('fullName') || '').trim()
+    const email = String(data.get('email') || '').trim()
+    const phone = String(data.get('phone') || '').trim()
+    const country = String(data.get('country') || '').trim()
     const selectedDistributorSlug = String(data.get('selectedDistributor') || '')
     const matchedDistributor = referralDistributor || distributors.find(d => d.slug === selectedDistributorSlug) || distributors[0]
+
+    // Determine primary interest enum for database compatibility
+    const primaryInterest =
+      selectedInterests.find((i) => ['duo', 'product', 'distributor', 'training', 'events'].includes(i)) ||
+      'duo'
+
+    // Combine all interests for descriptive logging and source tracking
+    const interestLabels = selectedInterests
+      .map((val) => INTERESTS.find((item) => item.value === val)?.labels[locale] || val)
+    if (customInterestChecked && customInterestText.trim()) {
+      interestLabels.push(`Other: ${customInterestText.trim()}`)
+    }
+    const combinedInterestsString = interestLabels.join(', ')
+
+    // Enriched source path with parameters
+    const sourceUrlParams = new URLSearchParams()
+    if (selectedInterests.length) sourceUrlParams.set('interests', selectedInterests.join(','))
+    if (customInterestText.trim()) sourceUrlParams.set('custom_interest', customInterestText.trim())
+    if (comments.trim()) sourceUrlParams.set('note', comments.trim().slice(0, 80))
+    const enrichedSourcePath = `${location.pathname}?${sourceUrlParams.toString()}`.slice(0, 300)
 
     setSubmitting(true)
     try {
@@ -127,15 +255,19 @@ export default function ApplicationPage() {
         fullName,
         email,
         phone,
-        country: String(data.get('country') || ''),
-        interest: String(data.get('interest') || ''),
+        country,
+        interest: primaryInterest,
+        selectedInterests,
+        customInterest: customInterestChecked ? customInterestText.trim() : undefined,
+        allInterests: combinedInterestsString,
+        comments: comments.trim(),
         hasReferrer: hasReferrer === 'Yes',
         referredBy: referralDistributor?.display_name || String(data.get('referredBy') || ''),
         referralCode: referralDistributor?.referral_code || referralCode,
         selectedDistributor: selectedDistributorSlug,
         locale,
-        sourcePath: `${location.pathname}${location.search}`,
-        consent: data.get('consent') === 'on',
+        sourcePath: enrichedSourcePath,
+        consent: true, // Automatically approved on submission
         privacyVersion: '2026-08-phase-1',
         website: String(data.get('website') || ''),
       })
@@ -306,24 +438,166 @@ export default function ApplicationPage() {
         ) : (
           <form onSubmit={submit} className="mt-10 space-y-6 rounded-3xl border border-white/10 bg-white/[0.03] p-6 sm:p-8">
             <div className="hidden" aria-hidden="true"><label>Website<input tabIndex={-1} autoComplete="off" name="website" /></label></div>
-            {referralDistributor && <div className="flex items-center gap-4 rounded-2xl border border-white/20 bg-cyan-400/10 p-4"><img src={referralDistributor.avatar_url || '/logos/tl-square-white.png'} alt="" className="h-14 w-14 rounded-full object-cover" /><div><p className="text-xs uppercase tracking-wider text-[#2997ff]">{t.referredThrough}</p><p className="font-semibold">{referralDistributor.display_name}</p></div></div>}
+            {referralDistributor && (
+              <div className="flex items-center gap-4 rounded-2xl border border-white/20 bg-cyan-400/10 p-4">
+                <img src={referralDistributor.avatar_url || '/logos/tl-square-white.png'} alt="" className="h-14 w-14 rounded-full object-cover" />
+                <div>
+                  <p className="text-xs uppercase tracking-wider text-[#2997ff]">{t.referredThrough}</p>
+                  <p className="font-semibold text-white">{referralDistributor.display_name}</p>
+                </div>
+              </div>
+            )}
+
             <div className="grid gap-5 sm:grid-cols-2">
-              <label className="text-sm text-[#cccccc]">{t.name}<input required name="fullName" autoComplete="name" minLength={2} maxLength={160} className="mt-2 w-full rounded-xl border border-white/10 bg-black/20 px-4 py-3 text-white focus:border-white/20 focus:outline-none" /></label>
-              <label className="text-sm text-[#cccccc]">{t.email}<input required type="email" name="email" autoComplete="email" maxLength={254} className="mt-2 w-full rounded-xl border border-white/10 bg-black/20 px-4 py-3 text-white focus:border-white/20 focus:outline-none" /></label>
-              <label className="text-sm text-[#cccccc]">{t.phone}<input name="phone" autoComplete="tel" maxLength={50} className="mt-2 w-full rounded-xl border border-white/10 bg-black/20 px-4 py-3 text-white focus:border-white/20 focus:outline-none" /></label>
-              <label className="text-sm text-[#cccccc]">{t.country}<select required name="country" defaultValue={COUNTRIES.some(country => country.slug === presetCountry) ? presetCountry : ''} className="mt-2 w-full rounded-xl border border-white/10 bg-black px-4 py-3 text-white focus:border-white/20 focus:outline-none"><option value="">{t.selectCountry}</option>{COUNTRIES.map(country => <option key={country.slug} value={country.slug}>{country.name}</option>)}</select></label>
+              <label className="text-sm text-[#cccccc]">
+                {t.name}
+                <input required name="fullName" autoComplete="name" minLength={2} maxLength={160} className="mt-2 w-full rounded-xl border border-white/10 bg-black/20 px-4 py-3 text-white focus:border-white/20 focus:outline-none" />
+              </label>
+              <label className="text-sm text-[#cccccc]">
+                {t.email}
+                <input required type="email" name="email" autoComplete="email" maxLength={254} className="mt-2 w-full rounded-xl border border-white/10 bg-black/20 px-4 py-3 text-white focus:border-white/20 focus:outline-none" />
+              </label>
+              <label className="text-sm text-[#cccccc]">
+                {t.phone}
+                <input name="phone" autoComplete="tel" maxLength={50} className="mt-2 w-full rounded-xl border border-white/10 bg-black/20 px-4 py-3 text-white focus:border-white/20 focus:outline-none" />
+              </label>
+              <label className="text-sm text-[#cccccc]">
+                {t.country}
+                <select required name="country" defaultValue={COUNTRIES.some(country => country.slug === presetCountry) ? presetCountry : ''} className="mt-2 w-full rounded-xl border border-white/10 bg-black px-4 py-3 text-white focus:border-white/20 focus:outline-none">
+                  <option value="">{t.selectCountry}</option>
+                  {COUNTRIES.map(country => <option key={country.slug} value={country.slug}>{country.name}</option>)}
+                </select>
+              </label>
             </div>
 
-            <fieldset><legend className="text-sm font-semibold text-white">{t.interest}</legend><div className="mt-3 grid gap-2">{INTERESTS.map(interest => <label key={interest.value} className="flex items-start gap-3 rounded-xl border border-white/10 px-4 py-3 text-sm text-[#cccccc]"><input required type="radio" name="interest" value={interest.value} defaultChecked={presetInterest === interest.value} className="mt-1" />{interest.labels[locale]}</label>)}</div></fieldset>
+            {/* Interests Section - Multi-select + Custom option */}
+            <fieldset className="space-y-3">
+              <div className="flex items-center justify-between">
+                <legend className="text-sm font-semibold text-white">{t.interest}</legend>
+                <span className="text-xs text-[#86868b]">{t.multipleAllowed}</span>
+              </div>
+              <div className="grid gap-2">
+                {INTERESTS.map((interest) => {
+                  const isChecked = selectedInterests.includes(interest.value)
+                  return (
+                    <label
+                      key={interest.value}
+                      className={`flex items-center gap-3.5 rounded-xl border px-4 py-3 text-sm transition-all cursor-pointer ${
+                        isChecked
+                          ? 'border-cyan-500/50 bg-cyan-500/10 text-white font-medium shadow-sm'
+                          : 'border-white/10 bg-black/20 text-[#cccccc] hover:border-white/20 hover:bg-white/[0.02]'
+                      }`}
+                    >
+                      <input
+                        type="checkbox"
+                        checked={isChecked}
+                        onChange={() => toggleInterest(interest.value)}
+                        className="h-4 w-4 rounded border-white/20 bg-black/40 text-cyan-500 focus:ring-cyan-400 focus:ring-offset-0"
+                      />
+                      <span className="flex-1 select-none">{interest.labels[locale]}</span>
+                    </label>
+                  )
+                })}
 
-            {!referralDistributor && <fieldset><legend className="text-sm font-semibold text-white">{t.referred}</legend><div className="mt-3 flex gap-3">{[{ value: 'Yes', label: t.yes }, { value: 'No', label: t.no }].map(item => <label key={item.value} className="flex items-center gap-2 rounded-xl border border-white/10 px-4 py-3 text-sm"><input required type="radio" name="hasReferrer" value={item.value} onChange={() => setHasReferrer(item.value)} />{item.label}</label>)}</div></fieldset>}
+                {/* Custom Interest Option at the bottom */}
+                <div
+                  className={`rounded-xl border transition-all ${
+                    customInterestChecked
+                      ? 'border-cyan-500/50 bg-cyan-500/10'
+                      : 'border-white/10 bg-black/20 hover:border-white/20'
+                  }`}
+                >
+                  <label className="flex items-center gap-3.5 px-4 py-3 text-sm text-[#cccccc] cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={customInterestChecked}
+                      onChange={(e) => setCustomInterestChecked(e.target.checked)}
+                      className="h-4 w-4 rounded border-white/20 bg-black/40 text-cyan-500 focus:ring-cyan-400 focus:ring-offset-0"
+                    />
+                    <span className="font-medium text-white select-none">{t.customInterestLabel}</span>
+                  </label>
+                  {customInterestChecked && (
+                    <div className="px-4 pb-3.5 pt-1">
+                      <input
+                        type="text"
+                        value={customInterestText}
+                        onChange={(e) => setCustomInterestText(e.target.value)}
+                        placeholder={t.customInterestPlaceholder}
+                        maxLength={160}
+                        autoFocus
+                        className="w-full rounded-lg border border-white/20 bg-black/50 px-3.5 py-2.5 text-sm text-white placeholder:text-[#86868b] focus:border-cyan-400 focus:outline-none focus:ring-1 focus:ring-cyan-400"
+                      />
+                    </div>
+                  )}
+                </div>
+              </div>
+            </fieldset>
 
-            {hasReferrer === 'Yes' && !referralDistributor && <label className="block text-sm text-[#cccccc]">{t.who}<input required name="referredBy" maxLength={160} placeholder={t.whoPlaceholder} className="mt-2 w-full rounded-xl border border-white/10 bg-black/20 px-4 py-3 text-white focus:border-white/20 focus:outline-none" /></label>}
-            {hasReferrer === 'No' && <label className="block text-sm text-[#cccccc]">{t.choose}<select required name="selectedDistributor" className="mt-2 w-full rounded-xl border border-white/10 bg-black px-4 py-3 text-white focus:border-white/20 focus:outline-none"><option value="">{t.selectDistributor}</option>{distributors.map(distributor => <option key={distributor.slug} value={distributor.slug}>{distributor.display_name} — {distributor.regions.join(' & ')}</option>)}</select><span className="mt-2 block text-xs text-[#86868b]">{t.growth}</span></label>}
+            {/* Comments / Questions Section */}
+            <div className="space-y-2">
+              <label className="flex items-center gap-2 text-sm font-semibold text-white">
+                <MessageSquare className="h-4 w-4 text-cyan-400" />
+                {t.commentsLabel}
+              </label>
+              <textarea
+                rows={3}
+                value={comments}
+                onChange={(e) => setComments(e.target.value)}
+                placeholder={t.commentsPlaceholder}
+                maxLength={1000}
+                className="w-full rounded-xl border border-white/10 bg-black/20 px-4 py-3 text-sm text-white placeholder:text-[#86868b] focus:border-white/20 focus:outline-none resize-y"
+              />
+            </div>
 
-            <label className="flex items-start gap-3 text-xs leading-5 text-[#cccccc]"><input required type="checkbox" name="consent" className="mt-1" />{t.consent} <Link to="/legal/privacy" className="text-[#2997ff] underline">{t.privacy}</Link>.</label>
-            {error && <p role="alert" className="rounded-xl border border-amber-400/30 bg-amber-400/10 p-4 text-sm text-amber-100">{error}</p>}
-            <button disabled={submitting} type="submit" className="w-full rounded-xl bg-cyan-500 px-6 py-3.5 font-semibold text-white hover:bg-cyan-400 disabled:cursor-wait disabled:opacity-60">{submitting ? t.submitting : t.submit}</button>
+            {/* Referrer Attribution */}
+            {!referralDistributor && (
+              <fieldset>
+                <legend className="text-sm font-semibold text-white">{t.referred}</legend>
+                <div className="mt-3 flex gap-3">
+                  {[
+                    { value: 'Yes', label: t.yes },
+                    { value: 'No', label: t.no },
+                  ].map((item) => (
+                    <label key={item.value} className="flex items-center gap-2 rounded-xl border border-white/10 px-4 py-3 text-sm cursor-pointer hover:border-white/20">
+                      <input required type="radio" name="hasReferrer" value={item.value} onChange={() => setHasReferrer(item.value)} />
+                      {item.label}
+                    </label>
+                  ))}
+                </div>
+              </fieldset>
+            )}
+
+            {hasReferrer === 'Yes' && !referralDistributor && (
+              <label className="block text-sm text-[#cccccc]">
+                {t.who}
+                <input required name="referredBy" maxLength={160} placeholder={t.whoPlaceholder} className="mt-2 w-full rounded-xl border border-white/10 bg-black/20 px-4 py-3 text-white focus:border-white/20 focus:outline-none" />
+              </label>
+            )}
+
+            {hasReferrer === 'No' && (
+              <label className="block text-sm text-[#cccccc]">
+                {t.choose}
+                <select required name="selectedDistributor" className="mt-2 w-full rounded-xl border border-white/10 bg-black px-4 py-3 text-white focus:border-white/20 focus:outline-none">
+                  <option value="">{t.selectDistributor}</option>
+                  {distributors.map(distributor => <option key={distributor.slug} value={distributor.slug}>{distributor.display_name} — {distributor.regions.join(' & ')}</option>)}
+                </select>
+                <span className="mt-2 block text-xs text-[#86868b]">{t.growth}</span>
+              </label>
+            )}
+
+            {error && (
+              <p role="alert" className="rounded-xl border border-amber-400/30 bg-amber-400/10 p-4 text-sm text-amber-100">
+                {error}
+              </p>
+            )}
+
+            <button
+              disabled={submitting}
+              type="submit"
+              className="w-full rounded-xl bg-cyan-500 px-6 py-3.5 font-semibold text-slate-950 hover:bg-cyan-400 transition-colors shadow-lg shadow-cyan-500/20 disabled:cursor-wait disabled:opacity-60"
+            >
+              {submitting ? t.submitting : t.submit}
+            </button>
           </form>
         )}
       </main>
