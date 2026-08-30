@@ -21,6 +21,7 @@ import type { Session } from '@supabase/supabase-js'
 import {
   Check,
   CheckCircle2,
+  ChevronDown,
   Copy,
   ExternalLink,
   FileText,
@@ -69,6 +70,9 @@ export default function AppAccountPage() {
   const [error, setError] = useState('')
   const [customAvatarUrl, setCustomAvatarUrl] = useState<string | null>(null)
   const [copiedLink, setCopiedLink] = useState(false)
+
+  // Collapsible state - collapsed by default
+  const [isFormCustomizerOpen, setIsFormCustomizerOpen] = useState(false)
 
   // Application Page Customization Form State
   const [customHeadline, setCustomHeadline] = useState('')
@@ -189,6 +193,15 @@ export default function AppAccountPage() {
     const origin = typeof window !== 'undefined' ? window.location.origin : 'https://www.truelegacyworld.com'
     return `${origin}/apply?ref=${slug}&interest=duo&source=duo`
   }, [distributor])
+
+  const hasCustomizations = Boolean(
+    customHeadline.trim() ||
+      customIntro.trim() ||
+      customEyebrow.trim() ||
+      customSubmitButtonText.trim() ||
+      customBadge.trim() ||
+      customNote.trim()
+  )
 
   const submit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
@@ -420,217 +433,7 @@ export default function AppAccountPage() {
 
             {/* Unified Profile & Application Form Settings */}
             <form key={distributor.id} onSubmit={submit} className="space-y-8">
-              {/* SECTION 1: Personal Application Form Customization */}
-              <div className="rounded-[28px] border border-cyan-500/30 bg-black/40 p-5 sm:p-8 backdrop-blur-xl shadow-2xl relative overflow-hidden">
-                <div className="absolute top-0 right-0 w-64 h-64 bg-cyan-500/5 rounded-full blur-3xl pointer-events-none" />
-
-                <div className="flex items-center gap-3 mb-6">
-                  <span className="grid h-11 w-11 place-items-center rounded-xl bg-cyan-400/15 text-cyan-400 border border-cyan-400/30">
-                    <Sliders className="h-5 w-5" />
-                  </span>
-                  <div>
-                    <div className="flex items-center gap-2">
-                      <span className="rounded-full border border-cyan-400/40 bg-cyan-400/10 px-2 py-0.5 text-[10px] font-black uppercase tracking-wider text-cyan-300">
-                        Live Form Customizer
-                      </span>
-                    </div>
-                    <h2 className="text-xl font-black text-white mt-0.5">Personal Application Form Settings</h2>
-                    <p className="text-xs text-[#868c98]">
-                      Customize what prospects see when they visit your personal application link (<code>/apply?ref={distributor.slug}</code>).
-                    </p>
-                  </div>
-                </div>
-
-                {/* Custom Fields Grid */}
-                <div className="grid gap-5 sm:grid-cols-2">
-                  <Field
-                    label="Custom Page Headline"
-                    hint="Defaults to 'Let’s connect you with the right person.'"
-                  >
-                    <input
-                      value={customHeadline}
-                      onChange={(e) => setCustomHeadline(e.target.value)}
-                      placeholder={`e.g. Work with ${distributor.display_name} · True Legacy`}
-                      maxLength={140}
-                      className="account-input"
-                    />
-                  </Field>
-
-                  <Field
-                    label="Custom Eyebrow / Tag"
-                    hint="Small banner text above the headline"
-                  >
-                    <input
-                      value={customEyebrow}
-                      onChange={(e) => setCustomEyebrow(e.target.value)}
-                      placeholder={`e.g. Direct Leadership Inquiry · ${distributor.display_name}`}
-                      maxLength={80}
-                      className="account-input"
-                    />
-                  </Field>
-
-                  <Field
-                    label="Custom Submit Button Text"
-                    hint="Defaults to 'Send my request'"
-                  >
-                    <input
-                      value={customSubmitButtonText}
-                      onChange={(e) => setCustomSubmitButtonText(e.target.value)}
-                      placeholder="e.g. Apply to Work with Me, Request Duo Package, etc."
-                      maxLength={60}
-                      className="account-input"
-                    />
-                  </Field>
-
-                  <Field
-                    label="Distributor Badge Tag"
-                    hint="e.g. 'Verified Global Leader', '6A2 Leader'"
-                  >
-                    <input
-                      value={customBadge}
-                      onChange={(e) => setCustomBadge(e.target.value)}
-                      placeholder="e.g. True Legacy Global Partner"
-                      maxLength={40}
-                      className="account-input"
-                    />
-                  </Field>
-                </div>
-
-                <Field
-                  label="Custom Subtitle / Welcome Message"
-                  hint="Main introductory text explaining the next steps to your lead."
-                  className="mt-5"
-                >
-                  <textarea
-                    value={customIntro}
-                    onChange={(e) => setCustomIntro(e.target.value)}
-                    placeholder="e.g. Ready to elevate your health and unlock global distribution? Complete this short inquiry and I will personally reach out within 24 hours via WhatsApp."
-                    rows={3}
-                    maxLength={500}
-                    className="account-input resize-y"
-                  />
-                </Field>
-
-                <Field
-                  label="Personal Instructions / Note Banner (Optional)"
-                  hint="Special note shown inside a highlighted banner right above the form fields."
-                  className="mt-5"
-                >
-                  <textarea
-                    value={customNote}
-                    onChange={(e) => setCustomNote(e.target.value)}
-                    placeholder="e.g. Please ensure your WhatsApp number is correct with country code so I can send you the presentation package directly."
-                    rows={2}
-                    maxLength={300}
-                    className="account-input resize-y"
-                  />
-                </Field>
-
-                {/* Default Pre-selected Interests */}
-                <fieldset className="mt-6 border-t border-white/10 pt-5">
-                  <legend className="text-sm font-bold text-white mb-2">Default Pre-Selected Interest Options</legend>
-                  <p className="text-xs text-[#868c98] mb-3">
-                    Choose which checkboxes are pre-checked by default when visitors open your application link:
-                  </p>
-                  <div className="grid gap-2 sm:grid-cols-2">
-                    {INTEREST_OPTIONS.map((opt) => {
-                      const isChecked = selectedDefaultInterests.includes(opt.id)
-                      return (
-                        <label
-                          key={opt.id}
-                          className={`flex items-center gap-3 rounded-xl border p-3 text-xs transition-all cursor-pointer ${
-                            isChecked
-                              ? 'border-cyan-500/50 bg-cyan-500/10 text-white font-bold'
-                              : 'border-white/10 bg-black/20 text-[#868c98] hover:border-white/20'
-                          }`}
-                        >
-                          <input
-                            type="checkbox"
-                            checked={isChecked}
-                            onChange={() => toggleDefaultInterest(opt.id)}
-                            className="h-4 w-4 rounded border-white/20 bg-black/40 text-cyan-500 focus:ring-0"
-                          />
-                          <span>{opt.label}</span>
-                        </label>
-                      )
-                    })}
-                  </div>
-                </fieldset>
-
-                {/* LIVE PREVIEW OF APPLICATION FORM */}
-                <div className="mt-8 rounded-2xl border border-white/15 bg-black/60 p-5 sm:p-6">
-                  <div className="flex items-center justify-between border-b border-white/10 pb-3 mb-4">
-                    <div className="flex items-center gap-2">
-                      <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
-                      <span className="text-[11px] font-black uppercase tracking-wider text-emerald-400">
-                        Live Preview (How Leads See It)
-                      </span>
-                    </div>
-                    <a
-                      href={appFormUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1 text-xs text-cyan-400 hover:underline"
-                    >
-                      Open full page <ExternalLink className="h-3 w-3" />
-                    </a>
-                  </div>
-
-                  <div className="space-y-4 text-left">
-                    <div>
-                      <p className="text-[10px] font-bold uppercase tracking-widest text-[#2997ff]">
-                        {customEyebrow.trim() || 'Team lead routing'}
-                      </p>
-                      <h3 className="text-xl sm:text-2xl font-black text-white mt-1">
-                        {customHeadline.trim() || 'Let’s connect you with the right person.'}
-                      </h3>
-                      <p className="text-xs text-[#cccccc] mt-1 leading-relaxed">
-                        {customIntro.trim() ||
-                          'Tell us what you are interested in and who introduced you. Referral attribution is respected; visitors without a referrer can choose an available distributor.'}
-                      </p>
-                    </div>
-
-                    {/* Distributor attribution banner */}
-                    <div className="flex items-center justify-between gap-3 rounded-xl border border-cyan-400/30 bg-cyan-400/10 p-3">
-                      <div className="flex items-center gap-3">
-                        <img
-                          src={currentAvatar}
-                          alt=""
-                          className="h-10 w-10 rounded-full object-cover border border-cyan-400/40"
-                        />
-                        <div>
-                          <p className="text-[10px] uppercase tracking-wider text-[#2997ff]">Referred Through</p>
-                          <p className="font-bold text-white text-xs">{distributor.display_name}</p>
-                          <p className="text-[10px] text-[#86868b]">{distributor.title}</p>
-                        </div>
-                      </div>
-                      {customBadge.trim() && (
-                        <span className="rounded-full border border-cyan-400/40 bg-cyan-400/20 px-2.5 py-0.5 text-[10px] font-black uppercase tracking-wider text-cyan-300">
-                          {customBadge.trim()}
-                        </span>
-                      )}
-                    </div>
-
-                    {customNote.trim() && (
-                      <div className="rounded-xl border border-white/10 bg-white/[0.04] p-3 text-xs text-[#cccccc]">
-                        <p className="font-bold text-white text-[11px] mb-0.5">Message from {distributor.display_name}:</p>
-                        <p className="text-[11px]">{customNote.trim()}</p>
-                      </div>
-                    )}
-
-                    <div className="pt-2">
-                      <button
-                        type="button"
-                        className="w-full rounded-xl bg-cyan-500 py-2.5 text-xs font-bold text-slate-950 shadow-md shadow-cyan-500/20"
-                      >
-                        {customSubmitButtonText.trim() || 'Send my request'}
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* SECTION 2: Public Profile Information Form */}
+              {/* SECTION 1: Public Profile Information Form (Main Section First) */}
               <div className="rounded-[28px] border border-white/10 bg-black/35 p-5 sm:p-8">
                 <div className="flex items-center gap-3">
                   <span className="grid h-11 w-11 place-items-center rounded-xl bg-cyan-400/10 text-[#2997ff]">
@@ -734,6 +537,243 @@ export default function AppAccountPage() {
                     <span className="text-[#868c98]">Allow visitors without an existing sponsor to select you.</span>
                   </span>
                 </label>
+              </div>
+
+              {/* SECTION 2: Collapsible Personal Application Form Customizer (Moved Down, Collapsed by Default) */}
+              <div className="rounded-[28px] border border-cyan-500/30 bg-black/40 backdrop-blur-xl shadow-2xl overflow-hidden transition-all">
+                {/* Collapsible Accordion Header */}
+                <button
+                  type="button"
+                  onClick={() => setIsFormCustomizerOpen(!isFormCustomizerOpen)}
+                  className="w-full p-5 sm:p-7 flex items-center justify-between text-left hover:bg-white/[0.02] transition-colors"
+                >
+                  <div className="flex items-center gap-3.5 min-w-0 pr-2">
+                    <span className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-cyan-400/15 text-cyan-400 border border-cyan-400/30">
+                      <Sliders className="h-5 w-5" />
+                    </span>
+                    <div className="min-w-0">
+                      <div className="flex items-center gap-2">
+                        <span className="rounded-full border border-cyan-400/40 bg-cyan-400/10 px-2 py-0.5 text-[10px] font-black uppercase tracking-wider text-cyan-300 shrink-0">
+                          Live Form Customizer
+                        </span>
+                        {hasCustomizations && (
+                          <span className="rounded-full bg-emerald-500/10 border border-emerald-500/30 px-2 py-0.5 text-[9px] font-bold text-emerald-300">
+                            Customized
+                          </span>
+                        )}
+                      </div>
+                      <h2 className="text-lg sm:text-xl font-black text-white mt-0.5 truncate">
+                        Personal Application Form Settings
+                      </h2>
+                      <p className="text-xs text-[#868c98] truncate">
+                        Customize what prospects see when they visit <code>/apply?ref={distributor.slug}</code>
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-2 shrink-0">
+                    <span className="hidden sm:inline text-xs font-bold text-cyan-400">
+                      {isFormCustomizerOpen ? 'Collapse' : 'Customize Form'}
+                    </span>
+                    <span
+                      className={`grid h-8 w-8 place-items-center rounded-xl border border-white/10 bg-white/5 text-[#86868b] transition-transform duration-200 ${
+                        isFormCustomizerOpen ? 'rotate-180 text-white' : ''
+                      }`}
+                    >
+                      <ChevronDown className="h-4 w-4" />
+                    </span>
+                  </div>
+                </button>
+
+                {/* Collapsible Content Body */}
+                {isFormCustomizerOpen && (
+                  <div className="px-5 pb-6 sm:px-8 sm:pb-8 pt-2 border-t border-white/10 space-y-6 animate-in fade-in-50 duration-200">
+                    <div className="grid gap-5 sm:grid-cols-2 pt-2">
+                      <Field
+                        label="Custom Page Headline"
+                        hint="Defaults to 'Let’s connect you with the right person.'"
+                      >
+                        <input
+                          value={customHeadline}
+                          onChange={(e) => setCustomHeadline(e.target.value)}
+                          placeholder={`e.g. Work with ${distributor.display_name} · True Legacy`}
+                          maxLength={140}
+                          className="account-input"
+                        />
+                      </Field>
+
+                      <Field
+                        label="Custom Eyebrow / Tag"
+                        hint="Small banner text above the headline"
+                      >
+                        <input
+                          value={customEyebrow}
+                          onChange={(e) => setCustomEyebrow(e.target.value)}
+                          placeholder={`e.g. Direct Leadership Inquiry · ${distributor.display_name}`}
+                          maxLength={80}
+                          className="account-input"
+                        />
+                      </Field>
+
+                      <Field
+                        label="Custom Submit Button Text"
+                        hint="Defaults to 'Send my request'"
+                      >
+                        <input
+                          value={customSubmitButtonText}
+                          onChange={(e) => setCustomSubmitButtonText(e.target.value)}
+                          placeholder="e.g. Apply to Work with Me, Request Duo Package, etc."
+                          maxLength={60}
+                          className="account-input"
+                        />
+                      </Field>
+
+                      <Field
+                        label="Distributor Badge Tag"
+                        hint="e.g. 'Verified Global Leader', '6A2 Leader'"
+                      >
+                        <input
+                          value={customBadge}
+                          onChange={(e) => setCustomBadge(e.target.value)}
+                          placeholder="e.g. True Legacy Global Partner"
+                          maxLength={40}
+                          className="account-input"
+                        />
+                      </Field>
+                    </div>
+
+                    <Field
+                      label="Custom Subtitle / Welcome Message"
+                      hint="Main introductory text explaining the next steps to your lead."
+                    >
+                      <textarea
+                        value={customIntro}
+                        onChange={(e) => setCustomIntro(e.target.value)}
+                        placeholder="e.g. Ready to elevate your health and unlock global distribution? Complete this short inquiry and I will personally reach out within 24 hours via WhatsApp."
+                        rows={3}
+                        maxLength={500}
+                        className="account-input resize-y"
+                      />
+                    </Field>
+
+                    <Field
+                      label="Personal Instructions / Note Banner (Optional)"
+                      hint="Special note shown inside a highlighted banner right above the form fields."
+                    >
+                      <textarea
+                        value={customNote}
+                        onChange={(e) => setCustomNote(e.target.value)}
+                        placeholder="e.g. Please ensure your WhatsApp number is correct with country code so I can send you the presentation package directly."
+                        rows={2}
+                        maxLength={300}
+                        className="account-input resize-y"
+                      />
+                    </Field>
+
+                    {/* Default Pre-selected Interests */}
+                    <fieldset className="border-t border-white/10 pt-5">
+                      <legend className="text-sm font-bold text-white mb-2">Default Pre-Selected Interest Options</legend>
+                      <p className="text-xs text-[#868c98] mb-3">
+                        Choose which checkboxes are pre-checked by default when visitors open your application link:
+                      </p>
+                      <div className="grid gap-2 sm:grid-cols-2">
+                        {INTEREST_OPTIONS.map((opt) => {
+                          const isChecked = selectedDefaultInterests.includes(opt.id)
+                          return (
+                            <label
+                              key={opt.id}
+                              className={`flex items-center gap-3 rounded-xl border p-3 text-xs transition-all cursor-pointer ${
+                                isChecked
+                                  ? 'border-cyan-500/50 bg-cyan-500/10 text-white font-bold'
+                                  : 'border-white/10 bg-black/20 text-[#868c98] hover:border-white/20'
+                              }`}
+                            >
+                              <input
+                                type="checkbox"
+                                checked={isChecked}
+                                onChange={() => toggleDefaultInterest(opt.id)}
+                                className="h-4 w-4 rounded border-white/20 bg-black/40 text-cyan-500 focus:ring-0"
+                              />
+                              <span>{opt.label}</span>
+                            </label>
+                          )
+                        })}
+                      </div>
+                    </fieldset>
+
+                    {/* LIVE PREVIEW OF APPLICATION FORM */}
+                    <div className="rounded-2xl border border-white/15 bg-black/60 p-5 sm:p-6">
+                      <div className="flex items-center justify-between border-b border-white/10 pb-3 mb-4">
+                        <div className="flex items-center gap-2">
+                          <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
+                          <span className="text-[11px] font-black uppercase tracking-wider text-emerald-400">
+                            Live Preview (How Leads See It)
+                          </span>
+                        </div>
+                        <a
+                          href={appFormUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-1 text-xs text-cyan-400 hover:underline"
+                        >
+                          Open full page <ExternalLink className="h-3 w-3" />
+                        </a>
+                      </div>
+
+                      <div className="space-y-4 text-left">
+                        <div>
+                          <p className="text-[10px] font-bold uppercase tracking-widest text-[#2997ff]">
+                            {customEyebrow.trim() || 'Team lead routing'}
+                          </p>
+                          <h3 className="text-xl sm:text-2xl font-black text-white mt-1">
+                            {customHeadline.trim() || 'Let’s connect you with the right person.'}
+                          </h3>
+                          <p className="text-xs text-[#cccccc] mt-1 leading-relaxed">
+                            {customIntro.trim() ||
+                              'Tell us what you are interested in and who introduced you. Referral attribution is respected; visitors without a referrer can choose an available distributor.'}
+                          </p>
+                        </div>
+
+                        {/* Distributor attribution banner */}
+                        <div className="flex items-center justify-between gap-3 rounded-xl border border-cyan-400/30 bg-cyan-400/10 p-3">
+                          <div className="flex items-center gap-3">
+                            <img
+                              src={currentAvatar}
+                              alt=""
+                              className="h-10 w-10 rounded-full object-cover border border-cyan-400/40"
+                            />
+                            <div>
+                              <p className="text-[10px] uppercase tracking-wider text-[#2997ff]">Referred Through</p>
+                              <p className="font-bold text-white text-xs">{distributor.display_name}</p>
+                              <p className="text-[10px] text-[#86868b]">{distributor.title}</p>
+                            </div>
+                          </div>
+                          {customBadge.trim() && (
+                            <span className="rounded-full border border-cyan-400/40 bg-cyan-400/20 px-2.5 py-0.5 text-[10px] font-black uppercase tracking-wider text-cyan-300">
+                              {customBadge.trim()}
+                            </span>
+                          )}
+                        </div>
+
+                        {customNote.trim() && (
+                          <div className="rounded-xl border border-white/10 bg-white/[0.04] p-3 text-xs text-[#cccccc]">
+                            <p className="font-bold text-white text-[11px] mb-0.5">Message from {distributor.display_name}:</p>
+                            <p className="text-[11px]">{customNote.trim()}</p>
+                          </div>
+                        )}
+
+                        <div className="pt-2">
+                          <button
+                            type="button"
+                            className="w-full rounded-xl bg-cyan-500 py-2.5 text-xs font-bold text-slate-950 shadow-md shadow-cyan-500/20"
+                          >
+                            {customSubmitButtonText.trim() || 'Send my request'}
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
 
               {/* Status alerts */}
