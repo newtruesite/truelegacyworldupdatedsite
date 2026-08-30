@@ -16,6 +16,7 @@ import {
   Radio,
   Send,
   ShieldCheck,
+  ShoppingCart,
   Smartphone,
   Sparkles,
   UserCheck,
@@ -1138,6 +1139,24 @@ export function EmguardeLandingPage({ profile: propProfile, distributorSlug }: E
               {copy.readyBodyPrefix} <strong>{distributorName}</strong> {copy.readyBodySuffix}
             </p>
             <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
+              {(profile?.purchase_links?.emguarde || profile?.purchase_links?.emguarde_original) && (
+                <a
+                  href={profile.purchase_links.emguarde || profile.purchase_links.emguarde_original}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 rounded-xl bg-amber-500 hover:bg-amber-400 px-8 py-3.5 text-sm font-black text-slate-950 transition-colors shadow-lg shadow-amber-500/25 active:scale-95"
+                >
+                  <ShoppingCart className="h-4 w-4" />
+                  {locale === 'es'
+                    ? 'Comprar emGuarde'
+                    : locale === 'fr'
+                      ? 'Acheter emGuarde'
+                      : locale === 'pt'
+                        ? 'Comprar emGuarde'
+                        : 'Buy emGuarde Now'}
+                  <ExternalLink className="h-3.5 w-3.5" />
+                </a>
+              )}
               <Link
                 to={applyUrl}
                 className="inline-flex items-center gap-2 rounded-xl bg-violet-500 hover:bg-violet-400 px-8 py-3.5 text-sm font-black text-slate-950 transition-colors shadow-lg shadow-violet-500/25"

@@ -11,6 +11,7 @@ import {
   MessageCircle,
   PlayCircle,
   Send,
+  ShoppingCart,
   Sparkles,
   Zap,
 } from 'lucide-react'
@@ -1091,6 +1092,24 @@ export function KangenLandingPage({ profile: propProfile, distributorSlug }: Kan
               {copy.readyBodyPrefix} <strong>{distributorName}</strong> {copy.readyBodySuffix}
             </p>
             <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
+              {profile?.purchase_links?.k8 && (
+                <a
+                  href={profile.purchase_links.k8}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 rounded-xl bg-amber-500 hover:bg-amber-400 px-8 py-3.5 text-sm font-black text-slate-950 transition-colors shadow-lg shadow-amber-500/25 active:scale-95"
+                >
+                  <ShoppingCart className="h-4 w-4" />
+                  {locale === 'es'
+                    ? 'Comprar Leveluk K8'
+                    : locale === 'fr'
+                      ? 'Acheter Leveluk K8'
+                      : locale === 'pt'
+                        ? 'Comprar Leveluk K8'
+                        : 'Buy Leveluk K8 Now'}
+                  <ExternalLink className="h-3.5 w-3.5" />
+                </a>
+              )}
               <Link
                 to={applyUrl}
                 className="inline-flex items-center gap-2 rounded-xl bg-cyan-500 hover:bg-cyan-400 px-8 py-3.5 text-sm font-black text-slate-950 transition-colors shadow-lg shadow-cyan-500/25"

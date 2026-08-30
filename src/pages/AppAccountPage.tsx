@@ -9,6 +9,7 @@ import {
   updateDistributorProfile,
   setCustomLeaderAvatar,
   setCustomApplicationSettings,
+  setCustomPurchaseLinks,
   convertToPermanentDataUrl,
 } from '@/lib/crm'
 import type {
@@ -17,6 +18,12 @@ import type {
   DistributorCustomApplicationSettings,
   DistributorProfileUpdate,
 } from '@/lib/crm'
+import {
+  PURCHASE_LINK_CONFIG,
+  STANDARD_PURCHASE_PRODUCTS,
+  OTHER_PURCHASE_PRODUCTS,
+  isValidPurchaseUrl,
+} from '@/config/productPurchaseLinks'
 import type { Session } from '@supabase/supabase-js'
 import {
   Check,
@@ -36,6 +43,7 @@ import {
   Save,
   Settings2,
   ShieldCheck,
+  ShoppingCart,
   Sliders,
   Sparkles,
   UserRound,
@@ -80,7 +88,12 @@ export default function AppAccountPage() {
   const [isPortraitStudioOpen, setIsPortraitStudioOpen] = useState(false)
   const [isProfileInfoOpen, setIsProfileInfoOpen] = useState(false)
   const [isFormCustomizerOpen, setIsFormCustomizerOpen] = useState(false)
+  const [isPurchaseLinksOpen, setIsPurchaseLinksOpen] = useState(false)
   const [isSecurityOpen, setIsSecurityOpen] = useState(false)
+
+  // Direct Purchase Links state
+  const [purchaseLinks, setPurchaseLinks] = useState<Record<string, string>>({})
+  const [purchaseLinkErrors, setPurchaseLinkErrors] = useState<Record<string, string>>({})
 
   // Password update state
   const [newPassword, setNewPassword] = useState('')
@@ -184,7 +197,7 @@ export default function AppAccountPage() {
     return distributors[0] || null
   }, [distributors, selectedId, session, membership])
 
-  // Sync application customization state when distributor changes
+  // Sync application customization state & purchase links when distributor changes
   useEffect(() => {
     if (distributor) {
       const settings = distributor.application_settings || {}
@@ -195,6 +208,8 @@ export default function AppAccountPage() {
       setCustomBadge(settings.customBadge || '')
       setCustomNote(settings.customNote || '')
       setSelectedDefaultInterests(settings.defaultInterests || ['duo'])
+      setPurchaseLinks(distributor.purchase_links || {})
+      setPurchaseLinkErrors({})
     }
   }, [distributor])
 
@@ -219,12 +234,32 @@ export default function AppAccountPage() {
       customNote.trim()
   )
 
-  const allOpen = isPortraitStudioOpen && isProfileInfoOpen && isFormCustomizerOpen && isSecurityOpen
+  const handlePurchaseLinkChange = (productId: string, val: string) => {
+    setPurchaseLinks((prev) => ({
+      ...prev,
+      [productId]: val,
+    }))
+    if (val.trim() && !isValidPurchaseUrl(val)) {
+      setPurchaseLinkErrors((prev) => ({
+        ...prev,
+        [productId]: 'Please enter a valid URL starting with http:// or https://',
+      }))
+    } else {
+      setPurchaseLinkErrors((prev) => {
+        const next = { ...prev }
+        delete next[productId]
+        return next
+      })
+    }
+  }
+
+  const allOpen = isPortraitStudioOpen && isProfileInfoOpen && isFormCustomizerOpen && isPurchaseLinksOpen && isSecurityOpen
   const toggleAllSections = () => {
     const nextState = !allOpen
     setIsPortraitStudioOpen(nextState)
     setIsProfileInfoOpen(nextState)
     setIsFormCustomizerOpen(nextState)
+    setIsPurchaseLinksOpen(nextState)
     setIsSecurityOpen(nextState)
   }
 
@@ -301,6 +336,23 @@ export default function AppAccountPage() {
         ? data.get('acceptingLeads') === 'on'
         : distributor.accepting_leads
 
+      // Validate purchase links before proceeding
+      const invalidEntries = Object.entries(purchaseLinks).filter(([_, url]) => url && url.trim() && !isValidPurchaseUrl(url))
+      if (invalidEntries.length > 0) {
+        setError('Please enter valid URLs (starting with http:// or https://) for your product purchase links.')
+        setIsPurchaseLinksOpen(true)
+        setSaving(false)
+        return
+      }
+
+      // Clean purchase links (filter empty strings)
+      const cleanPurchaseLinks: Record<string, string> = {}
+      for (const [key, val] of Object.entries(purchaseLinks)) {
+        if (val && val.trim()) {
+          cleanPurchaseLinks[key] = val.trim()
+        }
+      }
+
       const payload: DistributorProfileUpdate = {
         displayName,
         title,
@@ -312,6 +364,11 @@ export default function AppAccountPage() {
         languages,
         acceptingLeads,
         applicationSettings,
+        purchaseLinks: cleanPurchaseLinks,
+      }
+
+      if (distributor.slug) {
+        setCustomPurchaseLinks(distributor.slug, cleanPurchaseLinks)
       }
 
       if (permanentAvatar && distributor.slug) {
@@ -924,6 +981,152 @@ export default function AppAccountPage() {
                             {customSubmitButtonText.trim() || 'Send my request'}
                           </button>
                         </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* CARD 4: Collapsible Direct Purchase Links Form */}
+              <div className="rounded-[28px] border border-amber-500/30 bg-black/40 backdrop-blur-xl shadow-xl overflow-hidden transition-all">
+                <button
+                  type="button"
+                  onClick={() => setIsPurchaseLinksOpen(!isPurchaseLinksOpen)}
+                  className="w-full p-5 sm:p-6 flex items-center justify-between text-left hover:bg-white/[0.02] transition-colors"
+                >
+                  <div className="flex items-center gap-3.5 min-w-0 pr-2">
+                    <span className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-amber-400/15 text-amber-300 border border-amber-400/30">
+                      <ShoppingCart className="h-5 w-5" />
+                    </span>
+                    <div className="min-w-0">
+                      <div className="flex items-center gap-2">
+                        <span className="rounded-full border border-amber-400/40 bg-amber-400/10 px-2 py-0.5 text-[10px] font-black uppercase tracking-wider text-amber-300 shrink-0">
+                          E-Commerce & Orders
+                        </span>
+                      </div>
+                      <h2 className="text-lg sm:text-xl font-black text-white mt-0.5 truncate">
+                        Direct Purchase Links
+                      </h2>
+                      <p className="text-xs text-[#868c98] truncate">
+                        Configure direct-purchase checkout URLs to display "Buy Now" buttons on your landing pages
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-2 shrink-0">
+                    <span className="hidden sm:inline text-xs font-bold text-amber-300">
+                      {isPurchaseLinksOpen ? 'Collapse' : 'Manage Links'}
+                    </span>
+                    <span
+                      className={`grid h-8 w-8 place-items-center rounded-xl border border-white/10 bg-white/5 text-[#86868b] transition-transform duration-200 ${
+                        isPurchaseLinksOpen ? 'rotate-180 text-white' : ''
+                      }`}
+                    >
+                      <ChevronDown className="h-4 w-4" />
+                    </span>
+                  </div>
+                </button>
+
+                {isPurchaseLinksOpen && (
+                  <div className="px-5 pb-6 sm:px-7 sm:pb-7 pt-4 border-t border-white/10 space-y-6 animate-in fade-in-50 duration-200">
+                    {/* Guidance / Info Box */}
+                    <div className="rounded-2xl border border-amber-400/20 bg-amber-400/[0.05] p-4 text-xs text-[#cccccc] leading-relaxed">
+                      <p className="font-bold text-amber-300 text-sm mb-1 flex items-center gap-1.5">
+                        <ShoppingCart className="h-4 w-4" /> How Direct Purchase Links Work
+                      </p>
+                      <p>
+                        Add your personal Enagic or distributor checkout URL for each product below. When a valid link is saved, a high-converting <strong>Buy Now</strong> button will automatically appear on that product card across your personal landing pages and full product showcase. If left empty, only standard lead consultation & WhatsApp inquiries will display.
+                      </p>
+                    </div>
+
+                    {/* Standard Promoted Products (Top) */}
+                    <div className="space-y-4">
+                      <div className="flex items-center gap-2 border-b border-white/10 pb-2">
+                        <Sparkles className="h-4 w-4 text-cyan-400" />
+                        <h3 className="text-sm font-black uppercase tracking-wider text-white">Standard Flagship Products</h3>
+                      </div>
+
+                      <div className="grid gap-4 sm:grid-cols-2">
+                        {STANDARD_PURCHASE_PRODUCTS.map((prod) => {
+                          const val = purchaseLinks[prod.id] || ''
+                          const err = purchaseLinkErrors[prod.id]
+                          return (
+                            <div key={prod.id} className="space-y-1.5 rounded-2xl border border-white/10 bg-white/[0.02] p-4">
+                              <div className="flex items-center justify-between">
+                                <label className="text-xs font-bold text-white flex items-center gap-1.5">
+                                  <span>{prod.name}</span>
+                                  <span className="text-[10px] font-normal text-cyan-400 uppercase tracking-wider">Purchase Link</span>
+                                </label>
+                                {val.trim() && !err && (
+                                  <a
+                                    href={val}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="inline-flex items-center gap-1 text-[11px] font-semibold text-cyan-400 hover:text-cyan-300 transition-colors"
+                                  >
+                                    Test Link <ExternalLink className="h-3 w-3" />
+                                  </a>
+                                )}
+                              </div>
+                              <p className="text-[11px] text-[#86868b] leading-tight">{prod.subtitle}</p>
+                              <input
+                                type="url"
+                                value={val}
+                                onChange={(e) => handlePurchaseLinkChange(prod.id, e.target.value)}
+                                placeholder={prod.placeholder}
+                                className={`account-input text-xs ${err ? '!border-rose-500/80 !bg-rose-500/[0.05]' : ''}`}
+                              />
+                              {err && <p className="text-[11px] text-rose-400 font-medium">{err}</p>}
+                            </div>
+                          )
+                        })}
+                      </div>
+                    </div>
+
+                    {/* Other Products Section (Below Standard Products) */}
+                    <div className="space-y-4 pt-2">
+                      <div className="flex items-center gap-2 border-b border-white/10 pb-2">
+                        <Layers className="h-4 w-4 text-amber-400" />
+                        <h3 className="text-sm font-black uppercase tracking-wider text-white">Other Products & Catalog Lineup</h3>
+                      </div>
+                      <p className="text-xs text-[#86868b]">
+                        Configure direct purchase links for additional Enagic water ionizers, shower spas, supplements, and specialty products.
+                      </p>
+
+                      <div className="grid gap-4 sm:grid-cols-2">
+                        {OTHER_PURCHASE_PRODUCTS.map((prod) => {
+                          const val = purchaseLinks[prod.id] || ''
+                          const err = purchaseLinkErrors[prod.id]
+                          return (
+                            <div key={prod.id} className="space-y-1.5 rounded-2xl border border-white/10 bg-white/[0.02] p-4">
+                              <div className="flex items-center justify-between">
+                                <label className="text-xs font-bold text-white flex items-center gap-1.5">
+                                  <span>{prod.name}</span>
+                                  <span className="text-[10px] font-normal text-amber-400 uppercase tracking-wider">Purchase Link</span>
+                                </label>
+                                {val.trim() && !err && (
+                                  <a
+                                    href={val}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="inline-flex items-center gap-1 text-[11px] font-semibold text-amber-400 hover:text-amber-300 transition-colors"
+                                  >
+                                    Test Link <ExternalLink className="h-3 w-3" />
+                                  </a>
+                                )}
+                              </div>
+                              <p className="text-[11px] text-[#86868b] leading-tight">{prod.subtitle}</p>
+                              <input
+                                type="url"
+                                value={val}
+                                onChange={(e) => handlePurchaseLinkChange(prod.id, e.target.value)}
+                                placeholder={prod.placeholder}
+                                className={`account-input text-xs ${err ? '!border-rose-500/80 !bg-rose-500/[0.05]' : ''}`}
+                              />
+                              {err && <p className="text-[11px] text-rose-400 font-medium">{err}</p>}
+                            </div>
+                          )
+                        })}
                       </div>
                     </div>
                   </div>

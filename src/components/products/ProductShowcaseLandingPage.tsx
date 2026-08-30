@@ -17,6 +17,9 @@ import {
   MessageCircle,
   Radio,
   Send,
+  Shield,
+  ShieldCheck,
+  ShoppingCart,
   Sliders,
   Sparkles,
   Star,
@@ -146,6 +149,9 @@ export function ProductShowcaseLandingPage({
       learnMore: 'Learn More',
       downloadPdf: 'Download PDF',
       inquireWhatsApp: 'Inquire on WhatsApp',
+      buyNow: 'Buy Now',
+      buyK8Now: 'Buy Leveluk K8 Now',
+      buyEmguardeNow: 'Buy emGuarde Now',
       plates: 'Plates',
       warranty: 'Warranty',
       phRange: 'pH Range',
@@ -193,6 +199,9 @@ export function ProductShowcaseLandingPage({
       learnMore: 'Conocer Más',
       downloadPdf: 'Descargar PDF',
       inquireWhatsApp: 'Consultar por WhatsApp',
+      buyNow: 'Comprar Ahora',
+      buyK8Now: 'Comprar Leveluk K8',
+      buyEmguardeNow: 'Comprar emGuarde',
       plates: 'Placas',
       warranty: 'Garantía',
       phRange: 'Rango de pH',
@@ -240,6 +249,9 @@ export function ProductShowcaseLandingPage({
       learnMore: 'En Savoir Plus',
       downloadPdf: 'Télécharger PDF',
       inquireWhatsApp: 'Échanger sur WhatsApp',
+      buyNow: 'Acheter',
+      buyK8Now: 'Acheter Leveluk K8',
+      buyEmguardeNow: 'Acheter emGuarde',
       plates: 'Plaques',
       warranty: 'Garantie',
       phRange: 'Plage pH',
@@ -287,6 +299,9 @@ export function ProductShowcaseLandingPage({
       learnMore: 'Saber Mais',
       downloadPdf: 'Baixar PDF',
       inquireWhatsApp: 'Conversar no WhatsApp',
+      buyNow: 'Comprar Agora',
+      buyK8Now: 'Comprar Leveluk K8',
+      buyEmguardeNow: 'Comprar emGuarde',
       plates: 'Placas',
       warranty: 'Garantia',
       phRange: 'Faixa de pH',
@@ -883,6 +898,30 @@ export function ProductShowcaseLandingPage({
                       <Sparkles className="h-4 w-4" />
                       {copy.tier1Cta}
                     </Link>
+                    {profile?.purchase_links?.k8 && (
+                      <a
+                        href={profile.purchase_links.k8}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-amber-500 hover:bg-amber-400 px-6 py-3 text-sm font-bold text-slate-950 transition-all shadow-lg shadow-amber-500/20 hover:scale-105 active:scale-95"
+                      >
+                        <ShoppingCart className="h-4 w-4" />
+                        {copy.buyK8Now}
+                        <ExternalLink className="h-3.5 w-3.5" />
+                      </a>
+                    )}
+                    {profile?.purchase_links?.emguarde && (
+                      <a
+                        href={profile.purchase_links.emguarde}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-amber-500 hover:bg-amber-400 px-6 py-3 text-sm font-bold text-slate-950 transition-all shadow-lg shadow-amber-500/20 hover:scale-105 active:scale-95"
+                      >
+                        <ShoppingCart className="h-4 w-4" />
+                        {copy.buyEmguardeNow}
+                        <ExternalLink className="h-3.5 w-3.5" />
+                      </a>
+                    )}
                     <a
                       href={defaultWhatsAppUrl}
                       target="_blank"
@@ -1015,15 +1054,28 @@ export function ProductShowcaseLandingPage({
                       )}
                     </div>
 
-                    <a
-                      href={prod.whatsappMsg}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 px-4 py-2.5 text-xs font-bold text-slate-950 transition-colors shadow-md shadow-emerald-500/20"
-                    >
-                      <MessageCircle className="h-3.5 w-3.5" />
-                      {copy.inquireWhatsApp}
-                    </a>
+                    <div className="flex items-center gap-2">
+                      {profile?.purchase_links?.[prod.id] && (
+                        <a
+                          href={profile.purchase_links[prod.id]}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-1.5 rounded-xl bg-amber-500 hover:bg-amber-400 px-4 py-2.5 text-xs font-bold text-slate-950 transition-colors shadow-md shadow-amber-500/20 active:scale-95"
+                        >
+                          <ShoppingCart className="h-3.5 w-3.5" />
+                          {copy.buyNow}
+                        </a>
+                      )}
+                      <a
+                        href={prod.whatsappMsg}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 px-4 py-2.5 text-xs font-bold text-slate-950 transition-colors shadow-md shadow-emerald-500/20"
+                      >
+                        <MessageCircle className="h-3.5 w-3.5" />
+                        {copy.inquireWhatsApp}
+                      </a>
+                    </div>
                   </div>
                 </div>
               ))}
@@ -1079,15 +1131,28 @@ export function ProductShowcaseLandingPage({
                         <FileText className="h-3.5 w-3.5 text-cyan-400" /> PDF Guide
                       </a>
                     )}
-                    <a
-                      href={`https://wa.me/${whatsappPhone}?text=${encodeURIComponent(getWhatsAppMessage(prod.name))}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 px-3.5 py-2 text-xs font-bold text-slate-950 transition-colors shadow-sm shadow-emerald-500/20"
-                    >
-                      <MessageCircle className="h-3.5 w-3.5" />
-                      Inquire
-                    </a>
+                    <div className="flex items-center gap-2">
+                      {profile?.purchase_links?.[prod.id] && (
+                        <a
+                          href={profile.purchase_links[prod.id]}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-1 rounded-xl bg-amber-500 hover:bg-amber-400 px-3 py-1.5 text-xs font-bold text-slate-950 transition-colors shadow-sm shadow-amber-500/20 active:scale-95"
+                        >
+                          <ShoppingCart className="h-3 w-3" />
+                          {copy.buyNow}
+                        </a>
+                      )}
+                      <a
+                        href={`https://wa.me/${whatsappPhone}?text=${encodeURIComponent(getWhatsAppMessage(prod.name))}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 px-3.5 py-2 text-xs font-bold text-slate-950 transition-colors shadow-sm shadow-emerald-500/20"
+                      >
+                        <MessageCircle className="h-3.5 w-3.5" />
+                        Inquire
+                      </a>
+                    </div>
                   </div>
                 </div>
               ))}

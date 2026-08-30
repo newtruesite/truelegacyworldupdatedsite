@@ -28,6 +28,7 @@ export type PublicDistributor = {
   instagram_url?: string | null
   website_url?: string | null
   custom_links?: { label: string; url: string }[]
+  purchase_links?: Record<string, string>
   last_access_email_sent_at?: string | null
   auth_user_id?: string | null
   application_settings?: DistributorCustomApplicationSettings | null
@@ -52,6 +53,7 @@ export type DistributorProfileUpdate = {
   languages: string[]
   acceptingLeads: boolean
   applicationSettings?: DistributorCustomApplicationSettings | null
+  purchaseLinks?: Record<string, string>
 }
 
 export type CrmMembership = {
@@ -63,6 +65,32 @@ export type CrmMembership = {
 
 const AVATAR_STORAGE_KEY = 'true_legacy_custom_avatars'
 const APP_SETTINGS_STORAGE_KEY = 'true_legacy_custom_app_settings'
+const PURCHASE_LINKS_STORAGE_KEY = 'true_legacy_custom_purchase_links'
+
+export function getCustomPurchaseLinksMap(): Record<string, Record<string, string>> {
+  if (typeof window === 'undefined') return {}
+  try {
+    const raw = localStorage.getItem(PURCHASE_LINKS_STORAGE_KEY)
+    return raw ? JSON.parse(raw) : {}
+  } catch {
+    return {}
+  }
+}
+
+export function getCustomPurchaseLinks(slug: string): Record<string, string> {
+  const map = getCustomPurchaseLinksMap()
+  return map[slug] || {}
+}
+
+export function setCustomPurchaseLinks(slug: string, links: Record<string, string>): void {
+  if (typeof window === 'undefined' || !slug) return
+  try {
+    const map = getCustomPurchaseLinksMap()
+    map[slug] = links
+    localStorage.setItem(PURCHASE_LINKS_STORAGE_KEY, JSON.stringify(map))
+    window.dispatchEvent(new CustomEvent('truelegacy:purchase-links-updated', { detail: { slug, links } }))
+  } catch {}
+}
 
 export function getCustomApplicationSettingsMap(): Record<string, DistributorCustomApplicationSettings> {
   if (typeof window === 'undefined') return {}
@@ -412,11 +440,14 @@ const FALLBACK_DISTRIBUTORS: PublicDistributor[] = [
 export async function getPublicDistributors(): Promise<PublicDistributor[]> {
   const customAvatars = getCustomLeaderAvatars()
   const customAppSettings = getCustomApplicationSettingsMap()
+  const customPurchaseLinks = getCustomPurchaseLinksMap()
+
   const applyCustomizations = (list: PublicDistributor[]): PublicDistributor[] => {
     return list.map((item) => ({
       ...item,
       avatar_url: customAvatars[item.slug] || item.avatar_url || `/leaders/standardized/${item.slug}.png`,
       application_settings: customAppSettings[item.slug] || item.application_settings || null,
+      purchase_links: customPurchaseLinks[item.slug] || item.purchase_links || {},
     }))
   }
 
@@ -431,6 +462,7 @@ export async function getPublicDistributors(): Promise<PublicDistributor[]> {
         ...base,
         avatar_url: customAvatars[profile.slug] || profile.avatar_url || base.avatar_url || `/leaders/standardized/${profile.slug}.png`,
         application_settings: customAppSettings[profile.slug] || profile.application_settings || base.application_settings || null,
+        purchase_links: customPurchaseLinks[profile.slug] || profile.purchase_links || base.purchase_links || {},
       }
     })
     const remoteSlugs = new Set(remoteDistributors.map((profile) => profile.slug))
@@ -473,6 +505,7 @@ export async function getCrmLeads(): Promise<CrmLead[]> {
 export async function getCrmDistributors(): Promise<CrmDistributor[]> {
   const customAvatars = getCustomLeaderAvatars()
   const customAppSettings = getCustomApplicationSettingsMap()
+  const customPurchaseLinks = getCustomPurchaseLinksMap()
   if (!crmSupabase) {
     return FALLBACK_DISTRIBUTORS.map((d) => ({
       ...d,
@@ -481,6 +514,7 @@ export async function getCrmDistributors(): Promise<CrmDistributor[]> {
       login_email: null,
       avatar_url: customAvatars[d.slug] || d.avatar_url || `/leaders/standardized/${d.slug}.png`,
       application_settings: customAppSettings[d.slug] || d.application_settings || null,
+      purchase_links: customPurchaseLinks[d.slug] || d.purchase_links || {},
     }))
   }
   try {
@@ -490,6 +524,7 @@ export async function getCrmDistributors(): Promise<CrmDistributor[]> {
       ...d,
       avatar_url: customAvatars[d.slug] || d.avatar_url || `/leaders/standardized/${d.slug}.png`,
       application_settings: customAppSettings[d.slug] || d.application_settings || null,
+      purchase_links: customPurchaseLinks[d.slug] || d.purchase_links || {},
     }))
   } catch {
     return FALLBACK_DISTRIBUTORS.map((d) => ({
@@ -499,6 +534,7 @@ export async function getCrmDistributors(): Promise<CrmDistributor[]> {
       login_email: null,
       avatar_url: customAvatars[d.slug] || d.avatar_url || `/leaders/standardized/${d.slug}.png`,
       application_settings: customAppSettings[d.slug] || d.application_settings || null,
+      purchase_links: customPurchaseLinks[d.slug] || d.purchase_links || {},
     }))
   }
 }

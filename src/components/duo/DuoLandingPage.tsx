@@ -25,6 +25,7 @@ import {
   Headphones,
   Check,
   Send,
+  ShoppingCart,
   UserCheck,
   Share2
 } from 'lucide-react'
@@ -1399,7 +1400,25 @@ export function DuoLandingPage({ profile: initialProfile, distributorSlug }: Duo
               <p className="mt-5 text-base sm:text-lg text-[#cccccc] leading-relaxed">
                 {t.k8SectionBody}
               </p>
-              <div className="mt-7">
+              <div className="mt-7 flex flex-wrap items-center gap-3">
+                {profile?.purchase_links?.k8 && (
+                  <a
+                    href={profile.purchase_links.k8}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 rounded-xl bg-amber-500 hover:bg-amber-400 px-6 py-3.5 text-sm font-black text-slate-950 transition-colors shadow-lg shadow-amber-500/20 active:scale-95"
+                  >
+                    <ShoppingCart className="h-4 w-4" />
+                    {locale === 'es'
+                      ? 'Comprar Leveluk K8'
+                      : locale === 'fr'
+                        ? 'Acheter Leveluk K8'
+                        : locale === 'pt'
+                          ? 'Comprar Leveluk K8'
+                          : 'Buy Leveluk K8 Now'}
+                    <ExternalLink className="h-3.5 w-3.5" />
+                  </a>
+                )}
                 <a
                   href={k8WhatsAppUrl}
                   target="_blank"
@@ -1485,7 +1504,25 @@ export function DuoLandingPage({ profile: initialProfile, distributorSlug }: Duo
               <p className="mt-5 text-base sm:text-lg text-[#cccccc] leading-relaxed">
                 {t.emguardeSectionBody}
               </p>
-              <div className="mt-7">
+              <div className="mt-7 flex flex-wrap items-center gap-3">
+                {(profile?.purchase_links?.emguarde || profile?.purchase_links?.emguarde_original) && (
+                  <a
+                    href={profile.purchase_links.emguarde || profile.purchase_links.emguarde_original}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 rounded-xl bg-amber-500 hover:bg-amber-400 px-6 py-3.5 text-sm font-black text-slate-950 transition-colors shadow-lg shadow-amber-500/20 active:scale-95"
+                  >
+                    <ShoppingCart className="h-4 w-4" />
+                    {locale === 'es'
+                      ? 'Comprar emGuarde'
+                      : locale === 'fr'
+                        ? 'Acheter emGuarde'
+                        : locale === 'pt'
+                          ? 'Comprar emGuarde'
+                          : 'Buy emGuarde Now'}
+                    <ExternalLink className="h-3.5 w-3.5" />
+                  </a>
+                )}
                 <a
                   href={emguardeWhatsAppUrl}
                   target="_blank"
