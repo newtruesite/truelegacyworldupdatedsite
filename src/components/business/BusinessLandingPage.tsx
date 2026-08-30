@@ -2,6 +2,7 @@ import { useState, useEffect, useMemo, useRef } from 'react'
 import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
+  ArrowLeft,
   Globe,
   Globe2,
   PlayCircle,
@@ -1116,9 +1117,20 @@ export function BusinessLandingPage({ profile: initialProfile, distributorSlug }
       {/* ========================================================================= */}
       <header className="sticky top-0 z-50 w-full border-b border-white/[0.08] bg-[#030611]/90 backdrop-blur-xl transition-all duration-300">
         <div className="mx-auto flex h-16 w-full max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
-          <Link to="/" className="flex items-center gap-3 group">
-            <TrueLegacyLogo variant="nav" />
-          </Link>
+          <div className="flex items-center gap-3 sm:gap-4">
+            <Link
+              to={`/d/${encodeURIComponent(distributorSlugActive)}`}
+              className="inline-flex items-center gap-1.5 rounded-xl border border-white/15 bg-white/5 hover:bg-white/10 px-3 py-1.5 text-xs font-bold text-white transition-all shadow-sm active:scale-95"
+              title="Return to Leader Hub"
+            >
+              <ArrowLeft className="h-4 w-4 text-amber-400" />
+              <span className="hidden xs:inline">Back to Profile</span>
+              <span className="xs:hidden">Back</span>
+            </Link>
+            <Link to="/" className="flex items-center gap-3 group">
+              <TrueLegacyLogo variant="nav" />
+            </Link>
+          </div>
 
           <div className="flex items-center gap-3 sm:gap-4">
             <div className="flex items-center rounded-lg border border-white/10 bg-white/[0.04] p-0.5 text-xs font-semibold">

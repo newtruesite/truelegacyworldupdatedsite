@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
+  ArrowLeft,
   BriefcaseBusiness,
   ArrowRight,
   BookOpen,
@@ -402,6 +403,20 @@ export function AcademyLandingPage({
         image={leaderPhoto}
       />
       <Navbar />
+
+      {profile && (
+        <div className="fixed top-20 left-4 sm:left-8 z-[9200]">
+          <Link
+            to={`/d/${profile.slug}`}
+            className="inline-flex items-center gap-1.5 rounded-full border border-white/15 bg-[#05091a]/90 hover:bg-[#0d1d46] hover:border-cyan-400/50 px-3.5 py-1.5 text-xs font-bold text-slate-200 hover:text-white shadow-xl backdrop-blur-xl transition-all hover:scale-105 active:scale-95 cursor-pointer"
+            title="Return to Leader Hub"
+          >
+            <ArrowLeft className="w-4 h-4 text-cyan-400" />
+            <span className="hidden xs:inline">Back to Profile</span>
+            <span className="xs:hidden">Back</span>
+          </Link>
+        </div>
+      )}
 
       <main className="flex-1 overflow-hidden">
         {/* =========================================================================

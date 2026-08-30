@@ -2,6 +2,7 @@ import { useState, useEffect, useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import {
   Activity,
+  ArrowLeft,
   Award,
   Check,
   CheckCircle2,
@@ -207,12 +208,23 @@ export function KangenLandingPage({ profile: propProfile, distributorSlug }: Kan
       {/* Navigation Bar */}
       <header className="sticky top-0 z-50 border-b border-white/10 bg-black/85 backdrop-blur-xl">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3 sm:px-6">
-          <Link to="/" className="flex items-center gap-3">
-            <TrueLegacyLogo className="h-7 w-auto text-white" />
-            <span className="rounded-full border border-cyan-400/40 bg-cyan-400/10 px-2.5 py-0.5 text-[10px] font-black uppercase tracking-widest text-cyan-300">
-              KANGEN WATER®
-            </span>
-          </Link>
+          <div className="flex items-center gap-3 sm:gap-4">
+            <Link
+              to={`/d/${effectiveSlug}`}
+              className="inline-flex items-center gap-1.5 rounded-xl border border-white/15 bg-white/5 hover:bg-white/10 px-3 py-1.5 text-xs font-bold text-white transition-all shadow-sm active:scale-95"
+              title="Return to Leader Hub"
+            >
+              <ArrowLeft className="h-4 w-4 text-cyan-400" />
+              <span className="hidden xs:inline">Back to Profile</span>
+              <span className="xs:hidden">Back</span>
+            </Link>
+            <Link to="/" className="flex items-center gap-3">
+              <TrueLegacyLogo className="h-7 w-auto text-white" />
+              <span className="rounded-full border border-cyan-400/40 bg-cyan-400/10 px-2.5 py-0.5 text-[10px] font-black uppercase tracking-widest text-cyan-300">
+                KANGEN WATER®
+              </span>
+            </Link>
+          </div>
 
           <div className="flex items-center gap-2 sm:gap-3">
             {whatsappUrl && (

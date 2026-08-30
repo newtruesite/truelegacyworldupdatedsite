@@ -1,4 +1,5 @@
 import {
+  ArrowLeft,
   BarChart3,
   BookOpen,
   CalendarCheck2,
@@ -11,7 +12,7 @@ import {
   Users,
 } from 'lucide-react'
 import { useEffect, useState } from 'react'
-import { NavLink, useLocation } from 'react-router-dom'
+import { NavLink, useLocation, useNavigate } from 'react-router-dom'
 import { crmSupabase, getCrmMembership } from '@/lib/crm'
 
 const ITEMS = [
@@ -29,6 +30,7 @@ const ITEMS = [
 
 export function AppNavigation() {
   const { pathname } = useLocation()
+  const navigate = useNavigate()
   const [isAdmin, setIsAdmin] = useState(false)
   const appRoute =
     pathname.startsWith('/app') ||
@@ -77,58 +79,78 @@ export function AppNavigation() {
 
   if (!appRoute) return null
 
-  if (isCollapsed) {
-    return (
-      <div className="fixed z-[9400] right-4 sm:right-8 bottom-[max(12px,env(safe-area-inset-bottom))]">
-        <button
-          type="button"
-          onClick={() => handleSetCollapsed(false)}
-          className="flex items-center gap-2 px-4 py-2.5 rounded-full border border-cyan-400/50 bg-[#05091a]/95 text-white shadow-2xl backdrop-blur-xl hover:border-cyan-400 hover:bg-[#0d1d46] transition-all hover:scale-105 active:scale-95 group cursor-pointer"
-          title="Expand app navigation"
-          aria-label="Expand app navigation"
-        >
-          <span className="flex h-2 w-2 relative">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75"></span>
-            <span className="relative inline-flex rounded-full h-2 w-2 bg-cyan-400"></span>
-          </span>
-          <span className="text-xs font-bold text-slate-200 group-hover:text-cyan-300">
-            Navigation
-          </span>
-          <ChevronUp className="w-3.5 h-3.5 text-cyan-400 group-hover:-translate-y-0.5 transition-transform" />
-        </button>
-      </div>
-    )
-  }
-
-  const visibleItems = ITEMS.filter(item => !item.adminOnly || isAdmin)
+  const isDeepAppRoute = appRoute && pathname !== '/app'
 
   return (
-    <nav className="tl-app-nav" aria-label="True Legacy app navigation">
-      {/* Sleek top-right collapse handle positioned cleanly at the outer right edge */}
-      <button
-        type="button"
-        onClick={() => handleSetCollapsed(true)}
-        className="absolute -top-3.5 right-1 sm:-right-2 z-20 flex items-center gap-1 px-2.5 py-0.5 rounded-full border border-white/20 bg-[#05091a] hover:bg-[#0d1d46] hover:border-cyan-400/60 text-[10px] font-bold text-slate-300 hover:text-cyan-300 transition-all shadow-lg cursor-pointer"
-        title="Collapse navigation"
-        aria-label="Collapse navigation"
-      >
-        <span>Hide</span>
-        <ChevronDown className="w-3 h-3" />
-      </button>
+    <>
+      {/* Universal App Back Button for sub-routes */}
+      {isDeepAppRoute && (
+        <div className="fixed top-3 sm:top-4 left-3 sm:left-4 z-[9200]">
+          <button
+            type="button"
+            onClick={() => {
+              if (window.history.length > 1) {
+                navigate(-1)
+              } else {
+                navigate('/app')
+              }
+            }}
+            className="inline-flex items-center gap-1.5 rounded-full border border-white/15 bg-[#05091a]/90 hover:bg-[#0d1d46] hover:border-cyan-400/50 px-3.5 py-1.5 text-xs font-bold text-slate-200 hover:text-white shadow-xl backdrop-blur-xl transition-all hover:scale-105 active:scale-95 cursor-pointer"
+            title="Go back"
+            aria-label="Go back"
+          >
+            <ArrowLeft className="w-4 h-4 text-cyan-400" />
+            <span>Back</span>
+          </button>
+        </div>
+      )}
 
-      {visibleItems.map(({ to, label, icon: Icon, exact }) => (
-        <NavLink
-          key={to}
-          to={to}
-          end={exact}
-          className={({ isActive }) => (isActive ? 'is-active' : '')}
-        >
-          <Icon aria-hidden="true" />
-          <span>{label}</span>
-        </NavLink>
-      ))}
-    </nav>
+      {isCollapsed ? (
+        <div className="fixed z-[9400] right-4 sm:right-8 bottom-[max(12px,env(safe-area-inset-bottom))]">
+          <button
+            type="button"
+            onClick={() => handleSetCollapsed(false)}
+            className="flex items-center gap-2 px-4 py-2.5 rounded-full border border-cyan-400/50 bg-[#05091a]/95 text-white shadow-2xl backdrop-blur-xl hover:border-cyan-400 hover:bg-[#0d1d46] transition-all hover:scale-105 active:scale-95 group cursor-pointer"
+            title="Expand app navigation"
+            aria-label="Expand app navigation"
+          >
+            <span className="flex h-2 w-2 relative">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-cyan-400"></span>
+            </span>
+            <span className="text-xs font-bold text-slate-200 group-hover:text-cyan-300">
+              Navigation
+            </span>
+            <ChevronUp className="w-3.5 h-3.5 text-cyan-400 group-hover:-translate-y-0.5 transition-transform" />
+          </button>
+        </div>
+      ) : (
+        <nav className="tl-app-nav" aria-label="True Legacy app navigation">
+          {/* Sleek top-right collapse handle positioned cleanly at the outer right edge */}
+          <button
+            type="button"
+            onClick={() => handleSetCollapsed(true)}
+            className="absolute -top-3.5 right-1 sm:-right-2 z-20 flex items-center gap-1 px-2.5 py-0.5 rounded-full border border-white/20 bg-[#05091a] hover:bg-[#0d1d46] hover:border-cyan-400/60 text-[10px] font-bold text-slate-300 hover:text-cyan-300 transition-all shadow-lg cursor-pointer"
+            title="Collapse navigation"
+            aria-label="Collapse navigation"
+          >
+            <span>Hide</span>
+            <ChevronDown className="w-3 h-3" />
+          </button>
+
+          {ITEMS.filter(item => !item.adminOnly || isAdmin).map(({ to, label, icon: Icon, exact }) => (
+            <NavLink
+              key={to}
+              to={to}
+              end={exact}
+              className={({ isActive }) => (isActive ? 'is-active' : '')}
+            >
+              <Icon aria-hidden="true" />
+              <span>{label}</span>
+            </NavLink>
+          ))}
+        </nav>
+      )}
+    </>
   )
 }
-
-
