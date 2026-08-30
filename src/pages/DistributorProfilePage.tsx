@@ -738,16 +738,16 @@ export default function DistributorProfilePage() {
 
                       {/* Card Type 1: Business Opportunity Presentation */}
                       {item.type === 'presentation' && (
-                        <div className="absolute inset-0 flex items-center justify-center p-4">
+                        <div className="absolute inset-0 flex items-center justify-center p-3">
                           <div className="relative h-full w-full overflow-hidden rounded-2xl border border-white/15 bg-black/60 shadow-inner flex items-center justify-center group-hover:scale-105 transition-transform duration-500">
                             <img
-                              src="/assets/event-masterclass.png"
-                              alt="True Legacy Business Opportunity Presentation"
-                              className="h-full w-full object-cover object-top opacity-80"
+                              src="/assets/business-opportunity-preview.jpg"
+                              alt="True Legacy Global Business Opportunity"
+                              className="h-full w-full object-cover object-center"
                             />
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
                             <div className="absolute inset-0 flex items-center justify-center">
-                              <span className="grid h-12 w-12 place-items-center rounded-full bg-cyan-400 text-slate-950 shadow-lg shadow-cyan-400/30 group-hover:scale-110 transition-transform">
+                              <span className="grid h-11 w-11 place-items-center rounded-full bg-cyan-400 text-slate-950 shadow-lg shadow-cyan-400/40 group-hover:scale-110 transition-transform">
                                 <ArrowRight className="h-5 w-5 fill-current" />
                               </span>
                             </div>
