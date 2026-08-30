@@ -112,7 +112,7 @@ const UTAR_CLINICAL_STUDIES = [
     metric: '50.7%',
     change: 'REDUCTION',
     title: 'Blood Cell Aggregation (Rouleaux Formation)',
-    subtitle: 'Figura 2.1 Pre-intervención vs Figura 2.2 Post-intervención',
+    subtitle: 'Figure 2.1 Pre-intervention vs Figure 2.2 Post-intervention',
     desc: 'Significant reduction in clustered red blood cells, promoting smoother circulation, improved microvascular blood flow, and optimal cellular oxygen delivery.',
     icon: HeartPulse,
     color: 'from-cyan-500/20 to-blue-500/5 border-cyan-500/30 text-cyan-300',
@@ -435,17 +435,17 @@ export function EmguardeLandingPage({ profile: propProfile, distributorSlug }: E
               <Microscope className="h-3.5 w-3.5" /> Universiti Tunku Abdul Rahman (UTAR)
             </div>
             <h2 className="text-2xl sm:text-4xl font-black text-white">
-              Investigación Clínica Liderada por la Universidad
+              University-Led Clinical Research
             </h2>
             <p className="mt-2 text-sm sm:text-base text-cyan-300 font-semibold">
-              Pruebas reales en humanos. Cambios biológicos medibles en solo 3 días.
+              Real human clinical trials. Measurable biological improvements in just 3 days.
             </p>
             <p className="mt-2 text-xs text-[#86868b] max-w-2xl mx-auto font-mono">
-              Síndrome de Hipersensibilidad Electromagnética (EHS): Eficacia del dispositivo portátil emGuarde en la protección de adultos.
+              Electromagnetic Hypersensitivity Syndrome (EHS): Efficacy of the portable emGuarde device in the protection of adults.
             </p>
           </div>
 
-          {/* 4 Clinical Result Cards from Image 2 */}
+          {/* 4 Clinical Result Cards */}
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {UTAR_CLINICAL_STUDIES.map((study, idx) => {
               const Icon = study.icon
@@ -472,7 +472,7 @@ export function EmguardeLandingPage({ profile: propProfile, distributorSlug }: E
                   </div>
 
                   <div className="mt-5 pt-3 border-t border-white/10 text-[10px] text-white/60">
-                    Estudio Clínico UTAR
+                    UTAR Clinical Study
                   </div>
                 </div>
               )
@@ -482,17 +482,17 @@ export function EmguardeLandingPage({ profile: propProfile, distributorSlug }: E
           {/* Microcirculation Live Blood Callout Banner */}
           <div className="mt-10 rounded-3xl border border-white/10 bg-black/60 p-6 sm:p-8 flex flex-col md:flex-row items-center justify-between gap-6">
             <div className="space-y-1 text-center md:text-left">
-              <span className="text-[10px] font-black uppercase tracking-widest text-cyan-400">Microcirculación & Oxigenación Celular</span>
-              <h4 className="text-lg font-black text-white">Favorece una circulación más fluida y el suministro de oxígeno</h4>
+              <span className="text-[10px] font-black uppercase tracking-widest text-cyan-400">Microcirculation & Cellular Oxygenation</span>
+              <h4 className="text-lg font-black text-white">Promotes Smoother Blood Flow & Oxygen Delivery</h4>
               <p className="text-xs text-[#cccccc] max-w-2xl">
-                Al reducir la agregación de glóbulos rojos (efecto Rouleaux), las células sanguíneas fluyen libremente, optimizando la oxigenación y reduciendo la carga de estrés oxidativo en todo el organismo.
+                By reducing red blood cell aggregation (Rouleaux effect), blood cells flow freely, optimizing cellular oxygenation and decreasing systemic oxidative stress.
               </p>
             </div>
             <Link
               to={applyUrl}
               className="inline-flex shrink-0 items-center gap-2 rounded-xl bg-cyan-500 hover:bg-cyan-400 px-5 py-2.5 text-xs font-black text-slate-950 transition-colors shadow-md"
             >
-              Consultar Disponibilidad <Send className="h-3.5 w-3.5" />
+              Check Availability <Send className="h-3.5 w-3.5" />
             </Link>
           </div>
         </section>
