@@ -744,20 +744,24 @@ export function KangenLandingPage({ profile: propProfile, distributorSlug }: Kan
 
           <div className="flex items-center gap-2 sm:gap-3">
             {/* 4-Language Toggle (EN, ES, FR, PT) */}
-            <div className="flex items-center rounded-lg border border-white/10 bg-white/[0.04] p-0.5 text-xs font-semibold">
+            <div className="flex items-center rounded-lg border border-white/10 bg-white/[0.04] p-0.5 text-xs font-semibold notranslate" translate="no">
               {(['en', 'es', 'fr', 'pt'] as const).map((lang) => (
                 <button
                   key={lang}
                   type="button"
-                  onClick={() => setLocale(lang)}
-                  className={`px-2 sm:px-2.5 py-1 rounded-md transition-all uppercase tracking-wider text-[11px] sm:text-xs ${
+                  onClick={() => {
+                    setLocale(lang)
+                    setSelectedVideoLang(lang)
+                  }}
+                  className={`px-2 sm:px-2.5 py-1 rounded-md transition-all uppercase tracking-wider text-[11px] sm:text-xs font-bold notranslate ${
                     locale === lang
                       ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-slate-950 font-black shadow-md'
                       : 'text-[#86868b] hover:text-white hover:bg-white/5'
                   }`}
                   title={`Switch to ${lang.toUpperCase()}`}
+                  translate="no"
                 >
-                  {lang}
+                  {lang === 'en' ? 'EN' : lang === 'es' ? 'ES' : lang === 'fr' ? 'FR' : 'PT'}
                 </button>
               ))}
             </div>
@@ -852,7 +856,7 @@ export function KangenLandingPage({ profile: propProfile, distributorSlug }: Kan
               </div>
 
               {/* Language Selector Buttons */}
-              <div className="flex flex-wrap items-center gap-1.5 rounded-xl border border-white/10 bg-black/60 p-1 shrink-0">
+              <div className="flex flex-wrap items-center gap-1.5 rounded-xl border border-white/10 bg-black/60 p-1 shrink-0 notranslate" translate="no">
                 {(['en', 'es', 'fr', 'pt'] as const).map((lang) => {
                   const label =
                     lang === 'en'
@@ -870,11 +874,12 @@ export function KangenLandingPage({ profile: propProfile, distributorSlug }: Kan
                         setSelectedVideoLang(lang)
                         setLocale(lang)
                       }}
-                      className={`flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-bold transition-all ${
-                        selectedVideoLang === lang
+                      className={`flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-bold transition-all notranslate ${
+                        locale === lang
                           ? 'bg-cyan-500 text-slate-950 font-black shadow-md'
                           : 'text-[#86868b] hover:text-white'
                       }`}
+                      translate="no"
                     >
                       <Globe2 className="h-3.5 w-3.5" /> {label}
                     </button>

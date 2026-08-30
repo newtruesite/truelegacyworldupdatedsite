@@ -339,19 +339,20 @@ export function Navbar() {
 
             <div className="flex items-center gap-2">
               {/* Language Toggle - Desktop Only */}
-              <div className="hidden md:flex items-center gap-0.5">
+              <div className="hidden md:flex items-center gap-0.5 notranslate" translate="no">
                 {(["en", "es", "fr", "pt"] as const).map((loc) => (
                   <button
                     key={loc}
                     onClick={() => setLocaleOverride(loc)}
                     className={cn(
-                      "px-2 py-1 text-xs font-medium rounded transition-colors",
+                      "px-2 py-1 text-xs font-bold rounded transition-colors notranslate",
                       locale === loc
                         ? "text-white bg-white/10"
                         : "text-[#cccccc] hover:text-white hover:bg-white/5",
                     )}
+                    translate="no"
                   >
-                    {loc.toUpperCase()}
+                    {loc === "en" ? "EN" : loc === "es" ? "ES" : loc === "fr" ? "FR" : "PT"}
                   </button>
                 ))}
               </div>
@@ -411,7 +412,7 @@ export function Navbar() {
       <MobileMenu open={menuOpen} onClose={() => setMenuOpen(false)}>
         <div className="flex w-full flex-col gap-y-4">
           {/* Language Selection */}
-          <div className="space-y-2">
+          <div className="space-y-2 notranslate" translate="no">
             <span className="px-2 text-xs font-semibold uppercase tracking-wider text-[#86868b]">
               {t[locale].nav_language}
             </span>
@@ -421,11 +422,12 @@ export function Navbar() {
                   key={loc}
                   onClick={() => setLocaleOverride(loc)}
                   className={cn(
-                    "flex-1 min-h-[44px] flex items-center justify-center px-4 py-2 rounded-xl transition-colors font-medium text-sm",
+                    "flex-1 min-h-[44px] flex items-center justify-center px-4 py-2 rounded-xl transition-colors font-medium text-sm notranslate",
                     locale === loc
-                      ? "text-white bg-white/10"
+                      ? "text-white bg-white/10 font-bold"
                       : "text-[#cccccc] hover:text-white hover:bg-white/5",
                   )}
+                  translate="no"
                 >
                   {loc === "en"
                     ? "English"

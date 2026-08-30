@@ -150,7 +150,7 @@ export default function DistributorProfilePage() {
   const activeBio = localizedProfile?.bio || profile?.bio || ''
   const shortPositioning = getShortPositioning(activeBio)
 
-  const ui = {
+  const uiDict = {
     en: {
       invitationBadge: `Personal True Legacy invitation from ${firstName}`,
       verifiedLeader: 'Verified Leader',
@@ -375,23 +375,36 @@ export default function DistributorProfilePage() {
         },
       ],
     },
-  }[locale]
+  }
+  const ui = uiDict[locale as keyof typeof uiDict] || uiDict.en
 
   const languageNames: Record<string, string> = {
-    en: 'English',
-    zh: 'Mandarin',
-    yue: 'Cantonese',
-    ms: 'Malay',
-    es: 'Spanish',
-    fr: 'French',
-    pt: 'Portuguese',
-    ar: 'Arabic',
-    ru: 'Russian',
+    en: locale === 'es' ? 'Inglés' : locale === 'fr' ? 'Anglais' : locale === 'pt' ? 'Inglês' : 'English',
+    es: locale === 'es' ? 'Español' : locale === 'fr' ? 'Espagnol' : locale === 'pt' ? 'Espanhol' : 'Spanish',
+    fr: locale === 'es' ? 'Francés' : locale === 'fr' ? 'Français' : locale === 'pt' ? 'Francês' : 'French',
+    pt: locale === 'es' ? 'Portugués' : locale === 'fr' ? 'Portugais' : locale === 'pt' ? 'Português' : 'Portuguese',
+    zh: locale === 'es' ? 'Mandarín' : locale === 'fr' ? 'Mandarin' : locale === 'pt' ? 'Mandarim' : 'Mandarin',
+    yue: locale === 'es' ? 'Cantonés' : locale === 'fr' ? 'Cantonais' : locale === 'pt' ? 'Cantonês' : 'Cantonese',
+    ms: locale === 'es' ? 'Malayo' : locale === 'fr' ? 'Malais' : locale === 'pt' ? 'Malaio' : 'Malay',
+    ar: locale === 'es' ? 'Árabe' : locale === 'fr' ? 'Arabe' : locale === 'pt' ? 'Árabe' : 'Arabic',
+    ru: locale === 'es' ? 'Ruso' : locale === 'fr' ? 'Russe' : locale === 'pt' ? 'Russo' : 'Russian',
   }
 
   const whatsappPhone = profile?.phone ? profile.phone.replace(/\D/g, '') : null
+  const getWhatsAppMessage = () => {
+    switch (locale) {
+      case 'es':
+        return `Hola ${firstName}, visité tu perfil de True Legacy y me gustaría obtener más información.`
+      case 'fr':
+        return `Bonjour ${firstName}, j'ai visité votre profil True Legacy et j'aimerais en savoir plus.`
+      case 'pt':
+        return `Olá ${firstName}, visitei seu perfil da True Legacy e gostaria de saber mais.`
+      default:
+        return `Hi ${firstName}, I visited your True Legacy profile and would like to learn more.`
+    }
+  }
   const whatsappUrl = whatsappPhone
-    ? `https://wa.me/${whatsappPhone}?text=${encodeURIComponent(`Hi ${firstName}, I visited your True Legacy profile and would like to learn more.`)}`
+    ? `https://wa.me/${whatsappPhone}?text=${encodeURIComponent(getWhatsAppMessage())}`
     : null
   const applyUrl = `/apply?ref=${profile?.referral_code || slug}`
 

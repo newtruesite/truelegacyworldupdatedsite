@@ -1133,20 +1133,21 @@ export function BusinessLandingPage({ profile: initialProfile, distributorSlug }
           </div>
 
           <div className="flex items-center gap-3 sm:gap-4">
-            <div className="flex items-center rounded-lg border border-white/10 bg-white/[0.04] p-0.5 text-xs font-semibold">
+            <div className="flex items-center rounded-lg border border-white/10 bg-white/[0.04] p-0.5 text-xs font-semibold notranslate" translate="no">
               {(['en', 'es', 'fr', 'pt'] as const).map((lang) => (
                 <button
                   key={lang}
                   type="button"
                   onClick={() => setLocale(lang)}
-                  className={`px-2.5 py-1 rounded-md transition-all uppercase tracking-wider ${
+                  className={`px-2.5 py-1 rounded-md transition-all uppercase tracking-wider font-bold notranslate ${
                     locale === lang
                       ? 'bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 shadow-md font-bold'
                       : 'text-[#86868b] hover:text-white hover:bg-white/5'
                   }`}
                   title={`Switch to ${lang.toUpperCase()}`}
+                  translate="no"
                 >
-                  {lang}
+                  {lang === 'en' ? 'EN' : lang === 'es' ? 'ES' : lang === 'fr' ? 'FR' : 'PT'}
                 </button>
               ))}
             </div>
