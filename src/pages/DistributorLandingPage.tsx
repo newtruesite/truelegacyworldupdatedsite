@@ -7,6 +7,7 @@ import { BusinessLandingPage } from '@/components/business/BusinessLandingPage'
 import { AcademyLandingPage } from '@/components/academy/AcademyLandingPage'
 import { KangenLandingPage } from '@/components/kangen/KangenLandingPage'
 import { EmguardeLandingPage } from '@/components/emguarde/EmguardeLandingPage'
+import { ProductShowcaseLandingPage } from '@/components/products/ProductShowcaseLandingPage'
 import { crmSupabase, getPublicDistributors, getLeaderPortrait } from '@/lib/crm'
 import type { PublicDistributor } from '@/lib/crm'
 import { useLocaleContext } from '@/contexts/LocaleContext'
@@ -32,7 +33,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import NotFoundPage from './NotFoundPage'
 
-type LandingVariant = 'business' | 'duo' | 'training' | 'events' | 'kangen' | 'water' | 'emguarde'
+type LandingVariant = 'business' | 'duo' | 'training' | 'events' | 'kangen' | 'water' | 'emguarde' | 'products' | 'showcase'
 
 const VARIANTS: Record<LandingVariant, {
   eyebrow: string
@@ -90,6 +91,20 @@ const VARIANTS: Record<LandingVariant, {
     interest: 'events',
     icon: CalendarDays,
   },
+  products: {
+    eyebrow: 'Enagic® Official Technologies · True Legacy Collection',
+    headline: (name) => `Explore the full product collection with ${name}`,
+    subheadline: 'Discover the Duo Package, flagship medical-grade technologies, and the complete lineup of Enagic wellness and ionization systems.',
+    interest: 'product',
+    icon: Sparkles,
+  },
+  showcase: {
+    eyebrow: 'Enagic® Official Technologies · True Legacy Collection',
+    headline: (name) => `Explore the full product collection with ${name}`,
+    subheadline: 'Discover the Duo Package, flagship medical-grade technologies, and the complete lineup of Enagic wellness and ionization systems.',
+    interest: 'product',
+    icon: Sparkles,
+  },
 }
 
 const BENEFITS: Record<LandingVariant, string[]> = {
@@ -100,6 +115,8 @@ const BENEFITS: Record<LandingVariant, string[]> = {
   emguarde: ['Patented harmonic resonance noise suppression', '4-meter radius 360° environmental protection', 'Zero interference with Wi-Fi, phone, or Bluetooth', 'Portable USB-C powered emGuarde GO edition'],
   training: ['A structured training library', 'Product and presentation education', 'Weekly English and Spanish team calls', 'Leadership, media, and follow-up development'],
   events: ['Live product and business education', 'Open to members, prospects, and guests', 'English and Spanish weekly options', 'Direct follow-up with your referring distributor'],
+  products: ['The premier Duo Package synergy', 'Leveluk K8 8-plate medical-grade ionization', 'emGuarde GO 360° electromagnetic defense', 'Full Enagic product line and PDF guides'],
+  showcase: ['The premier Duo Package synergy', 'Leveluk K8 8-plate medical-grade ionization', 'emGuarde GO 360° electromagnetic defense', 'Full Enagic product line and PDF guides'],
 }
 
 const MEHDI_EVENT_PAGES = [
@@ -223,6 +240,10 @@ export default function DistributorLandingPage() {
 
   if (variant === 'training') {
     return <AcademyLandingPage profile={profile || null} distributorSlug={slug} />
+  }
+
+  if (variant === 'products' || variant === 'showcase') {
+    return <ProductShowcaseLandingPage profile={profile} distributorSlug={slug} />
   }
 
   const leaderPhoto =
