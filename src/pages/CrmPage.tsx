@@ -68,7 +68,16 @@ function formatLeadDate(dateString: string) {
 function formatLeadDateTime(dateString: string) {
   if (!dateString) return ''
   const date = new Date(dateString)
-  return `${date.toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}, ${date.toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit' })}`
+  const datePart = date.toLocaleDateString(undefined, {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
+  })
+  const timePart = date.toLocaleTimeString(undefined, {
+    hour: 'numeric',
+    minute: '2-digit',
+  })
+  return `${datePart} · ${timePart}`
 }
 
 function getGmailComposeUrl(to: string, subject: string = '', body: string = '') {
@@ -727,7 +736,7 @@ export default function CrmPage() {
                               {lead.email}
                             </p>
                             <p className="mt-0.5 text-[11px] text-[#86868b] truncate">
-                              <span className="uppercase">{lead.country}</span> · {formatLeadDate(lead.submitted_at)}
+                              <span className="uppercase">{lead.country}</span> · {formatLeadDateTime(lead.submitted_at)}
                             </p>
                           </div>
 
@@ -854,7 +863,7 @@ export default function CrmPage() {
                               {lead.email}
                             </a>
                             <p className="text-[11px] text-[#86868b] mt-0.5">
-                              {lead.country} · {formatLeadDate(lead.submitted_at)}
+                              <span className="uppercase">{lead.country}</span> · {formatLeadDateTime(lead.submitted_at)}
                             </p>
                           </div>
                           <span className={`rounded-full border px-2 py-0.5 text-[10px] font-bold ${interestCfg.badge}`}>
@@ -1125,6 +1134,7 @@ export default function CrmPage() {
 
                     {/* Metadata Grid */}
                     <div className="grid gap-3 sm:grid-cols-2">
+                      <DetailCard label="Submission Time" value={formatLeadDateTime(selectedLead.submitted_at)} />
                       <DetailCard label="Phone" value={selectedLead.phone} />
                       <DetailCard label="Country" value={selectedLead.country} />
                       <DetailCard label="Referral Method" value={selectedLead.attribution_method.replaceAll('_', ' ')} />
