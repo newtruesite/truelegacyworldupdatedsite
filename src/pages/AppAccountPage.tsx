@@ -26,6 +26,7 @@ import {
   ExternalLink,
   FileText,
   HelpCircle,
+  Layers,
   LoaderCircle,
   MessageSquare,
   Save,
@@ -71,7 +72,9 @@ export default function AppAccountPage() {
   const [customAvatarUrl, setCustomAvatarUrl] = useState<string | null>(null)
   const [copiedLink, setCopiedLink] = useState(false)
 
-  // Collapsible state - collapsed by default
+  // Collapsible section states - all collapsed by default for sleek appearance
+  const [isPortraitStudioOpen, setIsPortraitStudioOpen] = useState(false)
+  const [isProfileInfoOpen, setIsProfileInfoOpen] = useState(false)
   const [isFormCustomizerOpen, setIsFormCustomizerOpen] = useState(false)
 
   // Application Page Customization Form State
@@ -203,6 +206,14 @@ export default function AppAccountPage() {
       customNote.trim()
   )
 
+  const allOpen = isPortraitStudioOpen && isProfileInfoOpen && isFormCustomizerOpen
+  const toggleAllSections = () => {
+    const nextState = !allOpen
+    setIsPortraitStudioOpen(nextState)
+    setIsProfileInfoOpen(nextState)
+    setIsFormCustomizerOpen(nextState)
+  }
+
   const submit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     if (!distributor) return
@@ -225,19 +236,33 @@ export default function AppAccountPage() {
         defaultInterests: selectedDefaultInterests.length > 0 ? selectedDefaultInterests : ['duo'],
       }
 
+      // Check if profile info fields were present in form data or use existing values as fallback
+      const formDisplayName = data.get('displayName')
+      const displayName = formDisplayName !== null ? String(formDisplayName) : distributor.display_name
+      const title = data.get('title') !== null ? String(data.get('title')) : distributor.title
+      const bio = data.get('bio') !== null ? String(data.get('bio')) : distributor.bio || ''
+      const phone = data.get('phone') !== null ? String(data.get('phone')) : distributor.phone || ''
+      const instagramUrl = data.get('instagramUrl') !== null ? String(data.get('instagramUrl')) : distributor.instagram_url || ''
+      const regions = data.get('regions') !== null
+        ? String(data.get('regions')).split(',').map((item) => item.trim()).filter(Boolean)
+        : distributor.regions
+      const languages = data.getAll('languages').length > 0
+        ? data.getAll('languages').map(String)
+        : distributor.languages
+      const acceptingLeads = data.get('acceptingLeads') !== null
+        ? data.get('acceptingLeads') === 'on'
+        : distributor.accepting_leads
+
       const payload: DistributorProfileUpdate = {
-        displayName: String(data.get('displayName') || ''),
-        title: String(data.get('title') || ''),
-        bio: String(data.get('bio') || ''),
-        phone: String(data.get('phone') || ''),
-        instagramUrl: String(data.get('instagramUrl') || ''),
+        displayName,
+        title,
+        bio,
+        phone,
+        instagramUrl,
         avatarUrl: permanentAvatar,
-        regions: String(data.get('regions') || '')
-          .split(',')
-          .map((item) => item.trim())
-          .filter(Boolean),
-        languages: data.getAll('languages').map(String),
-        acceptingLeads: data.get('acceptingLeads') === 'on',
+        regions,
+        languages,
+        acceptingLeads,
         applicationSettings,
       }
 
@@ -332,16 +357,18 @@ export default function AppAccountPage() {
             </p>
           </div>
           <div className="flex flex-wrap items-center gap-3">
-            <Link
-              to="/leaders/portrait"
-              className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-[#2997ff]/40 bg-[#2997ff]/10 px-4 text-sm font-bold text-[#2997ff] hover:bg-[#2997ff]/20 transition"
+            <button
+              type="button"
+              onClick={toggleAllSections}
+              className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-white/15 bg-white/5 hover:bg-white/10 px-4 text-xs font-bold text-white transition"
             >
-              <Sparkles className="h-4 w-4" /> Portrait Studio
-            </Link>
+              <Layers className="h-4 w-4" />
+              {allOpen ? 'Collapse All' : 'Expand All'}
+            </button>
             <Link
               to={`/d/${distributor.slug}`}
               target="_blank"
-              className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-white/15 px-4 text-sm font-bold"
+              className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-white/15 px-4 text-sm font-bold hover:bg-white/5 transition"
             >
               View Public Profile <ExternalLink className="h-4 w-4" />
             </Link>
@@ -371,6 +398,7 @@ export default function AppAccountPage() {
         ) : null}
 
         <div className="mt-8 grid gap-8 lg:grid-cols-[280px_1fr] lg:items-start w-full max-w-full min-w-0">
+          {/* Aside Sidebar */}
           <aside className="lg:sticky lg:top-10 h-fit rounded-[28px] border border-white/10 bg-white/[.035] p-5 text-center shadow-xl w-full min-w-0">
             <div className="relative group">
               <img
@@ -420,132 +448,210 @@ export default function AppAccountPage() {
             </div>
           </aside>
 
-          <div className="space-y-8 w-full max-w-full min-w-0">
-            {/* Integrated AI Leader Portrait Generator */}
-            <LeaderPortraitGenerator
-              title="Leader Portrait"
-              onPortraitChange={handlePortraitChange}
-              onApprovePortrait={(approvedUrl) => {
-                setCustomAvatarUrl(approvedUrl)
-                setMessage('Standardized portrait approved for your profile. Click "Save all changes" to finalize.')
-              }}
-            />
+          {/* Main Content Area with 3 Modular Collapsible Cards */}
+          <div className="space-y-6 w-full max-w-full min-w-0">
+            <form key={distributor.id} onSubmit={submit} className="space-y-6">
 
-            {/* Unified Profile & Application Form Settings */}
-            <form key={distributor.id} onSubmit={submit} className="space-y-8">
-              {/* SECTION 1: Public Profile Information Form (Main Section First) */}
-              <div className="rounded-[28px] border border-white/10 bg-black/35 p-5 sm:p-8">
-                <div className="flex items-center gap-3">
-                  <span className="grid h-11 w-11 place-items-center rounded-xl bg-cyan-400/10 text-[#2997ff]">
-                    <UserRound className="h-5 w-5" />
-                  </span>
-                  <div>
-                    <h2 className="text-xl font-black">Public Profile Information</h2>
-                    <p className="text-sm text-[#868c98]">Changes appear wherever your CRM profile is used.</p>
+              {/* CARD 1: Collapsible Leader Portrait Studio & AI Generator */}
+              <div className="rounded-[28px] border border-white/10 bg-black/40 backdrop-blur-xl shadow-xl overflow-hidden transition-all">
+                <button
+                  type="button"
+                  onClick={() => setIsPortraitStudioOpen(!isPortraitStudioOpen)}
+                  className="w-full p-5 sm:p-6 flex items-center justify-between text-left hover:bg-white/[0.02] transition-colors"
+                >
+                  <div className="flex items-center gap-3.5 min-w-0 pr-2">
+                    <span className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-violet-400/15 text-violet-300 border border-violet-400/30">
+                      <Sparkles className="h-5 w-5" />
+                    </span>
+                    <div className="min-w-0">
+                      <div className="flex items-center gap-2">
+                        <span className="rounded-full border border-violet-400/40 bg-violet-400/10 px-2 py-0.5 text-[10px] font-black uppercase tracking-wider text-violet-300 shrink-0">
+                          AI Studio Generator
+                        </span>
+                        <span className="text-xs text-[#86868b] hidden sm:inline">4:5 Standard</span>
+                      </div>
+                      <h2 className="text-lg sm:text-xl font-black text-white mt-0.5 truncate">
+                        Leader Studio Portrait
+                      </h2>
+                      <p className="text-xs text-[#868c98] truncate">
+                        Generate or upload standardized 4:5 luxury studio headshots
+                      </p>
+                    </div>
                   </div>
-                </div>
-                <div className="mt-7 grid gap-5 sm:grid-cols-2">
-                  <Field label="Display name">
-                    <input
-                      required
-                      name="displayName"
-                      defaultValue={distributor.display_name}
-                      minLength={2}
-                      maxLength={120}
-                      className="account-input"
-                    />
-                  </Field>
-                  <Field label="Leadership title">
-                    <input
-                      required
-                      name="title"
-                      defaultValue={distributor.title}
-                      maxLength={160}
-                      className="account-input"
-                    />
-                  </Field>
-                  <Field label="Phone / WhatsApp">
-                    <input
-                      name="phone"
-                      defaultValue={distributor.phone || ''}
-                      maxLength={50}
-                      className="account-input"
-                    />
-                  </Field>
-                  <Field label="Instagram profile URL">
-                    <input
-                      name="instagramUrl"
-                      type="url"
-                      defaultValue={distributor.instagram_url || ''}
-                      placeholder="https://instagram.com/username"
-                      className="account-input"
-                    />
-                  </Field>
-                  <Field label="Markets and regions" hint="Separate markets with commas.">
-                    <input
-                      required
-                      name="regions"
-                      defaultValue={distributor.regions.join(', ')}
-                      className="account-input"
-                    />
-                  </Field>
-                  <Field label="Account email" hint="Contact support to change the sign-in email.">
-                    <input
-                      value={session?.user?.email || distributor.login_email || 'leader@truelegacyworld.com'}
-                      disabled
-                      className="account-input opacity-65"
-                    />
-                  </Field>
-                </div>
-                <Field label="Biography" className="mt-5">
-                  <textarea
-                    name="bio"
-                    defaultValue={distributor.bio || ''}
-                    maxLength={5000}
-                    rows={6}
-                    className="account-input resize-y"
-                  />
-                </Field>
-                <fieldset className="mt-5">
-                  <legend className="text-sm font-bold">Languages</legend>
-                  <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-3">
-                    {LANGUAGE_OPTIONS.map(([value, label]) => (
-                      <label
-                        key={value}
-                        className="flex items-center gap-2 rounded-xl border border-white/10 p-3 text-sm text-[#c9ced7]"
-                      >
-                        <input
-                          type="checkbox"
-                          name="languages"
-                          value={value}
-                          defaultChecked={distributor.languages.includes(value)}
-                        />
-                        {label}
-                      </label>
-                    ))}
+
+                  <div className="flex items-center gap-2 shrink-0">
+                    <span className="hidden sm:inline text-xs font-bold text-violet-300">
+                      {isPortraitStudioOpen ? 'Collapse' : 'Studio / Generator'}
+                    </span>
+                    <span
+                      className={`grid h-8 w-8 place-items-center rounded-xl border border-white/10 bg-white/5 text-[#86868b] transition-transform duration-200 ${
+                        isPortraitStudioOpen ? 'rotate-180 text-white' : ''
+                      }`}
+                    >
+                      <ChevronDown className="h-4 w-4" />
+                    </span>
                   </div>
-                </fieldset>
-                <label className="mt-5 flex items-start gap-3 rounded-2xl border border-white/10 bg-white/[.03] p-4 text-sm leading-6">
-                  <input
-                    type="checkbox"
-                    name="acceptingLeads"
-                    defaultChecked={distributor.accepting_leads}
-                    className="mt-1"
-                  />
-                  <span>
-                    <strong className="block">Accept new referrals</strong>
-                    <span className="text-[#868c98]">Allow visitors without an existing sponsor to select you.</span>
-                  </span>
-                </label>
+                </button>
+
+                {isPortraitStudioOpen && (
+                  <div className="px-5 pb-6 sm:px-7 sm:pb-7 pt-2 border-t border-white/10 animate-in fade-in-50 duration-200">
+                    <LeaderPortraitGenerator
+                      title="Leader Portrait"
+                      onPortraitChange={handlePortraitChange}
+                      onApprovePortrait={(approvedUrl) => {
+                        setCustomAvatarUrl(approvedUrl)
+                        setMessage('Standardized portrait approved for your profile. Click "Save all changes" below to finalize.')
+                      }}
+                    />
+                  </div>
+                )}
               </div>
 
-              {/* SECTION 2: Collapsible Personal Application Form Customizer (Moved Down, Collapsed by Default) */}
-              <div className="rounded-[28px] border border-cyan-500/30 bg-black/40 backdrop-blur-xl shadow-2xl overflow-hidden transition-all">
-                {/* Collapsible Accordion Header */}
+              {/* CARD 2: Collapsible Public Profile Information Form */}
+              <div className="rounded-[28px] border border-white/10 bg-black/40 backdrop-blur-xl shadow-xl overflow-hidden transition-all">
+                <button
+                  type="button"
+                  onClick={() => setIsProfileInfoOpen(!isProfileInfoOpen)}
+                  className="w-full p-5 sm:p-6 flex items-center justify-between text-left hover:bg-white/[0.02] transition-colors"
+                >
+                  <div className="flex items-center gap-3.5 min-w-0 pr-2">
+                    <span className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-cyan-400/15 text-cyan-400 border border-cyan-400/30">
+                      <UserRound className="h-5 w-5" />
+                    </span>
+                    <div className="min-w-0">
+                      <div className="flex items-center gap-2">
+                        <span className="rounded-full border border-cyan-400/40 bg-cyan-400/10 px-2 py-0.5 text-[10px] font-black uppercase tracking-wider text-cyan-300 shrink-0">
+                          Directory & Bio
+                        </span>
+                      </div>
+                      <h2 className="text-lg sm:text-xl font-black text-white mt-0.5 truncate">
+                        Public Profile Information
+                      </h2>
+                      <p className="text-xs text-[#868c98] truncate">
+                        {distributor.display_name} · {distributor.title}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-2 shrink-0">
+                    <span className="hidden sm:inline text-xs font-bold text-cyan-400">
+                      {isProfileInfoOpen ? 'Collapse' : 'Edit Profile'}
+                    </span>
+                    <span
+                      className={`grid h-8 w-8 place-items-center rounded-xl border border-white/10 bg-white/5 text-[#86868b] transition-transform duration-200 ${
+                        isProfileInfoOpen ? 'rotate-180 text-white' : ''
+                      }`}
+                    >
+                      <ChevronDown className="h-4 w-4" />
+                    </span>
+                  </div>
+                </button>
+
+                {isProfileInfoOpen && (
+                  <div className="px-5 pb-6 sm:px-7 sm:pb-7 pt-4 border-t border-white/10 space-y-5 animate-in fade-in-50 duration-200">
+                    <div className="grid gap-5 sm:grid-cols-2">
+                      <Field label="Display name">
+                        <input
+                          required
+                          name="displayName"
+                          defaultValue={distributor.display_name}
+                          minLength={2}
+                          maxLength={120}
+                          className="account-input"
+                        />
+                      </Field>
+                      <Field label="Leadership title">
+                        <input
+                          required
+                          name="title"
+                          defaultValue={distributor.title}
+                          maxLength={160}
+                          className="account-input"
+                        />
+                      </Field>
+                      <Field label="Phone / WhatsApp">
+                        <input
+                          name="phone"
+                          defaultValue={distributor.phone || ''}
+                          maxLength={50}
+                          className="account-input"
+                        />
+                      </Field>
+                      <Field label="Instagram profile URL">
+                        <input
+                          name="instagramUrl"
+                          type="url"
+                          defaultValue={distributor.instagram_url || ''}
+                          placeholder="https://instagram.com/username"
+                          className="account-input"
+                        />
+                      </Field>
+                      <Field label="Markets and regions" hint="Separate markets with commas.">
+                        <input
+                          required
+                          name="regions"
+                          defaultValue={distributor.regions.join(', ')}
+                          className="account-input"
+                        />
+                      </Field>
+                      <Field label="Account email" hint="Contact support to change the sign-in email.">
+                        <input
+                          value={session?.user?.email || distributor.login_email || 'leader@truelegacyworld.com'}
+                          disabled
+                          className="account-input opacity-65"
+                        />
+                      </Field>
+                    </div>
+                    <Field label="Biography" className="mt-5">
+                      <textarea
+                        name="bio"
+                        defaultValue={distributor.bio || ''}
+                        maxLength={5000}
+                        rows={6}
+                        className="account-input resize-y"
+                      />
+                    </Field>
+                    <fieldset className="mt-5">
+                      <legend className="text-sm font-bold">Languages</legend>
+                      <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-3">
+                        {LANGUAGE_OPTIONS.map(([value, label]) => (
+                          <label
+                            key={value}
+                            className="flex items-center gap-2 rounded-xl border border-white/10 p-3 text-sm text-[#c9ced7]"
+                          >
+                            <input
+                              type="checkbox"
+                              name="languages"
+                              value={value}
+                              defaultChecked={distributor.languages.includes(value)}
+                            />
+                            {label}
+                          </label>
+                        ))}
+                      </div>
+                    </fieldset>
+                    <label className="mt-5 flex items-start gap-3 rounded-2xl border border-white/10 bg-white/[.03] p-4 text-sm leading-6">
+                      <input
+                        type="checkbox"
+                        name="acceptingLeads"
+                        defaultChecked={distributor.accepting_leads}
+                        className="mt-1"
+                      />
+                      <span>
+                        <strong className="block">Accept new referrals</strong>
+                        <span className="text-[#868c98]">Allow visitors without an existing sponsor to select you.</span>
+                      </span>
+                    </label>
+                  </div>
+                )}
+              </div>
+
+              {/* CARD 3: Collapsible Personal Application Form Customizer */}
+              <div className="rounded-[28px] border border-cyan-500/30 bg-black/40 backdrop-blur-xl shadow-xl overflow-hidden transition-all">
                 <button
                   type="button"
                   onClick={() => setIsFormCustomizerOpen(!isFormCustomizerOpen)}
-                  className="w-full p-5 sm:p-7 flex items-center justify-between text-left hover:bg-white/[0.02] transition-colors"
+                  className="w-full p-5 sm:p-6 flex items-center justify-between text-left hover:bg-white/[0.02] transition-colors"
                 >
                   <div className="flex items-center gap-3.5 min-w-0 pr-2">
                     <span className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-cyan-400/15 text-cyan-400 border border-cyan-400/30">
@@ -585,10 +691,9 @@ export default function AppAccountPage() {
                   </div>
                 </button>
 
-                {/* Collapsible Content Body */}
                 {isFormCustomizerOpen && (
-                  <div className="px-5 pb-6 sm:px-8 sm:pb-8 pt-2 border-t border-white/10 space-y-6 animate-in fade-in-50 duration-200">
-                    <div className="grid gap-5 sm:grid-cols-2 pt-2">
+                  <div className="px-5 pb-6 sm:px-7 sm:pb-7 pt-4 border-t border-white/10 space-y-6 animate-in fade-in-50 duration-200">
+                    <div className="grid gap-5 sm:grid-cols-2">
                       <Field
                         label="Custom Page Headline"
                         hint="Defaults to 'Let’s connect you with the right person.'"
