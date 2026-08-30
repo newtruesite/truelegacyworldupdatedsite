@@ -745,12 +745,7 @@ export default function DistributorProfilePage() {
                               alt="True Legacy Global Business Opportunity"
                               className="h-full w-full object-cover object-center"
                             />
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-                            <div className="absolute inset-0 flex items-center justify-center">
-                              <span className="grid h-11 w-11 place-items-center rounded-full bg-cyan-400 text-slate-950 shadow-lg shadow-cyan-400/40 group-hover:scale-110 transition-transform">
-                                <ArrowRight className="h-5 w-5 fill-current" />
-                              </span>
-                            </div>
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-60" />
                           </div>
                         </div>
                       )}
