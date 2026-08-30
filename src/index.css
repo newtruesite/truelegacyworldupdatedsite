@@ -2423,13 +2423,47 @@ article[class*="rounded"], section[class*="rounded"], div[class*="rounded-[28px]
 
 /* Normalize the former rainbow accent vocabulary into monochrome + link blue. */
 [class*="text-cyan"], [class*="text-blue"], [class*="text-violet"],
-[class*="text-purple"], [class*="text-emerald"], [class*="text-amber"] { color: var(--color-link-blue) !important; }
+[class*="text-purple"], [class*="text-amber"] { color: var(--color-link-blue) !important; }
 [class*="text-slate-300"] { color: var(--color-platinum) !important; }
 [class*="text-slate-400"], [class*="text-slate-500"], [class*="text-slate-600"] { color: var(--color-ash-gray) !important; }
 [class*="bg-cyan"], [class*="bg-blue"], [class*="bg-violet"],
-[class*="bg-purple"], [class*="bg-emerald"], [class*="bg-amber"] {
+[class*="bg-purple"], [class*="bg-amber"] {
   background-color: var(--color-smoke) !important;
   background-image: none !important;
+}
+
+/* WhatsApp Branding Buttons - Always Solid Vibrant Green */
+a[href*="wa.me"],
+a[href*="whatsapp.com"],
+a[href*="api.whatsapp.com"],
+.bg-emerald-500,
+.bg-emerald-600,
+.btn-whatsapp {
+  background-color: #25D366 !important;
+  background-image: none !important;
+  color: #0b141a !important;
+  border: 1px solid rgba(37, 211, 102, 0.4) !important;
+}
+
+a[href*="wa.me"]:hover,
+a[href*="whatsapp.com"]:hover,
+a[href*="api.whatsapp.com"]:hover,
+.bg-emerald-500:hover,
+.bg-emerald-600:hover,
+.btn-whatsapp:hover {
+  background-color: #20bd5a !important;
+  color: #0b141a !important;
+  border-color: #20bd5a !important;
+}
+
+a[href*="wa.me"] svg,
+a[href*="whatsapp.com"] svg,
+a[href*="api.whatsapp.com"] svg,
+.bg-emerald-500 svg,
+.bg-emerald-600 svg,
+.btn-whatsapp svg {
+  color: #0b141a !important;
+  stroke: #0b141a !important;
 }
 
 .section-padding { padding-top: clamp(64px, 9vw, 144px); padding-bottom: clamp(64px, 9vw, 144px); }

@@ -1149,7 +1149,7 @@ export function EmguardeLandingPage({ profile: propProfile, distributorSlug }: E
                   href={whatsappUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 rounded-xl border border-emerald-400/30 bg-emerald-500/10 hover:bg-emerald-500/20 px-6 py-3.5 text-sm font-bold text-emerald-300 transition-colors"
+                  className="inline-flex items-center gap-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 px-6 py-3.5 text-sm font-bold text-slate-950 transition-colors shadow-lg shadow-emerald-500/25 active:scale-95"
                 >
                   <MessageCircle className="h-4 w-4" /> {copy.ctaWhatsApp}
                 </a>
