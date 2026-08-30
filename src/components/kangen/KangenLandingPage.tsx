@@ -236,11 +236,8 @@ export function KangenLandingPage({ profile: propProfile, distributorSlug }: Kan
       </header>
 
       <main className="relative overflow-hidden">
-        {/* Subtle Background Glows */}
-        <div className="pointer-events-none absolute -top-40 left-1/2 -translate-x-1/2 h-96 w-full max-w-4xl bg-gradient-to-b from-cyan-500/15 via-blue-600/5 to-transparent blur-3xl" />
-
         {/* HERO SECTION */}
-        <section className="mx-auto max-w-6xl px-4 pt-12 sm:pt-20 sm:px-6 text-center">
+        <section className="mx-auto max-w-6xl px-4 pt-12 sm:pt-20 sm:px-6 text-center relative z-10">
           <div className="inline-flex items-center gap-2 rounded-full border border-cyan-400/30 bg-cyan-400/10 px-4 py-1.5 text-xs font-black uppercase tracking-[0.2em] text-cyan-300 mb-6">
             <Droplets className="h-3.5 w-3.5" /> Japanese Medical-Grade Ionization
           </div>
@@ -253,7 +250,7 @@ export function KangenLandingPage({ profile: propProfile, distributorSlug }: Kan
           </h1>
 
           <p className="mt-5 max-w-2xl mx-auto text-sm sm:text-base text-[#cccccc] leading-relaxed">
-            50 years of Japanese engineering, active molecular hydrogen ($H_2$) infusion, and negative ORP antioxidant power. Discover how the Leveluk K8 replaces household chemicals and revitalizes your hydration.
+            50 years of Japanese engineering, active molecular hydrogen (H₂) infusion, and negative ORP antioxidant power. Discover how the Leveluk K8 replaces household chemicals and revitalizes your hydration.
           </p>
 
           {/* Distributor Personal Introduction Card */}

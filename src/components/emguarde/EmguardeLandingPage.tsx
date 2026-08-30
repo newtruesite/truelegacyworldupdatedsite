@@ -194,11 +194,8 @@ export function EmguardeLandingPage({ profile: propProfile, distributorSlug }: E
       </header>
 
       <main className="relative overflow-hidden">
-        {/* Subtle Background Glows */}
-        <div className="pointer-events-none absolute -top-40 left-1/2 -translate-x-1/2 h-96 w-full max-w-4xl bg-gradient-to-b from-violet-500/15 via-cyan-500/5 to-transparent blur-3xl" />
-
         {/* HERO SECTION */}
-        <section className="mx-auto max-w-6xl px-4 pt-12 sm:pt-20 sm:px-6 text-center">
+        <section className="mx-auto max-w-6xl px-4 pt-12 sm:pt-20 sm:px-6 text-center relative z-10">
           <div className="inline-flex items-center gap-2 rounded-full border border-violet-400/30 bg-violet-400/10 px-4 py-1.5 text-xs font-black uppercase tracking-[0.2em] text-violet-300 mb-6">
             <Radio className="h-3.5 w-3.5" /> Patented Harmonic EMF Defense
           </div>
