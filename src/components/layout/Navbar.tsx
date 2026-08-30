@@ -365,9 +365,9 @@ export function Navbar() {
                     locale,
                   })
                 }
-                className="hidden min-h-9 items-center gap-2 rounded-md border border-white/20 bg-cyan-300/[0.06] px-3 py-2 text-sm font-semibold text-[#2997ff] transition-colors hover:border-white/20 hover:bg-cyan-300/[0.12] md:inline-flex"
+                className="nav-login-btn hidden min-h-9 items-center gap-2 rounded-lg border border-amber-500/40 bg-amber-500/10 px-3 py-1.5 text-xs font-bold text-amber-300 transition-all hover:bg-amber-500/20 hover:border-amber-400/60 shadow-sm shadow-amber-500/10 md:inline-flex"
               >
-                <LogIn className="h-4 w-4" />
+                <LogIn className="h-3.5 w-3.5 text-amber-400" />
                 {navLabels.login}
               </Link>
 
@@ -551,9 +551,9 @@ export function Navbar() {
               });
               setMenuOpen(false);
             }}
-            className="flex min-h-[52px] w-full items-center justify-center gap-2 rounded-xl border border-white/20 bg-cyan-300/[0.07] px-6 py-3 text-base font-semibold text-[#2997ff] transition-colors hover:bg-cyan-300/[0.12]"
+            className="nav-login-btn flex min-h-[52px] w-full items-center justify-center gap-2 rounded-xl border border-amber-500/40 bg-amber-500/10 px-6 py-3 text-base font-bold text-amber-300 transition-colors hover:bg-amber-500/20"
           >
-            <LogIn className="h-5 w-5" />
+            <LogIn className="h-5 w-5 text-amber-400" />
             {navLabels.login}
           </Link>
           <a

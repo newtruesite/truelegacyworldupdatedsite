@@ -11,7 +11,7 @@ import { useLocaleContext } from "@/contexts/LocaleContext";
 import { trackEvent } from "@/lib/analytics";
 import { t } from "@/lib/translations";
 import { motion } from "framer-motion";
-import { ArrowRight, BookOpenCheck, BriefcaseBusiness, CalendarDays, Droplets, PlayCircle, ShieldCheck, Users } from "lucide-react";
+import { ArrowRight, BookOpenCheck, BriefcaseBusiness, CalendarDays, Droplets, LogIn, PlayCircle, ShieldCheck, Users } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 
@@ -227,7 +227,10 @@ export default function HomePage() {
               <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
                 <Link to="/products" onClick={()=>trackEvent("home_path_click",{path:"products",locale})} className="btn-primary inline-flex min-h-12 items-center justify-center gap-2 px-6">{locale==='es'?'Explorar productos':locale==='pt'?'Explorar produtos':'Explore the Products'}<ArrowRight className="h-4 w-4"/></Link>
                 <Link to="/apply?interest=distributor" onClick={()=>trackEvent("home_path_click",{path:"business",locale})} className="inline-flex min-h-12 items-center justify-center gap-2 rounded-lg border border-tl-gold/40 bg-tl-gold/10 px-6 font-semibold text-tl-gold hover:bg-tl-gold/20">{locale==='es'?'Explorar el negocio':locale==='pt'?'Explorar o negócio':'Explore the Opportunity'}</Link>
-                <Link to="/crm" className="inline-flex min-h-12 items-center justify-center rounded-lg border border-white/15 bg-white/5 px-6 font-semibold text-white hover:bg-white/10">{locale==='es'?'Acceso distribuidores':locale==='pt'?'Acesso distribuidores':'Distributor Login'}</Link>
+                <Link to="/crm" className="nav-login-btn inline-flex min-h-12 items-center justify-center gap-2 rounded-lg border border-amber-500/40 bg-amber-500/10 px-6 font-bold text-amber-300 hover:bg-amber-500/20 transition-all shadow-sm shadow-amber-500/10">
+                  <LogIn className="h-4 w-4 text-amber-400" />
+                  {locale==='es'?'Acceso Distribuidores':locale==='pt'?'Acesso Distribuidores':locale==='fr'?'Accès Distributeurs':'Distributor Login'}
+                </Link>
               </div>
               <SocialProofStrip />
             </motion.div>
@@ -472,13 +475,10 @@ export default function HomePage() {
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Link
-                  to="/training"
-                  className="inline-flex items-center justify-center min-h-[44px] px-6 py-3 rounded-md font-semibold text-white transition-all hover:scale-[1.02] hover:-translate-y-0.5"
-                  style={{
-                    background: "linear-gradient(135deg, #1B5A8C, #1e88e5)",
-                    boxShadow: "0 2px 8px rgba(27, 90, 140, 0.2)",
-                  }}
+                  to="/crm"
+                  className="nav-login-btn inline-flex items-center justify-center gap-2 min-h-[44px] px-6 py-3 rounded-lg font-bold text-amber-300 border border-amber-500/40 bg-amber-500/10 transition-all hover:bg-amber-500/20 shadow-sm shadow-amber-500/10"
                 >
+                  <LogIn className="h-4 w-4 text-amber-400" />
                   {locale === "es"
                     ? "Acceso a Distribuidores"
                     : locale === "fr"

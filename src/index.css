@@ -2466,6 +2466,25 @@ a[href*="api.whatsapp.com"] svg,
   stroke: #0b141a !important;
 }
 
+/* Internal Portal / Distributor Login Button */
+.nav-login-btn {
+  background-color: rgba(245, 158, 11, 0.12) !important;
+  background-image: none !important;
+  border: 1px solid rgba(245, 158, 11, 0.45) !important;
+  color: #fbbf24 !important;
+}
+
+.nav-login-btn:hover {
+  background-color: rgba(245, 158, 11, 0.22) !important;
+  border-color: rgba(251, 191, 36, 0.7) !important;
+  color: #fffbeb !important;
+}
+
+.nav-login-btn svg {
+  color: #fbbf24 !important;
+  stroke: #fbbf24 !important;
+}
+
 .section-padding { padding-top: clamp(64px, 9vw, 144px); padding-bottom: clamp(64px, 9vw, 144px); }
 .section-eyebrow {
   color: var(--color-ash-gray);
