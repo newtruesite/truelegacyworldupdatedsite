@@ -7,6 +7,7 @@ import { addLeadNote, assignLead, crmConfigured, crmSupabase, getCrmDistributors
 import type { CrmDistributor, CrmLead, CrmLeadNote, CrmMembership, LeadStatus } from '@/lib/crm'
 import type { Session } from '@supabase/supabase-js'
 import {
+  AlertTriangle,
   BellRing,
   CalendarClock,
   Check,
@@ -14,6 +15,7 @@ import {
   ChevronRight,
   Columns3,
   Copy,
+  Crown,
   Download,
   ExternalLink,
   Filter,
@@ -25,6 +27,7 @@ import {
   MoreVertical,
   Phone,
   Search,
+  Shield,
   ShieldCheck,
   Sparkles,
   UserPlus,
@@ -116,6 +119,8 @@ export default function CrmPage() {
   const [addingLead, setAddingLead] = useState(false)
   const [addLeadError, setAddLeadError] = useState('')
   const [activeTab, setActiveTab] = useState<'details' | 'nurture' | 'notes'>('details')
+  const [adminScope, setAdminScope] = useState<'personal' | 'oversight'>('personal')
+  const [oversightDistributorFilter, setOversightDistributorFilter] = useState<string>('all')
 
   useEffect(() => {
     if (!crmSupabase) {
@@ -172,9 +177,32 @@ export default function CrmPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [session?.user.id])
 
+  const isAdmin = membership?.role === 'admin'
+  const myDistributorId = membership?.distributor_id
+
+  const personalLeads = useMemo(() => {
+    if (isAdmin && myDistributorId) {
+      return leads.filter((l) => l.assigned_distributor_id === myDistributorId)
+    }
+    return leads
+  }, [leads, isAdmin, myDistributorId])
+
+  const unassignedLeads = useMemo(() => {
+    return leads.filter((l) => !l.assigned_distributor_id)
+  }, [leads])
+
+  const baseLeads = useMemo(() => {
+    if (!isAdmin || adminScope === 'personal') {
+      return personalLeads
+    }
+    if (oversightDistributorFilter === 'all') return leads
+    if (oversightDistributorFilter === 'unassigned') return unassignedLeads
+    return leads.filter((l) => l.assigned_distributor_id === oversightDistributorFilter)
+  }, [isAdmin, adminScope, personalLeads, leads, oversightDistributorFilter, unassignedLeads])
+
   const filtered = useMemo(() => {
     const query = search.trim().toLowerCase()
-    return leads.filter((lead) => {
+    return baseLeads.filter((lead) => {
       const matchesStatus = statusFilter === 'all' || lead.status === statusFilter
       const matchesInterest = interestFilter === 'all' || lead.interest === interestFilter
       const matchesAttention =
@@ -187,7 +215,7 @@ export default function CrmPage() {
         .toLowerCase()
       return matchesStatus && matchesInterest && matchesAttention && (!query || haystack.includes(query))
     })
-  }, [leads, search, statusFilter, interestFilter, attentionFilter])
+  }, [baseLeads, search, statusFilter, interestFilter, attentionFilter])
 
   const selectedLead = useMemo(() => {
     if (!selectedLeadId) return null
@@ -449,9 +477,13 @@ export default function CrmPage() {
     )
   }
 
-  const unassigned = leads.filter((item) => !item.assigned_distributor_id).length
-  const newCount = leads.filter((item) => item.status === 'new').length
-  const dueCount = leads.filter((item) => item.next_follow_up_at && new Date(item.next_follow_up_at) <= new Date()).length
+  const isOversight = isAdmin && adminScope === 'oversight'
+  const activeScopeLeads = isOversight ? baseLeads : personalLeads
+  const newCount = activeScopeLeads.filter((l) => l.status === 'new').length
+  const dueCount = activeScopeLeads.filter(
+    (l) => l.next_follow_up_at && new Date(l.next_follow_up_at) <= new Date()
+  ).length
+  const unassignedCount = unassignedLeads.length
 
   return (
     <SponsorGate membership={membership} distributors={distributors}>
@@ -467,12 +499,63 @@ export default function CrmPage() {
               </div>
               <h1 className="text-2xl sm:text-4xl font-black text-white">Contacts & Leads</h1>
               <p className="mt-1 text-xs sm:text-sm text-[#cccccc]">
-                {membership?.role === 'admin' ? 'Administrator Workspace · All Team Leads' : 'Distributor Workspace · Assigned Leads'} ·{' '}
+                {isAdmin
+                  ? isOversight
+                    ? 'Admin Team Oversight & Overrides · Full Team View'
+                    : 'Personal Distributor Workspace · My Assigned Leads'
+                  : 'Distributor Workspace · My Assigned Leads'} ·{' '}
                 <span className="text-white font-medium">{session.user.email}</span>
               </p>
+
+              {/* Admin Personal vs Team Oversight Scope Switcher */}
+              {isAdmin && (
+                <div className="mt-4 inline-flex items-center gap-1.5 rounded-2xl border border-white/15 bg-black/50 p-1">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setAdminScope('personal')
+                      setStatusFilter('all')
+                      setInterestFilter('all')
+                      setAttentionFilter('all')
+                      setSearch('')
+                    }}
+                    className={`inline-flex items-center gap-2 rounded-xl px-3.5 py-1.5 text-xs font-bold transition-all ${
+                      adminScope === 'personal'
+                        ? 'bg-cyan-500 text-slate-950 shadow-md shadow-cyan-500/25'
+                        : 'text-[#cccccc] hover:text-white hover:bg-white/5'
+                    }`}
+                  >
+                    <UserRoundCheck className="h-3.5 w-3.5" />
+                    My Leads ({personalLeads.length})
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setAdminScope('oversight')
+                      setStatusFilter('all')
+                      setInterestFilter('all')
+                      setAttentionFilter('all')
+                      setSearch('')
+                    }}
+                    className={`inline-flex items-center gap-2 rounded-xl px-3.5 py-1.5 text-xs font-bold transition-all ${
+                      adminScope === 'oversight'
+                        ? 'bg-gradient-to-r from-amber-400 to-amber-500 text-slate-950 font-black shadow-md shadow-amber-500/25'
+                        : 'text-[#cccccc] hover:text-white hover:bg-white/5'
+                    }`}
+                  >
+                    <ShieldCheck className="h-3.5 w-3.5" />
+                    Admin Oversight & Overrides ({leads.length})
+                    {unassignedCount > 0 && (
+                      <span className="rounded-full bg-rose-500 px-1.5 py-0.5 text-[9px] font-black text-white">
+                        {unassignedCount} unassigned
+                      </span>
+                    )}
+                  </button>
+                </div>
+              )}
             </div>
             <div className="flex flex-wrap items-center gap-2.5">
-              {membership?.role === 'admin' && (
+              {isAdmin && (
                 <Link
                   to="/crm/growth"
                   className="inline-flex items-center gap-1.5 rounded-xl border border-white/15 bg-white/[0.04] px-4 py-2 text-xs font-bold text-white hover:bg-white/10 transition-colors"
@@ -501,11 +584,102 @@ export default function CrmPage() {
 
           {/* Quick KPI Stats Bar */}
           <section className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
-            <MetricCard icon={<Users className="h-4 w-4 text-[#2997ff]" />} value={leads.length} label="Accessible Leads" />
-            <MetricCard icon={<UserRoundCheck className="h-4 w-4 text-cyan-400" />} value={newCount} label="New Leads" tone="cyan" />
-            <MetricCard icon={<ShieldCheck className="h-4 w-4 text-amber-400" />} value={unassigned} label="Needs Assignment" tone="amber" />
-            <MetricCard icon={<MessageCircle className="h-4 w-4 text-rose-400" />} value={dueCount} label="Follow-ups Due" tone="rose" />
+            {isOversight ? (
+              <>
+                <MetricCard icon={<Users className="h-4 w-4 text-[#2997ff]" />} value={leads.length} label="Total Team Leads" />
+                <MetricCard icon={<UserRoundCheck className="h-4 w-4 text-cyan-400" />} value={newCount} label="New Inquiries" tone="cyan" />
+                <MetricCard
+                  icon={<ShieldCheck className="h-4 w-4 text-amber-400" />}
+                  value={unassignedCount}
+                  label="Unassigned (Review)"
+                  tone={unassignedCount > 0 ? 'rose' : 'amber'}
+                />
+                <MetricCard icon={<MessageCircle className="h-4 w-4 text-rose-400" />} value={dueCount} label="Follow-ups Due" tone="rose" />
+              </>
+            ) : (
+              <>
+                <MetricCard icon={<Users className="h-4 w-4 text-[#2997ff]" />} value={personalLeads.length} label="My Active Leads" />
+                <MetricCard icon={<UserRoundCheck className="h-4 w-4 text-cyan-400" />} value={newCount} label="New Leads" tone="cyan" />
+                <MetricCard icon={<MessageCircle className="h-4 w-4 text-rose-400" />} value={dueCount} label="Follow-ups Due" tone="rose" />
+                <MetricCard
+                  icon={<Sparkles className="h-4 w-4 text-emerald-400" />}
+                  value={personalLeads.filter((l) => l.status === 'converted').length}
+                  label="Converted Customers"
+                  tone="emerald"
+                />
+              </>
+            )}
           </section>
+
+          {/* Admin Oversight Dedicated Banner & Distributor Filter */}
+          {isOversight && (
+            <div className="mt-5 rounded-2xl border border-amber-400/30 bg-amber-400/[0.06] p-4 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+              <div className="flex items-center gap-3">
+                <div className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-amber-400/15 text-amber-300">
+                  <ShieldCheck className="h-5 w-5" />
+                </div>
+                <div>
+                  <div className="flex items-center gap-2">
+                    <span className="rounded-full border border-amber-400/40 bg-amber-400/20 px-2 py-0.5 text-[10px] font-black uppercase tracking-wider text-amber-300">
+                      Admin Oversight Mode
+                    </span>
+                    <span className="text-xs text-[#86868b]">All Team Leads ({leads.length})</span>
+                  </div>
+                  <p className="mt-1 text-xs text-[#cccccc]">
+                    Monitoring all distributor leads across True Legacy. You can reassign ownership, override statuses, and manage team attribution.
+                  </p>
+                </div>
+              </div>
+              <div className="flex flex-wrap items-center gap-2 w-full md:w-auto">
+                <select
+                  value={oversightDistributorFilter}
+                  onChange={(e) => setOversightDistributorFilter(e.target.value)}
+                  className="h-10 rounded-xl border border-amber-400/40 bg-black/80 px-3 text-xs font-bold text-amber-200 focus:border-amber-400 outline-none w-full sm:w-auto"
+                >
+                  <option value="all">All Distributors ({leads.length} leads)</option>
+                  {unassignedCount > 0 && (
+                    <option value="unassigned">⚠️ Unassigned Only ({unassignedCount} leads)</option>
+                  )}
+                  {distributors
+                    .filter((d) => d.active)
+                    .map((d) => {
+                      const count = leads.filter((l) => l.assigned_distributor_id === d.id).length
+                      return (
+                        <option key={d.id} value={d.id}>
+                          {d.display_name} ({count} leads)
+                        </option>
+                      )
+                    })}
+                </select>
+              </div>
+            </div>
+          )}
+
+          {/* Unassigned Leads Triage Banner */}
+          {isAdmin && unassignedCount > 0 && (
+            <div className="mt-4 rounded-2xl border border-rose-500/40 bg-rose-500/[0.08] p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+              <div className="flex items-center gap-3">
+                <AlertTriangle className="h-5 w-5 text-rose-400 shrink-0" />
+                <div>
+                  <p className="text-xs font-bold text-white">
+                    {unassignedCount} Unassigned Lead{unassignedCount === 1 ? '' : 's'} Require Admin Review
+                  </p>
+                  <p className="text-xs text-rose-200/80">
+                    Incoming leads without an assigned distributor owner. Assign an owner to route them to the appropriate pipeline.
+                  </p>
+                </div>
+              </div>
+              <button
+                onClick={() => {
+                  setAdminScope('oversight')
+                  setOversightDistributorFilter('unassigned')
+                }}
+                className="rounded-xl bg-rose-500 hover:bg-rose-400 px-3.5 py-1.5 text-xs font-bold text-white transition-colors shrink-0"
+              >
+                Review & Assign Now
+              </button>
+            </div>
+          )}
 
           {/* Leader Applications (admin-only — shown first so pending alerts are visible) */}
           {membership?.role === 'admin' && <LeaderApplicationsPanel />}
@@ -689,7 +863,13 @@ export default function CrmPage() {
 
             {/* View Area */}
             {view === 'board' ? (
-              <PipelineBoard leads={filtered} working={working} onStatusChange={changeStatus} onOpen={openLeadDrawer} />
+              <PipelineBoard
+                leads={filtered}
+                distributors={distributors}
+                working={working}
+                onStatusChange={changeStatus}
+                onOpen={openLeadDrawer}
+              />
             ) : (
               <div>
                 {/* Desktop & Laptop High-Density Layout */}
@@ -1134,7 +1314,12 @@ export default function CrmPage() {
 
                     {/* Metadata Grid */}
                     <div className="grid gap-3 sm:grid-cols-2">
+                      <DetailCard
+                        label="Lead Owner / Distributor"
+                        value={assignedName(selectedLead.assigned_distributor_id) || 'Unassigned'}
+                      />
                       <DetailCard label="Submission Time" value={formatLeadDateTime(selectedLead.submitted_at)} />
+                      <DetailCard label="Last Updated" value={formatLeadDateTime(selectedLead.updated_at)} />
                       <DetailCard label="Phone" value={selectedLead.phone} />
                       <DetailCard label="Country" value={selectedLead.country} />
                       <DetailCard label="Referral Method" value={selectedLead.attribution_method.replaceAll('_', ' ')} />
@@ -1357,11 +1542,13 @@ function DetailCard({ label, value }: { label: string; value: string | null }) {
 
 function PipelineBoard({
   leads,
+  distributors,
   working,
   onStatusChange,
   onOpen,
 }: {
   leads: CrmLead[]
+  distributors: CrmDistributor[]
   working: string
   onStatusChange: (lead: CrmLead, status: LeadStatus) => void
   onOpen: (leadId: string) => void
@@ -1384,22 +1571,31 @@ function PipelineBoard({
                 </span>
               </div>
               <div className="mt-3 space-y-2.5">
-                {column.map((lead) => (
-                  <article
-                    key={lead.id}
-                    className="rounded-xl border border-white/10 bg-white/[0.035] hover:border-cyan-400/40 p-3 transition-colors cursor-pointer"
-                    onClick={() => onOpen(lead.id)}
-                  >
-                    <p className="font-bold text-white text-xs truncate">{lead.full_name}</p>
-                    <p className="text-[11px] text-[#86868b] truncate">{lead.email}</p>
-                    <div className="mt-2.5 flex flex-wrap items-center justify-between gap-1.5 pt-2 border-t border-white/5">
-                      <span className="rounded-full bg-cyan-400/10 px-2 py-0.5 text-[9px] font-bold uppercase text-[#2997ff]">
-                        {lead.interest}
-                      </span>
-                      <span className="text-[10px] text-[#86868b] uppercase">{lead.country}</span>
-                    </div>
-                  </article>
-                ))}
+                {column.map((lead) => {
+                  const owner = distributors.find((d) => d.id === lead.assigned_distributor_id)
+                  return (
+                    <article
+                      key={lead.id}
+                      className="rounded-xl border border-white/10 bg-white/[0.035] hover:border-cyan-400/40 p-3 transition-colors cursor-pointer"
+                      onClick={() => onOpen(lead.id)}
+                    >
+                      <p className="font-bold text-white text-xs truncate">{lead.full_name}</p>
+                      <p className="text-[11px] text-[#86868b] truncate">{lead.email}</p>
+                      <div className="mt-2 flex items-center justify-between text-[10px] text-[#86868b]">
+                        <span className="truncate text-cyan-300/90 font-medium">
+                          {owner ? owner.display_name : 'Unassigned'}
+                        </span>
+                        <span className="shrink-0">{formatLeadDate(lead.submitted_at)}</span>
+                      </div>
+                      <div className="mt-2 flex flex-wrap items-center justify-between gap-1.5 pt-1.5 border-t border-white/5">
+                        <span className="rounded-full bg-cyan-400/10 px-2 py-0.5 text-[9px] font-bold uppercase text-[#2997ff]">
+                          {lead.interest}
+                        </span>
+                        <span className="text-[10px] text-[#86868b] uppercase">{lead.country}</span>
+                      </div>
+                    </article>
+                  )
+                })}
                 {column.length === 0 ? <p className="py-6 text-center text-xs text-[#86868b]">No contacts</p> : null}
               </div>
             </section>

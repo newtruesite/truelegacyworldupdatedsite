@@ -68,9 +68,16 @@ export default function AppTodayPage() {
     return () => { current = false }
   }, [session])
 
-  const due = useMemo(() => { const now = new Date(); return leads.filter(lead => lead.next_follow_up_at && new Date(lead.next_follow_up_at) <= now && !['converted', 'closed'].includes(lead.status)) }, [leads])
-  const today = useMemo(() => leads.filter(lead => lead.next_follow_up_at && isToday(lead.next_follow_up_at) && !due.some(item => item.id === lead.id)), [due, leads])
-  const newLeads = useMemo(() => leads.filter(lead => lead.status === 'new'), [leads])
+  const myLeads = useMemo(() => {
+    if (membership?.role === 'admin' && membership.distributor_id) {
+      return leads.filter((lead) => lead.assigned_distributor_id === membership.distributor_id)
+    }
+    return leads
+  }, [leads, membership])
+
+  const due = useMemo(() => { const now = new Date(); return myLeads.filter(lead => lead.next_follow_up_at && new Date(lead.next_follow_up_at) <= now && !['converted', 'closed'].includes(lead.status)) }, [myLeads])
+  const today = useMemo(() => myLeads.filter(lead => lead.next_follow_up_at && isToday(lead.next_follow_up_at) && !due.some(item => item.id === lead.id)), [due, myLeads])
+  const newLeads = useMemo(() => myLeads.filter(lead => lead.status === 'new'), [myLeads])
   const todayMeetings = useMemo(() => meetings.filter(meeting => isToday(meeting.starts_at)), [meetings])
   const distributorId = distributor?.id
   const completedTraining = training.filter(item => item.distributor_id === distributorId && item.completed)

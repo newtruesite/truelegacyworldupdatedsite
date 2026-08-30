@@ -45,8 +45,14 @@ export default function AppHomePage() {
     if (membership?.role === 'admin') return distributors.find(item => item.slug === 'mehdi-cohen' && item.active) || distributors.find(item => item.active) || null
     return null
   }, [distributors, membership, session?.user.email])
-  const newLeads = leads.filter(item => item.status === 'new').length
-  const dueLeads = leads.filter(item => item.next_follow_up_at && new Date(item.next_follow_up_at) <= new Date()).length
+  const myLeads = useMemo(() => {
+    if (membership?.role === 'admin' && membership.distributor_id) {
+      return leads.filter((item) => item.assigned_distributor_id === membership.distributor_id)
+    }
+    return leads
+  }, [leads, membership])
+  const newLeads = myLeads.filter(item => item.status === 'new').length
+  const dueLeads = myLeads.filter(item => item.next_follow_up_at && new Date(item.next_follow_up_at) <= new Date()).length
   const profileUrl = distributor ? `${window.location.origin}/d/${distributor.slug}` : ''
 
   if (!crmConfigured) return <AppMessage title="App connection required" body="The True Legacy app is ready, but its secure account connection is not available in this preview." />
