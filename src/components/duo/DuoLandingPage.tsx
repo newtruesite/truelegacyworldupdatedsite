@@ -259,7 +259,7 @@ const I18N = {
     finalBody1: 'You do not need to make a decision today.',
     finalBody2:
       'The next step is simply to ask your questions, confirm what is available in your country, and determine whether one or both technologies make sense for you.',
-    requestConsultation: 'Request a Personal Consultation',
+    requestConsultation: 'Request More Info',
     finalTrust: 'No pressure. No obligation. Just a real conversation.',
     stickyMobileCta: 'Talk With',
   },
@@ -469,7 +469,7 @@ const I18N = {
     finalBody1: 'No necesitas tomar una decisión hoy.',
     finalBody2:
       'El siguiente paso es simplemente resolver tus dudas, verificar qué está disponible en tu país y determinar si una o ambas tecnologías se adaptan a lo que buscas.',
-    requestConsultation: 'Solicitar una Consulta Personalizada',
+    requestConsultation: 'Solicitar Más Información',
     finalTrust: 'Sin presión. Sin compromisos. Solo una conversación transparente.',
     stickyMobileCta: 'Hablar con',
   },
@@ -679,7 +679,7 @@ const I18N = {
     finalBody1: 'Vous n\'avez pas besoin de prendre une décision aujourd\'hui.',
     finalBody2:
       'La prochaine étape consiste simplement à poser vos questions, vérifier les disponibilités dans votre pays et déterminer si l\'une ou l\'autre de ces technologies vous convient.',
-    requestConsultation: 'Demander un Entretien Personnalisé',
+    requestConsultation: 'Demander Plus d\'Informations',
     finalTrust: 'Sans pression. Sans engagement. Juste un échange authentique.',
     stickyMobileCta: 'Échanger avec',
   },
@@ -889,7 +889,7 @@ const I18N = {
     finalBody1: 'Você não precisa tomar uma decisão hoje.',
     finalBody2:
       'O próximo passo é apenas esclarecer suas dúvidas, conferir a disponibilidade no seu país e avaliar se uma ou ambas as tecnologias fazem sentido para você.',
-    requestConsultation: 'Solicitar uma Conversa Pessoal',
+    requestConsultation: 'Solicitar Mais Informações',
     finalTrust: 'Sem pressão. Sem compromisso. Apenas uma conversa sincera.',
     stickyMobileCta: 'Conversar com',
   },
