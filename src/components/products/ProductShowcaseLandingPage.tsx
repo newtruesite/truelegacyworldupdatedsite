@@ -896,21 +896,23 @@ export function ProductShowcaseLandingPage({
                 </div>
 
                 {/* Hero Duo Imagery */}
-                <div className="relative w-full max-w-md lg:max-w-lg flex items-center justify-center">
-                  <div className="relative rounded-3xl border border-white/15 bg-black/40 p-6 backdrop-blur-2xl shadow-2xl">
-                    <div className="flex items-center justify-center gap-4 py-2">
+                <div className="w-full lg:w-[360px] shrink-0 flex items-center justify-center">
+                  <div className="w-full overflow-hidden rounded-3xl border border-white/15 bg-black/60 p-5 backdrop-blur-2xl shadow-2xl">
+                    <div className="h-44 w-full flex items-center justify-center gap-3 overflow-hidden py-1">
                       <img
                         src="/products/k8.png"
                         alt="Leveluk K8 Water Ionizer"
-                        className="h-28 sm:h-36 max-w-[48%] object-contain drop-shadow-xl hover:scale-105 transition-transform"
+                        className="max-h-36 max-w-[50%] w-auto object-contain drop-shadow-xl hover:scale-105 transition-transform"
+                        style={{ maxHeight: '144px', maxWidth: '50%' }}
                       />
                       <img
                         src="/products/emguarde-go.png"
                         alt="emGuarde GO Set of 2"
-                        className="h-24 sm:h-30 max-w-[42%] object-contain drop-shadow-xl hover:scale-105 transition-transform"
+                        className="max-h-28 max-w-[42%] w-auto object-contain drop-shadow-xl hover:scale-105 transition-transform"
+                        style={{ maxHeight: '112px', maxWidth: '42%' }}
                       />
                     </div>
-                    <div className="mt-4 pt-3 border-t border-white/10 flex items-center justify-between text-[11px] text-[#86868b]">
+                    <div className="mt-3 pt-3 border-t border-white/10 flex items-center justify-between text-[11px] text-[#86868b]">
                       <span className="flex items-center gap-1 text-cyan-300 font-semibold">
                         <CheckCircle2 className="h-3.5 w-3.5 text-cyan-400" /> Complete Health Stack
                       </span>
@@ -953,8 +955,13 @@ export function ProductShowcaseLandingPage({
                         <p className="text-xs text-[#cccccc] font-medium mt-1">{prod.tagline[locale]}</p>
                       </div>
 
-                      <div className="h-24 w-24 sm:h-28 sm:w-28 shrink-0 mx-auto sm:mx-0 p-2 rounded-2xl bg-black/40 border border-white/10 flex items-center justify-center">
-                        <img src={prod.image} alt={prod.name} className="max-h-20 sm:max-h-24 max-w-[90%] object-contain drop-shadow-lg" />
+                      <div className="h-24 w-24 sm:h-28 sm:w-28 shrink-0 mx-auto sm:mx-0 p-2 rounded-2xl bg-black/60 border border-white/10 flex items-center justify-center overflow-hidden">
+                        <img
+                          src={prod.image}
+                          alt={prod.name}
+                          className="max-h-20 sm:max-h-24 max-w-full w-auto object-contain drop-shadow-lg"
+                          style={{ maxHeight: '88px', maxWidth: '100%' }}
+                        />
                       </div>
                     </div>
 
@@ -1045,8 +1052,13 @@ export function ProductShowcaseLandingPage({
                   className="rounded-3xl border border-white/10 bg-white/[0.02] p-6 flex flex-col justify-between hover:border-white/20 transition-all"
                 >
                   <div>
-                    <div className="h-32 w-full rounded-2xl bg-black/40 border border-white/5 p-3 flex items-center justify-center mb-4">
-                      <img src={prod.image} alt={prod.name} className="max-h-24 max-w-[70%] object-contain drop-shadow-md" />
+                    <div className="h-32 w-full rounded-2xl bg-black/60 border border-white/5 p-3 flex items-center justify-center mb-4 overflow-hidden">
+                      <img
+                        src={prod.image}
+                        alt={prod.name}
+                        className="max-h-24 max-w-[70%] w-auto object-contain drop-shadow-md"
+                        style={{ maxHeight: '96px', maxWidth: '70%' }}
+                      />
                     </div>
                     <span className="text-[10px] font-bold uppercase tracking-widest text-[#86868b]">
                       {prod.category[locale]}
