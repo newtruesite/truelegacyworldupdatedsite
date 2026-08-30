@@ -21,6 +21,7 @@ import {
   LogOut,
   Mail,
   MessageCircle,
+  MessageSquare,
   MoreVertical,
   Phone,
   Search,
@@ -259,7 +260,7 @@ export default function CrmPage() {
     }
   }
 
-  const recordOutreach = async (lead: CrmLead, channel: 'WhatsApp' | 'Email', landingUrl: string) => {
+  const recordOutreach = async (lead: CrmLead, channel: 'WhatsApp' | 'Email' | 'SMS', landingUrl: string) => {
     try {
       await addLeadNote(lead.id, `${channel} nurture message prepared · ${landingUrl}`)
       if (notes[lead.id]) {
@@ -1013,7 +1014,7 @@ export default function CrmPage() {
                 </div>
 
                 {/* Primary Quick Connect Action Row */}
-                <div className="mt-4 grid grid-cols-2 sm:grid-cols-3 gap-2">
+                <div className="mt-4 grid grid-cols-2 sm:grid-cols-4 gap-2">
                   <a
                     href={getGmailComposeUrl(selectedLead.email, `True Legacy · ${selectedLead.full_name}`)}
                     target="_blank"
@@ -1042,8 +1043,18 @@ export default function CrmPage() {
 
                   {selectedLead.phone ? (
                     <a
+                      href={`sms:${selectedLead.phone.replace(/[^\d+]/g, '')}`}
+                      className="flex items-center justify-center gap-1.5 rounded-xl border border-cyan-500/30 bg-cyan-500/10 hover:bg-cyan-500/20 py-2.5 text-xs font-bold text-cyan-300 transition-colors"
+                    >
+                      <MessageSquare className="h-3.5 w-3.5" />
+                      SMS Text
+                    </a>
+                  ) : null}
+
+                  {selectedLead.phone ? (
+                    <a
                       href={`tel:${selectedLead.phone.replace(/\s+/g, '')}`}
-                      className="flex items-center justify-center gap-1.5 rounded-xl border border-white/15 bg-white/5 hover:bg-white/10 py-2.5 text-xs font-bold text-white transition-colors col-span-2 sm:col-span-1"
+                      className="flex items-center justify-center gap-1.5 rounded-xl border border-white/15 bg-white/5 hover:bg-white/10 py-2.5 text-xs font-bold text-white transition-colors"
                     >
                       <Phone className="h-3.5 w-3.5 text-[#2997ff]" />
                       Call
@@ -1396,7 +1407,7 @@ function NurtureCenter({
 }: {
   lead: CrmLead
   distributor?: CrmDistributor
-  onOpen: (lead: CrmLead, channel: 'WhatsApp' | 'Email', landingUrl: string) => void
+  onOpen: (lead: CrmLead, channel: 'WhatsApp' | 'Email' | 'SMS', landingUrl: string) => void
 }) {
   const [copied, setCopied] = useState('')
   if (!distributor) {
@@ -1469,9 +1480,13 @@ function NurtureCenter({
         {ALL_LANDING_PAGES.map((page) => {
           const landingUrl = `${window.location.origin}/d/${distributor.slug}/${page.campaign}`
           const text = nurtureMessage(lead, distributor, page.campaign, landingUrl)
-          const whatsAppUrl = lead.phone
-            ? `https://wa.me/${lead.phone.replace(/\D/g, '')}?text=${encodeURIComponent(text)}`
+          const cleanPhone = lead.phone ? lead.phone.replace(/[^\d+]/g, '') : ''
+          const whatsAppUrl = cleanPhone
+            ? `https://wa.me/${cleanPhone.replace(/\D/g, '')}?text=${encodeURIComponent(text)}`
             : `https://wa.me/?text=${encodeURIComponent(text)}`
+          const smsUrl = cleanPhone
+            ? `sms:${cleanPhone}?&body=${encodeURIComponent(text)}`
+            : `sms:?&body=${encodeURIComponent(text)}`
           const emailSubject = `Information from ${distributor.display_name} · True Legacy`
           const gmailUrl = getGmailComposeUrl(lead.email, emailSubject, text)
           const isPrimary =
@@ -1507,6 +1522,14 @@ function NurtureCenter({
                 >
                   <MessageCircle className="h-3.5 w-3.5" />
                   WhatsApp
+                </a>
+                <a
+                  href={smsUrl}
+                  onClick={() => onOpen(lead, 'SMS', landingUrl)}
+                  className="inline-flex items-center gap-1.5 rounded-lg border border-cyan-500/30 bg-cyan-500/10 hover:bg-cyan-500/20 px-3 py-1.5 text-xs font-bold text-cyan-300 transition-colors"
+                >
+                  <MessageSquare className="h-3.5 w-3.5" />
+                  SMS Text
                 </a>
                 <a
                   href={gmailUrl}
