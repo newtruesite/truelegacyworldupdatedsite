@@ -56,7 +56,7 @@ const LEADER_PORTRAITS: Record<string, string> = {
 const I18N = {
   en: {
     badge: 'PRIVATE PRODUCT PRESENTATION',
-    headline: 'Two Technologies. One More Intentional Lifestyle.',
+    headline: 'Two Technologies. One Elevated Lifestyle.',
     heroBody1:
       'Most people think carefully about the food they eat and the air they breathe. But two environments are also part of everyday life: the water we use and the technology surrounding us.',
     heroBody2:
