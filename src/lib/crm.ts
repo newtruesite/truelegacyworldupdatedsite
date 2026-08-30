@@ -4,6 +4,16 @@ export type CrmRole = 'admin' | 'distributor'
 export type LeadStatus = 'new' | 'contacted' | 'qualified' | 'nurturing' | 'converted' | 'closed'
 export type LeadInterest = 'product' | 'duo' | 'distributor' | 'training' | 'events'
 
+export type DistributorCustomApplicationSettings = {
+  customHeadline?: string
+  customIntro?: string
+  customEyebrow?: string
+  customSubmitButtonText?: string
+  customBadge?: string
+  customNote?: string
+  defaultInterests?: string[]
+}
+
 export type PublicDistributor = {
   id: string
   slug: string
@@ -20,6 +30,7 @@ export type PublicDistributor = {
   custom_links?: { label: string; url: string }[]
   last_access_email_sent_at?: string | null
   auth_user_id?: string | null
+  application_settings?: DistributorCustomApplicationSettings | null
 }
 
 export type CrmDistributor = PublicDistributor & {
@@ -40,6 +51,7 @@ export type DistributorProfileUpdate = {
   regions: string[]
   languages: string[]
   acceptingLeads: boolean
+  applicationSettings?: DistributorCustomApplicationSettings | null
 }
 
 export type CrmMembership = {
@@ -50,6 +62,32 @@ export type CrmMembership = {
 }
 
 const AVATAR_STORAGE_KEY = 'true_legacy_custom_avatars'
+const APP_SETTINGS_STORAGE_KEY = 'true_legacy_custom_app_settings'
+
+export function getCustomApplicationSettingsMap(): Record<string, DistributorCustomApplicationSettings> {
+  if (typeof window === 'undefined') return {}
+  try {
+    const raw = localStorage.getItem(APP_SETTINGS_STORAGE_KEY)
+    return raw ? JSON.parse(raw) : {}
+  } catch {
+    return {}
+  }
+}
+
+export function getCustomApplicationSettings(slug: string): DistributorCustomApplicationSettings | null {
+  const map = getCustomApplicationSettingsMap()
+  return map[slug] || null
+}
+
+export function setCustomApplicationSettings(slug: string, settings: DistributorCustomApplicationSettings): void {
+  if (typeof window === 'undefined' || !slug) return
+  try {
+    const map = getCustomApplicationSettingsMap()
+    map[slug] = settings
+    localStorage.setItem(APP_SETTINGS_STORAGE_KEY, JSON.stringify(map))
+    window.dispatchEvent(new CustomEvent('truelegacy:app-settings-updated', { detail: { slug, settings } }))
+  } catch {}
+}
 
 /**
  * Converts a Blob, File, or transient Image URL into a permanent Base64 Data URL
@@ -373,30 +411,33 @@ const FALLBACK_DISTRIBUTORS: PublicDistributor[] = [
 
 export async function getPublicDistributors(): Promise<PublicDistributor[]> {
   const customAvatars = getCustomLeaderAvatars()
-  const applyCustomAvatars = (list: PublicDistributor[]): PublicDistributor[] => {
+  const customAppSettings = getCustomApplicationSettingsMap()
+  const applyCustomizations = (list: PublicDistributor[]): PublicDistributor[] => {
     return list.map((item) => ({
       ...item,
       avatar_url: customAvatars[item.slug] || item.avatar_url || `/leaders/standardized/${item.slug}.png`,
+      application_settings: customAppSettings[item.slug] || item.application_settings || null,
     }))
   }
 
-  if (!crmSupabase) return applyCustomAvatars(FALLBACK_DISTRIBUTORS)
+  if (!crmSupabase) return applyCustomizations(FALLBACK_DISTRIBUTORS)
   try {
     const { data, error } = await crmSupabase.rpc('get_public_crm_distributors')
-    if (error || !Array.isArray(data)) return applyCustomAvatars(FALLBACK_DISTRIBUTORS)
+    if (error || !Array.isArray(data)) return applyCustomizations(FALLBACK_DISTRIBUTORS)
     const remoteDistributors = (data as PublicDistributor[]).map((profile) => {
       const confirmed = FALLBACK_DISTRIBUTORS.find((item) => item.slug === profile.slug)
       const base = confirmed ? { ...confirmed, ...profile, id: profile.id } : profile
       return {
         ...base,
         avatar_url: customAvatars[profile.slug] || profile.avatar_url || base.avatar_url || `/leaders/standardized/${profile.slug}.png`,
+        application_settings: customAppSettings[profile.slug] || profile.application_settings || base.application_settings || null,
       }
     })
     const remoteSlugs = new Set(remoteDistributors.map((profile) => profile.slug))
     const merged = [...remoteDistributors, ...FALLBACK_DISTRIBUTORS.filter((profile) => !remoteSlugs.has(profile.slug))]
-    return applyCustomAvatars(merged)
+    return applyCustomizations(merged)
   } catch {
-    return applyCustomAvatars(FALLBACK_DISTRIBUTORS)
+    return applyCustomizations(FALLBACK_DISTRIBUTORS)
   }
 }
 
@@ -431,6 +472,7 @@ export async function getCrmLeads(): Promise<CrmLead[]> {
 
 export async function getCrmDistributors(): Promise<CrmDistributor[]> {
   const customAvatars = getCustomLeaderAvatars()
+  const customAppSettings = getCustomApplicationSettingsMap()
   if (!crmSupabase) {
     return FALLBACK_DISTRIBUTORS.map((d) => ({
       ...d,
@@ -438,6 +480,7 @@ export async function getCrmDistributors(): Promise<CrmDistributor[]> {
       accepting_leads: true,
       login_email: null,
       avatar_url: customAvatars[d.slug] || d.avatar_url || `/leaders/standardized/${d.slug}.png`,
+      application_settings: customAppSettings[d.slug] || d.application_settings || null,
     }))
   }
   try {
@@ -446,6 +489,7 @@ export async function getCrmDistributors(): Promise<CrmDistributor[]> {
     return ((data || []) as CrmDistributor[]).map((d) => ({
       ...d,
       avatar_url: customAvatars[d.slug] || d.avatar_url || `/leaders/standardized/${d.slug}.png`,
+      application_settings: customAppSettings[d.slug] || d.application_settings || null,
     }))
   } catch {
     return FALLBACK_DISTRIBUTORS.map((d) => ({
@@ -454,6 +498,7 @@ export async function getCrmDistributors(): Promise<CrmDistributor[]> {
       accepting_leads: true,
       login_email: null,
       avatar_url: customAvatars[d.slug] || d.avatar_url || `/leaders/standardized/${d.slug}.png`,
+      application_settings: customAppSettings[d.slug] || d.application_settings || null,
     }))
   }
 }

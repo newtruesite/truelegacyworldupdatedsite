@@ -175,6 +175,15 @@ export default function ApplicationPage() {
   const presetCountry = useMemo(() => new URLSearchParams(location.search).get('country')?.trim().toLowerCase() || '', [location.search])
   const referralDistributor = distributors.find((item) => item.slug === referralCode || item.referral_code === referralCode)
 
+  // Check for distributor custom application form settings
+  const appSettings = referralDistributor?.application_settings
+  const pageEyebrow = appSettings?.customEyebrow || t.eyebrow
+  const pageTitle = appSettings?.customHeadline || t.title
+  const pageIntro = appSettings?.customIntro || t.intro
+  const submitLabel = appSettings?.customSubmitButtonText || t.submit
+  const customBadge = appSettings?.customBadge
+  const customNote = appSettings?.customNote
+
   // Multi-interest state
   const [selectedInterests, setSelectedInterests] = useState<string[]>(() => {
     const searchParams = new URLSearchParams(typeof window !== 'undefined' ? window.location.search : '')
@@ -193,8 +202,14 @@ export default function ApplicationPage() {
   }, [])
 
   useEffect(() => {
-    if (referralCode && referralDistributor) setHasReferrer('Yes')
-  }, [referralCode, referralDistributor])
+    if (referralCode && referralDistributor) {
+      setHasReferrer('Yes')
+      // If distributor configured custom default interests and no URL param override exists
+      if (!presetInterest && referralDistributor.application_settings?.defaultInterests?.length) {
+        setSelectedInterests(referralDistributor.application_settings.defaultInterests)
+      }
+    }
+  }, [referralCode, referralDistributor, presetInterest])
 
   useEffect(() => {
     if (presetInterest && ['product', 'duo', 'distributor', 'training', 'events'].includes(presetInterest)) {
@@ -287,12 +302,12 @@ export default function ApplicationPage() {
 
   return (
     <div className="page-wrapper bg-black text-white">
-      <SEO title="True Legacy Interest and Referral Form" description="Tell True Legacy what you are interested in, who referred you, and which distributor should assist you." />
+      <SEO title={referralDistributor ? `${pageTitle} · True Legacy` : "True Legacy Interest and Referral Form"} description={pageIntro} />
       <Navbar />
       <main className="mx-auto w-full max-w-3xl px-4 py-16 sm:px-6 md:py-24">
-        <p className="text-xs font-semibold uppercase tracking-[0.25em] text-[#2997ff]">{t.eyebrow}</p>
-        <h1 className="mt-3 text-3xl font-bold sm:text-5xl">{t.title}</h1>
-        <p className="mt-4 text-[#cccccc]">{t.intro}</p>
+        <p className="text-xs font-semibold uppercase tracking-[0.25em] text-[#2997ff]">{pageEyebrow}</p>
+        <h1 className="mt-3 text-3xl font-bold sm:text-5xl">{pageTitle}</h1>
+        <p className="mt-4 text-[#cccccc] leading-relaxed">{pageIntro}</p>
 
         {submitted ? (
           <div className="mt-10 space-y-8">
@@ -439,12 +454,27 @@ export default function ApplicationPage() {
           <form onSubmit={submit} className="mt-10 space-y-6 rounded-3xl border border-white/10 bg-white/[0.03] p-6 sm:p-8">
             <div className="hidden" aria-hidden="true"><label>Website<input tabIndex={-1} autoComplete="off" name="website" /></label></div>
             {referralDistributor && (
-              <div className="flex items-center gap-4 rounded-2xl border border-white/20 bg-cyan-400/10 p-4">
-                <img src={referralDistributor.avatar_url || '/logos/tl-square-white.png'} alt="" className="h-14 w-14 rounded-full object-cover" />
-                <div>
-                  <p className="text-xs uppercase tracking-wider text-[#2997ff]">{t.referredThrough}</p>
-                  <p className="font-semibold text-white">{referralDistributor.display_name}</p>
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 rounded-2xl border border-cyan-400/30 bg-cyan-400/10 p-4">
+                <div className="flex items-center gap-4">
+                  <img src={referralDistributor.avatar_url || '/logos/tl-square-white.png'} alt="" className="h-14 w-14 rounded-full object-cover border border-cyan-400/30 shadow-md" />
+                  <div>
+                    <p className="text-xs uppercase tracking-wider text-[#2997ff]">{t.referredThrough}</p>
+                    <p className="font-bold text-white text-base">{referralDistributor.display_name}</p>
+                    <p className="text-xs text-[#86868b]">{referralDistributor.title}</p>
+                  </div>
                 </div>
+                {customBadge && (
+                  <span className="self-start sm:self-center rounded-full border border-cyan-400/40 bg-cyan-400/20 px-3 py-1 text-[11px] font-black uppercase tracking-wider text-cyan-300">
+                    {customBadge}
+                  </span>
+                )}
+              </div>
+            )}
+
+            {customNote && (
+              <div className="rounded-xl border border-white/15 bg-white/[0.04] p-4 text-xs text-[#cccccc] leading-relaxed">
+                <p className="font-bold text-white text-xs mb-1">Message from {referralDistributor?.display_name || 'Leader'}:</p>
+                <p>{customNote}</p>
               </div>
             )}
 
@@ -594,9 +624,9 @@ export default function ApplicationPage() {
             <button
               disabled={submitting}
               type="submit"
-              className="w-full rounded-xl bg-cyan-500 px-6 py-3.5 font-semibold text-slate-950 hover:bg-cyan-400 transition-colors shadow-lg shadow-cyan-500/20 disabled:cursor-wait disabled:opacity-60"
+              className="w-full rounded-xl bg-cyan-500 px-6 py-3.5 font-bold text-slate-950 hover:bg-cyan-400 transition-colors shadow-lg shadow-cyan-500/20 disabled:cursor-wait disabled:opacity-60"
             >
-              {submitting ? t.submitting : t.submit}
+              {submitting ? t.submitting : submitLabel}
             </button>
           </form>
         )}
