@@ -166,8 +166,10 @@ export default function DistributorProfilePage() {
       attributionAssurance: 'Team Attribution Assured',
       primaryMessage: `Message ${firstName} on WhatsApp`,
       requestInfo: 'Request information',
-      chooseHeading: 'Choose your personal path',
-      chooseSub: `Explore the business, products, training, and live events. Every step connects directly back to ${firstName}.`,
+      journeyLabel: 'Your True Legacy Journey',
+      previewLabel: 'Preview',
+      chooseHeading: 'What Would You Like to Explore?',
+      chooseSub: `Choose the experience that matches your curiosity. You’ll see exactly what’s inside before taking the next step with ${firstName}.`,
       aboutTitle: `About ${profile?.display_name || firstName}`,
       storySubtitle: 'Background & Mission',
       connectDirectly: `Direct Connection`,
@@ -179,40 +181,46 @@ export default function DistributorProfilePage() {
       reconnectSub: 'Whether you want to learn more about the products or explore the business, we are here to support your journey.',
       paths: [
         {
-          tag: '01 · Opportunity',
-          title: 'Business Presentation',
-          desc: `See how ${firstName} approaches leadership, global expansion, and building an independent business.`,
-          cta: 'Explore the Business',
+          tag: '01 · OPPORTUNITY',
+          title: 'See the Business Opportunity',
+          desc: `A clear introduction to the model, mentorship, global community, and what building with ${firstName} can look like.`,
+          cta: 'Watch the Presentation',
+          badge: 'Global Model · Mentorship',
         },
         {
-          tag: '02 · Products',
-          title: 'Full Product Line Showcase',
-          desc: 'Explore our premier Duo Package, flagship medical-grade ionizers, and the complete Enagic catalog.',
-          cta: 'Explore Products',
+          tag: '02 · SHOWCASE',
+          title: 'Explore the Product Collection',
+          desc: 'Compare the complete Enagic range—from flagship water ionizers to home, wellness, and protection technologies.',
+          cta: 'View All Products',
+          badge: 'Complete Japanese Lineup',
         },
         {
-          tag: '03 · The Duo',
-          title: 'The Duo Technologies',
-          desc: 'Watch clear demonstrations of the Leveluk K8 water system and portable emGuarde GO set.',
-          cta: 'Explore the Duo',
+          tag: '03 · THE DUO',
+          title: 'Meet the K8 + emGuarde GO Duo',
+          desc: 'See how two complementary technologies support the water you drink and the environment around you.',
+          cta: 'See the Duo in Action',
+          badge: 'Cellular Synergy Stack',
         },
         {
-          tag: '04 · Ionization',
-          title: 'Kangen Water®',
-          desc: 'Explore Japanese medical-grade ionization, molecular hydrogen (H2), and negative ORP antioxidant power.',
-          cta: 'Discover Kangen Water',
+          tag: '04 · IONIZATION',
+          title: 'Discover the Leveluk K8',
+          desc: 'Understand the machine, the different water types it creates, and how families use them in everyday life.',
+          cta: 'Explore Kangen Water®',
+          badge: '8 Platinum Plates · 5 Waters',
         },
         {
-          tag: '05 · Protection',
-          title: 'emGuarde® Defense',
-          desc: 'Learn how patented harmonic resonance harmonizes electro smoke and EMF radiation noise across a 3-meter radius.',
-          cta: 'Explore emGuarde',
+          tag: '05 · PROTECTION',
+          title: 'Understand emGuarde® Protection',
+          desc: 'A simple visual introduction to emGuarde, its harmonic resonance technology, and where it fits in your space.',
+          cta: 'Discover emGuarde®',
+          badge: '360° Harmonic Resonance',
         },
         {
-          tag: '06 · Academy',
-          title: 'Leadership Training',
-          desc: 'Preview the practical learning systems, product education, and global mentorship community.',
-          cta: 'Preview Academy',
+          tag: '06 · ACADEMY',
+          title: 'Learn, Lead & Build with Confidence',
+          desc: 'Step inside the training system for product knowledge, conversations, leadership, and team development.',
+          cta: 'Enter the Academy',
+          badge: 'Training Hub · Resources',
         },
       ],
     },
@@ -222,8 +230,10 @@ export default function DistributorProfilePage() {
       attributionAssurance: 'Atribución de Equipo Garantizada',
       primaryMessage: `Mensaje a ${firstName} por WhatsApp`,
       requestInfo: 'Solicitar información',
-      chooseHeading: 'Elige tu camino personalizado',
-      chooseSub: `Explora el negocio, los productos, la capacitación y los eventos en vivo. Cada paso se conecta directamente con ${firstName}.`,
+      journeyLabel: 'Tu Recorrido True Legacy',
+      previewLabel: 'Vista previa',
+      chooseHeading: '¿Qué Te Gustaría Explorar?',
+      chooseSub: `Elige la experiencia que despierte tu curiosidad. Verás exactamente lo que hay dentro antes de dar el siguiente paso con ${firstName}.`,
       aboutTitle: `Acerca de ${profile?.display_name || firstName}`,
       storySubtitle: 'Trayectoria y Misión',
       connectDirectly: `Conexión Directa`,
@@ -235,40 +245,46 @@ export default function DistributorProfilePage() {
       reconnectSub: 'Ya sea que desees conocer más sobre los productos o explorar el negocio, estamos aquí para acompañarte.',
       paths: [
         {
-          tag: '01 · Oportunidad',
-          title: 'Presentación de Negocio',
-          desc: `Descubre cómo ${firstName} aborda el liderazgo, la expansión global y la creación de un negocio independiente.`,
-          cta: 'Explorar Negocio',
+          tag: '01 · OPORTUNIDAD',
+          title: 'Descubre la Oportunidad de Negocio',
+          desc: `Una introducción clara al modelo, la mentoría, la comunidad global y cómo es construir junto a ${firstName}.`,
+          cta: 'Ver la Presentación',
+          badge: 'Modelo Global · Mentoría',
         },
         {
-          tag: '02 · Productos',
-          title: 'Catálogo Completo de Productos',
-          desc: 'Explora el Paquete Dúo, los ionizadores médicos destacados y la línea completa de Enagic.',
-          cta: 'Ver Catálogo',
+          tag: '02 · COLECCIÓN',
+          title: 'Explora la Colección de Productos',
+          desc: 'Compara la gama completa de Enagic: desde ionizadores de agua médicos hasta tecnologías para el hogar, bienestar y protección.',
+          cta: 'Ver Todos los Productos',
+          badge: 'Línea Japonesa Completa',
         },
         {
-          tag: '03 · El Dúo',
-          title: 'Tecnologías del Dúo',
-          desc: 'Demostraciones claras del sistema de agua K8 y el set portátil emGuarde GO.',
-          cta: 'Explorar el Dúo',
+          tag: '03 · EL DÚO',
+          title: 'Conoce el Dúo K8 + emGuarde GO',
+          desc: 'Descubre cómo dos tecnologías complementarias optimizan el agua que bebes y el entorno que te rodea.',
+          cta: 'Ver el Dúo en Acción',
+          badge: 'Sinergia Celular Completa',
         },
         {
-          tag: '04 · Ionización',
-          title: 'Agua Kangen®',
-          desc: 'Descubre la ionización médica japonesa, el hidrógeno molecular (H2) y el poder antioxidante del Leveluk K8.',
-          cta: 'Descubrir Agua Kangen',
+          tag: '04 · IONIZACIÓN',
+          title: 'Descubre el Leveluk K8',
+          desc: 'Conoce el equipo, los diferentes tipos de agua que produce y cómo las familias lo utilizan en su día a día.',
+          cta: 'Explorar Agua Kangen®',
+          badge: '8 Placas de Titanio · 5 Aguas',
         },
         {
-          tag: '05 · Protección',
-          title: 'Defensa emGuarde®',
-          desc: 'Aprende cómo la resonancia armónica patentada armoniza el electrosmog y el ruido de radiación EMF en un radio de 3 metros.',
-          cta: 'Explorar emGuarde',
+          tag: '05 · PROTECCIÓN',
+          title: 'Entiende la Protección emGuarde®',
+          desc: 'Una introducción visual a emGuarde, su tecnología de resonancia armónica y cómo se integra en tu espacio.',
+          cta: 'Descubrir emGuarde®',
+          badge: 'Resonancia Armónica 360°',
         },
         {
-          tag: '06 · Academia',
-          title: 'Capacitación y Liderazgo',
-          desc: 'Conoce los sistemas de aprendizaje, la educación de productos y el apoyo de la comunidad.',
-          cta: 'Ver Academia',
+          tag: '06 · ACADEMIA',
+          title: 'Aprende, Lidera y Construye con Confianza',
+          desc: 'Accede al sistema de formación en conocimiento de producto, conversaciones, liderazgo y desarrollo de equipo.',
+          cta: 'Entrar a la Academia',
+          badge: 'Centro de Capacitación',
         },
       ],
     },
@@ -278,8 +294,10 @@ export default function DistributorProfilePage() {
       attributionAssurance: 'Attribution d’Équipe Garantie',
       primaryMessage: `Contacter ${firstName} sur WhatsApp`,
       requestInfo: 'Demander des informations',
-      chooseHeading: 'Choisissez votre parcours personnalisé',
-      chooseSub: `Découvrez l’activité, les produits, la formation et les événements en direct. Chaque étape reste directement liée à ${firstName}.`,
+      journeyLabel: 'Votre Parcours True Legacy',
+      previewLabel: 'Aperçu',
+      chooseHeading: 'Que Souhaitez-Vous Découvrir ?',
+      chooseSub: `Choisissez l’expérience qui correspond à votre curiosité. Vous verrez exactement ce qui vous attend avant de poursuivre avec ${firstName}.`,
       aboutTitle: `À propos de ${profile?.display_name || firstName}`,
       storySubtitle: 'Parcours et Vision',
       connectDirectly: `Contact Direct`,
@@ -291,40 +309,46 @@ export default function DistributorProfilePage() {
       reconnectSub: 'Que vous souhaitiez en savoir plus sur les produits ou découvrir l’activité, nous sommes là pour vous accompagner.',
       paths: [
         {
-          tag: '01 · Opportunité',
-          title: 'Présentation de l’Activité',
-          desc: `Découvrez la vision de ${firstName} sur le leadership, l’expansion et la création d’une activité indépendante.`,
-          cta: 'Découvrir l’Activité',
+          tag: '01 · OPPORTUNITÉ',
+          title: "Découvrez l'Opportunité d'Affaires",
+          desc: `Une introduction claire au modèle, au mentorat, à la communauté mondiale et au développement avec ${firstName}.`,
+          cta: 'Voir la Présentation',
+          badge: 'Modèle Mondial · Mentorat',
         },
         {
-          tag: '02 · Produits',
-          title: 'Vitrine Produits Complète',
-          desc: 'Découvrez notre Pack Duo, les ioniseurs médicaux phares et toute la gamme Enagic.',
-          cta: 'Explorer les Produits',
+          tag: '02 · COLLECTION',
+          title: 'Explorez la Collection de Produits',
+          desc: 'Comparez toute la gamme Enagic : des ioniseurs d’eau médicaux aux technologies pour le bien-être, la maison et la protection.',
+          cta: 'Voir Tous les Produits',
+          badge: 'Gamme Japonaise Certifiée',
         },
         {
-          tag: '03 · Le Duo',
-          title: 'Technologies du Duo',
-          desc: 'Démonstrations claires du système K8 et de la protection nomade emGuarde GO.',
-          cta: 'Découvrir le Duo',
+          tag: '03 · LE DUO',
+          title: 'Découvrez le Duo K8 + emGuarde GO',
+          desc: 'Découvrez comment deux technologies complémentaires agissent en synergie sur l’eau que vous buvez et votre environnement.',
+          cta: 'Voir le Duo en Action',
+          badge: 'Synergie Cellulaire Totale',
         },
         {
-          tag: '04 · Ionisation',
-          title: 'Eau Kangen®',
-          desc: 'Explorez l’ionisation médicale japonaise, l’hydrogène moléculaire (H2) et la puissance antioxydante du Leveluk K8.',
-          cta: 'Découvrir Eau Kangen',
+          tag: '04 · IONISATION',
+          title: 'Découvrez le Leveluk K8',
+          desc: 'Comprenez le fonctionnement de l’appareil, les différents types d’eau produits et leurs usages quotidiens en famille.',
+          cta: 'Explorer Eau Kangen®',
+          badge: '8 Plaques Titane · 5 Eaux',
         },
         {
-          tag: '05 · Protection',
-          title: 'Défense emGuarde®',
-          desc: 'Découvrez comment la résonance harmonique brevetée harmonise l\'électrosmog et le bruit des rayonnements CEM sur un rayon de 3 mètres.',
-          cta: 'Découvrir emGuarde',
+          tag: '05 · PROTECTION',
+          title: 'Comprendre la Protection emGuarde®',
+          desc: 'Une présentation visuelle simple d’emGuarde, de sa technologie de résonance harmonique et de son intégration dans votre espace.',
+          cta: 'Découvrir emGuarde®',
+          badge: 'Résonance Harmonique 360°',
         },
         {
-          tag: '06 · Académie',
-          title: 'Formation & Leadership',
-          desc: 'Accédez aux systèmes de formation, à l’éducation produit et au mentorat d’équipe.',
-          cta: 'Voir l’Académie',
+          tag: '06 · ACADÉMIE',
+          title: 'Apprenez, Dirigez et Bâtissez avec Confiance',
+          desc: 'Découvrez le système de formation pour la maîtrise produit, la communication, le leadership et le développement d’équipe.',
+          cta: "Entrer dans l'Académie",
+          badge: 'Hub de Formation & Outils',
         },
       ],
     },
@@ -334,8 +358,10 @@ export default function DistributorProfilePage() {
       attributionAssurance: 'Atribuição de Equipe Garantida',
       primaryMessage: `Mensagem para ${firstName} no WhatsApp`,
       requestInfo: 'Solicitar informações',
-      chooseHeading: 'Escolha seu caminho personalizado',
-      chooseSub: `Explore o negócio, os produtos, o treinamento e os eventos ao vivo. Cada passo se conecta diretamente a ${firstName}.`,
+      journeyLabel: 'Sua Jornada True Legacy',
+      previewLabel: 'Prévia',
+      chooseHeading: 'O Que Você Gostaria de Explorar?',
+      chooseSub: `Escolha a experiência que mais desperta sua curiosidade. Você verá exatamente o que há dentro antes de dar o próximo passo com ${firstName}.`,
       aboutTitle: `Sobre ${profile?.display_name || firstName}`,
       storySubtitle: 'Trajetória e Propósito',
       connectDirectly: `Conexão Direta`,
@@ -347,40 +373,46 @@ export default function DistributorProfilePage() {
       reconnectSub: 'Seja para conhecer mais sobre os produtos ou explorar o negócio, estamos prontos para apoiar sua jornada.',
       paths: [
         {
-          tag: '01 · Oportunidade',
-          title: 'Apresentação de Negócio',
-          desc: `Veja como ${firstName} aborda liderança, duplicação e construção de um negócio independente.`,
-          cta: 'Explorar Negócio',
+          tag: '01 · OPORTUNIDADE',
+          title: 'Veja a Oportunidade de Negócio',
+          desc: `Uma introdução clara ao modelo, mentoria, comunidade global e como é construir ao lado de ${firstName}.`,
+          cta: 'Assistir à Apresentação',
+          badge: 'Modelo Global · Mentoria',
         },
         {
-          tag: '02 · Produtos',
-          title: 'Catálogo Completo de Produtos',
-          desc: 'Explore o Pacote Duo, os ionizadores médicos de destaque e a linha completa Enagic.',
-          cta: 'Ver Produtos',
+          tag: '02 · COLEÇÃO',
+          title: 'Explore a Coleção de Produtos',
+          desc: 'Compare a linha completa da Enagic — desde ionizadores médicos de água até tecnologias para casa, bem-estar e proteção.',
+          cta: 'Ver Todos os Produtos',
+          badge: 'Linha Japonesa Completa',
         },
         {
-          tag: '03 · O Duo',
-          title: 'Tecnologias do Duo',
-          desc: 'Demonstrações práticas do ionizador K8 e do protetor portátil emGuarde GO.',
-          cta: 'Explorar o Duo',
+          tag: '03 · O DUO',
+          title: 'Conheça o Duo K8 + emGuarde GO',
+          desc: 'Veja como duas tecnologias complementares atuam na água que você bebe e no ambiente ao seu redor.',
+          cta: 'Ver o Duo em Ação',
+          badge: 'Sinergia Celular Total',
         },
         {
-          tag: '04 · Ionização',
-          title: 'Água Kangen®',
-          desc: 'Explore a ionização médica japonesa, hidrogênio molecular (H2) e o poder antioxidante do Leveluk K8.',
-          cta: 'Conhecer Água Kangen',
+          tag: '04 · IONIZAÇÃO',
+          title: 'Descubra o Leveluk K8',
+          desc: 'Entenda o equipamento, os diferentes tipos de água gerados e como as famílias o utilizam no dia a dia.',
+          cta: 'Explorar Água Kangen®',
+          badge: '8 Placas de Titânio · 5 Águas',
         },
         {
-          tag: '05 · Proteção',
-          title: 'Defesa emGuarde®',
-          desc: 'Aprenda como a ressonância harmônica patenteada harmoniza o electrosmog e o ruído de radiação eletromagnética em um raio de 3 metros.',
-          cta: 'Explorar emGuarde',
+          tag: '05 · PROTEÇÃO',
+          title: 'Entenda a Proteção emGuarde®',
+          desc: 'Uma introdução visual simples ao emGuarde, sua tecnologia de ressonância harmônica e onde ele se encaixa no seu espaço.',
+          cta: 'Descobrir emGuarde®',
+          badge: 'Ressonância Harmônica 360°',
         },
         {
-          tag: '06 · Academia',
-          title: 'Treinamento e Liderança',
-          desc: 'Conheça o sistema de aprendizado, educação de produtos e mentoria global da comunidade.',
-          cta: 'Ver Academia',
+          tag: '06 · ACADEMIA',
+          title: 'Aprenda, Lidere e Construa com Confiança',
+          desc: 'Acesse o sistema de treinamento em conhecimento de produtos, comunicação, liderança e desenvolvimento de equipe.',
+          cta: 'Entrar na Academia',
+          badge: 'Portal de Treinamento',
         },
       ],
     },
@@ -425,9 +457,12 @@ export default function DistributorProfilePage() {
       title: ui.paths[0].title,
       desc: ui.paths[0].desc,
       cta: ui.paths[0].cta,
+      badge: ui.paths[0].badge,
+      type: 'presentation',
       gradient: 'from-cyan-500/20 via-blue-600/10 to-transparent',
-      borderGlow: 'hover:border-cyan-400/40',
-      iconBg: 'bg-cyan-400/10 text-[#2997ff]',
+      borderGlow: 'hover:border-cyan-400/50 hover:shadow-cyan-500/10',
+      iconBg: 'bg-cyan-400/10 text-cyan-400 border border-cyan-400/30',
+      btnBg: 'bg-cyan-400/10 text-cyan-300 border border-cyan-400/30 group-hover:bg-cyan-400 group-hover:text-slate-950',
     },
     {
       slug: 'products',
@@ -436,9 +471,12 @@ export default function DistributorProfilePage() {
       title: ui.paths[1].title,
       desc: ui.paths[1].desc,
       cta: ui.paths[1].cta,
+      badge: ui.paths[1].badge,
+      type: 'collection',
       gradient: 'from-emerald-500/20 via-teal-600/10 to-transparent',
-      borderGlow: 'hover:border-emerald-400/40',
-      iconBg: 'bg-emerald-400/10 text-emerald-400',
+      borderGlow: 'hover:border-emerald-400/50 hover:shadow-emerald-500/10',
+      iconBg: 'bg-emerald-400/10 text-emerald-400 border border-emerald-400/30',
+      btnBg: 'bg-emerald-400/10 text-emerald-300 border border-emerald-400/30 group-hover:bg-emerald-400 group-hover:text-slate-950',
     },
     {
       slug: 'duo',
@@ -447,9 +485,12 @@ export default function DistributorProfilePage() {
       title: ui.paths[2].title,
       desc: ui.paths[2].desc,
       cta: ui.paths[2].cta,
+      badge: ui.paths[2].badge,
+      type: 'duo',
       gradient: 'from-sky-500/20 via-indigo-600/10 to-transparent',
-      borderGlow: 'hover:border-sky-400/40',
-      iconBg: 'bg-sky-400/10 text-sky-400',
+      borderGlow: 'hover:border-sky-400/50 hover:shadow-sky-500/10',
+      iconBg: 'bg-sky-400/10 text-sky-400 border border-sky-400/30',
+      btnBg: 'bg-sky-400/10 text-sky-300 border border-sky-400/30 group-hover:bg-sky-400 group-hover:text-slate-950',
     },
     {
       slug: 'kangen',
@@ -458,9 +499,12 @@ export default function DistributorProfilePage() {
       title: ui.paths[3].title,
       desc: ui.paths[3].desc,
       cta: ui.paths[3].cta,
+      badge: ui.paths[3].badge,
+      type: 'k8',
       gradient: 'from-cyan-500/20 via-sky-600/10 to-transparent',
-      borderGlow: 'hover:border-cyan-400/40',
-      iconBg: 'bg-cyan-400/10 text-cyan-300',
+      borderGlow: 'hover:border-cyan-400/50 hover:shadow-cyan-500/10',
+      iconBg: 'bg-cyan-400/10 text-cyan-300 border border-cyan-400/30',
+      btnBg: 'bg-cyan-400/10 text-cyan-300 border border-cyan-400/30 group-hover:bg-cyan-400 group-hover:text-slate-950',
     },
     {
       slug: 'emguarde',
@@ -469,9 +513,12 @@ export default function DistributorProfilePage() {
       title: ui.paths[4].title,
       desc: ui.paths[4].desc,
       cta: ui.paths[4].cta,
+      badge: ui.paths[4].badge,
+      type: 'emguarde',
       gradient: 'from-violet-500/20 via-purple-600/10 to-transparent',
-      borderGlow: 'hover:border-violet-400/40',
-      iconBg: 'bg-violet-400/10 text-violet-300',
+      borderGlow: 'hover:border-violet-400/50 hover:shadow-violet-500/10',
+      iconBg: 'bg-violet-400/10 text-violet-300 border border-violet-400/30',
+      btnBg: 'bg-violet-400/10 text-violet-300 border border-violet-400/30 group-hover:bg-violet-400 group-hover:text-slate-950',
     },
     {
       slug: 'training',
@@ -480,9 +527,12 @@ export default function DistributorProfilePage() {
       title: ui.paths[5].title,
       desc: ui.paths[5].desc,
       cta: ui.paths[5].cta,
+      badge: ui.paths[5].badge,
+      type: 'academy',
       gradient: 'from-blue-600/20 via-indigo-700/10 to-transparent',
-      borderGlow: 'hover:border-blue-400/40',
-      iconBg: 'bg-blue-400/10 text-blue-400',
+      borderGlow: 'hover:border-blue-400/50 hover:shadow-blue-500/10',
+      iconBg: 'bg-blue-400/10 text-blue-400 border border-blue-400/30',
+      btnBg: 'bg-blue-400/10 text-blue-300 border border-blue-400/30 group-hover:bg-blue-400 group-hover:text-slate-950',
     },
   ]
 
@@ -663,55 +713,181 @@ export default function DistributorProfilePage() {
               </div>
             </header>
 
-            {/* 2. FOUR-PATH GUIDED EXPERIENCE CARDS (Reduced height, connected visual cards, NO text-heavy flyers) */}
+            {/* 2. VISUAL GUIDED EXPERIENCE DESTINATION CARDS */}
             <section className="mb-14">
-              <div className="mb-8 text-center sm:text-left">
+              <div className="mb-8 max-w-3xl text-center sm:text-left">
                 <p className="text-xs font-bold uppercase tracking-[0.25em] text-[#2997ff]">
-                  {ui.chooseHeading}
+                  {ui.journeyLabel}
                 </p>
-                <h2 className="mt-2 text-2xl sm:text-3xl font-black text-white tracking-tight">
-                  {ui.chooseSub}
+                <h2 className="mt-2 text-3xl font-black tracking-tight text-white sm:text-4xl">
+                  {ui.chooseHeading}
                 </h2>
+                <p className="mt-3 max-w-2xl text-sm leading-6 text-[#aeb6c5] sm:text-base">{ui.chooseSub}</p>
               </div>
 
-              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 items-stretch">
+              <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 items-stretch">
                 {paths.map(item => (
                   <Link
                     key={item.slug}
                     to={`/d/${profile.slug}/${item.slug}`}
-                    className={`group relative flex flex-col justify-between overflow-hidden rounded-2xl border border-white/10 bg-[#090d16] p-5 shadow-xl transition-all duration-300 hover:-translate-y-1 ${item.borderGlow} hover:shadow-2xl hover:shadow-cyan-950/20`}
+                    className={`group relative flex w-full flex-col overflow-hidden rounded-3xl border border-white/10 bg-[#090d16] shadow-xl transition-all duration-300 hover:-translate-y-1.5 ${item.borderGlow} hover:shadow-2xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400`}
                   >
-                    {/* Visual Header Glow (Clean, minimal, no messy flyer posters) */}
-                    <div
-                      className={`pointer-events-none absolute inset-x-0 top-0 h-28 bg-gradient-to-b ${item.gradient}`}
-                    />
+                    {/* Visual Media Header with Custom Compositions */}
+                    <div className={`relative h-48 sm:h-52 w-full overflow-hidden border-b border-white/10 bg-gradient-to-br ${item.gradient}`}>
+                      <div className="absolute inset-0 bg-[radial-gradient(circle_at_75%_35%,rgba(255,255,255,0.1),transparent_55%)]" />
 
-                    <div>
-                      {/* Top Row: Icon + Step Tag */}
-                      <div className="relative mb-4 flex items-center justify-between">
-                        <div
-                          className={`flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 ${item.iconBg}`}
-                        >
-                          <item.icon className="h-5 w-5" />
+                      {/* Card Type 1: Business Opportunity Presentation */}
+                      {item.type === 'presentation' && (
+                        <div className="absolute inset-0 flex items-center justify-center p-4">
+                          <div className="relative h-full w-full overflow-hidden rounded-2xl border border-white/15 bg-black/60 shadow-inner flex items-center justify-center group-hover:scale-105 transition-transform duration-500">
+                            <img
+                              src="/assets/event-masterclass.png"
+                              alt="True Legacy Business Opportunity Presentation"
+                              className="h-full w-full object-cover object-top opacity-80"
+                            />
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
+                            <div className="absolute inset-0 flex items-center justify-center">
+                              <span className="grid h-12 w-12 place-items-center rounded-full bg-cyan-400 text-slate-950 shadow-lg shadow-cyan-400/30 group-hover:scale-110 transition-transform">
+                                <ArrowRight className="h-5 w-5 fill-current" />
+                              </span>
+                            </div>
+                          </div>
                         </div>
-                        <span className="text-[10px] font-bold uppercase tracking-wider text-[#86868b]">
-                          {item.tag}
+                      )}
+
+                      {/* Card Type 2: Product Collection Composition */}
+                      {item.type === 'collection' && (
+                        <div className="absolute inset-0 flex items-center justify-center p-3">
+                          <div className="relative h-full w-full flex items-center justify-center gap-1.5 group-hover:scale-105 transition-transform duration-500">
+                            <img
+                              src="/products/anespa-dx.png"
+                              alt="Anespa DX"
+                              className="h-28 w-auto object-contain drop-shadow-lg opacity-85 hover:opacity-100 transition-opacity"
+                              style={{ maxHeight: '105px', maxWidth: '30%' }}
+                            />
+                            <img
+                              src="/products/k8.png"
+                              alt="Leveluk K8"
+                              className="h-36 w-auto object-contain drop-shadow-2xl z-10"
+                              style={{ maxHeight: '135px', maxWidth: '42%' }}
+                            />
+                            <img
+                              src="/products/ukon-sigma.png"
+                              alt="Ukon Sigma"
+                              className="h-24 w-auto object-contain drop-shadow-lg opacity-85 hover:opacity-100 transition-opacity"
+                              style={{ maxHeight: '90px', maxWidth: '28%' }}
+                            />
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Card Type 3: The Duo (K8 + emGuarde GO) */}
+                      {item.type === 'duo' && (
+                        <div className="absolute inset-0 flex items-center justify-center p-3">
+                          <div className="relative h-full w-full flex items-center justify-center gap-3 group-hover:scale-105 transition-transform duration-500">
+                            <img
+                              src="/products/k8.png"
+                              alt="Leveluk K8 Water System"
+                              className="h-36 w-auto object-contain drop-shadow-2xl"
+                              style={{ maxHeight: '135px', maxWidth: '50%' }}
+                            />
+                            <img
+                              src="/products/emguarde-go.png"
+                              alt="emGuarde GO Set of 2"
+                              className="h-28 w-auto object-contain drop-shadow-2xl"
+                              style={{ maxHeight: '105px', maxWidth: '40%' }}
+                            />
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Card Type 4: Leveluk K8 (Kangen Water) */}
+                      {item.type === 'k8' && (
+                        <div className="absolute inset-0 flex items-center justify-center p-4">
+                          <div className="relative h-full w-full flex items-center justify-center group-hover:scale-105 transition-transform duration-500">
+                            <div className="absolute h-32 w-32 rounded-full bg-cyan-400/20 blur-xl pointer-events-none" />
+                            <img
+                              src="/products/k8.png"
+                              alt="Leveluk K8 Water Ionizer"
+                              className="h-36 w-auto object-contain drop-shadow-2xl relative z-10"
+                              style={{ maxHeight: '140px', maxWidth: '75%' }}
+                            />
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Card Type 5: emGuarde Protection */}
+                      {item.type === 'emguarde' && (
+                        <div className="absolute inset-0 flex items-center justify-center p-4">
+                          <div className="relative h-full w-full flex items-center justify-center group-hover:scale-105 transition-transform duration-500">
+                            <div className="absolute h-32 w-32 rounded-full bg-violet-500/20 blur-xl pointer-events-none" />
+                            <img
+                              src="/products/emguarde-go.png"
+                              alt="emGuarde Harmonic Protection"
+                              className="h-32 w-auto object-contain drop-shadow-2xl relative z-10"
+                              style={{ maxHeight: '125px', maxWidth: '70%' }}
+                            />
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Card Type 6: Leadership Academy */}
+                      {item.type === 'academy' && (
+                        <div className="absolute inset-0 flex items-center justify-center p-4">
+                          <div className="relative h-full w-full overflow-hidden rounded-2xl border border-white/15 bg-black/60 shadow-inner flex items-center justify-center group-hover:scale-105 transition-transform duration-500">
+                            <img
+                              src="/assets/event-global-flyer-UKa8W2ck.jpg"
+                              alt="True Legacy Leadership Academy Training System"
+                              className="h-full w-full object-cover object-center opacity-85"
+                            />
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+                            <div className="absolute bottom-2 left-3 right-3 flex items-center justify-between text-[10px] font-bold uppercase tracking-wider text-amber-300 bg-black/80 backdrop-blur-md px-2.5 py-1 rounded-lg border border-amber-400/20">
+                              <span>Mentorship & Duplication</span>
+                              <span>True Legacy</span>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Bottom Gradient Fade for Content Transition */}
+                      <div className="absolute inset-x-0 bottom-0 h-10 bg-gradient-to-t from-[#090d16] to-transparent pointer-events-none" />
+
+                      {/* Card Top Category Label & Icon */}
+                      <div className="absolute left-3.5 top-3.5 flex items-center gap-2">
+                        <span className={`grid h-8 w-8 place-items-center rounded-xl backdrop-blur-md shadow-md ${item.iconBg}`}>
+                          <item.icon className="h-4 w-4" />
                         </span>
                       </div>
-
-                      {/* Card Title & Description */}
-                      <h3 className="relative text-lg font-bold !text-white leading-snug group-hover:text-cyan-300 transition-colors">
-                        {item.title}
-                      </h3>
-                      <p className="relative mt-2 text-xs leading-relaxed text-[#cccccc] line-clamp-3">
-                        {item.desc}
-                      </p>
+                      <span className="absolute right-3.5 top-3.5 rounded-full border border-white/20 bg-black/80 px-2.5 py-0.5 text-[10px] font-black uppercase tracking-wider text-white/90 backdrop-blur-md shadow-md">
+                        {item.tag}
+                      </span>
                     </div>
 
-                    {/* Standardized Single Primary Action Arrow */}
-                    <div className="relative mt-6 flex items-center justify-between border-t border-white/10 pt-3 text-xs font-bold text-[#2997ff]">
-                      <span>{item.cta}</span>
-                      <ArrowUpRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                    {/* Card Content & Action Button */}
+                    <div className="flex flex-1 flex-col justify-between p-5 sm:p-6">
+                      <div>
+                        <div className="mb-2 flex items-center justify-between">
+                          <span className="inline-flex items-center gap-1 text-[11px] font-bold uppercase tracking-wider text-[#86868b]">
+                            {item.badge}
+                          </span>
+                        </div>
+                        <h3 className="text-lg sm:text-xl font-bold leading-snug !text-white transition-colors group-hover:text-cyan-300">
+                          {item.title}
+                        </h3>
+                        <p className="mt-2 text-xs sm:text-sm leading-relaxed text-[#b9c0cc]">
+                          {item.desc}
+                        </p>
+                      </div>
+
+                      {/* Bottom Interactive Button Affordance */}
+                      <div className="mt-6 pt-4 border-t border-white/10 flex items-center justify-between">
+                        <span className="text-xs font-bold text-white group-hover:text-cyan-300 transition-colors">
+                          {item.cta}
+                        </span>
+                        <span className={`inline-flex items-center justify-center gap-1 rounded-xl px-3 py-1.5 text-xs font-bold transition-all ${item.btnBg}`}>
+                          <ArrowUpRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                        </span>
+                      </div>
                     </div>
                   </Link>
                 ))}
@@ -820,24 +996,24 @@ export default function DistributorProfilePage() {
                 </p>
 
                 {/* 1 Primary + 1 Secondary Action */}
-                <div className="mt-7 flex flex-wrap items-center justify-center gap-3">
+                <div className="mt-7 flex flex-col sm:flex-row items-center justify-center gap-3 w-full max-w-md mx-auto">
                   {whatsappUrl && (
                     <a
                       href={whatsappUrl}
                       target="_blank"
                       rel="noreferrer"
-                      className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 px-6 py-3 font-bold text-slate-950 transition-colors shadow-lg shadow-emerald-500/10 active:scale-95"
+                      className="inline-flex min-h-12 w-full sm:w-auto items-center justify-center gap-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 px-6 py-3 font-bold text-slate-950 transition-colors shadow-lg shadow-emerald-500/10 active:scale-95 text-sm"
                     >
-                      <MessageCircle className="h-5 w-5" />
+                      <MessageCircle className="h-4 w-4" />
                       {ui.primaryMessage}
                     </a>
                   )}
                   <Link
                     to={applyUrl}
-                    className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-cyan-500 hover:bg-cyan-400 px-6 py-3 font-bold text-slate-950 transition-colors shadow-lg shadow-cyan-500/10 active:scale-95"
+                    className="inline-flex min-h-12 w-full sm:w-auto items-center justify-center gap-2 rounded-xl bg-cyan-500 hover:bg-cyan-400 px-6 py-3 font-bold text-slate-950 transition-colors shadow-lg shadow-cyan-500/10 active:scale-95 text-sm"
                   >
                     {ui.requestInfo}
-                    <ArrowRight className="h-5 w-5" />
+                    <ArrowRight className="h-4 w-4" />
                   </Link>
                 </div>
 
