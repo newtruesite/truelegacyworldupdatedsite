@@ -188,39 +188,39 @@ export default function DistributorProfilePage() {
           badge: 'Global Model · Mentorship',
         },
         {
-          tag: '02 · SHOWCASE',
-          title: 'Explore the Product Collection',
-          desc: 'Compare the complete Enagic range—from flagship water ionizers to home, wellness, and protection technologies.',
-          cta: 'View All Products',
-          badge: 'Complete Japanese Lineup',
-        },
-        {
-          tag: '03 · THE DUO',
+          tag: '02 · THE DUO',
           title: 'Meet the K8 + emGuarde GO Duo',
           desc: 'See how two complementary technologies support the water you drink and the environment around you.',
           cta: 'See the Duo in Action',
           badge: 'Cellular Synergy Stack',
         },
         {
-          tag: '04 · IONIZATION',
+          tag: '03 · IONIZATION',
           title: 'Discover the Leveluk K8',
           desc: 'Understand the machine, the different water types it creates, and how families use them in everyday life.',
           cta: 'Explore Kangen Water®',
           badge: '8 Platinum Plates · 5 Waters',
         },
         {
-          tag: '05 · PROTECTION',
+          tag: '04 · PROTECTION',
           title: 'Understand emGuarde® Protection',
           desc: 'A simple visual introduction to emGuarde, its harmonic resonance technology, and where it fits in your space.',
           cta: 'Discover emGuarde®',
           badge: '360° Harmonic Resonance',
         },
         {
-          tag: '06 · ACADEMY',
+          tag: '05 · ACADEMY',
           title: 'Learn, Lead & Build with Confidence',
           desc: 'Step inside the training system for product knowledge, conversations, leadership, and team development.',
           cta: 'Enter the Academy',
           badge: 'Training Hub · Resources',
+        },
+        {
+          tag: '06 · SHOWCASE',
+          title: 'Explore the Product Collection',
+          desc: 'Compare the complete Enagic range—from flagship water ionizers to home, wellness, and protection technologies.',
+          cta: 'View All Products',
+          badge: 'Complete Japanese Lineup',
         },
       ],
     },
@@ -252,39 +252,39 @@ export default function DistributorProfilePage() {
           badge: 'Modelo Global · Mentoría',
         },
         {
-          tag: '02 · COLECCIÓN',
-          title: 'Explora la Colección de Productos',
-          desc: 'Compara la gama completa de Enagic: desde ionizadores de agua médicos hasta tecnologías para el hogar, bienestar y protección.',
-          cta: 'Ver Todos los Productos',
-          badge: 'Línea Japonesa Completa',
-        },
-        {
-          tag: '03 · EL DÚO',
+          tag: '02 · EL DÚO',
           title: 'Conoce el Dúo K8 + emGuarde GO',
           desc: 'Descubre cómo dos tecnologías complementarias optimizan el agua que bebes y el entorno que te rodea.',
           cta: 'Ver el Dúo en Acción',
           badge: 'Sinergia Celular Completa',
         },
         {
-          tag: '04 · IONIZACIÓN',
+          tag: '03 · IONIZACIÓN',
           title: 'Descubre el Leveluk K8',
           desc: 'Conoce el equipo, los diferentes tipos de agua que produce y cómo las familias lo utilizan en su día a día.',
           cta: 'Explorar Agua Kangen®',
           badge: '8 Placas de Titanio · 5 Aguas',
         },
         {
-          tag: '05 · PROTECCIÓN',
+          tag: '04 · PROTECCIÓN',
           title: 'Entiende la Protección emGuarde®',
           desc: 'Una introducción visual a emGuarde, su tecnología de resonancia armónica y cómo se integra en tu espacio.',
           cta: 'Descubrir emGuarde®',
           badge: 'Resonancia Armónica 360°',
         },
         {
-          tag: '06 · ACADEMIA',
+          tag: '05 · ACADEMIA',
           title: 'Aprende, Lidera y Construye con Confianza',
           desc: 'Accede al sistema de formación en conocimiento de producto, conversaciones, liderazgo y desarrollo de equipo.',
           cta: 'Entrar a la Academia',
           badge: 'Centro de Capacitación',
+        },
+        {
+          tag: '06 · COLECCIÓN',
+          title: 'Explora la Colección de Productos',
+          desc: 'Compara la gama completa de Enagic: desde ionizadores de agua médicos hasta tecnologías para el hogar, bienestar y protección.',
+          cta: 'Ver Todos los Productos',
+          badge: 'Línea Japonesa Completa',
         },
       ],
     },
@@ -316,39 +316,39 @@ export default function DistributorProfilePage() {
           badge: 'Modèle Mondial · Mentorat',
         },
         {
-          tag: '02 · COLLECTION',
-          title: 'Explorez la Collection de Produits',
-          desc: 'Comparez toute la gamme Enagic : des ioniseurs d’eau médicaux aux technologies pour le bien-être, la maison et la protection.',
-          cta: 'Voir Tous les Produits',
-          badge: 'Gamme Japonaise Certifiée',
-        },
-        {
-          tag: '03 · LE DUO',
+          tag: '02 · LE DUO',
           title: 'Découvrez le Duo K8 + emGuarde GO',
           desc: 'Découvrez comment deux technologies complémentaires agissent en synergie sur l’eau que vous buvez et votre environnement.',
           cta: 'Voir le Duo en Action',
           badge: 'Synergie Cellulaire Totale',
         },
         {
-          tag: '04 · IONISATION',
+          tag: '03 · IONISATION',
           title: 'Découvrez le Leveluk K8',
           desc: 'Comprenez le fonctionnement de l’appareil, les différents types d’eau produits et leurs usages quotidiens en famille.',
           cta: 'Explorer Eau Kangen®',
           badge: '8 Plaques Titane · 5 Eaux',
         },
         {
-          tag: '05 · PROTECTION',
+          tag: '04 · PROTECTION',
           title: 'Comprendre la Protection emGuarde®',
           desc: 'Une présentation visuelle simple d’emGuarde, de sa technologie de résonance harmonique et de son intégration dans votre espace.',
           cta: 'Découvrir emGuarde®',
           badge: 'Résonance Harmonique 360°',
         },
         {
-          tag: '06 · ACADÉMIE',
+          tag: '05 · ACADÉMIE',
           title: 'Apprenez, Dirigez et Bâtissez avec Confiance',
           desc: 'Découvrez le système de formation pour la maîtrise produit, la communication, le leadership et le développement d’équipe.',
           cta: "Entrer dans l'Académie",
           badge: 'Hub de Formation & Outils',
+        },
+        {
+          tag: '06 · COLLECTION',
+          title: 'Explorez la Collection de Produits',
+          desc: 'Comparez toute la gamme Enagic : des ioniseurs d’eau médicaux aux technologies pour le bien-être, la maison et la protection.',
+          cta: 'Voir Tous les Produits',
+          badge: 'Gamme Japonaise Certifiée',
         },
       ],
     },
@@ -380,39 +380,39 @@ export default function DistributorProfilePage() {
           badge: 'Modelo Global · Mentoria',
         },
         {
-          tag: '02 · COLEÇÃO',
-          title: 'Explore a Coleção de Produtos',
-          desc: 'Compare a linha completa da Enagic — desde ionizadores médicos de água até tecnologias para casa, bem-estar e proteção.',
-          cta: 'Ver Todos os Produtos',
-          badge: 'Linha Japonesa Completa',
-        },
-        {
-          tag: '03 · O DUO',
+          tag: '02 · O DUO',
           title: 'Conheça o Duo K8 + emGuarde GO',
           desc: 'Veja como duas tecnologias complementares atuam na água que você bebe e no ambiente ao seu redor.',
           cta: 'Ver o Duo em Ação',
           badge: 'Sinergia Celular Total',
         },
         {
-          tag: '04 · IONIZAÇÃO',
+          tag: '03 · IONIZAÇÃO',
           title: 'Descubra o Leveluk K8',
           desc: 'Entenda o equipamento, os diferentes tipos de água gerados e como as famílias o utilizam no dia a dia.',
           cta: 'Explorar Água Kangen®',
           badge: '8 Placas de Titânio · 5 Águas',
         },
         {
-          tag: '05 · PROTEÇÃO',
+          tag: '04 · PROTEÇÃO',
           title: 'Entenda a Proteção emGuarde®',
           desc: 'Uma introdução visual simples ao emGuarde, sua tecnologia de ressonância harmônica e onde ele se encaixa no seu espaço.',
           cta: 'Descobrir emGuarde®',
           badge: 'Ressonância Harmônica 360°',
         },
         {
-          tag: '06 · ACADEMIA',
+          tag: '05 · ACADEMIA',
           title: 'Aprenda, Lidere e Construa com Confiança',
           desc: 'Acesse o sistema de treinamento em conhecimento de produtos, comunicação, liderança e desenvolvimento de equipe.',
           cta: 'Entrar na Academia',
           badge: 'Portal de Treinamento',
+        },
+        {
+          tag: '06 · COLEÇÃO',
+          title: 'Explore a Coleção de Produtos',
+          desc: 'Compare a linha completa da Enagic — desde ionizadores médicos de água até tecnologias para casa, bem-estar e proteção.',
+          cta: 'Ver Todos os Produtos',
+          badge: 'Linha Japonesa Completa',
         },
       ],
     },
@@ -465,27 +465,13 @@ export default function DistributorProfilePage() {
       btnBg: 'bg-cyan-400/10 text-cyan-300 border border-cyan-400/30 group-hover:bg-cyan-400 group-hover:text-slate-950',
     },
     {
-      slug: 'products',
-      icon: Package,
+      slug: 'duo',
+      icon: Sparkles,
       tag: ui.paths[1].tag,
       title: ui.paths[1].title,
       desc: ui.paths[1].desc,
       cta: ui.paths[1].cta,
       badge: ui.paths[1].badge,
-      type: 'collection',
-      gradient: 'from-emerald-500/20 via-teal-600/10 to-transparent',
-      borderGlow: 'hover:border-emerald-400/50 hover:shadow-emerald-500/10',
-      iconBg: 'bg-emerald-400/10 text-emerald-400 border border-emerald-400/30',
-      btnBg: 'bg-emerald-400/10 text-emerald-300 border border-emerald-400/30 group-hover:bg-emerald-400 group-hover:text-slate-950',
-    },
-    {
-      slug: 'duo',
-      icon: Sparkles,
-      tag: ui.paths[2].tag,
-      title: ui.paths[2].title,
-      desc: ui.paths[2].desc,
-      cta: ui.paths[2].cta,
-      badge: ui.paths[2].badge,
       type: 'duo',
       gradient: 'from-sky-500/20 via-indigo-600/10 to-transparent',
       borderGlow: 'hover:border-sky-400/50 hover:shadow-sky-500/10',
@@ -495,11 +481,11 @@ export default function DistributorProfilePage() {
     {
       slug: 'kangen',
       icon: Droplets,
-      tag: ui.paths[3].tag,
-      title: ui.paths[3].title,
-      desc: ui.paths[3].desc,
-      cta: ui.paths[3].cta,
-      badge: ui.paths[3].badge,
+      tag: ui.paths[2].tag,
+      title: ui.paths[2].title,
+      desc: ui.paths[2].desc,
+      cta: ui.paths[2].cta,
+      badge: ui.paths[2].badge,
       type: 'k8',
       gradient: 'from-cyan-500/20 via-sky-600/10 to-transparent',
       borderGlow: 'hover:border-cyan-400/50 hover:shadow-cyan-500/10',
@@ -509,11 +495,11 @@ export default function DistributorProfilePage() {
     {
       slug: 'emguarde',
       icon: Radio,
-      tag: ui.paths[4].tag,
-      title: ui.paths[4].title,
-      desc: ui.paths[4].desc,
-      cta: ui.paths[4].cta,
-      badge: ui.paths[4].badge,
+      tag: ui.paths[3].tag,
+      title: ui.paths[3].title,
+      desc: ui.paths[3].desc,
+      cta: ui.paths[3].cta,
+      badge: ui.paths[3].badge,
       type: 'emguarde',
       gradient: 'from-violet-500/20 via-purple-600/10 to-transparent',
       borderGlow: 'hover:border-violet-400/50 hover:shadow-violet-500/10',
@@ -523,16 +509,30 @@ export default function DistributorProfilePage() {
     {
       slug: 'training',
       icon: BookOpen,
-      tag: ui.paths[5].tag,
-      title: ui.paths[5].title,
-      desc: ui.paths[5].desc,
-      cta: ui.paths[5].cta,
-      badge: ui.paths[5].badge,
+      tag: ui.paths[4].tag,
+      title: ui.paths[4].title,
+      desc: ui.paths[4].desc,
+      cta: ui.paths[4].cta,
+      badge: ui.paths[4].badge,
       type: 'academy',
       gradient: 'from-blue-600/20 via-indigo-700/10 to-transparent',
       borderGlow: 'hover:border-blue-400/50 hover:shadow-blue-500/10',
       iconBg: 'bg-blue-400/10 text-blue-400 border border-blue-400/30',
       btnBg: 'bg-blue-400/10 text-blue-300 border border-blue-400/30 group-hover:bg-blue-400 group-hover:text-slate-950',
+    },
+    {
+      slug: 'products',
+      icon: Package,
+      tag: ui.paths[5].tag,
+      title: ui.paths[5].title,
+      desc: ui.paths[5].desc,
+      cta: ui.paths[5].cta,
+      badge: ui.paths[5].badge,
+      type: 'collection',
+      gradient: 'from-emerald-500/20 via-teal-600/10 to-transparent',
+      borderGlow: 'hover:border-emerald-400/50 hover:shadow-emerald-500/10',
+      iconBg: 'bg-emerald-400/10 text-emerald-400 border border-emerald-400/30',
+      btnBg: 'bg-emerald-400/10 text-emerald-300 border border-emerald-400/30 group-hover:bg-emerald-400 group-hover:text-slate-950',
     },
   ]
 
@@ -826,18 +826,18 @@ export default function DistributorProfilePage() {
                         </div>
                       )}
 
-                      {/* Card Type 6: Leadership Academy */}
+                      {/* Card Type 5: Leadership Academy */}
                       {item.type === 'academy' && (
-                        <div className="absolute inset-0 flex items-center justify-center p-4">
+                        <div className="absolute inset-0 flex items-center justify-center p-3">
                           <div className="relative h-full w-full overflow-hidden rounded-2xl border border-white/15 bg-black/60 shadow-inner flex items-center justify-center group-hover:scale-105 transition-transform duration-500">
                             <img
-                              src="/assets/event-global-flyer-UKa8W2ck.jpg"
-                              alt="True Legacy Leadership Academy Training System"
-                              className="h-full w-full object-cover object-center opacity-85"
+                              src="/assets/academy-leadership-team.jpg"
+                              alt="True Legacy Essential Enagic Workshop & Leadership Team"
+                              className="h-full w-full object-cover object-[center_18%] opacity-90"
                             />
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-70" />
                             <div className="absolute bottom-2 left-3 right-3 flex items-center justify-between text-[10px] font-bold uppercase tracking-wider text-amber-300 bg-black/80 backdrop-blur-md px-2.5 py-1 rounded-lg border border-amber-400/20">
-                              <span>Mentorship & Duplication</span>
+                              <span>Workshop & Mentorship</span>
                               <span>True Legacy</span>
                             </div>
                           </div>
