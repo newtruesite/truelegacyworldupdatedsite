@@ -831,11 +831,11 @@ export default function DistributorProfilePage() {
                         <div className="absolute inset-0 flex items-center justify-center p-3">
                           <div className="relative h-full w-full overflow-hidden rounded-2xl border border-white/15 bg-black/60 shadow-inner flex items-center justify-center group-hover:scale-105 transition-transform duration-500">
                             <img
-                              src="/assets/academy-leadership-team.jpg"
+                              src="/assets/academy-leadership-team-v2.jpg"
                               alt="True Legacy Essential Enagic Workshop & Leadership Team"
-                              className="h-full w-full object-cover object-[center_18%] opacity-90"
+                              className="h-full w-full object-cover object-center opacity-90"
                             />
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-70" />
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-60" />
                             <div className="absolute bottom-2 left-3 right-3 flex items-center justify-between text-[10px] font-bold uppercase tracking-wider text-amber-300 bg-black/80 backdrop-blur-md px-2.5 py-1 rounded-lg border border-amber-400/20">
                               <span>Workshop & Mentorship</span>
                               <span>True Legacy</span>
