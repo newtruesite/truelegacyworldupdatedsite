@@ -1,12 +1,14 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import {
   Activity,
   Award,
   CheckCircle2,
   ChevronDown,
+  Clock,
   Droplets,
   ExternalLink,
+  Globe2,
   HeartPulse,
   Info,
   Layers,
@@ -24,12 +26,31 @@ import TrueLegacyLogo from '@/components/ui/TrueLegacyLogo'
 import { SEO } from '@/components/SEO'
 import { Footer } from '@/components/layout/Footer'
 import { useLocaleContext } from '@/contexts/LocaleContext'
-import { localizedProductVideo } from '@/lib/productVideos'
+import { PRODUCT_VIDEOS } from '@/lib/productVideos'
 import { getLeaderPortrait, getPublicDistributors, type PublicDistributor } from '@/lib/crm'
 
 interface EmguardeLandingPageProps {
   profile?: PublicDistributor | null
   distributorSlug?: string
+}
+
+function toEmbedUrl(url: string) {
+  if (!url) return ''
+  if (url.includes('youtu.be/')) {
+    const after = url.split('youtu.be/')[1] || ''
+    const id = after.split(/[?&]/)[0]
+    return `https://www.youtube.com/embed/${id}`
+  }
+  if (url.includes('youtube.com/watch')) {
+    try {
+      const u = new URL(url)
+      const id = u.searchParams.get('v')
+      return id ? `https://www.youtube.com/embed/${id}` : url
+    } catch {
+      return url
+    }
+  }
+  return url
 }
 
 const TECH_PILLARS = [
@@ -100,8 +121,13 @@ export function EmguardeLandingPage({ profile: propProfile, distributorSlug }: E
   const { locale } = useLocaleContext()
   const [profile, setProfile] = useState<PublicDistributor | null | undefined>(propProfile)
   const [openFaq, setOpenFaq] = useState<number | null>(null)
+  const [selectedVideoLang, setSelectedVideoLang] = useState<'en' | 'es'>(locale === 'es' ? 'es' : 'en')
 
   const effectiveSlug = distributorSlug || profile?.slug || 'mehdi-cohen'
+
+  useEffect(() => {
+    setSelectedVideoLang(locale === 'es' ? 'es' : 'en')
+  }, [locale])
 
   useEffect(() => {
     if (propProfile) {
@@ -116,7 +142,10 @@ export function EmguardeLandingPage({ profile: propProfile, distributorSlug }: E
 
   const distributorName = profile?.display_name || 'True Legacy Leader'
   const leaderAvatar = profile?.avatar_url || (profile?.slug ? getLeaderPortrait(profile.slug) : '/logos/tl-square-white.png')
-  const videoUrl = localizedProductVideo('emguardeGo', locale)
+
+  const rawVideoUrl = PRODUCT_VIDEOS.emguardeGo[selectedVideoLang]
+  const embedVideoUrl = useMemo(() => toEmbedUrl(rawVideoUrl), [rawVideoUrl])
+
   const applyUrl = `/apply?ref=${profile?.referral_code || effectiveSlug}&interest=duo&source=emguarde`
   const duoUrl = `/d/${effectiveSlug}/duo`
 
@@ -223,22 +252,65 @@ export function EmguardeLandingPage({ profile: propProfile, distributorSlug }: E
             </div>
           )}
 
-          {/* VIDEO PRESENTATION SECTION */}
-          <div className="mt-12 sm:mt-16 mx-auto max-w-4xl rounded-3xl border border-white/15 bg-gradient-to-b from-white/[0.06] to-transparent p-3 sm:p-4 shadow-2xl">
-            <div className="relative aspect-video w-full overflow-hidden rounded-2xl border border-white/10 bg-black">
-              <iframe
-                src={videoUrl}
-                title="emGuarde GO Technology Demonstration"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-                className="absolute inset-0 h-full w-full border-0"
-              />
+          {/* VIDEO PRESENTATION SECTION WITH LANGUAGE SELECTOR */}
+          <div className="mt-12 sm:mt-16 mx-auto max-w-4xl rounded-3xl border border-violet-500/25 bg-gradient-to-b from-[#100d1e] to-[#080712] p-4 sm:p-6 shadow-2xl text-left">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-4 pb-4 border-b border-white/10">
+              <div>
+                <span className="text-[10px] font-black uppercase tracking-widest text-violet-400 bg-violet-500/10 border border-violet-500/20 px-3 py-1 rounded-full">
+                  Featured Technology Demonstration
+                </span>
+                <h3 className="text-lg sm:text-xl font-black text-white mt-2">emGuarde GO Environmental Defense</h3>
+                <p className="text-xs text-[#86868b]">Comprehensive lab testing: signal attenuation, oscilloscope analysis, and live blood cells.</p>
+              </div>
+
+              {/* Language Selector Buttons */}
+              <div className="flex items-center gap-1.5 rounded-xl border border-white/10 bg-black/60 p-1 shrink-0">
+                <button
+                  type="button"
+                  onClick={() => setSelectedVideoLang('en')}
+                  className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-bold transition-all ${
+                    selectedVideoLang === 'en'
+                      ? 'bg-violet-500 text-white font-black shadow-md'
+                      : 'text-[#86868b] hover:text-white'
+                  }`}
+                >
+                  <Globe2 className="h-3.5 w-3.5" /> English (~8m)
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setSelectedVideoLang('es')}
+                  className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-bold transition-all ${
+                    selectedVideoLang === 'es'
+                      ? 'bg-violet-500 text-white font-black shadow-md'
+                      : 'text-[#86868b] hover:text-white'
+                  }`}
+                >
+                  <Globe2 className="h-3.5 w-3.5" /> Español (~8m)
+                </button>
+              </div>
             </div>
-            <div className="flex flex-col sm:flex-row items-center justify-between gap-3 px-3 py-3 text-xs text-[#86868b]">
-              <span className="flex items-center gap-1.5 text-white font-bold">
-                <PlayCircle className="h-4 w-4 text-violet-400" /> Watch the Complete emGuarde Demonstration & Science
+
+            {/* 16:9 Video Embed */}
+            <div className="relative w-full rounded-2xl overflow-hidden border border-white/15 bg-black shadow-inner">
+              <div className="relative w-full pt-[56.25%]">
+                <iframe
+                  key={embedVideoUrl}
+                  src={embedVideoUrl}
+                  title="emGuarde GO Technology Presentation"
+                  className="absolute inset-0 h-full w-full border-0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                  allowFullScreen
+                />
+              </div>
+            </div>
+
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-4 text-xs text-[#86868b]">
+              <span className="flex items-center gap-1.5 text-white font-semibold">
+                <PlayCircle className="h-4 w-4 text-violet-400" /> Complete emGuarde GO Patented Harmonic Resonance Overview
               </span>
-              <span>Watch time: ~8 minutes · Lab tests & microcirculation insights</span>
+              <span className="flex items-center gap-1 font-mono">
+                <Clock className="h-3.5 w-3.5 text-violet-400" /> Watch time: ~8 minutes
+              </span>
             </div>
           </div>
         </section>

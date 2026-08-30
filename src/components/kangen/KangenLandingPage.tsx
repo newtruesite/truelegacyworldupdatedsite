@@ -1,18 +1,19 @@
 import { useState, useEffect, useMemo } from 'react'
 import { Link } from 'react-router-dom'
-import { motion, AnimatePresence } from 'framer-motion'
 import {
   Activity,
   Award,
   Check,
   CheckCircle2,
   ChevronDown,
+  Clock,
   Droplets,
   ExternalLink,
   Flame,
   Globe2,
   HeartPulse,
   Info,
+  Languages,
   Layers,
   MessageCircle,
   Phone,
@@ -28,12 +29,31 @@ import TrueLegacyLogo from '@/components/ui/TrueLegacyLogo'
 import { SEO } from '@/components/SEO'
 import { Footer } from '@/components/layout/Footer'
 import { useLocaleContext } from '@/contexts/LocaleContext'
-import { localizedProductVideo } from '@/lib/productVideos'
+import { PRODUCT_VIDEOS } from '@/lib/productVideos'
 import { getLeaderPortrait, getPublicDistributors, type PublicDistributor } from '@/lib/crm'
 
 interface KangenLandingPageProps {
   profile?: PublicDistributor | null
   distributorSlug?: string
+}
+
+function toEmbedUrl(url: string) {
+  if (!url) return ''
+  if (url.includes('youtu.be/')) {
+    const after = url.split('youtu.be/')[1] || ''
+    const id = after.split(/[?&]/)[0]
+    return `https://www.youtube.com/embed/${id}`
+  }
+  if (url.includes('youtube.com/watch')) {
+    try {
+      const u = new URL(url)
+      const id = u.searchParams.get('v')
+      return id ? `https://www.youtube.com/embed/${id}` : url
+    } catch {
+      return url
+    }
+  }
+  return url
 }
 
 const WATER_TYPES = [
@@ -143,8 +163,13 @@ export function KangenLandingPage({ profile: propProfile, distributorSlug }: Kan
   const [profile, setProfile] = useState<PublicDistributor | null | undefined>(propProfile)
   const [selectedWater, setSelectedWater] = useState(WATER_TYPES[1])
   const [openFaq, setOpenFaq] = useState<number | null>(null)
+  const [selectedVideoLang, setSelectedVideoLang] = useState<'en' | 'es'>(locale === 'es' ? 'es' : 'en')
 
   const effectiveSlug = distributorSlug || profile?.slug || 'mehdi-cohen'
+
+  useEffect(() => {
+    setSelectedVideoLang(locale === 'es' ? 'es' : 'en')
+  }, [locale])
 
   useEffect(() => {
     if (propProfile) {
@@ -159,7 +184,10 @@ export function KangenLandingPage({ profile: propProfile, distributorSlug }: Kan
 
   const distributorName = profile?.display_name || 'True Legacy Leader'
   const leaderAvatar = profile?.avatar_url || (profile?.slug ? getLeaderPortrait(profile.slug) : '/logos/tl-square-white.png')
-  const videoUrl = localizedProductVideo('kangenWater', locale)
+  
+  const rawVideoUrl = PRODUCT_VIDEOS.kangenWater[selectedVideoLang]
+  const embedVideoUrl = useMemo(() => toEmbedUrl(rawVideoUrl), [rawVideoUrl])
+
   const applyUrl = `/apply?ref=${profile?.referral_code || effectiveSlug}&interest=product&source=kangen`
   const duoUrl = `/d/${effectiveSlug}/duo`
 
@@ -266,22 +294,65 @@ export function KangenLandingPage({ profile: propProfile, distributorSlug }: Kan
             </div>
           )}
 
-          {/* VIDEO PRESENTATION SECTION */}
-          <div className="mt-12 sm:mt-16 mx-auto max-w-4xl rounded-3xl border border-white/15 bg-gradient-to-b from-white/[0.06] to-transparent p-3 sm:p-4 shadow-2xl">
-            <div className="relative aspect-video w-full overflow-hidden rounded-2xl border border-white/10 bg-black">
-              <iframe
-                src={videoUrl}
-                title="Kangen Water Demonstration Video"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-                className="absolute inset-0 h-full w-full border-0"
-              />
+          {/* VIDEO PRESENTATION SECTION WITH LANGUAGE SELECTOR */}
+          <div className="mt-12 sm:mt-16 mx-auto max-w-4xl rounded-3xl border border-cyan-500/20 bg-gradient-to-b from-[#0e1629] to-[#080d1a] p-4 sm:p-6 shadow-2xl text-left">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-4 pb-4 border-b border-white/10">
+              <div>
+                <span className="text-[10px] font-black uppercase tracking-widest text-cyan-400 bg-cyan-500/10 border border-cyan-500/20 px-3 py-1 rounded-full">
+                  Featured Product Demonstration
+                </span>
+                <h3 className="text-lg sm:text-xl font-black text-white mt-2">Leveluk K8 Water Technology</h3>
+                <p className="text-xs text-[#86868b]">Full scientific demonstration: pH testing, negative ORP readings, and oil emulsification.</p>
+              </div>
+
+              {/* Language Selector Buttons */}
+              <div className="flex items-center gap-1.5 rounded-xl border border-white/10 bg-black/60 p-1 shrink-0">
+                <button
+                  type="button"
+                  onClick={() => setSelectedVideoLang('en')}
+                  className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-bold transition-all ${
+                    selectedVideoLang === 'en'
+                      ? 'bg-cyan-500 text-slate-950 font-black shadow-md'
+                      : 'text-[#86868b] hover:text-white'
+                  }`}
+                >
+                  <Globe2 className="h-3.5 w-3.5" /> English (~4m)
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setSelectedVideoLang('es')}
+                  className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-bold transition-all ${
+                    selectedVideoLang === 'es'
+                      ? 'bg-cyan-500 text-slate-950 font-black shadow-md'
+                      : 'text-[#86868b] hover:text-white'
+                  }`}
+                >
+                  <Globe2 className="h-3.5 w-3.5" /> Español (~4m)
+                </button>
+              </div>
             </div>
-            <div className="flex flex-col sm:flex-row items-center justify-between gap-3 px-3 py-3 text-xs text-[#86868b]">
-              <span className="flex items-center gap-1.5 text-white font-bold">
-                <PlayCircle className="h-4 w-4 text-cyan-400" /> Watch the Complete Kangen Science & Water Demonstration
+
+            {/* 16:9 Video Embed */}
+            <div className="relative w-full rounded-2xl overflow-hidden border border-white/15 bg-black shadow-inner">
+              <div className="relative w-full pt-[56.25%]">
+                <iframe
+                  key={embedVideoUrl}
+                  src={embedVideoUrl}
+                  title="Kangen Water Leveluk K8 Demonstration"
+                  className="absolute inset-0 h-full w-full border-0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                  allowFullScreen
+                />
+              </div>
+            </div>
+
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-4 text-xs text-[#86868b]">
+              <span className="flex items-center gap-1.5 text-white font-semibold">
+                <PlayCircle className="h-4 w-4 text-cyan-400" /> Complete Leveluk K8 Japanese Medical Ionization Overview
               </span>
-              <span>Watch time: ~4 minutes · Scientific properties demonstrated</span>
+              <span className="flex items-center gap-1 font-mono">
+                <Clock className="h-3.5 w-3.5 text-cyan-400" /> Watch time: ~4 minutes
+              </span>
             </div>
           </div>
         </section>
