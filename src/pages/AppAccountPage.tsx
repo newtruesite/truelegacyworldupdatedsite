@@ -380,7 +380,7 @@ export default function AppAccountPage() {
         setCustomApplicationSettings(distributor.slug, applicationSettings)
       }
 
-      if (session && crmConfigured) {
+        if (session && crmConfigured) {
         const updated = await updateDistributorProfile(distributor.id, payload)
         setDistributors((rows) =>
           rows.map((item) =>
@@ -389,11 +389,12 @@ export default function AppAccountPage() {
                   ...updated,
                   avatar_url: permanentAvatar || updated.avatar_url,
                   application_settings: applicationSettings,
+                  purchase_links: cleanPurchaseLinks,
                 }
               : item
           )
         )
-        setMessage('Your public profile and custom application form settings have been saved.')
+        setMessage('Your profile, direct product purchase links, and application settings have been saved successfully.')
       } else {
         setDistributors((rows) =>
           rows.map((item) =>
@@ -410,11 +411,12 @@ export default function AppAccountPage() {
                   accepting_leads: payload.acceptingLeads,
                   avatar_url: permanentAvatar || item.avatar_url,
                   application_settings: applicationSettings,
+                  purchase_links: cleanPurchaseLinks,
                 }
               : item
           )
         )
-        setMessage('Profile and custom application form updated permanently.')
+        setMessage('Your profile, direct product purchase links, and application settings have been saved permanently.')
       }
     } catch {
       setError('Your changes could not be saved. Check the fields and try again.')
