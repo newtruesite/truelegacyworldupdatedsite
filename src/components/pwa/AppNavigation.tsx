@@ -126,31 +126,35 @@ export function AppNavigation() {
           </button>
         </div>
       ) : (
-        <nav className="tl-app-nav" aria-label="True Legacy app navigation">
-          {/* Sleek top-right collapse handle positioned cleanly at the outer right edge */}
-          <button
-            type="button"
-            onClick={() => handleSetCollapsed(true)}
-            className="absolute -top-3.5 right-1 sm:-right-2 z-20 flex items-center gap-1 px-2.5 py-0.5 rounded-full border border-white/20 bg-[#05091a] hover:bg-[#0d1d46] hover:border-cyan-400/60 text-[10px] font-bold text-slate-300 hover:text-cyan-300 transition-all shadow-lg cursor-pointer"
-            title="Collapse navigation"
-            aria-label="Collapse navigation"
-          >
-            <span>Hide</span>
-            <ChevronDown className="w-3 h-3" />
-          </button>
-
-          {ITEMS.filter(item => !item.adminOnly || isAdmin).map(({ to, label, icon: Icon, exact }) => (
-            <NavLink
-              key={to}
-              to={to}
-              end={exact}
-              className={({ isActive }) => (isActive ? 'is-active' : '')}
+        <div className="fixed z-[9400] left-1/2 -translate-x-1/2 bottom-[max(10px,env(safe-area-inset-bottom))] w-[min(960px,calc(100vw-20px))] pointer-events-none">
+          {/* External Hide Bubble floating above the nav bar */}
+          <div className="flex justify-end pr-2 pb-1.5 pointer-events-auto">
+            <button
+              type="button"
+              onClick={() => handleSetCollapsed(true)}
+              className="flex items-center gap-1.5 px-3 py-1 rounded-full border border-white/20 bg-[#05091a]/95 hover:bg-[#0d1d46] hover:border-cyan-400/60 text-[11px] font-bold text-slate-200 hover:text-cyan-300 transition-all shadow-2xl backdrop-blur-xl cursor-pointer"
+              title="Hide navigation bar"
+              aria-label="Hide navigation bar"
             >
-              <Icon aria-hidden="true" />
-              <span>{label}</span>
-            </NavLink>
-          ))}
-        </nav>
+              <span>Hide</span>
+              <ChevronDown className="w-3 h-3 text-cyan-400" />
+            </button>
+          </div>
+
+          <nav className="tl-app-nav pointer-events-auto" aria-label="True Legacy app navigation">
+            {ITEMS.filter(item => !item.adminOnly || isAdmin).map(({ to, label, icon: Icon, exact }) => (
+              <NavLink
+                key={to}
+                to={to}
+                end={exact}
+                className={({ isActive }) => (isActive ? 'is-active' : '')}
+              >
+                <Icon aria-hidden="true" />
+                <span>{label}</span>
+              </NavLink>
+            ))}
+          </nav>
+        </div>
       )}
     </>
   )

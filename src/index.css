@@ -2230,7 +2230,7 @@ canvas,
 .tl-app-route main { padding-bottom:calc(104px + env(safe-area-inset-bottom)) !important }
 .tl-app-route main > div.mx-auto:not(.crm-container):not(.max-w-\[1500px\]):not(.max-w-7xl) { max-width: 960px !important }
 .tl-app-route main > div.crm-container { max-width: min(96vw, 1500px) !important }
-.tl-app-nav { position:fixed; z-index:9400; left:50%; bottom:max(10px,env(safe-area-inset-bottom)); transform:translateX(-50%); width:min(960px,calc(100vw - 20px)); display:grid; grid-auto-flow:column; grid-auto-columns:1fr; gap:3px; padding:6px; border:1px solid rgba(255,255,255,.12); border-radius:22px; background:rgba(5,9,26,.94); box-shadow:0 20px 70px rgba(0,0,0,.5); backdrop-filter:blur(20px) }
+.tl-app-nav { position:relative; width:100%; display:grid; grid-auto-flow:column; grid-auto-columns:1fr; gap:3px; padding:6px; border:1px solid rgba(255,255,255,.12); border-radius:22px; background:rgba(5,9,26,.94); box-shadow:0 20px 70px rgba(0,0,0,.5); backdrop-filter:blur(20px) }
 .tl-app-nav a { display:flex; min-width:0; min-height:52px; flex-direction:column; align-items:center; justify-content:center; gap:3px; border-radius:16px; color:#71809a; font-size:9.5px; font-weight:700; text-decoration:none }
 .tl-app-nav a svg { width:19px; height:19px }.tl-app-nav a.is-active { color:#67e8f9; background:rgba(34,211,238,.11) }
 @media(max-width:720px){.tl-app-nav{grid-auto-flow:column;grid-auto-columns:minmax(60px,1fr);overflow-x:auto;scrollbar-width:none;-ms-overflow-style:none}.tl-app-nav::-webkit-scrollbar{display:none}.tl-app-nav a{min-width:58px;flex-shrink:0}}

@@ -47,7 +47,7 @@ export default function PhaseFourPage(){
   if(loading)return <main className="min-h-screen bg-black"/>
   if(!membership?.active)return <Gate title="Account not authorized" body="An active True Legacy profile is required."/>
   return <SponsorGate membership={membership} distributors={distributors}><main className="min-h-screen bg-black px-3 pb-24 pt-5 text-white sm:px-6"><SEO title={`${copy.title} | True Legacy`} description={copy.subtitle} noIndex/><div className="mx-auto max-w-7xl"><header className="rounded-3xl border border-white/20 bg-[radial-gradient(circle_at_top_right,rgba(14,165,233,.18),transparent_35%),rgba(255,255,255,.03)] p-6 sm:p-8"><div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between"><div><p className="text-xs font-bold uppercase tracking-[.28em] text-[#2997ff]">Phase 4 · team application</p><h1 className="mt-3 text-3xl font-black sm:text-5xl">{copy.title}</h1><p className="mt-3 max-w-2xl text-sm leading-6 text-[#cccccc] sm:text-base">{copy.subtitle}</p></div><div className="flex flex-wrap gap-2"><Link to="/crm" className="rounded-xl border border-white/10 px-4 py-3 text-sm">{copy.back}</Link><button onClick={()=>crmSupabase?.auth.signOut()} className="rounded-xl border border-white/10 p-3" aria-label="Sign out"><LogOut className="h-5 w-5"/></button></div></div></header>
-  <nav className="sticky top-2 z-20 mt-5 flex items-center gap-1 overflow-x-auto rounded-2xl border border-white/10 bg-black/95 p-1.5 shadow-2xl backdrop-blur [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+  <nav className="sticky top-2 z-20 mt-5 flex items-center gap-1.5 overflow-x-auto rounded-2xl border border-white/10 bg-black/95 p-1.5 shadow-2xl backdrop-blur [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
     {(
       [
         { id: 'academy', label: copy.academy, icon: BookOpenCheck },
@@ -59,13 +59,14 @@ export default function PhaseFourPage(){
     ).map((item) => (
       <button
         key={item.id}
+        type="button"
         onClick={() => setTab(item.id)}
-        className={`flex min-h-12 flex-1 items-center justify-center gap-1.5 rounded-xl px-3 text-[11px] font-bold whitespace-nowrap transition-colors sm:text-sm ${
-          tab === item.id ? 'bg-cyan-500 text-slate-950' : 'text-[#cccccc] hover:bg-white/5'
+        className={`flex min-h-11 shrink-0 sm:flex-1 items-center justify-center gap-1.5 rounded-xl px-3.5 text-xs font-bold whitespace-nowrap transition-all ${
+          tab === item.id ? 'bg-cyan-500 text-slate-950 shadow-md' : 'text-[#cccccc] hover:bg-white/5'
         }`}
       >
         <item.icon className="h-4 w-4 shrink-0" />
-        <span>{item.label}</span>
+        <span className="whitespace-nowrap inline-block">{item.label}</span>
       </button>
     ))}
   </nav>
