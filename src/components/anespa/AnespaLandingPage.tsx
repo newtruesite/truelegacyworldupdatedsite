@@ -371,17 +371,25 @@ export function AnespaLandingPage({ profile: propProfile, distributorSlug }: Ane
             </div>
 
             <div className="lg:col-span-6 relative">
-              <div className="overflow-hidden rounded-3xl border border-white/15 bg-gradient-to-br from-cyan-900/20 via-slate-900/50 to-black p-6 sm:p-8 shadow-2xl">
-                <div className="relative h-64 sm:h-80 w-full overflow-hidden rounded-2xl bg-black/40">
+              <div className="overflow-hidden rounded-3xl border border-cyan-500/30 bg-gradient-to-br from-cyan-950/40 via-slate-900/60 to-black/90 p-6 sm:p-8 shadow-[0_20px_60px_rgba(14,165,233,0.15)] backdrop-blur-md">
+                <div className="relative min-h-[380px] sm:min-h-[460px] w-full flex items-center justify-center rounded-2xl bg-black/50 p-6 border border-white/10 overflow-visible">
+                  {/* Glowing Ambient Radial Aura */}
+                  <div className="absolute inset-0 rounded-2xl bg-[radial-gradient(circle_at_center,rgba(14,165,233,0.22)_0%,transparent_70%)] pointer-events-none" />
+                  
                   <img
                     src="/products/anespa-dx.png"
-                    alt="Anespa DX Radium Tufa Ceramic Filter Cartridge"
-                    className="h-full w-full object-contain p-4 transition-transform duration-500 hover:scale-105"
+                    alt="Enagic Anespa DX Mineral Ion Water Spa Home System"
+                    className="relative z-10 h-auto w-auto max-h-[360px] sm:max-h-[420px] max-w-full object-contain drop-shadow-[0_20px_45px_rgba(14,165,233,0.4)] transition-transform duration-500 hover:scale-105"
                   />
                 </div>
-                <div className="mt-6 flex items-center justify-between text-xs text-[#cccccc]">
-                  <span className="font-bold text-white">Japanese Mineral Ionization</span>
-                  <span className="text-[#2997ff]">Hokkaido Tufa & Maifan Stones</span>
+                <div className="mt-6 flex flex-wrap items-center justify-between gap-2 text-xs text-[#cccccc]">
+                  <span className="font-bold text-white flex items-center gap-1.5">
+                    <Sparkles className="h-4 w-4 text-cyan-400" />
+                    Japanese Mineral Ionization
+                  </span>
+                  <span className="rounded-full border border-cyan-400/30 bg-cyan-400/10 px-3 py-1 text-[11px] font-bold text-cyan-300">
+                    Hokkaido Tufa & Maifan Stones
+                  </span>
                 </div>
               </div>
             </div>
@@ -389,18 +397,44 @@ export function AnespaLandingPage({ profile: propProfile, distributorSlug }: Ane
         </div>
       </section>
 
-      {/* Made for Simple Daily Use Section */}
+      {/* Official Enagic Specifications & Performance */}
       <section className="py-16 sm:py-24 border-t border-white/10 bg-[#060b1e]/60">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto">
-            <p className="text-xs font-bold uppercase tracking-[0.25em] text-[#2997ff]">PRACTICAL SPECIFICATIONS</p>
-            <h2 className="mt-3 text-3xl font-black text-white sm:text-4xl">Made for Simple Daily Use</h2>
+            <p className="text-xs font-bold uppercase tracking-[0.25em] text-[#2997ff]">OFFICIAL ENAGIC® SPECIFICATIONS</p>
+            <h2 className="mt-3 text-3xl font-black text-white sm:text-4xl">Technical & Performance Highlights</h2>
             <p className="mt-3 text-sm text-[#cccccc]">
-              Designed to seamlessly integrate into your bathroom routine with zero hassle.
+              Built in Japan with premium materials and double-stage mineral conditioning.
             </p>
           </div>
 
-          <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-5">
+              <p className="text-[11px] font-bold uppercase tracking-wider text-[#2997ff]">Flow Rate</p>
+              <h4 className="mt-2 text-2xl font-black text-white">2.6 GPM</h4>
+              <p className="mt-1 text-xs text-[#cccccc]">Up to 10 liters/min of continuous mineral shower water.</p>
+            </div>
+
+            <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-5">
+              <p className="text-[11px] font-bold uppercase tracking-wider text-[#2997ff]">External Filter</p>
+              <h4 className="mt-2 text-2xl font-black text-white">Active Carbon</h4>
+              <p className="mt-1 text-xs text-[#cccccc]">Filters chlorine, odor, rust, and pipe sediment.</p>
+            </div>
+
+            <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-5">
+              <p className="text-[11px] font-bold uppercase tracking-wider text-[#2997ff]">Internal Minerals</p>
+              <h4 className="mt-2 text-2xl font-black text-white">200g Ceramic</h4>
+              <p className="mt-1 text-xs text-[#cccccc]">Futamata Tufa & Maifan mineral stone cartridge.</p>
+            </div>
+
+            <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-5">
+              <p className="text-[11px] font-bold uppercase tracking-wider text-[#2997ff]">Warranty & Quality</p>
+              <h4 className="mt-2 text-2xl font-black text-white">3-Year Warranty</h4>
+              <p className="mt-1 text-xs text-[#cccccc]">Manufactured in Japan under ISO 13485 quality standards.</p>
+            </div>
+          </div>
+
+          <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-5 flex items-start gap-4">
               <CheckCircle2 className="h-5 w-5 text-cyan-400 shrink-0 mt-0.5" />
               <div>
