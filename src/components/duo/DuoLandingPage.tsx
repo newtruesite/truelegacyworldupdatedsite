@@ -31,6 +31,7 @@ import {
 } from 'lucide-react'
 import TrueLegacyLogo from '@/components/ui/TrueLegacyLogo'
 import { SEO } from '@/components/SEO'
+import { getProductPurchaseLink } from '@/config/productPurchaseLinks'
 import { Footer } from '@/components/layout/Footer'
 import { useLocaleContext } from '@/contexts/LocaleContext'
 import { localizedProductVideo } from '@/lib/productVideos'
@@ -1401,9 +1402,9 @@ export function DuoLandingPage({ profile: initialProfile, distributorSlug }: Duo
                 {t.k8SectionBody}
               </p>
               <div className="mt-7 flex flex-wrap items-center gap-3">
-                {profile?.purchase_links?.k8 && (
+                {getProductPurchaseLink(profile?.purchase_links, 'k8') && (
                   <a
-                    href={profile.purchase_links.k8}
+                    href={getProductPurchaseLink(profile?.purchase_links, 'k8')!}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="inline-flex items-center gap-2 rounded-xl bg-amber-500 hover:bg-amber-400 px-6 py-3.5 text-sm font-black text-slate-950 transition-colors shadow-lg shadow-amber-500/20 active:scale-95"
@@ -1505,9 +1506,9 @@ export function DuoLandingPage({ profile: initialProfile, distributorSlug }: Duo
                 {t.emguardeSectionBody}
               </p>
               <div className="mt-7 flex flex-wrap items-center gap-3">
-                {(profile?.purchase_links?.emguarde || profile?.purchase_links?.emguarde_original) && (
+                {getProductPurchaseLink(profile?.purchase_links, 'emguarde') && (
                   <a
-                    href={profile.purchase_links.emguarde || profile.purchase_links.emguarde_original}
+                    href={getProductPurchaseLink(profile?.purchase_links, 'emguarde')!}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="inline-flex items-center gap-2 rounded-xl bg-amber-500 hover:bg-amber-400 px-6 py-3.5 text-sm font-black text-slate-950 transition-colors shadow-lg shadow-amber-500/20 active:scale-95"

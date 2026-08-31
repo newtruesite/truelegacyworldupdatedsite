@@ -95,6 +95,34 @@ export const PURCHASE_LINK_CONFIG: ProductPurchaseLinkItem[] = [
 export const STANDARD_PURCHASE_PRODUCTS = PURCHASE_LINK_CONFIG.filter((p) => p.category === 'standard')
 export const OTHER_PURCHASE_PRODUCTS = PURCHASE_LINK_CONFIG.filter((p) => p.category === 'other')
 
+/** Canonical saved-link keys, including legacy aliases still present on older profiles. */
+export const PRODUCT_PURCHASE_LINK_KEYS: Record<string, readonly string[]> = {
+  k8: ['k8'],
+  emguarde: ['emguarde', 'emguarde_original'],
+  emguarde_original: ['emguarde', 'emguarde_original'],
+  ukon_sigma: ['ukon_sigma'],
+  anespa_dx: ['anespa_dx'],
+  sd501_dx: ['sd501_dx'],
+  sd501_super: ['sd501_super'],
+  sd501: ['sd501'],
+  kangen_beaute: ['kangen_beaute'],
+  kangen_wagyu: ['kangen_wagyu'],
+  kangen_air: ['kangen_air'],
+}
+
+export function getProductPurchaseLink(
+  links: Record<string, string> | null | undefined,
+  productId: string
+): string | null {
+  if (!links) return null
+  const keys = PRODUCT_PURCHASE_LINK_KEYS[productId] || [productId]
+  for (const key of keys) {
+    const value = links[key]?.trim()
+    if (value && isValidPurchaseUrl(value)) return value
+  }
+  return null
+}
+
 /**
  * Validates whether a provided string is a valid HTTP/HTTPS URL or safely empty.
  */

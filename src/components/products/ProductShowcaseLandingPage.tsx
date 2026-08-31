@@ -1,5 +1,6 @@
 import { Footer } from '@/components/layout/Footer'
 import { SEO } from '@/components/SEO'
+import { getProductPurchaseLink } from '@/config/productPurchaseLinks'
 import { useLocaleContext } from '@/contexts/LocaleContext'
 import { getLeaderPortrait, getPublicDistributors, type PublicDistributor } from '@/lib/crm'
 import { AnimatePresence, motion } from 'framer-motion'
@@ -898,9 +899,9 @@ export function ProductShowcaseLandingPage({
                       <Sparkles className="h-4 w-4" />
                       {copy.tier1Cta}
                     </Link>
-                    {profile?.purchase_links?.k8 && (
+                    {getProductPurchaseLink(profile?.purchase_links, 'k8') && (
                       <a
-                        href={profile.purchase_links.k8}
+                        href={getProductPurchaseLink(profile?.purchase_links, 'k8')!}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-amber-500 hover:bg-amber-400 px-6 py-3 text-sm font-bold text-slate-950 transition-all shadow-lg shadow-amber-500/20 hover:scale-105 active:scale-95"
@@ -910,9 +911,9 @@ export function ProductShowcaseLandingPage({
                         <ExternalLink className="h-3.5 w-3.5" />
                       </a>
                     )}
-                    {profile?.purchase_links?.emguarde && (
+                    {getProductPurchaseLink(profile?.purchase_links, 'emguarde') && (
                       <a
-                        href={profile.purchase_links.emguarde}
+                        href={getProductPurchaseLink(profile?.purchase_links, 'emguarde')!}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-amber-500 hover:bg-amber-400 px-6 py-3 text-sm font-bold text-slate-950 transition-all shadow-lg shadow-amber-500/20 hover:scale-105 active:scale-95"
@@ -1055,9 +1056,9 @@ export function ProductShowcaseLandingPage({
                     </div>
 
                     <div className="flex items-center gap-2">
-                      {profile?.purchase_links?.[prod.id] && (
+                      {getProductPurchaseLink(profile?.purchase_links, prod.id) && (
                         <a
-                          href={profile.purchase_links[prod.id]}
+                          href={getProductPurchaseLink(profile?.purchase_links, prod.id)!}
                           target="_blank"
                           rel="noopener noreferrer"
                           className="inline-flex items-center gap-1.5 rounded-xl bg-amber-500 hover:bg-amber-400 px-4 py-2.5 text-xs font-bold text-slate-950 transition-colors shadow-md shadow-amber-500/20 active:scale-95"
@@ -1132,9 +1133,9 @@ export function ProductShowcaseLandingPage({
                       </a>
                     )}
                     <div className="flex items-center gap-2">
-                      {profile?.purchase_links?.[prod.id] && (
+                      {getProductPurchaseLink(profile?.purchase_links, prod.id) && (
                         <a
-                          href={profile.purchase_links[prod.id]}
+                          href={getProductPurchaseLink(profile?.purchase_links, prod.id)!}
                           target="_blank"
                           rel="noopener noreferrer"
                           className="inline-flex items-center gap-1 rounded-xl bg-amber-500 hover:bg-amber-400 px-3 py-1.5 text-xs font-bold text-slate-950 transition-colors shadow-sm shadow-amber-500/20 active:scale-95"

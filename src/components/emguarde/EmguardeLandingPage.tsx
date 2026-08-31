@@ -24,6 +24,7 @@ import {
 } from 'lucide-react'
 import TrueLegacyLogo from '@/components/ui/TrueLegacyLogo'
 import { SEO } from '@/components/SEO'
+import { DistributorBuyButton } from '@/components/products/DistributorBuyButton'
 import { Footer } from '@/components/layout/Footer'
 import { useLocaleContext, type Locale } from '@/contexts/LocaleContext'
 import { PRODUCT_VIDEOS } from '@/lib/productVideos'
@@ -869,7 +870,7 @@ export function EmguardeLandingPage({ profile: propProfile, distributorSlug }: E
 
           {/* Distributor Personal Card */}
           {profile && (
-            <div className="mt-8 mx-auto max-w-xl rounded-2xl border border-white/15 bg-white/[0.03] p-4 sm:p-5 backdrop-blur-xl text-left flex items-center justify-between gap-4 shadow-2xl">
+            <div className="mt-8 mx-auto max-w-xl rounded-2xl border border-white/15 bg-white/[0.03] p-4 sm:p-5 backdrop-blur-xl text-left flex flex-col items-stretch justify-between gap-4 shadow-2xl sm:flex-row sm:items-center">
               <div className="flex items-center gap-3.5 min-w-0">
                 <img
                   src={leaderAvatar}
@@ -884,6 +885,11 @@ export function EmguardeLandingPage({ profile: propProfile, distributorSlug }: E
               </div>
 
               <div className="flex items-center gap-2 shrink-0">
+                <DistributorBuyButton
+                  profile={profile}
+                  productId="emguarde"
+                  label={locale === 'fr' ? 'Acheter' : locale === 'es' || locale === 'pt' ? 'Comprar' : 'Buy Now'}
+                />
                 {whatsappUrl && (
                   <a
                     href={whatsappUrl}
