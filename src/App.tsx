@@ -15,6 +15,7 @@ import { KangenLandingPage } from "@/components/kangen/KangenLandingPage";
 import { EmguardeLandingPage } from "@/components/emguarde/EmguardeLandingPage";
 import { AnespaLandingPage } from "@/components/anespa/AnespaLandingPage";
 import { UkonLandingPage } from "@/components/ukon/UkonLandingPage";
+import { BeauteLandingPage } from "@/components/beaute/BeauteLandingPage";
 import LandingPagesHubPage from "@/pages/LandingPagesHubPage";
 import { ProductShowcaseLandingPage } from "@/components/products/ProductShowcaseLandingPage";
 import EmGuardePage from "@/pages/EmGuardePage";
@@ -193,6 +194,14 @@ function AnimatedRoutes() {
             element={
               <PageTransitionWrapper>
                 <UkonLandingPage distributorSlug="mehdi-cohen" />
+              </PageTransitionWrapper>
+            }
+          />
+          <Route
+            path="/beaute"
+            element={
+              <PageTransitionWrapper>
+                <BeauteLandingPage distributorSlug="mehdi-cohen" />
               </PageTransitionWrapper>
             }
           />

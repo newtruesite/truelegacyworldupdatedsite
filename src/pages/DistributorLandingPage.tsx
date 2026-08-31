@@ -10,6 +10,7 @@ import { EmguardeLandingPage } from '@/components/emguarde/EmguardeLandingPage'
 import { ProductShowcaseLandingPage } from '@/components/products/ProductShowcaseLandingPage'
 import { AnespaLandingPage } from '@/components/anespa/AnespaLandingPage'
 import { UkonLandingPage } from '@/components/ukon/UkonLandingPage'
+import { BeauteLandingPage } from '@/components/beaute/BeauteLandingPage'
 import { crmSupabase, getPublicDistributors, getLeaderPortrait } from '@/lib/crm'
 import type { PublicDistributor } from '@/lib/crm'
 import { useLocaleContext } from '@/contexts/LocaleContext'
@@ -35,7 +36,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import NotFoundPage from './NotFoundPage'
 
-type LandingVariant = 'business' | 'duo' | 'training' | 'events' | 'kangen' | 'water' | 'emguarde' | 'products' | 'showcase' | 'anespa' | 'ukon'
+type LandingVariant = 'business' | 'duo' | 'training' | 'events' | 'kangen' | 'water' | 'emguarde' | 'products' | 'showcase' | 'anespa' | 'ukon' | 'beaute'
 
 const VARIANTS: Record<LandingVariant, {
   eyebrow: string
@@ -121,6 +122,13 @@ const VARIANTS: Record<LandingVariant, {
     interest: 'product',
     icon: Sparkles,
   },
+  beaute: {
+    eyebrow: 'Enagic® Kangen Beauté® Three-Step Skincare Collection',
+    headline: (name) => `Discover Kangen Beauté® with ${name}`,
+    subheadline: 'An exclusive Enagic skincare ritual inspired by Kangen Water at pH 5.5 and Okinawan Ukon, combining Japanese precision and Korean skincare artistry.',
+    interest: 'product',
+    icon: Sparkles,
+  },
 }
 
 const BENEFITS: Record<LandingVariant, string[]> = {
@@ -144,6 +152,12 @@ const BENEFITS: Record<LandingVariant, string[]> = {
     'Formulated with Spring Ukon, Autumn Ukon, and essential plant oils',
     'Enriched with Tocotrienols, Vitamin E, B-Vitamins, and Vitamin C',
     'Patented softgel encapsulation technology produced in Japan',
+  ],
+  beaute: [
+    'Three-step layered ritual: First Light Essence, Vital Rich Cream, Crystal Ampoule Cream',
+    'Built around Kangen Water at pH 5.5 to support moisture barrier function',
+    'Enriched with Okinawan Ukon, 5-type hyaluronic acid, PDRN, and peptides',
+    'Full ingredient transparency with complete INCI lists disclosed',
   ],
 }
 
@@ -280,6 +294,10 @@ export default function DistributorLandingPage() {
 
   if (variant === 'ukon') {
     return <UkonLandingPage profile={profile} distributorSlug={slug} />
+  }
+
+  if (variant === 'beaute') {
+    return <BeauteLandingPage profile={profile} distributorSlug={slug} />
   }
 
   const leaderPhoto =

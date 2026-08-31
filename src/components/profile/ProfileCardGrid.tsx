@@ -71,6 +71,21 @@ export function ProfileCardGrid({ profile, locale = 'en' }: ProfileCardGridProps
             </div>
           )}
 
+          {/* CARD TYPE: BEAUTE (10) */}
+          {item.cardType === 'beaute' && (
+            <div className="absolute inset-0 flex items-center justify-center p-4">
+              <div className="relative h-full w-full flex items-center justify-center group-hover:scale-105 transition-transform duration-500">
+                <div className={`absolute h-32 w-32 rounded-full ${item.accentColor.glowBlur} blur-xl pointer-events-none`} />
+                <img
+                  src={item.image || '/products/kangen-beaute.png'}
+                  alt={item.imageAlt}
+                  className="h-36 w-auto object-contain drop-shadow-[0_10px_25px_rgba(254,243,199,0.3)] relative z-10"
+                  style={{ maxHeight: '135px', maxWidth: '75%' }}
+                />
+              </div>
+            </div>
+          )}
+
           {/* CARD TYPE: LIVE EVENTS (08) */}
           {item.cardType === 'events' && (
             <div className="absolute inset-0 flex items-center justify-center p-3">
