@@ -1323,12 +1323,12 @@ export default function TrainingPage() {
                       if (url.includes("youtube.com/watch")) {
                         const u = new URL(url);
                         const id = u.searchParams.get("v");
-                        return id ? `https://www.youtube.com/embed/${id}?autoplay=1&rel=0` : url;
+                        return id ? `https://www.youtube.com/embed/${id}?autoplay=0&rel=0` : url;
                       }
                       if (url.includes("youtu.be/")) {
                         const after = url.split("youtu.be/")[1] || "";
                         const id = after.split(/[?&]/)[0];
-                        return id ? `https://www.youtube.com/embed/${id}?autoplay=1&rel=0` : url;
+                        return id ? `https://www.youtube.com/embed/${id}?autoplay=0&rel=0` : url;
                       }
                       return url;
                     } catch {

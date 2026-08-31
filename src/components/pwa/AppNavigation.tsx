@@ -32,12 +32,13 @@ export function AppNavigation() {
   const { pathname } = useLocation()
   const navigate = useNavigate()
   const [isAdmin, setIsAdmin] = useState(false)
+  const isDistributorPage = pathname.startsWith('/d/')
   const appRoute =
-    pathname.startsWith('/app') ||
-    pathname === '/crm' ||
-    pathname.startsWith('/crm/') ||
-    pathname.startsWith('/training') ||
-    pathname.includes('/training')
+    !isDistributorPage &&
+    (pathname.startsWith('/app') ||
+      pathname === '/crm' ||
+      pathname.startsWith('/crm/') ||
+      pathname === '/training')
 
   const [isCollapsed, setIsCollapsed] = useState(() => {
     if (typeof window === 'undefined') return false
