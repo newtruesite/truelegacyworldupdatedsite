@@ -85,7 +85,7 @@ BEGIN
   IF cardinality(normalized_regions) = 0 THEN RAISE EXCEPTION 'At least one market is required'; END IF;
   IF cardinality(normalized_languages) = 0 THEN RAISE EXCEPTION 'At least one language is required'; END IF;
   IF jsonb_typeof(normalized_purchase_links) <> 'object' THEN RAISE EXCEPTION 'Invalid purchase links'; END IF;
-  IF jsonb_object_length(normalized_purchase_links) > 50 THEN RAISE EXCEPTION 'Too many purchase links'; END IF;
+  IF (SELECT count(*) FROM jsonb_object_keys(normalized_purchase_links)) > 50 THEN RAISE EXCEPTION 'Too many purchase links'; END IF;
   IF EXISTS (
     SELECT 1
     FROM jsonb_each(normalized_purchase_links) link
