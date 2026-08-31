@@ -211,7 +211,7 @@ export default function CrmPage() {
         (attentionFilter === 'new'
           ? lead.status === 'new'
           : Boolean(lead.next_follow_up_at && new Date(lead.next_follow_up_at) <= new Date()))
-      const haystack = [lead.full_name, lead.email, lead.phone, lead.country, lead.interest, lead.referrer_name, lead.referral_code]
+      const haystack = [lead.full_name, lead.email || '', lead.phone || '', lead.country, lead.interest, lead.referrer_name, lead.referral_code]
         .join(' ')
         .toLowerCase()
       return matchesStatus && matchesInterest && matchesAttention && (!query || haystack.includes(query))
@@ -333,8 +333,18 @@ export default function CrmPage() {
       setAddingLead(false)
       return
     }
-    if (!email.match(/^[^@\s]+@[^@\s]+\.[^@\s]+$/)) {
+    if (!email && !phone) {
+      setAddLeadError('Please enter at least an email address or a phone number.')
+      setAddingLead(false)
+      return
+    }
+    if (email && !email.match(/^[^@\s]+@[^@\s]+\.[^@\s]+$/)) {
       setAddLeadError('Please enter a valid email address.')
+      setAddingLead(false)
+      return
+    }
+    if (phone && phone.replace(/\D/g, '').length < 5) {
+      setAddLeadError('Please enter a valid phone number.')
       setAddingLead(false)
       return
     }
@@ -997,7 +1007,7 @@ export default function CrmPage() {
                               )}
                             </div>
                             <p className="text-xs text-[#2997ff] truncate hover:underline">
-                              {lead.email}
+                              {lead.email || lead.phone || 'No contact info'}
                             </p>
                             <p className="mt-0.5 text-[11px] text-[#86868b] truncate">
                               <span className="uppercase">{lead.country}</span> · {formatLeadDateTime(lead.submitted_at)}
@@ -1066,15 +1076,17 @@ export default function CrmPage() {
 
                           {/* Col 6: Actions */}
                           <div className="flex items-center justify-end gap-1.5" onClick={(e) => e.stopPropagation()}>
-                            <a
-                              href={getGmailComposeUrl(lead.email, `True Legacy · Follow-Up with ${lead.full_name}`)}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="grid h-8 w-8 place-items-center rounded-lg border border-red-500/25 bg-red-500/10 hover:bg-red-500/20 text-red-300 transition-colors"
-                              title="Compose in Gmail"
-                            >
-                              <Mail className="h-3.5 w-3.5" />
-                            </a>
+                            {lead.email ? (
+                              <a
+                                href={getGmailComposeUrl(lead.email, `True Legacy · Follow-Up with ${lead.full_name}`)}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="grid h-8 w-8 place-items-center rounded-lg border border-red-500/25 bg-red-500/10 hover:bg-red-500/20 text-red-300 transition-colors"
+                                title="Compose in Gmail"
+                              >
+                                <Mail className="h-3.5 w-3.5" />
+                              </a>
+                            ) : null}
 
                             {lead.phone ? (
                               <a
@@ -1117,15 +1129,19 @@ export default function CrmPage() {
                         <div className="flex items-start justify-between gap-2">
                           <div>
                             <h3 className="font-bold text-white text-base">{lead.full_name}</h3>
-                            <a
-                              href={getGmailComposeUrl(lead.email, `True Legacy · ${lead.full_name}`)}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              onClick={(e) => e.stopPropagation()}
-                              className="text-xs text-[#2997ff] hover:underline"
-                            >
-                              {lead.email}
-                            </a>
+                            {lead.email ? (
+                              <a
+                                href={getGmailComposeUrl(lead.email, `True Legacy · ${lead.full_name}`)}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                onClick={(e) => e.stopPropagation()}
+                                className="text-xs text-[#2997ff] hover:underline"
+                              >
+                                {lead.email}
+                              </a>
+                            ) : (
+                              <p className="text-xs text-[#2997ff]">{lead.phone || 'No contact info'}</p>
+                            )}
                             <p className="text-[11px] text-[#86868b] mt-0.5">
                               <span className="uppercase">{lead.country}</span> · {formatLeadDateTime(lead.submitted_at)}
                             </p>
@@ -1512,7 +1528,6 @@ export default function CrmPage() {
                   <div>
                     <label className="block text-xs font-bold text-[#2997ff] uppercase tracking-wider mb-1.5">Email</label>
                     <input
-                      required
                       name="email"
                       type="email"
                       placeholder="e.g. sarah@example.com"
@@ -1520,7 +1535,7 @@ export default function CrmPage() {
                     />
                   </div>
                   <div>
-                    <label className="block text-xs font-bold text-[#2997ff] uppercase tracking-wider mb-1.5">Phone (Optional)</label>
+                    <label className="block text-xs font-bold text-[#2997ff] uppercase tracking-wider mb-1.5">Phone</label>
                     <input
                       name="phone"
                       type="tel"
@@ -1529,6 +1544,9 @@ export default function CrmPage() {
                     />
                   </div>
                 </div>
+                <p className="text-[11px] text-[#2997ff] font-medium -mt-2">
+                  * Provide an Email address or Phone number (at least one contact method is required).
+                </p>
 
                 <div className="grid gap-3 sm:grid-cols-2">
                   <div>
@@ -1666,7 +1684,7 @@ function PipelineBoard({
                       onClick={() => onOpen(lead.id)}
                     >
                       <p className="font-bold text-white text-xs truncate">{lead.full_name}</p>
-                      <p className="text-[11px] text-[#86868b] truncate">{lead.email}</p>
+                      <p className="text-[11px] text-[#86868b] truncate">{lead.email || lead.phone || 'No contact info'}</p>
                       <div className="mt-2 flex items-center justify-between text-[10px] text-[#86868b]">
                         <span className="truncate text-cyan-300/90 font-medium">
                           {owner ? owner.display_name : 'Unassigned'}
@@ -1823,16 +1841,18 @@ function NurtureCenter({
                   <MessageSquare className="h-3.5 w-3.5" />
                   SMS Text
                 </a>
-                <a
-                  href={gmailUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  onClick={() => onOpen(lead, 'Email', landingUrl)}
-                  className="inline-flex items-center gap-1.5 rounded-lg border border-red-500/30 bg-red-500/10 hover:bg-red-500/20 px-3 py-1.5 text-xs font-bold text-red-300 transition-colors"
-                >
-                  <Mail className="h-3.5 w-3.5" />
-                  Gmail
-                </a>
+                {lead.email ? (
+                  <a
+                    href={gmailUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={() => onOpen(lead, 'Email', landingUrl)}
+                    className="inline-flex items-center gap-1.5 rounded-lg border border-red-500/30 bg-red-500/10 hover:bg-red-500/20 px-3 py-1.5 text-xs font-bold text-red-300 transition-colors"
+                  >
+                    <Mail className="h-3.5 w-3.5" />
+                    Gmail
+                  </a>
+                ) : null}
                 <button
                   type="button"
                   onClick={async () => {

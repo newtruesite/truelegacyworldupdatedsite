@@ -181,16 +181,18 @@ function LeadAction({ lead }: { lead: CrmLead }) {
             WhatsApp
           </a>
         )}
-        <a
-          href={gmailUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-flex items-center gap-1 rounded-lg border border-red-500/25 bg-red-500/10 hover:bg-red-500/20 px-3 py-1.5 text-xs font-bold text-red-300 transition-colors"
-          title="Compose in Gmail"
-        >
-          <Mail className="h-3.5 w-3.5" />
-          Gmail
-        </a>
+        {lead.email && (
+          <a
+            href={gmailUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1 rounded-lg border border-red-500/25 bg-red-500/10 hover:bg-red-500/20 px-3 py-1.5 text-xs font-bold text-red-300 transition-colors"
+            title="Compose in Gmail"
+          >
+            <Mail className="h-3.5 w-3.5" />
+            Gmail
+          </a>
+        )}
         <Link to={`/crm?contact=${lead.id}`} className="rounded-lg border border-white/10 bg-white/5 hover:bg-white/10 px-3 py-1.5 text-xs font-bold text-white transition-colors">
           Open
         </Link>
