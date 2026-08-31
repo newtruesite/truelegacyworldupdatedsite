@@ -2,7 +2,7 @@ import { SEO } from '@/components/SEO'
 import { crmConfigured, crmSupabase, getCrmDistributors, getCrmLeads, getCrmMembership } from '@/lib/crm'
 import type { CrmDistributor, CrmLead, CrmMembership } from '@/lib/crm'
 import type { Session } from '@supabase/supabase-js'
-import { ArrowRight, BookOpenCheck, CalendarCheck2, CheckCircle2, Clock3, GraduationCap, Mail, MessageCircle, Sparkles, UserPlus, Users } from 'lucide-react'
+import { ArrowLeft, ArrowRight, BookOpenCheck, CalendarCheck2, CheckCircle2, Clock3, GraduationCap, Mail, MessageCircle, Sparkles, UserPlus, Users } from 'lucide-react'
 import { useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 
@@ -95,7 +95,26 @@ export default function AppTodayPage() {
   return <main className="min-h-screen bg-black px-4 pb-32 pt-7 text-white sm:px-6 lg:px-8">
     <SEO title="Today | True Legacy" description="Your daily True Legacy distributor action plan." noIndex />
     <div className="mx-auto max-w-7xl">
-      <header className="flex flex-col gap-5 border-b border-white/10 pb-7 sm:flex-row sm:items-end sm:justify-between"><div><p className="text-xs font-black uppercase tracking-[.24em] text-[#2997ff]">Your daily operating system</p><h1 className="mt-2 text-4xl font-black sm:text-5xl">Today</h1><p className="mt-3 text-sm text-[#cccccc]">Welcome back{distributor ? `, ${distributor.display_name.split(' ')[0]}` : ''}. Here is the shortest path to momentum.</p></div><div className="rounded-2xl border border-white/20 bg-cyan-300/[.07] px-5 py-3"><span className="text-3xl font-black text-[#2997ff]">{actionCount}</span><span className="ml-2 text-sm text-[#cccccc]">recommended actions</span></div></header>
+      <header className="flex flex-col gap-5 border-b border-white/10 pb-7 sm:flex-row sm:items-end sm:justify-between">
+        <div className="flex items-center gap-4">
+          <Link
+            to="/app"
+            aria-label="Back to app home"
+            className="grid h-11 w-11 shrink-0 place-items-center rounded-full border border-white/10 bg-white/[.04] hover:bg-white/[.08] transition-colors"
+          >
+            <ArrowLeft className="h-5 w-5 text-cyan-400" />
+          </Link>
+          <div>
+            <p className="text-xs font-black uppercase tracking-[.24em] text-[#2997ff]">Your daily operating system</p>
+            <h1 className="mt-1 text-4xl font-black sm:text-5xl">Today</h1>
+            <p className="mt-2 text-sm text-[#cccccc]">Welcome back{distributor ? `, ${distributor.display_name.split(' ')[0]}` : ''}. Here is the shortest path to momentum.</p>
+          </div>
+        </div>
+        <div className="rounded-2xl border border-white/20 bg-cyan-300/[.07] px-5 py-3">
+          <span className="text-3xl font-black text-[#2997ff]">{actionCount}</span>
+          <span className="ml-2 text-sm text-[#cccccc]">recommended actions</span>
+        </div>
+      </header>
 
       <section className="mt-7 grid gap-4 sm:grid-cols-2 xl:grid-cols-5"><Metric icon={<Clock3 />} value={due.length} label="Overdue follow-ups" tone="rose" /><Metric icon={<CalendarCheck2 />} value={today.length} label="Due today" tone="amber" /><Metric icon={<UserPlus />} value={newLeads.length} label="New contacts" tone="cyan" /><Metric icon={<CalendarCheck2 />} value={todayMeetings.length} label="Calls today" tone="cyan" /><Metric icon={<CheckCircle2 />} value={`${completedOnboarding.length}/${items.length}`} label="Onboarding" tone="emerald" /></section>
 

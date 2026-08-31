@@ -80,32 +80,8 @@ export function AppNavigation() {
 
   if (!appRoute) return null
 
-  const isDeepAppRoute = appRoute && pathname !== '/app'
-
   return (
     <>
-      {/* Universal App Back Button for sub-routes */}
-      {isDeepAppRoute && (
-        <div className="fixed top-3 sm:top-4 left-3 sm:left-4 z-[9200]">
-          <button
-            type="button"
-            onClick={() => {
-              if (window.history.length > 1) {
-                navigate(-1)
-              } else {
-                navigate('/app')
-              }
-            }}
-            className="inline-flex items-center gap-1.5 rounded-full border border-white/15 bg-[#05091a]/90 hover:bg-[#0d1d46] hover:border-cyan-400/50 px-3.5 py-1.5 text-xs font-bold text-slate-200 hover:text-white shadow-xl backdrop-blur-xl transition-all hover:scale-105 active:scale-95 cursor-pointer"
-            title="Go back"
-            aria-label="Go back"
-          >
-            <ArrowLeft className="w-4 h-4 text-cyan-400" />
-            <span>Back</span>
-          </button>
-        </div>
-      )}
-
       {isCollapsed ? (
         <div className="fixed z-[9400] right-4 sm:right-8 bottom-[max(12px,env(safe-area-inset-bottom))]">
           <button
@@ -127,8 +103,8 @@ export function AppNavigation() {
         </div>
       ) : (
         <div className="fixed z-[9400] left-1/2 -translate-x-1/2 bottom-[max(10px,env(safe-area-inset-bottom))] w-[min(960px,calc(100vw-20px))] pointer-events-none">
-          {/* External Hide Bubble floating above the nav bar */}
-          <div className="flex justify-end pr-2 pb-1.5 pointer-events-auto">
+          {/* External Hide Bubble floating cleanly above the left side of the nav bar */}
+          <div className="flex justify-start pl-3 pb-1.5 pointer-events-auto">
             <button
               type="button"
               onClick={() => handleSetCollapsed(true)}

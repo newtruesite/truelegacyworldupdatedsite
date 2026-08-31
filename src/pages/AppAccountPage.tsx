@@ -25,6 +25,7 @@ import {
 } from '@/config/productPurchaseLinks'
 import type { Session } from '@supabase/supabase-js'
 import {
+  ArrowLeft,
   Check,
   CheckCircle2,
   ChevronDown,
@@ -431,12 +432,21 @@ export default function AppAccountPage() {
       />
       <div className="mx-auto max-w-5xl">
         <header className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-          <div>
-            <p className="text-xs font-bold uppercase tracking-[.24em] text-[#2997ff]">Verified leader account</p>
-            <h1 className="mt-2 text-3xl font-black sm:text-5xl">Account Settings</h1>
-            <p className="mt-3 max-w-2xl text-sm leading-6 text-[#aeb4c0]">
-              Customize your verified profile, security password, portrait, and personalized application form ({distributor.display_name}).
-            </p>
+          <div className="flex items-center gap-4">
+            <Link
+              to="/app"
+              aria-label="Back to app home"
+              className="grid h-11 w-11 shrink-0 place-items-center rounded-full border border-white/10 bg-white/[.04] hover:bg-white/[.08] transition-colors"
+            >
+              <ArrowLeft className="h-5 w-5 text-cyan-400" />
+            </Link>
+            <div>
+              <p className="text-xs font-bold uppercase tracking-[.24em] text-[#2997ff]">Verified leader account</p>
+              <h1 className="mt-1 text-3xl font-black sm:text-5xl">Account Settings</h1>
+              <p className="mt-2 max-w-2xl text-sm leading-6 text-[#aeb4c0]">
+                Customize your verified profile, security password, portrait, and personalized application form ({distributor.display_name}).
+              </p>
+            </div>
           </div>
           <div className="flex flex-wrap items-center gap-3">
             <button

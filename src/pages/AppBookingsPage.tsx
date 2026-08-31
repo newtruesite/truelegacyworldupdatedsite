@@ -2,7 +2,7 @@ import { SEO } from '@/components/SEO'
 import { crmConfigured, crmSupabase, getCrmDistributors, getCrmMembership } from '@/lib/crm'
 import type { CrmDistributor, CrmMembership } from '@/lib/crm'
 import type { Session } from '@supabase/supabase-js'
-import { CalendarCheck2, Check, Clock3, Copy, ExternalLink, Link2, Settings2, UserRoundCheck, X } from 'lucide-react'
+import { ArrowLeft, CalendarCheck2, Check, Clock3, Copy, ExternalLink, Link2, Settings2, UserRoundCheck, X } from 'lucide-react'
 import { useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 
@@ -87,7 +87,27 @@ export default function AppBookingsPage() {
   return <main className="min-h-screen bg-black px-4 pb-32 pt-7 text-white sm:px-6 lg:px-8">
     <SEO title="Bookings | True Legacy" description="Manage True Legacy discovery calls and availability." noIndex />
     <div className="mx-auto max-w-7xl">
-      <header className="flex flex-col gap-5 border-b border-white/10 pb-7 sm:flex-row sm:items-end sm:justify-between"><div><p className="text-xs font-black uppercase tracking-[.24em] text-[#2997ff]">Phase 3A · Scheduling</p><h1 className="mt-2 text-4xl font-black sm:text-5xl">Bookings</h1><p className="mt-3 text-sm text-[#cccccc]">Turn interest into a scheduled conversation, connected directly to your CRM.</p></div>{bookingUrl && <a href={bookingUrl} target="_blank" rel="noreferrer" className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl border border-white/20 px-5 font-bold text-[#2997ff]">Open booking page <ExternalLink className="h-4 w-4" /></a>}</header>
+      <header className="flex flex-col gap-5 border-b border-white/10 pb-7 sm:flex-row sm:items-end sm:justify-between">
+        <div className="flex items-center gap-4">
+          <Link
+            to="/app"
+            aria-label="Back to app home"
+            className="grid h-11 w-11 shrink-0 place-items-center rounded-full border border-white/10 bg-white/[.04] hover:bg-white/[.08] transition-colors"
+          >
+            <ArrowLeft className="h-5 w-5 text-cyan-400" />
+          </Link>
+          <div>
+            <p className="text-xs font-black uppercase tracking-[.24em] text-[#2997ff]">Phase 3A · Scheduling</p>
+            <h1 className="mt-1 text-4xl font-black sm:text-5xl">Bookings</h1>
+            <p className="mt-2 text-sm text-[#cccccc]">Turn interest into a scheduled conversation, connected directly to your CRM.</p>
+          </div>
+        </div>
+        {bookingUrl && (
+          <a href={bookingUrl} target="_blank" rel="noreferrer" className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl border border-white/20 px-5 font-bold text-[#2997ff]">
+            Open booking page <ExternalLink className="h-4 w-4" />
+          </a>
+        )}
+      </header>
 
       <section className="mt-7 grid gap-4 sm:grid-cols-3"><Metric icon={<CalendarCheck2 />} value={upcoming.length} label="Upcoming" /><Metric icon={<UserRoundCheck />} value={completed} label="Completed" /><Metric icon={<Clock3 />} value={`${bookingType?.duration_minutes || 30} min`} label="Call length" /></section>
 
