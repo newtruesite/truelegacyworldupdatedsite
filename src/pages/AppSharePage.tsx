@@ -4,6 +4,7 @@ import type { CrmDistributor, CrmMembership } from '@/lib/crm'
 import type { Session } from '@supabase/supabase-js'
 import {
   ArrowLeft,
+  ArrowRight,
   BriefcaseBusiness,
   CalendarDays,
   Check,
@@ -340,7 +341,31 @@ export default function AppSharePage() {
             })}
           </div>
 
-          {/* Collapsible Access More Landing Pages Button & Container */}
+          {/* Centered Section with Prominent Explore More Landing Pages Button */}
+          <div className="mt-6 overflow-hidden rounded-[28px] border border-cyan-500/25 bg-gradient-to-r from-cyan-950/40 via-slate-900/50 to-black p-6 text-center shadow-[0_15px_40px_rgba(14,165,233,0.12)]">
+            <div className="mx-auto max-w-xl">
+              <span className="inline-flex items-center gap-1.5 rounded-full border border-cyan-400/30 bg-cyan-400/10 px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-cyan-300">
+                <Sparkles className="h-3.5 w-3.5" /> Extended Directory
+              </span>
+              <h3 className="mt-3 text-xl font-black text-white sm:text-2xl">
+                Looking for Spa, Academy & Specialized Pages?
+              </h3>
+              <p className="mt-2 text-xs text-[#cccccc] sm:text-sm">
+                Explore the Anespa® DX Mineral Ion Water Spa, Leadership Academy, Live Event briefings, and intake portals.
+              </p>
+              <div className="mt-5 flex justify-center">
+                <Link
+                  to="/landing-pages"
+                  className="inline-flex items-center gap-2.5 rounded-2xl bg-gradient-to-r from-cyan-500 to-blue-600 px-8 py-3.5 text-sm font-black text-slate-950 shadow-[0_10px_30px_rgba(14,165,233,0.3)] hover:from-cyan-400 hover:to-blue-500 hover:scale-[1.02] active:scale-[0.98] transition-all"
+                >
+                  Explore More Landing Pages
+                  <ArrowRight className="h-4 w-4" />
+                </Link>
+              </div>
+            </div>
+          </div>
+
+          {/* Collapsible Quick Toggle Container */}
           <div className="mt-4">
             <button
               type="button"
@@ -349,7 +374,7 @@ export default function AppSharePage() {
             >
               <div className="flex items-center gap-2.5">
                 <Layers className="h-4 w-4 text-cyan-400" />
-                <span>Access More Landing Pages & Portals ({EXTENDED_PAGES.length})</span>
+                <span>Quick Selector: Extended Portals ({EXTENDED_PAGES.length})</span>
               </div>
               <div className="flex items-center gap-1.5 text-xs text-[#86868b]">
                 <span>{showMorePages ? 'Collapse' : 'Expand'}</span>

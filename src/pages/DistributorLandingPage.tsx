@@ -8,6 +8,7 @@ import { AcademyLandingPage } from '@/components/academy/AcademyLandingPage'
 import { KangenLandingPage } from '@/components/kangen/KangenLandingPage'
 import { EmguardeLandingPage } from '@/components/emguarde/EmguardeLandingPage'
 import { ProductShowcaseLandingPage } from '@/components/products/ProductShowcaseLandingPage'
+import { AnespaLandingPage } from '@/components/anespa/AnespaLandingPage'
 import { crmSupabase, getPublicDistributors, getLeaderPortrait } from '@/lib/crm'
 import type { PublicDistributor } from '@/lib/crm'
 import { useLocaleContext } from '@/contexts/LocaleContext'
@@ -33,7 +34,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import NotFoundPage from './NotFoundPage'
 
-type LandingVariant = 'business' | 'duo' | 'training' | 'events' | 'kangen' | 'water' | 'emguarde' | 'products' | 'showcase'
+type LandingVariant = 'business' | 'duo' | 'training' | 'events' | 'kangen' | 'water' | 'emguarde' | 'products' | 'showcase' | 'anespa'
 
 const VARIANTS: Record<LandingVariant, {
   eyebrow: string
@@ -105,6 +106,13 @@ const VARIANTS: Record<LandingVariant, {
     interest: 'product',
     icon: Sparkles,
   },
+  anespa: {
+    eyebrow: 'Enagic® Anespa DX Mineral Ion Water Spa',
+    headline: (name) => `Turn every bath or shower into a spa ritual with ${name}`,
+    subheadline: 'Anespa® DX is a home spa system designed to filter tap water and add natural minerals for a gentler, more relaxing bath or shower experience.',
+    interest: 'product',
+    icon: Droplets,
+  },
 }
 
 const BENEFITS: Record<LandingVariant, string[]> = {
@@ -117,6 +125,12 @@ const BENEFITS: Record<LandingVariant, string[]> = {
   events: ['Live product and business education', 'Open to members, prospects, and guests', 'English and Spanish weekly options', 'Direct follow-up with your referring distributor'],
   products: ['The premier Duo Package synergy', 'Leveluk K8 8-plate medical-grade ionization', 'emGuarde GO 360° electromagnetic defense', 'Full Enagic product line and PDF guides'],
   showcase: ['The premier Duo Package synergy', 'Leveluk K8 8-plate medical-grade ionization', 'emGuarde GO 360° electromagnetic defense', 'Full Enagic product line and PDF guides'],
+  anespa: [
+    'Dual-stage filtration with active charcoal and Futamata ceramics',
+    'Incorporates natural Futamata Radium Tufa and Maifan mineral stones',
+    'Relaxing massage shower head with adjustable stream settings',
+    '3-year Enagic warranty with simple daily installation',
+  ],
 }
 
 const MEHDI_EVENT_PAGES = [
@@ -244,6 +258,10 @@ export default function DistributorLandingPage() {
 
   if (variant === 'products' || variant === 'showcase') {
     return <ProductShowcaseLandingPage profile={profile} distributorSlug={slug} />
+  }
+
+  if (variant === 'anespa') {
+    return <AnespaLandingPage profile={profile} distributorSlug={slug} />
   }
 
   const leaderPhoto =
