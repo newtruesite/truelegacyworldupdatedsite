@@ -9,7 +9,6 @@ import {
   updateDistributorProfile,
   setCustomLeaderAvatar,
   setCustomApplicationSettings,
-  setCustomPurchaseLinks,
   convertToPermanentDataUrl,
 } from '@/lib/crm'
 import type {
@@ -367,10 +366,6 @@ export default function AppAccountPage() {
         purchaseLinks: cleanPurchaseLinks,
       }
 
-      if (distributor.slug) {
-        setCustomPurchaseLinks(distributor.slug, cleanPurchaseLinks)
-      }
-
       if (permanentAvatar && distributor.slug) {
         setCustomLeaderAvatar(distributor.slug, permanentAvatar)
         setCustomAvatarUrl(permanentAvatar)
@@ -380,7 +375,7 @@ export default function AppAccountPage() {
         setCustomApplicationSettings(distributor.slug, applicationSettings)
       }
 
-        if (session && crmConfigured) {
+      if (session && crmConfigured) {
         const updated = await updateDistributorProfile(distributor.id, payload)
         setDistributors((rows) =>
           rows.map((item) =>
@@ -396,27 +391,7 @@ export default function AppAccountPage() {
         )
         setMessage('Your profile, direct product purchase links, and application settings have been saved successfully.')
       } else {
-        setDistributors((rows) =>
-          rows.map((item) =>
-            item.id === distributor.id
-              ? {
-                  ...item,
-                  display_name: payload.displayName,
-                  title: payload.title,
-                  bio: payload.bio,
-                  phone: payload.phone,
-                  instagram_url: payload.instagramUrl,
-                  regions: payload.regions,
-                  languages: payload.languages,
-                  accepting_leads: payload.acceptingLeads,
-                  avatar_url: permanentAvatar || item.avatar_url,
-                  application_settings: applicationSettings,
-                  purchase_links: cleanPurchaseLinks,
-                }
-              : item
-          )
-        )
-        setMessage('Your profile, direct product purchase links, and application settings have been saved permanently.')
+        throw new Error('Account storage is unavailable')
       }
     } catch {
       setError('Your changes could not be saved. Check the fields and try again.')

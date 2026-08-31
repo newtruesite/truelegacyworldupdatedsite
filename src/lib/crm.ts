@@ -462,12 +462,14 @@ export async function getPublicDistributors(): Promise<PublicDistributor[]> {
         ...base,
         avatar_url: customAvatars[profile.slug] || profile.avatar_url || base.avatar_url || `/leaders/standardized/${profile.slug}.png`,
         application_settings: customAppSettings[profile.slug] || profile.application_settings || base.application_settings || null,
-        purchase_links: customPurchaseLinks[profile.slug] || profile.purchase_links || base.purchase_links || {},
+        purchase_links: profile.purchase_links || base.purchase_links || {},
       }
     })
     const remoteSlugs = new Set(remoteDistributors.map((profile) => profile.slug))
-    const merged = [...remoteDistributors, ...FALLBACK_DISTRIBUTORS.filter((profile) => !remoteSlugs.has(profile.slug))]
-    return applyCustomizations(merged)
+    const previewOnlyDistributors = applyCustomizations(
+      FALLBACK_DISTRIBUTORS.filter((profile) => !remoteSlugs.has(profile.slug))
+    )
+    return [...remoteDistributors, ...previewOnlyDistributors]
   } catch {
     return applyCustomizations(FALLBACK_DISTRIBUTORS)
   }
@@ -524,7 +526,7 @@ export async function getCrmDistributors(): Promise<CrmDistributor[]> {
       ...d,
       avatar_url: customAvatars[d.slug] || d.avatar_url || `/leaders/standardized/${d.slug}.png`,
       application_settings: customAppSettings[d.slug] || d.application_settings || null,
-      purchase_links: customPurchaseLinks[d.slug] || d.purchase_links || {},
+      purchase_links: d.purchase_links || {},
     }))
   } catch {
     return FALLBACK_DISTRIBUTORS.map((d) => ({
@@ -677,4 +679,3 @@ export async function recordLeaderAccessEmailSent(distributorId: string): Promis
 }
 
 export { crmConfigured, crmSupabase }
-
