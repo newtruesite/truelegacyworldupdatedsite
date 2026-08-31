@@ -14,9 +14,10 @@ export function ProfileCardGrid({ profile, locale = 'en' }: ProfileCardGridProps
 
   const activeCards = useMemo(() => getActiveProfileLandingCards(), [])
 
-  // Partition cards for desktop layout: cards 1-6 in 3-col grid, cards 7+ in centered row
-  const firstSixCards = useMemo(() => activeCards.slice(0, 6), [activeCards])
-  const remainingCards = useMemo(() => activeCards.slice(6), [activeCards])
+  // Partition cards for desktop layout: full 3-card rows in 3-col grid, any remainder centered in bottom row
+  const fullRowCount = useMemo(() => Math.floor(activeCards.length / 3) * 3, [activeCards])
+  const gridCards = useMemo(() => activeCards.slice(0, fullRowCount), [activeCards, fullRowCount])
+  const remainingCards = useMemo(() => activeCards.slice(fullRowCount), [activeCards, fullRowCount])
 
   const langKey = locale === 'es' ? 'es' : 'en'
 
@@ -49,6 +50,21 @@ export function ProfileCardGrid({ profile, locale = 'en' }: ProfileCardGridProps
                   src={item.image || '/products/anespa-dx.png'}
                   alt={item.imageAlt}
                   className="h-36 w-auto object-contain drop-shadow-[0_10px_25px_rgba(14,165,233,0.3)] relative z-10"
+                  style={{ maxHeight: '135px', maxWidth: '75%' }}
+                />
+              </div>
+            </div>
+          )}
+
+          {/* CARD TYPE: UKON SIGMA (09) */}
+          {item.cardType === 'ukon' && (
+            <div className="absolute inset-0 flex items-center justify-center p-4">
+              <div className="relative h-full w-full flex items-center justify-center group-hover:scale-105 transition-transform duration-500">
+                <div className={`absolute h-32 w-32 rounded-full ${item.accentColor.glowBlur} blur-xl pointer-events-none`} />
+                <img
+                  src={item.image || '/products/ukon-sigma.png'}
+                  alt={item.imageAlt}
+                  className="h-36 w-auto object-contain drop-shadow-[0_10px_25px_rgba(245,158,11,0.35)] relative z-10"
                   style={{ maxHeight: '135px', maxWidth: '75%' }}
                 />
               </div>
@@ -240,14 +256,15 @@ export function ProfileCardGrid({ profile, locale = 'en' }: ProfileCardGridProps
         {activeCards.map((card) => renderCardItem(card))}
       </div>
 
-      {/* DESKTOP RESPONSIVE GRID (Cards 1-6 in 3-col grid; Cards 7-8 centered in final row) */}
+      {/* DESKTOP RESPONSIVE GRID (Full 3-col rows, remainder centered below) */}
       <div className="hidden lg:block space-y-5">
-        {/* Row 1 & Row 2: First 6 cards */}
-        <div className="grid grid-cols-3 gap-5 items-stretch">
-          {firstSixCards.map((card) => renderCardItem(card))}
-        </div>
+        {gridCards.length > 0 && (
+          <div className="grid grid-cols-3 gap-5 items-stretch">
+            {gridCards.map((card) => renderCardItem(card))}
+          </div>
+        )}
 
-        {/* Row 3: Centered final 2 cards (Anespa DX & Live Events) with identical 3-col width */}
+        {/* Remainder Cards centered with identical 3-col card width */}
         {remainingCards.length > 0 && (
           <div className="flex justify-center gap-5 items-stretch">
             {remainingCards.map((card) => (

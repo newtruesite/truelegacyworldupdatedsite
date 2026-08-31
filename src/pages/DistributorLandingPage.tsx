@@ -9,6 +9,7 @@ import { KangenLandingPage } from '@/components/kangen/KangenLandingPage'
 import { EmguardeLandingPage } from '@/components/emguarde/EmguardeLandingPage'
 import { ProductShowcaseLandingPage } from '@/components/products/ProductShowcaseLandingPage'
 import { AnespaLandingPage } from '@/components/anespa/AnespaLandingPage'
+import { UkonLandingPage } from '@/components/ukon/UkonLandingPage'
 import { crmSupabase, getPublicDistributors, getLeaderPortrait } from '@/lib/crm'
 import type { PublicDistributor } from '@/lib/crm'
 import { useLocaleContext } from '@/contexts/LocaleContext'
@@ -34,7 +35,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import NotFoundPage from './NotFoundPage'
 
-type LandingVariant = 'business' | 'duo' | 'training' | 'events' | 'kangen' | 'water' | 'emguarde' | 'products' | 'showcase' | 'anespa'
+type LandingVariant = 'business' | 'duo' | 'training' | 'events' | 'kangen' | 'water' | 'emguarde' | 'products' | 'showcase' | 'anespa' | 'ukon'
 
 const VARIANTS: Record<LandingVariant, {
   eyebrow: string
@@ -113,6 +114,13 @@ const VARIANTS: Record<LandingVariant, {
     interest: 'product',
     icon: Droplets,
   },
+  ukon: {
+    eyebrow: 'Enagic® Kangen Ukon® Sigma Dietary Supplement',
+    headline: (name) => `Discover Kangen Ukon® Sigma with ${name}`,
+    subheadline: 'Enagic’s premium turmeric supplement, cultivated in Okinawa, Japan, and formulated with Spring Ukon, Autumn Ukon, essential oils, and vitamins.',
+    interest: 'product',
+    icon: Sparkles,
+  },
 }
 
 const BENEFITS: Record<LandingVariant, string[]> = {
@@ -130,6 +138,12 @@ const BENEFITS: Record<LandingVariant, string[]> = {
     'Incorporates natural Futamata Radium Tufa and Maifan mineral stones',
     'Relaxing massage shower head with adjustable stream settings',
     '3-year Enagic warranty with simple daily installation',
+  ],
+  ukon: [
+    'Cultivated in Yanbaru, Okinawa, Japan on dedicated Enagic farms',
+    'Formulated with Spring Ukon, Autumn Ukon, and essential plant oils',
+    'Enriched with Tocotrienols, Vitamin E, B-Vitamins, and Vitamin C',
+    'Patented softgel encapsulation technology produced in Japan',
   ],
 }
 
@@ -262,6 +276,10 @@ export default function DistributorLandingPage() {
 
   if (variant === 'anespa') {
     return <AnespaLandingPage profile={profile} distributorSlug={slug} />
+  }
+
+  if (variant === 'ukon') {
+    return <UkonLandingPage profile={profile} distributorSlug={slug} />
   }
 
   const leaderPhoto =
