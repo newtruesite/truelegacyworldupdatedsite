@@ -2233,7 +2233,7 @@ canvas,
 .tl-app-nav { position:fixed; z-index:9400; left:50%; bottom:max(10px,env(safe-area-inset-bottom)); transform:translateX(-50%); width:min(960px,calc(100vw - 20px)); display:grid; grid-auto-flow:column; grid-auto-columns:1fr; gap:3px; padding:6px; border:1px solid rgba(255,255,255,.12); border-radius:22px; background:rgba(5,9,26,.94); box-shadow:0 20px 70px rgba(0,0,0,.5); backdrop-filter:blur(20px) }
 .tl-app-nav a { display:flex; min-width:0; min-height:52px; flex-direction:column; align-items:center; justify-content:center; gap:3px; border-radius:16px; color:#71809a; font-size:9.5px; font-weight:700; text-decoration:none }
 .tl-app-nav a svg { width:19px; height:19px }.tl-app-nav a.is-active { color:#67e8f9; background:rgba(34,211,238,.11) }
-@media(max-width:720px){.tl-app-nav{grid-auto-flow:row;grid-template-columns:repeat(5,1fr)}.tl-app-nav a:nth-child(n+6){display:none}}
+@media(max-width:720px){.tl-app-nav{grid-auto-flow:column;grid-auto-columns:minmax(60px,1fr);overflow-x:auto;scrollbar-width:none;-ms-overflow-style:none}.tl-app-nav::-webkit-scrollbar{display:none}.tl-app-nav a{min-width:58px;flex-shrink:0}}
 .app-home-card { position:relative; min-height:175px; overflow:hidden; border:1px solid rgba(255,255,255,.1); border-radius:20px; padding:16px 14px; background:rgba(255,255,255,.035); color:#fff; transition:all .2s ease }
 .app-home-card:hover { border-color:rgba(255,255,255,.2); background:rgba(255,255,255,.06); transform:translateY(-2px) }
 .app-home-card>span { display:grid; width:38px; height:38px; place-items:center; border-radius:12px; background:rgba(255,255,255,.07) }
