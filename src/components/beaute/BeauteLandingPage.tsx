@@ -300,8 +300,8 @@ export function BeauteLandingPage({ profile: propProfile, distributorSlug }: Bea
                   <div className="absolute inset-0 rounded-full bg-amber-300/10 blur-2xl animate-pulse pointer-events-none" />
                   
                   <img
-                    src="/products/kangen-beaute.png"
-                    alt="Kangen Beaute Three Step Skincare Collection"
+                    src="/products/beaute-turmeric-hero.png"
+                    alt="Kangen Beaute Three Step Skincare Collection with Okinawan Turmeric"
                     className="relative z-10 h-72 sm:h-80 w-auto object-contain drop-shadow-[0_20px_45px_rgba(254,243,199,0.25)] transition-transform duration-500 hover:scale-105"
                   />
                 </div>
@@ -441,13 +441,13 @@ export function BeauteLandingPage({ profile: propProfile, distributorSlug }: Bea
               </div>
 
               <div className="lg:col-span-5 flex justify-center">
-                <div className="rounded-2xl border border-white/10 bg-black/60 p-6 text-center w-full">
+                <div className="overflow-hidden rounded-2xl border border-white/10 bg-black/60 p-2 text-center w-full shadow-2xl">
                   <img
-                    src="/products/kangen-beaute.png"
-                    alt="First Light Essence Step 1"
-                    className="h-56 w-auto object-contain mx-auto"
+                    src="/products/beaute-step-1-essence.jpg"
+                    alt="First Light Essence Step 1 Infographic"
+                    className="h-80 w-auto object-contain mx-auto rounded-xl"
                   />
-                  <p className="mt-3 text-xs font-bold text-white">First Light Essence</p>
+                  <p className="mt-2 text-xs font-bold text-white pb-1">First Light Essence</p>
                 </div>
               </div>
             </div>
@@ -484,13 +484,13 @@ export function BeauteLandingPage({ profile: propProfile, distributorSlug }: Bea
               </div>
 
               <div className="lg:col-span-5 flex justify-center">
-                <div className="rounded-2xl border border-white/10 bg-black/60 p-6 text-center w-full">
+                <div className="overflow-hidden rounded-2xl border border-white/10 bg-black/60 p-2 text-center w-full shadow-2xl">
                   <img
-                    src="/products/kangen-beaute.png"
-                    alt="Vital Rich Cream Step 2"
-                    className="h-56 w-auto object-contain mx-auto"
+                    src="/products/beaute-step-2-cream.jpg"
+                    alt="Vital Rich Cream Step 2 Infographic"
+                    className="h-80 w-auto object-contain mx-auto rounded-xl"
                   />
-                  <p className="mt-3 text-xs font-bold text-white">Vital Rich Cream</p>
+                  <p className="mt-2 text-xs font-bold text-white pb-1">Vital Rich Cream</p>
                 </div>
               </div>
             </div>
@@ -527,13 +527,13 @@ export function BeauteLandingPage({ profile: propProfile, distributorSlug }: Bea
               </div>
 
               <div className="lg:col-span-5 flex justify-center">
-                <div className="rounded-2xl border border-white/10 bg-black/60 p-6 text-center w-full">
+                <div className="overflow-hidden rounded-2xl border border-white/10 bg-black/60 p-2 text-center w-full shadow-2xl">
                   <img
-                    src="/products/kangen-beaute.png"
-                    alt="Crystal Ampoule Cream Step 3"
-                    className="h-56 w-auto object-contain mx-auto"
+                    src="/products/beaute-step-3-ampoule.jpg"
+                    alt="Crystal Ampoule Cream Step 3 Infographic"
+                    className="h-80 w-auto object-contain mx-auto rounded-xl"
                   />
-                  <p className="mt-3 text-xs font-bold text-white">Crystal Ampoule Cream</p>
+                  <p className="mt-2 text-xs font-bold text-white pb-1">Crystal Ampoule Cream</p>
                 </div>
               </div>
             </div>
@@ -760,11 +760,11 @@ export function BeauteLandingPage({ profile: propProfile, distributorSlug }: Bea
             </div>
 
             <div className="lg:col-span-5 flex justify-center">
-              <div className="rounded-3xl border border-white/10 bg-black/60 p-6 text-center">
+              <div className="overflow-hidden rounded-3xl border border-white/10 bg-black/60 p-2 text-center shadow-2xl">
                 <img
-                  src="/products/kangen-beaute.png"
-                  alt="Enagic Kangen Beaute Collection Heritage"
-                  className="h-64 w-auto object-contain mx-auto"
+                  src="/products/beaute-collection-wave.jpg"
+                  alt="Enagic Kangen Beaute Timeless Radiance Collection Heritage"
+                  className="h-72 w-auto object-contain mx-auto rounded-2xl"
                 />
               </div>
             </div>

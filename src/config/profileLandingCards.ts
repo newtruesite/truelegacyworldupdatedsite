@@ -456,7 +456,7 @@ export const PROFILE_LANDING_CARDS: ProfileLandingCardConfig[] = [
       fr: () => 'Découvrez un rituel soin en trois étapes inspiré de l\'Eau Kangen et du Ukon d\'Okinawa.',
     },
     ctaText: { en: 'Explore the Ritual', es: 'Explorar el Ritual', fr: 'Explorer le Rituel' },
-    image: '/products/kangen-beaute.png',
+    image: '/products/beaute-turmeric-hero.png',
     imageAlt: 'Enagic Kangen Beaute Three Step Skincare Collection',
     cardType: 'beaute',
     accentColor: {
