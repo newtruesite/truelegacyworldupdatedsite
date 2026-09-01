@@ -450,8 +450,8 @@ export function WagyuLandingPage({ profile: propProfile, distributorSlug }: Wagy
               <div className="lg:col-span-6 flex justify-center">
                 <div className="overflow-hidden rounded-3xl border border-amber-500/30 bg-stone-900/80 p-2 shadow-2xl">
                   <img
-                    src="/products/wagyu-ranch-landscape.jpg"
-                    alt="Masami Ranch Corning California"
+                    src="/products/wagyu-masami-pasture.jpg"
+                    alt="Masami Ranch Corning California Cattle Pasture"
                     className="h-80 sm:h-96 w-full object-cover rounded-2xl"
                   />
                 </div>
@@ -500,6 +500,17 @@ export function WagyuLandingPage({ profile: propProfile, distributorSlug }: Wagy
               </p>
               <p className="text-xs text-slate-300 mt-1">
                 Raised in California. Inspired by Japanese Wagyu heritage.
+              </p>
+            </div>
+
+            <div className="mt-8 max-w-2xl mx-auto overflow-hidden rounded-2xl border border-amber-500/30 bg-black/60 p-2 shadow-xl">
+              <img
+                src="/products/wagyu-marbled-steak.jpg"
+                alt="Kangen Wagyu Intricate Intramuscular Marbling"
+                className="w-full h-64 sm:h-72 object-cover rounded-xl"
+              />
+              <p className="text-[11px] text-center text-slate-400 mt-2 italic">
+                Intricate intramuscular marbling characteristic of Kangen Wagyu beef cuts.
               </p>
             </div>
           </div>
@@ -641,11 +652,11 @@ export function WagyuLandingPage({ profile: propProfile, distributorSlug }: Wagy
                 </div>
 
                 <div className="space-y-4">
-                  <div className="h-44 rounded-2xl overflow-hidden border border-white/10 bg-black/60 flex items-center justify-center p-2">
+                  <div className="h-48 rounded-2xl overflow-hidden border border-white/10 bg-black/60 flex items-center justify-center p-2">
                     <img
-                      src="/products/kangen-wagyu.png"
-                      alt="Kangen Wagyu Reorder Options"
-                      className="max-h-40 w-auto object-contain opacity-90 group-hover:scale-105 transition-transform duration-500"
+                      src="/products/wagyu-raw-cuts.jpg"
+                      alt="Kangen Wagyu Raw Steaks, Burger Patties, and Sausages"
+                      className="max-h-44 w-full object-cover rounded-xl group-hover:scale-105 transition-transform duration-500"
                     />
                   </div>
 
@@ -676,12 +687,12 @@ export function WagyuLandingPage({ profile: propProfile, distributorSlug }: Wagy
                 </div>
 
                 <div className="space-y-4">
-                  <div className="h-44 rounded-2xl overflow-hidden border border-white/10 bg-black/60 flex items-center justify-center p-4 text-center">
-                    <div className="p-4 rounded-2xl bg-amber-500/10 border border-amber-500/20">
-                      <Flame className="h-8 w-8 text-amber-400 mx-auto mb-1" />
-                      <p className="text-xs font-bold text-amber-200">12 Individual Packages</p>
-                      <p className="text-[10px] text-slate-400">8 oz per pouch</p>
-                    </div>
+                  <div className="h-48 rounded-2xl overflow-hidden border border-white/10 bg-black/60 flex items-center justify-center p-2">
+                    <img
+                      src="/products/wagyu-jerky-pouch.jpg"
+                      alt="Official Kangen Wagyu and Angus Beef Jerky Pouch"
+                      className="max-h-44 w-full object-cover rounded-xl group-hover:scale-105 transition-transform duration-500"
+                    />
                   </div>
 
                   <div>
@@ -760,6 +771,17 @@ export function WagyuLandingPage({ profile: propProfile, distributorSlug }: Wagy
                   Orders are shipped using current official cold-chain fulfillment in supported U.S. markets.
                 </p>
               </div>
+            </div>
+
+            <div className="mt-10 max-w-xl mx-auto overflow-hidden rounded-2xl border border-amber-500/30 bg-black/60 p-3 text-center shadow-xl">
+              <img
+                src="/products/wagyu-shipping-box.jpg"
+                alt="Official Kangen Cattle Shipping Box"
+                className="w-full h-56 object-contain rounded-xl"
+              />
+              <p className="text-[11px] text-slate-400 mt-2 font-medium">
+                Official Enagic Kangen Cattle shipping container designed for cold-chain delivery.
+              </p>
             </div>
           </div>
         </section>
