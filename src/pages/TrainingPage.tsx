@@ -730,15 +730,16 @@ export default function TrainingPage() {
       subtitle: "Official Enagic tools and live company training for independent distributors.",
       portal: "Enagic Distributor Portal",
       portalWarning: "You are opening the Enagic Distributor Portal. Every distributor must use their own personal Enagic portal credentials. Continue?",
+      ewsDashboard: "EWS Dashboard",
       cards: [
         {
-          id: "ews-dashboard",
-          title: "EWS Dashboard",
-          description: "Access your personal Enagic Web System dashboard.",
-          badge: "EWS / TOOL",
-          cta: "OPEN ↗",
-          href: "https://app.enagicwebsystem.com/backoffice.php?section=logout",
-          icon: LayoutDashboard,
+          id: "monday-training",
+          title: "Monday Training",
+          description: "Access the recurring Monday distributor training.",
+          badge: "WEEKLY",
+          cta: "JOIN →",
+          href: "https://www.truehealthlifestyle.team/monday",
+          icon: Calendar,
         },
         {
           id: "ews-learn",
@@ -750,13 +751,13 @@ export default function TrainingPage() {
           icon: PlayCircle,
         },
         {
-          id: "monday-training",
-          title: "Monday Training",
-          description: "Access the recurring Monday distributor training.",
-          badge: "WEEKLY",
+          id: "wednesday-call",
+          title: "Wednesday Call",
+          description: "Join the weekly Wednesday training call.",
+          badge: "LIVE",
           cta: "JOIN →",
-          href: "https://www.truehealthlifestyle.team/monday",
-          icon: Calendar,
+          href: "https://www.truehealthlifestyle.team/wednesday",
+          icon: Radio,
         },
         {
           id: "saturday-calls",
@@ -775,15 +776,16 @@ export default function TrainingPage() {
       subtitle: "Herramientas oficiales de Enagic y capacitaciones en vivo de la compañía.",
       portal: "Portal de Distribuidores Enagic",
       portalWarning: "Vas a abrir el Portal de Distribuidores Enagic. Cada distribuidor debe usar sus propias credenciales personales de Enagic. ¿Deseas continuar?",
+      ewsDashboard: "Panel EWS",
       cards: [
         {
-          id: "ews-dashboard",
-          title: "Panel EWS",
-          description: "Accede a tu panel personal del Sistema Web de Enagic.",
-          badge: "EWS / HERRAMIENTA",
-          cta: "ABRIR ↗",
-          href: "https://app.enagicwebsystem.com/backoffice.php?section=logout",
-          icon: LayoutDashboard,
+          id: "monday-training",
+          title: "Capacitación del lunes",
+          description: "Accede a la capacitación recurrente de los lunes.",
+          badge: "SEMANAL",
+          cta: "UNIRSE →",
+          href: "https://www.truehealthlifestyle.team/monday",
+          icon: Calendar,
         },
         {
           id: "ews-learn",
@@ -795,13 +797,13 @@ export default function TrainingPage() {
           icon: PlayCircle,
         },
         {
-          id: "monday-training",
-          title: "Capacitación del lunes",
-          description: "Accede a la capacitación recurrente de los lunes.",
-          badge: "SEMANAL",
+          id: "wednesday-call",
+          title: "Llamada del miércoles",
+          description: "Únete a la llamada de capacitación semanal de los miércoles.",
+          badge: "EN VIVO",
           cta: "UNIRSE →",
-          href: "https://www.truehealthlifestyle.team/monday",
-          icon: Calendar,
+          href: "https://www.truehealthlifestyle.team/wednesday",
+          icon: Radio,
         },
         {
           id: "saturday-calls",
@@ -820,15 +822,16 @@ export default function TrainingPage() {
       subtitle: "Ferramentas oficiais da Enagic e treinamentos ao vivo da empresa.",
       portal: "Portal do Distribuidor Enagic",
       portalWarning: "Você está abrindo o Portal do Distribuidor Enagic. Cada distribuidor deve usar suas próprias credenciais pessoais da Enagic. Deseja continuar?",
+      ewsDashboard: "Painel EWS",
       cards: [
         {
-          id: "ews-dashboard",
-          title: "Painel EWS",
-          description: "Acesse seu painel pessoal do Sistema Web Enagic.",
-          badge: "EWS / FERRAMENTA",
-          cta: "ABRIR ↗",
-          href: "https://app.enagicwebsystem.com/backoffice.php?section=logout",
-          icon: LayoutDashboard,
+          id: "monday-training",
+          title: "Treinamento de segunda",
+          description: "Acesse o treinamento recorrente de segunda-feira.",
+          badge: "SEMANAL",
+          cta: "PARTICIPAR →",
+          href: "https://www.truehealthlifestyle.team/monday",
+          icon: Calendar,
         },
         {
           id: "ews-learn",
@@ -840,13 +843,13 @@ export default function TrainingPage() {
           icon: PlayCircle,
         },
         {
-          id: "monday-training",
-          title: "Treinamento de segunda",
-          description: "Acesse o treinamento recorrente de segunda-feira.",
-          badge: "SEMANAL",
+          id: "wednesday-call",
+          title: "Chamada de quarta",
+          description: "Participe da chamada de treinamento semanal de quarta-feira.",
+          badge: "AO VIVO",
           cta: "PARTICIPAR →",
-          href: "https://www.truehealthlifestyle.team/monday",
-          icon: Calendar,
+          href: "https://www.truehealthlifestyle.team/wednesday",
+          icon: Radio,
         },
         {
           id: "saturday-calls",
@@ -865,15 +868,16 @@ export default function TrainingPage() {
       subtitle: "Outils officiels Enagic et formations de l’entreprise en direct.",
       portal: "Portail Distributeur Enagic",
       portalWarning: "Vous allez ouvrir le Portail Distributeur Enagic. Chaque distributeur doit utiliser ses propres identifiants Enagic. Continuer ?",
+      ewsDashboard: "Tableau de bord EWS",
       cards: [
         {
-          id: "ews-dashboard",
-          title: "Tableau de bord EWS",
-          description: "Accédez à votre tableau de bord Enagic Web System personnel.",
-          badge: "EWS / OUTIL",
-          cta: "OUVRIR ↗",
-          href: "https://app.enagicwebsystem.com/backoffice.php?section=logout",
-          icon: LayoutDashboard,
+          id: "monday-training",
+          title: "Formation du lundi",
+          description: "Accédez à la formation récurrente du lundi.",
+          badge: "HEBDOMADAIRE",
+          cta: "REJOINDRE →",
+          href: "https://www.truehealthlifestyle.team/monday",
+          icon: Calendar,
         },
         {
           id: "ews-learn",
@@ -885,13 +889,13 @@ export default function TrainingPage() {
           icon: PlayCircle,
         },
         {
-          id: "monday-training",
-          title: "Formation du lundi",
-          description: "Accédez à la formation récurrente du lundi.",
-          badge: "HEBDOMADAIRE",
+          id: "wednesday-call",
+          title: "Appel du mercredi",
+          description: "Rejoignez l’appel de formation hebdomadaire du mercredi.",
+          badge: "EN DIRECT",
           cta: "REJOINDRE →",
-          href: "https://www.truehealthlifestyle.team/monday",
-          icon: Calendar,
+          href: "https://www.truehealthlifestyle.team/wednesday",
+          icon: Radio,
         },
         {
           id: "saturday-calls",
@@ -910,15 +914,16 @@ export default function TrainingPage() {
     subtitle: "Official Enagic tools and live company training for independent distributors.",
     portal: "Enagic Distributor Portal",
     portalWarning: "You are opening the Enagic Distributor Portal. Every distributor must use their own personal Enagic portal credentials. Continue?",
+    ewsDashboard: "EWS Dashboard",
     cards: [
       {
-        id: "ews-dashboard",
-        title: "EWS Dashboard",
-        description: "Access your personal Enagic Web System dashboard.",
-        badge: "EWS / TOOL",
-        cta: "OPEN ↗",
-        href: "https://app.enagicwebsystem.com/backoffice.php?section=logout",
-        icon: LayoutDashboard,
+        id: "monday-training",
+        title: "Monday Training",
+        description: "Access the recurring Monday distributor training.",
+        badge: "WEEKLY",
+        cta: "JOIN →",
+        href: "https://www.truehealthlifestyle.team/monday",
+        icon: Calendar,
       },
       {
         id: "ews-learn",
@@ -930,13 +935,13 @@ export default function TrainingPage() {
         icon: PlayCircle,
       },
       {
-        id: "monday-training",
-        title: "Monday Training",
-        description: "Access the recurring Monday distributor training.",
-        badge: "WEEKLY",
+        id: "wednesday-call",
+        title: "Wednesday Call",
+        description: "Join the weekly Wednesday training call.",
+        badge: "LIVE",
         cta: "JOIN →",
-        href: "https://www.truehealthlifestyle.team/monday",
-        icon: Calendar,
+        href: "https://www.truehealthlifestyle.team/wednesday",
+        icon: Radio,
       },
       {
         id: "saturday-calls",
@@ -1179,7 +1184,8 @@ export default function TrainingPage() {
                         </p>
                       </div>
                     </div>
-                    <div className="flex shrink-0 items-center gap-3">
+                    <div className="flex shrink-0 flex-col items-stretch gap-2.5 w-full sm:w-auto min-w-[220px]">
+                      {/* Button 1: Green Enagic Distributor Portal */}
                       <a
                         href="https://information.enagic.com/home"
                         target="_blank"
@@ -1187,46 +1193,57 @@ export default function TrainingPage() {
                         onClick={(event) => {
                           if (!window.confirm(companyResourcesData.portalWarning)) event.preventDefault();
                         }}
-                        className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl !bg-[#10b981] hover:!bg-[#059669] !text-white border border-emerald-400/50 px-5 font-bold text-xs transition-all duration-200 hover:-translate-y-0.5 shadow-lg shadow-emerald-500/30 active:scale-95 cursor-pointer"
+                        className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl !bg-[#10b981] hover:!bg-[#059669] !text-white border border-emerald-400/50 px-5 font-bold text-xs transition-all duration-200 hover:-translate-y-0.5 shadow-lg shadow-emerald-500/30 active:scale-95 cursor-pointer w-full text-center"
                         style={{ backgroundColor: '#10b981', color: '#ffffff' }}
                       >
                         {companyResourcesData.portal}
-                        <ExternalLink className="h-3.5 w-3.5 text-white" />
+                        <ExternalLink className="h-3.5 w-3.5 text-white shrink-0" />
+                      </a>
+
+                      {/* Button 2: Electric Blue EWS Dashboard */}
+                      <a
+                        href="https://app.enagicwebsystem.com/backoffice.php?section=logout"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl !bg-[#2997ff] hover:!bg-[#0077e6] !text-white border border-cyan-400/50 px-5 font-bold text-xs transition-all duration-200 hover:-translate-y-0.5 shadow-lg shadow-blue-500/30 active:scale-95 cursor-pointer w-full text-center"
+                        style={{ backgroundColor: '#2997ff', color: '#ffffff' }}
+                      >
+                        {companyResourcesData.ewsDashboard}
+                        <ExternalLink className="h-3.5 w-3.5 text-white shrink-0" />
                       </a>
                     </div>
                   </div>
 
-                  {/* The 4 Horizontal Resource Cards (Clean 2-column desktop grid) */}
-                  <div className="mt-6 grid gap-3.5 sm:grid-cols-2">
+                  {/* The 4 Training Cards (1 row desktop lg:grid-cols-4, 2 per row tablet sm:grid-cols-2, 1 per row mobile grid-cols-1) */}
+                  <div className="mt-6 grid gap-3.5 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
                     {companyResourcesData.cards.map(({ id, title, description, badge, cta, href, icon: Icon }) => (
                       <a
                         key={id}
                         href={href}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="group relative flex items-center justify-between gap-4 rounded-2xl border border-white/10 bg-white/[0.025] hover:bg-white/[0.05] p-4 sm:p-5 backdrop-blur-md transition-all duration-300 hover:-translate-y-1 hover:border-cyan-400/50 hover:shadow-lg hover:shadow-cyan-500/10 active:scale-[0.99]"
+                        className="group relative flex flex-col justify-between gap-4 rounded-2xl border border-white/10 bg-white/[0.025] hover:bg-white/[0.05] p-4 sm:p-5 backdrop-blur-md transition-all duration-300 hover:-translate-y-1 hover:border-cyan-400/50 hover:shadow-lg hover:shadow-cyan-500/10 active:scale-[0.99]"
                       >
-                        <div className="flex items-center gap-3.5 min-w-0 flex-1">
-                          <span className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-cyan-400/10 border border-cyan-400/20 text-[#2997ff] group-hover:scale-105 group-hover:bg-cyan-400/20 group-hover:border-cyan-400/40 transition-all">
-                            <Icon className="h-5 w-5" />
-                          </span>
-                          <div className="min-w-0 flex-1">
-                            <div className="flex items-center gap-2 mb-1 flex-wrap">
-                              <h3 className="font-bold text-white text-sm sm:text-base group-hover:text-cyan-300 transition-colors truncate">
-                                {title}
-                              </h3>
-                              <span className="text-[9px] font-black uppercase tracking-wider text-[#86868b] bg-white/5 border border-white/10 px-1.5 py-0.5 rounded shrink-0">
-                                {badge}
-                              </span>
-                            </div>
-                            <p className="text-xs text-[#cccccc] line-clamp-1 leading-normal">
+                        <div className="space-y-3 min-w-0">
+                          <div className="flex items-center justify-between gap-2">
+                            <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-cyan-400/10 border border-cyan-400/20 text-[#2997ff] group-hover:scale-105 group-hover:bg-cyan-400/20 group-hover:border-cyan-400/40 transition-all">
+                              <Icon className="h-5 w-5" />
+                            </span>
+                            <span className="text-[9px] font-black uppercase tracking-wider text-[#86868b] bg-white/5 border border-white/10 px-2 py-0.5 rounded shrink-0">
+                              {badge}
+                            </span>
+                          </div>
+                          <div>
+                            <h3 className="font-bold text-white text-sm sm:text-base group-hover:text-cyan-300 transition-colors line-clamp-1">
+                              {title}
+                            </h3>
+                            <p className="mt-1.5 text-xs text-[#cccccc] line-clamp-2 leading-relaxed">
                               {description}
                             </p>
                           </div>
                         </div>
-                        <div className="shrink-0 flex items-center gap-1.5 pl-3 border-l border-white/10 text-xs font-black tracking-wider text-[#2997ff] group-hover:text-cyan-300 transition-colors">
-                          <span className="hidden sm:inline">{cta}</span>
-                          <span className="sm:hidden font-bold">{cta.includes('↗') ? '↗' : '→'}</span>
+                        <div className="pt-3 border-t border-white/10 flex items-center justify-end text-xs font-black tracking-wider text-[#2997ff] group-hover:text-cyan-300 transition-colors">
+                          <span>{cta}</span>
                         </div>
                       </a>
                     ))}
