@@ -4,7 +4,7 @@ import { SEO } from "@/components/SEO";
 import { TLBackground } from "@/components/ui/TLBackground";
 import { LeaderCard } from "@/components/ui/LeaderCard";
 import { useLocaleContext } from "@/contexts/LocaleContext";
-import { getPublicDistributors, getInitialPublicDistributors, getLeaderPortrait } from "@/lib/crm";
+import { getPublicDistributors } from "@/lib/crm";
 import { motion } from "framer-motion";
 import {
   ArrowRight,
@@ -72,10 +72,10 @@ const LANGUAGE_NAMES: Record<string, Record<string, string>> = {
 
 export default function DistributorsPage() {
   const { locale } = useLocaleContext();
-  const [distributors, setDistributors] = useState<Distributor[]>(() =>
-    getInitialPublicDistributors().map(mapProfileToDistributor)
-  );
-  const [isLoadingDistributors, setIsLoadingDistributors] = useState(false);
+  // Do not paint bundled portraits before the live directory resolves. Rendering
+  // those records first makes current avatars visibly swap in a moment later.
+  const [distributors, setDistributors] = useState<Distributor[]>([]);
+  const [isLoadingDistributors, setIsLoadingDistributors] = useState(true);
   const [query, setQuery] = useState("");
   const [region, setRegion] = useState("all");
   const [language, setLanguage] = useState("all");
@@ -261,10 +261,21 @@ export default function DistributorsPage() {
               </div>
             </div>
 
-            {isLoadingDistributors && distributors.length === 0 ? (
+            {isLoadingDistributors ? (
               <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                 {Array.from({ length: 8 }).map((_, i) => (
-                  <div key={i} className="h-80 rounded-3xl border border-white/10 bg-white/[0.03] animate-pulse" />
+                  <div
+                    key={i}
+                    aria-hidden="true"
+                    className="overflow-hidden rounded-3xl border border-white/10 bg-[#090d16]"
+                  >
+                    <div className="aspect-[4/5] animate-pulse bg-gradient-to-b from-white/[0.07] to-white/[0.025]" />
+                    <div className="space-y-3 p-5">
+                      <div className="h-5 w-2/3 animate-pulse rounded bg-white/10" />
+                      <div className="h-3 w-1/2 animate-pulse rounded bg-white/[0.06]" />
+                      <div className="h-3 w-5/6 animate-pulse rounded bg-white/[0.06]" />
+                    </div>
+                  </div>
                 ))}
               </div>
             ) : filtered.length ? (
