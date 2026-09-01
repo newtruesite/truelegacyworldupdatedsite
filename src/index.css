@@ -3,7 +3,8 @@
 
 html, body {
   scroll-behavior: smooth;
-  overflow-x: hidden;
+  overflow-x: clip;
+  overflow-y: visible;
   max-width: 100vw;
   width: 100%;
   margin: 0;
@@ -130,7 +131,8 @@ html, body {
     font-family: var(--font-body);
     background: var(--color-surface-0);
     color: var(--color-text-primary);
-    overflow-x: hidden;
+    overflow-x: clip;
+    overflow-y: visible;
     -webkit-font-smoothing: antialiased;
     font-size: var(--text-base);
     line-height: var(--text-base-lh);
@@ -1924,7 +1926,8 @@ header {
   min-height: 100dvh;
   display: flex;
   flex-direction: column;
-  overflow-x: hidden;
+  overflow-x: clip;
+  overflow-y: visible;
 }
 
 /* Content wrapper for main page content */
@@ -1932,7 +1935,8 @@ header {
 .page-wrapper,
 .content-wrapper {
   max-width: 100vw;
-  overflow-x: hidden;
+  overflow-x: clip;
+  overflow-y: visible;
 }
 .page-wrapper {
   min-height: 100vh;
@@ -2179,7 +2183,8 @@ canvas,
 .page-container,
 .content-wrapper {
   max-width: 100%;
-  overflow-x: hidden;
+  overflow-x: clip;
+  overflow-y: visible;
 }
 .map-container,
 .jvectormap-container {
