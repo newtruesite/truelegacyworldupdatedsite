@@ -1046,6 +1046,14 @@ export function DuoLandingPage({ profile: initialProfile, distributorSlug }: Duo
 
           {/* Right Controls: Language Selector + Single Contact Button */}
           <div className="flex items-center gap-3 sm:gap-4">
+            <a
+              href="#buy-options"
+              className="inline-flex shrink-0 items-center justify-center gap-1.5 rounded-xl bg-amber-500 px-3.5 py-2 text-xs font-black text-slate-950 shadow-md shadow-amber-500/20 transition-all hover:bg-amber-400 active:scale-95"
+              aria-label="Buy the Duo products"
+            >
+              <ShoppingCart className="h-3.5 w-3.5" />
+              <span className="hidden sm:inline">Buy Now</span>
+            </a>
             {/* Language Selector */}
             <div className="flex items-center rounded-lg border border-white/10 bg-white/[0.04] p-0.5 text-xs font-semibold notranslate" translate="no">
               {(['en', 'es', 'fr', 'pt'] as const).map((lang) => (
@@ -1387,7 +1395,7 @@ export function DuoLandingPage({ profile: initialProfile, distributorSlug }: Duo
       {/* ========================================================================= */}
       {/* SECTION 4: LEVELUK K8 PRODUCT INFORMATION */}
       {/* ========================================================================= */}
-      <section className="py-16 sm:py-24 border-b border-white/10 bg-[#060914] relative">
+      <section id="buy-options" className="scroll-mt-20 py-16 sm:py-24 border-b border-white/10 bg-[#060914] relative">
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
           <div className="grid gap-12 lg:grid-cols-[1.1fr_0.9fr] lg:items-center mb-14">
             <div>

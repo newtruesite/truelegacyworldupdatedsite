@@ -734,6 +734,15 @@ export function ProductShowcaseLandingPage({
           </div>
 
           <div className="flex items-center gap-2 sm:gap-3">
+            <a
+              href="#buy-options"
+              onClick={() => setActiveTab('all')}
+              className="inline-flex shrink-0 items-center justify-center gap-1.5 rounded-xl bg-amber-500 px-3.5 py-2 text-xs font-black text-slate-950 shadow-md shadow-amber-500/20 transition-all hover:bg-amber-400 active:scale-95"
+              aria-label="Browse products available to buy"
+            >
+              <ShoppingCart className="h-3.5 w-3.5" />
+              <span className="hidden sm:inline">{copy.buyNow}</span>
+            </a>
             {/* 4-Language Toggle (EN, ES, FR, PT) */}
             <div className="flex items-center rounded-lg border border-white/10 bg-white/[0.04] p-0.5 text-xs font-semibold notranslate" translate="no">
               {(['en', 'es', 'fr', 'pt'] as const).map((lang) => (
@@ -852,7 +861,7 @@ export function ProductShowcaseLandingPage({
         {/* TIER 1: THE TRUE LEGACY DUO PACKAGE SPOTLIGHT */}
         {/* ========================================================================= */}
         {(activeTab === 'all' || activeTab === 'duo') && (
-          <section className="mx-auto max-w-7xl px-4 py-12 sm:px-6">
+          <section id="buy-options" className="mx-auto max-w-7xl scroll-mt-20 px-4 py-12 sm:px-6">
             <div className="relative overflow-hidden rounded-3xl border-2 border-cyan-400/40 bg-gradient-to-b from-[#0e1a38] via-[#091024] to-[#040711] p-6 sm:p-10 shadow-2xl">
               {/* Ambient backdrop glow */}
               <div className="pointer-events-none absolute -right-20 -top-20 h-96 w-96 rounded-full bg-cyan-500/15 blur-[120px]" />

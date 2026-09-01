@@ -745,6 +745,7 @@ export function KangenLandingPage({ profile: propProfile, distributorSlug }: Kan
           </div>
 
           <div className="flex items-center gap-2 sm:gap-3">
+            <DistributorBuyButton profile={profile} productId="k8" label={locale === 'fr' ? 'Acheter' : locale === 'es' || locale === 'pt' ? 'Comprar' : 'Buy Now'} compactOnMobile className="shrink-0" />
             {/* 4-Language Toggle (EN, ES, FR, PT) */}
             <div className="flex items-center rounded-lg border border-white/10 bg-white/[0.04] p-0.5 text-xs font-semibold notranslate" translate="no">
               {(['en', 'es', 'fr', 'pt'] as const).map((lang) => (

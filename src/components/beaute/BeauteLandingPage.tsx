@@ -200,6 +200,7 @@ export function BeauteLandingPage({ profile: propProfile, distributorSlug }: Bea
           </div>
 
           <div className="flex items-center gap-3">
+            <DistributorBuyButton profile={profile} productId="kangen_beaute" label="Buy Now" compactOnMobile className="shrink-0" />
             <a
               href={whatsappUrl}
               target="_blank"

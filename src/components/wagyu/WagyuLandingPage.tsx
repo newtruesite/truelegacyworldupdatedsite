@@ -260,6 +260,7 @@ export function WagyuLandingPage({ profile: propProfile, distributorSlug }: Wagy
           </Link>
 
           <div className="flex items-center gap-3">
+            <DistributorBuyButton profile={profile} productId="kangen_wagyu" label={locale === 'fr' ? 'Acheter' : locale === 'es' || locale === 'pt' ? 'Comprar' : 'Buy Now'} compactOnMobile className="shrink-0" />
             {/* Language Selector */}
             <div className="flex items-center rounded-lg border border-amber-500/20 bg-amber-950/20 p-1 text-xs font-bold">
               {(['en', 'es', 'fr', 'pt'] as const).map((lang) => (
