@@ -411,7 +411,7 @@ export function BeauteLandingPage({ profile: propProfile, distributorSlug }: Bea
           <div className="mt-14 space-y-12">
             {/* Step 1 */}
             <div className="rounded-3xl border border-amber-300/30 bg-gradient-to-br from-amber-950/20 via-slate-900/50 to-black p-6 sm:p-10 grid gap-8 lg:grid-cols-12 items-center">
-              <div className="lg:col-span-7 space-y-4">
+              <div className="lg:col-span-7 space-y-5">
                 <span className="inline-flex items-center gap-2 rounded-full border border-sky-400/30 bg-sky-400/10 px-3.5 py-1 text-xs font-black uppercase tracking-wider text-sky-300">
                   STEP 1 · PREPARE + HYDRATE
                 </span>
@@ -420,41 +420,66 @@ export function BeauteLandingPage({ profile: propProfile, distributorSlug }: Bea
                   A multilayered essence designed to refresh the look of skin, support a smooth hydrated feel, and prepare the skin for the next step.
                 </p>
 
-                <div className="pt-2 space-y-2 text-xs text-[#cccccc]">
-                  <div className="flex items-center gap-2">
-                    <CheckCircle2 className="h-4 w-4 text-sky-400" />
-                    <span>pH 5.5 formulation</span>
+                {/* Accurate Infographic Features from Official Sheet */}
+                <div className="grid gap-3 sm:grid-cols-2 pt-2 text-xs">
+                  <div className="rounded-xl border border-white/10 bg-white/[0.03] p-3.5 space-y-1">
+                    <div className="flex items-center gap-2 font-bold text-sky-300">
+                      <Droplets className="h-4 w-4" />
+                      <span>pH 5.5 Balance</span>
+                    </div>
+                    <p className="text-[11px] text-[#cccccc] leading-normal">
+                      Helps support the look of a comfortable, balanced skin barrier.
+                    </p>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <CheckCircle2 className="h-4 w-4 text-sky-400" />
-                    <span>Five-type hyaluronic acid complex</span>
+
+                  <div className="rounded-xl border border-white/10 bg-white/[0.03] p-3.5 space-y-1">
+                    <div className="flex items-center gap-2 font-bold text-amber-300">
+                      <Sparkles className="h-4 w-4" />
+                      <span>Milk-Derived Actives</span>
+                    </div>
+                    <p className="text-[11px] text-[#cccccc] leading-normal">
+                      Milk Exosome Complex & Curcumin Composite to condition skin.
+                    </p>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <CheckCircle2 className="h-4 w-4 text-sky-400" />
-                    <span>Layered hydration to support barrier function</span>
+
+                  <div className="rounded-xl border border-white/10 bg-white/[0.03] p-3.5 space-y-1">
+                    <div className="flex items-center gap-2 font-bold text-sky-300">
+                      <CheckCircle2 className="h-4 w-4" />
+                      <span>5-Type Hyaluronic Complex</span>
+                    </div>
+                    <p className="text-[11px] text-[#cccccc] leading-normal">
+                      5 types of hyaluronic acid maintain soft, hydrated-looking skin.
+                    </p>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <CheckCircle2 className="h-4 w-4 text-sky-400" />
-                    <span>Leaves skin feeling refreshed and balanced</span>
+
+                  <div className="rounded-xl border border-white/10 bg-white/[0.03] p-3.5 space-y-1">
+                    <div className="flex items-center gap-2 font-bold text-emerald-400">
+                      <CheckCircle2 className="h-4 w-4" />
+                      <span>Prepare & Absorb</span>
+                    </div>
+                    <p className="text-[11px] text-[#cccccc] leading-normal">
+                      Designed to blend the formula seamlessly into the skin surface.
+                    </p>
                   </div>
                 </div>
               </div>
 
+              {/* Clean PNG bottle (Proportionate Sizing) */}
               <div className="lg:col-span-5 flex justify-center">
-                <div className="overflow-hidden rounded-2xl border border-white/10 bg-black/60 p-2 text-center w-full shadow-2xl">
+                <div className="relative flex items-center justify-center p-6 w-full">
+                  <div className="absolute h-48 w-48 rounded-full bg-sky-400/10 blur-2xl pointer-events-none" />
                   <img
-                    src="/products/beaute-step-1-essence.jpg"
-                    alt="First Light Essence Step 1 Infographic"
-                    className="h-80 w-auto object-contain mx-auto rounded-xl"
+                    src="/products/beaute-step-1-bottle.png"
+                    alt="Kangen Beaute First Light Essence Bottle PNG"
+                    className="relative z-10 h-64 sm:h-72 w-auto object-contain drop-shadow-[0_15px_35px_rgba(14,165,233,0.3)] transition-transform duration-500 hover:scale-105"
                   />
-                  <p className="mt-2 text-xs font-bold text-white pb-1">First Light Essence</p>
                 </div>
               </div>
             </div>
 
             {/* Step 2 */}
             <div className="rounded-3xl border border-amber-300/30 bg-gradient-to-br from-amber-950/20 via-slate-900/50 to-black p-6 sm:p-10 grid gap-8 lg:grid-cols-12 items-center">
-              <div className="lg:col-span-7 space-y-4">
+              <div className="lg:col-span-7 space-y-5">
                 <span className="inline-flex items-center gap-2 rounded-full border border-amber-400/30 bg-amber-400/10 px-3.5 py-1 text-xs font-black uppercase tracking-wider text-amber-300">
                   STEP 2 · NOURISH + RENEW
                 </span>
@@ -463,41 +488,66 @@ export function BeauteLandingPage({ profile: propProfile, distributorSlug }: Bea
                   A rich treatment cream designed to help improve the appearance of firmness, smoothness, tone, and radiance as part of an evening skincare ritual.
                 </p>
 
-                <div className="pt-2 space-y-2 text-xs text-[#cccccc]">
-                  <div className="flex items-center gap-2">
-                    <CheckCircle2 className="h-4 w-4 text-amber-400" />
-                    <span>PDRN & Peptide complex</span>
+                {/* Accurate Infographic Features from Official Sheet */}
+                <div className="grid gap-3 sm:grid-cols-2 pt-2 text-xs">
+                  <div className="rounded-xl border border-white/10 bg-white/[0.03] p-3.5 space-y-1">
+                    <div className="flex items-center gap-2 font-bold text-amber-300">
+                      <Sparkles className="h-4 w-4" />
+                      <span>Skin Renewal (PDRN)</span>
+                    </div>
+                    <p className="text-[11px] text-[#cccccc] leading-normal">
+                      PDRN + peptides help support smoother, firmer-looking skin.
+                    </p>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <CheckCircle2 className="h-4 w-4 text-amber-400" />
-                    <span>Niacinamide for complexion clarity</span>
+
+                  <div className="rounded-xl border border-white/10 bg-white/[0.03] p-3.5 space-y-1">
+                    <div className="flex items-center gap-2 font-bold text-amber-300">
+                      <Sun className="h-4 w-4" />
+                      <span>Brightening Support</span>
+                    </div>
+                    <p className="text-[11px] text-[#cccccc] leading-normal">
+                      Niacinamide helps promote a more even, radiant appearance.
+                    </p>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <CheckCircle2 className="h-4 w-4 text-amber-400" />
-                    <span>Helps smooth the appearance of fine lines</span>
+
+                  <div className="rounded-xl border border-white/10 bg-white/[0.03] p-3.5 space-y-1">
+                    <div className="flex items-center gap-2 font-bold text-amber-300">
+                      <CheckCircle2 className="h-4 w-4" />
+                      <span>Deep Infusion</span>
+                    </div>
+                    <p className="text-[11px] text-[#cccccc] leading-normal">
+                      Formulated to channel active ingredients deep into the skin.
+                    </p>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <CheckCircle2 className="h-4 w-4 text-amber-400" />
-                    <span>Helps brighten the appearance of the complexion</span>
+
+                  <div className="rounded-xl border border-white/10 bg-white/[0.03] p-3.5 space-y-1">
+                    <div className="flex items-center gap-2 font-bold text-emerald-400">
+                      <Leaf className="h-4 w-4" />
+                      <span>Nature & Innovation</span>
+                    </div>
+                    <p className="text-[11px] text-[#cccccc] leading-normal">
+                      Harmony of PDRN, Niacinamide, and Okinawan Ukon curcumin.
+                    </p>
                   </div>
                 </div>
               </div>
 
+              {/* Clean PNG jar (Proportionate Sizing) */}
               <div className="lg:col-span-5 flex justify-center">
-                <div className="overflow-hidden rounded-2xl border border-white/10 bg-black/60 p-2 text-center w-full shadow-2xl">
+                <div className="relative flex items-center justify-center p-6 w-full">
+                  <div className="absolute h-48 w-48 rounded-full bg-amber-400/10 blur-2xl pointer-events-none" />
                   <img
-                    src="/products/beaute-step-2-cream.jpg"
-                    alt="Vital Rich Cream Step 2 Infographic"
-                    className="h-80 w-auto object-contain mx-auto rounded-xl"
+                    src="/products/beaute-step-2-jar.png"
+                    alt="Kangen Beaute Vital Rich Cream Jar PNG"
+                    className="relative z-10 h-56 sm:h-64 w-auto object-contain drop-shadow-[0_15px_35px_rgba(245,158,11,0.3)] transition-transform duration-500 hover:scale-105"
                   />
-                  <p className="mt-2 text-xs font-bold text-white pb-1">Vital Rich Cream</p>
                 </div>
               </div>
             </div>
 
             {/* Step 3 */}
             <div className="rounded-3xl border border-amber-300/30 bg-gradient-to-br from-amber-950/20 via-slate-900/50 to-black p-6 sm:p-10 grid gap-8 lg:grid-cols-12 items-center">
-              <div className="lg:col-span-7 space-y-4">
+              <div className="lg:col-span-7 space-y-5">
                 <span className="inline-flex items-center gap-2 rounded-full border border-emerald-400/30 bg-emerald-400/10 px-3.5 py-1 text-xs font-black uppercase tracking-wider text-emerald-300">
                   STEP 3 · PROTECT + REVITALIZE
                 </span>
@@ -506,34 +556,59 @@ export function BeauteLandingPage({ profile: propProfile, distributorSlug }: Bea
                   The final seal in the ritual. A concentrated cream designed to help lock in moisture and leave skin with a luminous, silky finish.
                 </p>
 
-                <div className="pt-2 space-y-2 text-xs text-[#cccccc]">
-                  <div className="flex items-center gap-2">
-                    <CheckCircle2 className="h-4 w-4 text-emerald-400" />
-                    <span>Proprietary delivery system</span>
+                {/* Accurate Infographic Features from Official Sheet */}
+                <div className="grid gap-3 sm:grid-cols-2 pt-2 text-xs">
+                  <div className="rounded-xl border border-white/10 bg-white/[0.03] p-3.5 space-y-1">
+                    <div className="flex items-center gap-2 font-bold text-emerald-300">
+                      <Sparkles className="h-4 w-4" />
+                      <span>Deep Nourishment</span>
+                    </div>
+                    <p className="text-[11px] text-[#cccccc] leading-normal">
+                      Omega-7 + essential fatty acids enhance soft & smooth skin.
+                    </p>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <CheckCircle2 className="h-4 w-4 text-emerald-400" />
-                    <span>Palmitoleic acid (Omega-7) & Ceramide-like lipids</span>
+
+                  <div className="rounded-xl border border-white/10 bg-white/[0.03] p-3.5 space-y-1">
+                    <div className="flex items-center gap-2 font-bold text-emerald-300">
+                      <ShieldCheck className="h-4 w-4" />
+                      <span>Barrier Support</span>
+                    </div>
+                    <p className="text-[11px] text-[#cccccc] leading-normal">
+                      Ceramide-like lipids support moisture & strengthen skin barrier.
+                    </p>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <CheckCircle2 className="h-4 w-4 text-emerald-400" />
-                    <span>Unsaturated fatty acids to nourish skin</span>
+
+                  <div className="rounded-xl border border-white/10 bg-white/[0.03] p-3.5 space-y-1">
+                    <div className="flex items-center gap-2 font-bold text-emerald-300">
+                      <CheckCircle2 className="h-4 w-4" />
+                      <span>120nm Nano Delivery</span>
+                    </div>
+                    <p className="text-[11px] text-[#cccccc] leading-normal">
+                      120nm technology glides smoothly for a clean, residue-free finish.
+                    </p>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <CheckCircle2 className="h-4 w-4 text-emerald-400" />
-                    <span>Helps nourish and seal in moisture with a luminous finish</span>
+
+                  <div className="rounded-xl border border-white/10 bg-white/[0.03] p-3.5 space-y-1">
+                    <div className="flex items-center gap-2 font-bold text-emerald-300">
+                      <Droplets className="h-4 w-4" />
+                      <span>Silk Rich Finish</span>
+                    </div>
+                    <p className="text-[11px] text-[#cccccc] leading-normal">
+                      120nm Vesicle Complex & Mink Oil Composite for radiant glow.
+                    </p>
                   </div>
                 </div>
               </div>
 
+              {/* Clean PNG bottle (Proportionate Sizing) */}
               <div className="lg:col-span-5 flex justify-center">
-                <div className="overflow-hidden rounded-2xl border border-white/10 bg-black/60 p-2 text-center w-full shadow-2xl">
+                <div className="relative flex items-center justify-center p-6 w-full">
+                  <div className="absolute h-48 w-48 rounded-full bg-emerald-400/10 blur-2xl pointer-events-none" />
                   <img
-                    src="/products/beaute-step-3-ampoule.jpg"
-                    alt="Crystal Ampoule Cream Step 3 Infographic"
-                    className="h-80 w-auto object-contain mx-auto rounded-xl"
+                    src="/products/beaute-step-3-bottle.png"
+                    alt="Kangen Beaute Crystal Ampoule Cream Bottle PNG"
+                    className="relative z-10 h-64 sm:h-72 w-auto object-contain drop-shadow-[0_15px_35px_rgba(52,211,153,0.3)] transition-transform duration-500 hover:scale-105"
                   />
-                  <p className="mt-2 text-xs font-bold text-white pb-1">Crystal Ampoule Cream</p>
                 </div>
               </div>
             </div>
@@ -760,11 +835,12 @@ export function BeauteLandingPage({ profile: propProfile, distributorSlug }: Bea
             </div>
 
             <div className="lg:col-span-5 flex justify-center">
-              <div className="overflow-hidden rounded-3xl border border-white/10 bg-black/60 p-2 text-center shadow-2xl">
+              <div className="relative flex items-center justify-center p-6 w-full">
+                <div className="absolute h-56 w-56 rounded-full bg-amber-400/10 blur-2xl pointer-events-none" />
                 <img
-                  src="/products/beaute-collection-wave.jpg"
-                  alt="Enagic Kangen Beaute Timeless Radiance Collection Heritage"
-                  className="h-72 w-auto object-contain mx-auto rounded-2xl"
+                  src="/products/beaute-turmeric-hero.png"
+                  alt="Enagic Kangen Beaute Collection Heritage PNG"
+                  className="relative z-10 h-64 sm:h-72 w-auto object-contain drop-shadow-[0_15px_35px_rgba(254,243,199,0.25)] transition-transform duration-500 hover:scale-105"
                 />
               </div>
             </div>
