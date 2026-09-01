@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 
 export function GlobalCursorGlow() {
-  const [isActive, setIsActive] = useState(false)
+  const isActiveRef = useRef(false)
   const targetX = useRef(0)
   const targetY = useRef(0)
   const glowX = useRef(0)
@@ -32,8 +32,8 @@ export function GlobalCursorGlow() {
     }
 
     const handleMouseMove = (e: MouseEvent) => {
-      if (!isActive) {
-        setIsActive(true)
+      if (!isActiveRef.current) {
+        isActiveRef.current = true
         document.documentElement.classList.add('mouse-active')
         // Set initial positions immediately on first move to prevent jumping from (0,0)
         glowX.current = e.clientX
@@ -47,11 +47,11 @@ export function GlobalCursorGlow() {
     }
 
     const handleMouseLeave = () => {
-      setIsActive(false)
+      isActiveRef.current = false
       document.documentElement.classList.remove('mouse-active')
     }
 
-    window.addEventListener('mousemove', handleMouseMove)
+    window.addEventListener('mousemove', handleMouseMove, { passive: true })
     document.addEventListener('mouseleave', handleMouseLeave)
     
     // Start animation loop
@@ -64,7 +64,7 @@ export function GlobalCursorGlow() {
         cancelAnimationFrame(animationFrameId.current)
       }
     }
-  }, [isActive])
+  }, [])
 
   return null
 }

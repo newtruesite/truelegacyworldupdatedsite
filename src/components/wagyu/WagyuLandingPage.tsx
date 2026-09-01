@@ -377,11 +377,14 @@ export function WagyuLandingPage({ profile: propProfile, distributorSlug }: Wagy
                 <div className="relative w-full max-w-md rounded-3xl border border-amber-500/30 bg-gradient-to-b from-stone-900/80 via-amber-950/40 to-black p-4 shadow-2xl overflow-hidden group">
                   <div className="absolute top-0 right-0 w-32 h-32 bg-amber-500/10 rounded-full blur-2xl pointer-events-none" />
 
-                  <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-black/60 text-center">
+                  <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-black/80 p-2 text-center">
                     <img
-                      src="/products/wagyu-hero-steak.jpg"
-                      alt="Kangen Wagyu Grilled Ribeye Steak"
-                      className="max-h-[300px] sm:max-h-[340px] w-full object-cover rounded-xl transition-transform duration-700 group-hover:scale-105"
+                      src="/products/kangen-wagyu-box.png"
+                      alt="Kangen Wagyu Premium Selection Box"
+                      className="max-h-[300px] sm:max-h-[340px] w-auto mx-auto object-contain transition-transform duration-700 group-hover:scale-105"
+                      onError={(e) => {
+                        ;(e.currentTarget as HTMLImageElement).src = '/products/kangen-wagyu-box.jpg'
+                      }}
                     />
                   </div>
 
@@ -585,11 +588,14 @@ export function WagyuLandingPage({ profile: propProfile, distributorSlug }: Wagy
                 </div>
 
                 <div className="space-y-4">
-                  <div className="h-44 rounded-2xl overflow-hidden border border-white/10 bg-black/60 flex items-center justify-center p-2">
+                  <div className="h-48 rounded-2xl overflow-hidden border border-white/10 bg-black/80 flex items-center justify-center p-2">
                     <img
-                      src="/products/kangen-wagyu.png"
-                      alt="Kangen Wagyu Premium Set SKU 2115"
-                      className="max-h-40 w-auto object-contain group-hover:scale-105 transition-transform duration-500"
+                      src="/products/kangen-wagyu-box.png"
+                      alt="Kangen Wagyu Premium Selection Box SKU 2115"
+                      className="max-h-44 w-auto object-contain group-hover:scale-105 transition-transform duration-500"
+                      onError={(e) => {
+                        ;(e.currentTarget as HTMLImageElement).src = '/products/kangen-wagyu-box.jpg'
+                      }}
                     />
                   </div>
 

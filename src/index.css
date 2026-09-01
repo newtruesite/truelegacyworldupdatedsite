@@ -1,8 +1,13 @@
 /* True Legacy World — cinematic production design system */
 @import "tailwindcss";
 
-html {
+html, body {
   scroll-behavior: smooth;
+  overflow-x: hidden;
+  max-width: 100vw;
+  width: 100%;
+  margin: 0;
+  padding: 0;
 }
 
 @theme {
