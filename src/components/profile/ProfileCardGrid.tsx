@@ -86,14 +86,14 @@ export function ProfileCardGrid({ profile, locale = 'en' }: ProfileCardGridProps
             </div>
           )}
 
-          {/* CARD TYPE: LIVE EVENTS (08) */}
+          {/* CARD TYPE: LIVE EVENTS (06) */}
           {item.cardType === 'events' && (
-            <div className="absolute inset-0 flex items-center justify-center p-3">
+            <div className="absolute inset-0 flex items-center justify-center p-2">
               <div className="relative h-full w-full overflow-hidden rounded-2xl border border-white/15 bg-black/60 shadow-inner flex items-center justify-center group-hover:scale-105 transition-transform duration-500">
                 <img
                   src={item.image || '/assets/event-masterclass.png'}
                   alt={item.imageAlt}
-                  className="h-full w-full object-contain object-center opacity-95"
+                  className="h-full w-full object-cover object-[center_top] opacity-95"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent" />
                 <div className="absolute bottom-2.5 left-3 right-3 flex items-center justify-between text-[10px] font-bold uppercase tracking-wider text-blue-300 bg-black/85 backdrop-blur-md px-3 py-1.5 rounded-lg border border-blue-400/30">

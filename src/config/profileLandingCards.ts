@@ -277,98 +277,12 @@ export const PROFILE_LANDING_CARDS: ProfileLandingCardConfig[] = [
     getPath: (slug: string) => `/d/${slug}/training`,
   },
 
-  // 06. Explore the Product Collection
+  // 06. Join Live True Legacy Events (NEW CARD)
   {
-    id: 'products',
+    id: 'events',
     displayOrder: 6,
     active: true,
     numberLabel: '06',
-    categoryLabel: {
-      en: 'SHOWCASE',
-      es: 'CATÁLOGO',
-    },
-    eyebrow: {
-      en: 'COMPLETE JAPANESE LINEUP',
-      es: 'LÍNEA JAPONESA COMPLETA',
-    },
-    title: {
-      en: 'Explore the Product Collection',
-      es: 'Explorar la Colección de Productos',
-    },
-    description: {
-      en: () => 'Compare the complete Enagic range—from flagship water ionizers to home, wellness, and protection technologies.',
-      es: () => 'Compara la gama completa de Enagic, desde ionizadores de agua hasta tecnologías para el hogar y la protección.',
-    },
-    ctaText: {
-      en: 'View All Products',
-      es: 'Ver Todos los Productos',
-    },
-    imageAlt: 'Complete Enagic Product Showcase Lineup',
-    cardType: 'collection',
-    accentColor: {
-      borderGlow: 'hover:border-teal-400/50 hover:shadow-[0_0_30px_rgba(45,212,191,0.18)]',
-      gradient: 'from-teal-950/40 via-slate-900/60 to-black',
-      iconBg: 'bg-teal-500/10 text-teal-300 border border-teal-400/30',
-      badgeText: 'text-teal-400',
-      btnBg: 'bg-teal-500/20 text-teal-300 group-hover:bg-teal-400 group-hover:text-slate-950',
-      glowBlur: 'bg-teal-500/20',
-      textHighlight: 'group-hover:text-teal-300',
-    },
-    icon: Package,
-    analyticsInterest: 'product',
-    getPath: (slug: string) => `/d/${slug}/products`,
-  },
-
-  // 07. Discover Anespa DX (NEW CARD)
-  {
-    id: 'anespa',
-    displayOrder: 7,
-    active: true,
-    isNew: true,
-    numberLabel: '07',
-    categoryLabel: {
-      en: 'HOME WELLNESS',
-      es: 'BIENESTAR EN EL HOGAR',
-    },
-    eyebrow: {
-      en: 'MINERAL SHOWER SYSTEM',
-      es: 'SISTEMA DE DUCHA MINERAL',
-    },
-    title: {
-      en: 'Transform Your Everyday Shower',
-      es: 'Transforma tu Ducha Diaria',
-    },
-    description: {
-      en: () => 'Discover how Anespa DX brings Japanese mineral-water technology into your daily bath and shower experience.',
-      es: () => 'Descubre cómo Anespa DX lleva la tecnología de agua mineral japonesa a tu experiencia diaria de baño y ducha.',
-    },
-    ctaText: {
-      en: 'Discover Anespa DX',
-      es: 'Descubrir Anespa DX',
-    },
-    image: '/products/anespa-dx.png',
-    imageAlt: 'Enagic Anespa DX Mineral Ion Water Spa Home Unit',
-    cardType: 'anespa',
-    accentColor: {
-      borderGlow: 'hover:border-cyan-400/60 hover:shadow-[0_0_30px_rgba(14,165,233,0.22)]',
-      gradient: 'from-cyan-950/40 via-slate-900/60 to-black',
-      iconBg: 'bg-cyan-500/10 text-cyan-300 border border-cyan-400/30',
-      badgeText: 'text-[#2997ff]',
-      btnBg: 'bg-cyan-500/20 text-cyan-300 group-hover:bg-cyan-400 group-hover:text-slate-950',
-      glowBlur: 'bg-cyan-400/20',
-      textHighlight: 'group-hover:text-cyan-300',
-    },
-    icon: ShowerHead,
-    analyticsInterest: 'anespa',
-    getPath: (slug: string) => `/d/${slug}/anespa`,
-  },
-
-  // 08. Join Live True Legacy Events (NEW CARD)
-  {
-    id: 'events',
-    displayOrder: 8,
-    active: true,
-    numberLabel: '08',
     categoryLabel: {
       en: 'LIVE EVENTS',
       es: 'EVENTOS EN VIVO',
@@ -406,41 +320,125 @@ export const PROFILE_LANDING_CARDS: ProfileLandingCardConfig[] = [
     getPath: (slug: string) => `/d/${slug}/events`,
   },
 
-  // ==========================================
-  // FUTURE LANDING PAGE PLACEHOLDERS (INACTIVE)
-  // ==========================================
-  // 09. Discover Kangen Ukon Sigma (NEW CARD)
+  // 07. Explore the Product Collection
   {
-    id: 'ukon',
+    id: 'products',
+    displayOrder: 7,
+    active: true,
+    numberLabel: '07',
+    categoryLabel: {
+      en: 'SHOWCASE',
+      es: 'CATÁLOGO',
+    },
+    eyebrow: {
+      en: 'COMPLETE JAPANESE LINEUP',
+      es: 'LÍNEA JAPONESA COMPLETA',
+    },
+    title: {
+      en: 'Explore the Product Collection',
+      es: 'Explorar la Colección de Productos',
+    },
+    description: {
+      en: () => 'Compare the complete Enagic range—from flagship water ionizers to home, wellness, and protection technologies.',
+      es: () => 'Compara la gama completa de Enagic, desde ionizadores de agua hasta tecnologías para el hogar y la protección.',
+    },
+    ctaText: {
+      en: 'View All Products',
+      es: 'Ver Todos los Productos',
+    },
+    imageAlt: 'Complete Enagic Product Showcase Lineup',
+    cardType: 'collection',
+    accentColor: {
+      borderGlow: 'hover:border-teal-400/50 hover:shadow-[0_0_30px_rgba(45,212,191,0.18)]',
+      gradient: 'from-teal-950/40 via-slate-900/60 to-black',
+      iconBg: 'bg-teal-500/10 text-teal-300 border border-teal-400/30',
+      badgeText: 'text-teal-400',
+      btnBg: 'bg-teal-500/20 text-teal-300 group-hover:bg-teal-400 group-hover:text-slate-950',
+      glowBlur: 'bg-teal-500/20',
+      textHighlight: 'group-hover:text-teal-300',
+    },
+    icon: Package,
+    analyticsInterest: 'product',
+    getPath: (slug: string) => `/d/${slug}/products`,
+  },
+
+  // 08. Discover Anespa DX (NEW CARD)
+  {
+    id: 'anespa',
+    displayOrder: 8,
+    active: true,
+    isNew: true,
+    numberLabel: '08',
+    categoryLabel: {
+      en: 'HOME WELLNESS',
+      es: 'BIENESTAR EN EL HOGAR',
+    },
+    eyebrow: {
+      en: 'MINERAL SHOWER SYSTEM',
+      es: 'SISTEMA DE DUCHA MINERAL',
+    },
+    title: {
+      en: 'Transform Your Everyday Shower',
+      es: 'Transforma tu Ducha Diaria',
+    },
+    description: {
+      en: () => 'Discover how Anespa DX brings Japanese mineral-water technology into your daily bath and shower experience.',
+      es: () => 'Descubre cómo Anespa DX lleva la tecnología de agua mineral japonesa a tu experiencia diaria de baño y ducha.',
+    },
+    ctaText: {
+      en: 'Discover Anespa DX',
+      es: 'Descubrir Anespa DX',
+    },
+    image: '/products/anespa-dx.png',
+    imageAlt: 'Enagic Anespa DX Mineral Ion Water Spa Home Unit',
+    cardType: 'anespa',
+    accentColor: {
+      borderGlow: 'hover:border-cyan-400/60 hover:shadow-[0_0_30px_rgba(14,165,233,0.22)]',
+      gradient: 'from-cyan-950/40 via-slate-900/60 to-black',
+      iconBg: 'bg-cyan-500/10 text-cyan-300 border border-cyan-400/30',
+      badgeText: 'text-[#2997ff]',
+      btnBg: 'bg-cyan-500/20 text-cyan-300 group-hover:bg-cyan-400 group-hover:text-slate-950',
+      glowBlur: 'bg-cyan-400/20',
+      textHighlight: 'group-hover:text-cyan-300',
+    },
+    icon: ShowerHead,
+    analyticsInterest: 'anespa',
+    getPath: (slug: string) => `/d/${slug}/anespa`,
+  },
+
+  // 09. Meet the Leveluk JrIV (NEW CARD)
+  {
+    id: 'jr4',
     displayOrder: 9,
     active: true,
     isNew: true,
     numberLabel: '09',
-    categoryLabel: { en: 'DAILY WELLNESS', es: 'BIENESTAR DIARIO', fr: 'BIEN-ÊTRE QUOTIDIEN' },
-    eyebrow: { en: 'OKINAWAN TURMERIC FORMULA', es: 'FÓRMULA DE CÚRCUMA DE OKINAWA', fr: 'FORMULE DE CURCUMA D\'OKINAWA' },
-    title: { en: 'Discover Kangen Ukon Sigma', es: 'Descubre Kangen Ukon Sigma', fr: 'Découvrez Kangen Ukon Sigma' },
+    categoryLabel: { en: 'COMPACT WATER SYSTEM', es: 'SISTEMA COMPACTO DE AGUA', fr: 'SYSTÈME D’EAU COMPACT' },
+    eyebrow: { en: 'THE JUNIOR MODEL', es: 'EL MODELO JUNIOR', fr: 'LE MODÈLE JUNIOR' },
+    title: { en: 'Meet the Leveluk JrIV', es: 'Conoce el Leveluk JrIV', fr: 'Découvrez le Leveluk JrIV' },
     description: {
-      en: () => 'Explore Enagic’s premium turmeric supplement, grown in Okinawa and produced in Japan with a patented softgel formulation.',
-      es: () => 'Explora el suplemento de cúrcuma de Enagic, cultivado en Okinawa y producido en Japón con cápsula blanda patentada.',
-      fr: () => 'Découvrez le complément de curcuma premium d\'Enagic, cultivé à Okinawa y produit au Japon.',
+      en: () => 'Explore Enagic’s compact four-plate starter model, designed primarily for singles and couples seeking access to all five water types.',
+      es: () => 'Explora el modelo de iniciación compacto de 4 placas de Enagic, diseñado principalmente para personas solteras y parejas.',
+      fr: () => 'Découvrez le modèle compact 4 plaques d’Enagic, conçu principalement pour les personnes seules et les couples.',
     },
-    ctaText: { en: 'Explore Ukon Sigma', es: 'Explorar Ukon Sigma', fr: 'Explorer Ukon Sigma' },
-    image: '/products/ukon-sigma.png',
-    imageAlt: 'Enagic Kangen Ukon Sigma Dietary Supplement',
-    cardType: 'ukon',
+    ctaText: { en: 'Explore the JrIV', es: 'Explorar el JrIV', fr: 'Explorer le JrIV' },
+    image: '/products/jr-iv.png',
+    imageAlt: 'Leveluk JrIV Compact Kangen Water Machine',
+    cardType: 'jr4',
     accentColor: {
-      borderGlow: 'hover:border-amber-400/60 hover:shadow-[0_0_30px_rgba(245,158,11,0.22)]',
-      gradient: 'from-amber-950/40 via-slate-900/60 to-black',
-      iconBg: 'bg-amber-500/10 text-amber-300 border border-amber-400/30',
-      badgeText: 'text-amber-400',
-      btnBg: 'bg-amber-500/20 text-amber-300 group-hover:bg-amber-400 group-hover:text-slate-950',
-      glowBlur: 'bg-amber-500/20',
-      textHighlight: 'group-hover:text-amber-300',
+      borderGlow: 'hover:border-cyan-400/60 hover:shadow-[0_0_30px_rgba(56,189,248,0.22)]',
+      gradient: 'from-slate-900/60 via-[#0a1120] to-black',
+      iconBg: 'bg-cyan-500/10 text-cyan-300 border border-cyan-400/30',
+      badgeText: 'text-cyan-300',
+      btnBg: 'bg-cyan-500/20 text-cyan-300 group-hover:bg-cyan-400 group-hover:text-slate-950',
+      glowBlur: 'bg-cyan-400/20',
+      textHighlight: 'group-hover:text-cyan-300',
     },
-    icon: Sparkles,
-    analyticsInterest: 'ukon',
-    getPath: (slug: string) => `/d/${slug}/ukon`,
+    icon: Droplets,
+    analyticsInterest: 'jr4',
+    getPath: (slug: string) => `/d/${slug}/jr4`,
   },
+
   // 10. Discover Kangen Beaute (NEW CARD)
   {
     id: 'beaute',
@@ -473,6 +471,7 @@ export const PROFILE_LANDING_CARDS: ProfileLandingCardConfig[] = [
     analyticsInterest: 'beaute',
     getPath: (slug: string) => `/d/${slug}/beaute`,
   },
+
   // 11. Experience Kangen Wagyu (NEW CARD)
   {
     id: 'wagyu',
@@ -505,37 +504,38 @@ export const PROFILE_LANDING_CARDS: ProfileLandingCardConfig[] = [
     analyticsInterest: 'wagyu',
     getPath: (slug: string) => `/d/${slug}/wagyu`,
   },
-  // 12. Meet the Leveluk JrIV (NEW CARD)
+
+  // 12. Discover Kangen Ukon Sigma (NEW CARD)
   {
-    id: 'jr4',
+    id: 'ukon',
     displayOrder: 12,
     active: true,
     isNew: true,
     numberLabel: '12',
-    categoryLabel: { en: 'COMPACT WATER SYSTEM', es: 'SISTEMA COMPACTO DE AGUA', fr: 'SYSTÈME D’EAU COMPACT' },
-    eyebrow: { en: 'THE JUNIOR MODEL', es: 'EL MODELO JUNIOR', fr: 'LE MODÈLE JUNIOR' },
-    title: { en: 'Meet the Leveluk JrIV', es: 'Conoce el Leveluk JrIV', fr: 'Découvrez le Leveluk JrIV' },
+    categoryLabel: { en: 'DAILY WELLNESS', es: 'BIENESTAR DIARIO', fr: 'BIEN-ÊTRE QUOTIDIEN' },
+    eyebrow: { en: 'OKINAWAN TURMERIC FORMULA', es: 'FÓRMULA DE CÚRCUMA DE OKINAWA', fr: 'FORMULE DE CURCUMA D\'OKINAWA' },
+    title: { en: 'Discover Kangen Ukon Sigma', es: 'Descubre Kangen Ukon Sigma', fr: 'Découvrez Kangen Ukon Sigma' },
     description: {
-      en: () => 'Explore Enagic’s compact four-plate starter model, designed primarily for singles and couples seeking access to all five water types.',
-      es: () => 'Explora el modelo de iniciación compacto de 4 placas de Enagic, diseñado principalmente para personas solteras y parejas.',
-      fr: () => 'Découvrez le modèle compact 4 plaques d’Enagic, conçu principalement pour les personnes seules et les couples.',
+      en: () => 'Explore Enagic’s premium turmeric supplement, grown in Okinawa and produced in Japan with a patented softgel formulation.',
+      es: () => 'Explora el suplemento de cúrcuma de Enagic, cultivado en Okinawa y producido en Japón con cápsula blanda patentada.',
+      fr: () => 'Découvrez le complément de curcuma premium d\'Enagic, cultivé à Okinawa y produit au Japon.',
     },
-    ctaText: { en: 'Explore the JrIV', es: 'Explorar el JrIV', fr: 'Explorer le JrIV' },
-    image: '/products/jr-iv.png',
-    imageAlt: 'Leveluk JrIV Compact Kangen Water Machine',
-    cardType: 'jr4',
+    ctaText: { en: 'Explore Ukon Sigma', es: 'Explorar Ukon Sigma', fr: 'Explorer Ukon Sigma' },
+    image: '/products/ukon-sigma.png',
+    imageAlt: 'Enagic Kangen Ukon Sigma Dietary Supplement',
+    cardType: 'ukon',
     accentColor: {
-      borderGlow: 'hover:border-cyan-400/60 hover:shadow-[0_0_30px_rgba(56,189,248,0.22)]',
-      gradient: 'from-slate-900/60 via-[#0a1120] to-black',
-      iconBg: 'bg-cyan-500/10 text-cyan-300 border border-cyan-400/30',
-      badgeText: 'text-cyan-300',
-      btnBg: 'bg-cyan-500/20 text-cyan-300 group-hover:bg-cyan-400 group-hover:text-slate-950',
-      glowBlur: 'bg-cyan-400/20',
-      textHighlight: 'group-hover:text-cyan-300',
+      borderGlow: 'hover:border-amber-400/60 hover:shadow-[0_0_30px_rgba(245,158,11,0.22)]',
+      gradient: 'from-amber-950/40 via-slate-900/60 to-black',
+      iconBg: 'bg-amber-500/10 text-amber-300 border border-amber-400/30',
+      badgeText: 'text-amber-400',
+      btnBg: 'bg-amber-500/20 text-amber-300 group-hover:bg-amber-400 group-hover:text-slate-950',
+      glowBlur: 'bg-amber-500/20',
+      textHighlight: 'group-hover:text-amber-300',
     },
-    icon: Droplets,
-    analyticsInterest: 'jr4',
-    getPath: (slug: string) => `/d/${slug}/jr4`,
+    icon: Sparkles,
+    analyticsInterest: 'ukon',
+    getPath: (slug: string) => `/d/${slug}/ukon`,
   },
 ]
 
