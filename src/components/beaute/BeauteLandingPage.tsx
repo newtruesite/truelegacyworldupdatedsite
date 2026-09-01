@@ -302,7 +302,7 @@ export function BeauteLandingPage({ profile: propProfile, distributorSlug }: Bea
                   <img
                     src="/products/beaute-turmeric-hero.png"
                     alt="Kangen Beaute Three Step Skincare Collection with Okinawan Turmeric"
-                    className="relative z-10 h-72 sm:h-80 w-auto object-contain drop-shadow-[0_20px_45px_rgba(254,243,199,0.25)] transition-transform duration-500 hover:scale-105"
+                    className="relative z-10 max-h-[260px] sm:max-h-[300px] w-auto object-contain drop-shadow-[0_20px_45px_rgba(254,243,199,0.25)] transition-transform duration-500 hover:scale-105"
                   />
                 </div>
 
@@ -471,7 +471,7 @@ export function BeauteLandingPage({ profile: propProfile, distributorSlug }: Bea
                   <img
                     src="/products/beaute-step-1-bottle.png"
                     alt="Kangen Beaute First Light Essence Bottle PNG"
-                    className="relative z-10 h-64 sm:h-72 w-auto object-contain drop-shadow-[0_15px_35px_rgba(14,165,233,0.3)] transition-transform duration-500 hover:scale-105"
+                    className="relative z-10 max-h-[230px] sm:max-h-[260px] w-auto object-contain drop-shadow-[0_15px_35px_rgba(14,165,233,0.3)] transition-transform duration-500 hover:scale-105"
                   />
                 </div>
               </div>
@@ -539,7 +539,7 @@ export function BeauteLandingPage({ profile: propProfile, distributorSlug }: Bea
                   <img
                     src="/products/beaute-step-2-jar.png"
                     alt="Kangen Beaute Vital Rich Cream Jar PNG"
-                    className="relative z-10 h-56 sm:h-64 w-auto object-contain drop-shadow-[0_15px_35px_rgba(245,158,11,0.3)] transition-transform duration-500 hover:scale-105"
+                    className="relative z-10 max-h-[180px] sm:max-h-[210px] w-auto object-contain drop-shadow-[0_15px_35px_rgba(245,158,11,0.3)] transition-transform duration-500 hover:scale-105"
                   />
                 </div>
               </div>
@@ -607,7 +607,7 @@ export function BeauteLandingPage({ profile: propProfile, distributorSlug }: Bea
                   <img
                     src="/products/beaute-step-3-bottle.png"
                     alt="Kangen Beaute Crystal Ampoule Cream Bottle PNG"
-                    className="relative z-10 h-64 sm:h-72 w-auto object-contain drop-shadow-[0_15px_35px_rgba(52,211,153,0.3)] transition-transform duration-500 hover:scale-105"
+                    className="relative z-10 max-h-[230px] sm:max-h-[260px] w-auto object-contain drop-shadow-[0_15px_35px_rgba(52,211,153,0.3)] transition-transform duration-500 hover:scale-105"
                   />
                 </div>
               </div>
