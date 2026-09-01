@@ -6,7 +6,7 @@ import { motion } from "framer-motion";
 import { Calendar, Globe, Instagram, MessageCircle } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { getPublicDistributors, getLeaderPortrait } from "@/lib/crm";
+import { getPublicDistributors, getInitialPublicDistributors, getLeaderPortrait } from "@/lib/crm";
 
 type Distributor = {
   slug: string; name: string; title: string; photo: string; fallbackInitial: string; region: string;
@@ -14,33 +14,29 @@ type Distributor = {
   calendly?: string; telegram?: string; instagram?: string;
 };
 
-const DEFAULT_DISTRIBUTORS: Distributor[] = [
-  {
-    slug: "mehdi-cohen",
-    name: "Mehdi Cohen",
-    title: "Líder True Legacy 6A",
-    photo: "/leaders/standardized/mehdi-cohen.png",
-    fallbackInitial: "M",
-    website: "https://mehdicohen.com",
-    whatsapp:
-      "https://api.whatsapp.com/send/?phone=18649072149&text&type=phone_number&app_absent=0",
-    latamWhatsapp: "https://wa.me/+573001844049",
-    calendly: "https://calendly.com/aquacharged/true-legacy-one-on-one",
-    telegram: "https://t.me/mehdicohen",
-    instagram: "https://www.instagram.com/mehdicohen/",
-    region: "Global y LATAM",
-  },
-  {
-    slug: "ryan-pool",
-    name: "Ryan Pool",
-    title: "Líder True Legacy",
-    photo: "/leaders/standardized/ryan-pool-sr.png",
-    fallbackInitial: "R",
-    website: "https://ryanpool.com",
-    instagram: "https://www.instagram.com/ryanpool/",
-    region: "Solo Global",
-  },
-];
+function mapProfileToLatamDistributor(profile: {
+  slug: string;
+  display_name: string;
+  title: string;
+  avatar_url: string | null;
+  regions: string[];
+  phone?: string | null;
+  instagram_url?: string | null;
+  website_url?: string | null;
+}): Distributor {
+  return {
+    slug: profile.slug,
+    name: profile.display_name,
+    title: profile.title,
+    photo: profile.avatar_url || `/leaders/standardized/${profile.slug}.png`,
+    fallbackInitial: profile.display_name.charAt(0),
+    region: profile.regions.join(", "),
+    website: profile.website_url || undefined,
+    whatsapp: profile.phone ? `https://wa.me/${profile.phone.replace(/\D/g, "")}` : undefined,
+    latamWhatsapp: profile.slug === "mehdi-cohen" ? "https://wa.me/+573001844049" : undefined,
+    instagram: profile.instagram_url || undefined,
+  };
+}
 
 function IconWhatsApp({ className }: { className?: string }) {
   return (
@@ -58,10 +54,7 @@ function IconWhatsApp({ className }: { className?: string }) {
 
 export default function LatamDistributorsPage() {
   const [distributors, setDistributors] = useState<Distributor[]>(() =>
-    DEFAULT_DISTRIBUTORS.map((d) => ({
-      ...d,
-      photo: getLeaderPortrait(d.slug, d.photo),
-    }))
+    getInitialPublicDistributors().map(mapProfileToLatamDistributor)
   );
 
   useEffect(() => {
@@ -69,17 +62,7 @@ export default function LatamDistributorsPage() {
     const refresh = () => {
       getPublicDistributors().then((profiles) => {
         if (!active) return;
-        setDistributors((prev) =>
-          prev.map((d) => {
-            const remote = profiles.find((p) => p.slug === d.slug);
-            return {
-              ...d,
-              name: remote?.display_name || d.name,
-              title: remote?.title || d.title,
-              photo: remote?.avatar_url || getLeaderPortrait(d.slug, d.photo),
-            };
-          })
-        );
+        setDistributors(profiles.map(mapProfileToLatamDistributor));
       });
     };
 

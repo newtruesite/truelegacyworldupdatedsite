@@ -4,7 +4,7 @@ import { SEO } from "@/components/SEO";
 import { TLBackground } from "@/components/ui/TLBackground";
 import { LeaderCard } from "@/components/ui/LeaderCard";
 import { useLocaleContext } from "@/contexts/LocaleContext";
-import { getPublicDistributors, getLeaderPortrait } from "@/lib/crm";
+import { getPublicDistributors, getInitialPublicDistributors, getLeaderPortrait } from "@/lib/crm";
 import { motion } from "framer-motion";
 import {
   ArrowRight,
@@ -40,29 +40,28 @@ const FEATURED_ORDER = [
   "angel-mok",
 ];
 
-const FALLBACK_DISTRIBUTORS: Distributor[] = [
-  {
-    slug: "mehdi-cohen",
-    name: "Mehdi Cohen",
-    title: "True Legacy World",
-    photo: "/leaders/standardized/mehdi-cohen.png",
-    fallbackInitial: "M",
-    regions: ["Global", "LATAM", "Morocco", "USA", "Canada"],
-    languages: ["en", "es", "fr"],
-    whatsapp: "https://wa.me/18649072149",
-    instagram: "https://www.instagram.com/mehdicohen_/",
-  },
-  {
-    slug: "ryan-pool",
-    name: "Ryan Pool Sr",
-    title: "True Legacy Leader",
-    photo: "/leaders/standardized/ryan-pool-sr.png",
-    fallbackInitial: "R",
-    regions: ["USA"],
-    languages: ["en"],
-    instagram: "https://www.instagram.com/ryanpoolsr/",
-  },
-];
+function mapProfileToDistributor(profile: {
+  slug: string;
+  display_name: string;
+  title: string;
+  avatar_url: string | null;
+  regions: string[];
+  languages: string[];
+  phone?: string | null;
+  instagram_url?: string | null;
+}): Distributor {
+  return {
+    slug: profile.slug,
+    name: profile.display_name,
+    title: profile.title,
+    photo: profile.avatar_url || "",
+    fallbackInitial: profile.display_name.charAt(0),
+    regions: profile.regions,
+    languages: profile.languages,
+    whatsapp: profile.phone ? `https://wa.me/${profile.phone.replace(/\D/g, "")}` : undefined,
+    instagram: profile.instagram_url || undefined,
+  };
+}
 
 const LANGUAGE_NAMES: Record<string, Record<string, string>> = {
   en: { en: "English", es: "Spanish", fr: "French", pt: "Portuguese", zh: "Mandarin", yue: "Cantonese", ms: "Malay", ar: "Arabic" },
@@ -74,10 +73,7 @@ const LANGUAGE_NAMES: Record<string, Record<string, string>> = {
 export default function DistributorsPage() {
   const { locale } = useLocaleContext();
   const [distributors, setDistributors] = useState<Distributor[]>(() =>
-    FALLBACK_DISTRIBUTORS.map((d) => ({
-      ...d,
-      photo: getLeaderPortrait(d.slug, d.photo),
-    }))
+    getInitialPublicDistributors().map(mapProfileToDistributor)
   );
   const [isLoadingDistributors, setIsLoadingDistributors] = useState(true);
   const [query, setQuery] = useState("");
@@ -89,19 +85,7 @@ export default function DistributorsPage() {
     const loadDistributors = () => {
       getPublicDistributors().then((profiles) => {
         if (!active) return;
-        setDistributors(
-          profiles.map((profile) => ({
-            slug: profile.slug,
-            name: profile.display_name,
-            title: profile.title,
-            photo: profile.avatar_url || "",
-            fallbackInitial: profile.display_name.charAt(0),
-            regions: profile.regions,
-            languages: profile.languages,
-            whatsapp: profile.phone ? `https://wa.me/${profile.phone.replace(/\D/g, "")}` : undefined,
-            instagram: profile.instagram_url || undefined,
-          })),
-        );
+        setDistributors(profiles.map(mapProfileToDistributor));
         setIsLoadingDistributors(false);
       }).catch(() => {
         if (active) setIsLoadingDistributors(false);
@@ -277,7 +261,13 @@ export default function DistributorsPage() {
               </div>
             </div>
 
-            {filtered.length ? (
+            {isLoadingDistributors && distributors.length === 0 ? (
+              <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                {Array.from({ length: 8 }).map((_, i) => (
+                  <div key={i} className="h-80 rounded-3xl border border-white/10 bg-white/[0.03] animate-pulse" />
+                ))}
+              </div>
+            ) : filtered.length ? (
               <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                 {filtered.map((dist, index) => (
                   <LeaderCard

@@ -107,6 +107,16 @@ export default function LandingPagesHubPage() {
       badge: 'Protection',
     },
     {
+      id: 'jr4',
+      category: 'STARTER IONIZER',
+      title: 'Leveluk JrIV',
+      description: 'Compact four-plate starter model designed primarily for singles and couples.',
+      cta: 'Explore Leveluk JrIV',
+      image: '/products/jr-iv.png',
+      path: '/jr4',
+      badge: 'Junior Model',
+    },
+    {
       id: 'products',
       category: 'ENAGIC CATALOG',
       title: 'Product Collection',

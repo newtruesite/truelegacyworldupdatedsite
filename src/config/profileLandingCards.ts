@@ -505,6 +505,38 @@ export const PROFILE_LANDING_CARDS: ProfileLandingCardConfig[] = [
     analyticsInterest: 'wagyu',
     getPath: (slug: string) => `/d/${slug}/wagyu`,
   },
+  // 12. Meet the Leveluk JrIV (NEW CARD)
+  {
+    id: 'jr4',
+    displayOrder: 12,
+    active: true,
+    isNew: true,
+    numberLabel: '12',
+    categoryLabel: { en: 'COMPACT WATER SYSTEM', es: 'SISTEMA COMPACTO DE AGUA', fr: 'SYSTÈME D’EAU COMPACT' },
+    eyebrow: { en: 'THE JUNIOR MODEL', es: 'EL MODELO JUNIOR', fr: 'LE MODÈLE JUNIOR' },
+    title: { en: 'Meet the Leveluk JrIV', es: 'Conoce el Leveluk JrIV', fr: 'Découvrez le Leveluk JrIV' },
+    description: {
+      en: () => 'Explore Enagic’s compact four-plate starter model, designed primarily for singles and couples seeking access to all five water types.',
+      es: () => 'Explora el modelo de iniciación compacto de 4 placas de Enagic, diseñado principalmente para personas solteras y parejas.',
+      fr: () => 'Découvrez le modèle compact 4 plaques d’Enagic, conçu principalement pour les personnes seules et les couples.',
+    },
+    ctaText: { en: 'Explore the JrIV', es: 'Explorar el JrIV', fr: 'Explorer le JrIV' },
+    image: '/products/jr-iv.png',
+    imageAlt: 'Leveluk JrIV Compact Kangen Water Machine',
+    cardType: 'jr4',
+    accentColor: {
+      borderGlow: 'hover:border-cyan-400/60 hover:shadow-[0_0_30px_rgba(56,189,248,0.22)]',
+      gradient: 'from-slate-900/60 via-[#0a1120] to-black',
+      iconBg: 'bg-cyan-500/10 text-cyan-300 border border-cyan-400/30',
+      badgeText: 'text-cyan-300',
+      btnBg: 'bg-cyan-500/20 text-cyan-300 group-hover:bg-cyan-400 group-hover:text-slate-950',
+      glowBlur: 'bg-cyan-400/20',
+      textHighlight: 'group-hover:text-cyan-300',
+    },
+    icon: Droplets,
+    analyticsInterest: 'jr4',
+    getPath: (slug: string) => `/d/${slug}/jr4`,
+  },
 ]
 
 /**

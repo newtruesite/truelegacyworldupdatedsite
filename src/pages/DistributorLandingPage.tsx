@@ -12,6 +12,7 @@ import { AnespaLandingPage } from '@/components/anespa/AnespaLandingPage'
 import { UkonLandingPage } from '@/components/ukon/UkonLandingPage'
 import { BeauteLandingPage } from '@/components/beaute/BeauteLandingPage'
 import { WagyuLandingPage } from '@/components/wagyu/WagyuLandingPage'
+import { Jr4LandingPage } from '@/components/jr4/Jr4LandingPage'
 import { crmSupabase, getPublicDistributors, getLeaderPortrait } from '@/lib/crm'
 import type { PublicDistributor } from '@/lib/crm'
 import { useLocaleContext } from '@/contexts/LocaleContext'
@@ -37,7 +38,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import NotFoundPage from './NotFoundPage'
 
-type LandingVariant = 'business' | 'duo' | 'training' | 'events' | 'kangen' | 'water' | 'emguarde' | 'products' | 'showcase' | 'anespa' | 'ukon' | 'beaute' | 'wagyu'
+type LandingVariant = 'business' | 'duo' | 'training' | 'events' | 'kangen' | 'water' | 'emguarde' | 'products' | 'showcase' | 'anespa' | 'ukon' | 'beaute' | 'wagyu' | 'jr4' | 'jriv' | 'jr-4' | 'leveluk-jr4' | 'leveluk-jriv'
 
 const VARIANTS: Record<LandingVariant, {
   eyebrow: string
@@ -137,6 +138,41 @@ const VARIANTS: Record<LandingVariant, {
     interest: 'product',
     icon: Sparkles,
   },
+  jr4: {
+    eyebrow: 'Enagic® Leveluk JrIV Compact Kangen Water Model',
+    headline: (name) => `Discover the Leveluk JrIV with ${name}`,
+    subheadline: 'Enagic’s compact starter model featuring four solid platinum-coated titanium plates, 120-watt power draw, and access to all five water types.',
+    interest: 'product',
+    icon: Droplets,
+  },
+  jriv: {
+    eyebrow: 'Enagic® Leveluk JrIV Compact Kangen Water Model',
+    headline: (name) => `Discover the Leveluk JrIV with ${name}`,
+    subheadline: 'Enagic’s compact starter model featuring four solid platinum-coated titanium plates, 120-watt power draw, and access to all five water types.',
+    interest: 'product',
+    icon: Droplets,
+  },
+  'jr-4': {
+    eyebrow: 'Enagic® Leveluk JrIV Compact Kangen Water Model',
+    headline: (name) => `Discover the Leveluk JrIV with ${name}`,
+    subheadline: 'Enagic’s compact starter model featuring four solid platinum-coated titanium plates, 120-watt power draw, and access to all five water types.',
+    interest: 'product',
+    icon: Droplets,
+  },
+  'leveluk-jr4': {
+    eyebrow: 'Enagic® Leveluk JrIV Compact Kangen Water Model',
+    headline: (name) => `Discover the Leveluk JrIV with ${name}`,
+    subheadline: 'Enagic’s compact starter model featuring four solid platinum-coated titanium plates, 120-watt power draw, and access to all five water types.',
+    interest: 'product',
+    icon: Droplets,
+  },
+  'leveluk-jriv': {
+    eyebrow: 'Enagic® Leveluk JrIV Compact Kangen Water Model',
+    headline: (name) => `Discover the Leveluk JrIV with ${name}`,
+    subheadline: 'Enagic’s compact starter model featuring four solid platinum-coated titanium plates, 120-watt power draw, and access to all five water types.',
+    interest: 'product',
+    icon: Droplets,
+  },
 }
 
 const BENEFITS: Record<LandingVariant, string[]> = {
@@ -172,6 +208,36 @@ const BENEFITS: Record<LandingVariant, string[]> = {
     'Raised at Masami Ranch in Corning, California with daily Kangen Water hydration',
     'Grass-fed and grain-finished vegetarian diet with no added hormones or antibiotics',
     'Portioned, vacuum-sealed, and delivered cold-chain in supported U.S. markets',
+  ],
+  jr4: [
+    '4 solid platinum-coated titanium electrode plates',
+    'Compact starter model designed for singles and couples',
+    '120-watt power draw with access to all 5 water types',
+    '3-year manufacturer warranty (referenced U.S. market)',
+  ],
+  jriv: [
+    '4 solid platinum-coated titanium electrode plates',
+    'Compact starter model designed for singles and couples',
+    '120-watt power draw with access to all 5 water types',
+    '3-year manufacturer warranty (referenced U.S. market)',
+  ],
+  'jr-4': [
+    '4 solid platinum-coated titanium electrode plates',
+    'Compact starter model designed for singles and couples',
+    '120-watt power draw with access to all 5 water types',
+    '3-year manufacturer warranty (referenced U.S. market)',
+  ],
+  'leveluk-jr4': [
+    '4 solid platinum-coated titanium electrode plates',
+    'Compact starter model designed for singles and couples',
+    '120-watt power draw with access to all 5 water types',
+    '3-year manufacturer warranty (referenced U.S. market)',
+  ],
+  'leveluk-jriv': [
+    '4 solid platinum-coated titanium electrode plates',
+    'Compact starter model designed for singles and couples',
+    '120-watt power draw with access to all 5 water types',
+    '3-year manufacturer warranty (referenced U.S. market)',
   ],
 }
 
@@ -316,6 +382,10 @@ export default function DistributorLandingPage() {
 
   if (variant === 'wagyu') {
     return <WagyuLandingPage profile={profile} distributorSlug={slug} />
+  }
+
+  if (variant === 'jr4' || variant === 'jriv' || variant === 'jr-4' || variant === 'leveluk-jr4' || variant === 'leveluk-jriv') {
+    return <Jr4LandingPage profile={profile} distributorSlug={slug} />
   }
 
   const leaderPhoto =

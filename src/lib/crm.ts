@@ -437,6 +437,19 @@ const FALLBACK_DISTRIBUTORS: PublicDistributor[] = [
   },
 ]
 
+export function getInitialPublicDistributors(): PublicDistributor[] {
+  const customAvatars = getCustomLeaderAvatars()
+  const customAppSettings = getCustomApplicationSettingsMap()
+  const customPurchaseLinks = getCustomPurchaseLinksMap()
+
+  return FALLBACK_DISTRIBUTORS.map((item) => ({
+    ...item,
+    avatar_url: customAvatars[item.slug] || item.avatar_url || `/leaders/standardized/${item.slug}.png`,
+    application_settings: customAppSettings[item.slug] || item.application_settings || null,
+    purchase_links: customPurchaseLinks[item.slug] || item.purchase_links || {},
+  }))
+}
+
 export async function getPublicDistributors(): Promise<PublicDistributor[]> {
   const customAvatars = getCustomLeaderAvatars()
   const customAppSettings = getCustomApplicationSettingsMap()
