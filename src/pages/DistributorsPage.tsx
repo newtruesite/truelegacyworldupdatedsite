@@ -75,7 +75,7 @@ export default function DistributorsPage() {
   const [distributors, setDistributors] = useState<Distributor[]>(() =>
     getInitialPublicDistributors().map(mapProfileToDistributor)
   );
-  const [isLoadingDistributors, setIsLoadingDistributors] = useState(true);
+  const [isLoadingDistributors, setIsLoadingDistributors] = useState(false);
   const [query, setQuery] = useState("");
   const [region, setRegion] = useState("all");
   const [language, setLanguage] = useState("all");

@@ -234,10 +234,28 @@ export function setCustomLeaderAvatar(slug: string, avatarUrl: string): void {
   } catch {}
 }
 
-export function getLeaderPortrait(slug: string, fallback?: string): string {
+export const CANONICAL_LEADER_AVATARS: Record<string, string> = {
+  'mehdi-cohen': '/leaders/standardized/mehdi-cohen.png',
+  'simon-loh': '/leaders/standardized/simon-loh-v2.png',
+  'ming-way-sia': '/leaders/standardized/ming-way-sia.png',
+  'zah-naderi': '/leaders/standardized/zah-naderi-v3.png',
+  'alex-gonzalez': '/leaders/standardized/alex-gonzalez.png',
+  'ryan-pool': '/leaders/standardized/ryan-pool-sr.png',
+  'magaly-cardona': '/leaders/standardized/magaly-cardona.png',
+  emanuela: '/leaders/standardized/emanuela-doustova.png',
+  'jesse-schexnayder': '/leaders/standardized/jesse-schexnayder.png',
+  'angel-mok': '/leaders/standardized/angel-mok-v2.png',
+}
+
+export function resolveCanonicalAvatarUrl(slug: string, rawUrl?: string | null): string {
   const custom = getCustomLeaderAvatar(slug)
   if (custom && !custom.startsWith('blob:')) return custom
-  return fallback || `/leaders/standardized/${slug}.png`
+  if (rawUrl && rawUrl.includes('/standardized/')) return rawUrl
+  return CANONICAL_LEADER_AVATARS[slug] || `/leaders/standardized/${slug}.png`
+}
+
+export function getLeaderPortrait(slug: string, fallback?: string): string {
+  return resolveCanonicalAvatarUrl(slug, fallback)
 }
 
 
@@ -438,27 +456,25 @@ const FALLBACK_DISTRIBUTORS: PublicDistributor[] = [
 ]
 
 export function getInitialPublicDistributors(): PublicDistributor[] {
-  const customAvatars = getCustomLeaderAvatars()
   const customAppSettings = getCustomApplicationSettingsMap()
   const customPurchaseLinks = getCustomPurchaseLinksMap()
 
   return FALLBACK_DISTRIBUTORS.map((item) => ({
     ...item,
-    avatar_url: customAvatars[item.slug] || item.avatar_url || `/leaders/standardized/${item.slug}.png`,
+    avatar_url: resolveCanonicalAvatarUrl(item.slug, item.avatar_url),
     application_settings: customAppSettings[item.slug] || item.application_settings || null,
     purchase_links: customPurchaseLinks[item.slug] || item.purchase_links || {},
   }))
 }
 
 export async function getPublicDistributors(): Promise<PublicDistributor[]> {
-  const customAvatars = getCustomLeaderAvatars()
   const customAppSettings = getCustomApplicationSettingsMap()
   const customPurchaseLinks = getCustomPurchaseLinksMap()
 
   const applyCustomizations = (list: PublicDistributor[]): PublicDistributor[] => {
     return list.map((item) => ({
       ...item,
-      avatar_url: customAvatars[item.slug] || item.avatar_url || `/leaders/standardized/${item.slug}.png`,
+      avatar_url: resolveCanonicalAvatarUrl(item.slug, item.avatar_url),
       application_settings: customAppSettings[item.slug] || item.application_settings || null,
       purchase_links: customPurchaseLinks[item.slug] || item.purchase_links || {},
     }))
@@ -473,7 +489,7 @@ export async function getPublicDistributors(): Promise<PublicDistributor[]> {
       const base = confirmed ? { ...confirmed, ...profile, id: profile.id } : profile
       return {
         ...base,
-        avatar_url: customAvatars[profile.slug] || profile.avatar_url || base.avatar_url || `/leaders/standardized/${profile.slug}.png`,
+        avatar_url: resolveCanonicalAvatarUrl(profile.slug, profile.avatar_url || base.avatar_url),
         application_settings: customAppSettings[profile.slug] || profile.application_settings || base.application_settings || null,
         purchase_links: profile.purchase_links || base.purchase_links || {},
       }

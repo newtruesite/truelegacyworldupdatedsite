@@ -125,8 +125,7 @@ export function LeaderCard({
 }: LeaderCardProps) {
   const config = LEADER_PORTRAIT_REGISTRY[dist.slug] || {}
   const fallbackSrc = config.src || `/leaders/standardized/${dist.slug}.png`
-  const dynamicPhoto = getLeaderPortrait(dist.slug, dist.photo)
-  const primaryPhoto = dist.photo || dynamicPhoto || fallbackSrc
+  const primaryPhoto = getLeaderPortrait(dist.slug, dist.photo)
 
   const [imgFailed, setImgFailed] = useState(false)
 
