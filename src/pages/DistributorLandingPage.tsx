@@ -11,6 +11,7 @@ import { ProductShowcaseLandingPage } from '@/components/products/ProductShowcas
 import { AnespaLandingPage } from '@/components/anespa/AnespaLandingPage'
 import { UkonLandingPage } from '@/components/ukon/UkonLandingPage'
 import { BeauteLandingPage } from '@/components/beaute/BeauteLandingPage'
+import { WagyuLandingPage } from '@/components/wagyu/WagyuLandingPage'
 import { crmSupabase, getPublicDistributors, getLeaderPortrait } from '@/lib/crm'
 import type { PublicDistributor } from '@/lib/crm'
 import { useLocaleContext } from '@/contexts/LocaleContext'
@@ -36,7 +37,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import NotFoundPage from './NotFoundPage'
 
-type LandingVariant = 'business' | 'duo' | 'training' | 'events' | 'kangen' | 'water' | 'emguarde' | 'products' | 'showcase' | 'anespa' | 'ukon' | 'beaute'
+type LandingVariant = 'business' | 'duo' | 'training' | 'events' | 'kangen' | 'water' | 'emguarde' | 'products' | 'showcase' | 'anespa' | 'ukon' | 'beaute' | 'wagyu'
 
 const VARIANTS: Record<LandingVariant, {
   eyebrow: string
@@ -129,6 +130,13 @@ const VARIANTS: Record<LandingVariant, {
     interest: 'product',
     icon: Sparkles,
   },
+  wagyu: {
+    eyebrow: 'Enagic® Kangen Wagyu® Premium Collection',
+    headline: (name) => `Discover Kangen Wagyu® with ${name}`,
+    subheadline: 'Premium American Wagyu raised at Masami Ranch in Corning, California with Japanese Kuroge Wagyu heritage and daily Kangen Water hydration.',
+    interest: 'product',
+    icon: Sparkles,
+  },
 }
 
 const BENEFITS: Record<LandingVariant, string[]> = {
@@ -158,6 +166,12 @@ const BENEFITS: Record<LandingVariant, string[]> = {
     'Built around Kangen Water at pH 5.5 to support moisture barrier function',
     'Enriched with Okinawan Ukon, 5-type hyaluronic acid, PDRN, and peptides',
     'Full ingredient transparency with complete INCI lists disclosed',
+  ],
+  wagyu: [
+    'Premium F1 American Wagyu crossbreed (Japanese Kuroge Wagyu × Black Angus)',
+    'Raised at Masami Ranch in Corning, California with daily Kangen Water hydration',
+    'Grass-fed and grain-finished vegetarian diet with no added hormones or antibiotics',
+    'Portioned, vacuum-sealed, and delivered cold-chain in supported U.S. markets',
   ],
 }
 
@@ -298,6 +312,10 @@ export default function DistributorLandingPage() {
 
   if (variant === 'beaute') {
     return <BeauteLandingPage profile={profile} distributorSlug={slug} />
+  }
+
+  if (variant === 'wagyu') {
+    return <WagyuLandingPage profile={profile} distributorSlug={slug} />
   }
 
   const leaderPhoto =

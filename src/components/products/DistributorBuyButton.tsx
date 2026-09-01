@@ -1,4 +1,4 @@
-import { getProductPurchaseLink } from '@/config/productPurchaseLinks'
+import { getProductPurchaseLink, PURCHASE_LINK_CONFIG } from '@/config/productPurchaseLinks'
 import type { PublicDistributor } from '@/lib/crm'
 import { ExternalLink, ShoppingCart } from 'lucide-react'
 
@@ -15,7 +15,10 @@ export function DistributorBuyButton({
   label,
   className = '',
 }: DistributorBuyButtonProps) {
-  const href = getProductPurchaseLink(profile?.purchase_links, productId)
+  const customHref = getProductPurchaseLink(profile?.purchase_links, productId)
+  const configItem = PURCHASE_LINK_CONFIG.find((p) => p.id === productId)
+  const href = customHref || configItem?.enagicUrl
+
   if (!href) return null
 
   return (

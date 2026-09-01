@@ -7,6 +7,7 @@ import {
   Package,
   CalendarDays,
   ShowerHead,
+  Flame,
   type LucideIcon,
 } from 'lucide-react'
 
@@ -471,6 +472,38 @@ export const PROFILE_LANDING_CARDS: ProfileLandingCardConfig[] = [
     icon: Sparkles,
     analyticsInterest: 'beaute',
     getPath: (slug: string) => `/d/${slug}/beaute`,
+  },
+  // 11. Experience Kangen Wagyu (NEW CARD)
+  {
+    id: 'wagyu',
+    displayOrder: 11,
+    active: true,
+    isNew: true,
+    numberLabel: '11',
+    categoryLabel: { en: 'CULINARY EXPERIENCE', es: 'EXPERIENCIA CULINARIA', fr: 'EXPÉRIENCE CULINAIRE' },
+    eyebrow: { en: 'PREMIUM AMERICAN WAGYU', es: 'WAGYU AMERICANO PREMIUM', fr: 'WAGYU AMÉRICAIN PREMIUM' },
+    title: { en: 'Experience Kangen Wagyu', es: 'Experimenta Kangen Wagyu', fr: 'Découvrez Kangen Wagyu' },
+    description: {
+      en: () => 'Discover premium American Wagyu raised at Masami Ranch in California with Japanese Wagyu heritage and daily Kangen Water hydration.',
+      es: () => 'Descubre carne Wagyu americana premium criada en Masami Ranch en California con herencia Wagyu e hidratación con Agua Kangen.',
+      fr: () => 'Découvrez du Wagyu américain d\'exception élevé au Masami Ranch en Californie avec de l\'Eau Kangen au quotidien.',
+    },
+    ctaText: { en: 'Explore Kangen Wagyu', es: 'Explorar Kangen Wagyu', fr: 'Explorer Kangen Wagyu' },
+    image: '/products/wagyu-hero-steak.jpg',
+    imageAlt: 'Kangen Wagyu Premium American Beef Collection',
+    cardType: 'wagyu',
+    accentColor: {
+      borderGlow: 'hover:border-amber-500/60 hover:shadow-[0_0_30px_rgba(245,158,11,0.22)]',
+      gradient: 'from-amber-950/40 via-stone-900/60 to-black',
+      iconBg: 'bg-amber-500/10 text-amber-300 border border-amber-500/30',
+      badgeText: 'text-amber-400',
+      btnBg: 'bg-amber-500/20 text-amber-300 group-hover:bg-amber-500 group-hover:text-slate-950',
+      glowBlur: 'bg-amber-500/20',
+      textHighlight: 'group-hover:text-amber-300',
+    },
+    icon: Flame,
+    analyticsInterest: 'wagyu',
+    getPath: (slug: string) => `/d/${slug}/wagyu`,
   },
 ]
 
