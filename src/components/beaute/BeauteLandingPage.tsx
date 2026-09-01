@@ -296,13 +296,13 @@ export function BeauteLandingPage({ profile: propProfile, distributorSlug }: Bea
                   Japanese & Korean Skincare Artistry
                 </div>
 
-                <div className="relative my-6 flex justify-center items-center min-h-[280px]">
+                <div className="relative my-6 flex min-h-[340px] items-center justify-center sm:min-h-[400px]">
                   <div className="absolute inset-0 rounded-full bg-amber-300/10 blur-2xl animate-pulse pointer-events-none" />
                   
                   <img
-                    src="/products/beaute-turmeric-hero.png"
-                    alt="Kangen Beaute Three Step Skincare Collection with Okinawan Turmeric"
-                    className="relative z-10 max-h-[260px] sm:max-h-[300px] w-auto object-contain drop-shadow-[0_20px_45px_rgba(254,243,199,0.25)] transition-transform duration-500 hover:scale-105"
+                    src="/products/kangen-beaute-collection-original.png"
+                    alt="Kangen Beauté three-product collection: First Light Essence, Vital Rich Cream, and Crystal Ampoule Cream"
+                    className="relative z-10 h-auto max-h-[340px] w-auto max-w-full object-contain drop-shadow-[0_20px_45px_rgba(254,243,199,0.25)] transition-transform duration-500 hover:scale-105 sm:max-h-[400px]"
                   />
                 </div>
 
@@ -469,9 +469,9 @@ export function BeauteLandingPage({ profile: propProfile, distributorSlug }: Bea
                 <div className="relative flex items-center justify-center p-6 w-full">
                   <div className="absolute h-48 w-48 rounded-full bg-sky-400/10 blur-2xl pointer-events-none" />
                   <img
-                    src="/products/beaute-step-1-bottle.png"
-                    alt="Kangen Beaute First Light Essence Bottle PNG"
-                    className="relative z-10 max-h-[230px] sm:max-h-[260px] w-auto object-contain drop-shadow-[0_15px_35px_rgba(14,165,233,0.3)] transition-transform duration-500 hover:scale-105"
+                    src="/products/kangen-beaute-step-1-original.png"
+                    alt="Kangen Beauté First Light Essence, Step I"
+                    className="relative z-10 h-auto max-h-[340px] w-auto max-w-full object-contain drop-shadow-[0_15px_35px_rgba(14,165,233,0.3)] transition-transform duration-500 hover:scale-105 sm:max-h-[380px]"
                   />
                 </div>
               </div>
@@ -537,9 +537,9 @@ export function BeauteLandingPage({ profile: propProfile, distributorSlug }: Bea
                 <div className="relative flex items-center justify-center p-6 w-full">
                   <div className="absolute h-48 w-48 rounded-full bg-amber-400/10 blur-2xl pointer-events-none" />
                   <img
-                    src="/products/beaute-step-2-jar.png"
-                    alt="Kangen Beaute Vital Rich Cream Jar PNG"
-                    className="relative z-10 max-h-[180px] sm:max-h-[210px] w-auto object-contain drop-shadow-[0_15px_35px_rgba(245,158,11,0.3)] transition-transform duration-500 hover:scale-105"
+                    src="/products/kangen-beaute-step-2-original.png"
+                    alt="Kangen Beauté Vital Rich Cream, Step II"
+                    className="relative z-10 h-auto max-h-[320px] w-auto max-w-full object-contain drop-shadow-[0_15px_35px_rgba(245,158,11,0.3)] transition-transform duration-500 hover:scale-105 sm:max-h-[360px]"
                   />
                 </div>
               </div>
@@ -605,9 +605,9 @@ export function BeauteLandingPage({ profile: propProfile, distributorSlug }: Bea
                 <div className="relative flex items-center justify-center p-6 w-full">
                   <div className="absolute h-48 w-48 rounded-full bg-emerald-400/10 blur-2xl pointer-events-none" />
                   <img
-                    src="/products/beaute-step-3-bottle.png"
-                    alt="Kangen Beaute Crystal Ampoule Cream Bottle PNG"
-                    className="relative z-10 max-h-[230px] sm:max-h-[260px] w-auto object-contain drop-shadow-[0_15px_35px_rgba(52,211,153,0.3)] transition-transform duration-500 hover:scale-105"
+                    src="/products/kangen-beaute-step-3-original.png"
+                    alt="Kangen Beauté Crystal Ampoule Cream, Step III"
+                    className="relative z-10 h-auto max-h-[340px] w-auto max-w-full object-contain drop-shadow-[0_15px_35px_rgba(52,211,153,0.3)] transition-transform duration-500 hover:scale-105 sm:max-h-[380px]"
                   />
                 </div>
               </div>
@@ -838,9 +838,9 @@ export function BeauteLandingPage({ profile: propProfile, distributorSlug }: Bea
               <div className="relative flex items-center justify-center p-6 w-full">
                 <div className="absolute h-56 w-56 rounded-full bg-amber-400/10 blur-2xl pointer-events-none" />
                 <img
-                  src="/products/beaute-turmeric-hero.png"
-                  alt="Enagic Kangen Beaute Collection Heritage PNG"
-                  className="relative z-10 h-64 sm:h-72 w-auto object-contain drop-shadow-[0_15px_35px_rgba(254,243,199,0.25)] transition-transform duration-500 hover:scale-105"
+                  src="/products/kangen-beaute-collection-original.png"
+                  alt="Enagic Kangen Beauté three-step skincare collection"
+                  className="relative z-10 h-auto max-h-80 w-auto max-w-full object-contain drop-shadow-[0_15px_35px_rgba(254,243,199,0.25)] transition-transform duration-500 hover:scale-105"
                 />
               </div>
             </div>
