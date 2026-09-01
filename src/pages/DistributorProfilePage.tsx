@@ -150,6 +150,15 @@ export default function DistributorProfilePage() {
     void crmSupabase.rpc('crm_track_share_click', { p_slug: profile.slug, p_campaign: 'profile', p_locale: locale })
   }, [profile, locale])
 
+  const [isScrolled, setIsScrolled] = useState(false)
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 250)
+    }
+    window.addEventListener('scroll', handleScroll, { passive: true })
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
+
   if (profile === null) return <NotFoundPage />
 
   const firstName = profile?.display_name.split(' ')[0] || 'Leader'
@@ -545,6 +554,69 @@ export default function DistributorProfilePage() {
         image={profile?.avatar_url || undefined}
       />
       <Navbar />
+
+      {/* STICKY MINIMIZED LEADER BAR (Appears smoothly when scrolling down) */}
+      {profile && (
+        <div
+          className={`fixed top-16 left-0 right-0 z-40 transition-all duration-300 transform ${
+            isScrolled
+              ? 'translate-y-0 opacity-100 pointer-events-auto'
+              : '-translate-y-full opacity-0 pointer-events-none'
+          }`}
+        >
+          <div className="mx-auto max-w-6xl px-4 sm:px-6 py-2">
+            <div className="flex items-center justify-between gap-3 rounded-2xl border border-white/15 bg-[#090d16]/95 p-3 shadow-[0_10px_30px_rgba(0,0,0,0.8)] backdrop-blur-xl">
+              {/* Leader Avatar & Identity */}
+              <div className="flex items-center gap-3 min-w-0">
+                <div className="relative h-10 w-10 shrink-0 overflow-hidden rounded-full border border-cyan-400/50 shadow-md">
+                  <img
+                    src={leaderPhoto}
+                    alt={profile.display_name}
+                    className="h-full w-full object-cover object-top"
+                  />
+                </div>
+                <div className="min-w-0 flex-1">
+                  <div className="flex items-center gap-2">
+                    <h3 className="truncate text-sm font-bold text-white">
+                      {profile.display_name}
+                    </h3>
+                    <span className="hidden sm:inline-flex items-center gap-1 rounded-full bg-cyan-500/10 px-2 py-0.5 text-[10px] font-bold text-[#2997ff] border border-cyan-400/30">
+                      <BadgeCheck className="h-3 w-3 text-[#2997ff]" />
+                      {ui.verifiedLeader}
+                    </span>
+                  </div>
+                  <p className="truncate text-xs text-[#86868b]">
+                    {activeTitle}
+                  </p>
+                </div>
+              </div>
+
+              {/* Quick CTAs */}
+              <div className="flex items-center gap-2 shrink-0">
+                {whatsappUrl && (
+                  <a
+                    href={whatsappUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-flex items-center justify-center gap-1.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 px-3.5 py-1.5 text-xs font-bold text-slate-950 transition-all shadow-md shadow-emerald-500/10 active:scale-95"
+                  >
+                    <MessageCircle className="h-3.5 w-3.5" />
+                    <span className="hidden sm:inline">{ui.primaryMessage}</span>
+                    <span className="sm:hidden">WhatsApp</span>
+                  </a>
+                )}
+                <Link
+                  to={applyUrl}
+                  className="inline-flex items-center justify-center gap-1.5 rounded-xl border border-white/15 bg-white/10 hover:bg-white/20 px-3 py-1.5 text-xs font-semibold text-white transition-all active:scale-95"
+                >
+                  <span>{ui.requestInfo}</span>
+                  <ArrowRight className="h-3.5 w-3.5" />
+                </Link>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       <main className="mx-auto flex w-full max-w-6xl flex-1 flex-col px-4 pt-24 pb-16 sm:px-6 md:pt-28 md:pb-24">
         {profile ? (
