@@ -93,7 +93,7 @@ export function ProfileCardGrid({ profile, locale = 'en' }: ProfileCardGridProps
                 <img
                   src={item.image || '/assets/event-masterclass.png'}
                   alt={item.imageAlt}
-                  className="h-full w-full object-cover object-center opacity-90"
+                  className="h-full w-full object-contain object-center opacity-95"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent" />
                 <div className="absolute bottom-2.5 left-3 right-3 flex items-center justify-between text-[10px] font-bold uppercase tracking-wider text-blue-300 bg-black/85 backdrop-blur-md px-3 py-1.5 rounded-lg border border-blue-400/30">
@@ -103,6 +103,21 @@ export function ProfileCardGrid({ profile, locale = 'en' }: ProfileCardGridProps
                   </span>
                   <span>Weekly Presentations</span>
                 </div>
+              </div>
+            </div>
+          )}
+
+          {/* CARD TYPE: KANGEN WAGYU (11) */}
+          {item.cardType === 'wagyu' && (
+            <div className="absolute inset-0 flex items-center justify-center p-4">
+              <div className="relative h-full w-full flex items-center justify-center group-hover:scale-105 transition-transform duration-500">
+                <div className={`absolute h-32 w-32 rounded-full ${item.accentColor.glowBlur} blur-xl pointer-events-none`} />
+                <img
+                  src={item.image || '/assets/profile-kangen-wagyu.png'}
+                  alt={item.imageAlt}
+                  className="h-40 w-auto object-contain drop-shadow-[0_10px_25px_rgba(245,158,11,0.3)] relative z-10"
+                  style={{ maxHeight: '155px', maxWidth: '88%' }}
+                />
               </div>
             </div>
           )}

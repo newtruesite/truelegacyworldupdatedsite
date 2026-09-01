@@ -1,24 +1,15 @@
 import { SEO } from '@/components/SEO'
+import { getActiveProfileLandingCards } from '@/config/profileLandingCards'
 import { crmConfigured, crmSupabase, getCrmDistributors, getCrmMembership } from '@/lib/crm'
 import type { CrmDistributor, CrmMembership } from '@/lib/crm'
 import type { Session } from '@supabase/supabase-js'
 import {
   ArrowLeft,
-  ArrowRight,
-  BriefcaseBusiness,
-  CalendarDays,
   Check,
-  ChevronDown,
-  ChevronUp,
   ClipboardCheck,
   Copy,
-  Droplets,
   ExternalLink,
-  GraduationCap,
-  Layers,
-  Package,
   QrCode,
-  Radio,
   Share2,
   Sparkles,
   UserRound,
@@ -30,102 +21,37 @@ interface SharePageItem {
   id: string
   label: string
   description: string
-  path: string
   icon: any
-  category: 'core' | 'extended'
+  getPath: (slug: string) => string
   badge?: string
-  isRootPath?: boolean
 }
 
-const PRIMARY_PAGES: SharePageItem[] = [
+const ALL_PAGES: SharePageItem[] = [
   {
     id: 'profile',
     label: 'My Profile',
     description: 'Your verified leader profile, biography, markets, languages, and direct contact channels.',
-    path: '',
     icon: UserRound,
-    category: 'core',
+    getPath: (slug) => `/d/${slug}`,
     badge: 'Hub',
   },
-  {
-    id: 'duo',
-    label: 'Duo Technologies',
-    description: 'K8 water ionization & emGuarde GO 360° cellular synergy presentation.',
-    path: '/duo',
-    icon: Sparkles,
-    category: 'core',
-    badge: 'Flagship',
-  },
-  {
-    id: 'kangen',
-    label: 'Kangen Water®',
-    description: 'Leveluk K8 Japanese ionization technology, 5 water types, and everyday benefits.',
-    path: '/kangen',
-    icon: Droplets,
-    category: 'core',
-    badge: 'Hydration',
-  },
-  {
-    id: 'emguarde',
-    label: 'emGuarde® Defense',
-    description: 'Harmonize electro-smoke and EMF radiation noise across a 3m radius presentation.',
-    path: '/emguarde',
-    icon: Radio,
-    category: 'core',
-    badge: 'Protection',
-  },
-  {
-    id: 'business',
-    label: 'Business Opportunity',
-    description: 'Global business model, mentorship, global community, and team building introduction.',
-    path: '/business',
-    icon: BriefcaseBusiness,
-    category: 'core',
-    badge: 'Model',
-  },
-  {
-    id: 'products',
-    label: 'Product Collection',
-    description: 'The complete Enagic Japanese product lineup—ionizers, Anespa DX shower, and Ukon wellness.',
-    path: '/products',
-    icon: Package,
-    category: 'core',
-    badge: 'Showcase',
-  },
-]
-
-const EXTENDED_PAGES: SharePageItem[] = [
-  {
-    id: 'training',
-    label: 'Leadership Academy',
-    description: 'Public preview of the True Legacy mentorship and duplication training system.',
-    path: '/training',
-    icon: GraduationCap,
-    category: 'extended',
-    badge: 'Academy',
-  },
-  {
-    id: 'events',
-    label: 'Live Global Events',
-    description: 'Current weekly multi-language briefings and masterclass schedules.',
-    path: '/events',
-    icon: CalendarDays,
-    category: 'extended',
-    badge: 'Live',
-  },
+  ...getActiveProfileLandingCards().map((card): SharePageItem => ({
+    id: card.id,
+    label: card.title.en,
+    description: card.description.en('your True Legacy leader'),
+    icon: card.icon,
+    getPath: card.getPath,
+    badge: card.categoryLabel.en,
+  })),
   {
     id: 'apply',
     label: 'Direct Application Form',
     description: 'Direct candidate qualification form pre-attributed to your True Legacy CRM profile.',
-    path: '/apply',
     icon: ClipboardCheck,
-    category: 'extended',
+    getPath: (slug) => `/apply?ref=${slug}`,
     badge: 'Intake',
-    isRootPath: true,
   },
 ]
-
-const ALL_PAGES = [...PRIMARY_PAGES, ...EXTENDED_PAGES]
 
 export default function AppSharePage() {
   const [session, setSession] = useState<Session | null>(null)
@@ -134,7 +60,6 @@ export default function AppSharePage() {
   const [selected, setSelected] = useState<string>('profile')
   const [copied, setCopied] = useState(false)
   const [showQr, setShowQr] = useState(false)
-  const [showMorePages, setShowMorePages] = useState(false)
   const [selectedDistributorId, setSelectedDistributorId] = useState('')
   const [loading, setLoading] = useState(true)
 
@@ -192,15 +117,12 @@ export default function AppSharePage() {
     [distributors, matchedDistributor, selectedDistributorId]
   )
 
-  const page = ALL_PAGES.find((item) => item.id === selected) || PRIMARY_PAGES[0]
+  const page = ALL_PAGES.find((item) => item.id === selected) || ALL_PAGES[0]
 
   const url = useMemo(() => {
     if (!distributor) return ''
     const origin = typeof window !== 'undefined' ? window.location.origin : 'https://www.truelegacyworld.com'
-    if (page.isRootPath) {
-      return `${origin}${page.path}?ref=${distributor.slug}`
-    }
-    return `${origin}/d/${distributor.slug}${page.path}`
+    return `${origin}${page.getPath(distributor.slug)}`
   }, [distributor, page])
 
   const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=720x720&data=${encodeURIComponent(url)}`
@@ -304,13 +226,13 @@ export default function AppSharePage() {
           <div className="flex items-center justify-between">
             <p className="text-xs font-bold uppercase tracking-[.2em] text-amber-300">1 · Choose what to share</p>
             <span className="text-xs text-[#86868b]">
-              {PRIMARY_PAGES.length + (showMorePages ? EXTENDED_PAGES.length : 0)} landing pages
+              {ALL_PAGES.length} individual pages
             </span>
           </div>
 
-          {/* Primary Landing Pages Grid */}
+          {/* Every active personalized page in one visible selector. */}
           <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-            {PRIMARY_PAGES.map((item) => {
+            {ALL_PAGES.map((item) => {
               const Icon = item.icon
               const active = item.id === selected
               return (
@@ -339,82 +261,6 @@ export default function AppSharePage() {
                 </button>
               )
             })}
-          </div>
-
-          {/* Centered Section with Prominent Explore More Landing Pages Button */}
-          <div className="mt-6 overflow-hidden rounded-[28px] border border-cyan-500/25 bg-gradient-to-r from-cyan-950/40 via-slate-900/50 to-black p-6 text-center shadow-[0_15px_40px_rgba(14,165,233,0.12)]">
-            <div className="mx-auto max-w-xl">
-              <span className="inline-flex items-center gap-1.5 rounded-full border border-cyan-400/30 bg-cyan-400/10 px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-cyan-300">
-                <Sparkles className="h-3.5 w-3.5" /> Extended Directory
-              </span>
-              <h3 className="mt-3 text-xl font-black text-white sm:text-2xl">
-                Looking for Spa, Academy & Specialized Pages?
-              </h3>
-              <p className="mt-2 text-xs text-[#cccccc] sm:text-sm">
-                Explore the Anespa® DX Mineral Ion Water Spa, Leadership Academy, Live Event briefings, and intake portals.
-              </p>
-              <div className="mt-5 flex justify-center">
-                <Link
-                  to="/landing-pages"
-                  className="inline-flex items-center gap-2.5 rounded-2xl bg-gradient-to-r from-cyan-500 to-blue-600 px-8 py-3.5 text-sm font-black text-slate-950 shadow-[0_10px_30px_rgba(14,165,233,0.3)] hover:from-cyan-400 hover:to-blue-500 hover:scale-[1.02] active:scale-[0.98] transition-all"
-                >
-                  Explore More Landing Pages
-                  <ArrowRight className="h-4 w-4" />
-                </Link>
-              </div>
-            </div>
-          </div>
-
-          {/* Collapsible Quick Toggle Container */}
-          <div className="mt-4">
-            <button
-              type="button"
-              onClick={() => setShowMorePages((prev) => !prev)}
-              className="flex w-full items-center justify-between rounded-2xl border border-white/10 bg-white/[0.03] px-5 py-3.5 text-sm font-bold text-white hover:border-cyan-400/40 hover:bg-white/[0.06] transition-all"
-            >
-              <div className="flex items-center gap-2.5">
-                <Layers className="h-4 w-4 text-cyan-400" />
-                <span>Quick Selector: Extended Portals ({EXTENDED_PAGES.length})</span>
-              </div>
-              <div className="flex items-center gap-1.5 text-xs text-[#86868b]">
-                <span>{showMorePages ? 'Collapse' : 'Expand'}</span>
-                {showMorePages ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
-              </div>
-            </button>
-
-            {showMorePages && (
-              <div className="mt-3 grid gap-3 sm:grid-cols-2 lg:grid-cols-3 rounded-2xl border border-white/10 bg-black/40 p-4 animate-in fade-in slide-in-from-top-2 duration-200">
-                {EXTENDED_PAGES.map((item) => {
-                  const Icon = item.icon
-                  const active = item.id === selected
-                  return (
-                    <button
-                      key={item.id}
-                      type="button"
-                      onClick={() => {
-                        setSelected(item.id)
-                        setShowQr(false)
-                      }}
-                      className={`share-choice ${active ? 'is-active' : ''}`}
-                    >
-                      <div className="flex items-center justify-between w-full">
-                        <span>
-                          <Icon className="h-5 w-5" />
-                        </span>
-                        {item.badge && (
-                          <span className="rounded-full border border-white/10 bg-white/5 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-[#86868b]">
-                            {item.badge}
-                          </span>
-                        )}
-                      </div>
-                      <strong>{item.label}</strong>
-                      <small>{item.description}</small>
-                      {active && <Check className="share-choice__check" />}
-                    </button>
-                  )
-                })}
-              </div>
-            )}
           </div>
         </section>
 
