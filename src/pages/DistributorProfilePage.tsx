@@ -171,7 +171,7 @@ export default function DistributorProfilePage() {
 
   const firstName = profile?.display_name.split(' ')[0] || 'Leader'
   const localizedProfile = profile && locale !== 'en' ? PROFILE_TRANSLATIONS[profile.slug]?.[locale] : undefined
-  const leaderPhoto = profile?.avatar_url || (profile?.slug && getLeaderPortrait(profile.slug, LEADER_PORTRAITS[profile.slug])) || '/logos/tl-square-white.png'
+  const leaderPhoto = (profile?.slug ? getLeaderPortrait(profile.slug, profile.avatar_url || undefined) : profile?.avatar_url) || '/logos/tl-square-white.png'
   const websiteUrl = profile?.website_url || (profile?.slug === 'mehdi-cohen' ? 'https://mehdicohen.com' : null)
   const activeTitle = localizedProfile?.title || profile?.title || 'Independent Distributor'
   const activeBio = localizedProfile?.bio || profile?.bio || ''

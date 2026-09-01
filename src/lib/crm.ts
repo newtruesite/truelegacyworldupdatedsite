@@ -248,9 +248,18 @@ export const CANONICAL_LEADER_AVATARS: Record<string, string> = {
 }
 
 export function resolveCanonicalAvatarUrl(slug: string, rawUrl?: string | null): string {
+  // 1. Prioritize client custom avatar upload (from local storage)
   const custom = getCustomLeaderAvatar(slug)
-  if (custom && !custom.startsWith('blob:')) return custom
-  if (rawUrl && rawUrl.includes('/standardized/')) return rawUrl
+  if (custom && typeof custom === 'string' && custom.trim() !== '' && !custom.startsWith('blob:')) {
+    return custom
+  }
+
+  // 2. Prioritize uploaded photo URL saved in leader settings / database profile
+  if (rawUrl && typeof rawUrl === 'string' && rawUrl.trim() !== '') {
+    return rawUrl
+  }
+
+  // 3. Fallback to standardized portrait registry asset
   return CANONICAL_LEADER_AVATARS[slug] || `/leaders/standardized/${slug}.png`
 }
 
