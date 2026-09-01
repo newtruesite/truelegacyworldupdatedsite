@@ -130,6 +130,7 @@ export function AnespaLandingPage({ profile: propProfile, distributorSlug }: Ane
       <header className="sticky top-0 z-40 border-b border-white/10 bg-[#040817]/80 backdrop-blur-xl">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3.5 sm:px-6 lg:px-8">
           <div className="flex items-center gap-3">
+            <DistributorBuyButton profile={profile} productId="anespa_dx" label="Buy Now" compactOnMobile className="shrink-0" />
             <Link
               to="/landing-pages"
               className="group flex h-9 w-9 items-center justify-center rounded-xl border border-white/10 bg-white/5 hover:border-cyan-400/50 hover:bg-cyan-500/10 transition-all"

@@ -204,6 +204,7 @@ export function UkonLandingPage({ profile: propProfile, distributorSlug }: UkonL
           </div>
 
           <div className="flex items-center gap-3">
+            <DistributorBuyButton profile={profile} productId="ukon_sigma" label="Buy Now" compactOnMobile className="shrink-0" />
             <a
               href={whatsappUrl}
               target="_blank"
