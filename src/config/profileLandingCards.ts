@@ -389,8 +389,8 @@ export const PROFILE_LANDING_CARDS: ProfileLandingCardConfig[] = [
       en: 'View Upcoming Events',
       es: 'Ver Próximos Eventos',
     },
-    image: '/assets/event-masterclass.png',
-    imageAlt: 'True Legacy Live Weekly Global and LATAM Presentation Calls',
+    image: '/assets/profile-live-event.jpg',
+    imageAlt: 'True Legacy emGuarde GO live presentation featuring Mehdi Cohen, Zah Naderi, and Simon Loh',
     cardType: 'events',
     accentColor: {
       borderGlow: 'hover:border-blue-400/60 hover:shadow-[0_0_30px_rgba(59,130,246,0.22)]',
@@ -457,7 +457,7 @@ export const PROFILE_LANDING_CARDS: ProfileLandingCardConfig[] = [
       fr: () => 'Découvrez un rituel soin en trois étapes inspiré de l\'Eau Kangen et du Ukon d\'Okinawa.',
     },
     ctaText: { en: 'Explore the Ritual', es: 'Explorar el Ritual', fr: 'Explorer le Rituel' },
-    image: '/products/beaute-turmeric-hero.png',
+    image: '/assets/profile-kangen-beaute.png',
     imageAlt: 'Enagic Kangen Beaute Three Step Skincare Collection',
     cardType: 'beaute',
     accentColor: {
@@ -489,7 +489,7 @@ export const PROFILE_LANDING_CARDS: ProfileLandingCardConfig[] = [
       fr: () => 'Découvrez du Wagyu américain d\'exception élevé au Masami Ranch en Californie avec de l\'Eau Kangen au quotidien.',
     },
     ctaText: { en: 'Explore Kangen Wagyu', es: 'Explorar Kangen Wagyu', fr: 'Explorer Kangen Wagyu' },
-    image: '/products/wagyu-hero-steak.jpg',
+    image: '/assets/profile-kangen-wagyu.png',
     imageAlt: 'Kangen Wagyu Premium American Beef Collection',
     cardType: 'wagyu',
     accentColor: {
