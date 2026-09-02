@@ -1,6 +1,6 @@
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { ArrowUpRight, ShieldCheck } from 'lucide-react'
+import { ArrowUpRight, ChevronDown, ShieldCheck } from 'lucide-react'
 import { getActiveProfileLandingCards, type ProfileLandingCardConfig } from '@/config/profileLandingCards'
 import type { PublicDistributor } from '@/lib/crm'
 
@@ -10,14 +10,18 @@ interface ProfileCardGridProps {
 }
 
 export function ProfileCardGrid({ profile, locale = 'en' }: ProfileCardGridProps) {
+  const [showAllCards, setShowAllCards] = useState(false)
   const firstName = useMemo(() => profile.display_name.split(' ')[0] || 'Leader', [profile.display_name])
 
   const activeCards = useMemo(() => getActiveProfileLandingCards(), [])
+  const initialCardCount = 6
+  const visibleCards = showAllCards ? activeCards : activeCards.slice(0, initialCardCount)
+  const hiddenCardCount = Math.max(activeCards.length - initialCardCount, 0)
 
   // Partition cards for desktop layout: full 3-card rows in 3-col grid, any remainder centered in bottom row
-  const fullRowCount = useMemo(() => Math.floor(activeCards.length / 3) * 3, [activeCards])
-  const gridCards = useMemo(() => activeCards.slice(0, fullRowCount), [activeCards, fullRowCount])
-  const remainingCards = useMemo(() => activeCards.slice(fullRowCount), [activeCards, fullRowCount])
+  const fullRowCount = Math.floor(visibleCards.length / 3) * 3
+  const gridCards = visibleCards.slice(0, fullRowCount)
+  const remainingCards = visibleCards.slice(fullRowCount)
 
   const langKey = locale === 'es' ? 'es' : 'en'
 
@@ -296,9 +300,9 @@ export function ProfileCardGrid({ profile, locale = 'en' }: ProfileCardGridProps
 
   return (
     <div className="w-full">
-      {/* TABLET / MOBILE RESPONSIVE GRID (All active cards in 1-col mobile or 2-col tablet) */}
+      {/* TABLET / MOBILE RESPONSIVE GRID */}
       <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:hidden items-stretch">
-        {activeCards.map((card) => renderCardItem(card))}
+        {visibleCards.map((card) => renderCardItem(card))}
       </div>
 
       {/* DESKTOP RESPONSIVE GRID (Full 3-col rows, remainder centered below) */}
@@ -320,6 +324,21 @@ export function ProfileCardGrid({ profile, locale = 'en' }: ProfileCardGridProps
           </div>
         )}
       </div>
+
+      {!showAllCards && hiddenCardCount > 0 && (
+        <div className="mt-8 flex justify-center">
+          <button
+            type="button"
+            aria-expanded="false"
+            onClick={() => setShowAllCards(true)}
+            className="group inline-flex min-h-12 items-center justify-center gap-2 rounded-full border border-cyan-400/30 bg-cyan-400/10 px-6 py-3 text-sm font-bold text-cyan-200 shadow-lg shadow-cyan-950/30 transition-all duration-300 hover:-translate-y-0.5 hover:border-cyan-300/60 hover:bg-cyan-400/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-300"
+          >
+            {langKey === 'es' ? 'Cargar más páginas' : 'Load more pages'}
+            <span className="text-xs font-semibold text-cyan-300/70">+{hiddenCardCount}</span>
+            <ChevronDown className="h-4 w-4 transition-transform duration-300 group-hover:translate-y-0.5" />
+          </button>
+        </div>
+      )}
     </div>
   )
 }
