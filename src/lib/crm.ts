@@ -245,6 +245,7 @@ export const CANONICAL_LEADER_AVATARS: Record<string, string> = {
   emanuela: '/leaders/standardized/emanuela-doustova.png',
   'jesse-schexnayder': '/leaders/standardized/jesse-schexnayder.png',
   'angel-mok': '/leaders/standardized/angel-mok-v2.png',
+  'leo-khodorkovskiy': '/leaders/standardized/leo-khodorkovskiy.png',
 }
 
 export function resolveCanonicalAvatarUrl(slug: string, rawUrl?: string | null): string {
@@ -459,6 +460,19 @@ const FALLBACK_DISTRIBUTORS: PublicDistributor[] = [
     avatar_url: '/leaders/standardized/angel-mok-v2.png',
     regions: ['Malaysia', 'Singapore', 'Dubai', 'Türkiye', 'Nigeria'],
     languages: ['en'],
+    phone: null,
+    instagram_url: null,
+  },
+  {
+    id: 'preview-leo',
+    slug: 'leo-khodorkovskiy',
+    referral_code: 'leo-khodorkovskiy',
+    display_name: 'Leo Khodorkovskiy',
+    title: 'True Legacy 1A Leader',
+    bio: 'Leo is a dedicated True Legacy leader building an international business with purpose and impact.',
+    avatar_url: '/leaders/standardized/leo-khodorkovskiy.png',
+    regions: ['Global', 'USA'],
+    languages: ['en', 'ru'],
     phone: null,
     instagram_url: null,
   },
