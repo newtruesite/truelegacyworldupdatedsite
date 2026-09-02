@@ -479,13 +479,15 @@ export default function CrmPage() {
         }}
         onMagicLinkSubmit={async (e) => {
           e.preventDefault()
+          setMessage('')
           const email = String(new FormData(e.currentTarget).get('email') || '').trim().toLowerCase()
           const { error } = await crmSupabase!.auth.signInWithOtp({ email, options: { emailRedirectTo: `${window.location.origin}/crm` } })
-          setMessage(error ? 'The sign-in link could not be sent.' : 'Check your email for the sign-in link.')
+          setMessage(error ? (error.message || 'The sign-in link could not be sent.') : 'Check your email for the sign-in link!')
         }}
         onPasswordReset={async (email) => {
+          setMessage('')
           const { error } = await crmSupabase!.auth.resetPasswordForEmail(email.trim().toLowerCase(), { redirectTo: `${window.location.origin}/crm` })
-          setMessage(error ? 'The reset email could not be sent.' : 'Check your email for a password reset link.')
+          setMessage(error ? (error.message || 'The reset email could not be sent.') : 'Check your email for a password reset link!')
         }}
         message={message}
       />
