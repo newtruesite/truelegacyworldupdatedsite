@@ -466,11 +466,16 @@ export default function CrmPage() {
       <CrmLogin
         onPasswordSubmit={async (e) => {
           e.preventDefault()
+          setMessage('')
           const data = new FormData(e.currentTarget)
           const email = String(data.get('email') || '').trim().toLowerCase()
           const password = String(data.get('password') || '')
           const { error } = await crmSupabase!.auth.signInWithPassword({ email, password })
-          setMessage(error ? 'The email or password was not accepted.' : '')
+          if (error) {
+            setMessage(error.message || 'Invalid email or password. Please check your credentials and try again.')
+          } else {
+            setMessage('')
+          }
         }}
         onMagicLinkSubmit={async (e) => {
           e.preventDefault()
@@ -1976,9 +1981,29 @@ function CrmLogin({
           </>
         )}
         {message && (
-          <p role="alert" className="mt-4 text-sm text-[#2997ff]">
-            {message}
-          </p>
+          <div
+            role="alert"
+            className={`mt-5 flex items-center gap-3 rounded-2xl border p-4 text-left text-xs font-semibold animate-in fade-in-50 duration-200 ${
+              message.toLowerCase().includes('not accepted') ||
+              message.toLowerCase().includes('invalid') ||
+              message.toLowerCase().includes('error') ||
+              message.toLowerCase().includes('failed') ||
+              message.toLowerCase().includes('could not')
+                ? 'border-rose-500/40 bg-rose-500/10 text-rose-200 shadow-lg shadow-rose-950/20'
+                : 'border-cyan-500/40 bg-cyan-500/10 text-cyan-200 shadow-lg shadow-cyan-950/20'
+            }`}
+          >
+            {message.toLowerCase().includes('not accepted') ||
+            message.toLowerCase().includes('invalid') ||
+            message.toLowerCase().includes('error') ||
+            message.toLowerCase().includes('failed') ||
+            message.toLowerCase().includes('could not') ? (
+              <AlertTriangle className="h-5 w-5 shrink-0 text-rose-400" />
+            ) : (
+              <Sparkles className="h-5 w-5 shrink-0 text-cyan-400" />
+            )}
+            <span className="leading-relaxed">{message}</span>
+          </div>
         )}
       </div>
     </main>
