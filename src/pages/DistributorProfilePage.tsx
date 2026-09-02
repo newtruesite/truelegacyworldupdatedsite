@@ -37,7 +37,7 @@ import {
 } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion, AnimatePresence, useReducedMotion } from 'framer-motion'
 import NotFoundPage from './NotFoundPage'
 
 const LEADER_PORTRAITS: Record<string, string> = {
@@ -124,6 +124,7 @@ export default function DistributorProfilePage() {
   const [profile, setProfile] = useState<PublicDistributor | null | undefined>(undefined)
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 })
   const [isHovered, setIsHovered] = useState(false)
+  const prefersReducedMotion = useReducedMotion()
 
   const handleMouseMove = (e: React.MouseEvent<HTMLElement>) => {
     const rect = e.currentTarget.getBoundingClientRect()
@@ -157,7 +158,9 @@ export default function DistributorProfilePage() {
     const handleScroll = () => {
       if (!ticking) {
         window.requestAnimationFrame(() => {
-          setIsScrolled(window.scrollY > 80)
+          // Separate collapse and expand thresholds prevent a height change from
+          // repeatedly crossing one trigger point and causing a visible flicker.
+          setIsScrolled(current => current ? window.scrollY > 48 : window.scrollY > 112)
           ticking = false
         })
         ticking = true
@@ -567,7 +570,9 @@ export default function DistributorProfilePage() {
         {profile ? (
           <>
             {/* 1. TOP HERO CARD (Smoothly Minimizes on Scroll) */}
-            <header
+            <motion.header
+              layout={!prefersReducedMotion}
+              transition={prefersReducedMotion ? { duration: 0 } : { layout: { type: 'spring', stiffness: 320, damping: 34 } }}
               onMouseMove={handleMouseMove}
               onMouseEnter={() => setIsHovered(true)}
               onMouseLeave={() => setIsHovered(false)}
@@ -586,15 +591,15 @@ export default function DistributorProfilePage() {
                 }}
               />
 
-              <AnimatePresence mode="wait">
+              <AnimatePresence initial={false} mode="popLayout">
                 {isScrolled ? (
-                  /* MINIMIZED COMPACT STATE (Scrolled > 80px) */
+                  /* MINIMIZED COMPACT STATE (after the expanded card begins leaving view) */
                   <motion.div
                     key="minimized"
                     initial={{ opacity: 0, y: -6 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -6 }}
-                    transition={{ duration: 0.2, ease: 'easeOut' }}
+                    transition={prefersReducedMotion ? { duration: 0 } : { duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
                     className="relative z-10 flex items-center justify-between gap-3"
                   >
                     {/* Compact Leader Avatar & Identity */}
@@ -652,7 +657,7 @@ export default function DistributorProfilePage() {
                     initial={{ opacity: 0, y: 6 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: 6 }}
-                    transition={{ duration: 0.2, ease: 'easeOut' }}
+                    transition={prefersReducedMotion ? { duration: 0 } : { duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
                   >
                     {/* Invitation & Attribution Top Banner */}
                     <div className="relative z-10 mb-6 flex flex-wrap items-center justify-between gap-3 border-b border-white/10 pb-4">
@@ -804,7 +809,7 @@ export default function DistributorProfilePage() {
             </motion.div>
           )}
         </AnimatePresence>
-      </header>
+      </motion.header>
 
             {/* 2. VISUAL GUIDED EXPERIENCE DESTINATION CARDS */}
             <section className="mb-14">
