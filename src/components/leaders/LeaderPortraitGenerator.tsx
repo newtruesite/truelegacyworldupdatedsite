@@ -39,6 +39,7 @@ import {
   getProviderStatus,
   getProviderStatusAsync,
 } from '@/services/portraitGenerationService'
+import { convertToPermanentDataUrl } from '@/lib/crm'
 
 export interface LeaderPortraitGeneratorProps {
   onPortraitChange?: (data: LeaderPortraitData) => void
@@ -294,17 +295,41 @@ export function LeaderPortraitGenerator({
   }
 
   // ── Custom portrait upload ────────────────────────────────────────────────
-  const handleCustomUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleCustomUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const f = e.target.files?.[0]
     if (!f) return
-    const url = URL.createObjectURL(f)
-    if (generatedUrl.startsWith('blob:')) URL.revokeObjectURL(generatedUrl)
-    setGeneratedBlob(undefined)
-    setGeneratedUrl(url)
-    setStatus('ready_for_review')
-    setUiState('review')
-    setIsApproved(false)
-    e.target.value = ''
+    try {
+      const result = await validatePortraitFile(f)
+      if (!result.valid) {
+        setErrorMessage(result.error ?? 'Invalid photo.')
+        return
+      }
+      const permUrl = await convertToPermanentDataUrl(f)
+      if (generatedUrl.startsWith('blob:')) URL.revokeObjectURL(generatedUrl)
+      setGeneratedBlob(f)
+      setGeneratedUrl(permUrl)
+      setApprovedUrl(permUrl)
+      setIsApproved(true)
+      setStatus('applicant_approved')
+      setUiState('review')
+      const data: LeaderPortraitData = {
+        originalFile: f,
+        originalFileName: f.name,
+        originalPreviewUrl: permUrl,
+        generatedPortraitUrl: permUrl,
+        approvedPortraitUrl: permUrl,
+        promptUsed: 'Custom Leader Portrait Upload',
+        status: 'applicant_approved',
+        qualityPassed: true,
+        validationNotes: ['Custom approved portrait upload'],
+      }
+      notify(data)
+      onApprovePortrait?.(permUrl, data)
+    } catch {
+      setErrorMessage('Failed to process custom portrait.')
+    } finally {
+      e.target.value = ''
+    }
   }
 
   // ── RENDER ────────────────────────────────────────────────────────────────
@@ -366,14 +391,6 @@ export function LeaderPortraitGenerator({
                   : 'border-white/12 bg-white/[0.018] hover:border-white/25 hover:bg-white/[0.025]'
               }`}
             >
-              <input
-                ref={fileInputRef}
-                type="file"
-                accept="image/jpeg,image/png,image/webp"
-                onChange={handleFileInput}
-                className="hidden"
-              />
-
               {originalUrl ? (
                 /* ── Photo already loaded — show preview + actions ── */
                 <div className="w-full flex flex-col sm:flex-row items-center gap-5 sm:gap-6 text-left" onClick={(e) => e.stopPropagation()}>
@@ -684,15 +701,21 @@ export function LeaderPortraitGenerator({
               <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-1 pt-0.5">
                 <button
                   type="button"
-                  onClick={() => fileInputRef.current?.click()}
-                  className="text-xs text-[#6b7480] hover:text-white underline transition text-left"
+                  onClick={() => {
+                    setErrorMessage('')
+                    fileInputRef.current?.click()
+                  }}
+                  className="text-xs font-semibold text-[#aeb4c0] hover:text-white underline transition text-left cursor-pointer"
                 >
                   Upload Different Photo
                 </button>
                 <button
                   type="button"
-                  onClick={() => customUploadRef.current?.click()}
-                  className="text-xs text-[#2997ff] hover:underline transition text-right"
+                  onClick={() => {
+                    setErrorMessage('')
+                    customUploadRef.current?.click()
+                  }}
+                  className="text-xs font-semibold text-[#2997ff] hover:underline transition text-right cursor-pointer"
                 >
                   Upload Custom Portrait
                 </button>
