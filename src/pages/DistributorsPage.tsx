@@ -239,7 +239,7 @@ export default function DistributorsPage() {
 
         <section className="border-t border-white/5 bg-black py-12 md:py-16">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <div className="sticky top-20 z-20 mb-10 rounded-3xl border border-white/10 bg-black/95 p-4 shadow-2xl shadow-black/30 backdrop-blur-xl sm:p-5">
+            <div className="relative mb-10 rounded-3xl border border-white/10 bg-black p-4 shadow-2xl sm:p-5">
               <div className="grid gap-3 md:grid-cols-[1.4fr_1fr_1fr]">
                 <label className="relative">
                   <Search className="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-[#86868b]" />
