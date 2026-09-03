@@ -18,7 +18,6 @@ import type {
   DistributorProfileUpdate,
 } from '@/lib/crm'
 import {
-  PURCHASE_LINK_CONFIG,
   STANDARD_PURCHASE_PRODUCTS,
   OTHER_PURCHASE_PRODUCTS,
   isValidPurchaseUrl,
@@ -33,13 +32,10 @@ import {
   ExternalLink,
   Eye,
   EyeOff,
-  FileText,
-  HelpCircle,
   KeyRound,
   Layers,
   LoaderCircle,
   Lock,
-  MessageSquare,
   Save,
   Settings2,
   ShieldCheck,
@@ -102,6 +98,13 @@ export default function AppAccountPage() {
   const [passwordSaving, setPasswordSaving] = useState(false)
   const [passwordMessage, setPasswordMessage] = useState('')
   const [passwordError, setPasswordError] = useState('')
+
+  // Verified email update state
+  const [newEmail, setNewEmail] = useState('')
+  const [confirmEmail, setConfirmEmail] = useState('')
+  const [emailSaving, setEmailSaving] = useState(false)
+  const [emailMessage, setEmailMessage] = useState('')
+  const [emailError, setEmailError] = useState('')
 
   // Application Page Customization Form State
   const [customHeadline, setCustomHeadline] = useState('')
@@ -290,10 +293,47 @@ export default function AppAccountPage() {
         setNewPassword('')
         setConfirmPassword('')
       }
-    } catch (err: any) {
-      setPasswordError(err?.message || 'Failed to update password. Please try again.')
+    } catch (updateError) {
+      setPasswordError(updateError instanceof Error ? updateError.message : 'Failed to update password. Please try again.')
     } finally {
       setPasswordSaving(false)
+    }
+  }
+
+  const handleEmailUpdate = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+    const normalizedEmail = newEmail.trim().toLowerCase()
+    const currentEmail = session?.user.email?.trim().toLowerCase()
+    setEmailError('')
+    setEmailMessage('')
+
+    if (!crmSupabase || !session) {
+      setEmailError('Please sign in again before changing your email.')
+      return
+    }
+    if (!normalizedEmail || normalizedEmail !== confirmEmail.trim().toLowerCase()) {
+      setEmailError('The new email addresses do not match.')
+      return
+    }
+    if (normalizedEmail === currentEmail) {
+      setEmailError('Enter a different email address.')
+      return
+    }
+
+    setEmailSaving(true)
+    try {
+      const { error: updateError } = await crmSupabase.auth.updateUser(
+        { email: normalizedEmail },
+        { emailRedirectTo: `${window.location.origin}/app/settings` }
+      )
+      if (updateError) throw updateError
+      setEmailMessage(`Verification sent. For your protection, complete the confirmation steps sent to your current email and ${normalizedEmail}.`)
+      setNewEmail('')
+      setConfirmEmail('')
+    } catch (updateError) {
+      setEmailError(updateError instanceof Error ? updateError.message : 'The email change could not be started. Please try again.')
+    } finally {
+      setEmailSaving(false)
     }
   }
 
@@ -326,6 +366,7 @@ export default function AppAccountPage() {
       const bio = data.get('bio') !== null ? String(data.get('bio')) : distributor.bio || ''
       const phone = data.get('phone') !== null ? String(data.get('phone')) : distributor.phone || ''
       const instagramUrl = data.get('instagramUrl') !== null ? String(data.get('instagramUrl')) : distributor.instagram_url || ''
+      const websiteUrl = data.get('websiteUrl') !== null ? String(data.get('websiteUrl')) : distributor.website_url || ''
       const regions = data.get('regions') !== null
         ? String(data.get('regions')).split(',').map((item) => item.trim()).filter(Boolean)
         : distributor.regions
@@ -337,7 +378,7 @@ export default function AppAccountPage() {
         : distributor.accepting_leads
 
       // Validate purchase links before proceeding
-      const invalidEntries = Object.entries(purchaseLinks).filter(([_, url]) => url && url.trim() && !isValidPurchaseUrl(url))
+      const invalidEntries = Object.entries(purchaseLinks).filter(([, url]) => url && url.trim() && !isValidPurchaseUrl(url))
       if (invalidEntries.length > 0) {
         setError('Please enter valid URLs (starting with http:// or https://) for your product purchase links.')
         setIsPurchaseLinksOpen(true)
@@ -359,6 +400,7 @@ export default function AppAccountPage() {
         bio,
         phone,
         instagramUrl,
+        websiteUrl,
         avatarUrl: permanentAvatar,
         regions,
         languages,
@@ -422,9 +464,13 @@ export default function AppAccountPage() {
     )
 
   const currentAvatar = customAvatarUrl || distributor.avatar_url || '/logos/tl-square-white.png'
+  const isOwnAccount = Boolean(
+    session?.user &&
+      (distributor.auth_user_id === session.user.id || membership?.distributor_id === distributor.id)
+  )
 
   return (
-    <main className="min-h-screen bg-[radial-gradient(circle_at_top,#12233d,#05070c_48%)] px-4 pb-32 pt-10 text-white sm:px-6">
+    <main className="account-settings-page min-h-[100dvh] overflow-visible bg-[radial-gradient(circle_at_top,#12233d,#05070c_48%)] px-4 pb-56 pt-10 text-white sm:px-6">
       <SEO
         title="Leader Account Settings | True Legacy"
         description="Manage your verified True Legacy leader profile, security, and personal application form."
@@ -679,6 +725,16 @@ export default function AppAccountPage() {
                           className="account-input"
                         />
                       </Field>
+                      <Field label="Personal website" hint="Shown on your public profile.">
+                        <input
+                          name="websiteUrl"
+                          type="url"
+                          defaultValue={distributor.website_url || ''}
+                          placeholder="https://yourwebsite.com"
+                          maxLength={500}
+                          className="account-input"
+                        />
+                      </Field>
                       <Field label="Markets and regions" hint="Separate markets with commas.">
                         <input
                           required
@@ -687,9 +743,9 @@ export default function AppAccountPage() {
                           className="account-input"
                         />
                       </Field>
-                      <Field label="Account email" hint="Contact support to change the sign-in email.">
+                      <Field label="Account email" hint="Change securely in the Security section below.">
                         <input
-                          value={session?.user?.email || distributor.login_email || 'leader@truelegacyworld.com'}
+                          value={isOwnAccount ? session?.user?.email || distributor.login_email || '' : distributor.login_email || ''}
                           disabled
                           className="account-input opacity-65"
                         />
@@ -1186,7 +1242,32 @@ export default function AppAccountPage() {
               </button>
 
               {isSecurityOpen && (
-                <form onSubmit={handlePasswordUpdate} className="px-5 pb-6 sm:px-7 sm:pb-7 pt-4 border-t border-white/10 space-y-5 animate-in fade-in-50 duration-200">
+                <div className="px-5 pb-6 sm:px-7 sm:pb-7 pt-4 border-t border-white/10 space-y-7 animate-in fade-in-50 duration-200">
+                  {isOwnAccount ? <><form onSubmit={handleEmailUpdate} className="space-y-5 rounded-2xl border border-cyan-400/20 bg-cyan-400/[.04] p-4 sm:p-5">
+                    <div className="flex items-start gap-3">
+                      <ShieldCheck className="mt-0.5 h-5 w-5 shrink-0 text-cyan-300" />
+                      <div>
+                        <h3 className="font-black text-white">Secure sign-in email change</h3>
+                        <p className="mt-1 text-xs leading-5 text-[#aeb4c0]">Your current sign-in is <strong className="text-white">{session?.user.email || distributor.login_email}</strong>. Verification is required before the new address becomes active.</p>
+                      </div>
+                    </div>
+                    <div className="grid gap-5 sm:grid-cols-2">
+                      <Field label="New email address">
+                        <input type="email" value={newEmail} onChange={(event) => setNewEmail(event.target.value)} required autoComplete="email" placeholder="new@email.com" className="account-input" />
+                      </Field>
+                      <Field label="Confirm new email">
+                        <input type="email" value={confirmEmail} onChange={(event) => setConfirmEmail(event.target.value)} required autoComplete="email" placeholder="Repeat new email" className="account-input" />
+                      </Field>
+                    </div>
+                    {emailMessage && <p className="flex items-start gap-2 rounded-xl border border-emerald-300/20 bg-emerald-300/[.08] p-4 text-sm leading-6 text-emerald-100"><CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-emerald-400" />{emailMessage}</p>}
+                    {emailError && <p role="alert" className="rounded-xl border border-rose-300/20 bg-rose-300/[.08] p-4 text-sm text-rose-100">{emailError}</p>}
+                    <button disabled={emailSaving || !newEmail || !confirmEmail} type="submit" className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-cyan-400 px-6 text-xs font-black text-slate-950 shadow-lg shadow-cyan-400/20 transition hover:bg-cyan-300 disabled:opacity-60">
+                      <ShieldCheck className="h-4 w-4" />
+                      {emailSaving ? 'Sending verification…' : 'Send verification emails'}
+                    </button>
+                  </form>
+
+                  <form onSubmit={handlePasswordUpdate} className="space-y-5">
                   <div className="rounded-2xl border border-amber-400/20 bg-amber-400/5 p-4 text-xs text-amber-200/90 leading-relaxed flex items-start gap-2.5">
                     <Lock className="h-4 w-4 shrink-0 text-amber-400 mt-0.5" />
                     <span>
@@ -1251,7 +1332,9 @@ export default function AppAccountPage() {
                     <KeyRound className="h-4 w-4" />
                     {passwordSaving ? 'Updating password securely…' : 'Update Portal Password'}
                   </button>
-                </form>
+                  </form>
+                  </> : <div className="rounded-2xl border border-white/10 bg-white/[.03] p-4 text-sm leading-6 text-[#aeb4c0]"><strong className="text-white">Security changes are owner-verified.</strong> The leader must sign in to their own account to change their email or password. This prevents an administrator session from replacing another person’s credentials.</div>}
+                </div>
               )}
             </div>
 

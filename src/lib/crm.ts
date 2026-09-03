@@ -48,6 +48,7 @@ export type DistributorProfileUpdate = {
   bio: string
   phone: string
   instagramUrl: string
+  websiteUrl: string
   avatarUrl?: string | null
   regions: string[]
   languages: string[]
