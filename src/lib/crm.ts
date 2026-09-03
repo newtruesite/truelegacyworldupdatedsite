@@ -1,5 +1,8 @@
 import { crmConfigured, crmSupabase } from '@/integrations/supabase/client'
 
+export const ENAGIC_PORTAL_URL = 'https://information.enagic.com/login'
+export const EWS_LOGIN_URL = 'https://app.enagicwebsystem.com/'
+
 export type CrmRole = 'admin' | 'distributor'
 export type LeadStatus = 'new' | 'contacted' | 'qualified' | 'nurturing' | 'converted' | 'closed'
 export type LeadInterest = 'product' | 'duo' | 'distributor' | 'training' | 'events'
