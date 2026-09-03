@@ -30,7 +30,7 @@ export function AppPageHeader({
   maxWidthClass = '',
 }: AppPageHeaderProps) {
   return (
-    <header className={`w-full border-b border-white/10 pb-6 mb-7 text-white ${className}`}>
+    <section className={`w-full border-b border-white/10 pb-6 mb-7 text-white relative z-10 ${className}`}>
       <div className={`w-full ${maxWidthClass}`}>
         <div className="flex flex-col gap-5 sm:flex-row sm:items-start sm:justify-between">
           <div className="flex items-start gap-3.5 sm:gap-4 min-w-0 flex-1">
@@ -73,6 +73,6 @@ export function AppPageHeader({
 
         {children && <div className="mt-5">{children}</div>}
       </div>
-    </header>
+    </section>
   )
 }
