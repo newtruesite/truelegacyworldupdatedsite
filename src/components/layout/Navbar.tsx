@@ -236,7 +236,7 @@ export function Navbar() {
           </div>
 
           {/* Center: Desktop Navigation + Controls */}
-          <div className="tl-desktop-nav hidden md:flex items-center justify-center gap-6">
+          <div className="tl-desktop-nav hidden xl:flex items-center justify-center gap-4 whitespace-nowrap">
             <div className="flex items-center space-x-1">
               {mainNavLinks.map((link) => {
                 if (link.to === "/select-country") {
@@ -429,7 +429,7 @@ export function Navbar() {
           {/* Hamburger Button - Mobile Only */}
           <button
             onClick={() => setMenuOpen(!menuOpen)}
-            className="tl-mobile-trigger md:hidden absolute right-4 inline-flex items-center justify-center p-2 rounded-md text-[#cccccc] hover:text-white hover:bg-white/5 transition-colors"
+            className="tl-mobile-trigger xl:hidden absolute right-4 inline-flex items-center justify-center p-2 rounded-md text-[#cccccc] hover:text-white hover:bg-white/5 transition-colors cursor-pointer"
             aria-expanded={menuOpen}
             aria-controls="mobile-menu"
             aria-label="Toggle menu"

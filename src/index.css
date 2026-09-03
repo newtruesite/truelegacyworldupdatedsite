@@ -2383,7 +2383,7 @@ header.navbar, .navbar, .tl-desktop-nav {
   box-shadow: none !important;
   backdrop-filter: saturate(1.2) blur(20px);
 }
-.tl-desktop-nav a, header.navbar a { color: rgba(245,245,247,.8); font-size: 14px; font-weight: 400 !important; }
+.tl-desktop-nav a, .tl-desktop-nav button, header.navbar a { color: rgba(245,245,247,.8); font-size: 14px; font-weight: 400 !important; white-space: nowrap !important; }
 .tl-mobile-menu { background: rgba(29,29,31,.98) !important; border-color: rgba(134,134,139,.3) !important; }
 
 /* Buttons: one chromatic primary action, all others quiet and monochrome. */
