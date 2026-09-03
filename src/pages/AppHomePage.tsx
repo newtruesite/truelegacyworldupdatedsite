@@ -481,12 +481,26 @@ function AppWelcome() {
         <p className="mt-4 leading-7 text-[#cccccc]">
           Sign in with your existing distributor account to access your leads, academy, personal links, and organization.
         </p>
-        <Link to="/crm" className="mt-8 inline-flex min-h-14 w-full items-center justify-center gap-2 rounded-2xl bg-cyan-400 px-6 font-black text-slate-950">
-          Distributor sign in <ArrowRight />
-        </Link>
-        <Link to="/" className="mt-3 inline-flex min-h-12 w-full items-center justify-center rounded-2xl border border-white/15">
-          Visit public website
-        </Link>
+        <div className="mt-8 space-y-3">
+          <Link
+            to="/crm"
+            className="inline-flex min-h-14 w-full items-center justify-center gap-2 rounded-2xl bg-cyan-400 px-6 font-black text-slate-950 transition-colors hover:bg-cyan-300 cursor-pointer"
+          >
+            Distributor sign in <ArrowRight className="h-5 w-5" />
+          </Link>
+          <Link
+            to="/leaders/apply"
+            className="inline-flex min-h-14 w-full items-center justify-center gap-2 rounded-2xl border border-emerald-400/40 bg-emerald-500/10 px-6 font-black text-emerald-300 transition-colors hover:bg-emerald-500/20 cursor-pointer"
+          >
+            Sign Up Now — Become a Leader <ArrowRight className="h-5 w-5" />
+          </Link>
+          <Link
+            to="/"
+            className="inline-flex min-h-12 w-full items-center justify-center rounded-2xl border border-white/15 text-sm font-semibold text-[#cccccc] transition-colors hover:bg-white/5 cursor-pointer"
+          >
+            Visit public website
+          </Link>
+        </div>
       </div>
     </main>
   )

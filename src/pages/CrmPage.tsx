@@ -8,6 +8,7 @@ import type { CrmDistributor, CrmLead, CrmLeadNote, CrmMembership, LeadStatus } 
 import type { Session } from '@supabase/supabase-js'
 import {
   AlertTriangle,
+  ArrowRight,
   BellRing,
   CalendarClock,
   Check,
@@ -2007,6 +2008,15 @@ function CrmLogin({
             <span className="leading-relaxed">{message}</span>
           </div>
         )}
+        <div className="mt-8 border-t border-white/10 pt-6 text-center">
+          <p className="text-xs text-[#86868b]">Want to become an official True Legacy leader?</p>
+          <Link
+            to="/leaders/apply"
+            className="mt-3 inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-xl border border-emerald-400/30 bg-emerald-500/10 px-4 text-sm font-bold text-emerald-300 transition-colors hover:bg-emerald-500/20 cursor-pointer"
+          >
+            Sign up now — Apply for leadership <ArrowRight className="h-4 w-4" />
+          </Link>
+        </div>
       </div>
     </main>
   )

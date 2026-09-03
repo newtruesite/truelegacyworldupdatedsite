@@ -26,6 +26,7 @@ import {
 import type { Session } from '@supabase/supabase-js'
 import {
   ArrowLeft,
+  ArrowRight,
   Check,
   CheckCircle2,
   ChevronDown,
@@ -198,22 +199,22 @@ export default function AppAccountPage() {
       )
       if (byUser) return byUser
     }
-    return distributors[0] || null
+    if (!session) return null
+    return membership?.role === 'admin' ? distributors.find((item) => item.slug === 'mehdi-cohen') || distributors[0] || null : null
   }, [distributors, selectedId, session, membership])
 
-  // Sync application customization state & purchase links when distributor changes
   useEffect(() => {
     if (distributor) {
-      const settings = distributor.application_settings || {}
-      setCustomHeadline(settings.customHeadline || '')
-      setCustomIntro(settings.customIntro || '')
-      setCustomEyebrow(settings.customEyebrow || '')
-      setCustomSubmitButtonText(settings.customSubmitButtonText || '')
-      setCustomBadge(settings.customBadge || '')
-      setCustomNote(settings.customNote || '')
-      setSelectedDefaultInterests(settings.defaultInterests || ['duo'])
+      setCustomAvatarUrl(distributor.avatar_url || '')
       setPurchaseLinks(distributor.purchase_links || {})
-      setPurchaseLinkErrors({})
+      const custom = distributor.application_settings || {}
+      setCustomHeadline(custom.customHeadline || '')
+      setCustomIntro(custom.customIntro || '')
+      setCustomEyebrow(custom.customEyebrow || '')
+      setCustomSubmitButtonText(custom.customSubmitButtonText || '')
+      setCustomBadge(custom.customBadge || '')
+      setCustomNote(custom.customNote || '')
+      setSelectedDefaultInterests(custom.defaultInterests || ['duo'])
     }
   }, [distributor])
 
@@ -228,15 +229,6 @@ export default function AppAccountPage() {
     const origin = typeof window !== 'undefined' ? window.location.origin : 'https://www.truelegacyworld.com'
     return `${origin}/apply?ref=${slug}&interest=duo&source=duo`
   }, [distributor])
-
-  const hasCustomizations = Boolean(
-    customHeadline.trim() ||
-      customIntro.trim() ||
-      customEyebrow.trim() ||
-      customSubmitButtonText.trim() ||
-      customBadge.trim() ||
-      customNote.trim()
-  )
 
   const handlePurchaseLinkChange = (productId: string, val: string) => {
     setPurchaseLinks((prev) => ({
@@ -267,26 +259,35 @@ export default function AppAccountPage() {
     setIsSecurityOpen(nextState)
   }
 
-  const handlePasswordUpdate = async (e: FormEvent) => {
-    e.preventDefault()
-    if (!newPassword || newPassword.length < 8) {
-      setPasswordError('Password must be at least 8 characters long.')
-      setPasswordMessage('')
-      return
-    }
-    if (newPassword !== confirmPassword) {
-      setPasswordError('Passwords do not match. Please re-enter.')
-      setPasswordMessage('')
-      return
-    }
-    setPasswordSaving(true)
+  const handlePasswordUpdate = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
     setPasswordError('')
     setPasswordMessage('')
+
+    if (!crmSupabase || !session) {
+      setPasswordError('Please sign in again before updating your password.')
+      return
+    }
+
+    if (newPassword.length < 8) {
+      setPasswordError('Password must be at least 8 characters long.')
+      return
+    }
+
+    if (newPassword !== confirmPassword) {
+      setPasswordError('Passwords do not match.')
+      return
+    }
+
+    setPasswordSaving(true)
     try {
-      if (crmSupabase && session) {
-        const { error: updateErr } = await crmSupabase.auth.updateUser({ password: newPassword })
-        if (updateErr) throw updateErr
-        setPasswordMessage('Your password has been updated securely. You can now use it to sign in to the CRM portal.')
+      const { error: updateError } = await crmSupabase.auth.updateUser({
+        password: newPassword,
+      })
+
+      if (updateError) {
+        setPasswordError(updateError.message)
+        setPasswordMessage('')
         setNewPassword('')
         setConfirmPassword('')
       } else {
@@ -294,8 +295,8 @@ export default function AppAccountPage() {
         setNewPassword('')
         setConfirmPassword('')
       }
-    } catch (updateError) {
-      setPasswordError(updateError instanceof Error ? updateError.message : 'Failed to update password. Please try again.')
+    } catch (err) {
+      setPasswordError('Failed to update password.')
     } finally {
       setPasswordSaving(false)
     }
@@ -323,33 +324,37 @@ export default function AppAccountPage() {
 
     setEmailSaving(true)
     try {
-      const { error: updateError } = await crmSupabase.auth.updateUser(
-        { email: normalizedEmail },
-        { emailRedirectTo: `${window.location.origin}/app/settings` }
-      )
-      if (updateError) throw updateError
-      setEmailMessage(`Verification sent. For your protection, complete the confirmation steps sent to your current email and ${normalizedEmail}.`)
-      setNewEmail('')
-      setConfirmEmail('')
+      const { error: updateError } = await crmSupabase.auth.updateUser({
+        email: normalizedEmail,
+      })
+      if (updateError) {
+        setEmailError(updateError.message)
+      } else {
+        setEmailMessage(`Verification links sent to both ${currentEmail} and ${normalizedEmail}. Please confirm both to finish.`)
+        setNewEmail('')
+        setConfirmEmail('')
+      }
     } catch (updateError) {
-      setEmailError(updateError instanceof Error ? updateError.message : 'The email change could not be started. Please try again.')
+      setEmailError(updateError instanceof Error ? updateError.message : 'Failed to update email. Please try again.')
     } finally {
       setEmailSaving(false)
     }
   }
 
-  const submit = async (event: FormEvent<HTMLFormElement>) => {
+  const handleSaveAllSettings = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
-    if (!distributor) return
     setSaving(true)
-    setError('')
     setMessage('')
+    setError('')
+
+    if (!distributor) {
+      setError('Distributor context is missing.')
+      setSaving(false)
+      return
+    }
 
     try {
       const data = new FormData(event.currentTarget)
-      const rawAvatar = customAvatarUrl || distributor.avatar_url || null
-      const permanentAvatar = rawAvatar ? await convertToPermanentDataUrl(rawAvatar) : null
-
       const applicationSettings: DistributorCustomApplicationSettings = {
         customHeadline: customHeadline.trim() || undefined,
         customIntro: customIntro.trim() || undefined,
@@ -360,34 +365,16 @@ export default function AppAccountPage() {
         defaultInterests: selectedDefaultInterests.length > 0 ? selectedDefaultInterests : ['duo'],
       }
 
-      // Check if profile info fields were present in form data or use existing values as fallback
-      const formDisplayName = data.get('displayName')
-      const displayName = formDisplayName !== null ? String(formDisplayName) : distributor.display_name
-      const title = data.get('title') !== null ? String(data.get('title')) : distributor.title
-      const bio = data.get('bio') !== null ? String(data.get('bio')) : distributor.bio || ''
-      const phone = data.get('phone') !== null ? String(data.get('phone')) : distributor.phone || ''
-      const instagramUrl = data.get('instagramUrl') !== null ? String(data.get('instagramUrl')) : distributor.instagram_url || ''
-      const websiteUrl = data.get('websiteUrl') !== null ? String(data.get('websiteUrl')) : distributor.website_url || ''
-      const regions = data.get('regions') !== null
-        ? String(data.get('regions')).split(',').map((item) => item.trim()).filter(Boolean)
-        : distributor.regions
-      const languages = data.getAll('languages').length > 0
-        ? data.getAll('languages').map(String)
-        : distributor.languages
-      const acceptingLeads = data.get('acceptingLeads') !== null
-        ? data.get('acceptingLeads') === 'on'
-        : distributor.accepting_leads
+      const displayName = String(data.get('displayName') || distributor.display_name || '')
+      const title = String(data.get('title') || distributor.title || '')
+      const bio = String(data.get('bio') || distributor.bio || '')
+      const phone = String(data.get('phone') || distributor.phone || '')
+      const instagramUrl = String(data.get('instagramUrl') || distributor.instagram_url || '')
+      const websiteUrl = String(data.get('websiteUrl') || distributor.website_url || '')
+      const regions = String(data.get('regions') || '').split(',').map((s) => s.trim()).filter(Boolean)
+      const languages = data.getAll('languages').map(String)
+      const acceptingLeads = data.get('acceptingLeads') === 'on'
 
-      // Validate purchase links before proceeding
-      const invalidEntries = Object.entries(purchaseLinks).filter(([, url]) => url && url.trim() && !isValidPurchaseUrl(url))
-      if (invalidEntries.length > 0) {
-        setError('Please enter valid URLs (starting with http:// or https://) for your product purchase links.')
-        setIsPurchaseLinksOpen(true)
-        setSaving(false)
-        return
-      }
-
-      // Clean purchase links (filter empty strings)
       const cleanPurchaseLinks: Record<string, string> = {}
       for (const [key, val] of Object.entries(purchaseLinks)) {
         if (val && val.trim()) {
@@ -395,14 +382,14 @@ export default function AppAccountPage() {
         }
       }
 
-      const payload: DistributorProfileUpdate = {
+      const updates: DistributorProfileUpdate = {
+        avatarUrl: customAvatarUrl || distributor.avatar_url || null,
         displayName,
         title,
         bio,
         phone,
         instagramUrl,
         websiteUrl,
-        avatarUrl: permanentAvatar,
         regions,
         languages,
         acceptingLeads,
@@ -410,23 +397,28 @@ export default function AppAccountPage() {
         purchaseLinks: cleanPurchaseLinks,
       }
 
-      if (permanentAvatar && distributor.slug) {
-        setCustomLeaderAvatar(distributor.slug, permanentAvatar)
-        setCustomAvatarUrl(permanentAvatar)
-      }
+      const updated = await updateDistributorProfile(distributor.id, updates)
 
-      if (distributor.slug) {
+      if (updated) {
+        if (updates.avatarUrl) {
+          setCustomLeaderAvatar(distributor.slug, updates.avatarUrl)
+        }
         setCustomApplicationSettings(distributor.slug, applicationSettings)
-      }
-
-      if (session && crmConfigured) {
-        const updated = await updateDistributorProfile(distributor.id, payload)
-        setDistributors((rows) =>
-          rows.map((item) =>
-            item.id === updated.id
+        setDistributors((prev) =>
+          prev.map((item) =>
+            item.id === distributor.id
               ? {
-                  ...updated,
-                  avatar_url: permanentAvatar || updated.avatar_url,
+                  ...item,
+                  avatar_url: updates.avatarUrl || item.avatar_url,
+                  display_name: displayName,
+                  title,
+                  bio,
+                  phone,
+                  instagram_url: instagramUrl,
+                  website_url: websiteUrl,
+                  regions,
+                  languages,
+                  accepting_leads: acceptingLeads,
                   application_settings: applicationSettings,
                   purchase_links: cleanPurchaseLinks,
                 }
@@ -450,17 +442,67 @@ export default function AppAccountPage() {
     }
   }
 
+  const hasCustomizations = Boolean(
+    customHeadline.trim() ||
+      customIntro.trim() ||
+      customEyebrow.trim() ||
+      customSubmitButtonText.trim() ||
+      customBadge.trim() ||
+      customNote.trim()
+  )
+
   if (loading)
     return (
       <main className="grid min-h-screen place-items-center bg-black text-white">
         <LoaderCircle className="h-8 w-8 animate-spin text-[#2997ff]" />
       </main>
     )
+
+  if (!session)
+    return (
+      <div className="min-h-screen bg-black text-white">
+        <Navbar />
+        <main className="account-settings-page min-h-screen bg-black px-4 pb-28 pt-8 text-white sm:px-6">
+          <SEO title="Account Settings | True Legacy" description="Sign in to customize your verified profile." noIndex />
+          <div className="mx-auto max-w-md text-center py-12">
+            <div className="mx-auto grid h-16 w-16 place-items-center rounded-2xl border border-white/15 bg-white/[0.04] p-3 shadow-xl">
+              <Lock className="h-8 w-8 text-[#2997ff]" />
+            </div>
+            <p className="mt-6 text-xs font-bold uppercase tracking-[.24em] text-[#2997ff]">Verified Leader Account</p>
+            <h1 className="mt-2 text-3xl font-black text-white">Sign In Required</h1>
+            <p className="mt-3 text-sm leading-6 text-[#cccccc]">
+              Please sign in with your verified distributor account to access Account Settings, update your portrait, manage your direct purchase links, and customize your personalized application form.
+            </p>
+            <div className="mt-8 space-y-3">
+              <Link
+                to="/crm"
+                className="inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-2xl bg-[#2997ff] px-6 font-black text-slate-950 transition-colors hover:bg-cyan-300 cursor-pointer"
+              >
+                Distributor Sign In <ArrowRight className="h-4 w-4" />
+              </Link>
+              <Link
+                to="/leaders/apply"
+                className="inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-2xl border border-emerald-400/40 bg-emerald-500/10 px-6 font-black text-emerald-300 transition-colors hover:bg-emerald-500/20 cursor-pointer"
+              >
+                Sign Up Now — Apply for Leadership <ArrowRight className="h-4 w-4" />
+              </Link>
+              <Link
+                to="/"
+                className="inline-flex min-h-11 w-full items-center justify-center rounded-2xl border border-white/15 text-sm font-semibold text-[#cccccc] hover:bg-white/5 transition-colors cursor-pointer"
+              >
+                Visit Public Website
+              </Link>
+            </div>
+          </div>
+        </main>
+      </div>
+    )
+
   if (!distributor)
     return (
       <AccountState
         title="Leader account not found"
-        body="No leader profiles were found. Please check back later."
+        body="No leader profile is associated with this account yet."
       />
     )
 
@@ -655,7 +697,7 @@ export default function AppAccountPage() {
             </div>
 
             {/* Profile & Application Settings Form */}
-            <form key={distributor.id} onSubmit={submit} className="space-y-6">
+            <form key={distributor.id} onSubmit={handleSaveAllSettings} className="space-y-6">
 
               {/* CARD 2: Collapsible Public Profile Information Form */}
               <div className="rounded-[28px] border border-white/10 bg-black/40 backdrop-blur-xl shadow-xl overflow-hidden transition-all">
