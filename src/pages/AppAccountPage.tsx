@@ -1,4 +1,5 @@
 import { SEO } from '@/components/SEO'
+import { Navbar } from '@/components/layout/Navbar'
 import { LeaderPortraitGenerator } from '@/components/leaders/LeaderPortraitGenerator'
 import type { LeaderPortraitData } from '@/config/portraitStandard'
 import {
@@ -470,74 +471,84 @@ export default function AppAccountPage() {
   )
 
   return (
-    <main className="account-settings-page min-h-[100dvh] overflow-visible bg-[radial-gradient(circle_at_top,#12233d,#05070c_48%)] px-4 pb-56 pt-10 text-white sm:px-6">
-      <SEO
-        title="Leader Account Settings | True Legacy"
-        description="Manage your verified True Legacy leader profile, security, and personal application form."
-        noIndex
-      />
-      <div className="mx-auto max-w-5xl">
-        <header className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-          <div className="flex items-center gap-4">
-            <Link
-              to="/app"
-              aria-label="Back to app home"
-              className="grid h-11 w-11 shrink-0 place-items-center rounded-full border border-white/10 bg-white/[.04] hover:bg-white/[.08] transition-colors"
-            >
-              <ArrowLeft className="h-5 w-5 text-cyan-400" />
-            </Link>
-            <div>
-              <p className="text-xs font-bold uppercase tracking-[.24em] text-[#2997ff]">Verified leader account</p>
-              <h1 className="mt-1 text-3xl font-black sm:text-5xl">Account Settings</h1>
-              <p className="mt-2 max-w-2xl text-sm leading-6 text-[#aeb4c0]">
-                Customize your verified profile, security password, portrait, and personalized application form ({distributor.display_name}).
-              </p>
+    <div className="min-h-screen bg-[radial-gradient(circle_at_top,#12233d,#05070c_48%)] text-white">
+      <Navbar />
+      <main className="account-settings-page min-h-[100dvh] overflow-visible px-4 pb-48 sm:pb-56 pt-6 sm:pt-10 text-white sm:px-6">
+        <SEO
+          title="Leader Account Settings | True Legacy"
+          description="Manage your verified True Legacy leader profile, security, and personal application form."
+          noIndex
+        />
+        <div className="mx-auto max-w-5xl">
+          <header className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between w-full min-w-0">
+            <div className="flex items-start gap-3.5 sm:gap-4 min-w-0 flex-1">
+              <Link
+                to="/app"
+                aria-label="Back to app home"
+                className="mt-1 grid h-10 w-10 sm:h-11 sm:w-11 shrink-0 place-items-center rounded-full border border-white/10 bg-white/[.04] hover:bg-white/[.08] transition-colors"
+              >
+                <ArrowLeft className="h-5 w-5 text-cyan-400" />
+              </Link>
+              <div className="min-w-0 flex-1">
+                <p className="text-xs font-bold uppercase tracking-[.24em] text-[#2997ff]">
+                  Verified leader account
+                </p>
+                <h1 className="mt-1 text-3xl font-black text-white sm:text-4xl lg:text-5xl tracking-tight">
+                  Account Settings
+                </h1>
+                <p className="mt-2.5 max-w-2xl text-sm sm:text-base leading-relaxed text-[#aeb4c0] break-words">
+                  Customize your verified profile, security password, portrait, and personalized application form ({distributor.display_name}).
+                </p>
+              </div>
             </div>
-          </div>
-          <div className="flex flex-wrap items-center gap-3">
-            <button
-              type="button"
-              onClick={toggleAllSections}
-              className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-white/15 bg-white/5 hover:bg-white/10 px-4 text-xs font-bold text-white transition"
-            >
-              <Layers className="h-4 w-4" />
-              {allOpen ? 'Collapse All' : 'Expand All'}
-            </button>
-            <Link
-              to={`/d/${distributor.slug}`}
-              target="_blank"
-              className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-white/15 px-4 text-sm font-bold hover:bg-white/5 transition"
-            >
-              View Public Profile <ExternalLink className="h-4 w-4" />
-            </Link>
-          </div>
-        </header>
 
-        {membership?.role === 'admin' ? (
-          <label className="mt-7 block max-w-sm text-sm text-[#aeb4c0]">
-            Profile to manage
-            <select
-              value={selectedId}
-              onChange={(event) => {
-                setSelectedId(event.target.value)
-                setMessage('')
-                setError('')
-              }}
-              className="account-input mt-2"
-            >
-              <option value="">Choose a leader</option>
-              {distributors.map((item) => (
-                <option key={item.id} value={item.id}>
-                  {item.display_name} ({item.slug})
-                </option>
-              ))}
-            </select>
-          </label>
-        ) : null}
+            <div className="flex flex-wrap items-center gap-3 shrink-0 lg:pt-1">
+              <button
+                type="button"
+                onClick={toggleAllSections}
+                className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-white/15 bg-white/5 hover:bg-white/10 px-4 text-xs font-bold text-white transition cursor-pointer"
+              >
+                <Layers className="h-4 w-4 text-cyan-400" />
+                {allOpen ? 'Collapse All' : 'Expand All'}
+              </button>
+              <Link
+                to={`/d/${distributor.slug}`}
+                target="_blank"
+                className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-white/15 px-4 text-xs sm:text-sm font-bold text-white hover:bg-white/5 transition"
+              >
+                View Public Profile <ExternalLink className="h-4 w-4 text-cyan-400" />
+              </Link>
+            </div>
+          </header>
 
-        <div className="mt-8 grid gap-8 lg:grid-cols-[280px_1fr] lg:items-start w-full max-w-full min-w-0">
-          {/* Aside Sidebar */}
-          <aside className="lg:sticky lg:top-10 h-fit rounded-[28px] border border-white/10 bg-white/[.035] p-5 text-center shadow-xl w-full min-w-0">
+          {membership?.role === 'admin' ? (
+            <div className="mt-6 block max-w-sm text-sm text-[#aeb4c0] w-full">
+              <label htmlFor="profile-to-manage-select" className="block text-xs font-bold uppercase tracking-wider text-[#2997ff] mb-2">
+                Profile to manage
+              </label>
+              <select
+                id="profile-to-manage-select"
+                value={selectedId}
+                onChange={(event) => {
+                  setSelectedId(event.target.value)
+                  setMessage('')
+                  setError('')
+                }}
+                className="account-input w-full"
+              >
+                <option value="">Choose a leader</option>
+                {distributors.map((item) => (
+                  <option key={item.id} value={item.id}>
+                    {item.display_name} ({item.slug})
+                  </option>
+                ))}
+              </select>
+            </div>
+          ) : null}
+
+          <div className="mt-8 grid gap-8 lg:grid-cols-[280px_1fr] lg:items-start w-full max-w-full min-w-0">
+            {/* Aside Sidebar */}
+            <aside className="h-fit rounded-[28px] border border-white/10 bg-white/[.035] p-5 text-center shadow-xl w-full min-w-0">
             <div className="relative group">
               <img
                 src={currentAvatar}
@@ -1342,6 +1353,7 @@ export default function AppAccountPage() {
         </div>
       </div>
     </main>
+    </div>
   )
 }
 
