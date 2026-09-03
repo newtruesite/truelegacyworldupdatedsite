@@ -1,4 +1,5 @@
 import { SEO } from '@/components/SEO'
+import { Navbar } from '@/components/layout/Navbar'
 import {
   crmConfigured,
   crmSupabase,
@@ -151,49 +152,51 @@ export default function AppHomePage() {
     )
 
   return (
-    <main className="min-h-screen bg-black px-4 pb-28 pt-4 text-white sm:px-6">
-      <SEO title="True Legacy App" description="Private True Legacy distributor home." noIndex />
-      <div className="mx-auto max-w-6xl">
-        {/* Sticky Header with Smooth Translate Hide on Scroll Down */}
-        <header
-          className={`sticky top-0 z-40 flex items-center justify-between gap-3 min-w-0 py-3.5 -mx-4 px-4 sm:-mx-6 sm:px-6 bg-black/90 backdrop-blur-xl border-b border-white/10 transition-transform duration-300 ease-in-out ${
-            isHeaderHidden ? '-translate-y-full' : 'translate-y-0'
-          }`}
-        >
-          <Link to="/" className="flex items-center gap-3.5 min-w-0 transition-opacity hover:opacity-90">
-            <img
-              src="/icons/icon-192.png"
-              alt="True Legacy"
-              className="h-11 w-11 sm:h-12 sm:w-12 shrink-0 rounded-2xl border border-white/15 bg-white/[0.04] p-1.5 shadow-lg object-contain"
-            />
-            <div className="min-w-0 flex-1">
-              <p className="truncate text-[11px] font-bold uppercase tracking-[.24em] text-[#2997ff] sm:text-xs leading-none mb-1">
-                True Legacy
-              </p>
-              <h1 className="text-lg sm:text-xl font-black leading-tight text-white truncate">
-                Distributor App
-              </h1>
+    <div className="min-h-screen bg-black text-white">
+      <Navbar />
+      <main className="px-4 pb-28 pt-4 text-white sm:px-6">
+        <SEO title="True Legacy App" description="Private True Legacy distributor home." noIndex />
+        <div className="mx-auto max-w-6xl">
+          {/* Sticky Header with Smooth Translate Hide on Scroll Down */}
+          <header
+            className={`sticky top-0 z-40 flex items-center justify-between gap-3 min-w-0 py-3.5 -mx-4 px-4 sm:-mx-6 sm:px-6 bg-black/90 backdrop-blur-xl border-b border-white/10 transition-transform duration-300 ease-in-out ${
+              isHeaderHidden ? '-translate-y-full' : 'translate-y-0'
+            }`}
+          >
+            <Link to="/" className="flex items-center gap-3.5 min-w-0 transition-opacity hover:opacity-90">
+              <img
+                src="/icons/icon-192.png"
+                alt="True Legacy"
+                className="h-11 w-11 sm:h-12 sm:w-12 shrink-0 rounded-2xl border border-white/15 bg-white/[0.04] p-1.5 shadow-lg object-contain"
+              />
+              <div className="min-w-0 flex-1">
+                <p className="truncate text-[11px] font-bold uppercase tracking-[.24em] text-[#2997ff] sm:text-xs leading-none mb-1">
+                  True Legacy
+                </p>
+                <h1 className="text-lg sm:text-xl font-black leading-tight text-white truncate">
+                  Distributor App
+                </h1>
+              </div>
+            </Link>
+            <div className="flex shrink-0 items-center gap-1.5 sm:gap-2">
+              <button
+                aria-label="Notifications"
+                className="relative grid h-9 w-9 sm:h-10 sm:w-10 place-items-center rounded-full border border-white/10 bg-white/[0.04] hover:bg-white/10 transition-colors text-white cursor-pointer"
+              >
+                <Bell className="h-4 w-4" />
+                {newLeads + dueLeads > 0 && (
+                  <span className="absolute right-1.5 top-1.5 h-2 w-2 rounded-full bg-orange-400 ring-2 ring-[#05091a]" />
+                )}
+              </button>
+              <button
+                onClick={() => crmSupabase?.auth.signOut()}
+                aria-label="Sign out"
+                className="grid h-9 w-9 sm:h-10 sm:w-10 place-items-center rounded-full border border-white/10 bg-white/[0.04] hover:bg-white/10 transition-colors text-white cursor-pointer"
+              >
+                <LogOut className="h-4 w-4" />
+              </button>
             </div>
-          </Link>
-          <div className="flex shrink-0 items-center gap-1.5 sm:gap-2">
-            <button
-              aria-label="Notifications"
-              className="relative grid h-9 w-9 sm:h-10 sm:w-10 place-items-center rounded-full border border-white/10 bg-white/[0.04] hover:bg-white/10 transition-colors text-white cursor-pointer"
-            >
-              <Bell className="h-4 w-4" />
-              {newLeads + dueLeads > 0 && (
-                <span className="absolute right-1.5 top-1.5 h-2 w-2 rounded-full bg-orange-400 ring-2 ring-[#05091a]" />
-              )}
-            </button>
-            <button
-              onClick={() => crmSupabase?.auth.signOut()}
-              aria-label="Sign out"
-              className="grid h-9 w-9 sm:h-10 sm:w-10 place-items-center rounded-full border border-white/10 bg-white/[0.04] hover:bg-white/10 transition-colors text-white cursor-pointer"
-            >
-              <LogOut className="h-4 w-4" />
-            </button>
-          </div>
-        </header>
+          </header>
 
         {/* Hero Welcome Card */}
         <section className="mt-6 overflow-hidden rounded-[28px] border border-white/20 bg-gradient-to-br from-cyan-400/[.14] via-blue-500/[.08] to-amber-400/[.08] p-6 sm:p-8">
@@ -424,7 +427,8 @@ export default function AppHomePage() {
         )}
       </div>
     </main>
-  )
+  </div>
+)
 }
 
 function AppCard({
