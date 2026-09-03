@@ -46,7 +46,6 @@ function IconDroplets({ className }: { className?: string }) {
 const COUNTRY_SLUGS = COUNTRIES.map((c) => c.slug);
 const DEFAULT_JOTFORM = "/apply";
 
-// Custom hook for scroll detection
 function useScroll(threshold: number = 10) {
   const [scrolled, setScrolled] = useState(false);
 
@@ -55,7 +54,7 @@ function useScroll(threshold: number = 10) {
       setScrolled(window.scrollY > threshold);
     };
 
-    handleScroll(); // Check initial state
+    handleScroll();
     window.addEventListener("scroll", handleScroll, { passive: true });
 
     return () => {
@@ -66,6 +65,38 @@ function useScroll(threshold: number = 10) {
   return scrolled;
 }
 
+function useScrollDirection() {
+  const [scrollDirection, setScrollDirection] = useState<'up' | 'down'>('up')
+  const [isAtTop, setIsAtTop] = useState(true)
+
+  useEffect(() => {
+    let lastScrollY = window.scrollY
+
+    const updateScrollDirection = () => {
+      const scrollY = window.scrollY
+      setIsAtTop(scrollY <= 20)
+
+      if (Math.abs(scrollY - lastScrollY) < 6) {
+        return
+      }
+
+      if (scrollY > lastScrollY && scrollY > 60) {
+        setScrollDirection('down')
+      } else if (scrollY < lastScrollY) {
+        setScrollDirection('up')
+      }
+      lastScrollY = scrollY > 0 ? scrollY : 0
+    }
+
+    window.addEventListener('scroll', updateScrollDirection, { passive: true })
+    return () => {
+      window.removeEventListener('scroll', updateScrollDirection)
+    }
+  }, [])
+
+  return { scrollDirection, isAtTop }
+}
+
 export function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [countriesOpen, setCountriesOpen] = useState(false);
@@ -74,6 +105,8 @@ export function Navbar() {
   );
   const countriesRef = useRef<HTMLDivElement>(null);
   const scrolled = useScroll(10);
+  const { scrollDirection, isAtTop } = useScrollDirection();
+  const isHidden = scrollDirection === 'down' && !isAtTop && !menuOpen;
   const navigate = useNavigate();
   const location = useLocation();
   const pathname = location.pathname;
@@ -177,9 +210,11 @@ export function Navbar() {
   return (
     <>
       <header
-        className={cn("sticky top-0 z-50 w-full border-b border-transparent", {
+        className={cn("sticky top-0 z-50 w-full border-b border-transparent transition-transform duration-300 ease-in-out", {
           "bg-background/95 supports-[backdrop-filter]:bg-background/50 border-border backdrop-blur-lg":
             scrolled,
+          "-translate-y-full": isHidden,
+          "translate-y-0": !isHidden,
         })}
         style={{
           background: scrolled ? "rgba(6,11,30,0.95)" : "rgba(6,11,30,0.88)",
