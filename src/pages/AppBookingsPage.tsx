@@ -1,5 +1,6 @@
 import { SEO } from '@/components/SEO'
 import { Navbar } from '@/components/layout/Navbar'
+import { AppPageHeader } from '@/components/layout/AppPageHeader'
 import { crmConfigured, crmSupabase, getCrmDistributors, getCrmMembership } from '@/lib/crm'
 import type { CrmDistributor, CrmMembership } from '@/lib/crm'
 import type { Session } from '@supabase/supabase-js'
@@ -85,30 +86,31 @@ export default function AppBookingsPage() {
   if (!session) return <Gate title="Sign In Required" />
   if (!membership?.active) return <Gate title="Account Not Authorized" />
 
-  return <main className="min-h-screen bg-black px-4 pb-32 pt-7 text-white sm:px-6 lg:px-8">
-    <SEO title="Bookings | True Legacy" description="Manage True Legacy discovery calls and availability." noIndex />
-    <div className="mx-auto max-w-7xl">
-      <header className="flex flex-col gap-5 border-b border-white/10 pb-7 sm:flex-row sm:items-end sm:justify-between">
-        <div className="flex items-center gap-4">
-          <Link
-            to="/app"
-            aria-label="Back to app home"
-            className="grid h-11 w-11 shrink-0 place-items-center rounded-full border border-white/10 bg-white/[.04] hover:bg-white/[.08] transition-colors"
-          >
-            <ArrowLeft className="h-5 w-5 text-cyan-400" />
-          </Link>
-          <div>
-            <p className="text-xs font-black uppercase tracking-[.24em] text-[#2997ff]">Phase 3A · Scheduling</p>
-            <h1 className="mt-1 text-4xl font-black sm:text-5xl">Bookings</h1>
-            <p className="mt-2 text-sm text-[#cccccc]">Turn interest into a scheduled conversation, connected directly to your CRM.</p>
-          </div>
-        </div>
-        {bookingUrl && (
-          <a href={bookingUrl} target="_blank" rel="noreferrer" className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl border border-white/20 px-5 font-bold text-[#2997ff]">
-            Open booking page <ExternalLink className="h-4 w-4" />
-          </a>
-        )}
-      </header>
+  return (
+    <div className="min-h-screen bg-black text-white">
+      <Navbar />
+      <main className="min-h-screen bg-black px-4 pb-32 pt-7 text-white sm:px-6 lg:px-8">
+        <SEO title="Bookings | True Legacy" description="Manage True Legacy discovery calls and availability." noIndex />
+        <div className="mx-auto max-w-7xl">
+          <AppPageHeader
+            eyebrow="PHASE 3A · SCHEDULING"
+            title="Bookings"
+            description="Turn interest into a scheduled conversation, connected directly to your CRM."
+            backTo="/app"
+            maxWidthClass="max-w-7xl"
+            actions={
+              bookingUrl ? (
+                <a
+                  href={bookingUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-white/20 px-5 font-bold text-[#2997ff] hover:bg-white/5 transition"
+                >
+                  Open booking page <ExternalLink className="h-4 w-4" />
+                </a>
+              ) : null
+            }
+          />
 
       <section className="mt-7 grid gap-4 sm:grid-cols-3"><Metric icon={<CalendarCheck2 />} value={upcoming.length} label="Upcoming" /><Metric icon={<UserRoundCheck />} value={completed} label="Completed" /><Metric icon={<Clock3 />} value={`${bookingType?.duration_minutes || 30} min`} label="Call length" /></section>
 
@@ -121,6 +123,8 @@ export default function AppBookingsPage() {
       </div>
     </div>
   </main>
+</div>
+  )
 }
 
 function Metric({ icon, value, label }: { icon: React.ReactNode; value: string|number; label: string }) { return <div className="rounded-2xl border border-white/10 bg-white/[.03] p-5"><span className="text-[#2997ff]">{icon}</span><p className="mt-4 text-3xl font-black">{value}</p><p className="mt-1 text-xs font-bold uppercase tracking-wider text-[#86868b]">{label}</p></div> }

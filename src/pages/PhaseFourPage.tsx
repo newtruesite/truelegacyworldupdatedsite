@@ -1,5 +1,6 @@
 import { SEO } from '@/components/SEO'
 import { SponsorGate } from '@/components/crm/SponsorGate'
+import { AppPageHeader } from '@/components/layout/AppPageHeader'
 import { useLocaleContext } from '@/contexts/LocaleContext'
 import { crmSupabase, getCrmDistributors, getCrmMembership } from '@/lib/crm'
 import type { CrmDistributor, CrmMembership } from '@/lib/crm'
@@ -46,30 +47,47 @@ export default function PhaseFourPage(){
   if(!session)return <Gate title="Platform sign-in required" body="Sign in to the CRM to open Phase 4."/>
   if(loading)return <main className="min-h-screen bg-black"/>
   if(!membership?.active)return <Gate title="Account not authorized" body="An active True Legacy profile is required."/>
-  return <SponsorGate membership={membership} distributors={distributors}><main className="min-h-screen bg-black px-3 pb-24 pt-5 text-white sm:px-6"><SEO title={`${copy.title} | True Legacy`} description={copy.subtitle} noIndex/><div className="mx-auto max-w-7xl"><header className="rounded-3xl border border-white/20 bg-[radial-gradient(circle_at_top_right,rgba(14,165,233,.18),transparent_35%),rgba(255,255,255,.03)] p-6 sm:p-8"><div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between"><div><p className="text-xs font-bold uppercase tracking-[.28em] text-[#2997ff]">Phase 4 · team application</p><h1 className="mt-3 text-3xl font-black sm:text-5xl">{copy.title}</h1><p className="mt-3 max-w-2xl text-sm leading-6 text-[#cccccc] sm:text-base">{copy.subtitle}</p></div><div className="flex flex-wrap gap-2"><Link to="/crm" className="rounded-xl border border-white/10 px-4 py-3 text-sm">{copy.back}</Link><button onClick={()=>crmSupabase?.auth.signOut()} className="rounded-xl border border-white/10 p-3" aria-label="Sign out"><LogOut className="h-5 w-5"/></button></div></div></header>
-  <nav className="sticky top-2 z-20 mt-5 flex items-center gap-1.5 overflow-x-auto rounded-2xl border border-white/10 bg-black/95 p-1.5 shadow-2xl backdrop-blur [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
-    {(
-      [
-        { id: 'academy', label: copy.academy, icon: BookOpenCheck },
-        { id: 'team', label: copy.team, icon: GitBranch },
-        { id: 'automation', label: copy.automation, icon: Megaphone },
-        { id: 'analytics', label: copy.analytics, icon: BarChart3 },
-        { id: 'admin', label: copy.admin, icon: Settings2 },
-      ] as const
-    ).map((item) => (
-      <button
-        key={item.id}
-        type="button"
-        onClick={() => setTab(item.id)}
-        className={`flex min-h-11 shrink-0 sm:flex-1 items-center justify-center gap-1.5 rounded-xl px-3.5 text-xs font-bold whitespace-nowrap transition-all ${
-          tab === item.id ? 'bg-cyan-500 text-slate-950 shadow-md' : 'text-[#cccccc] hover:bg-white/5'
-        }`}
-      >
-        <item.icon className="h-4 w-4 shrink-0" />
-        <span className="whitespace-nowrap inline-block">{item.label}</span>
-      </button>
-    ))}
-  </nav>
+  return <SponsorGate membership={membership} distributors={distributors}><main className="min-h-screen bg-black px-3 pb-24 pt-5 text-white sm:px-6"><SEO title={`${copy.title} | True Legacy`} description={copy.subtitle} noIndex/><div className="mx-auto max-w-7xl">
+    <AppPageHeader
+      eyebrow="PHASE 4 · TEAM APPLICATION"
+      title={copy.title}
+      description={copy.subtitle}
+      maxWidthClass="max-w-7xl"
+      actions={
+        <>
+          <Link to="/crm" className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-white/15 px-4 text-xs font-bold text-white hover:bg-white/5 transition">
+            {copy.back}
+          </Link>
+          <button onClick={()=>crmSupabase?.auth.signOut()} className="grid h-11 w-11 place-items-center rounded-xl border border-white/15 hover:bg-white/5 transition text-white cursor-pointer" aria-label="Sign out">
+            <LogOut className="h-5 w-5"/>
+          </button>
+        </>
+      }
+    >
+      <nav className="flex items-center gap-1.5 overflow-x-auto rounded-2xl border border-white/10 bg-black/95 p-1.5 shadow-2xl backdrop-blur [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+        {(
+          [
+            { id: 'academy', label: copy.academy, icon: BookOpenCheck },
+            { id: 'team', label: copy.team, icon: GitBranch },
+            { id: 'automation', label: copy.automation, icon: Megaphone },
+            { id: 'analytics', label: copy.analytics, icon: BarChart3 },
+            { id: 'admin', label: copy.admin, icon: Settings2 },
+          ] as const
+        ).map((item) => (
+          <button
+            key={item.id}
+            type="button"
+            onClick={() => setTab(item.id)}
+            className={`flex min-h-11 shrink-0 sm:flex-1 items-center justify-center gap-1.5 rounded-xl px-3.5 text-xs font-bold whitespace-nowrap transition-all cursor-pointer ${
+              tab === item.id ? 'bg-cyan-500 text-slate-950 shadow-md' : 'text-[#cccccc] hover:bg-white/5'
+            }`}
+          >
+            <item.icon className="h-4 w-4 shrink-0" />
+            <span className="whitespace-nowrap inline-block">{item.label}</span>
+          </button>
+        ))}
+      </nav>
+    </AppPageHeader>
   {tab==='academy'&&<section className="mt-6"><div className="grid gap-4 sm:grid-cols-3"><Metric value={`${done}/${modules.length}`} label={copy.complete}/><Metric value={courses.length} label={copy.academy}/><Metric value={modules.reduce((n,m)=>n+(m.duration_minutes||0),0)} label="minutes"/></div><div className="mt-6 space-y-5">{courses.map(course=>{const lessons=modules.filter(m=>m.course_id===course.id);const courseDone=lessons.filter(m=>progress.some(p=>p.distributor_id===me&&p.module_id===m.id&&p.completed)).length;return <article key={course.id} className="overflow-hidden rounded-3xl border border-white/10 bg-white/[.03]"><div className="border-b border-white/10 p-5 sm:p-6"><div className="flex items-start justify-between gap-5"><div><h2 className="text-xl font-black">{course.title[lang]||course.title.en}</h2><p className="mt-2 text-sm text-[#cccccc]">{course.description[lang]||course.description.en}</p></div><span className="whitespace-nowrap rounded-full bg-cyan-400/10 px-3 py-1 text-xs text-[#2997ff]">{courseDone}/{lessons.length}</span></div><div className="mt-4 h-2 overflow-hidden rounded-full bg-white/5"><div className="h-full bg-gradient-to-r from-cyan-500 to-blue-500" style={{width:`${lessons.length?courseDone/lessons.length*100:0}%`}}/></div></div><div className="divide-y divide-white/10">{lessons.map(m=><button key={m.id} onClick={()=>openModule(m)} className="flex w-full items-center gap-4 p-5 text-left hover:bg-white/[.03]"><span className={`grid h-9 w-9 place-items-center rounded-full ${progress.some(p=>p.distributor_id===me&&p.module_id===m.id&&p.completed)?'bg-emerald-400/15 text-[#cccccc]':'bg-white/5 text-[#86868b]'}`}>{progress.some(p=>p.distributor_id===me&&p.module_id===m.id&&p.completed)?<CheckCircle2 className="h-5 w-5"/>:m.position}</span><div className="min-w-0 flex-1"><p className="truncate font-bold">{m.title[lang]||m.title.en}</p><p className="mt-1 text-xs text-[#86868b]">{m.duration_minutes||'—'} min · {questions.some(q=>q.module_id===m.id)?`quiz ${m.passing_score||80}%`:'completion check'}</p></div><ChevronRight className="h-4 w-4 text-[#86868b]"/></button>)}</div></article>})}</div></section>}
   {tab==='team'&&<section className="mt-6"><h2 className="text-2xl font-black">{copy.organization}</h2><div className="mt-4 grid gap-4 sm:grid-cols-3"><Metric value={direct} label={copy.direct}/><Metric value={descendants.size} label={copy.total}/><Metric value={distributors.find(d=>d.id===sponsorId)?.display_name||copy.noSponsor} label={copy.sponsor}/></div><div className="mt-6 grid gap-3 md:grid-cols-2 xl:grid-cols-3">{distributors.filter(d=>visibleIds.has(d.id)).map(d=><article key={d.id} className="flex items-center gap-4 rounded-2xl border border-white/10 bg-white/[.03] p-4"><img src={d.avatar_url||'/logos/tl-square-white.png'} alt="" className="h-14 w-14 rounded-xl object-cover"/><div className="min-w-0"><p className="truncate font-bold">{d.display_name}</p><p className="truncate text-xs text-[#86868b]">{d.title}</p><p className="mt-1 text-[10px] uppercase tracking-wider text-[#2997ff]">{relationships.find(r=>r.distributor_id===d.id)?.sponsor_distributor_id===me?'Direct team':'Organization'}</p></div></article>)}</div></section>}
   {tab==='automation'&&<section className="mt-6 grid gap-5 lg:grid-cols-2"><article className="rounded-3xl border border-white/10 bg-white/[.03] p-6"><Megaphone className="h-8 w-8 text-[#2997ff]"/><h2 className="mt-5 text-2xl font-black">{copy.active}</h2><p className="mt-3 text-sm leading-6 text-[#cccccc]">{copy.automated}</p><div className="mt-6 grid gap-3">{campaigns.filter(c=>c.locale===lang).map(c=><div key={c.id} className="rounded-xl border border-white/10 p-4"><div className="flex items-center justify-between"><span className="font-bold capitalize">{c.interest}</span><span className="rounded-full bg-emerald-400/10 px-3 py-1 text-xs text-[#cccccc]">{c.steps.length} steps</span></div><div className="mt-3 flex flex-wrap gap-2">{c.steps.map((step,i)=><span key={i} className="rounded-lg bg-white/5 px-2.5 py-1 text-[11px] text-[#cccccc]">{i+1}. {step.channel} · {step.delay_hours===0?'now':`${step.delay_hours}h`}</span>)}</div></div>)}</div></article><MobileCard copy={copy}/></section>}

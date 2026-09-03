@@ -1,5 +1,6 @@
 import { SEO } from '@/components/SEO'
 import { Navbar } from '@/components/layout/Navbar'
+import { AppPageHeader } from '@/components/layout/AppPageHeader'
 import { getActiveProfileLandingCards } from '@/config/profileLandingCards'
 import { crmConfigured, crmSupabase, getCrmDistributors, getCrmMembership } from '@/lib/crm'
 import type { CrmDistributor, CrmMembership } from '@/lib/crm'
@@ -45,34 +46,22 @@ const ALL_PAGES: SharePageItem[] = [
     getPath: card.getPath,
     badge: card.categoryLabel.en,
   })),
-  {
-    id: 'apply',
-    label: 'Direct Application Form',
-    description: 'Direct candidate qualification form pre-attributed to your True Legacy CRM profile.',
-    icon: ClipboardCheck,
-    getPath: (slug) => `/apply?ref=${slug}`,
-    badge: 'Intake',
-  },
 ]
 
 export default function AppSharePage() {
   const [session, setSession] = useState<Session | null>(null)
   const [membership, setMembership] = useState<CrmMembership | null>(null)
   const [distributors, setDistributors] = useState<CrmDistributor[]>([])
+  const [selectedDistributorId, setSelectedDistributorId] = useState<string>('')
   const [selected, setSelected] = useState<string>('profile')
   const [copied, setCopied] = useState(false)
-  const [showQr, setShowQr] = useState(false)
-  const [selectedDistributorId, setSelectedDistributorId] = useState('')
-  const [loading, setLoading] = useState(true)
+  const [copiedRaw, setCopiedRaw] = useState(false)
+  const [copiedSlug, setCopiedSlug] = useState(false)
+  const [showQrModal, setShowQrModal] = useState(false)
+  const [loading, setLoading] = useState(crmConfigured)
 
   useEffect(() => {
-    getCrmDistributors().then((team) => {
-      setDistributors(team)
-    })
-    if (!crmSupabase) {
-      setLoading(false)
-      return
-    }
+    if (!crmSupabase) return
     crmSupabase.auth.getSession().then(({ data }) => {
       setSession(data.session)
       if (!data.session) setLoading(false)
@@ -82,11 +71,11 @@ export default function AppSharePage() {
   }, [])
 
   useEffect(() => {
-    if (!session) return
+    if (!session || !crmSupabase) return
     Promise.all([getCrmMembership(session.user.id), getCrmDistributors()])
-      .then(([member, team]) => {
+      .then(([member, items]) => {
         setMembership(member)
-        setDistributors(team)
+        setDistributors(items)
         setLoading(false)
       })
       .catch(() => setLoading(false))
@@ -138,7 +127,7 @@ export default function AppSharePage() {
   const share = async () => {
     if (navigator.share) {
       await navigator.share({
-        title: `${distributor?.display_name} · ${page.label}`,
+        title: page.label,
         text: page.description,
         url,
       })
@@ -147,14 +136,22 @@ export default function AppSharePage() {
     }
   }
 
-  if (loading && distributors.length === 0) return <main className="min-h-screen bg-black" />
+  if (!crmConfigured)
+    return (
+      <Message
+        title="Share Center connection required"
+        body="The secure distributor connection is unavailable in this preview."
+      />
+    )
+
+  if (loading) return <main className="min-h-screen bg-black" />
 
   if (!session)
     return (
       <div className="min-h-screen bg-black text-white">
         <Navbar />
-        <main className="min-h-screen bg-black px-4 pb-28 pt-8 text-white sm:px-6">
-          <SEO title="True Legacy Share Center" description="Sign in to share your personal pages." noIndex />
+        <main className="grid min-h-[calc(100vh-80px)] place-items-center bg-black p-5 text-white">
+          <SEO title="Share & Connect | True Legacy" description="Sign in required to share pages." noIndex />
           <div className="mx-auto max-w-md text-center py-12">
             <div className="mx-auto grid h-16 w-16 place-items-center rounded-2xl border border-white/15 bg-white/[0.04] p-3 shadow-xl">
               <Share2 className="h-8 w-8 text-[#2997ff]" />
@@ -200,74 +197,65 @@ export default function AppSharePage() {
   return (
     <div className="min-h-screen bg-black text-white">
       <Navbar />
-      <main className="min-h-screen bg-black px-4 pb-28 pt-[max(22px,env(safe-area-inset-top))] text-white sm:px-6">
-      <SEO
-        title="True Legacy Share Center"
-        description="Choose and share personalized distributor landing pages."
-        noIndex
-      />
-      <div className="mx-auto max-w-6xl">
-        <header className="flex items-center gap-4">
-          <Link
-            to="/app"
-            aria-label="Back to app home"
-            className="grid h-11 w-11 place-items-center rounded-full border border-white/10 bg-white/[.04] hover:bg-white/[.08] transition-colors"
-          >
-            <ArrowLeft />
-          </Link>
-          <div>
-            <p className="text-xs font-bold uppercase tracking-[.22em] text-[#2997ff]">Duplication tools</p>
-            <h1 className="text-2xl font-black">Share Center</h1>
-          </div>
-        </header>
-
-        {/* Distributor identity header */}
-        <section className="mt-7 grid gap-5 rounded-[28px] border border-white/10 bg-gradient-to-br from-cyan-400/[.1] to-blue-500/[.04] p-5 sm:grid-cols-[auto_1fr_auto] sm:items-center sm:p-7">
-          <img
-            src={distributor.avatar_url || '/icons/icon-192.png'}
-            alt={distributor.display_name}
-            className="h-24 w-24 rounded-3xl border border-white/15 bg-black object-cover object-top"
-          />
-          <div>
-            <p className="text-sm text-[#2997ff]">Sharing as</p>
-            {membership?.role === 'admin' || !session ? (
-              <select
-                aria-label="Choose distributor profile"
-                value={distributor.id}
-                onChange={(event) => {
-                  setSelectedDistributorId(event.target.value)
-                  setShowQr(false)
-                }}
-                className="mt-2 w-full max-w-sm rounded-xl border border-white/15 bg-black px-4 py-3 text-lg font-black text-white"
+      <main className="min-h-screen bg-black px-4 pb-28 pt-6 text-white sm:px-6">
+        <SEO
+          title="True Legacy Share Center"
+          description="Choose and share personalized distributor landing pages."
+          noIndex
+        />
+        <div className="mx-auto max-w-6xl">
+        <AppPageHeader
+          eyebrow="DUPLICATION TOOLS"
+          title="Share Center"
+          description={`Choose and share personalized landing pages for ${distributor.display_name}.`}
+          backTo="/app"
+          maxWidthClass="max-w-6xl"
+        >
+          {/* Distributor identity header */}
+          <section className="grid gap-5 rounded-[28px] border border-white/10 bg-gradient-to-br from-cyan-400/[.1] to-blue-500/[.04] p-5 sm:grid-cols-[auto_1fr_auto] sm:items-center sm:p-7">
+            <img
+              src={distributor.avatar_url || '/icons/icon-192.png'}
+              alt={distributor.display_name}
+              className="h-20 w-20 rounded-2xl border border-white/15 bg-black object-cover object-top"
+            />
+            <div>
+              <p className="text-xs font-bold uppercase tracking-wider text-[#2997ff]">Sharing as</p>
+              {membership?.role === 'admin' || !session ? (
+                <select
+                  aria-label="Choose distributor profile"
+                  value={distributor.id}
+                  onChange={(event) => setSelectedDistributorId(event.target.value)}
+                  className="mt-1 font-black bg-black/50 text-xl border border-white/20 rounded-xl px-3 py-1.5 text-white"
+                >
+                  {distributors
+                    .filter((item) => item.active)
+                    .map((item) => (
+                      <option key={item.id} value={item.id} className="bg-slate-900 text-white">
+                        {item.display_name}
+                      </option>
+                    ))}
+                </select>
+              ) : (
+                <h2 className="text-2xl font-black text-white">{distributor.display_name}</h2>
+              )}
+              <p className="mt-1 text-xs text-[#cccccc]">
+                {distributor.title || 'Verified Distributor'} · Every page keeps your referral attribution and contact details.
+              </p>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              <Link
+                to={`/d/${distributor.slug}`}
+                target="_blank"
+                className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-white/15 px-4 text-xs font-bold text-white hover:bg-white/5 transition"
               >
-                <option value={matchedDistributor?.id || ''}>{matchedDistributor?.display_name}</option>
-                {distributors
-                  .filter((item) => item.active && item.id !== matchedDistributor?.id)
-                  .map((item) => (
-                    <option key={item.id} value={item.id}>
-                      {item.display_name}
-                    </option>
-                  ))}
-              </select>
-            ) : (
-              <h2 className="mt-1 text-3xl font-black">{distributor.display_name}</h2>
-            )}
-            <p className="mt-2 text-sm text-[#cccccc]">
-              Every page keeps your referral attribution and contact details.
-            </p>
-          </div>
-          <a
-            href={`/d/${distributor.slug}`}
-            target="_blank"
-            rel="noreferrer"
-            className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl border border-white/15 bg-white/[0.03] px-5 font-bold hover:bg-white/[0.08] transition-colors"
-          >
-            View profile <ExternalLink className="h-4 w-4" />
-          </a>
-        </section>
+                View Profile <ExternalLink className="h-4 w-4 text-cyan-400" />
+              </Link>
+            </div>
+          </section>
+        </AppPageHeader>
 
         {/* 1. CHOOSE WHAT TO SHARE */}
-        <section className="mt-8">
+        <section className="mt-8 px-4 sm:px-0">
           <div className="flex items-center justify-between">
             <p className="text-xs font-bold uppercase tracking-[.2em] text-amber-300">1 · Choose what to share</p>
             <span className="text-xs text-[#86868b]">
@@ -286,7 +274,7 @@ export default function AppSharePage() {
                   type="button"
                   onClick={() => {
                     setSelected(item.id)
-                    setShowQr(false)
+                    setShowQrModal(false)
                   }}
                   className={`share-choice ${active ? 'is-active' : ''}`}
                 >
@@ -330,7 +318,7 @@ export default function AppSharePage() {
                 <Copy />
                 {copied ? 'Copied' : 'Copy'}
               </button>
-              <button onClick={() => setShowQr((value) => !value)} className="share-secondary">
+              <button onClick={() => setShowQrModal((value) => !value)} className="share-secondary">
                 <QrCode />
                 QR code
               </button>
@@ -340,7 +328,7 @@ export default function AppSharePage() {
               </a>
             </div>
           </div>
-          {showQr && (
+          {showQrModal && (
             <div className="grid gap-6 border-t border-white/10 bg-black/20 p-5 sm:grid-cols-[220px_1fr] sm:items-center sm:p-7">
               <div className="rounded-2xl bg-white p-3">
                 <img src={qrUrl} alt={`${page.label} QR code`} className="w-full" />
@@ -365,7 +353,7 @@ export default function AppSharePage() {
       </div>
     </main>
   </div>
-)
+  )
 }
 
 function Message({ title, body, action }: { title: string; body: string; action?: React.ReactNode }) {

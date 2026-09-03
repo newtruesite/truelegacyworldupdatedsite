@@ -1,4 +1,6 @@
 import { SEO } from '@/components/SEO'
+import { Navbar } from '@/components/layout/Navbar'
+import { AppPageHeader } from '@/components/layout/AppPageHeader'
 import { crmConfigured, crmSupabase, getCrmMembership } from '@/lib/crm'
 import type { CrmMembership } from '@/lib/crm'
 import type { Session } from '@supabase/supabase-js'
@@ -37,10 +39,19 @@ export default function AppLibraryPage() {
   if (!session) return <Gate title="Distributor sign-in required" body="Sign in with your True Legacy distributor account to open the private Tool Center." action={<Link to="/crm" className="rounded-xl bg-cyan-400 px-5 py-3 font-black text-slate-950">Sign in</Link>} />
   if (!membership?.active) return <Gate title="Account not authorized" body="An active True Legacy distributor profile is required to access this Tool Center." />
 
-  return <main className="min-h-screen bg-black px-4 pb-28 pt-6 text-white sm:px-6 lg:px-8">
-    <SEO title="True Legacy Tool Center" description="Private tools created for the True Legacy distributor community." noIndex />
-    <div className="mx-auto max-w-7xl">
-      <header className="flex items-center gap-4"><Link to="/app" aria-label="Back to app home" className="grid h-11 w-11 place-items-center rounded-full border border-white/10 bg-white/[.04]"><ArrowLeft /></Link><div><p className="text-xs font-bold uppercase tracking-[.22em] text-[#2997ff]">Private distributor workspace</p><h1 className="text-2xl font-black">True Legacy Tool Center</h1></div></header>
+  return (
+    <div className="min-h-screen bg-black text-white">
+      <Navbar />
+      <main className="min-h-screen bg-black px-4 pb-28 pt-6 text-white sm:px-6 lg:px-8">
+        <SEO title="True Legacy Tool Center" description="Private tools created for the True Legacy distributor community." noIndex />
+        <div className="mx-auto max-w-7xl">
+          <AppPageHeader
+            eyebrow="PRIVATE DISTRIBUTOR WORKSPACE"
+            title="True Legacy Tool Center"
+            description="Everything here is built for True Legacy."
+            backTo="/app"
+            maxWidthClass="max-w-7xl"
+          />
       <section className="mt-7 overflow-hidden rounded-[30px] border border-white/20 bg-[radial-gradient(circle_at_top_right,rgba(34,211,238,.18),transparent_35%),linear-gradient(145deg,rgba(37,99,235,.12),rgba(255,255,255,.025))] p-6 sm:p-9">
         <span className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-cyan-300/[.07] px-3 py-1.5 text-xs font-bold text-[#2997ff]"><LockKeyhole className="h-3.5 w-3.5" /> True Legacy distributors only</span>
         <h2 className="mt-5 max-w-4xl text-3xl font-black sm:text-5xl">Everything here is built for True Legacy.</h2>
@@ -53,6 +64,8 @@ export default function AppLibraryPage() {
       <section className="mt-9 grid gap-4 sm:grid-cols-3"><LibraryPoint icon={<GraduationCap />} title="Learn in order" text="Use the Academy for courses, modules, quizzes, and tracked progress." /><LibraryPoint icon={<Share2 />} title="Share officially" text="Use approved True Legacy pages and personal distributor links." /><LibraryPoint icon={<ShieldCheck />} title="Build responsibly" text="Keep contacts, growth activity, and distributor resources in one secure space." /></section>
     </div>
   </main>
+</div>
+  )
 }
 
 function LibraryPoint({ icon, title, text }: { icon: React.ReactNode; title: string; text: string }) { return <div className="rounded-2xl border border-white/10 bg-white/[.025] p-5"><span className="text-[#2997ff]">{icon}</span><h3 className="mt-4 font-black">{title}</h3><p className="mt-2 text-sm leading-6 text-[#86868b]">{text}</p></div> }

@@ -1,4 +1,5 @@
 import { SEO } from '@/components/SEO'
+import { AppPageHeader } from '@/components/layout/AppPageHeader'
 import { PortraitReferenceAdmin } from '@/components/leaders/PortraitReferenceAdmin'
 import { LeaderApplicationsPanel } from '@/components/crm/LeaderApplicationsPanel'
 import { LeaderAccessAdmin } from '@/components/crm/LeaderAccessAdmin'
@@ -522,26 +523,51 @@ export default function CrmPage() {
       <main className="min-h-screen bg-black px-3 py-6 text-white sm:px-6 lg:px-8">
         <SEO title="True Legacy CRM" description="Command Center & Lead Management Platform." noIndex />
         <div className="crm-container mx-auto w-full max-w-[1500px]">
-          {/* Header */}
-          <header className="flex flex-col gap-4 border-b border-white/10 pb-6 md:flex-row md:items-end md:justify-between">
-            <div>
-              <div className="flex items-center gap-3 mb-2">
-                <img src="/logos/tl-square-white.png" alt="True Legacy" className="h-8 w-8 object-contain" />
-                <span className="text-[11px] font-bold uppercase tracking-[0.2em] text-[#2997ff]">Sales Command Center</span>
-              </div>
-              <h1 className="text-2xl sm:text-4xl font-black text-white">Contacts & Leads</h1>
-              <p className="mt-1 text-xs sm:text-sm text-[#cccccc]">
-                {isAdmin
-                  ? isOversight
-                    ? 'Admin Team Oversight & Overrides · Full Team View'
-                    : 'Personal Distributor Workspace · My Assigned Leads'
-                  : 'Distributor Workspace · My Assigned Leads'} ·{' '}
-                <span className="text-white font-medium">{session.user.email}</span>
-              </p>
-
-              {/* Admin Personal vs Team Oversight Scope Switcher */}
-              {isAdmin && (
-                <div className="mt-4 inline-flex items-center gap-1.5 rounded-2xl border border-white/15 bg-black/50 p-1">
+          <AppPageHeader
+            eyebrow="SALES COMMAND CENTER"
+            title="Contacts & Leads"
+            description={`${
+              isAdmin
+                ? isOversight
+                  ? 'Admin Team Oversight & Overrides · Full Team View'
+                  : 'Personal Distributor Workspace · My Assigned Leads'
+                : 'Distributor Workspace · My Assigned Leads'
+            } · ${session.user.email}`}
+            maxWidthClass="max-w-[1500px]"
+            actions={
+              <>
+                {isAdmin && (
+                  <Link
+                    to="/crm/growth"
+                    className="inline-flex min-h-11 items-center justify-center gap-1.5 rounded-xl border border-white/15 bg-white/[0.04] px-4 text-xs font-bold text-white hover:bg-white/10 transition-colors cursor-pointer"
+                  >
+                    Growth Center
+                  </Link>
+                )}
+                <button
+                  onClick={() => {
+                    setShowAddLeadModal(true)
+                    setAddLeadError('')
+                  }}
+                  className="inline-flex min-h-11 items-center justify-center gap-1.5 rounded-xl bg-cyan-500 hover:bg-cyan-400 px-4 text-xs font-black text-slate-950 transition-colors shadow-lg shadow-cyan-500/20 cursor-pointer"
+                >
+                  <UserPlus className="h-4 w-4" />
+                  Add Lead
+                </button>
+                <button
+                  onClick={() => crmSupabase?.auth.signOut()}
+                  className="grid h-11 w-11 place-items-center rounded-xl border border-white/10 bg-white/[0.03] text-[#86868b] hover:text-white hover:bg-white/5 transition-colors cursor-pointer"
+                  aria-label="Sign out"
+                >
+                  <LogOut className="h-4 w-4" />
+                </button>
+              </>
+            }
+          >
+            {/* Admin Personal vs Team Oversight Scope Switcher */}
+            {isAdmin && (
+              <div className="flex flex-wrap items-center gap-2">
+                <div className="inline-flex items-center gap-1.5 rounded-2xl border border-white/15 bg-black/50 p-1">
                   <button
                     type="button"
                     onClick={() => {
@@ -551,7 +577,7 @@ export default function CrmPage() {
                       setAttentionFilter('all')
                       setSearch('')
                     }}
-                    className={`inline-flex items-center gap-2 rounded-xl px-3.5 py-1.5 text-xs font-bold transition-all ${
+                    className={`inline-flex min-h-10 items-center gap-2 rounded-xl px-3.5 text-xs font-bold transition-all cursor-pointer ${
                       adminScope === 'personal'
                         ? 'bg-cyan-500 text-slate-950 shadow-md shadow-cyan-500/25'
                         : 'text-[#cccccc] hover:text-white hover:bg-white/5'
@@ -569,7 +595,7 @@ export default function CrmPage() {
                       setAttentionFilter('all')
                       setSearch('')
                     }}
-                    className={`inline-flex items-center gap-2 rounded-xl px-3.5 py-1.5 text-xs font-bold transition-all ${
+                    className={`inline-flex min-h-10 items-center gap-2 rounded-xl px-3.5 text-xs font-bold transition-all cursor-pointer ${
                       adminScope === 'oversight'
                         ? 'bg-gradient-to-r from-amber-400 to-amber-500 text-slate-950 font-black shadow-md shadow-amber-500/25'
                         : 'text-[#cccccc] hover:text-white hover:bg-white/5'
@@ -584,35 +610,9 @@ export default function CrmPage() {
                     )}
                   </button>
                 </div>
-              )}
-            </div>
-            <div className="flex flex-wrap items-center gap-2.5">
-              {isAdmin && (
-                <Link
-                  to="/crm/growth"
-                  className="inline-flex items-center gap-1.5 rounded-xl border border-white/15 bg-white/[0.04] px-4 py-2 text-xs font-bold text-white hover:bg-white/10 transition-colors"
-                >
-                  Growth Center
-                </Link>
-              )}
-              <button
-                onClick={() => {
-                  setShowAddLeadModal(true)
-                  setAddLeadError('')
-                }}
-                className="inline-flex items-center gap-1.5 rounded-xl bg-cyan-500 hover:bg-cyan-400 px-4 py-2 text-xs font-black text-slate-950 transition-colors shadow-lg shadow-cyan-500/20"
-              >
-                <UserPlus className="h-4 w-4" />
-                Add Lead
-              </button>
-              <button
-                onClick={() => crmSupabase?.auth.signOut()}
-                className="inline-flex items-center gap-1.5 rounded-xl border border-white/10 bg-white/[0.03] px-3 py-2 text-xs text-[#86868b] hover:text-white hover:bg-white/5 transition-colors"
-              >
-                <LogOut className="h-3.5 w-3.5" />
-              </button>
-            </div>
-          </header>
+              </div>
+            )}
+          </AppPageHeader>
 
           {/* Admin Navigation Hub (When Admin) */}
           {isAdmin && (

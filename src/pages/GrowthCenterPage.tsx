@@ -1,4 +1,5 @@
 import { SEO } from '@/components/SEO'
+import { AppPageHeader } from '@/components/layout/AppPageHeader'
 import { crmSupabase, getCrmDistributors, getCrmLeads, getCrmMembership } from '@/lib/crm'
 import type { CrmDistributor, CrmMembership } from '@/lib/crm'
 import type { Session } from '@supabase/supabase-js'
@@ -54,8 +55,33 @@ export default function GrowthCenterPage() {
   if(loading)return <main className="min-h-screen bg-black"/>
   if(!membership?.active)return <Message title="Account not authorized" body="This account does not have an active True Legacy role."/>
 
-  return <main className="min-h-screen bg-black px-4 py-8 text-white md:px-8"><SEO title="True Legacy Growth Center" description="Private distributor sharing and training progress center." noIndex/><div className="mx-auto max-w-7xl"><header className="flex flex-col gap-5 border-b border-white/10 pb-7 md:flex-row md:items-end md:justify-between"><div><p className="text-xs font-bold uppercase tracking-[.25em] text-[#2997ff]">Duplication & team development</p><h1 className="mt-2 text-4xl font-black">Growth Center</h1><p className="mt-2 text-sm text-[#cccccc]">Personal links, campaign results, onboarding, and training progress.</p></div><div className="flex gap-2"><Link to="/crm" className="rounded-xl border border-white/15 px-4 py-3 text-sm">Lead dashboard</Link><button onClick={()=>crmSupabase?.auth.signOut()} className="inline-flex items-center gap-2 rounded-xl border border-white/15 px-4 py-3 text-sm"><LogOut className="h-4 w-4"/>Sign out</button></div></header>
-  {visible.length>1&&<section className="mt-6 rounded-2xl border border-white/10 bg-white/[.03] p-4"><label className="text-xs font-bold uppercase tracking-wider text-[#86868b]">Viewing distributor/team member</label><select value={distributor?.id||''} onChange={e=>setSelected(e.target.value)} className="mt-2 h-11 w-full max-w-md rounded-xl border border-white/10 bg-black px-4"><option value={membership.distributor_id||''}>My progress</option>{visible.filter(d=>d.id!==membership.distributor_id).map(d=><option key={d.id} value={d.id}>{d.display_name}</option>)}</select></section>}
+  return <main className="min-h-screen bg-black px-4 py-8 text-white md:px-8"><SEO title="True Legacy Growth Center" description="Private distributor sharing and training progress center." noIndex/><div className="mx-auto max-w-7xl">
+    <AppPageHeader
+      eyebrow="DUPLICATION & TEAM DEVELOPMENT"
+      title="Growth Center"
+      description="Personal links, campaign results, onboarding, and training progress."
+      maxWidthClass="max-w-7xl"
+      actions={
+        <>
+          <Link to="/crm" className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-white/15 px-4 text-xs font-bold text-white hover:bg-white/5 transition">
+            Lead dashboard
+          </Link>
+          <button onClick={()=>crmSupabase?.auth.signOut()} className="inline-flex items-center gap-2 rounded-xl border border-white/15 px-4 py-3 text-xs font-bold text-white hover:bg-white/5 transition cursor-pointer">
+            <LogOut className="h-4 w-4"/>Sign out
+          </button>
+        </>
+      }
+    >
+      {visible.length > 1 && (
+        <div className="block max-w-md w-full text-xs font-bold uppercase tracking-wider text-[#86868b]">
+          <label className="block mb-2">Viewing distributor/team member</label>
+          <select value={distributor?.id||''} onChange={e=>setSelected(e.target.value)} className="h-11 w-full rounded-xl border border-white/10 bg-black px-4 text-sm font-normal text-white">
+            <option value={membership.distributor_id||''}>My progress</option>
+            {visible.filter(d=>d.id!==membership.distributor_id).map(d=><option key={d.id} value={d.id}>{d.display_name}</option>)}
+          </select>
+        </div>
+      )}
+    </AppPageHeader>
   {distributor&&<><section className="mt-7 grid gap-4 sm:grid-cols-2 xl:grid-cols-4"><Metric icon={<Link2/>} value={clicks.filter(c=>c.distributor_id===distributor.id).length} label="Tracked clicks"/><Metric icon={<Users/>} value={leadTotals[distributor.id]||0} label="Attributed leads"/><Metric icon={<CheckCircle2/>} value={`${doneItems}/${items.length}`} label="Onboarding"/><Metric icon={<GraduationCap/>} value={`${doneModules}/${modules.length}`} label="Training modules"/></section>
   <section className="mt-7"><h2 className="text-2xl font-black">Personal Sharing Center</h2><div className="mt-4 grid gap-4 md:grid-cols-2 xl:grid-cols-3">{CAMPAIGNS.map(c=>{const url=`${window.location.origin}/d/${distributor.slug}${c.path}`; const clickCount=clicks.filter(x=>x.distributor_id===distributor.id&&x.campaign===c.id).length; return <article key={c.id} className="rounded-2xl border border-white/10 bg-white/[.03] p-5"><p className="font-bold">{c.label}</p><p className="mt-1 text-xs text-[#86868b]">{clickCount} tracked clicks</p><p className="mt-3 truncate rounded-lg bg-black/20 p-3 text-xs text-[#cccccc]">{url}</p><div className="mt-4 flex flex-wrap gap-2"><button onClick={async()=>{await navigator.clipboard.writeText(url);setCopied(c.id);setTimeout(()=>setCopied(''),1200)}} className="inline-flex items-center gap-1 rounded-lg border border-white/10 px-3 py-2 text-xs"><Copy className="h-4 w-4"/>{copied===c.id?'Copied':'Copy'}</button><button onClick={()=>navigator.share?navigator.share({title:c.label,url}):navigator.clipboard.writeText(url)} className="inline-flex items-center gap-1 rounded-lg border border-white/10 px-3 py-2 text-xs"><Share2 className="h-4 w-4"/>Share</button><button onClick={()=>showQr(c.label,url)} className="inline-flex items-center gap-1 rounded-lg border border-white/10 px-3 py-2 text-xs"><QrCode className="h-4 w-4"/>QR</button><a href={url} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 rounded-lg border border-white/10 px-3 py-2 text-xs"><ExternalLink className="h-4 w-4"/>Open</a></div></article>})}</div></section>
   <section className="mt-8 grid gap-6 xl:grid-cols-2"><ProgressPanel title="Distributor Onboarding" subtitle={`${doneItems} of ${items.length} completed`} percent={items.length?Math.round(doneItems/items.length*100):0}>{items.map(item=><CheckRow key={item.id} label={item.title[locale]||item.title.en} checked={onboarding.some(p=>p.distributor_id===distributor.id&&p.item_id===item.id&&p.completed)} disabled={!canEdit} onChange={v=>setProgress('onboarding',item.id,v)}/>)}</ProgressPanel><ProgressPanel title="Training Progress" subtitle={`${doneModules} of ${modules.length} modules completed`} percent={modules.length?Math.round(doneModules/modules.length*100):0}>{modules.map(module=><div key={module.id} className="rounded-xl border border-white/10 p-3"><CheckRow label={module.title[locale]||module.title.en} checked={training.some(p=>p.distributor_id===distributor.id&&p.module_id===module.id&&p.completed)} disabled={!canEdit} onChange={v=>setProgress('training',module.id,v)}/>{module.video_url&&<a href={module.video_url} target="_blank" rel="noreferrer" className="ml-8 mt-1 inline-flex items-center gap-1 text-xs text-[#2997ff]">Watch training <ExternalLink className="h-3 w-3"/></a>}</div>)}</ProgressPanel></section></>}
