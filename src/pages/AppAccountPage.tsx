@@ -187,7 +187,7 @@ export default function AppAccountPage() {
   }, [])
 
   const distributor = useMemo(() => {
-    if (selectedId) {
+    if (membership?.role === 'admin' && selectedId) {
       const found = distributors.find((item) => item.id === selectedId)
       if (found) return found
     }
@@ -552,7 +552,7 @@ export default function AppAccountPage() {
             {membership?.role === 'admin' && (
               <div className="block max-w-sm text-sm text-[#aeb4c0] w-full">
                 <label htmlFor="profile-to-manage-select" className="block text-xs font-bold uppercase tracking-wider text-[#2997ff] mb-2">
-                  Profile to manage
+                  Profile to manage (Admin Override)
                 </label>
                 <select
                   id="profile-to-manage-select"
