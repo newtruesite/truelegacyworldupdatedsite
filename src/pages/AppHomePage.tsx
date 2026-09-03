@@ -347,7 +347,7 @@ export default function AppHomePage() {
               <button
                 type="button"
                 onClick={() => setPortalConfirm(true)}
-                className="inline-flex min-h-12 shrink-0 items-center justify-center gap-2 rounded-xl bg-blue-600 px-5 font-black text-white transition-colors hover:bg-blue-500 cursor-pointer"
+                className="inline-flex min-h-12 shrink-0 items-center justify-center gap-2 rounded-xl bg-emerald-500 px-5 font-black text-slate-950 transition-colors hover:bg-emerald-400 cursor-pointer"
               >
                 Open Enagic Portal <ExternalLink className="h-4 w-4" />
               </button>
@@ -417,7 +417,7 @@ export default function AppHomePage() {
                   target="_blank"
                   rel="noopener noreferrer"
                   onClick={() => setPortalConfirm(false)}
-                  className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-blue-600 px-5 font-black text-white hover:bg-blue-500 cursor-pointer"
+                  className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-emerald-500 px-5 font-black text-slate-950 hover:bg-emerald-400 cursor-pointer"
                 >
                   Continue to Enagic <ExternalLink className="h-4 w-4" />
                 </a>
