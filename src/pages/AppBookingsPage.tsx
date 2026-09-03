@@ -80,10 +80,10 @@ export default function AppBookingsPage() {
     if (!error) setMeetings(current => current.map(item => item.id === meetingId ? { ...item, status } : item))
   }
 
-  if (!crmConfigured) return <Gate title="Booking connection required" />
+  if (!crmConfigured) return <Gate title="Booking Connection Required" />
   if (loading) return <main className="min-h-screen bg-black" />
-  if (!session) return <Gate title="Distributor login required" action={<Link to="/crm" className="rounded-xl bg-cyan-400 px-5 py-3 font-black text-slate-950">Sign in</Link>} />
-  if (!membership?.active) return <Gate title="Account not authorized" />
+  if (!session) return <Gate title="Sign In Required" />
+  if (!membership?.active) return <Gate title="Account Not Authorized" />
 
   return <main className="min-h-screen bg-black px-4 pb-32 pt-7 text-white sm:px-6 lg:px-8">
     <SEO title="Bookings | True Legacy" description="Manage True Legacy discovery calls and availability." noIndex />
@@ -124,31 +124,39 @@ export default function AppBookingsPage() {
 }
 
 function Metric({ icon, value, label }: { icon: React.ReactNode; value: string|number; label: string }) { return <div className="rounded-2xl border border-white/10 bg-white/[.03] p-5"><span className="text-[#2997ff]">{icon}</span><p className="mt-4 text-3xl font-black">{value}</p><p className="mt-1 text-xs font-bold uppercase tracking-wider text-[#86868b]">{label}</p></div> }
-function Gate({ title, action }: { title: string; action?: React.ReactNode }) {
+function Gate({ title }: { title: string }) {
   return (
     <div className="min-h-screen bg-black text-white">
       <Navbar />
       <main className="grid min-h-screen place-items-center bg-black p-5 text-white">
-        <div className="max-w-md text-center">
-          <CalendarCheck2 className="mx-auto h-12 w-12 text-[#2997ff]" />
-          <h1 className="mt-5 text-3xl font-black">{title}</h1>
-          <p className="mt-3 text-sm text-[#cccccc]">
-            Sign in with your verified distributor account to manage availability, schedule calls, and view upcoming bookings.
+        <SEO title="Bookings | True Legacy" description="Sign in required." noIndex />
+        <div className="mx-auto max-w-md text-center py-12">
+          <div className="mx-auto grid h-16 w-16 place-items-center rounded-2xl border border-white/15 bg-white/[0.04] p-3 shadow-xl">
+            <CalendarCheck2 className="h-8 w-8 text-[#2997ff]" />
+          </div>
+          <p className="mt-6 text-xs font-bold uppercase tracking-[.24em] text-[#2997ff]">Discovery & Scheduling</p>
+          <h1 className="mt-2 text-3xl font-black text-white">{title}</h1>
+          <p className="mt-3 text-sm leading-6 text-[#cccccc]">
+            Please sign in with your verified distributor account to manage availability, schedule calls, and view upcoming bookings.
           </p>
-          <div className="mt-7 space-y-3">
-            {action || (
-              <Link
-                to="/crm"
-                className="inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-2xl bg-[#2997ff] px-6 font-black text-slate-950 transition-colors hover:bg-cyan-300 cursor-pointer"
-              >
-                Distributor Sign In <ArrowRight className="h-4 w-4" />
-              </Link>
-            )}
+          <div className="mt-8 space-y-3">
+            <Link
+              to="/crm"
+              className="inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-2xl bg-[#2997ff] px-6 font-black text-slate-950 transition-colors hover:bg-cyan-300 cursor-pointer"
+            >
+              Distributor Sign In <ArrowRight className="h-4 w-4" />
+            </Link>
             <Link
               to="/leaders/apply"
               className="inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-2xl border border-emerald-400/40 bg-emerald-500/10 px-6 font-black text-emerald-300 transition-colors hover:bg-emerald-500/20 cursor-pointer"
             >
               Sign Up Now — Apply for Leadership <ArrowRight className="h-4 w-4" />
+            </Link>
+            <Link
+              to="/"
+              className="inline-flex min-h-11 w-full items-center justify-center rounded-2xl border border-white/15 text-sm font-semibold text-[#cccccc] hover:bg-white/5 transition-colors cursor-pointer"
+            >
+              Visit Public Website
             </Link>
           </div>
         </div>
