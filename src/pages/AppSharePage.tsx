@@ -1,10 +1,12 @@
 import { SEO } from '@/components/SEO'
+import { Navbar } from '@/components/layout/Navbar'
 import { getActiveProfileLandingCards } from '@/config/profileLandingCards'
 import { crmConfigured, crmSupabase, getCrmDistributors, getCrmMembership } from '@/lib/crm'
 import type { CrmDistributor, CrmMembership } from '@/lib/crm'
 import type { Session } from '@supabase/supabase-js'
 import {
   ArrowLeft,
+  ArrowRight,
   Check,
   ClipboardCheck,
   Copy,
@@ -91,6 +93,7 @@ export default function AppSharePage() {
   }, [session?.user.id])
 
   const matchedDistributor = useMemo(() => {
+    if (!session) return null
     if (membership?.distributor_id) {
       const byId = distributors.find((item) => item.id === membership.distributor_id)
       if (byId) return byId
@@ -101,20 +104,19 @@ export default function AppSharePage() {
       if (byEmail) return byEmail
     }
     return (
-      distributors.find((item) => item.slug === 'mehdi-cohen' && item.active) ||
-      distributors.find((item) => item.active) ||
-      distributors[0] ||
-      null
+      (membership?.role === 'admin'
+        ? distributors.find((item) => item.slug === 'mehdi-cohen' && item.active) || distributors.find((item) => item.active)
+        : null) || null
     )
-  }, [distributors, membership, session?.user.email])
+  }, [distributors, membership, session])
 
   useEffect(() => {
     if (!selectedDistributorId && matchedDistributor) setSelectedDistributorId(matchedDistributor.id)
   }, [matchedDistributor, selectedDistributorId])
 
   const distributor = useMemo(
-    () => distributors.find((item) => item.id === selectedDistributorId) || matchedDistributor,
-    [distributors, matchedDistributor, selectedDistributorId]
+    () => (session ? distributors.find((item) => item.id === selectedDistributorId) || matchedDistributor : null),
+    [distributors, matchedDistributor, selectedDistributorId, session]
   )
 
   const page = ALL_PAGES.find((item) => item.id === selected) || ALL_PAGES[0]
@@ -146,6 +148,47 @@ export default function AppSharePage() {
   }
 
   if (loading && distributors.length === 0) return <main className="min-h-screen bg-black" />
+
+  if (!session)
+    return (
+      <div className="min-h-screen bg-black text-white">
+        <Navbar />
+        <main className="min-h-screen bg-black px-4 pb-28 pt-8 text-white sm:px-6">
+          <SEO title="True Legacy Share Center" description="Sign in to share your personal pages." noIndex />
+          <div className="mx-auto max-w-md text-center py-12">
+            <div className="mx-auto grid h-16 w-16 place-items-center rounded-2xl border border-white/15 bg-white/[0.04] p-3 shadow-xl">
+              <Share2 className="h-8 w-8 text-[#2997ff]" />
+            </div>
+            <p className="mt-6 text-xs font-bold uppercase tracking-[.24em] text-[#2997ff]">Share & Connect</p>
+            <h1 className="mt-2 text-3xl font-black text-white">Sign In Required</h1>
+            <p className="mt-3 text-sm leading-6 text-[#cccccc]">
+              Please sign in with your verified distributor account to generate your personal landing page links, track inquiries, and download your personalized QR codes.
+            </p>
+            <div className="mt-8 space-y-3">
+              <Link
+                to="/crm"
+                className="inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-2xl bg-[#2997ff] px-6 font-black text-slate-950 transition-colors hover:bg-cyan-300 cursor-pointer"
+              >
+                Distributor Sign In <ArrowRight className="h-4 w-4" />
+              </Link>
+              <Link
+                to="/leaders/apply"
+                className="inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-2xl border border-emerald-400/40 bg-emerald-500/10 px-6 font-black text-emerald-300 transition-colors hover:bg-emerald-500/20 cursor-pointer"
+              >
+                Sign Up Now — Apply for Leadership <ArrowRight className="h-4 w-4" />
+              </Link>
+              <Link
+                to="/"
+                className="inline-flex min-h-11 w-full items-center justify-center rounded-2xl border border-white/15 text-sm font-semibold text-[#cccccc] hover:bg-white/5 transition-colors cursor-pointer"
+              >
+                Visit Public Website
+              </Link>
+            </div>
+          </div>
+        </main>
+      </div>
+    )
+
   if (!distributor)
     return (
       <Message
@@ -155,7 +198,9 @@ export default function AppSharePage() {
     )
 
   return (
-    <main className="min-h-screen bg-black px-4 pb-28 pt-[max(22px,env(safe-area-inset-top))] text-white sm:px-6">
+    <div className="min-h-screen bg-black text-white">
+      <Navbar />
+      <main className="min-h-screen bg-black px-4 pb-28 pt-[max(22px,env(safe-area-inset-top))] text-white sm:px-6">
       <SEO
         title="True Legacy Share Center"
         description="Choose and share personalized distributor landing pages."
@@ -319,7 +364,8 @@ export default function AppSharePage() {
         </section>
       </div>
     </main>
-  )
+  </div>
+)
 }
 
 function Message({ title, body, action }: { title: string; body: string; action?: React.ReactNode }) {

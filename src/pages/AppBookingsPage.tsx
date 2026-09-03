@@ -1,8 +1,9 @@
 import { SEO } from '@/components/SEO'
+import { Navbar } from '@/components/layout/Navbar'
 import { crmConfigured, crmSupabase, getCrmDistributors, getCrmMembership } from '@/lib/crm'
 import type { CrmDistributor, CrmMembership } from '@/lib/crm'
 import type { Session } from '@supabase/supabase-js'
-import { ArrowLeft, CalendarCheck2, Check, Clock3, Copy, ExternalLink, Link2, Settings2, UserRoundCheck, X } from 'lucide-react'
+import { ArrowLeft, ArrowRight, CalendarCheck2, Check, Clock3, Copy, ExternalLink, Link2, Settings2, UserRoundCheck, X } from 'lucide-react'
 import { useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 
@@ -123,4 +124,35 @@ export default function AppBookingsPage() {
 }
 
 function Metric({ icon, value, label }: { icon: React.ReactNode; value: string|number; label: string }) { return <div className="rounded-2xl border border-white/10 bg-white/[.03] p-5"><span className="text-[#2997ff]">{icon}</span><p className="mt-4 text-3xl font-black">{value}</p><p className="mt-1 text-xs font-bold uppercase tracking-wider text-[#86868b]">{label}</p></div> }
-function Gate({ title, action }: { title: string; action?: React.ReactNode }) { return <main className="grid min-h-screen place-items-center bg-black p-5 text-white"><div className="text-center"><CalendarCheck2 className="mx-auto h-12 w-12 text-[#2997ff]"/><h1 className="mt-5 text-3xl font-black">{title}</h1>{action && <div className="mt-7">{action}</div>}</div></main> }
+function Gate({ title, action }: { title: string; action?: React.ReactNode }) {
+  return (
+    <div className="min-h-screen bg-black text-white">
+      <Navbar />
+      <main className="grid min-h-screen place-items-center bg-black p-5 text-white">
+        <div className="max-w-md text-center">
+          <CalendarCheck2 className="mx-auto h-12 w-12 text-[#2997ff]" />
+          <h1 className="mt-5 text-3xl font-black">{title}</h1>
+          <p className="mt-3 text-sm text-[#cccccc]">
+            Sign in with your verified distributor account to manage availability, schedule calls, and view upcoming bookings.
+          </p>
+          <div className="mt-7 space-y-3">
+            {action || (
+              <Link
+                to="/crm"
+                className="inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-2xl bg-[#2997ff] px-6 font-black text-slate-950 transition-colors hover:bg-cyan-300 cursor-pointer"
+              >
+                Distributor Sign In <ArrowRight className="h-4 w-4" />
+              </Link>
+            )}
+            <Link
+              to="/leaders/apply"
+              className="inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-2xl border border-emerald-400/40 bg-emerald-500/10 px-6 font-black text-emerald-300 transition-colors hover:bg-emerald-500/20 cursor-pointer"
+            >
+              Sign Up Now — Apply for Leadership <ArrowRight className="h-4 w-4" />
+            </Link>
+          </div>
+        </div>
+      </main>
+    </div>
+  )
+}
