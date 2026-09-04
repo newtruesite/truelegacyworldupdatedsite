@@ -5,7 +5,7 @@ import { YouTubeEmbed } from '@/components/ui/YouTubeEmbed'
 import { DuoLandingPage } from '@/components/duo/DuoLandingPage'
 import { BusinessLandingPage } from '@/components/business/BusinessLandingPage'
 import { AcademyLandingPage } from '@/components/academy/AcademyLandingPage'
-import { KangenLandingPage } from '@/components/kangen/KangenLandingPage'
+import K8Page from '@/pages/K8Page'
 import { EmguardeLandingPage } from '@/components/emguarde/EmguardeLandingPage'
 import { ProductShowcaseLandingPage } from '@/components/products/ProductShowcaseLandingPage'
 import { AnespaLandingPage } from '@/components/anespa/AnespaLandingPage'
@@ -349,7 +349,7 @@ export default function DistributorLandingPage() {
   }
 
   if (variant === 'kangen' || variant === 'water') {
-    return <KangenLandingPage profile={profile} distributorSlug={slug} />
+    return <K8Page profile={profile} distributorSlug={slug} />
   }
 
   if (variant === 'emguarde') {

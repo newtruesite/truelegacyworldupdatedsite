@@ -6,6 +6,7 @@ import { trackEvent } from "@/lib/analytics";
 import { COUNTRIES } from "@/lib/countries";
 import { getDistributorLink } from "@/lib/distributorRouter";
 import { localizedProductVideo } from "@/lib/productVideos";
+import type { PublicDistributor } from "@/lib/crm";
 import { cn } from "@/lib/utils";
 import { AnimatePresence, motion } from "framer-motion";
 import {
@@ -953,7 +954,12 @@ const LOCALES = {
   },
 } as const;
 
-export default function K8Page() {
+type K8PageProps = {
+  profile?: PublicDistributor | null;
+  distributorSlug?: string;
+};
+
+export default function K8Page({ profile, distributorSlug }: K8PageProps = {}) {
   const { countrySlug } = useParams<{ countrySlug: string }>();
   const country =
     COUNTRIES.find((c) => c.slug === countrySlug) ??
@@ -1020,8 +1026,13 @@ export default function K8Page() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const distributorRoute = getDistributorLink(country.slug);
-  const jotformUrl = country.jotformUrl ?? "/apply";
+  const effectiveDistributorSlug = distributorSlug || profile?.slug;
+  const distributorRoute = effectiveDistributorSlug
+    ? `/d/${effectiveDistributorSlug}`
+    : getDistributorLink(country.slug);
+  const jotformUrl = effectiveDistributorSlug
+    ? `/apply?ref=${profile?.referral_code || effectiveDistributorSlug}&interest=product&source=kangen`
+    : country.jotformUrl ?? "/apply";
   const enagicOfficialUrl = "https://www.enagic.com/en_US/products/leveluk-k8";
 
   const videoUrl = localizedProductVideo("kangenWater", videoLang);
