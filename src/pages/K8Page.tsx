@@ -3,6 +3,7 @@ import { YouTubeEmbed } from "@/components/ui/YouTubeEmbed";
 import { useLocaleContext } from "@/contexts/LocaleContext";
 import { trackEvent } from "@/lib/analytics";
 import { COUNTRIES } from "@/lib/countries";
+import { getDistributorLink } from "@/lib/distributorRouter";
 import { localizedProductVideo } from "@/lib/productVideos";
 import { cn } from "@/lib/utils";
 import { AnimatePresence, motion } from "framer-motion";
@@ -22,6 +23,7 @@ import {
     Sparkles,
     Star,
     UserCheck,
+    Users,
     Zap,
 } from "lucide-react";
 import React, { useEffect, useRef, useState } from "react";
@@ -35,15 +37,15 @@ const LOCALES = {
       headline: "Better water, freshly made at your tap.",
       sub: "Meet the Leveluk K8—a premium home water ionizer that filters ordinary tap water and creates multiple water settings for drinking, cooking, beauty, produce washing, and everyday cleaning.",
       ctaPrimary: "Watch the 4-Minute Demo",
-      ctaSecondary: "Ask Mehdi on WhatsApp",
+      ctaSecondary: "Contact Your Distributor",
       claims: [
         "Made in Japan",
         "Eight platinum-dipped titanium plates",
         "Multiple water settings",
         "Personal product guidance",
       ],
-      presentedBy: "Presented by Mehdi Cohen",
-      distributorTag: "Independent Enagic Distributor",
+      presentedBy: "True Legacy Product Guidance",
+      distributorTag: "Independent Enagic Distributors",
     },
     demo: {
       eyebrow: "SEE IT IN ACTION",
@@ -53,7 +55,7 @@ const LOCALES = {
       transcriptToggle: "View Video Transcript & Summary",
       actions: {
         pricing: "Get Pricing & Availability",
-        question: "Ask a Question",
+        question: "Contact Your Distributor",
       },
       transcriptText: `The 4-minute demonstration highlights how the Leveluk K8 transforms standard municipal tap water through high-grade internal filtration and electrolysis. Key segments include:
 • Filtration Stage: Removal of chlorine, sediment, and organic odors while preserving essential minerals.
@@ -155,13 +157,13 @@ const LOCALES = {
     guidance: {
       eyebrow: "DIRECT DISTRIBUTOR SUPPORT",
       heading: "You do not have to choose alone.",
-      sub: "Connect directly with Mehdi for a personal walkthrough, current pricing, installation questions, and availability in your country.",
-      distributorName: "Mehdi Cohen",
-      distributorTitle: "Independent Enagic Distributor · True Legacy Leader",
+      sub: "Connect directly with your True Legacy independent distributor or leader for a personal walkthrough, current pricing, installation questions, and availability in your country.",
+      distributorName: "True Legacy Team",
+      distributorTitle: "Independent Enagic Distributors · Global Support",
       distributorLanguages: "Languages: English, Spanish, French, Portuguese",
-      responseTime: "Usually responds within 2 hours",
+      responseTime: "Dedicated personal distributor guidance",
       actions: {
-        whatsapp: "Chat on WhatsApp",
+        whatsapp: "Contact Your Distributor",
         consultation: "Request a Consultation",
         purchase: "Continue to Official Ordering",
       },
@@ -181,7 +183,7 @@ const LOCALES = {
         {
           name: "Marc & Sophie T.",
           location: "Geneva, Switzerland",
-          quote: "Mehdi answered all our questions about European tap compatibility and installation before we purchased. The setup took less than 15 minutes, and the touch interface makes switching between drinking water and produce washing completely intuitive.",
+          quote: "Our distributor answered all our questions about European tap compatibility and installation before we purchased. The setup took less than 15 minutes, and the touch interface makes switching between drinking water and produce washing completely intuitive.",
           role: "Verified K8 Owners",
         },
         {
@@ -225,11 +227,11 @@ const LOCALES = {
         },
         {
           q: "How much does it cost?",
-          a: "Official pricing varies slightly depending on your shipping country, applicable tax, and local Enagic distributor guidelines. Contact Mehdi via WhatsApp or the consultation form for exact pricing and current availability in your location.",
+          a: "Official pricing varies slightly depending on your shipping country, applicable tax, and local Enagic distributor guidelines. Contact your True Legacy distributor or request a consultation for exact pricing and current availability in your location.",
         },
         {
           q: "Is financing available?",
-          a: "Yes. Enagic offers flexible in-house installment payment plans and third-party financing options in many regions (including USA, Europe, and LATAM). Mehdi can walk you through local payment terms.",
+          a: "Yes. Enagic offers flexible in-house installment payment plans and third-party financing options in many regions (including USA, Europe, and LATAM). Your distributor can walk you through local payment terms.",
         },
         {
           q: "What warranty and service support are included?",
@@ -241,22 +243,22 @@ const LOCALES = {
         },
         {
           q: "Why should I purchase through an independent distributor?",
-          a: "Enagic operates on a direct distribution model. Purchasing through an authorized independent distributor like Mehdi Cohen ensures you receive full personal installation guidance, customer service support, genuine Enagic warranty registration, and assistance with ordering.",
+          a: "Enagic operates on a direct distribution model. Purchasing through an authorized independent distributor ensures you receive full personal installation guidance, customer service support, genuine Enagic warranty registration, and assistance with ordering.",
         },
       ],
     },
     finalCta: {
       heading: "Ready to see whether the K8 fits your home?",
-      sub: "Get current pricing, installation guidance, and answers directly from Mehdi—without pressure.",
+      sub: "Get current pricing, installation guidance, and answers directly from your distributor—without pressure.",
       primary: "Get Pricing & Availability",
-      secondaryWhatsapp: "Chat on WhatsApp",
+      secondaryWhatsapp: "Contact Your Leader",
       secondaryEnagic: "Buy Through the Official Enagic Page",
       redirectNotice: "Note: Clicking 'Buy Through Official Enagic Page' redirects to Enagic's official online portal.",
     },
     legal: {
       medical: "Medical Disclaimer: Kangen Water® is ionized filtered water and is not intended to diagnose, treat, cure, or prevent any disease. Product information is provided strictly for educational and household utility guidance.",
       earnings: "Distributor Disclaimer: True Legacy is an independent team platform. Enagic product sales offer optional independent distributor compensation. Individual results vary based on personal effort, location, and market demand.",
-      distributor: "Notice: Mehdi Cohen is an Independent Enagic Distributor. This landing page is independently owned and operated and is not the corporate site of Enagic Co., Ltd.",
+      distributor: "Notice: This landing page is independently owned and operated by True Legacy independent distributors and is not the corporate site of Enagic Co., Ltd.",
     },
   },
   es: {
@@ -265,15 +267,15 @@ const LOCALES = {
       headline: "Mejor agua, recién hecha en tu grifo.",
       sub: "Conoce la Leveluk K8: un ionizador de agua para el hogar de alta gama que filtra el agua del grifo y crea múltiples opciones de agua para beber, cocinar, belleza, lavado de alimentos y limpieza diaria.",
       ctaPrimary: "Ver la demostración de 4 min",
-      ctaSecondary: "Consultar a Mehdi por WhatsApp",
+      ctaSecondary: "Contactar a tu distribuidor",
       claims: [
         "Hecha en Japón",
         "Ocho placas de titanio bañadas en platino",
         "Múltiples opciones de agua",
         "Asesoría personal de producto",
       ],
-      presentedBy: "Presentado por Mehdi Cohen",
-      distributorTag: "Distribuidor Independiente Enagic",
+      presentedBy: "Guía de producto True Legacy",
+      distributorTag: "Distribuidores Independientes Enagic",
     },
     demo: {
       eyebrow: "MÍRALA EN ACCIÓN",
@@ -283,7 +285,7 @@ const LOCALES = {
       transcriptToggle: "Ver transcripción y resumen del video",
       actions: {
         pricing: "Obtener precios y disponibilidad",
-        question: "Hacer una pregunta",
+        question: "Contactar a tu distribuidor",
       },
       transcriptText: `La demostración de 4 minutos muestra cómo la Leveluk K8 transforma el agua de grifo municipal mediante filtración interna de alta calidad y electrólisis:
 • Filtración: Eliminación de cloro, sedimentos y olores orgánicos reteniendo minerales esenciales.
@@ -385,13 +387,13 @@ const LOCALES = {
     guidance: {
       eyebrow: "ATENCIÓN DIRECTA DE DISTRIBUIDOR",
       heading: "No tienes que elegir a ciegas.",
-      sub: "Conéctate directamente con Mehdi para recibir asesoría personalizada, precios actuales, respuestas a dudas de instalación y disponibilidad en tu país.",
-      distributorName: "Mehdi Cohen",
-      distributorTitle: "Distribuidor Independiente Enagic · Líder True Legacy",
+      sub: "Conéctate directamente con tu distribuidor o líder independiente de True Legacy para recibir asesoría personalizada, precios actuales, respuestas a dudas de instalación y disponibilidad en tu país.",
+      distributorName: "Equipo True Legacy",
+      distributorTitle: "Distribuidores Independientes Enagic · Soporte Global",
       distributorLanguages: "Idiomas: Español, Inglés, Francés, Portugués",
-      responseTime: "Responde usualmente en menos de 2 horas",
+      responseTime: "Atención directa de tu distribuidor",
       actions: {
-        whatsapp: "Chatear por WhatsApp",
+        whatsapp: "Contactar a tu distribuidor",
         consultation: "Solicitar una consulta",
         purchase: "Continuar a la compra oficial",
       },
@@ -411,7 +413,7 @@ const LOCALES = {
         {
           name: "Marc & Sophie T.",
           location: "Ginebra, Suiza",
-          quote: "Mehdi resolvió todas nuestras dudas sobre la compatibilidad de grifos antes de comprar. La instalación tomó 15 minutos y cambiar entre el agua para beber y para lavar frutas es facilísimo.",
+          quote: "Nuestro distribuidor resolvió todas nuestras dudas sobre la compatibilidad de grifos antes de comprar. La instalación tomó 15 minutos y cambiar entre el agua para beber y para lavar frutas es facilísimo.",
           role: "Propietarios de K8",
         },
         {
@@ -455,11 +457,11 @@ const LOCALES = {
         },
         {
           q: "¿Cuánto cuesta la Leveluk K8?",
-          a: "El precio oficial varía según el país de envío, impuestos aplicables y pautas locales de Enagic. Contacta a Mehdi por WhatsApp o mediante el formulario para obtener la cotización exacta y disponibilidad en tu zona.",
+          a: "El precio oficial varía según el país de envío, impuestos aplicables y pautas locales de Enagic. Contacta a tu distribuidor de True Legacy o solicita una consulta para obtener la cotización exacta y disponibilidad en tu zona.",
         },
         {
           q: "¿Hay opciones de financiamiento?",
-          a: "Sí. Enagic ofrece planes de pago a plazos en muchas regiones (EE. UU., Europa y Latinoamérica). Mehdi puede explicarte las modalidades de financiamiento disponibles para tu país.",
+          a: "Sí. Enagic ofrece planes de pago a plazos en muchas regiones (EE. UU., Europa y Latinoamérica). Tu distribuidor puede explicarte las modalidades de financiamiento disponibles para tu país.",
         },
         {
           q: "¿Qué garantía y soporte incluye?",
@@ -471,22 +473,22 @@ const LOCALES = {
         },
         {
           q: "¿Por qué comprar a través de un distribuidor independiente?",
-          a: "Enagic vende exclusivamente mediante distribución directa. Comprar con un distribuidor autorizado como Mehdi Cohen te garantiza asesoría de instalación, registro oficial de garantía y soporte directo continuo.",
+          a: "Enagic vende exclusivamente mediante distribución directa. Comprar con un distribuidor autorizado te garantiza asesoría de instalación, registro oficial de garantía y soporte directo continuo.",
         },
       ],
     },
     finalCta: {
       heading: "¿Listo para comprobar si la K8 es ideal para tu hogar?",
-      sub: "Recibe precios vigentes, ayuda de instalación y respuestas claras directamente de Mehdi, sin presión.",
+      sub: "Recibe precios vigentes, ayuda de instalación y respuestas claras directamente de tu distribuidor, sin presión.",
       primary: "Obtener precios y disponibilidad",
-      secondaryWhatsapp: "Chatear por WhatsApp",
+      secondaryWhatsapp: "Contactar a tu líder",
       secondaryEnagic: "Comprar en la página oficial de Enagic",
       redirectNotice: "Nota: Al hacer clic en 'Comprar en la página oficial de Enagic' serás redirigido al portal oficial de compra.",
     },
     legal: {
       medical: "Aviso Médico: El Agua Kangen® es agua filtrada e ionizada. No está destinada a diagnosticar, tratar, curar ni prevenir ninguna enfermedad. La información compartida tiene carácter educativo y de utilidad doméstica.",
       earnings: "Aviso de Distribuidor: True Legacy es un equipo independiente. La venta de equipos Enagic ofrece comisiones opcionales para distribuidores. Los resultados varían según el esfuerzo individual y las condiciones del mercado.",
-      distributor: "Aviso Legal: Mehdi Cohen es Distribuidor Independiente de Enagic. Este sitio web es administrado de manera independiente y no es el sitio corporativo oficial de Enagic Co., Ltd.",
+      distributor: "Aviso Legal: Este sitio web es administrado de manera independiente por distribuidores de True Legacy y no es el sitio corporativo oficial de Enagic Co., Ltd.",
     },
   },
   fr: {
@@ -495,15 +497,15 @@ const LOCALES = {
       headline: "Une eau meilleure, fraîchement produite à votre robinet.",
       sub: "Découvrez la Leveluk K8—un ioniseur d'eau domestique haut de gamme qui filtre l'eau du robinet et génère plusieurs réglages d'eau pour la boisson, la cuisine, la beauté, le lavage des produits frais et le nettoyage quotidien.",
       ctaPrimary: "Regarder la démo de 4 min",
-      ctaSecondary: "Poser une question à Mehdi sur WhatsApp",
+      ctaSecondary: "Contacter votre distributeur",
       claims: [
         "Fabriqué au Japon",
         "Huit plaques en titane plaqué platine",
         "Plusieurs réglages d'eau",
         "Accompagnement personnalisé",
       ],
-      presentedBy: "Présenté par Mehdi Cohen",
-      distributorTag: "Distributeur Indépendant Enagic",
+      presentedBy: "Conseil produit True Legacy",
+      distributorTag: "Distributeurs Indépendants Enagic",
     },
     demo: {
       eyebrow: "DÉMO EN VIDÉO",
@@ -513,7 +515,7 @@ const LOCALES = {
       transcriptToggle: "Afficher la transcription et le résumé",
       actions: {
         pricing: "Obtenir les tarifs et disponibilités",
-        question: "Poser une question",
+        question: "Contacter votre distributeur",
       },
       transcriptText: `La démonstration de 4 minutes présente la transformation de l'eau du robinet par la Leveluk K8 grâce à sa filtration interne et son électrolyse :
 • Filtration : Élimination du chlore, des sédiments et des odeurs tout en conservant les minéraux essentiels.
@@ -615,13 +617,13 @@ const LOCALES = {
     guidance: {
       eyebrow: "ACCOMPAGNEMENT DIRECT",
       heading: "Vous n'avez pas à choisir seul.",
-      sub: "Contactez directement Mehdi pour obtenir des réponses sur l'installation, les tarifs actuels et la disponibilité dans votre pays.",
-      distributorName: "Mehdi Cohen",
-      distributorTitle: "Distributeur Indépendant Enagic · Leader True Legacy",
+      sub: "Contactez directement votre distributeur ou leader indépendant True Legacy pour obtenir des réponses sur l'installation, les tarifs actuels et la disponibilité dans votre pays.",
+      distributorName: "Équipe True Legacy",
+      distributorTitle: "Distributeurs Indépendants Enagic · Support Global",
       distributorLanguages: "Langues : Français, Anglais, Espagnol, Portugais",
-      responseTime: "Réponse habituelle en moins de 2 heures",
+      responseTime: "Accompagnement personnalisé de votre distributeur",
       actions: {
-        whatsapp: "Discuter sur WhatsApp",
+        whatsapp: "Contacter votre distributeur",
         consultation: "Demander un rendez-vous",
         purchase: "Continuer vers la commande officielle",
       },
@@ -641,7 +643,7 @@ const LOCALES = {
         {
           name: "Marc & Sophie T.",
           location: "Genève, Suisse",
-          quote: "Mehdi a répondu à toutes nos questions sur la compatibilité du robinet avant l'achat. L'installation a pris 15 minutes et l'écran tactile rend le changement de réglage très simple.",
+          quote: "Notre distributeur a répondu à toutes nos questions sur la compatibilité du robinet avant l'achat. L'installation a pris 15 minutes et l'écran tactile rend le changement de réglage très simple.",
           role: "Propriétaires d'une K8",
         },
         {
@@ -685,11 +687,11 @@ const LOCALES = {
         },
         {
           q: "Quel est le prix de la K8 ?",
-          a: "Le tarif officiel varie selon le pays de livraison et les taxes applicables. Contactez Mehdi via WhatsApp pour obtenir le tarif exact et la disponibilité dans votre pays.",
+          a: "Le tarif officiel varie selon le pays de livraison et les taxes applicables. Contactez votre distributeur True Legacy pour obtenir le tarif exact et la disponibilité dans votre pays.",
         },
         {
           q: "Existe-t-il des options de financement ?",
-          a: "Oui. Enagic propose des facilités de paiement échelonné dans plusieurs régions. Mehdi pourra vous expliquer les modalités disponibles pour votre secteur.",
+          a: "Oui. Enagic propose des facilités de paiement échelonné dans plusieurs régions. Votre distributeur pourra vous expliquer les modalités disponibles pour votre secteur.",
         },
         {
           q: "Quelle est la garantie incluse ?",
@@ -701,22 +703,22 @@ const LOCALES = {
         },
         {
           q: "Pourquoi acheter via un distributeur indépendant ?",
-          a: "Enagic fonctionne en distribution directe. Commander via un distributeur agréé comme Mehdi Cohen vous garantit un accompagnement personnalisé, l'enregistrement de votre garantie et un suivi complet.",
+          a: "Enagic fonctionne en distribution directe. Commander via un distributeur agréé vous garantit un accompagnement personnalisé, l'enregistrement de votre garantie et un suivi complet.",
         },
       ],
     },
     finalCta: {
       heading: "Prêt à découvrir si la K8 convient à votre foyer ?",
-      sub: "Obtenez les tarifs actuels, les conseils d'installation et toutes les réponses directement auprès de Mehdi—sans engagement.",
+      sub: "Obtenez les tarifs actuels, les conseils d'installation et toutes les réponses directement auprès de votre distributeur—sans engagement.",
       primary: "Obtenir les tarifs et disponibilités",
-      secondaryWhatsapp: "Discuter sur WhatsApp",
+      secondaryWhatsapp: "Contacter votre leader",
       secondaryEnagic: "Acheter sur le site officiel Enagic",
       redirectNotice: "Note : En cliquant sur 'Acheter sur le site officiel Enagic', vous serez réorienté vers la boutique officielle d'Enagic.",
     },
     legal: {
       medical: "Avertissement Médical : L'Eau Kangen® est une eau filtrée et ionisée. Elle n'est pas destinée à diagnostiquer, traiter, guérir ou prévenir une maladie.",
       earnings: "Avertissement Distributeur : True Legacy est un réseau indépendant. La vente de produits Enagic offre des commissions de distribution optionnelles.",
-      distributor: "Mentions Légales : Mehdi Cohen est Distributeur Indépendant Enagic. Ce site est géré de manière indépendante et n'est pas le site officiel d'Enagic Co., Ltd.",
+      distributor: "Mentions Légales : Ce site est géré de manière indépendante par des distributeurs True Legacy et n'est pas le site officiel d'Enagic Co., Ltd.",
     },
   },
   pt: {
@@ -725,15 +727,15 @@ const LOCALES = {
       headline: "Água melhor, feita na hora na sua torneira.",
       sub: "Conheça a Leveluk K8—um ionizador de água residencial premium que filtra a água da torneira e cria múltiplas configurações de água para beber, cozinhar, beleza, lavagem de alimentos e limpeza diária.",
       ctaPrimary: "Assistir à demonstração de 4 min",
-      ctaSecondary: "Falar com Mehdi no WhatsApp",
+      ctaSecondary: "Falar com seu distribuidor",
       claims: [
         "Feita no Japão",
         "Oito placas de titânio banhadas em platina",
         "Múltiplas opções de água",
         "Orientação pessoal de produto",
       ],
-      presentedBy: "Apresentado por Mehdi Cohen",
-      distributorTag: "Distribuidor Independente Enagic",
+      presentedBy: "Orientação de produto True Legacy",
+      distributorTag: "Distribuidores Independentes Enagic",
     },
     demo: {
       eyebrow: "VEJA EM AÇÃO",
@@ -743,7 +745,7 @@ const LOCALES = {
       transcriptToggle: "Ver transcrição e resumo do vídeo",
       actions: {
         pricing: "Obter preços e disponibilidade",
-        question: "Fazer uma pergunta",
+        question: "Falar com seu distribuidor",
       },
       transcriptText: `A demonstração de 4 minutos exibe como a Leveluk K8 transforma a água da torneira municipal através de filtragem interna de alta qualidade e eletrólise:
 • Estágio de filtragem: Remoção de cloro, sedimentos e odores preservando minerais essenciais.
@@ -845,13 +847,13 @@ const LOCALES = {
     guidance: {
       eyebrow: "SUPORTE DIRETO DO DISTRIBUIDOR",
       heading: "Você não precisa escolher sozinho.",
-      sub: "Conecte-se diretamente com Mehdi para receber orientação personalizada, preços atuais, tirar dúvidas de instalação e verificar a disponibilidade no seu país.",
-      distributorName: "Mehdi Cohen",
-      distributorTitle: "Distribuidor Independente Enagic · Líder True Legacy",
+      sub: "Conecte-se diretamente com seu distribuidor ou líder independente True Legacy para receber orientação personalizada, preços atuais, tirar dúvidas de instalação e verificar a disponibilidade no seu país.",
+      distributorName: "Equipe True Legacy",
+      distributorTitle: "Distribuidores Independentes Enagic · Suporte Global",
       distributorLanguages: "Idiomas: Português, Inglês, Espanhol, Francês",
-      responseTime: "Responde geralmente em menos de 2 horas",
+      responseTime: "Atendimento direto do seu distribuidor",
       actions: {
-        whatsapp: "Conversar no WhatsApp",
+        whatsapp: "Falar com seu distribuidor",
         consultation: "Solicitar consultoria",
         purchase: "Continuar para compra oficial",
       },
@@ -871,7 +873,7 @@ const LOCALES = {
         {
           name: "Marc & Sophie T.",
           location: "Genebra, Suíça",
-          quote: "Mehdi respondeu todas as nossas dúvidas sobre instalação antes da compra. O processo levou 15 minutos e a tela sensível ao toque facilita muito alternar entre os tipos de água.",
+          quote: "Nosso distribuidor respondeu todas as nossas dúvidas sobre instalação antes da compra. O processo levou 15 minutos e a tela sensível ao toque facilita muito alternar entre os tipos de água.",
           role: "Proprietários de K8",
         },
         {
@@ -911,15 +913,15 @@ const LOCALES = {
         },
         {
           q: "Qual a manutenção necessária?",
-          a: "A máquina possui ciclos automáticos de autolimpeza. A manutenção periódica envolve a troca do filtro interno (aprox. uma vez por ano) e limpezas com ácido cítrico (E-cleaning).",
+          a: "A máquina possui ciclos automáticos de autolimpieza. A manutenção periódica envolve a troca do filtro interno (aprox. uma vez por ano) e limpezas com ácido cítrico (E-cleaning).",
         },
         {
           q: "Quanto custa a Leveluk K8?",
-          a: "O valor oficial varia conforme o país de envio e impostos aplicáveis. Entre em contato com Mehdi no WhatsApp para receber a cotação exata para o seu endereço.",
+          a: "O valor oficial varia conforme o país de envio e impostos aplicáveis. Entre em contato com seu distribuidor True Legacy para receber a cotação exata para o seu endereço.",
         },
         {
           q: "Existe opção de parcelamento?",
-          a: "Sim. A Enagic oferece planos de pagamento parcelado em diversas regiões. Mehdi pode orientar sobre as opções disponíveis para o seu país.",
+          a: "Sim. A Enagic oferece planos de pagamento parcelado em diversas regiões. Seu distribuidor pode orientar sobre as opções disponíveis para o seu país.",
         },
         {
           q: "Qual a garantia inclusa?",
@@ -931,22 +933,22 @@ const LOCALES = {
         },
         {
           q: "Por que comprar através de um distribuidor independente?",
-          a: "A Enagic vende exclusivamente por distribuição direta. Comprar com um distribuidor credenciado como Mehdi Cohen garante suporte de instalação, registro oficial de garantia e acompanhamento contínuo.",
+          a: "A Enagic vende exclusivamente por distribuição direta. Comprar com um distribuidor credenciado garante suporte de instalação, registro oficial de garantia e acompanhamento contínuo.",
         },
       ],
     },
     finalCta: {
       heading: "Pronto para saber se a K8 é ideal para a sua casa?",
-      sub: "Receba valores atualizados, orientações de instalação e tire todas as suas dúvidas diretamente com o Mehdi—sem pressão.",
+      sub: "Receba valores atualizados, orientações de instalação e tire todas as suas dúvidas diretamente com seu distribuidor—sem pressão.",
       primary: "Obter preços e disponibilidade",
-      secondaryWhatsapp: "Conversar no WhatsApp",
+      secondaryWhatsapp: "Falar com seu líder",
       secondaryEnagic: "Comprar na página oficial da Enagic",
       redirectNotice: "Nota: Ao clicar em 'Comprar na página oficial da Enagic' você será redirecionado para a loja oficial da Enagic.",
     },
     legal: {
       medical: "Aviso Médico: A Água Kangen® é água filtrada e ionizada. Não se destina a diagnosticar, tratar, curar ou prevenir doenças.",
       earnings: "Aviso de Distribuidor: True Legacy é uma equipe independente. Vendas de produtos Enagic oferecem comissões opcionais.",
-      distributor: "Aviso Legal: Mehdi Cohen é Distribuidor Independente Enagic. Este site é operado de forma independente e não é o site corporativo da Enagic Co., Ltd.",
+      distributor: "Aviso Legal: Este site é operado de forma independente por distribuidores True Legacy e não é o site corporativo da Enagic Co., Ltd.",
     },
   },
 } as const;
@@ -999,18 +1001,7 @@ export default function K8Page() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const whatsappPhone = "18649072149";
-  const whatsappMsg = encodeURIComponent(
-    currentLang === "es"
-      ? "Hola Mehdi, vi la página de la Leveluk K8 y me gustaría obtener información sobre precios e instalación."
-      : currentLang === "fr"
-        ? "Bonjour Mehdi, j'ai vu la page Leveluk K8 et je souhaite obtenir des informations sur les prix et l'installation."
-        : currentLang === "pt"
-          ? "Olá Mehdi, vi a página da Leveluk K8 e gostaria de informações sobre preços e instalação."
-          : "Hi Mehdi, I saw the Leveluk K8 page and would like information on pricing and installation."
-  );
-  const whatsappUrl = `https://wa.me/${whatsappPhone}?text=${whatsappMsg}`;
-
+  const distributorRoute = getDistributorLink(country.slug);
   const jotformUrl = country.jotformUrl ?? "/apply";
   const enagicOfficialUrl = "https://www.enagic.com/en_US/products/leveluk-k8";
 
@@ -1020,7 +1011,6 @@ export default function K8Page() {
     trackEvent(`k8_${actionName}`, {
       locale: currentLang,
       country: country.slug,
-      referral: "mehdi-cohen",
     });
   };
 
@@ -1121,16 +1111,20 @@ export default function K8Page() {
                       : "Watch Demo"}
               </a>
 
-              <a
-                href={whatsappUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={() => handleActionClick("header_whatsapp")}
+              <Link
+                to={distributorRoute}
+                onClick={() => handleActionClick("header_contact_distributor")}
                 className="px-4 py-2 rounded-xl text-xs font-semibold border border-emerald-500/30 bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20 transition-all flex items-center gap-1.5"
               >
-                <MessageCircle className="w-3.5 h-3.5" />
-                WhatsApp
-              </a>
+                <Users className="w-3.5 h-3.5" />
+                {currentLang === "es"
+                  ? "Contactar Distribuidor"
+                  : currentLang === "fr"
+                    ? "Contacter Distributeur"
+                    : currentLang === "pt"
+                      ? "Falar com Distribuidor"
+                      : "Contact Distributor"}
+              </Link>
 
               <a
                 href={jotformUrl}
@@ -1177,16 +1171,22 @@ export default function K8Page() {
             </span>
           </a>
 
-          <a
-            href={whatsappUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            onClick={() => handleActionClick("mobile_sticky_whatsapp")}
+          <Link
+            to={distributorRoute}
+            onClick={() => handleActionClick("mobile_sticky_distributor")}
             className="flex flex-col items-center justify-center py-2 px-1 rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 font-bold text-[11px] hover:bg-emerald-500/25 transition-all text-center leading-tight"
           >
-            <MessageCircle className="w-4 h-4 mb-1 text-emerald-400" />
-            <span>WhatsApp</span>
-          </a>
+            <Users className="w-4 h-4 mb-1 text-emerald-400" />
+            <span>
+              {currentLang === "es"
+                ? "Distribuidor"
+                : currentLang === "fr"
+                  ? "Distributeur"
+                  : currentLang === "pt"
+                    ? "Distribuidor"
+                    : "Distributor"}
+            </span>
+          </Link>
 
           <a
             href={jotformUrl}
@@ -1254,16 +1254,14 @@ export default function K8Page() {
                   <span>{content.hero.ctaPrimary}</span>
                 </a>
 
-                <a
-                  href={whatsappUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  onClick={() => handleActionClick("hero_secondary_whatsapp")}
+                <Link
+                  to={distributorRoute}
+                  onClick={() => handleActionClick("hero_secondary_distributor")}
                   className="inline-flex items-center justify-center gap-3 rounded-2xl border border-emerald-500/40 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-300 font-semibold px-6 py-4 text-base transition-all duration-300 hover:scale-[1.02]"
                 >
-                  <MessageCircle className="w-5 h-5 text-emerald-400" />
+                  <Users className="w-5 h-5 text-emerald-400" />
                   <span>{content.hero.ctaSecondary}</span>
-                </a>
+                </Link>
               </div>
 
               {/* Compact Credibility Row */}
@@ -1278,15 +1276,12 @@ export default function K8Page() {
                 ))}
               </div>
 
-              {/* Personal Distributor Badge (Mehdi Cohen) */}
+              {/* True Legacy Team Distributor Badge */}
               <div className="pt-2">
                 <div className="inline-flex items-center gap-3.5 rounded-2xl border border-white/15 bg-white/[0.04] p-3 pr-5 backdrop-blur-md">
-                  <img
-                    src="/leaders/standardized/mehdi-cohen.png"
-                    alt="Mehdi Cohen Independent Enagic Distributor"
-                    className="w-12 h-12 rounded-xl object-cover object-top border border-cyan-500/40 shadow-md shrink-0"
-                    loading="eager"
-                  />
+                  <div className="w-11 h-11 rounded-xl bg-cyan-500/20 border border-cyan-500/40 flex items-center justify-center text-cyan-400 shrink-0">
+                    <Users className="w-6 h-6" />
+                  </div>
                   <div>
                     <div className="text-xs font-bold text-white tracking-wide">
                       {content.hero.presentedBy}
@@ -1430,16 +1425,14 @@ export default function K8Page() {
               <span>{content.demo.actions.pricing}</span>
             </a>
 
-            <a
-              href={whatsappUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={() => handleActionClick("post_video_ask_question")}
+            <Link
+              to={distributorRoute}
+              onClick={() => handleActionClick("post_video_contact_distributor")}
               className="inline-flex items-center justify-center gap-2 rounded-2xl border border-white/20 bg-white/5 hover:bg-white/10 text-white font-semibold px-6 py-3.5 text-sm transition-all text-center"
             >
-              <HelpCircle className="w-4 h-4 text-cyan-400" />
+              <Users className="w-4 h-4 text-cyan-400" />
               <span>{content.demo.actions.question}</span>
-            </a>
+            </Link>
           </div>
         </div>
 
@@ -1676,19 +1669,16 @@ export default function K8Page() {
         </div>
       </section>
 
-      {/* ── PERSONAL GUIDANCE SECTION (MEHDI COHEN) ── */}
+      {/* ── PERSONAL GUIDANCE SECTION (GENERIC TEAM / DISTRIBUTOR ROUTING) ── */}
       <section className="py-16 md:py-24 border-b border-white/10 bg-[#070b12] relative overflow-hidden">
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
           <div className="rounded-3xl border border-white/15 bg-gradient-to-b from-white/[0.05] to-white/[0.02] p-8 sm:p-12 shadow-2xl relative">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
-              {/* Mehdi Cohen Portrait & Meta */}
+              {/* Team Avatar & Meta */}
               <div className="lg:col-span-5 text-center lg:text-left space-y-4">
-                <img
-                  src="/leaders/standardized/mehdi-cohen.png"
-                  alt="Mehdi Cohen Independent Enagic Distributor"
-                  className="w-32 h-32 sm:w-40 sm:h-40 rounded-3xl object-cover object-top border-2 border-cyan-500/40 shadow-2xl mx-auto lg:mx-0"
-                  loading="lazy"
-                />
+                <div className="w-32 h-32 sm:w-40 sm:h-40 rounded-3xl bg-cyan-500/10 border-2 border-cyan-500/40 flex items-center justify-center text-cyan-400 mx-auto lg:mx-0 shadow-2xl">
+                  <Users className="w-16 h-16" />
+                </div>
                 <div>
                   <h3 className="text-2xl font-black text-white">
                     {content.guidance.distributorName}
@@ -1723,16 +1713,14 @@ export default function K8Page() {
                 </p>
 
                 <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 pt-2">
-                  <a
-                    href={whatsappUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    onClick={() => handleActionClick("guidance_whatsapp")}
+                  <Link
+                    to={distributorRoute}
+                    onClick={() => handleActionClick("guidance_distributor")}
                     className="inline-flex items-center justify-center gap-2.5 rounded-2xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold px-6 py-3.5 text-sm transition-all shadow-lg shadow-emerald-500/20"
                   >
-                    <MessageCircle className="w-4 h-4 fill-slate-950" />
+                    <Users className="w-4 h-4 fill-slate-950" />
                     <span>{content.guidance.actions.whatsapp}</span>
-                  </a>
+                  </Link>
 
                   <a
                     href={jotformUrl}
@@ -1890,16 +1878,14 @@ export default function K8Page() {
               <span>{content.finalCta.primary}</span>
             </a>
 
-            <a
-              href={whatsappUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={() => handleActionClick("final_whatsapp")}
+            <Link
+              to={distributorRoute}
+              onClick={() => handleActionClick("final_contact_leader")}
               className="w-full sm:w-auto inline-flex items-center justify-center gap-3 rounded-2xl border border-emerald-500/40 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-300 font-semibold px-7 py-4 text-base transition-all duration-300 hover:scale-105"
             >
-              <MessageCircle className="w-5 h-5 text-emerald-400" />
+              <Users className="w-5 h-5 text-emerald-400" />
               <span>{content.finalCta.secondaryWhatsapp}</span>
-            </a>
+            </Link>
 
             <a
               href={enagicOfficialUrl}
