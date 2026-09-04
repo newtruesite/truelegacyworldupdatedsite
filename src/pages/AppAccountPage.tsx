@@ -239,7 +239,7 @@ export default function AppAccountPage() {
     if (val.trim() && !isValidPurchaseUrl(val)) {
       setPurchaseLinkErrors((prev) => ({
         ...prev,
-        [productId]: 'Please enter a valid URL starting with http:// or https://',
+        [productId]: 'Please enter a valid URL starting with https://',
       }))
     } else {
       setPurchaseLinkErrors((prev) => {
@@ -1184,19 +1184,30 @@ export default function AppAccountPage() {
                             <div key={prod.id} className="space-y-1.5 rounded-2xl border border-white/10 bg-white/[0.02] p-4">
                               <div className="flex items-center justify-between">
                                 <label className="text-xs font-bold text-white flex items-center gap-1.5">
-                                  <span>{prod.name}</span>
-                                  <span className="text-[10px] font-normal text-amber-400 uppercase tracking-wider">Purchase Link</span>
+                                  <span>{prod.id === 'kangen_wagyu' ? 'Kangen Wagyu Purchase Link' : prod.name}</span>
+                                  <span className="text-[10px] font-normal text-amber-400 uppercase tracking-wider">{prod.id === 'kangen_wagyu' ? 'Official Link' : 'Purchase Link'}</span>
                                 </label>
-                                {val.trim() && !err && (
-                                  <a
-                                    href={val}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="inline-flex items-center gap-1 text-[11px] font-semibold text-amber-400 hover:text-amber-300 transition-colors"
-                                  >
-                                    Test Link <ExternalLink className="h-3 w-3" />
-                                  </a>
-                                )}
+                                <div className="flex items-center gap-2">
+                                  {val.trim() && !err && (
+                                    <a
+                                      href={val}
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                      className="inline-flex items-center gap-1 text-[11px] font-semibold text-amber-400 hover:text-amber-300 transition-colors"
+                                    >
+                                      Test Link <ExternalLink className="h-3 w-3" />
+                                    </a>
+                                  )}
+                                  {val && (
+                                    <button
+                                      type="button"
+                                      onClick={() => handlePurchaseLinkChange(prod.id, '')}
+                                      className="text-[11px] text-slate-400 hover:text-rose-300 transition-colors"
+                                    >
+                                      Remove
+                                    </button>
+                                  )}
+                                </div>
                               </div>
                               <p className="text-[11px] text-[#86868b] leading-tight">{prod.subtitle}</p>
                               <input

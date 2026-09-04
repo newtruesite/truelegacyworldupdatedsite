@@ -77,11 +77,10 @@ export const PURCHASE_LINK_CONFIG: ProductPurchaseLinkItem[] = [
   },
   {
     id: 'kangen_wagyu',
-    name: 'Kangen Wagyu™',
+    name: 'Kangen Wagyu®',
     category: 'other',
-    subtitle: 'Artisanal Premium Japanese Wagyu Beef Collection',
-    placeholder: 'https://... your Kangen Wagyu order link',
-    enagicUrl: 'https://www.enagic.com/en_US/products/kangen-wagyu',
+    subtitle: 'Add your official Kangen Wagyu ordering link. When added, the Buy Now button will automatically appear on your Wagyu landing page.',
+    placeholder: 'https://... your official Kangen Wagyu order link',
   },
   {
     id: 'kangen_air',
@@ -106,7 +105,7 @@ export const PRODUCT_PURCHASE_LINK_KEYS: Record<string, readonly string[]> = {
   sd501_super: ['sd501_super'],
   sd501: ['sd501'],
   kangen_beaute: ['kangen_beaute'],
-  kangen_wagyu: ['kangen_wagyu'],
+  kangen_wagyu: ['kangen_wagyu', 'wagyu', 'wagyuPurchaseUrl'],
   kangen_air: ['kangen_air'],
 }
 
