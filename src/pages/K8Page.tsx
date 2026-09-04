@@ -1,4 +1,5 @@
 import { SEO } from "@/components/SEO";
+import TrueLegacyLogo from "@/components/ui/TrueLegacyLogo";
 import { YouTubeEmbed } from "@/components/ui/YouTubeEmbed";
 import { useLocaleContext } from "@/contexts/LocaleContext";
 import { trackEvent } from "@/lib/analytics";
@@ -17,7 +18,6 @@ import {
     Globe,
     HelpCircle,
     Info,
-    MessageCircle,
     Play,
     ShieldCheck,
     Sparkles,
@@ -913,7 +913,7 @@ const LOCALES = {
         },
         {
           q: "Qual a manutenção necessária?",
-          a: "A máquina possui ciclos automáticos de autolimpieza. A manutenção periódica envolve a troca do filtro interno (aprox. uma vez por ano) e limpezas com ácido cítrico (E-cleaning).",
+          a: "A máquina possui ciclos automáticos de autolimpeza. A manutenção periódica envolve a troca do filtro interno (aprox. uma vez por ano) e limpezas com ácido cítrico (E-cleaning).",
         },
         {
           q: "Quanto custa a Leveluk K8?",
@@ -1053,34 +1053,30 @@ export default function K8Page() {
 
       {/* ── STICKY SLIM HEADER (DESKTOP & TABLET) ── */}
       <header className="sticky top-0 z-50 w-full border-b border-white/10 bg-[#070b12]/85 backdrop-blur-xl transition-all duration-300">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6 lg:px-8">
-          {/* Logo & Brand */}
+        <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-2.5 sm:px-6 lg:px-8">
+          {/* Left: Original True Legacy Logo & Kangen Water Badge */}
           <Link
             to={countrySlug ? `/${countrySlug}` : "/"}
-            className="flex items-center gap-3 group focus:outline-none focus:ring-2 focus:ring-cyan-500 rounded-lg p-1"
+            className="flex items-center gap-2.5 group focus:outline-none focus:ring-2 focus:ring-cyan-500 rounded-lg p-0.5 shrink-0"
           >
-            <div className="flex items-center gap-2">
-              <span className="text-base sm:text-lg font-black tracking-wider text-white group-hover:text-cyan-400 transition-colors">
-                TRUE LEGACY
-              </span>
-              <span className="text-xs font-semibold text-cyan-400/90 border border-cyan-500/30 bg-cyan-500/10 px-2 py-0.5 rounded-md uppercase tracking-widest hidden sm:inline-block">
-                Kangen Water®
-              </span>
-            </div>
+            <TrueLegacyLogo variant="nav" className="h-8 sm:h-9 w-auto object-contain" />
+            <span className="text-[10px] font-semibold text-cyan-400/90 border border-cyan-500/30 bg-cyan-500/10 px-2 py-0.5 rounded-md uppercase tracking-widest hidden sm:inline-block">
+              Kangen Water®
+            </span>
           </Link>
 
           {/* Right Header Navigation Controls */}
-          <div className="flex items-center gap-3 sm:gap-4">
-            {/* Language Switcher Selector */}
-            <div className="flex items-center rounded-xl border border-white/10 bg-white/5 p-1 text-xs">
+          <div className="flex items-center gap-2.5 sm:gap-3">
+            {/* Proportionate Language Switcher Selector */}
+            <div className="flex items-center rounded-lg border border-white/10 bg-white/5 p-0.5 text-[11px]">
               {(["en", "es", "fr", "pt"] as const).map((lang) => (
                 <Link
                   key={lang}
                   to={`/${countrySlug ? countrySlug : "usa"}/k8`}
                   className={cn(
-                    "px-2.5 py-1 rounded-lg font-bold uppercase transition-all duration-200",
+                    "px-2 py-0.5 rounded font-extrabold uppercase transition-all duration-200 tracking-wider",
                     currentLang === lang
-                      ? "bg-cyan-500 text-slate-950 shadow-md shadow-cyan-500/20"
+                      ? "bg-cyan-500 text-slate-950 shadow-sm"
                       : "text-slate-400 hover:text-white"
                   )}
                 >
@@ -1090,14 +1086,14 @@ export default function K8Page() {
             </div>
 
             {/* Header Actions (Desktop) */}
-            <div className="hidden md:flex items-center gap-3">
+            <div className="hidden md:flex items-center gap-2.5">
               <a
                 href="#video-demo"
                 onClick={() => handleActionClick("header_watch_demo")}
                 className={cn(
-                  "px-4 py-2 rounded-xl text-xs font-semibold transition-all duration-300 flex items-center gap-1.5",
+                  "px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all duration-300 flex items-center gap-1.5",
                   !pastVideoSection
-                    ? "bg-cyan-500 text-slate-950 hover:bg-cyan-400 shadow-lg shadow-cyan-500/20 font-bold"
+                    ? "bg-cyan-500 text-slate-950 hover:bg-cyan-400 shadow-md shadow-cyan-500/20 font-bold"
                     : "border border-white/15 bg-white/5 text-slate-300 hover:bg-white/10"
                 )}
               >
@@ -1114,7 +1110,7 @@ export default function K8Page() {
               <Link
                 to={distributorRoute}
                 onClick={() => handleActionClick("header_contact_distributor")}
-                className="px-4 py-2 rounded-xl text-xs font-semibold border border-emerald-500/30 bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20 transition-all flex items-center gap-1.5"
+                className="px-3.5 py-1.5 rounded-xl text-xs font-semibold border border-emerald-500/30 bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20 transition-all flex items-center gap-1.5"
               >
                 <Users className="w-3.5 h-3.5" />
                 {currentLang === "es"
@@ -1132,9 +1128,9 @@ export default function K8Page() {
                 rel="noopener noreferrer"
                 onClick={() => handleActionClick("header_get_pricing")}
                 className={cn(
-                  "px-4 py-2 rounded-xl text-xs transition-all duration-300 flex items-center gap-1.5 font-bold",
+                  "px-3.5 py-1.5 rounded-xl text-xs transition-all duration-300 flex items-center gap-1.5 font-bold",
                   pastVideoSection
-                    ? "bg-cyan-500 text-slate-950 hover:bg-cyan-400 shadow-lg shadow-cyan-500/20"
+                    ? "bg-cyan-500 text-slate-950 hover:bg-cyan-400 shadow-md shadow-cyan-500/20"
                     : "border border-white/15 bg-white/5 text-slate-200 hover:bg-white/10"
                 )}
               >
@@ -1344,7 +1340,7 @@ export default function K8Page() {
             <span className="text-xs font-semibold text-slate-400">
               {content.demo.langSelectLabel}
             </span>
-            <div className="flex items-center gap-2 bg-white/5 border border-white/10 p-1 rounded-xl">
+            <div className="flex items-center gap-1.5 bg-white/5 border border-white/10 p-1 rounded-xl">
               {(
                 [
                   { code: "en", label: "English" },
@@ -1357,7 +1353,7 @@ export default function K8Page() {
                   key={code}
                   onClick={() => setVideoLang(code)}
                   className={cn(
-                    "px-3 py-1.5 rounded-lg text-xs font-bold transition-all duration-200",
+                    "px-2.5 py-1 rounded-lg text-xs font-bold transition-all duration-200",
                     videoLang === code
                       ? "bg-cyan-500 text-slate-950 shadow-md shadow-cyan-500/20"
                       : "text-slate-400 hover:text-white"
