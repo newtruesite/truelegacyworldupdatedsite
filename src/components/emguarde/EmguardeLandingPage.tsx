@@ -1889,7 +1889,86 @@ export function EmguardeLandingPage({ profile: propProfile, distributorSlug }: E
           </div>
         </section>
 
-        {/* ── 03: WHAT IS EMGUARDE? (EDITORIAL HERO PRODUCT OVERVIEW) ── */}
+        {/* ── 03: VIDEO / DEMONSTRATION SECTION (KANGEN SISTER FORMAT) ── */}
+        <section
+          id="video-demo"
+          ref={videoSectionRef}
+          className="py-16 md:py-24 border-b border-white/10 bg-gradient-to-b from-[#070b12] via-[#09101d] to-[#070b12] relative"
+        >
+          <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+            <div className="text-center max-w-3xl mx-auto mb-8 space-y-3">
+              <span className="text-xs font-bold uppercase tracking-widest text-cyan-400 bg-cyan-500/10 border border-cyan-500/20 px-3.5 py-1 rounded-full inline-block">
+                {copy.demoBadge}
+              </span>
+              <h2 className="text-2xl sm:text-4xl font-bold text-white">
+                {copy.demoTitle}
+              </h2>
+              <p className="text-sm sm:text-base text-slate-300">
+                {copy.demoSubtitle}
+              </p>
+            </div>
+
+            {/* Language Selector Bar for Video */}
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mb-6 notranslate" translate="no">
+              <span className="text-xs font-semibold text-slate-400">
+                Video Language:
+              </span>
+              <div className="flex items-center gap-1.5 bg-white/5 border border-white/10 p-1 rounded-xl">
+                {(
+                  [
+                    { code: 'en', label: 'English (~8m)' },
+                    { code: 'es', label: 'Español (~8m)' },
+                    { code: 'fr', label: 'Français (~8m)' },
+                    { code: 'pt', label: 'Português (~8m)' },
+                  ] as const
+                ).map((lang) => (
+                  <button
+                    key={lang.code}
+                    type="button"
+                    onClick={() => {
+                      setSelectedVideoLang(lang.code)
+                      setLocale(lang.code)
+                    }}
+                    className={cn(
+                      'px-3 py-1.5 rounded-lg text-xs font-bold transition-all notranslate',
+                      selectedVideoLang === lang.code
+                        ? 'bg-cyan-500 text-slate-950 font-black shadow-md'
+                        : 'text-slate-400 hover:text-white hover:bg-white/5'
+                    )}
+                    translate="no"
+                  >
+                    {lang.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* 16:9 Video Embed */}
+            <div className="relative w-full rounded-2xl overflow-hidden border border-white/15 bg-black shadow-2xl">
+              <div className="relative w-full pt-[56.25%]">
+                <iframe
+                  key={embedVideoUrl}
+                  src={embedVideoUrl}
+                  title="The Enagic emGuarde Presentation"
+                  className="absolute inset-0 h-full w-full border-0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                  allowFullScreen
+                />
+              </div>
+            </div>
+
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-4 text-xs text-slate-400">
+              <span className="flex items-center gap-1.5 text-white font-semibold">
+                <PlayCircle className="h-4 w-4 text-cyan-400" /> Complete Enagic emGuarde™ Overview
+              </span>
+              <span className="flex items-center gap-1 font-mono">
+                <Clock className="h-3.5 w-3.5 text-cyan-400" /> {copy.watchTime}
+              </span>
+            </div>
+          </div>
+        </section>
+
+        {/* ── 04: WHAT IS EMGUARDE? (EDITORIAL HERO PRODUCT OVERVIEW) ── */}
         <section className="py-16 md:py-24 border-b border-white/10 bg-[#070b12] relative">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center">
@@ -2205,85 +2284,6 @@ export function EmguardeLandingPage({ profile: propProfile, distributorSlug }: E
                   </div>
                 ))}
               </div>
-            </div>
-          </div>
-        </section>
-
-        {/* ── 10: VIDEO / DEMONSTRATION SECTION (KANGEN SISTER FORMAT) ── */}
-        <section
-          id="video-demo"
-          ref={videoSectionRef}
-          className="py-16 md:py-24 border-b border-white/10 bg-gradient-to-b from-[#070b12] via-[#09101d] to-[#070b12] relative"
-        >
-          <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
-            <div className="text-center max-w-3xl mx-auto mb-8 space-y-3">
-              <span className="text-xs font-bold uppercase tracking-widest text-cyan-400 bg-cyan-500/10 border border-cyan-500/20 px-3.5 py-1 rounded-full inline-block">
-                {copy.demoBadge}
-              </span>
-              <h2 className="text-2xl sm:text-4xl font-bold text-white">
-                {copy.demoTitle}
-              </h2>
-              <p className="text-sm sm:text-base text-slate-300">
-                {copy.demoSubtitle}
-              </p>
-            </div>
-
-            {/* Language Selector Bar for Video */}
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mb-6 notranslate" translate="no">
-              <span className="text-xs font-semibold text-slate-400">
-                Video Language:
-              </span>
-              <div className="flex items-center gap-1.5 bg-white/5 border border-white/10 p-1 rounded-xl">
-                {(
-                  [
-                    { code: 'en', label: 'English (~8m)' },
-                    { code: 'es', label: 'Español (~8m)' },
-                    { code: 'fr', label: 'Français (~8m)' },
-                    { code: 'pt', label: 'Português (~8m)' },
-                  ] as const
-                ).map((lang) => (
-                  <button
-                    key={lang.code}
-                    type="button"
-                    onClick={() => {
-                      setSelectedVideoLang(lang.code)
-                      setLocale(lang.code)
-                    }}
-                    className={cn(
-                      'px-3 py-1.5 rounded-lg text-xs font-bold transition-all notranslate',
-                      selectedVideoLang === lang.code
-                        ? 'bg-cyan-500 text-slate-950 font-black shadow-md'
-                        : 'text-slate-400 hover:text-white hover:bg-white/5'
-                    )}
-                    translate="no"
-                  >
-                    {lang.label}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* 16:9 Video Embed */}
-            <div className="relative w-full rounded-2xl overflow-hidden border border-white/15 bg-black shadow-2xl">
-              <div className="relative w-full pt-[56.25%]">
-                <iframe
-                  key={embedVideoUrl}
-                  src={embedVideoUrl}
-                  title="The Enagic emGuarde Presentation"
-                  className="absolute inset-0 h-full w-full border-0"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                  allowFullScreen
-                />
-              </div>
-            </div>
-
-            <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-4 text-xs text-slate-400">
-              <span className="flex items-center gap-1.5 text-white font-semibold">
-                <PlayCircle className="h-4 w-4 text-cyan-400" /> Complete Enagic emGuarde™ Overview
-              </span>
-              <span className="flex items-center gap-1 font-mono">
-                <Clock className="h-3.5 w-3.5 text-cyan-400" /> {copy.watchTime}
-              </span>
             </div>
           </div>
         </section>
