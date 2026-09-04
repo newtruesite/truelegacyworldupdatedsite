@@ -315,6 +315,64 @@ const ACADEMY_STRUCTURE = [
   },
 ];
 
+// Module Color System - Coordinated Semantic Themes for Training Modules
+const MODULE_THEMES = {
+  1: {
+    num: 1,
+    name: "Foundation & Product Mastery",
+    badgeText: "text-cyan-400",
+    badgeBg: "bg-cyan-400/10",
+    badgeBorder: "border-cyan-400/30",
+    cardBg: "bg-gradient-to-r from-cyan-950/30 via-neutral-900/60 to-neutral-950",
+    cardBorder: "border-cyan-500/25 hover:border-cyan-400/50",
+    activeCardBorder: "border-cyan-400/70 shadow-[0_0_24px_rgba(6,182,212,0.18)]",
+    leftAccent: "border-l-4 border-l-cyan-400",
+    progressFill: "bg-gradient-to-r from-cyan-400 to-blue-500 shadow-[0_0_10px_rgba(6,182,212,0.3)]",
+    activeLessonBg: "bg-cyan-500/15 border-l-4 border-cyan-400 text-white font-bold shadow-[0_0_15px_rgba(6,182,212,0.15)]",
+    playIconBg: "bg-cyan-400/20 text-cyan-400",
+    playIconColor: "text-cyan-400 fill-cyan-400",
+    hoverLessonBg: "hover:bg-cyan-500/10 hover:text-cyan-200",
+    focusRing: "focus-visible:ring-cyan-400",
+    eyebrowText: "text-cyan-400",
+  },
+  2: {
+    num: 2,
+    name: "Business Skills & Conversations",
+    badgeText: "text-amber-400",
+    badgeBg: "bg-amber-400/10",
+    badgeBorder: "border-amber-400/30",
+    cardBg: "bg-gradient-to-r from-amber-950/30 via-neutral-900/60 to-neutral-950",
+    cardBorder: "border-amber-500/25 hover:border-amber-400/50",
+    activeCardBorder: "border-amber-400/70 shadow-[0_0_24px_rgba(245,166,35,0.18)]",
+    leftAccent: "border-l-4 border-l-amber-400",
+    progressFill: "bg-gradient-to-r from-amber-400 to-amber-500 shadow-[0_0_10px_rgba(245,166,35,0.3)]",
+    activeLessonBg: "bg-amber-500/15 border-l-4 border-amber-400 text-white font-bold shadow-[0_0_15px_rgba(245,166,35,0.15)]",
+    playIconBg: "bg-amber-400/20 text-amber-400",
+    playIconColor: "text-amber-400 fill-amber-400",
+    hoverLessonBg: "hover:bg-amber-500/10 hover:text-amber-200",
+    focusRing: "focus-visible:ring-amber-400",
+    eyebrowText: "text-amber-400",
+  },
+  3: {
+    num: 3,
+    name: "Systems, Leadership & Duplication",
+    badgeText: "text-purple-400",
+    badgeBg: "bg-purple-400/10",
+    badgeBorder: "border-purple-400/30",
+    cardBg: "bg-gradient-to-r from-purple-950/30 via-neutral-900/60 to-neutral-950",
+    cardBorder: "border-purple-500/25 hover:border-purple-400/50",
+    activeCardBorder: "border-purple-400/70 shadow-[0_0_24px_rgba(168,85,247,0.18)]",
+    leftAccent: "border-l-4 border-l-purple-400",
+    progressFill: "bg-gradient-to-r from-purple-400 to-indigo-500 shadow-[0_0_10px_rgba(168,85,247,0.3)]",
+    activeLessonBg: "bg-purple-500/15 border-l-4 border-purple-400 text-white font-bold shadow-[0_0_15px_rgba(168,85,247,0.15)]",
+    playIconBg: "bg-purple-400/20 text-purple-400",
+    playIconColor: "text-purple-400 fill-purple-400",
+    hoverLessonBg: "hover:bg-purple-500/10 hover:text-purple-200",
+    focusRing: "focus-visible:ring-purple-400",
+    eyebrowText: "text-purple-400",
+  },
+} as const;
+
 const getYouTubeThumbnail = (url?: string) => {
   if (!url) return '';
   try {
@@ -1374,147 +1432,165 @@ export default function TrainingPage() {
                     });
                   };
 
-                  const renderCurriculumSidebar = () => (
-                    <div className="space-y-6">
-                      {/* Sidebar Header & Progress */}
-                      <div>
-                        <div className="flex items-center justify-between mb-2">
-                          <span className="text-[11px] font-black uppercase tracking-[0.25em] text-white">
-                            {locale === "es" ? "TU ENTRENAMIENTO" : locale === "fr" ? "VOTRE FORMATION" : locale === "pt" ? "SEU TREINAMENTO" : "YOUR TRAINING"}
-                          </span>
-                          <span className="text-xs font-bold text-[#cccccc]">
-                            {academyProgressPercent}%
-                          </span>
-                        </div>
+                  const renderCurriculumSidebar = () => {
+                    const activeModuleTheme = MODULE_THEMES[activeAcademyModule.num as 1 | 2 | 3] || MODULE_THEMES[1];
 
-                        {/* Academy Progress Bar */}
-                        <div className="mb-4">
-                          <div className="flex items-center justify-between text-xs text-[#cccccc] mb-1.5 font-semibold">
-                            <span>{locale === "es" ? "Progreso de la Academia" : locale === "fr" ? "Progrès de l’Académie" : locale === "pt" ? "Progresso da Academia" : "Academy Progress"}</span>
-                            <span className={academyProgressPercent === 100 ? "text-emerald-400 font-bold" : "text-[#2997ff]"}>
-                              {totalCompletedCount} / {totalLessonsCount}
+                    return (
+                      <div className="space-y-6">
+                        {/* Sidebar Header & Progress */}
+                        <div>
+                          <div className="flex items-center justify-between mb-2">
+                            <span className="text-[11px] font-black uppercase tracking-[0.25em] text-white">
+                              {locale === "es" ? "TU ENTRENAMIENTO" : locale === "fr" ? "VOTRE FORMATION" : locale === "pt" ? "SEU TREINAMENTO" : "YOUR TRAINING"}
+                            </span>
+                            <span className="text-xs font-bold text-[#cccccc]">
+                              {academyProgressPercent}%
                             </span>
                           </div>
-                          <div className="h-2 w-full rounded-full bg-white/10 overflow-hidden">
-                            <div
-                              className={`h-full rounded-full transition-all duration-500 ${
-                                academyProgressPercent === 100
-                                  ? "bg-gradient-to-r from-emerald-400 to-teal-500 shadow-[0_0_12px_rgba(16,185,129,0.3)]"
-                                  : "bg-gradient-to-r from-cyan-400 to-blue-500"
-                              }`}
-                              style={{ width: `${academyProgressPercent}%` }}
-                            />
-                          </div>
-                        </div>
 
-                        {/* Active Module Progress Bar */}
-                        <div className="p-3 rounded-xl border border-white/10 bg-white/[0.03]">
-                          <div className="flex items-center justify-between text-xs text-[#cccccc] mb-1 font-semibold">
-                            <span>{locale === "es" ? "Progreso del Módulo" : locale === "fr" ? "Progrès du Module" : locale === "pt" ? "Progresso do Módulo" : "Module Progress"}</span>
-                            <span className={activeModuleCompletedCount === activeAcademyModule.moduleIds.length ? "text-emerald-400 font-bold" : "text-[#2997ff]"}>
-                              {activeModuleCompletedCount} / {activeAcademyModule.moduleIds.length}
-                            </span>
-                          </div>
-                          <div className="h-1.5 w-full rounded-full bg-white/10 overflow-hidden">
-                            <div
-                              className={`h-full rounded-full transition-all duration-500 ${
-                                activeModuleCompletedCount === activeAcademyModule.moduleIds.length
-                                  ? "bg-emerald-400 shadow-[0_0_8px_rgba(16,185,129,0.3)]"
-                                  : "bg-[#2997ff]"
-                              }`}
-                              style={{ width: `${Math.round((activeModuleCompletedCount / activeAcademyModule.moduleIds.length) * 100)}%` }}
-                            />
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* Module Accordions */}
-                      <div className="space-y-3">
-                        {ACADEMY_STRUCTURE.map((acadMod) => {
-                          const isExpanded = expandedCurriculumModules.has(acadMod.id);
-                          const modTitle = getModuleTitle(acadMod.titleKey);
-                          const modLessons = acadMod.moduleIds.map((id) => TRAINING_MODULES.find((m) => m.id === id)!);
-                          const modCompleted = acadMod.moduleIds.filter((id) => completedLessonIds.has(id)).length;
-
-                          return (
-                            <div key={acadMod.id} className="rounded-xl border border-white/10 bg-black/40 overflow-hidden transition-colors">
-                              {/* Module Header Button */}
-                              <button
-                                type="button"
-                                onClick={() => {
-                                  toggleCurriculumModule(acadMod.id);
-                                }}
-                                className="w-full p-3.5 flex items-center justify-between gap-2 text-left hover:bg-white/5 transition-colors"
-                              >
-                                <div className="min-w-0 flex-1">
-                                  <div className="flex items-center gap-2 mb-0.5">
-                                    <span className="text-[10px] font-black uppercase tracking-wider text-tl-gold">
-                                      {locale === "es" ? `MÓDULO ${acadMod.num}` : locale === "fr" ? `MODULE ${acadMod.num}` : locale === "pt" ? `MÓDULO ${acadMod.num}` : `MODULE ${acadMod.num}`}
-                                    </span>
-                                    <span className="text-[10px] font-medium text-[#cccccc] bg-white/10 px-1.5 py-0.5 rounded">
-                                      {modCompleted}/{acadMod.moduleIds.length} {locale === "es" ? "completado" : "completed"}
-                                    </span>
-                                  </div>
-                                  <h4 className="text-xs font-extrabold text-white truncate">{modTitle}</h4>
-                                </div>
-                                <span className="text-[#cccccc] p-1">
-                                  {isExpanded ? <ChevronDown className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />}
-                                </span>
-                              </button>
-
-                              {/* Lesson Items inside Module */}
-                              {isExpanded && (
-                                <div className="border-t border-white/10 p-1.5 space-y-1 bg-white/[0.01]">
-                                  {modLessons.map((lesson, idx) => {
-                                    const loc = getLocalizedLesson(lesson);
-                                    const isCurrentActive = lesson.id === activeLessonId && !activeModuleOverviewId;
-                                    const isDone = completedLessonIds.has(lesson.id);
-
-                                    return (
-                                      <button
-                                        key={lesson.id}
-                                        type="button"
-                                        onClick={() => {
-                                          setActiveLessonId(lesson.id);
-                                          setActiveModuleOverviewId(null);
-                                          setShowMobileCurriculum(false);
-                                        }}
-                                        className={`w-full p-2.5 rounded-lg flex items-center gap-2.5 text-left transition-all text-xs ${
-                                          isCurrentActive
-                                            ? "border-l-2 border-[#2997ff] bg-cyan-500/15 text-white font-bold shadow-[0_0_20px_rgba(6,182,212,0.15)]"
-                                            : isDone
-                                              ? "text-[#cccccc] hover:bg-white/5 hover:text-white"
-                                              : "text-[#cccccc] hover:bg-white/5 hover:text-white"
-                                        }`}
-                                      >
-                                        <span className="shrink-0">
-                                          {isCurrentActive ? (
-                                            <Play className="w-3.5 h-3.5 fill-[#2997ff] text-[#2997ff]" />
-                                          ) : isDone ? (
-                                            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
-                                          ) : (
-                                            <Circle className="w-3.5 h-3.5 text-neutral-600" />
-                                          )}
-                                        </span>
-                                        <span className="truncate flex-1 leading-snug">
-                                          {idx + 1}. {loc.title}
-                                        </span>
-                                        {lesson.duration && (
-                                          <span className="text-[10px] text-[#86868b] shrink-0 font-medium">
-                                            {lesson.duration}
-                                          </span>
-                                        )}
-                                      </button>
-                                    );
-                                  })}
-                                </div>
-                              )}
+                          {/* Academy Progress Bar */}
+                          <div className="mb-4">
+                            <div className="flex items-center justify-between text-xs text-[#cccccc] mb-1.5 font-semibold">
+                              <span>{locale === "es" ? "Progreso de la Academia" : locale === "fr" ? "Progrès de l’Académie" : locale === "pt" ? "Progresso da Academia" : "Academy Progress"}</span>
+                              <span className={academyProgressPercent === 100 ? "text-emerald-400 font-bold" : "text-[#2997ff]"}>
+                                {totalCompletedCount} / {totalLessonsCount}
+                              </span>
                             </div>
-                          );
-                        })}
+                            <div className="h-2 w-full rounded-full bg-white/10 overflow-hidden">
+                              <div
+                                className={`h-full rounded-full transition-all duration-500 ${
+                                  academyProgressPercent === 100
+                                    ? "bg-gradient-to-r from-emerald-400 to-teal-500 shadow-[0_0_12px_rgba(16,185,129,0.3)]"
+                                    : "bg-gradient-to-r from-cyan-400 to-blue-500"
+                                }`}
+                                style={{ width: `${academyProgressPercent}%` }}
+                              />
+                            </div>
+                          </div>
+
+                          {/* Active Module Progress Bar (Using Active Module Theme Color) */}
+                          <div className="p-3.5 rounded-xl border border-white/10 bg-white/[0.03]">
+                            <div className="flex items-center justify-between text-xs text-[#cccccc] mb-1.5 font-semibold">
+                              <span className="flex items-center gap-1.5">
+                                <span className={`w-2 h-2 rounded-full ${activeModuleTheme.badgeBg} ${activeModuleTheme.badgeText}`} />
+                                {locale === "es" ? "Progreso del Módulo" : locale === "fr" ? "Progrès du Module" : locale === "pt" ? "Progresso do Módulo" : "Module Progress"}
+                              </span>
+                              <span className={activeModuleCompletedCount === activeAcademyModule.moduleIds.length ? "text-emerald-400 font-bold" : activeModuleTheme.badgeText}>
+                                {activeModuleCompletedCount} / {activeAcademyModule.moduleIds.length}
+                              </span>
+                            </div>
+                            <div className="h-1.5 w-full rounded-full bg-white/10 overflow-hidden">
+                              <div
+                                className={`h-full rounded-full transition-all duration-500 ${
+                                  activeModuleCompletedCount === activeAcademyModule.moduleIds.length
+                                    ? "bg-emerald-400 shadow-[0_0_8px_rgba(16,185,129,0.3)]"
+                                    : activeModuleTheme.progressFill
+                                }`}
+                                style={{ width: `${Math.round((activeModuleCompletedCount / activeAcademyModule.moduleIds.length) * 100)}%` }}
+                              />
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Module Accordions */}
+                        <div className="space-y-3.5">
+                          {ACADEMY_STRUCTURE.map((acadMod) => {
+                            const modTheme = MODULE_THEMES[acadMod.num as 1 | 2 | 3] || MODULE_THEMES[1];
+                            const isExpanded = expandedCurriculumModules.has(acadMod.id);
+                            const isActiveModule = acadMod.id === activeAcademyModule.id;
+                            const modTitle = getModuleTitle(acadMod.titleKey);
+                            const modLessons = acadMod.moduleIds.map((id) => TRAINING_MODULES.find((m) => m.id === id)!);
+                            const modCompleted = acadMod.moduleIds.filter((id) => completedLessonIds.has(id)).length;
+
+                            return (
+                              <div
+                                key={acadMod.id}
+                                className={`rounded-xl border overflow-hidden transition-all duration-200 ${modTheme.leftAccent} ${modTheme.cardBg} ${
+                                  isActiveModule ? modTheme.activeCardBorder : modTheme.cardBorder
+                                }`}
+                              >
+                                {/* Module Header Button */}
+                                <button
+                                  type="button"
+                                  aria-expanded={isExpanded}
+                                  aria-label={`Module ${acadMod.num}: ${modTitle}`}
+                                  onClick={() => {
+                                    toggleCurriculumModule(acadMod.id);
+                                  }}
+                                  className="w-full p-3.5 flex items-center justify-between gap-3 text-left hover:bg-white/5 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-neutral-950 focus-visible:ring-cyan-400"
+                                >
+                                  <div className="min-w-0 flex-1">
+                                    <div className="flex items-center gap-2 mb-1">
+                                      <span className={`text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded border ${modTheme.badgeText} ${modTheme.badgeBg} ${modTheme.badgeBorder}`}>
+                                        {locale === "es" ? `MÓDULO ${acadMod.num}` : locale === "fr" ? `MODULE ${acadMod.num}` : locale === "pt" ? `MÓDULO ${acadMod.num}` : `MODULE ${acadMod.num}`}
+                                      </span>
+                                      <span className="text-[10px] font-semibold text-[#cccccc] bg-white/10 px-1.5 py-0.5 rounded border border-white/10">
+                                        {modCompleted}/{acadMod.moduleIds.length} {locale === "es" ? "completado" : "completed"}
+                                      </span>
+                                    </div>
+                                    <h4 className="text-xs sm:text-sm font-extrabold text-white truncate leading-snug">{modTitle}</h4>
+                                  </div>
+                                  <span className="text-[#cccccc] p-1">
+                                    {isExpanded ? <ChevronDown className="w-4 h-4 text-white" /> : <ChevronRight className="w-4 h-4 text-[#cccccc]" />}
+                                  </span>
+                                </button>
+
+                                {/* Lesson Items inside Module */}
+                                {isExpanded && (
+                                  <div className="border-t border-white/10 p-1.5 space-y-1 bg-black/40">
+                                    {modLessons.map((lesson, idx) => {
+                                      const loc = getLocalizedLesson(lesson);
+                                      const isCurrentActive = lesson.id === activeLessonId && !activeModuleOverviewId;
+                                      const isDone = completedLessonIds.has(lesson.id);
+
+                                      return (
+                                        <button
+                                          key={lesson.id}
+                                          type="button"
+                                          title={loc.title}
+                                          aria-label={loc.title}
+                                          onClick={() => {
+                                            setActiveLessonId(lesson.id);
+                                            setActiveModuleOverviewId(null);
+                                            setShowMobileCurriculum(false);
+                                          }}
+                                          className={`w-full min-h-[44px] px-3 py-2.5 rounded-lg flex items-center gap-3 text-left transition-all text-xs sm:text-sm font-medium ${
+                                            isCurrentActive
+                                              ? modTheme.activeLessonBg
+                                              : isDone
+                                                ? "text-slate-200 hover:bg-emerald-500/10 hover:text-white"
+                                                : `text-[#cccccc] ${modTheme.hoverLessonBg}`
+                                          } focus-visible:outline-none focus-visible:ring-2 ${modTheme.focusRing}`}
+                                        >
+                                          <span className="shrink-0">
+                                            {isCurrentActive ? (
+                                              <Play className={`w-4 h-4 ${modTheme.playIconColor}`} />
+                                            ) : isDone ? (
+                                              <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+                                            ) : (
+                                              <Circle className="w-4 h-4 text-neutral-600 shrink-0" />
+                                            )}
+                                          </span>
+                                          <span className="truncate flex-1 leading-snug">
+                                            {idx + 1}. {loc.title}
+                                          </span>
+                                          {lesson.duration && (
+                                            <span className="text-[11px] text-[#86868b] shrink-0 font-medium">
+                                              {lesson.duration}
+                                            </span>
+                                          )}
+                                        </button>
+                                      );
+                                    })}
+                                  </div>
+                                )}
+                              </div>
+                            );
+                          })}
+                        </div>
                       </div>
-                    </div>
-                  );
+                    );
+                  };
 
                   return (
                     <section className="mb-12">
@@ -1654,6 +1730,7 @@ export default function TrainingPage() {
                             (() => {
                               const loc = getLocalizedLesson(activeLesson);
                               const isCompleted = completedLessonIds.has(activeLesson.id);
+                              const activeModuleTheme = MODULE_THEMES[activeAcademyModule.num as 1 | 2 | 3] || MODULE_THEMES[1];
 
                               return (
                                 <motion.div
@@ -1666,7 +1743,7 @@ export default function TrainingPage() {
                                   {/* Lesson Header */}
                                   <div>
                                     <div className="flex items-center justify-between flex-wrap gap-2 mb-2">
-                                      <span className="text-xs font-black uppercase tracking-[0.25em] text-tl-gold">
+                                      <span className={`text-xs font-black uppercase tracking-[0.25em] ${activeModuleTheme.eyebrowText}`}>
                                         {locale === "es" ? `MÓDULO ${activeAcademyModule.num}` : `MODULE ${activeAcademyModule.num}`} • {getModuleTitle(activeAcademyModule.titleKey)}
                                       </span>
                                       <button
@@ -1812,6 +1889,8 @@ export default function TrainingPage() {
                                   {nextLesson && (() => {
                                     const nextLoc = getLocalizedLesson(nextLesson);
                                     const nextThumb = getYouTubeThumbnail(nextLesson.videoUrl);
+                                    const nextModule = ACADEMY_STRUCTURE.find((m) => m.moduleIds.includes(nextLesson.id)) || ACADEMY_STRUCTURE[0];
+                                    const nextModuleTheme = MODULE_THEMES[nextModule.num as 1 | 2 | 3] || MODULE_THEMES[1];
 
                                     return (
                                       <div
@@ -1835,8 +1914,8 @@ export default function TrainingPage() {
                                           </div>
 
                                           <div className="min-w-0">
-                                            <p className="text-[10px] font-black uppercase tracking-[0.25em] text-[#2997ff] mb-1">
-                                              {locale === "es" ? "SIGUIENTE LECCIÓN" : "NEXT LESSON"}
+                                            <p className={`text-[10px] font-black uppercase tracking-[0.25em] mb-1 ${nextModuleTheme.badgeText}`}>
+                                              {locale === "es" ? `SIGUIENTE LECCIÓN • MÓDULO ${nextModule.num}` : `NEXT LESSON • MODULE ${nextModule.num}`}
                                             </p>
                                             <h4 className="font-bold text-white text-base truncate group-hover:text-cyan-300 transition-colors">
                                               {nextLoc.title}
