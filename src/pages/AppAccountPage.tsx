@@ -11,6 +11,7 @@ import {
   updateDistributorProfile,
   setCustomLeaderAvatar,
   setCustomApplicationSettings,
+  setCustomPurchaseLinks,
   convertToPermanentDataUrl,
 } from '@/lib/crm'
 import type {
@@ -368,19 +369,50 @@ export default function AppAccountPage() {
 
       const displayName = String(data.get('displayName') || distributor.display_name || '')
       const title = String(data.get('title') || distributor.title || '')
-      const bio = String(data.get('bio') || distributor.bio || '')
-      const phone = String(data.get('phone') || distributor.phone || '')
-      const instagramUrl = String(data.get('instagramUrl') || distributor.instagram_url || '')
-      const websiteUrl = String(data.get('websiteUrl') || distributor.website_url || '')
-      const regions = String(data.get('regions') || '').split(',').map((s) => s.trim()).filter(Boolean)
-      const languages = data.getAll('languages').map(String)
-      const acceptingLeads = data.get('acceptingLeads') === 'on'
+      const bio = data.has('bio') ? String(data.get('bio') || '') : (distributor.bio || '')
+      const phone = data.has('phone') ? String(data.get('phone') || '') : (distributor.phone || '')
+      const instagramUrl = data.has('instagramUrl') ? String(data.get('instagramUrl') || '') : (distributor.instagram_url || '')
+      const websiteUrl = data.has('websiteUrl') ? String(data.get('websiteUrl') || '') : (distributor.website_url || '')
+      
+      const rawRegions = data.get('regions')
+      let regions = rawRegions !== null
+        ? String(rawRegions).split(',').map((s) => s.trim()).filter(Boolean)
+        : (distributor.regions && distributor.regions.length > 0 ? distributor.regions : ['North America'])
+      if (regions.length === 0) {
+        regions = distributor.regions && distributor.regions.length > 0 ? distributor.regions : ['North America']
+      }
+
+      const rawLanguages = data.getAll('languages')
+      let languages = rawLanguages.length > 0
+        ? rawLanguages.map(String)
+        : (distributor.languages && distributor.languages.length > 0 ? distributor.languages : ['en'])
+      if (languages.length === 0) {
+        languages = distributor.languages && distributor.languages.length > 0 ? distributor.languages : ['en']
+      }
+
+      const acceptingLeads = data.has('acceptingLeads')
+        ? data.get('acceptingLeads') === 'on'
+        : distributor.accepting_leads
 
       const cleanPurchaseLinks: Record<string, string> = {}
       for (const [key, val] of Object.entries(purchaseLinks)) {
         if (val && val.trim()) {
-          cleanPurchaseLinks[key] = val.trim()
+          let urlVal = val.trim()
+          if (!/^https?:\/\//i.test(urlVal) && urlVal.includes('.')) {
+            urlVal = `https://${urlVal}`
+          }
+          if (!isValidPurchaseUrl(urlVal)) {
+            throw new Error(`Invalid URL format for ${key.replace(/_/g, ' ')}. Please enter a valid web link starting with https://`)
+          }
+          cleanPurchaseLinks[key] = urlVal
         }
+      }
+
+      // Mirror kangen_wagyu and wagyu keys for universal compatibility
+      if (cleanPurchaseLinks.kangen_wagyu && !cleanPurchaseLinks.wagyu) {
+        cleanPurchaseLinks.wagyu = cleanPurchaseLinks.kangen_wagyu
+      } else if (cleanPurchaseLinks.wagyu && !cleanPurchaseLinks.kangen_wagyu) {
+        cleanPurchaseLinks.kangen_wagyu = cleanPurchaseLinks.wagyu
       }
 
       const updates: DistributorProfileUpdate = {
@@ -405,6 +437,7 @@ export default function AppAccountPage() {
           setCustomLeaderAvatar(distributor.slug, updates.avatarUrl)
         }
         setCustomApplicationSettings(distributor.slug, applicationSettings)
+        setCustomPurchaseLinks(distributor.slug, cleanPurchaseLinks)
         setDistributors((prev) =>
           prev.map((item) =>
             item.id === distributor.id
@@ -430,8 +463,17 @@ export default function AppAccountPage() {
       } else {
         throw new Error('Account storage is unavailable')
       }
-    } catch {
-      setError('Your changes could not be saved. Check the fields and try again.')
+    } catch (err: unknown) {
+      console.error('Failed to save settings:', err)
+      let errorMsg = 'Your changes could not be saved. Check the fields and try again.'
+      if (err instanceof Error) {
+        errorMsg = err.message
+      } else if (typeof err === 'object' && err !== null && 'message' in err) {
+        errorMsg = String((err as { message: unknown }).message)
+      } else if (typeof err === 'string') {
+        errorMsg = err
+      }
+      setError(errorMsg)
     } finally {
       setSaving(false)
     }
