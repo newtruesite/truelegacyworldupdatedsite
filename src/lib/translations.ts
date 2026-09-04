@@ -235,6 +235,23 @@ export const t = {
         systems: 'Systems & Funnels',
         prospecting: 'Prospecting & Invitations',
         closing: 'Closing, Objections & Business Media'
+      },
+      presentationCenter: {
+        eyebrow: 'TRUE LEGACY LEADER RESOURCE',
+        title: 'Leader Presentation Center',
+        subtitle: 'Everything you need to present with confidence.',
+        supportingCopy: 'Access the official True Legacy presentations for prospect calls, Zoom presentations, home meetings, team events, and one-on-one conversations.',
+        badgeOfficial: 'OFFICIAL',
+        badgeTrueLegacy: 'TRUE LEGACY',
+        badgeCustomizable: 'CUSTOMIZABLE',
+        badgeUpdated: 'UPDATED',
+        openPresentation: 'Open Presentation',
+        downloadPdf: 'Download PDF',
+        downloadPdfUnavailable: 'PDF Download Coming Soon',
+        openCanva: 'Open in Canva',
+        useCanvaTemplate: 'Use Canva Template',
+        versionLabel: 'Version',
+        updatedLabel: 'Updated',
       }
     },
     trainingModules: {
@@ -456,6 +473,23 @@ export const t = {
         systems: 'Sistemas y Embudos',
         prospecting: 'Prospección e Invitaciones',
         closing: 'Cierre, Objeciones y Medios de Negocio'
+      },
+      presentationCenter: {
+        eyebrow: 'RECURSO DE LÍDER TRUE LEGACY',
+        title: 'Centro de Presentaciones de Líderes',
+        subtitle: 'Todo lo que necesitas para presentar con confianza.',
+        supportingCopy: 'Accede a las presentaciones oficiales de True Legacy para llamadas de prospectos, presentaciones por Zoom, reuniones en casa, eventos de equipo y conversaciones uno a uno.',
+        badgeOfficial: 'OFICIAL',
+        badgeTrueLegacy: 'TRUE LEGACY',
+        badgeCustomizable: 'PERSONALIZABLE',
+        badgeUpdated: 'ACTUALIZADO',
+        openPresentation: 'Abrir presentación',
+        downloadPdf: 'Descargar PDF',
+        downloadPdfUnavailable: 'Descarga PDF próximamente',
+        openCanva: 'Abrir en Canva',
+        useCanvaTemplate: 'Usar plantilla de Canva',
+        versionLabel: 'Versión',
+        updatedLabel: 'Actualizado',
       }
     },
     trainingModules: {
@@ -773,6 +807,23 @@ export const t = {
         systems: 'Systèmes et Entonnoirs',
         prospecting: 'Prospection et Invitations',
         closing: 'Clôture, Objections et Médias d\'Affaires'
+      },
+      presentationCenter: {
+        eyebrow: 'RESSOURCE LEADER TRUE LEGACY',
+        title: 'Centre de Présentation des Leaders',
+        subtitle: 'Tout ce dont vous avez besoin pour présenter en toute confiance.',
+        supportingCopy: 'Accédez aux présentations officielles de True Legacy pour les appels de prospects, présentations Zoom, réunions à domicile, événements d\'équipe et entretiens individuels.',
+        badgeOfficial: 'OFFICIEL',
+        badgeTrueLegacy: 'TRUE LEGACY',
+        badgeCustomizable: 'PERSONNALISABLE',
+        badgeUpdated: 'MIS À JOUR',
+        openPresentation: 'Ouvrir la présentation',
+        downloadPdf: 'Télécharger le PDF',
+        downloadPdfUnavailable: 'Téléchargement PDF disponible bientôt',
+        openCanva: 'Ouvrir dans Canva',
+        useCanvaTemplate: 'Utiliser le modèle Canva',
+        versionLabel: 'Version',
+        updatedLabel: 'Mis à jour',
       }
     },
     trainingModules: {
@@ -1090,6 +1141,23 @@ export const t = {
         systems: 'Sistemas e Funis',
         prospecting: 'Prospecção e Convites',
         closing: 'Fechamento, Objeções e Mídia de Negócios'
+      },
+      presentationCenter: {
+        eyebrow: 'RECURSO DE LÍDER TRUE LEGACY',
+        title: 'Centro de Apresentações do Líder',
+        subtitle: 'Tudo o que você precisa para apresentar com confiança.',
+        supportingCopy: 'Acesse as apresentações oficiais da True Legacy para chamadas com prospectos, apresentações no Zoom, reuniões caseiras, eventos de equipe e conversas individuais.',
+        badgeOfficial: 'OFICIAL',
+        badgeTrueLegacy: 'TRUE LEGACY',
+        badgeCustomizable: 'PERSONALIZÁVEL',
+        badgeUpdated: 'ATUALIZADO',
+        openPresentation: 'Abrir apresentação',
+        downloadPdf: 'Baixar PDF',
+        downloadPdfUnavailable: 'Download do PDF em breve',
+        openCanva: 'Abrir no Canva',
+        useCanvaTemplate: 'Usar modelo do Canva',
+        versionLabel: 'Versão',
+        updatedLabel: 'Atualizado',
       }
     },
     trainingModules: {

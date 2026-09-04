@@ -1,4 +1,5 @@
 import { EventsTab } from "@/components/EventsTab";
+import { PresentationCenter } from "@/components/training/PresentationCenter";
 import { Footer } from "@/components/layout/Footer";
 import { Navbar } from "@/components/layout/Navbar";
 import { SEO } from "@/components/SEO";
@@ -1204,6 +1205,9 @@ export default function TrainingPage() {
                     ))}
                   </div>
                 </section>
+
+                {/* TRUE LEGACY LEADER PRESENTATION CENTER */}
+                <PresentationCenter />
 
                 {/* CLEAR TRANSITION INTO TRUE LEGACY ACADEMY */}
                 <div className="mt-14 mb-8 pt-10 border-t border-white/10 text-center">
