@@ -1747,13 +1747,13 @@ export function UkonLandingPage({ profile: propProfile, distributorSlug: propDis
           <div className="grid lg:grid-cols-12 gap-12 items-center">
             {/* Left: Official Box Product Focus */}
             <div className="lg:col-span-5 flex justify-center">
-              <div className="relative max-w-md w-full rounded-3xl border border-amber-500/20 bg-gradient-to-b from-amber-500/[0.06] via-transparent to-black/60 p-6 sm:p-8 backdrop-blur-sm shadow-2xl">
+              <div className="relative max-w-lg w-full rounded-3xl border border-amber-500/20 bg-gradient-to-b from-amber-500/[0.06] via-transparent to-black/60 p-6 sm:p-8 backdrop-blur-sm shadow-2xl">
                 <span className="inline-block rounded-full border border-amber-400/30 bg-amber-400/10 px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-amber-300 mb-4">
                   {content.supplement.badge}
                 </span>
                 <img
-                  src="/products/ukon/ukon-sigma-box.png"
-                  alt="Kangen Ukon Sigma Box"
+                  src="/products/ukon/ukon-sigma-supplement-showcase.png"
+                  alt="Kangen Ukon Sigma Box with Okinawan Turmeric Root"
                   className="w-full h-auto object-contain drop-shadow-[0_20px_40px_rgba(245,158,11,0.25)] mx-auto hover:scale-105 transition-transform duration-300"
                 />
                 <div className="mt-6 border-t border-white/10 pt-4 flex items-center justify-between text-xs text-slate-400">
