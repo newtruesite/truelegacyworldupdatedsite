@@ -415,6 +415,14 @@ export default function AppAccountPage() {
         cleanPurchaseLinks.kangen_wagyu = cleanPurchaseLinks.wagyu
       }
 
+      // Mirror ukon_sigma, ukon, and ukonPurchaseUrl keys for universal compatibility
+      const ukonVal = cleanPurchaseLinks.ukonPurchaseUrl || cleanPurchaseLinks.ukon_sigma || cleanPurchaseLinks.ukon
+      if (ukonVal) {
+        cleanPurchaseLinks.ukonPurchaseUrl = ukonVal
+        cleanPurchaseLinks.ukon_sigma = ukonVal
+        cleanPurchaseLinks.ukon = ukonVal
+      }
+
       const updates: DistributorProfileUpdate = {
         avatarUrl: customAvatarUrl || distributor.avatar_url || null,
         displayName,
@@ -1226,8 +1234,8 @@ export default function AppAccountPage() {
                             <div key={prod.id} className="space-y-1.5 rounded-2xl border border-white/10 bg-white/[0.02] p-4">
                               <div className="flex items-center justify-between">
                                 <label className="text-xs font-bold text-white flex items-center gap-1.5">
-                                  <span>{prod.id === 'kangen_wagyu' ? 'Kangen Wagyu Purchase Link' : prod.name}</span>
-                                  <span className="text-[10px] font-normal text-amber-400 uppercase tracking-wider">{prod.id === 'kangen_wagyu' ? 'Official Link' : 'Purchase Link'}</span>
+                                  <span>{prod.id === 'kangen_wagyu' ? 'Kangen Wagyu Purchase Link' : prod.id === 'ukon_sigma' ? 'Kangen Ukon Purchase Link' : prod.name}</span>
+                                  <span className="text-[10px] font-normal text-amber-400 uppercase tracking-wider">{prod.id === 'kangen_wagyu' || prod.id === 'ukon_sigma' ? 'Official Link' : 'Purchase Link'}</span>
                                 </label>
                                 <div className="flex items-center gap-2">
                                   {val.trim() && !err && (
