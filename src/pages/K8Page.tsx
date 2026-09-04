@@ -268,11 +268,12 @@ const LOCALES = {
   },
   es: {
     hero: {
-      eyebrow: "AGUA KANGEN® · TECNOLOGÍA JAPONESA DE AGUA",
-      headline: "Mejor agua, recién hecha en tu grifo.",
-      sub: "Conoce la Leveluk K8: un ionizador de agua para el hogar de alta gama que filtra el agua del grifo y crea múltiples opciones de agua para beber, cocinar, belleza, lavado de alimentos y limpieza diaria.",
-      ctaPrimary: "Ver la demostración de 4 min",
-      ctaSecondary: "Contactar a tu distribuidor",
+      eyebrow: "TRUE LEGACY × LEVELUK K8",
+      headline: "Transforma tu Agua. Eleva tu Legado.",
+      sub: "Descubre el LEVELUK K8—un ionizador de agua premium para el hogar diseñado para ofrecer múltiples tipos de agua para beber, cocinar, belleza y uso doméstico diario.",
+      ctaPrimary: "Explorar el K8",
+      ctaSecondary: "Conectar con tu Líder True Legacy",
+      trustStatement: "Tu próximo paso está guiado por el líder independiente de True Legacy que compartió esta página contigo.",
       claims: [
         "Hecha en Japón",
         "Ocho placas de titanio bañadas en platino",
@@ -498,11 +499,12 @@ const LOCALES = {
   },
   fr: {
     hero: {
-      eyebrow: "EAU KANGEN® · TECHNOLOGIE DE L'EAU JAPONAISE",
-      headline: "Une eau meilleure, fraîchement produite à votre robinet.",
-      sub: "Découvrez la Leveluk K8—un ioniseur d'eau domestique haut de gamme qui filtre l'eau du robinet et génère plusieurs réglages d'eau pour la boisson, la cuisine, la beauté, le lavage des produits frais et le nettoyage quotidien.",
-      ctaPrimary: "Regarder la démo de 4 min",
-      ctaSecondary: "Contacter votre distributeur",
+      eyebrow: "TRUE LEGACY × LEVELUK K8",
+      headline: "Transformez votre Eau. Élevez votre Héritage.",
+      sub: "Découvrez le LEVELUK K8—un ioniseur d'eau domestique premium conçu pour fournir plusieurs types d'eau pour la boisson, la cuisine, la beauté et l'usage quotidien.",
+      ctaPrimary: "Explorer le K8",
+      ctaSecondary: "Contacter votre Leader True Legacy",
+      trustStatement: "Votre prochaine étape est guidée par le leader indépendant True Legacy qui a partagé cette page avec vous.",
       claims: [
         "Fabriqué au Japon",
         "Huit plaques en titane plaqué platine",
@@ -728,11 +730,12 @@ const LOCALES = {
   },
   pt: {
     hero: {
-      eyebrow: "ÁGUA KANGEN® · TECNOLOGIA JAPONESA DE ÁGUA",
-      headline: "Água melhor, feita na hora na sua torneira.",
-      sub: "Conheça a Leveluk K8—um ionizador de água residencial premium que filtra a água da torneira e cria múltiplas configurações de água para beber, cozinhar, beleza, lavagem de alimentos e limpeza diária.",
-      ctaPrimary: "Assistir à demonstração de 4 min",
-      ctaSecondary: "Falar com seu distribuidor",
+      eyebrow: "TRUE LEGACY × LEVELUK K8",
+      headline: "Transforme sua Água. Eleve seu Legado.",
+      sub: "Descubra o LEVELUK K8—um ionizador de água residencial premium projetado para fornecer múltiplos tipos de água para beber, cozinhar, beleza e uso doméstico diário.",
+      ctaPrimary: "Explorar o K8",
+      ctaSecondary: "Conectar com seu Líder True Legacy",
+      trustStatement: "Seu próximo passo é guiado pelo líder independente True Legacy que compartilhou esta página com você.",
       claims: [
         "Feita no Japão",
         "Oito placas de titânio banhadas em platina",
@@ -1390,166 +1393,182 @@ export default function K8Page({ profile: propProfile, distributorSlug: propSlug
         </div>
       </div>
 
-      {/* ── HERO SECTION ── */}
-      <section className="relative pt-8 pb-16 md:pt-14 md:pb-24 overflow-hidden border-b border-white/10 bg-gradient-to-b from-[#070b12] via-[#0b121e] to-[#070b12]">
-        {/* Background ambient lighting */}
-        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[400px] bg-cyan-500/10 rounded-full blur-[130px] pointer-events-none" />
+      {/* ── HERO SECTION — FULL-BLEED CINEMATIC BACKGROUND ── */}
+      <section
+        className="relative overflow-hidden border-b border-white/10"
+        style={{
+          minHeight: "clamp(600px, 55vw, 800px)",
+        }}
+      >
+        {/* ── Full-bleed background image ── */}
+        <div
+          className="k8-hero-bg absolute inset-0 w-full h-full"
+          aria-hidden="true"
+          style={{
+            backgroundImage: "url('/true-legacy-assets/k8-cinematic-hero.png')",
+            backgroundSize: "cover",
+            backgroundRepeat: "no-repeat",
+            // Desktop: image is 16:9, K8 sits right-center. Anchor it so K8 stays right.
+            backgroundPosition: "center right",
+          }}
+        />
 
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
-            {/* Left Column: Copy & Actions */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-              className="lg:col-span-7 space-y-6"
-            >
-              {/* Eyebrow */}
-              <div className="inline-flex items-center gap-2 rounded-full border border-cyan-500/30 bg-cyan-500/10 px-3.5 py-1 text-xs font-bold uppercase tracking-widest text-cyan-400">
-                <Sparkles className="w-3.5 h-3.5" />
-                <span>{content.hero.eyebrow}</span>
-              </div>
+        {/* ── Left-to-center gradient for text readability — light touch only ── */}
+        <div
+          className="absolute inset-0 pointer-events-none"
+          aria-hidden="true"
+          style={{
+            background:
+              "linear-gradient(to right, rgba(7,11,18,0.82) 0%, rgba(7,11,18,0.72) 30%, rgba(7,11,18,0.30) 55%, rgba(7,11,18,0.0) 75%)",
+          }}
+        />
+        {/* subtle top/bottom vignette for edge polish */}
+        <div
+          className="absolute inset-0 pointer-events-none"
+          aria-hidden="true"
+          style={{
+            background:
+              "linear-gradient(to bottom, rgba(7,11,18,0.4) 0%, transparent 18%, transparent 80%, rgba(7,11,18,0.5) 100%)",
+          }}
+        />
 
-              {/* Headline */}
-              <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight text-white leading-[1.12]">
-                {content.hero.headline.split(",")[0]},
-                <br />
-                <span className="bg-gradient-to-r from-cyan-400 via-sky-300 to-blue-500 bg-clip-text text-transparent">
-                  {content.hero.headline.split(",")[1] || ""}
-                </span>
-              </h1>
+        {/* ── Hero content — left-aligned ── */}
+        <div className="relative z-10 h-full mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 flex items-center" style={{ minHeight: "inherit" }}>
+          <motion.div
+            initial={{ opacity: 0, y: 22 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.65 }}
+            className="w-full max-w-[520px] lg:max-w-[560px] xl:max-w-[600px] py-14 md:py-20 space-y-5"
+          >
+            {/* Eyebrow */}
+            <div className="inline-flex items-center gap-2 rounded-full border border-cyan-500/30 bg-black/30 backdrop-blur-sm px-3.5 py-1 text-xs font-bold uppercase tracking-widest text-cyan-400">
+              <Sparkles className="w-3.5 h-3.5 shrink-0" />
+              <span>{content.hero.eyebrow}</span>
+            </div>
 
-              {/* Supporting Body Copy */}
-              <p className="text-base sm:text-lg text-slate-300 leading-relaxed max-w-2xl font-normal">
-                {content.hero.sub}
-              </p>
+            {/* Headline — 3-line premium editorial treatment */}
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-[1.08] text-white">
+              Better water,
+              <br />
+              <span className="bg-gradient-to-r from-cyan-400 via-sky-300 to-blue-400 bg-clip-text text-transparent">
+                freshly made
+              </span>
+              <br />
+              at your tap.
+            </h1>
 
-              {/* Action Buttons */}
-              <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3.5 pt-2">
+            {/* Supporting paragraph */}
+            <p className="text-sm sm:text-base text-slate-300 leading-relaxed max-w-md">
+              {content.hero.sub}
+            </p>
+
+            {/* CTA buttons */}
+            <div className="flex flex-wrap items-center gap-3 pt-1">
+              <a
+                href="#video-demo"
+                onClick={() => handleActionClick("hero_primary_watch_demo")}
+                className="inline-flex items-center gap-2.5 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold px-5 py-3 text-sm transition-all duration-200 hover:scale-[1.02] shadow-lg shadow-cyan-500/30 focus:ring-2 focus:ring-cyan-400 focus:outline-none"
+              >
+                <Play className="w-4 h-4 fill-slate-950 shrink-0" />
+                <span>{content.hero.ctaPrimary}</span>
+              </a>
+
+              {hasPurchaseLink && (
                 <a
-                  href="#video-demo"
-                  onClick={() => handleActionClick("hero_primary_watch_demo")}
-                  className="inline-flex items-center justify-center gap-3 rounded-2xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold px-6 py-3.5 text-base transition-all duration-300 hover:scale-[1.02] shadow-xl shadow-cyan-500/25 focus:ring-2 focus:ring-cyan-400"
+                  href={k8PurchaseUrl!}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={() => handleActionClick("hero_buy_now")}
+                  className="inline-flex items-center gap-2.5 rounded-xl bg-gradient-to-r from-amber-400 to-yellow-400 hover:from-amber-300 hover:to-yellow-300 text-slate-950 font-black px-5 py-3 text-sm transition-all duration-200 hover:scale-[1.02] shadow-lg shadow-amber-500/30"
                 >
-                  <Play className="w-5 h-5 fill-slate-950" />
-                  <span>{content.hero.ctaPrimary}</span>
+                  <ShoppingCart className="w-4 h-4 shrink-0" />
+                  <span>{buyNowLabel}</span>
                 </a>
+              )}
 
-                {hasPurchaseLink && (
-                  <a
-                    href={k8PurchaseUrl!}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    onClick={() => handleActionClick("hero_buy_now")}
-                    className="inline-flex items-center justify-center gap-2.5 rounded-2xl bg-gradient-to-r from-amber-400 via-amber-300 to-yellow-400 hover:from-amber-300 hover:to-yellow-300 text-slate-950 font-black px-6 py-3.5 text-base transition-all duration-300 hover:scale-[1.02] shadow-xl shadow-amber-500/25"
-                  >
-                    <ShoppingCart className="w-5 h-5" />
-                    <span>{buyNowLabel}</span>
-                  </a>
-                )}
+              {whatsappNumber ? (
+                <a
+                  href={personalWhatsAppUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={() => handleActionClick("hero_whatsapp")}
+                  className="inline-flex items-center gap-2.5 rounded-xl border border-emerald-500/40 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-300 font-semibold px-5 py-3 text-sm transition-all duration-200 hover:scale-[1.02]"
+                >
+                  <MessageCircle className="w-4 h-4 shrink-0 text-emerald-400" />
+                  <span>{messageWhatsappLabel}</span>
+                </a>
+              ) : (
+                <Link
+                  to={distributorProfileRoute}
+                  onClick={() => handleActionClick("hero_secondary_distributor")}
+                  className="inline-flex items-center gap-2.5 rounded-xl border border-emerald-500/40 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-300 font-semibold px-5 py-3 text-sm transition-all duration-200 hover:scale-[1.02]"
+                >
+                  <Users className="w-4 h-4 shrink-0 text-emerald-400" />
+                  <span>{content.hero.ctaSecondary}</span>
+                </Link>
+              )}
+            </div>
 
-                {whatsappNumber ? (
-                  <a
-                    href={personalWhatsAppUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    onClick={() => handleActionClick("hero_whatsapp")}
-                    className="inline-flex items-center justify-center gap-2.5 rounded-2xl border border-emerald-500/40 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-300 font-semibold px-5 py-3.5 text-base transition-all duration-300 hover:scale-[1.02]"
-                  >
-                    <MessageCircle className="w-5 h-5 text-emerald-400" />
-                    <span>{messageWhatsappLabel}</span>
-                  </a>
-                ) : (
-                  <Link
-                    to={distributorProfileRoute}
-                    onClick={() => handleActionClick("hero_secondary_distributor")}
-                    className="inline-flex items-center justify-center gap-2.5 rounded-2xl border border-emerald-500/40 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-300 font-semibold px-5 py-3.5 text-base transition-all duration-300 hover:scale-[1.02]"
-                  >
-                    <Users className="w-5 h-5 text-emerald-400" />
-                    <span>{content.hero.ctaSecondary}</span>
-                  </Link>
-                )}
-              </div>
-
-              {/* Compact Credibility Row */}
-              <div className="pt-6 border-t border-white/10 grid grid-cols-2 sm:grid-cols-4 gap-3">
-                {content.hero.claims.map((claim, idx) => (
-                  <div key={idx} className="flex items-start gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-cyan-400 shrink-0 mt-0.5" />
-                    <span className="text-xs font-medium text-slate-300 leading-snug">
-                      {claim}
-                    </span>
-                  </div>
-                ))}
-              </div>
-
-              {/* Leader or Team Distributor Badge */}
-              <div className="pt-2">
-                {isLeaderPage ? (
-                  <Link
-                    to={distributorProfileRoute}
-                    className="inline-flex items-center gap-3.5 rounded-2xl border border-white/15 bg-white/[0.04] hover:bg-white/[0.08] transition-colors p-2.5 pr-5 backdrop-blur-md group"
-                  >
-                    <img
-                      src={leaderAvatar}
-                      alt={distributorName}
-                      className="w-12 h-12 rounded-xl object-cover border border-white/20 shrink-0 group-hover:scale-105 transition-transform"
-                    />
-                    <div>
-                      <div className="text-xs font-bold text-white tracking-wide group-hover:text-cyan-300 transition-colors flex items-center gap-1.5">
-                        <span>{distributorName}</span>
-                        <ShieldCheck className="w-3.5 h-3.5 text-cyan-400" />
-                      </div>
-                      <div className="text-[11px] text-slate-300">
-                        {leaderTitle}
-                      </div>
-                    </div>
-                  </Link>
-                ) : (
-                  <div className="inline-flex items-center gap-3.5 rounded-2xl border border-white/15 bg-white/[0.04] p-3 pr-5 backdrop-blur-md">
-                    <div className="w-11 h-11 rounded-xl bg-cyan-500/20 border border-cyan-500/40 flex items-center justify-center text-cyan-400 shrink-0">
-                      <Users className="w-6 h-6" />
-                    </div>
-                    <div>
-                      <div className="text-xs font-bold text-white tracking-wide">
-                        {content.hero.presentedBy}
-                      </div>
-                      <div className="text-[11px] font-medium text-cyan-400/90 flex items-center gap-1.5">
-                        <ShieldCheck className="w-3.5 h-3.5" />
-                        <span>{content.hero.distributorTag}</span>
-                      </div>
-                    </div>
-                  </div>
-                )}
-              </div>
-            </motion.div>
-
-            {/* Right Column: K8 Premium Product Visual */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.96 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.7, delay: 0.2 }}
-              className="lg:col-span-5 relative"
-            >
-              <div className="relative rounded-3xl border border-white/15 bg-gradient-to-b from-white/[0.06] to-white/[0.02] p-4 sm:p-6 shadow-2xl backdrop-blur-xl overflow-hidden group">
-                <div className="absolute top-0 right-0 w-32 h-32 bg-cyan-500/20 rounded-full blur-2xl" />
-                <img
-                  src="/true-legacy-assets/k8-hero-premium.png"
-                  alt="Leveluk K8 Kangen Water Machine Premium Countertop Setup"
-                  className="w-full h-auto object-contain max-h-[460px] mx-auto drop-shadow-[0_20px_50px_rgba(0,0,0,0.8)] transition-transform duration-700 group-hover:scale-[1.02]"
-                  loading="eager"
-                />
-                <div className="mt-4 flex items-center justify-between text-xs text-slate-400 border-t border-white/10 pt-3">
-                  <span className="font-semibold text-slate-300">Leveluk K8</span>
-                  <span className="text-cyan-400 font-medium">Flagship 8-Plate Ionizer</span>
+            {/* Trust / value points */}
+            <div className="pt-4 border-t border-white/10 grid grid-cols-2 gap-x-4 gap-y-2">
+              {content.hero.claims.map((claim, idx) => (
+                <div key={idx} className="flex items-start gap-2">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-cyan-400 shrink-0 mt-0.5" />
+                  <span className="text-xs text-slate-300 leading-snug">{claim}</span>
                 </div>
-              </div>
-            </motion.div>
-          </div>
+              ))}
+            </div>
+
+            {/* Leader / distributor attribution */}
+            <div className="pt-1">
+              {isLeaderPage ? (
+                <Link
+                  to={distributorProfileRoute}
+                  className="inline-flex items-center gap-3 rounded-xl border border-white/15 bg-black/30 hover:bg-black/50 backdrop-blur-sm transition-colors p-2 pr-4 group"
+                >
+                  <img
+                    src={leaderAvatar}
+                    alt={distributorName}
+                    className="w-10 h-10 rounded-lg object-cover border border-white/20 shrink-0 group-hover:scale-105 transition-transform"
+                  />
+                  <div>
+                    <div className="text-xs font-bold text-white group-hover:text-cyan-300 transition-colors flex items-center gap-1">
+                      <span>{distributorName}</span>
+                      <ShieldCheck className="w-3 h-3 text-cyan-400" />
+                    </div>
+                    <div className="text-[11px] text-slate-400">{leaderTitle}</div>
+                  </div>
+                </Link>
+              ) : (
+                <div className="inline-flex items-center gap-3 rounded-xl border border-white/15 bg-black/30 backdrop-blur-sm p-2 pr-4">
+                  <div className="w-10 h-10 rounded-lg bg-cyan-500/20 border border-cyan-500/30 flex items-center justify-center text-cyan-400 shrink-0">
+                    <Users className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <div className="text-xs font-bold text-white">{content.hero.presentedBy}</div>
+                    <div className="text-[11px] text-cyan-400/90 flex items-center gap-1">
+                      <ShieldCheck className="w-3 h-3" />
+                      <span>{content.hero.distributorTag}</span>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+          </motion.div>
         </div>
+
+        {/* ── Mobile-only: responsive background via style tag ── */}
+        <style>{`
+          @media (max-width: 639px) {
+            .k8-hero-bg { background-position: 72% center !important; min-height: 680px !important; }
+          }
+          @media (min-width: 640px) and (max-width: 1023px) {
+            .k8-hero-bg { background-position: 65% center !important; }
+          }
+        `}</style>
       </section>
 
-      {/* ── DEMONSTRATION SECTION (4-MINUTE VIDEO) ── */}
+
       <section
         id="video-demo"
         ref={videoSectionRef}
