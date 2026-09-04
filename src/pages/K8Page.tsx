@@ -26,7 +26,7 @@ import {
     Users,
     Zap,
 } from "lucide-react";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 
 // ── LOCALIZATION DICTIONARY ──────────────────────────────────
@@ -963,6 +963,25 @@ export default function K8Page() {
   const { locale, setLocale } = useLocaleContext();
   const currentLang = (locale in LOCALES ? locale : "en") as keyof typeof LOCALES;
   const content = LOCALES[currentLang];
+
+  // Force page to load from the very top on mount
+  useLayoutEffect(() => {
+    if (typeof window !== "undefined") {
+      if ("scrollRestoration" in window.history) {
+        window.history.scrollRestoration = "manual";
+      }
+      window.scrollTo(0, 0);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      window.scrollTo(0, 0);
+      if (window.location.hash) {
+        window.history.replaceState(null, "", window.location.pathname);
+      }
+    }
+  }, []);
 
   // Video language selector state
   const [videoLang, setVideoLang] = useState<"en" | "es" | "fr" | "pt">(
