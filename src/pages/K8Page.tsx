@@ -960,7 +960,7 @@ export default function K8Page() {
     COUNTRIES.find((c) => c.slug === "usa") ??
     COUNTRIES[0];
 
-  const { locale } = useLocaleContext();
+  const { locale, setLocale } = useLocaleContext();
   const currentLang = (locale in LOCALES ? locale : "en") as keyof typeof LOCALES;
   const content = LOCALES[currentLang];
 
@@ -1056,7 +1056,7 @@ export default function K8Page() {
         <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-2.5 sm:px-6 lg:px-8">
           {/* Left: Original True Legacy Logo & Kangen Water Badge */}
           <Link
-            to={countrySlug ? `/${countrySlug}` : "/"}
+            to="/"
             className="flex items-center gap-2.5 group focus:outline-none focus:ring-2 focus:ring-cyan-500 rounded-lg p-0.5 shrink-0"
           >
             <TrueLegacyLogo variant="nav" className="h-8 sm:h-9 w-auto object-contain" />
@@ -1067,21 +1067,23 @@ export default function K8Page() {
 
           {/* Right Header Navigation Controls */}
           <div className="flex items-center gap-2.5 sm:gap-3">
-            {/* Proportionate Language Switcher Selector */}
-            <div className="flex items-center rounded-lg border border-white/10 bg-white/5 p-0.5 text-[11px]">
+            {/* Symmetrical Uniform Language Selector Bubbles */}
+            <div className="flex items-center gap-1 rounded-full border border-white/10 bg-white/5 p-1">
               {(["en", "es", "fr", "pt"] as const).map((lang) => (
-                <Link
+                <button
                   key={lang}
-                  to={`/${countrySlug ? countrySlug : "usa"}/k8`}
+                  type="button"
+                  onClick={() => setLocale(lang)}
                   className={cn(
-                    "px-2 py-0.5 rounded font-extrabold uppercase transition-all duration-200 tracking-wider",
+                    "w-7 h-7 sm:w-8 sm:h-8 flex items-center justify-center rounded-full text-[11px] uppercase transition-all duration-200 shrink-0",
                     currentLang === lang
-                      ? "bg-cyan-500 text-slate-950 shadow-sm"
-                      : "text-slate-400 hover:text-white"
+                      ? "bg-cyan-500 text-slate-950 font-black shadow-md shadow-cyan-500/20"
+                      : "text-slate-400 hover:text-white hover:bg-white/10 font-bold"
                   )}
+                  aria-label={`Switch language to ${lang.toUpperCase()}`}
                 >
                   {lang}
-                </Link>
+                </button>
               ))}
             </div>
 
