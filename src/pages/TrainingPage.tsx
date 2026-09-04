@@ -1409,6 +1409,7 @@ export default function TrainingPage() {
                   const academyProgressPercent = Math.round((totalCompletedCount / totalLessonsCount) * 100);
 
                   const activeModuleCompletedCount = activeAcademyModule.moduleIds.filter((id) => completedLessonIds.has(id)).length;
+                  const activeModuleTheme = MODULE_THEMES[activeAcademyModule.num as 1 | 2 | 3] || MODULE_THEMES[1];
 
                   const getLocalizedLesson = (mod: TrainingModule) => {
                     const trans = copy.trainingModules?.[mod.id as keyof typeof copy.trainingModules];
@@ -1433,8 +1434,6 @@ export default function TrainingPage() {
                   };
 
                   const renderCurriculumSidebar = () => {
-                    const activeModuleTheme = MODULE_THEMES[activeAcademyModule.num as 1 | 2 | 3] || MODULE_THEMES[1];
-
                     return (
                       <div className="space-y-6">
                         {/* Sidebar Header & Progress */}
@@ -1599,10 +1598,10 @@ export default function TrainingPage() {
                         <button
                           type="button"
                           onClick={() => setShowMobileCurriculum(!showMobileCurriculum)}
-                          className="flex items-center justify-between w-full p-4 rounded-xl border border-cyan-500/30 bg-neutral-900/90 text-white font-bold shadow-lg"
+                          className={`flex items-center justify-between w-full min-h-[48px] p-4 rounded-xl border ${activeModuleTheme.cardBorder} ${activeModuleTheme.cardBg} text-white font-bold shadow-lg transition-all focus-visible:outline-none focus-visible:ring-2 ${activeModuleTheme.focusRing}`}
                         >
                           <div className="flex items-center gap-2.5">
-                            <BookOpenCheck className="w-5 h-5 text-[#2997ff]" />
+                            <BookOpenCheck className={`w-5 h-5 ${activeModuleTheme.badgeText}`} />
                             <span className="text-sm">
                               {showMobileCurriculum
                                 ? (locale === "es" ? "Ocultar plan de estudios" : "Hide Course Curriculum")
@@ -1610,10 +1609,10 @@ export default function TrainingPage() {
                             </span>
                           </div>
                           <div className="flex items-center gap-2">
-                            <span className="text-xs px-2.5 py-1 rounded-full bg-cyan-500/20 text-[#2997ff] border border-cyan-500/30">
+                            <span className={`text-xs px-2.5 py-1 rounded-full ${activeModuleTheme.badgeBg} ${activeModuleTheme.badgeText} border ${activeModuleTheme.badgeBorder}`}>
                               {academyProgressPercent}%
                             </span>
-                            {showMobileCurriculum ? <ChevronDown className="w-4 h-4 text-[#cccccc]" /> : <ChevronRight className="w-4 h-4 text-[#cccccc]" />}
+                            {showMobileCurriculum ? <ChevronDown className="w-4 h-4 text-white" /> : <ChevronRight className="w-4 h-4 text-[#cccccc]" />}
                           </div>
                         </button>
 
@@ -1623,7 +1622,7 @@ export default function TrainingPage() {
                             initial={{ opacity: 0, height: 0 }}
                             animate={{ opacity: 1, height: "auto" }}
                             exit={{ opacity: 0, height: 0 }}
-                            className="mt-3 rounded-2xl border border-white/15 bg-neutral-950 p-5 shadow-2xl space-y-4"
+                            className="mt-3 rounded-2xl border border-white/15 bg-neutral-950 p-4 sm:p-5 shadow-2xl space-y-4"
                           >
                             {renderCurriculumSidebar()}
                           </motion.div>
