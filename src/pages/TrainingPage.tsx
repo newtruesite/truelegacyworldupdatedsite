@@ -1172,37 +1172,56 @@ export default function TrainingPage() {
 
                   {/* The 3 Training Cards (1 row desktop/tablet sm:grid-cols-3, 1 per row mobile grid-cols-1) */}
                   <div className="mt-6 grid gap-3.5 grid-cols-1 sm:grid-cols-3">
-                    {companyResourcesData.cards.map(({ id, title, description, badge, cta, href, icon: Icon }) => (
-                      <a
-                        key={id}
-                        href={href}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="group relative flex flex-col justify-between gap-4 rounded-2xl border border-white/10 bg-white/[0.025] hover:bg-white/[0.05] p-4 sm:p-5 backdrop-blur-md transition-all duration-300 hover:-translate-y-1 hover:border-cyan-400/50 hover:shadow-lg hover:shadow-cyan-500/10 active:scale-[0.99]"
-                      >
-                        <div className="space-y-3 min-w-0">
-                          <div className="flex items-center justify-between gap-2">
-                            <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-cyan-400/10 border border-cyan-400/20 text-[#2997ff] group-hover:scale-105 group-hover:bg-cyan-400/20 group-hover:border-cyan-400/40 transition-all">
-                              <Icon className="h-5 w-5" />
-                            </span>
-                            <span className="text-[9px] font-black uppercase tracking-wider text-[#86868b] bg-white/5 border border-white/10 px-2 py-0.5 rounded shrink-0">
-                              {badge}
-                            </span>
+                    {companyResourcesData.cards.map(({ id, title, description, badge, cta, href, icon: Icon }) => {
+                      const isLiveCard = id === "saturday-calls";
+                      const isEwsCard = id === "ews-learn";
+
+                      const iconBg = isLiveCard
+                        ? "bg-purple-500/10 border-purple-500/20 text-purple-300 group-hover:bg-purple-500/20 group-hover:border-purple-500/40"
+                        : isEwsCard
+                          ? "bg-blue-500/10 border-blue-500/20 text-[#2997ff] group-hover:bg-blue-500/20 group-hover:border-blue-500/40"
+                          : "bg-cyan-400/10 border-cyan-400/20 text-[#2997ff] group-hover:bg-cyan-400/20 group-hover:border-cyan-400/40";
+
+                      const badgeStyle = isLiveCard
+                        ? "text-purple-300 bg-purple-500/10 border-purple-500/25"
+                        : "text-[#cccccc] bg-white/5 border-white/10";
+
+                      const hoverBorder = isLiveCard
+                        ? "hover:border-purple-400/50 hover:shadow-purple-500/10"
+                        : "hover:border-cyan-400/50 hover:shadow-cyan-500/10";
+
+                      return (
+                        <a
+                          key={id}
+                          href={href}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className={`group relative flex flex-col justify-between gap-4 rounded-2xl border border-white/10 bg-white/[0.025] hover:bg-white/[0.05] p-4 sm:p-5 backdrop-blur-md transition-all duration-300 hover:-translate-y-1 hover:shadow-lg active:scale-[0.99] focus-visible:ring-2 focus-visible:ring-[#2997ff] focus-visible:ring-offset-2 focus-visible:ring-offset-[#060b1e] focus-visible:outline-none ${hoverBorder}`}
+                        >
+                          <div className="space-y-3 min-w-0">
+                            <div className="flex items-center justify-between gap-2">
+                              <span className={`grid h-10 w-10 shrink-0 place-items-center rounded-xl border transition-all ${iconBg}`}>
+                                <Icon className="h-5 w-5" />
+                              </span>
+                              <span className={`text-[9px] font-black uppercase tracking-wider border px-2 py-0.5 rounded shrink-0 ${badgeStyle}`}>
+                                {badge}
+                              </span>
+                            </div>
+                            <div>
+                              <h3 className="font-bold text-white text-sm sm:text-base group-hover:text-cyan-300 transition-colors line-clamp-1">
+                                {title}
+                              </h3>
+                              <p className="mt-1.5 text-xs text-[#cccccc] line-clamp-2 leading-relaxed">
+                                {description}
+                              </p>
+                            </div>
                           </div>
-                          <div>
-                            <h3 className="font-bold text-white text-sm sm:text-base group-hover:text-cyan-300 transition-colors line-clamp-1">
-                              {title}
-                            </h3>
-                            <p className="mt-1.5 text-xs text-[#cccccc] line-clamp-2 leading-relaxed">
-                              {description}
-                            </p>
+                          <div className={`pt-3 border-t border-white/10 flex items-center justify-end text-xs font-black tracking-wider transition-colors ${isLiveCard ? "text-purple-300 group-hover:text-purple-200" : "text-[#2997ff] group-hover:text-cyan-300"}`}>
+                            <span>{cta}</span>
                           </div>
-                        </div>
-                        <div className="pt-3 border-t border-white/10 flex items-center justify-end text-xs font-black tracking-wider text-[#2997ff] group-hover:text-cyan-300 transition-colors">
-                          <span>{cta}</span>
-                        </div>
-                      </a>
-                    ))}
+                        </a>
+                      );
+                    })}
                   </div>
                 </section>
 
@@ -1245,47 +1264,52 @@ export default function TrainingPage() {
                 {/* Sessions/Guides/Spanish Slides Toggle */}
                 <div className="mb-8">
                   <div className="flex justify-center">
-                    <div className="inline-flex rounded-xl border border-white/10 bg-white/5 p-1">
+                    <div className="inline-flex rounded-xl border border-white/10 bg-white/5 p-1 flex-wrap justify-center gap-1">
                       <button
+                        type="button"
                         onClick={() => setActiveView("sessions")}
-                        className={`px-6 py-3 rounded-lg text-sm font-medium transition-all ${
+                        className={`px-5 py-2.5 rounded-lg text-sm font-semibold transition-all focus-visible:ring-2 focus-visible:ring-[#2997ff] focus-visible:ring-offset-2 focus-visible:ring-offset-[#060b1e] focus-visible:outline-none ${
                           activeView === "sessions"
-                            ? "bg-cyan-500/20 text-[#2997ff] border border-white/20 shadow-lg"
-                            : "text-[#cccccc] hover:text-white hover:bg-white/5"
+                            ? "bg-cyan-500/20 text-[#2997ff] border border-cyan-400/40 shadow-lg shadow-cyan-500/10 font-bold"
+                            : "text-[#cccccc] hover:text-white hover:bg-white/5 border border-transparent"
                         }`}
                       >
                         {copy.training?.sessions_tab || "Training Sessions"}
                       </button>
                       <button
+                        type="button"
                         onClick={() => setActiveView("guides")}
-                        className={`px-6 py-3 rounded-lg text-sm font-medium transition-all ${
+                        className={`px-5 py-2.5 rounded-lg text-sm font-semibold transition-all focus-visible:ring-2 focus-visible:ring-[#2997ff] focus-visible:ring-offset-2 focus-visible:ring-offset-[#060b1e] focus-visible:outline-none ${
                           activeView === "guides"
-                            ? "bg-cyan-500/20 text-[#2997ff] border border-white/20 shadow-lg"
-                            : "text-[#cccccc] hover:text-white hover:bg-white/5"
+                            ? "bg-cyan-500/20 text-[#2997ff] border border-cyan-400/40 shadow-lg shadow-cyan-500/10 font-bold"
+                            : "text-[#cccccc] hover:text-white hover:bg-white/5 border border-transparent"
                         }`}
                       >
                         {copy.training?.guides_tab || "Informational Guides"}
                       </button>
                       {locale === "es" && (
                         <button
+                          type="button"
                           onClick={() => setActiveView("slides")}
-                          className={`px-6 py-3 rounded-lg text-sm font-medium transition-all ${
+                          className={`px-5 py-2.5 rounded-lg text-sm font-semibold transition-all focus-visible:ring-2 focus-visible:ring-[#2997ff] focus-visible:ring-offset-2 focus-visible:ring-offset-[#060b1e] focus-visible:outline-none ${
                             activeView === "slides"
-                              ? "bg-cyan-500/20 text-[#2997ff] border border-white/20 shadow-lg"
-                              : "text-[#cccccc] hover:text-white hover:bg-white/5"
+                              ? "bg-cyan-500/20 text-[#2997ff] border border-cyan-400/40 shadow-lg shadow-cyan-500/10 font-bold"
+                              : "text-[#cccccc] hover:text-white hover:bg-white/5 border border-transparent"
                           }`}
                         >
                           Presentación True Legacy
                         </button>
                       )}
                       <button
+                        type="button"
                         onClick={() => setActiveView("events")}
-                        className={`px-6 py-3 rounded-lg text-sm font-medium transition-all ${
+                        className={`px-5 py-2.5 rounded-lg text-sm font-semibold transition-all inline-flex items-center gap-1.5 focus-visible:ring-2 focus-visible:ring-[#2997ff] focus-visible:ring-offset-2 focus-visible:ring-offset-[#060b1e] focus-visible:outline-none ${
                           activeView === "events"
-                            ? "bg-cyan-500/20 text-[#2997ff] border border-white/20 shadow-lg"
-                            : "text-[#cccccc] hover:text-white hover:bg-white/5"
+                            ? "bg-cyan-500/20 text-[#2997ff] border border-cyan-400/40 shadow-lg shadow-cyan-500/10 font-bold"
+                            : "text-[#cccccc] hover:text-white hover:bg-white/5 border border-transparent"
                         }`}
                       >
+                        <span className="h-2 w-2 rounded-full bg-purple-400 animate-pulse" />
                         {copy.training?.events_tab || "Upcoming Events"}
                       </button>
                     </div>
@@ -1367,11 +1391,17 @@ export default function TrainingPage() {
                         <div className="mb-4">
                           <div className="flex items-center justify-between text-xs text-[#cccccc] mb-1.5 font-semibold">
                             <span>{locale === "es" ? "Progreso de la Academia" : locale === "fr" ? "Progrès de l’Académie" : locale === "pt" ? "Progresso da Academia" : "Academy Progress"}</span>
-                            <span>{totalCompletedCount} / {totalLessonsCount}</span>
+                            <span className={academyProgressPercent === 100 ? "text-emerald-400 font-bold" : "text-[#2997ff]"}>
+                              {totalCompletedCount} / {totalLessonsCount}
+                            </span>
                           </div>
                           <div className="h-2 w-full rounded-full bg-white/10 overflow-hidden">
                             <div
-                              className="h-full bg-gradient-to-r from-cyan-400 to-blue-500 rounded-full transition-all duration-500"
+                              className={`h-full rounded-full transition-all duration-500 ${
+                                academyProgressPercent === 100
+                                  ? "bg-gradient-to-r from-emerald-400 to-teal-500 shadow-[0_0_12px_rgba(16,185,129,0.3)]"
+                                  : "bg-gradient-to-r from-cyan-400 to-blue-500"
+                              }`}
                               style={{ width: `${academyProgressPercent}%` }}
                             />
                           </div>
@@ -1381,13 +1411,17 @@ export default function TrainingPage() {
                         <div className="p-3 rounded-xl border border-white/10 bg-white/[0.03]">
                           <div className="flex items-center justify-between text-xs text-[#cccccc] mb-1 font-semibold">
                             <span>{locale === "es" ? "Progreso del Módulo" : locale === "fr" ? "Progrès du Module" : locale === "pt" ? "Progresso do Módulo" : "Module Progress"}</span>
-                            <span className="text-[#2997ff]">
+                            <span className={activeModuleCompletedCount === activeAcademyModule.moduleIds.length ? "text-emerald-400 font-bold" : "text-[#2997ff]"}>
                               {activeModuleCompletedCount} / {activeAcademyModule.moduleIds.length}
                             </span>
                           </div>
                           <div className="h-1.5 w-full rounded-full bg-white/10 overflow-hidden">
                             <div
-                              className="h-full bg-[#2997ff] rounded-full transition-all duration-500"
+                              className={`h-full rounded-full transition-all duration-500 ${
+                                activeModuleCompletedCount === activeAcademyModule.moduleIds.length
+                                  ? "bg-emerald-400 shadow-[0_0_8px_rgba(16,185,129,0.3)]"
+                                  : "bg-[#2997ff]"
+                              }`}
                               style={{ width: `${Math.round((activeModuleCompletedCount / activeAcademyModule.moduleIds.length) * 100)}%` }}
                             />
                           </div>
@@ -1707,7 +1741,7 @@ export default function TrainingPage() {
                                             setActiveModuleOverviewId(null);
                                           }
                                         }}
-                                        className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg border border-white/10 bg-white/5 hover:bg-white/10 text-xs font-bold text-white transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+                                        className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 text-xs font-bold text-white transition-colors disabled:opacity-30 disabled:cursor-not-allowed focus-visible:ring-2 focus-visible:ring-[#2997ff] focus-visible:ring-offset-2 focus-visible:ring-offset-[#060b1e] focus-visible:outline-none"
                                       >
                                         <ChevronLeft className="w-4 h-4" />
                                         {locale === "es" ? "Anterior" : "Previous"}
@@ -1721,7 +1755,7 @@ export default function TrainingPage() {
                                             setActiveModuleOverviewId(null);
                                           }
                                         }}
-                                        className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg border border-white/10 bg-white/5 hover:bg-white/10 text-xs font-bold text-white transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+                                        className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-gradient-to-r from-cyan-400 to-blue-500 hover:from-cyan-300 hover:to-blue-400 text-slate-950 text-xs font-black transition-all shadow-md shadow-cyan-500/20 hover:-translate-y-0.5 active:scale-95 disabled:opacity-30 disabled:hover:translate-y-0 disabled:bg-white/10 disabled:text-slate-500 disabled:cursor-not-allowed focus-visible:ring-2 focus-visible:ring-[#2997ff] focus-visible:ring-offset-2 focus-visible:ring-offset-[#060b1e] focus-visible:outline-none"
                                       >
                                         {locale === "es" ? "Siguiente" : "Next"}
                                         <ChevronRight className="w-4 h-4" />

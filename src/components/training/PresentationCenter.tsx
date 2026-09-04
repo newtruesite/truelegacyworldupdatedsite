@@ -79,12 +79,12 @@ export const PresentationCenter: React.FC<PresentationCenterProps> = ({
 
   return (
     <section
-      className={`mb-12 rounded-[2rem] border border-white/10 bg-black/40 backdrop-blur-xl p-5 sm:p-7 shadow-[0_24px_80px_rgba(0,0,0,0.4)] ${className}`}
+      className={`mb-12 rounded-[2rem] border border-amber-500/20 bg-gradient-to-br from-black/60 via-slate-950/40 to-amber-950/10 backdrop-blur-xl p-5 sm:p-7 shadow-[0_24px_80px_rgba(0,0,0,0.4)] ${className}`}
     >
-      {/* SECTION HEADER */}
+      {/* SECTION HEADER — GOLD FEATURED LEADER RESOURCE IDENTITY */}
       <div className="pb-6 border-b border-white/10">
         <div className="flex items-start gap-4">
-          <div className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl border border-cyan-400/30 bg-cyan-400/10 text-[#2997ff] shadow-lg shadow-cyan-500/10">
+          <div className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl border border-amber-400/30 bg-amber-400/10 text-tl-gold shadow-lg shadow-amber-500/10">
             <Presentation className="h-6 w-6" />
           </div>
           <div>
@@ -94,7 +94,7 @@ export const PresentationCenter: React.FC<PresentationCenterProps> = ({
             <h2 className="mt-1 text-2xl sm:text-3xl font-black text-white">
               {pcCopy.title}
             </h2>
-            <p className="mt-1 text-sm font-semibold text-cyan-300">
+            <p className="mt-1 text-sm font-semibold text-amber-300/90">
               {pcCopy.subtitle}
             </p>
             <p className="mt-1.5 text-xs sm:text-sm text-[#cccccc] max-w-3xl leading-relaxed">
@@ -118,7 +118,7 @@ export const PresentationCenter: React.FC<PresentationCenterProps> = ({
               key={item.id}
               initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
-              className="group relative overflow-hidden rounded-2xl border border-white/15 bg-gradient-to-br from-white/[0.04] via-black/50 to-cyan-950/20 p-5 sm:p-6 backdrop-blur-md transition-all duration-300 hover:border-cyan-400/40 hover:shadow-[0_0_40px_rgba(41,151,255,0.15)]"
+              className="group relative overflow-hidden rounded-2xl border border-amber-500/20 bg-gradient-to-br from-white/[0.04] via-black/60 to-slate-950 p-5 sm:p-6 backdrop-blur-md transition-all duration-300 hover:border-amber-400/40 hover:shadow-[0_0_40px_rgba(245,166,35,0.12)]"
             >
               <div className="grid gap-6 lg:grid-cols-[340px_1fr] items-center">
                 {/* THUMBNAIL / COVER AREA */}
@@ -152,7 +152,7 @@ export const PresentationCenter: React.FC<PresentationCenterProps> = ({
                   </div>
                 ) : (
                   /* Fallback Banner Graphic if no image */
-                  <div className="relative aspect-[16/10] w-full overflow-hidden rounded-xl border border-cyan-500/20 bg-gradient-to-br from-cyan-950/60 to-slate-950 p-6 flex flex-col justify-between">
+                  <div className="relative aspect-[16/10] w-full overflow-hidden rounded-xl border border-amber-500/30 bg-gradient-to-br from-amber-950/40 to-slate-950 p-6 flex flex-col justify-between">
                     <div className="flex items-center justify-between">
                       <span className="inline-flex items-center gap-1 rounded-md border border-amber-400/40 bg-amber-400/10 px-2 py-0.5 text-[10px] font-black uppercase text-tl-gold">
                         <ShieldCheck className="h-3 w-3" />
@@ -162,7 +162,7 @@ export const PresentationCenter: React.FC<PresentationCenterProps> = ({
                         {pcCopy.badgeTrueLegacy}
                       </span>
                     </div>
-                    <Presentation className="h-12 w-12 text-cyan-400/50 self-center" />
+                    <Presentation className="h-12 w-12 text-tl-gold/60 self-center" />
                     <div className="text-[10px] text-[#cccccc] text-right">
                       {item.version && `${pcCopy.versionLabel} ${item.version}`}
                     </div>
@@ -199,7 +199,7 @@ export const PresentationCenter: React.FC<PresentationCenterProps> = ({
 
                       {(item.version || item.updatedAt) && (
                         <div className="flex items-center gap-2 text-[11px] text-[#86868b]">
-                          <Clock className="h-3 w-3 text-cyan-400" />
+                          <Clock className="h-3 w-3 text-tl-gold" />
                           <span>
                             {item.version && `${pcCopy.versionLabel} ${item.version}`}
                             {item.version && item.updatedAt && " · "}
@@ -210,7 +210,7 @@ export const PresentationCenter: React.FC<PresentationCenterProps> = ({
                     </div>
 
                     {/* Title & Description */}
-                    <h3 className="text-xl sm:text-2xl font-bold text-white group-hover:text-cyan-300 transition-colors">
+                    <h3 className="text-xl sm:text-2xl font-bold text-white group-hover:text-amber-200 transition-colors">
                       {item.title}
                     </h3>
                     <p className="mt-2 text-xs sm:text-sm text-[#cccccc] leading-relaxed">
@@ -218,14 +218,14 @@ export const PresentationCenter: React.FC<PresentationCenterProps> = ({
                     </p>
                   </div>
 
-                  {/* THREE PRIMARY ACTIONS */}
+                  {/* THREE PRIMARY ACTIONS — STRICT SEMANTIC HIERARCHY */}
                   <div className="pt-4 border-t border-white/10 flex flex-col sm:flex-row sm:items-center gap-3">
-                    {/* PRIMARY ACTION: Open Presentation */}
+                    {/* PRIMARY ACTION: TRUE LEGACY BLUE (Action / Primary) */}
                     <button
                       type="button"
                       disabled={!isPresentationConfigured}
                       onClick={() => handleOpenPresentation(item)}
-                      className={`inline-flex min-h-11 items-center justify-center gap-2.5 rounded-xl px-5 py-2.5 font-bold text-xs sm:text-sm transition-all duration-200 shadow-lg cursor-pointer active:scale-95 w-full sm:w-auto ${
+                      className={`inline-flex min-h-11 items-center justify-center gap-2.5 rounded-xl px-5 py-2.5 font-bold text-xs sm:text-sm transition-all duration-200 shadow-lg cursor-pointer active:scale-95 w-full sm:w-auto focus-visible:ring-2 focus-visible:ring-[#2997ff] focus-visible:ring-offset-2 focus-visible:ring-offset-[#060b1e] focus-visible:outline-none ${
                         isPresentationConfigured
                           ? "bg-gradient-to-r from-cyan-400 to-blue-500 text-slate-950 hover:from-cyan-300 hover:to-blue-400 shadow-cyan-500/25 hover:-translate-y-0.5"
                           : "bg-white/5 text-slate-500 border border-white/10 cursor-not-allowed"
@@ -235,13 +235,13 @@ export const PresentationCenter: React.FC<PresentationCenterProps> = ({
                       <span>{pcCopy.openPresentation}</span>
                     </button>
 
-                    {/* SECONDARY ACTION: Download PDF */}
+                    {/* SECONDARY ACTION: Download PDF (Neutral Glass / Disabled Gray) */}
                     <button
                       type="button"
                       disabled={!isPdfConfigured}
                       onClick={() => handleDownloadPdf(item)}
                       title={!isPdfConfigured ? pcCopy.downloadPdfUnavailable : ""}
-                      className={`inline-flex min-h-11 items-center justify-center gap-2 rounded-xl px-4 py-2.5 font-bold text-xs sm:text-sm transition-all duration-200 border w-full sm:w-auto ${
+                      className={`inline-flex min-h-11 items-center justify-center gap-2 rounded-xl px-4 py-2.5 font-bold text-xs sm:text-sm transition-all duration-200 border w-full sm:w-auto focus-visible:ring-2 focus-visible:ring-[#2997ff] focus-visible:ring-offset-2 focus-visible:ring-offset-[#060b1e] focus-visible:outline-none ${
                         isPdfConfigured
                           ? "bg-white/10 hover:bg-white/15 text-white border-white/20 hover:border-white/30 shadow-md cursor-pointer hover:-translate-y-0.5 active:scale-95"
                           : "bg-white/[0.03] text-[#86868b] border-white/10 cursor-not-allowed"
@@ -255,12 +255,12 @@ export const PresentationCenter: React.FC<PresentationCenterProps> = ({
                       </span>
                     </button>
 
-                    {/* TERTIARY ACTION: Open in Canva / Use Canva Template */}
+                    {/* TERTIARY ACTION: Open in Canva / Use Canva Template (Action Link) */}
                     {isCanvaConfigured && (
                       <button
                         type="button"
                         onClick={() => handleOpenCanva(item)}
-                        className="inline-flex min-h-11 items-center justify-center gap-1.5 rounded-xl px-3.5 py-2 text-xs sm:text-sm font-semibold text-[#2997ff] hover:text-cyan-300 hover:bg-white/5 transition-colors cursor-pointer w-full sm:w-auto sm:ml-auto"
+                        className="inline-flex min-h-11 items-center justify-center gap-1.5 rounded-xl px-3.5 py-2 text-xs sm:text-sm font-semibold text-[#2997ff] hover:text-cyan-300 hover:bg-white/5 transition-colors cursor-pointer w-full sm:w-auto sm:ml-auto focus-visible:ring-2 focus-visible:ring-[#2997ff] focus-visible:ring-offset-2 focus-visible:ring-offset-[#060b1e] focus-visible:outline-none"
                       >
                         <span>
                           {item.isCustomizable
