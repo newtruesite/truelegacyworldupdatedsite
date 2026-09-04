@@ -1379,10 +1379,10 @@ export default function TrainingPage() {
                       {/* Sidebar Header & Progress */}
                       <div>
                         <div className="flex items-center justify-between mb-2">
-                          <span className="text-[11px] font-black uppercase tracking-[0.25em] text-[#2997ff]">
+                          <span className="text-[11px] font-black uppercase tracking-[0.25em] text-white">
                             {locale === "es" ? "TU ENTRENAMIENTO" : locale === "fr" ? "VOTRE FORMATION" : locale === "pt" ? "SEU TREINAMENTO" : "YOUR TRAINING"}
                           </span>
-                          <span className="text-xs font-black text-cyan-400">
+                          <span className="text-xs font-bold text-[#cccccc]">
                             {academyProgressPercent}%
                           </span>
                         </div>
@@ -1730,7 +1730,7 @@ export default function TrainingPage() {
                                         : (locale === "es" ? "Marcar como completada" : "Mark Complete")}
                                     </button>
 
-                                    {/* Previous / Next Lesson Buttons */}
+                                    {/* Previous / Next Lesson Buttons (De-duplicated Compact Outlined Navigation) */}
                                     <div className="flex items-center gap-2">
                                       <button
                                         type="button"
@@ -1755,7 +1755,7 @@ export default function TrainingPage() {
                                             setActiveModuleOverviewId(null);
                                           }
                                         }}
-                                        className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-gradient-to-r from-cyan-400 to-blue-500 hover:from-cyan-300 hover:to-blue-400 text-slate-950 text-xs font-black transition-all shadow-md shadow-cyan-500/20 hover:-translate-y-0.5 active:scale-95 disabled:opacity-30 disabled:hover:translate-y-0 disabled:bg-white/10 disabled:text-slate-500 disabled:cursor-not-allowed focus-visible:ring-2 focus-visible:ring-[#2997ff] focus-visible:ring-offset-2 focus-visible:ring-offset-[#060b1e] focus-visible:outline-none"
+                                        className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 text-xs font-bold text-[#cccccc] hover:text-white transition-colors disabled:opacity-30 disabled:cursor-not-allowed focus-visible:ring-2 focus-visible:ring-[#2997ff] focus-visible:ring-offset-2 focus-visible:ring-offset-[#060b1e] focus-visible:outline-none"
                                       >
                                         {locale === "es" ? "Siguiente" : "Next"}
                                         <ChevronRight className="w-4 h-4" />
@@ -1766,7 +1766,7 @@ export default function TrainingPage() {
                                   {/* Lesson Description & Resources */}
                                   <div className="p-6 rounded-2xl border border-white/10 bg-white/[0.025] space-y-6">
                                     <div>
-                                      <h3 className="text-sm font-bold uppercase tracking-wider text-[#2997ff] mb-2">
+                                      <h3 className="text-sm font-bold uppercase tracking-wider text-white mb-2">
                                         {locale === "es" ? "Acerca de esta lección" : "About this lesson"}
                                       </h3>
                                       <p className="text-[#cccccc] text-sm sm:text-base leading-relaxed">
@@ -1774,11 +1774,11 @@ export default function TrainingPage() {
                                       </p>
                                     </div>
 
-                                    {/* Resources Downloads */}
+                                    {/* Resources Downloads — GOLD / AMBER TOOL SEMANTICS */}
                                     {activeLesson.resources.length > 0 && (
                                       <div className="border-t border-white/10 pt-5">
-                                        <h4 className="text-xs font-bold uppercase tracking-wider text-[#cccccc] mb-3 flex items-center gap-2">
-                                          <Download className="w-4 h-4 text-[#2997ff]" />
+                                        <h4 className="text-xs font-bold uppercase tracking-wider text-tl-gold mb-3 flex items-center gap-2">
+                                          <Download className="w-4 h-4 text-tl-gold" />
                                           {locale === "es" ? "Descargas y Recursos" : "Downloads & Resources"} ({activeLesson.resources.length})
                                         </h4>
                                         <div className="grid gap-2.5 sm:grid-cols-2">
@@ -1790,16 +1790,16 @@ export default function TrainingPage() {
                                                 href={res.url}
                                                 target="_blank"
                                                 rel="noopener noreferrer"
-                                                className="flex items-center gap-3 p-3 rounded-xl border border-white/10 bg-black/40 hover:border-cyan-400/40 hover:bg-cyan-500/10 transition-all text-xs group"
+                                                className="flex items-center gap-3 p-3.5 rounded-xl border border-amber-500/20 bg-gradient-to-br from-amber-950/20 via-black/40 to-black/60 hover:border-amber-400/40 hover:bg-amber-500/10 transition-all text-xs group focus-visible:ring-2 focus-visible:ring-amber-400 focus-visible:outline-none"
                                               >
-                                                <FileText className="w-4 h-4 text-[#2997ff] shrink-0" />
+                                                <FileText className="w-4 h-4 text-tl-gold shrink-0" />
                                                 <span className="text-slate-200 font-medium truncate flex-1 group-hover:text-white">
                                                   {resTitle}
                                                 </span>
-                                                <span className="text-[10px] text-[#86868b] uppercase font-bold px-1.5 py-0.5 rounded bg-white/5">
+                                                <span className="text-[10px] text-amber-300 bg-amber-400/10 border border-amber-400/20 uppercase font-bold px-1.5 py-0.5 rounded shrink-0">
                                                   {res.type}
                                                 </span>
-                                                <ExternalLink className="w-3.5 h-3.5 text-[#cccccc] group-hover:text-[#2997ff]" />
+                                                <ExternalLink className="w-3.5 h-3.5 text-[#cccccc] group-hover:text-amber-300 shrink-0" />
                                               </a>
                                             );
                                           })}
@@ -1808,7 +1808,7 @@ export default function TrainingPage() {
                                     )}
                                   </div>
 
-                                  {/* NEXT LESSON Preview Card */}
+                                  {/* NEXT LESSON CARD — SINGLE DOMINANT BLUE PRIMARY CTA */}
                                   {nextLesson && (() => {
                                     const nextLoc = getLocalizedLesson(nextLesson);
                                     const nextThumb = getYouTubeThumbnail(nextLesson.videoUrl);
@@ -1820,7 +1820,7 @@ export default function TrainingPage() {
                                           setActiveModuleOverviewId(null);
                                           window.scrollTo({ top: 300, behavior: "smooth" });
                                         }}
-                                        className="group p-5 rounded-2xl border border-white/15 bg-gradient-to-r from-cyan-950/30 via-neutral-950 to-blue-950/30 hover:border-cyan-400/50 transition-all cursor-pointer flex flex-col sm:flex-row items-start sm:items-center justify-between gap-5 shadow-xl"
+                                        className="group p-5 sm:p-6 rounded-2xl border border-white/15 bg-gradient-to-r from-cyan-950/20 via-black/60 to-blue-950/20 hover:border-cyan-400/40 transition-all cursor-pointer flex flex-col sm:flex-row items-start sm:items-center justify-between gap-5 shadow-xl"
                                       >
                                         <div className="flex items-center gap-4 min-w-0">
                                           {/* Thumbnail */}
@@ -1838,7 +1838,7 @@ export default function TrainingPage() {
                                             <p className="text-[10px] font-black uppercase tracking-[0.25em] text-[#2997ff] mb-1">
                                               {locale === "es" ? "SIGUIENTE LECCIÓN" : "NEXT LESSON"}
                                             </p>
-                                            <h4 className="font-bold text-white text-base truncate group-hover:text-[#2997ff] transition-colors">
+                                            <h4 className="font-bold text-white text-base truncate group-hover:text-cyan-300 transition-colors">
                                               {nextLoc.title}
                                             </h4>
                                             {nextLesson.duration && (
@@ -1851,9 +1851,10 @@ export default function TrainingPage() {
 
                                         <button
                                           type="button"
-                                          className="shrink-0 px-5 py-2.5 rounded-xl bg-cyan-400 text-slate-950 font-black text-xs inline-flex items-center gap-2 group-hover:bg-cyan-300 transition-colors shadow-md"
+                                          className="shrink-0 px-6 py-3 rounded-xl bg-gradient-to-r from-cyan-400 to-blue-500 hover:from-cyan-300 hover:to-blue-400 text-slate-950 font-black text-xs sm:text-sm inline-flex items-center gap-2 shadow-lg shadow-cyan-500/25 transition-all duration-200 hover:-translate-y-0.5 active:scale-95 cursor-pointer"
                                         >
-                                          {locale === "es" ? "Continuar" : "Continue"} <ArrowRight className="w-4 h-4" />
+                                          <span>{locale === "es" ? "Iniciar siguiente lección" : "Start Next Lesson"}</span>
+                                          <ArrowRight className="w-4 h-4" />
                                         </button>
                                       </div>
                                     );
@@ -1903,27 +1904,30 @@ export default function TrainingPage() {
                             target="_blank" rel="noopener noreferrer"
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: i * 0.1 }}
-                            className="pdf-card flex flex-col p-6 rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 hover:border-white/20 transition-all group"
+                            transition={{ delay: i * 0.08 }}
+                            className="pdf-card flex flex-col p-6 rounded-2xl border border-amber-500/20 bg-gradient-to-br from-amber-950/15 via-black/40 to-slate-950 hover:border-amber-400/40 hover:shadow-[0_0_30px_rgba(245,166,35,0.12)] transition-all group focus-visible:ring-2 focus-visible:ring-amber-400 focus-visible:outline-none"
                           >
                             <div className="flex items-start gap-3 mb-4">
-                              <div className="p-3 rounded-lg bg-cyan-500/20 shrink-0">
-                                <FileText className="w-6 h-6 text-[#2997ff]" />
+                              <div className="p-3 rounded-xl bg-amber-400/10 border border-amber-400/20 text-tl-gold shrink-0">
+                                <FileText className="w-6 h-6 text-tl-gold" />
                               </div>
                               <div className="flex-1 min-w-0">
-                                <h3 className="font-semibold text-white mb-2 group-hover:text-[#2997ff] transition-colors">
+                                <h3 className="font-bold text-white mb-2 group-hover:text-amber-200 transition-colors">
                                   {title}
                                 </h3>
-                                <p className="text-[#cccccc] text-sm leading-relaxed">
+                                <p className="text-[#cccccc] text-xs sm:text-sm leading-relaxed">
                                   {desc}
                                 </p>
                               </div>
                             </div>
-                            <div className="flex items-center justify-between mt-auto">
-                              <span className="px-2 py-1 rounded-md text-xs uppercase tracking-wider text-[#86868b] bg-white/5 border border-white/10">
+                            <div className="flex items-center justify-between mt-auto pt-4 border-t border-white/10">
+                              <span className="px-2.5 py-1 rounded-md text-[10px] uppercase font-bold tracking-wider text-amber-300 bg-amber-400/10 border border-amber-400/20">
                                 {pdf.category}
                               </span>
-                              <ExternalLink className="w-4 h-4 text-[#cccccc] group-hover:text-[#2997ff] transition-colors" />
+                              <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-amber-300 group-hover:text-amber-200">
+                                {locale === "es" ? "Descargar PDF" : "Download PDF"}
+                                <ExternalLink className="w-3.5 h-3.5 shrink-0" />
+                              </span>
                             </div>
                           </motion.a>
                         );
