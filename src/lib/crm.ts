@@ -348,6 +348,9 @@ const FALLBACK_DISTRIBUTORS: PublicDistributor[] = [
     phone: '+1 (864) 907-2149',
     instagram_url: 'https://www.instagram.com/mehdicohen_/',
     website_url: 'https://mehdicohen.com',
+    purchase_links: {
+      k8: 'https://www.enagic.com/en_US/products/leveluk-k8',
+    },
   },
   {
     id: 'preview-ryan',

@@ -6,10 +6,10 @@ import { trackEvent } from "@/lib/analytics";
 import { COUNTRIES } from "@/lib/countries";
 import { getDistributorLink } from "@/lib/distributorRouter";
 import { localizedProductVideo } from "@/lib/productVideos";
-import type { PublicDistributor } from "@/lib/crm";
 import { cn } from "@/lib/utils";
 import { AnimatePresence, motion } from "framer-motion";
 import {
+    ArrowLeft,
     CheckCircle2,
     ChevronDown,
     ChevronUp,
@@ -19,8 +19,10 @@ import {
     Globe,
     HelpCircle,
     Info,
+    MessageCircle,
     Play,
     ShieldCheck,
+    ShoppingCart,
     Sparkles,
     Star,
     UserCheck,
@@ -29,6 +31,8 @@ import {
 } from "lucide-react";
 import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { Link, useParams } from "react-router-dom";
+import { getLeaderPortrait, getPublicDistributors, type PublicDistributor } from "@/lib/crm";
+import { getProductPurchaseLink } from "@/config/productPurchaseLinks";
 
 // ── LOCALIZATION DICTIONARY ──────────────────────────────────
 const LOCALES = {
@@ -954,13 +958,36 @@ const LOCALES = {
   },
 } as const;
 
-type K8PageProps = {
+export type K8PageProps = {
   profile?: PublicDistributor | null;
   distributorSlug?: string;
 };
 
-export default function K8Page({ profile, distributorSlug }: K8PageProps = {}) {
-  const { countrySlug } = useParams<{ countrySlug: string }>();
+export default function K8Page({ profile: propProfile, distributorSlug: propSlug }: K8PageProps = {}) {
+  const params = useParams<{ countrySlug?: string; slug?: string; campaign?: string }>();
+  const countrySlug = params.countrySlug;
+  const activeSlug = propSlug || params.slug;
+
+  const [profile, setProfile] = useState<PublicDistributor | null | undefined>(propProfile);
+
+  useEffect(() => {
+    if (propProfile) {
+      setProfile(propProfile);
+      return;
+    }
+    if (activeSlug) {
+      let active = true;
+      getPublicDistributors().then((items) => {
+        if (!active) return;
+        const match = items.find((item) => item.slug === activeSlug);
+        setProfile(match || null);
+      });
+      return () => {
+        active = false;
+      };
+    }
+  }, [propProfile, activeSlug]);
+
   const country =
     COUNTRIES.find((c) => c.slug === countrySlug) ??
     COUNTRIES.find((c) => c.slug === "usa") ??
@@ -969,6 +996,45 @@ export default function K8Page({ profile, distributorSlug }: K8PageProps = {}) {
   const { locale, setLocale } = useLocaleContext();
   const currentLang = (locale in LOCALES ? locale : "en") as keyof typeof LOCALES;
   const content = LOCALES[currentLang];
+
+  const isLeaderPage = Boolean(profile || activeSlug);
+  const distributorName = profile?.display_name || "True Legacy Team";
+  const distributorFirstName = profile?.display_name ? profile.display_name.split(" ")[0] : "Your Distributor";
+  const leaderAvatar =
+    profile?.avatar_url ||
+    (activeSlug ? getLeaderPortrait(activeSlug) : "/logos/tl-square-white.png");
+  const leaderTitle =
+    profile?.title || "Independent Enagic Distributor · True Legacy Leader";
+
+  // Purchase Link detection
+  const k8PurchaseUrl = getProductPurchaseLink(profile?.purchase_links, "k8");
+  const hasPurchaseLink = Boolean(k8PurchaseUrl);
+
+  // WhatsApp personalized destination
+  const whatsappNumber = profile?.phone ? profile.phone.replace(/\D/g, "") : "";
+  const getPersonalWhatsAppUrl = () => {
+    if (!whatsappNumber) return "";
+    let message = "";
+    if (currentLang === "es") {
+      message = `Hola ${distributorFirstName}, estoy revisando la página del Leveluk K8 en True Legacy y me gustaría hacerte unas preguntas sobre disponibilidad y precios.`;
+    } else if (currentLang === "fr") {
+      message = `Bonjour ${distributorFirstName}, je consulte la page du Leveluk K8 sur True Legacy et j'aimerais vous poser quelques questions sur les tarifs et l'installation.`;
+    } else if (currentLang === "pt") {
+      message = `Olá ${distributorFirstName}, estou visualizando a página do Leveluk K8 na True Legacy e gostaria de tirar algumas dúvidas sobre disponibilidade e valores.`;
+    } else {
+      message = `Hi ${distributorFirstName}, I'm reviewing the Leveluk K8 page on True Legacy and would love to ask you a few questions about availability and ordering.`;
+    }
+    return `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
+  };
+
+  const personalWhatsAppUrl = getPersonalWhatsAppUrl();
+  const whatsappActionUrl = personalWhatsAppUrl || (whatsappNumber ? `https://wa.me/${whatsappNumber}` : country.jotformUrl ?? "/apply");
+
+  const consultationUrl = profile
+    ? `/apply?ref=${encodeURIComponent(profile.referral_code || activeSlug || "")}&interest=k8&source=kangen`
+    : (country.jotformUrl ?? "/apply");
+
+  const distributorProfileRoute = activeSlug ? `/d/${activeSlug}` : getDistributorLink(country.slug);
 
   // Force page to load from the very top on mount
   useLayoutEffect(() => {
@@ -1026,21 +1092,42 @@ export default function K8Page({ profile, distributorSlug }: K8PageProps = {}) {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const effectiveDistributorSlug = distributorSlug || profile?.slug;
-  const distributorRoute = effectiveDistributorSlug
-    ? `/d/${effectiveDistributorSlug}`
-    : getDistributorLink(country.slug);
-  const jotformUrl = effectiveDistributorSlug
-    ? `/apply?ref=${profile?.referral_code || effectiveDistributorSlug}&interest=product&source=kangen`
-    : country.jotformUrl ?? "/apply";
+  const effectiveDistributorSlug = activeSlug || profile?.slug;
+  const distributorRoute = distributorProfileRoute;
+  const jotformUrl = consultationUrl;
   const enagicOfficialUrl = "https://www.enagic.com/en_US/products/leveluk-k8";
 
   const videoUrl = localizedProductVideo("kangenWater", videoLang);
+
+  const buyNowLabels = {
+    en: "Buy Now",
+    es: "Comprar Ahora",
+    fr: "Acheter Maintenant",
+    pt: "Comprar Agora",
+  } as const;
+  const buyNowLabel = buyNowLabels[currentLang] || "Buy Now";
+
+  const contactDistributorLabels = {
+    en: isLeaderPage ? `Contact ${distributorFirstName}` : "Contact Distributor",
+    es: isLeaderPage ? `Contactar a ${distributorFirstName}` : "Contactar Distribuidor",
+    fr: isLeaderPage ? `Contacter ${distributorFirstName}` : "Contacter Distributeur",
+    pt: isLeaderPage ? `Falar com ${distributorFirstName}` : "Falar com Distribuidor",
+  } as const;
+  const contactDistributorLabel = contactDistributorLabels[currentLang] || "Contact Distributor";
+
+  const messageWhatsappLabels = {
+    en: isLeaderPage ? `WhatsApp ${distributorFirstName}` : "Message on WhatsApp",
+    es: isLeaderPage ? `WhatsApp con ${distributorFirstName}` : "Mensaje por WhatsApp",
+    fr: isLeaderPage ? `WhatsApp ${distributorFirstName}` : "Message sur WhatsApp",
+    pt: isLeaderPage ? `WhatsApp com ${distributorFirstName}` : "Mensagem no WhatsApp",
+  } as const;
+  const messageWhatsappLabel = messageWhatsappLabels[currentLang] || "Message on WhatsApp";
 
   const handleActionClick = (actionName: string) => {
     trackEvent(`k8_${actionName}`, {
       locale: currentLang,
       country: country.slug,
+      distributor: activeSlug || undefined,
     });
   };
 
@@ -1062,17 +1149,23 @@ export default function K8Page({ profile, distributorSlug }: K8PageProps = {}) {
     <div className="min-h-screen bg-[#070b12] text-[#f8f9fa] selection:bg-cyan-500/30 selection:text-cyan-200 font-sans relative antialiased overflow-x-hidden">
       <SEO
         title={
-          currentLang === "es"
-            ? `Leveluk K8 Ionizador de Agua Kangen® | True Legacy ${countrySlug ? `(${country.name})` : ""}`
-            : currentLang === "fr"
-              ? `Leveluk K8 Ioniseur d'Eau Kangen® | True Legacy ${countrySlug ? `(${country.name})` : ""}`
-              : currentLang === "pt"
-                ? `Leveluk K8 Ionizador de Água Kangen® | True Legacy ${countrySlug ? `(${country.name})` : ""}`
-                : `Leveluk K8 Kangen Water® Ionizer | True Legacy ${countrySlug ? `(${country.name})` : ""}`
+          isLeaderPage
+            ? `${distributorName} | Leveluk K8 Kangen Water® | True Legacy`
+            : currentLang === "es"
+              ? `Leveluk K8 Ionizador de Agua Kangen® | True Legacy ${countrySlug ? `(${country.name})` : ""}`
+              : currentLang === "fr"
+                ? `Leveluk K8 Ioniseur d'Eau Kangen® | True Legacy ${countrySlug ? `(${country.name})` : ""}`
+                : currentLang === "pt"
+                  ? `Leveluk K8 Ionizador de Água Kangen® | True Legacy ${countrySlug ? `(${country.name})` : ""}`
+                  : `Leveluk K8 Kangen Water® Ionizer | True Legacy ${countrySlug ? `(${country.name})` : ""}`
         }
         description={content.hero.sub}
-        image="/true-legacy-assets/k8-hero-premium.png"
-        canonical={`https://truelegacyworld.com${countrySlug ? `/${countrySlug}` : ""}/k8`}
+        image={leaderAvatar || "/true-legacy-assets/k8-hero-premium.png"}
+        canonical={
+          activeSlug
+            ? `https://truelegacyworld.com/d/${activeSlug}/kangen`
+            : `https://truelegacyworld.com${countrySlug ? `/${countrySlug}` : ""}/k8`
+        }
       />
 
       {/* JSON-LD FAQ Structured Data */}
@@ -1084,16 +1177,30 @@ export default function K8Page({ profile, distributorSlug }: K8PageProps = {}) {
       {/* ── STICKY SLIM HEADER (DESKTOP & TABLET) ── */}
       <header className="sticky top-0 z-50 w-full border-b border-white/10 bg-[#070b12]/85 backdrop-blur-xl transition-all duration-300">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-2.5 sm:px-6 lg:px-8">
-          {/* Left: Original True Legacy Logo & Kangen Water Badge */}
-          <Link
-            to="/"
-            className="flex items-center gap-2.5 group focus:outline-none focus:ring-2 focus:ring-cyan-500 rounded-lg p-0.5 shrink-0"
-          >
-            <TrueLegacyLogo variant="nav" className="h-8 sm:h-9 w-auto object-contain" />
-            <span className="text-[10px] font-semibold text-cyan-400/90 border border-cyan-500/30 bg-cyan-500/10 px-2 py-0.5 rounded-md uppercase tracking-widest hidden sm:inline-block">
-              Kangen Water®
-            </span>
-          </Link>
+          {/* Left: Original True Legacy Logo, Kangen Water Badge & Back to Profile (if on leader page) */}
+          <div className="flex items-center gap-3">
+            <Link
+              to="/"
+              className="flex items-center gap-2.5 group focus:outline-none focus:ring-2 focus:ring-cyan-500 rounded-lg p-0.5 shrink-0"
+            >
+              <TrueLegacyLogo variant="nav" className="h-8 sm:h-9 w-auto object-contain" />
+              <span className="text-[10px] font-semibold text-cyan-400/90 border border-cyan-500/30 bg-cyan-500/10 px-2 py-0.5 rounded-md uppercase tracking-widest hidden sm:inline-block">
+                Kangen Water®
+              </span>
+            </Link>
+
+            {isLeaderPage && (
+              <Link
+                to={distributorProfileRoute}
+                className="hidden lg:inline-flex items-center gap-1.5 ml-2 pl-3 border-l border-white/10 text-xs text-slate-300 hover:text-white transition-colors group"
+                title={`Back to ${distributorName}'s Profile`}
+              >
+                <ArrowLeft className="w-3.5 h-3.5 text-cyan-400 group-hover:-translate-x-0.5 transition-transform" />
+                <span className="text-slate-400">Leader:</span>
+                <span className="font-semibold text-white truncate max-w-[120px]">{distributorFirstName}</span>
+              </Link>
+            )}
+          </div>
 
           {/* Right Header Navigation Controls */}
           <div className="flex items-center gap-2.5 sm:gap-3">
@@ -1119,12 +1226,25 @@ export default function K8Page({ profile, distributorSlug }: K8PageProps = {}) {
 
             {/* Header Actions (Desktop) */}
             <div className="hidden md:flex items-center gap-2.5">
+              {hasPurchaseLink && (
+                <a
+                  href={k8PurchaseUrl!}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={() => handleActionClick("header_buy_now")}
+                  className="px-3.5 py-1.5 rounded-xl text-xs font-black bg-gradient-to-r from-amber-400 via-amber-300 to-yellow-400 text-slate-950 hover:from-amber-300 hover:to-yellow-300 shadow-md shadow-amber-500/25 transition-all flex items-center gap-1.5 hover:scale-105 active:scale-95"
+                >
+                  <ShoppingCart className="w-3.5 h-3.5" />
+                  <span>{buyNowLabel}</span>
+                </a>
+              )}
+
               <a
                 href="#video-demo"
                 onClick={() => handleActionClick("header_watch_demo")}
                 className={cn(
                   "px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all duration-300 flex items-center gap-1.5",
-                  !pastVideoSection
+                  !pastVideoSection && !hasPurchaseLink
                     ? "bg-cyan-500 text-slate-950 hover:bg-cyan-400 shadow-md shadow-cyan-500/20 font-bold"
                     : "border border-white/15 bg-white/5 text-slate-300 hover:bg-white/10"
                 )}
@@ -1139,20 +1259,27 @@ export default function K8Page({ profile, distributorSlug }: K8PageProps = {}) {
                       : "Watch Demo"}
               </a>
 
-              <Link
-                to={distributorRoute}
-                onClick={() => handleActionClick("header_contact_distributor")}
-                className="px-3.5 py-1.5 rounded-xl text-xs font-semibold border border-emerald-500/30 bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20 transition-all flex items-center gap-1.5"
-              >
-                <Users className="w-3.5 h-3.5" />
-                {currentLang === "es"
-                  ? "Contactar Distribuidor"
-                  : currentLang === "fr"
-                    ? "Contacter Distributeur"
-                    : currentLang === "pt"
-                      ? "Falar com Distribuidor"
-                      : "Contact Distributor"}
-              </Link>
+              {whatsappNumber ? (
+                <a
+                  href={personalWhatsAppUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={() => handleActionClick("header_whatsapp")}
+                  className="px-3.5 py-1.5 rounded-xl text-xs font-semibold border border-emerald-500/30 bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20 transition-all flex items-center gap-1.5"
+                >
+                  <MessageCircle className="w-3.5 h-3.5" />
+                  <span>{messageWhatsappLabel}</span>
+                </a>
+              ) : (
+                <Link
+                  to={distributorProfileRoute}
+                  onClick={() => handleActionClick("header_contact_distributor")}
+                  className="px-3.5 py-1.5 rounded-xl text-xs font-semibold border border-emerald-500/30 bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20 transition-all flex items-center gap-1.5"
+                >
+                  <Users className="w-3.5 h-3.5" />
+                  <span>{contactDistributorLabel}</span>
+                </Link>
+              )}
 
               <a
                 href={jotformUrl}
@@ -1161,7 +1288,7 @@ export default function K8Page({ profile, distributorSlug }: K8PageProps = {}) {
                 onClick={() => handleActionClick("header_get_pricing")}
                 className={cn(
                   "px-3.5 py-1.5 rounded-xl text-xs transition-all duration-300 flex items-center gap-1.5 font-bold",
-                  pastVideoSection
+                  pastVideoSection && !hasPurchaseLink
                     ? "bg-cyan-500 text-slate-950 hover:bg-cyan-400 shadow-md shadow-cyan-500/20"
                     : "border border-white/15 bg-white/5 text-slate-200 hover:bg-white/10"
                 )}
@@ -1199,41 +1326,67 @@ export default function K8Page({ profile, distributorSlug }: K8PageProps = {}) {
             </span>
           </a>
 
-          <Link
-            to={distributorRoute}
-            onClick={() => handleActionClick("mobile_sticky_distributor")}
-            className="flex flex-col items-center justify-center py-2 px-1 rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 font-bold text-[11px] hover:bg-emerald-500/25 transition-all text-center leading-tight"
-          >
-            <Users className="w-4 h-4 mb-1 text-emerald-400" />
-            <span>
-              {currentLang === "es"
-                ? "Distribuidor"
-                : currentLang === "fr"
-                  ? "Distributeur"
-                  : currentLang === "pt"
-                    ? "Distribuidor"
-                    : "Distributor"}
-            </span>
-          </Link>
+          {whatsappNumber ? (
+            <a
+              href={personalWhatsAppUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => handleActionClick("mobile_sticky_whatsapp")}
+              className="flex flex-col items-center justify-center py-2 px-1 rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 font-bold text-[11px] hover:bg-emerald-500/25 transition-all text-center leading-tight"
+            >
+              <MessageCircle className="w-4 h-4 mb-1 text-emerald-400" />
+              <span>WhatsApp</span>
+            </a>
+          ) : (
+            <Link
+              to={distributorProfileRoute}
+              onClick={() => handleActionClick("mobile_sticky_distributor")}
+              className="flex flex-col items-center justify-center py-2 px-1 rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 font-bold text-[11px] hover:bg-emerald-500/25 transition-all text-center leading-tight"
+            >
+              <Users className="w-4 h-4 mb-1 text-emerald-400" />
+              <span>
+                {currentLang === "es"
+                  ? "Distribuidor"
+                  : currentLang === "fr"
+                    ? "Distributeur"
+                    : currentLang === "pt"
+                      ? "Distribuidor"
+                      : "Distributor"}
+              </span>
+            </Link>
+          )}
 
-          <a
-            href={jotformUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            onClick={() => handleActionClick("mobile_sticky_get_pricing")}
-            className="flex flex-col items-center justify-center py-2 px-1 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 text-slate-950 font-black text-[11px] shadow-lg shadow-cyan-500/20 transition-all text-center leading-tight"
-          >
-            <Zap className="w-4 h-4 mb-1 fill-current" />
-            <span>
-              {currentLang === "es"
-                ? "Precios"
-                : currentLang === "fr"
-                  ? "Tarifs"
-                  : currentLang === "pt"
-                    ? "Preços"
-                    : "Get Pricing"}
-            </span>
-          </a>
+          {hasPurchaseLink ? (
+            <a
+              href={k8PurchaseUrl!}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => handleActionClick("mobile_sticky_buy_now")}
+              className="flex flex-col items-center justify-center py-2 px-1 rounded-xl bg-gradient-to-r from-amber-400 to-yellow-500 text-slate-950 font-black text-[11px] shadow-lg shadow-amber-500/25 transition-all text-center leading-tight"
+            >
+              <ShoppingCart className="w-4 h-4 mb-1 fill-current" />
+              <span>{buyNowLabel}</span>
+            </a>
+          ) : (
+            <a
+              href={jotformUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => handleActionClick("mobile_sticky_get_pricing")}
+              className="flex flex-col items-center justify-center py-2 px-1 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 text-slate-950 font-black text-[11px] shadow-lg shadow-cyan-500/20 transition-all text-center leading-tight"
+            >
+              <Zap className="w-4 h-4 mb-1 fill-current" />
+              <span>
+                {currentLang === "es"
+                  ? "Precios"
+                  : currentLang === "fr"
+                    ? "Tarifs"
+                    : currentLang === "pt"
+                      ? "Preços"
+                      : "Get Pricing"}
+              </span>
+            </a>
+          )}
         </div>
       </div>
 
@@ -1272,24 +1425,50 @@ export default function K8Page({ profile, distributorSlug }: K8PageProps = {}) {
               </p>
 
               {/* Action Buttons */}
-              <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 pt-2">
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3.5 pt-2">
                 <a
                   href="#video-demo"
                   onClick={() => handleActionClick("hero_primary_watch_demo")}
-                  className="inline-flex items-center justify-center gap-3 rounded-2xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold px-7 py-4 text-base transition-all duration-300 hover:scale-[1.02] shadow-xl shadow-cyan-500/25 focus:ring-2 focus:ring-cyan-400"
+                  className="inline-flex items-center justify-center gap-3 rounded-2xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold px-6 py-3.5 text-base transition-all duration-300 hover:scale-[1.02] shadow-xl shadow-cyan-500/25 focus:ring-2 focus:ring-cyan-400"
                 >
                   <Play className="w-5 h-5 fill-slate-950" />
                   <span>{content.hero.ctaPrimary}</span>
                 </a>
 
-                <Link
-                  to={distributorRoute}
-                  onClick={() => handleActionClick("hero_secondary_distributor")}
-                  className="inline-flex items-center justify-center gap-3 rounded-2xl border border-emerald-500/40 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-300 font-semibold px-6 py-4 text-base transition-all duration-300 hover:scale-[1.02]"
-                >
-                  <Users className="w-5 h-5 text-emerald-400" />
-                  <span>{content.hero.ctaSecondary}</span>
-                </Link>
+                {hasPurchaseLink && (
+                  <a
+                    href={k8PurchaseUrl!}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={() => handleActionClick("hero_buy_now")}
+                    className="inline-flex items-center justify-center gap-2.5 rounded-2xl bg-gradient-to-r from-amber-400 via-amber-300 to-yellow-400 hover:from-amber-300 hover:to-yellow-300 text-slate-950 font-black px-6 py-3.5 text-base transition-all duration-300 hover:scale-[1.02] shadow-xl shadow-amber-500/25"
+                  >
+                    <ShoppingCart className="w-5 h-5" />
+                    <span>{buyNowLabel}</span>
+                  </a>
+                )}
+
+                {whatsappNumber ? (
+                  <a
+                    href={personalWhatsAppUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={() => handleActionClick("hero_whatsapp")}
+                    className="inline-flex items-center justify-center gap-2.5 rounded-2xl border border-emerald-500/40 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-300 font-semibold px-5 py-3.5 text-base transition-all duration-300 hover:scale-[1.02]"
+                  >
+                    <MessageCircle className="w-5 h-5 text-emerald-400" />
+                    <span>{messageWhatsappLabel}</span>
+                  </a>
+                ) : (
+                  <Link
+                    to={distributorProfileRoute}
+                    onClick={() => handleActionClick("hero_secondary_distributor")}
+                    className="inline-flex items-center justify-center gap-2.5 rounded-2xl border border-emerald-500/40 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-300 font-semibold px-5 py-3.5 text-base transition-all duration-300 hover:scale-[1.02]"
+                  >
+                    <Users className="w-5 h-5 text-emerald-400" />
+                    <span>{content.hero.ctaSecondary}</span>
+                  </Link>
+                )}
               </div>
 
               {/* Compact Credibility Row */}
@@ -1304,22 +1483,44 @@ export default function K8Page({ profile, distributorSlug }: K8PageProps = {}) {
                 ))}
               </div>
 
-              {/* True Legacy Team Distributor Badge */}
+              {/* Leader or Team Distributor Badge */}
               <div className="pt-2">
-                <div className="inline-flex items-center gap-3.5 rounded-2xl border border-white/15 bg-white/[0.04] p-3 pr-5 backdrop-blur-md">
-                  <div className="w-11 h-11 rounded-xl bg-cyan-500/20 border border-cyan-500/40 flex items-center justify-center text-cyan-400 shrink-0">
-                    <Users className="w-6 h-6" />
-                  </div>
-                  <div>
-                    <div className="text-xs font-bold text-white tracking-wide">
-                      {content.hero.presentedBy}
+                {isLeaderPage ? (
+                  <Link
+                    to={distributorProfileRoute}
+                    className="inline-flex items-center gap-3.5 rounded-2xl border border-white/15 bg-white/[0.04] hover:bg-white/[0.08] transition-colors p-2.5 pr-5 backdrop-blur-md group"
+                  >
+                    <img
+                      src={leaderAvatar}
+                      alt={distributorName}
+                      className="w-12 h-12 rounded-xl object-cover border border-white/20 shrink-0 group-hover:scale-105 transition-transform"
+                    />
+                    <div>
+                      <div className="text-xs font-bold text-white tracking-wide group-hover:text-cyan-300 transition-colors flex items-center gap-1.5">
+                        <span>{distributorName}</span>
+                        <ShieldCheck className="w-3.5 h-3.5 text-cyan-400" />
+                      </div>
+                      <div className="text-[11px] text-slate-300">
+                        {leaderTitle}
+                      </div>
                     </div>
-                    <div className="text-[11px] font-medium text-cyan-400/90 flex items-center gap-1.5">
-                      <ShieldCheck className="w-3.5 h-3.5" />
-                      <span>{content.hero.distributorTag}</span>
+                  </Link>
+                ) : (
+                  <div className="inline-flex items-center gap-3.5 rounded-2xl border border-white/15 bg-white/[0.04] p-3 pr-5 backdrop-blur-md">
+                    <div className="w-11 h-11 rounded-xl bg-cyan-500/20 border border-cyan-500/40 flex items-center justify-center text-cyan-400 shrink-0">
+                      <Users className="w-6 h-6" />
+                    </div>
+                    <div>
+                      <div className="text-xs font-bold text-white tracking-wide">
+                        {content.hero.presentedBy}
+                      </div>
+                      <div className="text-[11px] font-medium text-cyan-400/90 flex items-center gap-1.5">
+                        <ShieldCheck className="w-3.5 h-3.5" />
+                        <span>{content.hero.distributorTag}</span>
+                      </div>
                     </div>
                   </div>
-                </div>
+                )}
               </div>
             </motion.div>
 
@@ -1441,7 +1642,42 @@ export default function K8Page({ profile, distributorSlug }: K8PageProps = {}) {
           </div>
 
           {/* Post-Video Actions */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-xl mx-auto">
+          <div className="flex flex-wrap items-center justify-center gap-3.5 max-w-2xl mx-auto">
+            {hasPurchaseLink && (
+              <a
+                href={k8PurchaseUrl!}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => handleActionClick("post_video_buy_now")}
+                className="inline-flex items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-amber-400 via-amber-300 to-yellow-400 hover:from-amber-300 hover:to-yellow-300 text-slate-950 font-black px-6 py-3.5 text-sm transition-all shadow-lg shadow-amber-500/25 text-center hover:scale-105"
+              >
+                <ShoppingCart className="w-4 h-4" />
+                <span>{buyNowLabel}</span>
+              </a>
+            )}
+
+            {whatsappNumber ? (
+              <a
+                href={personalWhatsAppUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => handleActionClick("post_video_whatsapp")}
+                className="inline-flex items-center justify-center gap-2 rounded-2xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold px-6 py-3.5 text-sm transition-all shadow-lg shadow-emerald-500/20 text-center hover:scale-105"
+              >
+                <MessageCircle className="w-4 h-4 fill-slate-950" />
+                <span>{messageWhatsappLabel}</span>
+              </a>
+            ) : (
+              <Link
+                to={distributorProfileRoute}
+                onClick={() => handleActionClick("post_video_contact_distributor")}
+                className="inline-flex items-center justify-center gap-2 rounded-2xl border border-white/20 bg-white/5 hover:bg-white/10 text-white font-semibold px-6 py-3.5 text-sm transition-all text-center"
+              >
+                <Users className="w-4 h-4 text-cyan-400" />
+                <span>{contactDistributorLabel}</span>
+              </Link>
+            )}
+
             <a
               href={jotformUrl}
               target="_blank"
@@ -1452,15 +1688,6 @@ export default function K8Page({ profile, distributorSlug }: K8PageProps = {}) {
               <Zap className="w-4 h-4 fill-slate-950" />
               <span>{content.demo.actions.pricing}</span>
             </a>
-
-            <Link
-              to={distributorRoute}
-              onClick={() => handleActionClick("post_video_contact_distributor")}
-              className="inline-flex items-center justify-center gap-2 rounded-2xl border border-white/20 bg-white/5 hover:bg-white/10 text-white font-semibold px-6 py-3.5 text-sm transition-all text-center"
-            >
-              <Users className="w-4 h-4 text-cyan-400" />
-              <span>{content.demo.actions.question}</span>
-            </Link>
           </div>
         </div>
 
@@ -1702,17 +1929,25 @@ export default function K8Page({ profile, distributorSlug }: K8PageProps = {}) {
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
           <div className="rounded-3xl border border-white/15 bg-gradient-to-b from-white/[0.05] to-white/[0.02] p-8 sm:p-12 shadow-2xl relative">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
-              {/* Team Avatar & Meta */}
+              {/* Team or Leader Avatar & Meta */}
               <div className="lg:col-span-5 text-center lg:text-left space-y-4">
-                <div className="w-32 h-32 sm:w-40 sm:h-40 rounded-3xl bg-cyan-500/10 border-2 border-cyan-500/40 flex items-center justify-center text-cyan-400 mx-auto lg:mx-0 shadow-2xl">
-                  <Users className="w-16 h-16" />
-                </div>
+                {isLeaderPage ? (
+                  <img
+                    src={leaderAvatar}
+                    alt={distributorName}
+                    className="w-32 h-32 sm:w-40 sm:h-40 rounded-3xl object-cover border-2 border-cyan-500/40 mx-auto lg:mx-0 shadow-2xl"
+                  />
+                ) : (
+                  <div className="w-32 h-32 sm:w-40 sm:h-40 rounded-3xl bg-cyan-500/10 border-2 border-cyan-500/40 flex items-center justify-center text-cyan-400 mx-auto lg:mx-0 shadow-2xl">
+                    <Users className="w-16 h-16" />
+                  </div>
+                )}
                 <div>
                   <h3 className="text-2xl font-black text-white">
-                    {content.guidance.distributorName}
+                    {distributorName}
                   </h3>
                   <div className="text-xs font-semibold text-cyan-400 mt-1">
-                    {content.guidance.distributorTitle}
+                    {leaderTitle}
                   </div>
                   <div className="text-xs text-slate-400 mt-2 flex items-center justify-center lg:justify-start gap-1.5">
                     <Globe className="w-3.5 h-3.5 text-slate-400" />
@@ -1741,14 +1976,40 @@ export default function K8Page({ profile, distributorSlug }: K8PageProps = {}) {
                 </p>
 
                 <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 pt-2">
-                  <Link
-                    to={distributorRoute}
-                    onClick={() => handleActionClick("guidance_distributor")}
-                    className="inline-flex items-center justify-center gap-2.5 rounded-2xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold px-6 py-3.5 text-sm transition-all shadow-lg shadow-emerald-500/20"
-                  >
-                    <Users className="w-4 h-4 fill-slate-950" />
-                    <span>{content.guidance.actions.whatsapp}</span>
-                  </Link>
+                  {hasPurchaseLink && (
+                    <a
+                      href={k8PurchaseUrl!}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={() => handleActionClick("guidance_buy_now")}
+                      className="inline-flex items-center justify-center gap-2.5 rounded-2xl bg-gradient-to-r from-amber-400 via-amber-300 to-yellow-400 hover:from-amber-300 hover:to-yellow-300 text-slate-950 font-black px-6 py-3.5 text-sm transition-all shadow-lg shadow-amber-500/25 hover:scale-105"
+                    >
+                      <ShoppingCart className="w-4 h-4" />
+                      <span>{buyNowLabel}</span>
+                    </a>
+                  )}
+
+                  {whatsappNumber ? (
+                    <a
+                      href={personalWhatsAppUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={() => handleActionClick("guidance_whatsapp")}
+                      className="inline-flex items-center justify-center gap-2.5 rounded-2xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold px-6 py-3.5 text-sm transition-all shadow-lg shadow-emerald-500/20"
+                    >
+                      <MessageCircle className="w-4 h-4 fill-slate-950" />
+                      <span>{messageWhatsappLabel}</span>
+                    </a>
+                  ) : (
+                    <Link
+                      to={distributorProfileRoute}
+                      onClick={() => handleActionClick("guidance_distributor")}
+                      className="inline-flex items-center justify-center gap-2.5 rounded-2xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold px-6 py-3.5 text-sm transition-all shadow-lg shadow-emerald-500/20"
+                    >
+                      <Users className="w-4 h-4 fill-slate-950" />
+                      <span>{contactDistributorLabel}</span>
+                    </Link>
+                  )}
 
                   <a
                     href={jotformUrl}
@@ -1761,16 +2022,18 @@ export default function K8Page({ profile, distributorSlug }: K8PageProps = {}) {
                     <span>{content.guidance.actions.consultation}</span>
                   </a>
 
-                  <a
-                    href={enagicOfficialUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    onClick={() => handleActionClick("guidance_enagic_official")}
-                    className="inline-flex items-center justify-center gap-2 rounded-2xl border border-white/10 bg-white/5 hover:bg-white/10 text-slate-300 font-medium px-5 py-3.5 text-xs transition-all"
-                  >
-                    <span>{content.guidance.actions.purchase}</span>
-                    <ExternalLink className="w-3.5 h-3.5" />
-                  </a>
+                  {!hasPurchaseLink && (
+                    <a
+                      href={enagicOfficialUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={() => handleActionClick("guidance_enagic_official")}
+                      className="inline-flex items-center justify-center gap-2 rounded-2xl border border-white/10 bg-white/5 hover:bg-white/10 text-slate-300 font-medium px-5 py-3.5 text-xs transition-all"
+                    >
+                      <span>{content.guidance.actions.purchase}</span>
+                      <ExternalLink className="w-3.5 h-3.5" />
+                    </a>
+                  )}
                 </div>
               </div>
             </div>
@@ -1894,7 +2157,42 @@ export default function K8Page({ profile, distributorSlug }: K8PageProps = {}) {
             </p>
           </div>
 
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-2">
+          <div className="flex flex-wrap items-center justify-center gap-4 pt-2">
+            {hasPurchaseLink && (
+              <a
+                href={k8PurchaseUrl!}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => handleActionClick("final_buy_now")}
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-3 rounded-2xl bg-gradient-to-r from-amber-400 via-amber-300 to-yellow-400 hover:from-amber-300 hover:to-yellow-300 text-slate-950 font-black px-8 py-4 text-base transition-all duration-300 hover:scale-105 shadow-xl shadow-amber-500/25"
+              >
+                <ShoppingCart className="w-5 h-5" />
+                <span>{buyNowLabel}</span>
+              </a>
+            )}
+
+            {whatsappNumber ? (
+              <a
+                href={personalWhatsAppUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => handleActionClick("final_whatsapp")}
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-3 rounded-2xl border border-emerald-500/40 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-300 font-semibold px-7 py-4 text-base transition-all duration-300 hover:scale-105"
+              >
+                <MessageCircle className="w-5 h-5 text-emerald-400" />
+                <span>{messageWhatsappLabel}</span>
+              </a>
+            ) : (
+              <Link
+                to={distributorProfileRoute}
+                onClick={() => handleActionClick("final_contact_leader")}
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-3 rounded-2xl border border-emerald-500/40 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-300 font-semibold px-7 py-4 text-base transition-all duration-300 hover:scale-105"
+              >
+                <Users className="w-5 h-5 text-emerald-400" />
+                <span>{contactDistributorLabel}</span>
+              </Link>
+            )}
+
             <a
               href={jotformUrl}
               target="_blank"
@@ -1906,25 +2204,18 @@ export default function K8Page({ profile, distributorSlug }: K8PageProps = {}) {
               <span>{content.finalCta.primary}</span>
             </a>
 
-            <Link
-              to={distributorRoute}
-              onClick={() => handleActionClick("final_contact_leader")}
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-3 rounded-2xl border border-emerald-500/40 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-300 font-semibold px-7 py-4 text-base transition-all duration-300 hover:scale-105"
-            >
-              <Users className="w-5 h-5 text-emerald-400" />
-              <span>{content.finalCta.secondaryWhatsapp}</span>
-            </Link>
-
-            <a
-              href={enagicOfficialUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={() => handleActionClick("final_buy_official")}
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-2xl border border-white/20 bg-white/5 hover:bg-white/10 text-slate-300 font-medium px-6 py-4 text-sm transition-all"
-            >
-              <span>{content.finalCta.secondaryEnagic}</span>
-              <ExternalLink className="w-4 h-4" />
-            </a>
+            {!hasPurchaseLink && (
+              <a
+                href={enagicOfficialUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => handleActionClick("final_buy_official")}
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-2xl border border-white/20 bg-white/5 hover:bg-white/10 text-slate-300 font-medium px-6 py-4 text-sm transition-all"
+              >
+                <span>{content.finalCta.secondaryEnagic}</span>
+                <ExternalLink className="w-4 h-4" />
+              </a>
+            )}
           </div>
 
           <p className="text-xs text-slate-400 pt-2">

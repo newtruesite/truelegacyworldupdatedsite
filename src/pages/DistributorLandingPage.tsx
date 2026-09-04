@@ -38,7 +38,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import NotFoundPage from './NotFoundPage'
 
-type LandingVariant = 'business' | 'duo' | 'training' | 'events' | 'kangen' | 'water' | 'emguarde' | 'products' | 'showcase' | 'anespa' | 'ukon' | 'beaute' | 'wagyu' | 'jr4' | 'jriv' | 'jr-4' | 'leveluk-jr4' | 'leveluk-jriv'
+type LandingVariant = 'business' | 'duo' | 'training' | 'events' | 'kangen' | 'water' | 'k8' | 'emguarde' | 'products' | 'showcase' | 'anespa' | 'ukon' | 'beaute' | 'wagyu' | 'jr4' | 'jriv' | 'jr-4' | 'leveluk-jr4' | 'leveluk-jriv'
 
 const VARIANTS: Record<LandingVariant, {
   eyebrow: string
@@ -69,6 +69,13 @@ const VARIANTS: Record<LandingVariant, {
     icon: Droplets,
   },
   water: {
+    eyebrow: 'Enagic® Japanese Medical Ionization',
+    headline: (name) => `Discover Kangen Water® with ${name}`,
+    subheadline: 'Explore 50 years of Japanese engineering, active molecular hydrogen (H2) hydration, negative ORP antioxidant power, and the Leveluk K8.',
+    interest: 'product',
+    icon: Droplets,
+  },
+  k8: {
     eyebrow: 'Enagic® Japanese Medical Ionization',
     headline: (name) => `Discover Kangen Water® with ${name}`,
     subheadline: 'Explore 50 years of Japanese engineering, active molecular hydrogen (H2) hydration, negative ORP antioxidant power, and the Leveluk K8.',
@@ -180,6 +187,7 @@ const BENEFITS: Record<LandingVariant, string[]> = {
   duo: ['Kangen Water education centered on the Leveluk K8', 'Portable emGuarde GO product education', 'Two separate product videos below', 'Market availability confirmed with your distributor'],
   kangen: ['Leveluk K8 8-plate medical-grade ionization', 'Molecular Hydrogen (H2) cellular antioxidant power', '5 distinct water types for home and health', 'Direct consultation and machine pricing'],
   water: ['Leveluk K8 8-plate medical-grade ionization', 'Molecular Hydrogen (H2) cellular antioxidant power', '5 distinct water types for home and health', 'Direct consultation and machine pricing'],
+  k8: ['Leveluk K8 8-plate medical-grade ionization', 'Molecular Hydrogen (H2) cellular antioxidant power', '5 distinct water types for home and health', 'Direct consultation and machine pricing'],
   emguarde: ['Patented harmonic resonance technology', '3-meter radius 360° environmental protection', 'Harmonizes electro smoke and EMF radiation noise', 'Portable USB-C powered emGuarde GO edition'],
   training: ['A structured training library', 'Product and presentation education', 'Weekly English and Spanish team calls', 'Leadership, media, and follow-up development'],
   events: ['Live product and business education', 'Open to members, prospects, and guests', 'English and Spanish weekly options', 'Direct follow-up with your referring distributor'],
@@ -348,7 +356,7 @@ export default function DistributorLandingPage() {
     return <DuoLandingPage profile={profile} distributorSlug={slug} />
   }
 
-  if (variant === 'kangen' || variant === 'water') {
+  if (variant === 'kangen' || variant === 'water' || variant === 'k8') {
     return <K8Page profile={profile} distributorSlug={slug} />
   }
 

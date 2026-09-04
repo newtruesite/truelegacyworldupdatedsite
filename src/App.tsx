@@ -155,7 +155,7 @@ function AnimatedRoutes() {
             path="/kangen"
             element={
               <PageTransitionWrapper>
-                <KangenLandingPage distributorSlug="mehdi-cohen" />
+                <K8Page distributorSlug="mehdi-cohen" />
               </PageTransitionWrapper>
             }
           />
@@ -163,7 +163,7 @@ function AnimatedRoutes() {
             path="/water"
             element={
               <PageTransitionWrapper>
-                <KangenLandingPage distributorSlug="mehdi-cohen" />
+                <K8Page distributorSlug="mehdi-cohen" />
               </PageTransitionWrapper>
             }
           />
