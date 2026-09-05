@@ -416,7 +416,7 @@ export default function DistributorLandingPage() {
       <Navbar />
 
       <main className="mx-auto flex w-full max-w-5xl flex-1 flex-col px-4 pt-24 pb-20 sm:px-6 md:pt-32">
-        <header className="rounded-3xl border border-white/10 bg-gradient-to-b from-white/[.07] to-white/[.02] p-6 text-center sm:p-12">
+        <section aria-label="Page Header" className="rounded-3xl border border-white/10 bg-gradient-to-b from-white/[.07] to-white/[.02] p-6 text-center sm:p-12">
           <div className="inline-flex items-center gap-2 rounded-full border border-cyan-400/30 bg-cyan-400/10 px-4 py-1 text-xs font-bold uppercase tracking-widest text-[#2997ff]">
             <Icon className="h-3.5 w-3.5" />
             {copy?.eyebrow}
@@ -463,7 +463,7 @@ export default function DistributorLandingPage() {
               </div>
             </div>
           ) : null}
-        </header>
+        </section>
 
         {variant === 'events' ? (
           <section className="mt-12 space-y-8">

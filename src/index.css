@@ -1808,7 +1808,8 @@ a {
 }
 
 /* ─── New SaaS-style Header Styles ─────────────────── */
-header {
+header:has(nav),
+header.site-header {
   position: sticky !important;
   top: 0 !important;
   z-index: 50 !important;

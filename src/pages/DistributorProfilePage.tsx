@@ -613,7 +613,8 @@ export default function DistributorProfilePage() {
         {profile ? (
           <>
             {/* 1. TOP HERO CARD (Natural Document Scroll) */}
-            <header
+            <section
+              aria-label="Distributor Profile"
               onMouseMove={handleMouseMove}
               onMouseEnter={() => setIsHovered(true)}
               onMouseLeave={() => setIsHovered(false)}
@@ -795,7 +796,7 @@ export default function DistributorProfilePage() {
                   </div>
                 </div>
               </div>
-            </header>
+            </section>
 
             {/* 2. VISUAL GUIDED EXPERIENCE DESTINATION CARDS */}
             <section className="mb-14">
