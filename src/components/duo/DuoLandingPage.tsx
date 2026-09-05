@@ -46,6 +46,7 @@ import { Footer } from '@/components/layout/Footer'
 import { LandingHeaderBackButton } from '@/components/layout/LandingHeaderBackButton'
 import { useLocaleContext } from '@/contexts/LocaleContext'
 import { localizedProductVideo } from '@/lib/productVideos'
+import { YouTubeEmbed } from '@/components/ui/YouTubeEmbed'
 import { crmSupabase, getLeaderPortrait, getPublicDistributors, type PublicDistributor } from '@/lib/crm'
 import { trackEvent } from '@/lib/analytics'
 
@@ -233,6 +234,10 @@ const I18N = {
     videoSub: 'Watch the video presentations for both technologies and explore how they integrate into everyday routines.',
     videoTabK8: 'Leveluk K8 Demo (~4 min)',
     videoTabEmguarde: 'emGuarde GO Overview (~8 min)',
+    videoK8Title: 'Leveluk K8® Water Ionizer Demonstration',
+    videoK8Desc: 'Explore active molecular hydrogen hydration, negative ORP antioxidant power, and 5 continuous water settings with Japanese medical-grade craftsmanship.',
+    videoEmguardeTitle: 'emGuarde® GO Technology Overview',
+    videoEmguardeDesc: 'Discover how patented harmonic resonance suppresses ambient electromagnetic noise across a 3-meter radius without interrupting wireless connectivity.',
 
     // Section 12: Explore Individually
     exploreIndHeading: 'GO DEEPER.',
@@ -444,6 +449,10 @@ const I18N = {
     videoSub: 'Mira las presentaciones en video de ambas tecnologías y comprende su integración en la vida diaria.',
     videoTabK8: 'Demostración Leveluk K8 (~4 min)',
     videoTabEmguarde: 'Presentación emGuarde GO (~8 min)',
+    videoK8Title: 'Demostración de Agua Leveluk K8®',
+    videoK8Desc: 'Descubre la infusión activa de hidrógeno molecular, el potencial antioxidante de ORP negativo y los 5 tipos de agua médica japonesa.',
+    videoEmguardeTitle: 'Presentación de Tecnología emGuarde® GO',
+    videoEmguardeDesc: 'Conoce cómo la resonancia armónica de 3 metros atenúa el ruido electromagnético ambiental sin interferir con señales Wi-Fi o celulares.',
 
     exploreIndHeading: 'CONOCE MÁS A FONDO.',
     exploreIndSub: '¿Prefieres explorar una tecnología primero? Descubre la experiencia completa de cada una.',
@@ -579,6 +588,10 @@ const I18N = {
     videoSub: 'Visionnez les présentations pour comprendre le fonctionnement concret de chaque appareil.',
     videoTabK8: 'Démo Leveluk K8 (~4 min)',
     videoTabEmguarde: 'Présentation emGuarde GO (~8 min)',
+    videoK8Title: 'Démonstration Eau Leveluk K8®',
+    videoK8Desc: 'Découvrez les 5 types d’eau, l’infusion d’hydrogène moléculaire actif et la fabrication médicale japonaise.',
+    videoEmguardeTitle: 'Présentation Technologie emGuarde® GO',
+    videoEmguardeDesc: 'Apprenez comment la résonance harmonique sur 3 mètres supprime les bruits électromagnétiques ambiants sans couper les réseaux.',
     exploreIndHeading: 'ALLER PLUS LOIN.',
     exploreIndSub: 'Vous préférez explorer un produit d’abord ? Découvrez leur univers dédié.',
     exploreIndK8Cta: 'EXPLORER KANGEN',
@@ -688,6 +701,10 @@ const I18N = {
     videoSub: 'Assista às apresentações para entender como cada tecnologia funciona na prática.',
     videoTabK8: 'Demonstração Leveluk K8 (~4 min)',
     videoTabEmguarde: 'Apresentação emGuarde GO (~8 min)',
+    videoK8Title: 'Demonstração Água Leveluk K8®',
+    videoK8Desc: 'Conheça os 5 tipos de água, os antioxidantes de hidrogênio molecular e o padrão de engenharia médica japonesa.',
+    videoEmguardeTitle: 'Apresentação Tecnologia emGuarde® GO',
+    videoEmguardeDesc: 'Entenda como a ressonância harmônica de 3 metros atenua ruídos eletromagnéticos sem bloquear o sinal de celular ou Wi-Fi.',
     exploreIndHeading: 'CONHEÇA A FUNDO.',
     exploreIndSub: 'Prefere explorar um produto primeiro? Veja os detalhes de cada tecnologia.',
     exploreIndK8Cta: 'EXPLORAR KANGEN',
@@ -720,7 +737,6 @@ export function DuoLandingPage({ profile: propProfile, distributorSlug: propSlug
   const { locale, setLocale } = useLocaleContext()
   const [profile, setProfile] = useState<PublicDistributor | null | undefined>(propProfile || undefined)
   const [activeFaq, setActiveFaq] = useState<number | null>(null)
-  const [selectedVideo, setSelectedVideo] = useState<'k8' | 'emguarde'>('k8')
 
   const equationRef = useRef<HTMLDivElement>(null)
   const videoRef = useRef<HTMLDivElement>(null)
@@ -1036,12 +1052,12 @@ export function DuoLandingPage({ profile: propProfile, distributorSlug: propSlug
                 </p>
 
                 {/* Exact Transparent K8 Asset */}
-                <div className="my-6 relative h-48 sm:h-56 flex items-center justify-center">
+                <div className="my-6 relative h-56 sm:h-64 flex items-center justify-center">
                   <img
                     src="/products/k8.png"
                     alt="Leveluk K8 Water Ionizer System"
                     loading="lazy"
-                    className="h-full w-auto object-contain drop-shadow-[0_15px_30px_rgba(6,182,212,0.25)] transition-transform duration-500 group-hover:scale-105"
+                    className="h-full w-auto max-w-[90%] object-contain scale-[1.18] sm:scale-[1.25] drop-shadow-[0_20px_40px_rgba(6,182,212,0.3)] transition-transform duration-500 group-hover:scale-[1.3]"
                   />
                 </div>
               </div>
@@ -1088,12 +1104,12 @@ export function DuoLandingPage({ profile: propProfile, distributorSlug: propSlug
                 </p>
 
                 {/* Exact Transparent emGuarde GO Asset */}
-                <div className="my-6 relative h-48 sm:h-56 flex items-center justify-center">
+                <div className="my-6 relative h-44 sm:h-48 flex items-center justify-center">
                   <img
                     src="/products/emguarde-go.png"
                     alt="emGuarde GO Portable Electromagnetic Harmonizer Set"
                     loading="lazy"
-                    className="h-full w-auto object-contain drop-shadow-[0_15px_30px_rgba(16,185,129,0.25)] transition-transform duration-500 group-hover:scale-105"
+                    className="h-full w-auto max-w-[85%] object-contain drop-shadow-[0_15px_30px_rgba(16,185,129,0.25)] transition-transform duration-500 group-hover:scale-105"
                   />
                 </div>
               </div>
@@ -1189,7 +1205,7 @@ export function DuoLandingPage({ profile: propProfile, distributorSlug: propSlug
                   src="/products/k8.png"
                   alt="Leveluk K8 Water Ionizer"
                   loading="lazy"
-                  className="h-64 sm:h-72 w-auto object-contain drop-shadow-[0_20px_40px_rgba(6,182,212,0.3)]"
+                  className="h-76 sm:h-88 md:h-96 w-auto max-w-[95%] object-contain scale-105 drop-shadow-[0_25px_50px_rgba(6,182,212,0.35)]"
                 />
                 <div className="absolute bottom-4 left-4 right-4 rounded-xl border border-white/10 bg-black/60 p-3 text-center backdrop-blur-md">
                   <span className="text-xs font-bold text-white">8 Solid Platinum-Dipped Titanium Plates</span>
@@ -1322,7 +1338,7 @@ export function DuoLandingPage({ profile: propProfile, distributorSlug: propSlug
                   src="/products/emguarde-go.png"
                   alt="emGuarde GO Dual Set"
                   loading="lazy"
-                  className="h-64 sm:h-72 w-auto object-contain drop-shadow-[0_20px_40px_rgba(16,185,129,0.3)]"
+                  className="h-52 sm:h-60 w-auto max-w-[85%] object-contain drop-shadow-[0_20px_40px_rgba(16,185,129,0.3)]"
                 />
                 <div className="absolute bottom-4 left-4 right-4 rounded-xl border border-white/10 bg-black/60 p-3 text-center backdrop-blur-md">
                   <span className="text-xs font-bold text-white">Dual-Unit Synchronized Set</span>
@@ -1572,59 +1588,110 @@ export function DuoLandingPage({ profile: propProfile, distributorSlug: propSlug
       </section>
 
       {/* ========================================================================= */}
-      {/* 11. WATCH THE DUO: SEE THE DUO IN ACTION (VIDEO THEATER) */}
+      {/* 11. WATCH THE DUO: DUAL VIDEO THEATER (BOTH DEMOS PLAYABLE) */}
       {/* ========================================================================= */}
       <section ref={videoRef} id="video-story" className="scroll-mt-20 py-20 sm:py-28 border-b border-white/10 bg-[#03050a] relative">
-        <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 text-center">
-          <span className="text-xs font-bold uppercase tracking-[0.25em] text-cyan-400">
-            VIDEO SHOWCASE
-          </span>
-          <h2 className="mt-3 text-3xl sm:text-4xl md:text-5xl font-black text-white tracking-tight">
-            {t.videoHeading}
-          </h2>
-          <p className="mt-4 text-base sm:text-lg text-[#b8c0cf] max-w-2xl mx-auto">
-            {t.videoSub}
-          </p>
-
-          {/* Video Switcher Tabs */}
-          <div className="mt-8 inline-flex items-center rounded-2xl border border-white/10 bg-white/[0.04] p-1.5">
-            <button
-              type="button"
-              onClick={() => setSelectedVideo('k8')}
-              className={`px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer ${
-                selectedVideo === 'k8'
-                  ? 'bg-cyan-500 text-slate-950 shadow-md font-black'
-                  : 'text-[#88909e] hover:text-white'
-              }`}
-            >
-              {t.videoTabK8}
-            </button>
-            <button
-              type="button"
-              onClick={() => setSelectedVideo('emguarde')}
-              className={`px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer ${
-                selectedVideo === 'emguarde'
-                  ? 'bg-emerald-500 text-slate-950 shadow-md font-black'
-                  : 'text-[#88909e] hover:text-white'
-              }`}
-            >
-              {t.videoTabEmguarde}
-            </button>
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="text-center max-w-3xl mx-auto">
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-cyan-400/30 bg-cyan-400/10 px-3.5 py-1 text-xs font-bold text-cyan-300 tracking-wider uppercase">
+              <Play className="h-3 w-3 fill-current text-cyan-400" />
+              DUAL VIDEO THEATER
+            </span>
+            <h2 className="mt-4 text-3xl sm:text-4xl md:text-5xl font-black text-white tracking-tight">
+              {t.videoHeading}
+            </h2>
+            <p className="mt-3 text-base sm:text-lg text-[#b8c0cf]">
+              {t.videoSub}
+            </p>
           </div>
 
-          {/* Video Player Box */}
-          <div className="mt-10 relative overflow-hidden rounded-3xl border border-white/15 bg-black shadow-2xl aspect-video w-full">
-            <iframe
-              src={selectedVideo === 'k8' ? videoK8Url : videoEmguardeUrl}
-              title={selectedVideo === 'k8' ? 'Leveluk K8 Water Demo' : 'emGuarde GO Presentation'}
-              className="h-full w-full border-0"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-            />
+          {/* DUAL VIDEOS GRID - BOTH DEMO VIDEOS DISPLAYED SIDE-BY-SIDE */}
+          <div className="mt-12 sm:mt-16 grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-10">
+            {/* Video 1: Leveluk K8 Water Demo */}
+            <article className="rounded-3xl border border-cyan-500/25 bg-gradient-to-b from-[#091524] via-[#050b14] to-black p-5 sm:p-6 shadow-2xl shadow-cyan-500/10 flex flex-col justify-between group hover:border-cyan-400/50 transition-all duration-300">
+              <div>
+                <div className="flex items-center justify-between gap-3 mb-3.5">
+                  <span className="inline-flex items-center gap-1.5 rounded-full border border-cyan-400/40 bg-cyan-400/15 px-3 py-1 text-[11px] font-black uppercase text-cyan-300 tracking-wider">
+                    <Droplets className="h-3 w-3 text-cyan-400" />
+                    {t.videoTabK8}
+                  </span>
+                  <span className="text-[11px] font-mono text-cyan-400/80">JAPANESE MED-TECH</span>
+                </div>
+
+                <div className="relative overflow-hidden rounded-2xl border border-white/10 shadow-2xl bg-black">
+                  <YouTubeEmbed
+                    url={videoK8Url}
+                    title={t.videoK8Title}
+                    className="border-0 bg-black"
+                  />
+                </div>
+
+                <div className="mt-5">
+                  <h3 className="text-lg sm:text-xl font-black text-white group-hover:text-cyan-300 transition-colors">
+                    {t.videoK8Title}
+                  </h3>
+                  <p className="mt-2 text-xs sm:text-sm text-[#a4b0c2] leading-relaxed">
+                    {t.videoK8Desc}
+                  </p>
+                </div>
+              </div>
+
+              <div className="mt-6 pt-4 border-t border-white/10 flex items-center justify-between">
+                <span className="text-xs font-semibold text-slate-400">Pillar 01: Water Vitality</span>
+                <Link
+                  to={kangenPageUrl}
+                  className="inline-flex items-center gap-1.5 text-xs font-bold text-cyan-400 hover:text-cyan-300 transition-colors"
+                >
+                  <span>{t.exploreIndK8Cta}</span>
+                  <ArrowRight className="h-3.5 w-3.5" />
+                </Link>
+              </div>
+            </article>
+
+            {/* Video 2: emGuarde GO Frequency Demo */}
+            <article className="rounded-3xl border border-emerald-500/25 bg-gradient-to-b from-[#061814] via-[#040f0c] to-black p-5 sm:p-6 shadow-2xl shadow-emerald-500/10 flex flex-col justify-between group hover:border-emerald-400/50 transition-all duration-300">
+              <div>
+                <div className="flex items-center justify-between gap-3 mb-3.5">
+                  <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-400/40 bg-emerald-400/15 px-3 py-1 text-[11px] font-black uppercase text-emerald-300 tracking-wider">
+                    <Radio className="h-3 w-3 text-emerald-400" />
+                    {t.videoTabEmguarde}
+                  </span>
+                  <span className="text-[11px] font-mono text-emerald-400/80">PATENTED HARMONIC</span>
+                </div>
+
+                <div className="relative overflow-hidden rounded-2xl border border-white/10 shadow-2xl bg-black">
+                  <YouTubeEmbed
+                    url={videoEmguardeUrl}
+                    title={t.videoEmguardeTitle}
+                    className="border-0 bg-black"
+                  />
+                </div>
+
+                <div className="mt-5">
+                  <h3 className="text-lg sm:text-xl font-black text-white group-hover:text-emerald-300 transition-colors">
+                    {t.videoEmguardeTitle}
+                  </h3>
+                  <p className="mt-2 text-xs sm:text-sm text-[#a4b0c2] leading-relaxed">
+                    {t.videoEmguardeDesc}
+                  </p>
+                </div>
+              </div>
+
+              <div className="mt-6 pt-4 border-t border-white/10 flex items-center justify-between">
+                <span className="text-xs font-semibold text-slate-400">Pillar 02: Environmental Calm</span>
+                <Link
+                  to={emguardePageUrl}
+                  className="inline-flex items-center gap-1.5 text-xs font-bold text-emerald-400 hover:text-emerald-300 transition-colors"
+                >
+                  <span>{t.exploreIndEmguardeCta}</span>
+                  <ArrowRight className="h-3.5 w-3.5" />
+                </Link>
+              </div>
+            </article>
           </div>
 
-          <p className="mt-4 text-xs text-slate-400">
-            Official presentation videos localized for {locale.toUpperCase()}. Sound starts only upon your explicit play interaction.
+          <p className="mt-8 text-center text-xs text-slate-400">
+            Official presentation videos localized for {locale.toUpperCase()}. Click to play. Sound starts only upon your explicit play interaction.
           </p>
         </div>
       </section>
@@ -1662,12 +1729,12 @@ export function DuoLandingPage({ profile: propProfile, distributorSlug: propSlug
                 </p>
               </div>
 
-              <div className="my-8 flex justify-center">
+              <div className="my-8 flex justify-center items-center h-52 sm:h-60">
                 <img
                   src="/products/k8.png"
                   alt="Leveluk K8"
                   loading="lazy"
-                  className="h-44 w-auto object-contain drop-shadow-xl transition-transform duration-500 group-hover:scale-105"
+                  className="h-full w-auto max-w-[90%] object-contain scale-110 drop-shadow-xl transition-transform duration-500 group-hover:scale-115"
                 />
               </div>
 
@@ -1695,12 +1762,12 @@ export function DuoLandingPage({ profile: propProfile, distributorSlug: propSlug
                 </p>
               </div>
 
-              <div className="my-8 flex justify-center">
+              <div className="my-8 flex justify-center items-center h-40 sm:h-44">
                 <img
                   src="/products/emguarde-go.png"
                   alt="emGuarde GO"
                   loading="lazy"
-                  className="h-44 w-auto object-contain drop-shadow-xl transition-transform duration-500 group-hover:scale-105"
+                  className="h-full w-auto max-w-[85%] object-contain drop-shadow-xl transition-transform duration-500 group-hover:scale-105"
                 />
               </div>
 
@@ -1828,19 +1895,19 @@ export function DuoLandingPage({ profile: propProfile, distributorSlug: propSlug
 
         <div className="relative mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
           {/* Dual Product Visual Harmony */}
-          <div className="flex items-center justify-center gap-6 sm:gap-10 mb-10">
+          <div className="flex items-end justify-center gap-6 sm:gap-12 mb-10">
             <img
               src="/products/k8.png"
               alt="Leveluk K8"
               loading="lazy"
-              className="h-32 sm:h-44 w-auto object-contain drop-shadow-[0_15px_30px_rgba(6,182,212,0.3)]"
+              className="h-44 sm:h-56 w-auto object-contain scale-110 drop-shadow-[0_20px_40px_rgba(6,182,212,0.35)]"
             />
-            <div className="h-16 w-px bg-white/20" />
+            <div className="h-20 w-px bg-white/20 mb-4" />
             <img
               src="/products/emguarde-go.png"
               alt="emGuarde GO"
               loading="lazy"
-              className="h-28 sm:h-36 w-auto object-contain drop-shadow-[0_15px_30px_rgba(16,185,129,0.3)]"
+              className="h-24 sm:h-32 w-auto object-contain drop-shadow-[0_15px_30px_rgba(16,185,129,0.3)] mb-2"
             />
           </div>
 

@@ -147,20 +147,20 @@ export function ProfileCardGrid({ profile, locale = 'en' }: ProfileCardGridProps
                 <img
                   src="/products/anespa-dx.png"
                   alt="Anespa DX"
-                  className="h-28 w-auto object-contain drop-shadow-lg opacity-85 hover:opacity-100 transition-opacity"
-                  style={{ maxHeight: '105px', maxWidth: '30%' }}
+                  className="h-24 w-auto object-contain drop-shadow-lg opacity-85 hover:opacity-100 transition-opacity"
+                  style={{ maxHeight: '90px', maxWidth: '28%' }}
                 />
                 <img
                   src="/products/k8.png"
                   alt="Leveluk K8"
-                  className="h-36 w-auto object-contain drop-shadow-2xl z-10"
-                  style={{ maxHeight: '135px', maxWidth: '42%' }}
+                  className="h-40 w-auto object-contain drop-shadow-2xl z-10 scale-105"
+                  style={{ maxHeight: '150px', maxWidth: '48%' }}
                 />
                 <img
                   src="/products/ukon-sigma.png"
                   alt="Ukon Sigma"
-                  className="h-24 w-auto object-contain drop-shadow-lg opacity-85 hover:opacity-100 transition-opacity"
-                  style={{ maxHeight: '90px', maxWidth: '28%' }}
+                  className="h-20 w-auto object-contain drop-shadow-lg opacity-85 hover:opacity-100 transition-opacity"
+                  style={{ maxHeight: '85px', maxWidth: '24%' }}
                 />
               </div>
             </div>
@@ -173,14 +173,14 @@ export function ProfileCardGrid({ profile, locale = 'en' }: ProfileCardGridProps
                 <img
                   src="/products/k8.png"
                   alt="Leveluk K8 Water System"
-                  className="h-36 w-auto object-contain drop-shadow-2xl"
-                  style={{ maxHeight: '135px', maxWidth: '50%' }}
+                  className="h-40 w-auto object-contain drop-shadow-2xl scale-105"
+                  style={{ maxHeight: '150px', maxWidth: '56%' }}
                 />
                 <img
                   src="/products/emguarde-go.png"
                   alt="emGuarde GO Set of 2"
-                  className="h-28 w-auto object-contain drop-shadow-2xl"
-                  style={{ maxHeight: '105px', maxWidth: '40%' }}
+                  className="h-24 w-auto object-contain drop-shadow-2xl"
+                  style={{ maxHeight: '95px', maxWidth: '38%' }}
                 />
               </div>
             </div>

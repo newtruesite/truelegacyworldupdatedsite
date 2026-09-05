@@ -167,11 +167,11 @@ export function ProductSection({
               </div>
               <div className="grid grid-cols-2 items-end gap-2 rounded-2xl border border-white/10 bg-black/75 px-3 py-4 sm:px-5">
                 <div>
-                  <img src="/products/k8.png" alt="K8 flagship Kangen Water ionizer" className="mx-auto h-28 w-full origin-bottom scale-[0.78] object-contain drop-shadow-2xl sm:h-36" />
+                  <img src="/products/k8.png" alt="K8 flagship Kangen Water ionizer" className="mx-auto h-32 w-full origin-bottom scale-[1.08] object-contain drop-shadow-2xl sm:h-40" />
                   <p className="mt-1 text-center text-xs font-bold text-white sm:text-sm">K8 Flagship</p>
                 </div>
                 <div>
-                  <img src="/products/emguarde-go.png" alt="emGuarde GO product set" className="mx-auto h-32 w-full origin-bottom scale-[1.12] object-contain drop-shadow-2xl sm:h-40" />
+                  <img src="/products/emguarde-go.png" alt="emGuarde GO product set" className="mx-auto h-26 w-full origin-bottom scale-[0.95] object-contain drop-shadow-2xl sm:h-32" />
                   <p className="mt-1 text-center text-xs font-bold text-white sm:text-sm">emGuarde GO</p>
                 </div>
               </div>

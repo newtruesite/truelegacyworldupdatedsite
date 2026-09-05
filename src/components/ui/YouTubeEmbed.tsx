@@ -10,12 +10,15 @@ export function YouTubeEmbed({ url, title, className = "" }: YouTubeEmbedProps) 
       if (url.includes('youtube.com/watch')) {
         const u = new URL(url)
         const id = u.searchParams.get('v')
-        return id ? `https://www.youtube.com/embed/${id}` : url
+        return id ? `https://www.youtube.com/embed/${id}?rel=0` : url
       }
       if (url.includes('youtu.be/')) {
         const after = url.split('youtu.be/')[1] || ''
         const id = after.split(/[?&]/)[0]
-        return id ? `https://www.youtube.com/embed/${id}` : url
+        return id ? `https://www.youtube.com/embed/${id}?rel=0` : url
+      }
+      if (url.includes('youtube.com/embed/')) {
+        return url.includes('?') ? url : `${url}?rel=0`
       }
       return url
     } catch {
