@@ -240,35 +240,90 @@ export function setCustomLeaderAvatar(slug: string, avatarUrl: string): void {
 
 export const CANONICAL_LEADER_AVATARS: Record<string, string> = {
   'mehdi-cohen': '/leaders/standardized/mehdi-cohen.png',
+  'mehdi': '/leaders/standardized/mehdi-cohen.png',
   'simon-loh': '/leaders/standardized/simon-loh-v2.png',
+  'simon': '/leaders/standardized/simon-loh-v2.png',
   'ming-way-sia': '/leaders/standardized/ming-way-sia.png',
+  'ming-way': '/leaders/standardized/ming-way-sia.png',
+  'mingway': '/leaders/standardized/ming-way-sia.png',
   'zah-naderi': '/leaders/standardized/zah-naderi-v3.png',
+  'zah': '/leaders/standardized/zah-naderi-v3.png',
   'alex-gonzalez': '/leaders/standardized/alex-gonzalez.png',
+  'alex': '/leaders/standardized/alex-gonzalez.png',
   'ryan-pool': '/leaders/standardized/ryan-pool-sr.png',
+  'ryan-pool-sr': '/leaders/standardized/ryan-pool-sr.png',
+  'ryan': '/leaders/standardized/ryan-pool-sr.png',
   'magaly-cardona': '/leaders/standardized/magaly-cardona.png',
-  emanuela: '/leaders/standardized/emanuela-doustova.png',
+  'magaly': '/leaders/standardized/magaly-cardona.png',
+  'emanuela': '/leaders/standardized/emanuela-doustova.png',
+  'emanuela-doustova': '/leaders/standardized/emanuela-doustova.png',
+  'emanuela-braj': '/leaders/standardized/emanuela-doustova.png',
   'jesse-schexnayder': '/leaders/standardized/jesse-schexnayder.png',
+  'jesse': '/leaders/standardized/jesse-schexnayder.png',
   'angel-mok': '/leaders/standardized/angel-mok-v2.png',
+  'angel': '/leaders/standardized/angel-mok-v2.png',
   'leo-khodorkovskiy': '/leaders/standardized/leo-khodorkovskiy.png',
+  'leo': '/leaders/standardized/leo-khodorkovskiy.png',
+  'dr-ed-vance': '/leaders/standardized/dr-ed-vance.png',
+  'andrea-freschi': '/leaders/standardized/andrea-freschi.png',
+  'elias-cohen': '/leaders/standardized/elias-cohen.png',
+  'valery-schwarz': '/leaders/standardized/valery-schwarz.png',
+  'nassim-habib': '/leaders/standardized/nassim-habib.png',
+  'nour-el-bouhali': '/leaders/standardized/nour-el-bouhali.png',
+  'adam-habib': '/leaders/standardized/adam-habib.png',
+  'farah-el-kadiri': '/leaders/standardized/farah-el-kadiri.png',
+  'ismail-el-bouhali': '/leaders/standardized/ismail-el-bouhali.png',
+  'soufiane-el-bouhali': '/leaders/standardized/soufiane-el-bouhali.png',
+  'mehdi-d': '/leaders/standardized/mehdi-d.png',
+  'elias-d': '/leaders/standardized/elias-d.png',
+  'dany-d': '/leaders/standardized/dany-d.png',
 }
 
-export function resolveCanonicalAvatarUrl(slug: string, rawUrl?: string | null): string {
+export function resolveCanonicalAvatarUrl(slug?: string | null, rawUrl?: string | null): string {
+  const normalizedSlug = (slug || '').toLowerCase().trim()
+
   // 1. Prioritize client custom avatar upload (from local storage)
-  const custom = getCustomLeaderAvatar(slug)
-  if (custom && typeof custom === 'string' && custom.trim() !== '' && !custom.startsWith('blob:')) {
-    return custom
+  if (normalizedSlug) {
+    const custom = getCustomLeaderAvatar(normalizedSlug)
+    if (custom && typeof custom === 'string' && custom.trim() !== '' && !custom.startsWith('blob:')) {
+      return custom
+    }
   }
 
-  // 2. Prioritize uploaded photo URL saved in leader settings / database profile
+  // 2. Check if rawUrl is a legitimate personalized image (not an accidental fallback for another leader)
   if (rawUrl && typeof rawUrl === 'string' && rawUrl.trim() !== '') {
-    return rawUrl
+    const isStandardizedOther =
+      rawUrl.includes('/leaders/standardized/') &&
+      normalizedSlug &&
+      !rawUrl.toLowerCase().includes(normalizedSlug) &&
+      !rawUrl.toLowerCase().includes(normalizedSlug.split('-')[0])
+    const isGenericFallback = rawUrl.includes('/logos/') || rawUrl.includes('placeholder')
+
+    // If it's a legitimate custom photo URL or matches the leader, use it
+    if (!isStandardizedOther && !isGenericFallback) {
+      return rawUrl
+    }
   }
 
-  // 3. Fallback to standardized portrait registry asset
-  return CANONICAL_LEADER_AVATARS[slug] || `/leaders/standardized/${slug}.png`
+  // 3. Match against standardized portrait registry
+  if (normalizedSlug && CANONICAL_LEADER_AVATARS[normalizedSlug]) {
+    return CANONICAL_LEADER_AVATARS[normalizedSlug]
+  }
+
+  // Check prefix / partial matching (e.g. 'zah' matching 'zah-naderi')
+  if (normalizedSlug) {
+    for (const [key, path] of Object.entries(CANONICAL_LEADER_AVATARS)) {
+      if (normalizedSlug === key || normalizedSlug.startsWith(key) || key.startsWith(normalizedSlug)) {
+        return path
+      }
+    }
+    return `/leaders/standardized/${normalizedSlug}.png`
+  }
+
+  return rawUrl || '/logos/tl-square-white.png'
 }
 
-export function getLeaderPortrait(slug: string, fallback?: string): string {
+export function getLeaderPortrait(slug?: string | null, fallback?: string | null): string {
   return resolveCanonicalAvatarUrl(slug, fallback)
 }
 

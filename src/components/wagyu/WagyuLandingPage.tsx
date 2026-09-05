@@ -336,6 +336,25 @@ export function WagyuLandingPage({ profile: propProfile, distributorSlug }: Wagy
 
           {/* Right Actions */}
           <div className="flex items-center gap-3">
+            {/* Corner Leader Profile Badge */}
+            <Link
+              to={`/d/${activeSlug}`}
+              className="flex items-center gap-2 rounded-full border border-[#3e342b] bg-[#1a1614] hover:bg-[#25201c] px-2.5 py-1 transition-all group shrink-0"
+              title={`Shared by ${distributorFullName}`}
+            >
+              <img
+                src={(profile?.avatar_url && !profile.avatar_url.includes('mehdi-cohen') ? profile.avatar_url : null) || getLeaderPortrait(profile?.slug || activeSlug, profile?.avatar_url) || '/logos/tl-square-white.png'}
+                alt={distributorFullName}
+                className="w-6 h-6 rounded-full object-cover border border-[#c5a059]/60 shrink-0 group-hover:scale-105 transition-transform"
+                onError={(e) => {
+                  ;(e.currentTarget as HTMLImageElement).src = '/logos/tl-square-white.png'
+                }}
+              />
+              <span className="hidden sm:inline text-xs font-bold text-[#ede8df] truncate max-w-[110px]">
+                {distributorFirstName}
+              </span>
+            </Link>
+
             {/* Language Selector */}
             <div className="flex items-center rounded-lg border border-[#3e342b] bg-[#1a1614] p-1 text-[11px] font-bold">
               {(['en', 'es', 'fr', 'pt'] as const).map((lang) => (
@@ -404,11 +423,11 @@ export function WagyuLandingPage({ profile: propProfile, distributorSlug }: Wagy
                 {/* Distributor Attribution Badge */}
                 <div className="flex items-center gap-4 rounded-2xl border border-[#3e342b] bg-[#14110e]/90 p-3.5 max-w-md shadow-xl backdrop-blur-sm">
                   <img
-                    src={profile?.avatar_url || getLeaderPortrait(profile?.slug || activeSlug, '/leaders/standardized/mehdi-cohen.png')}
+                    src={(profile?.avatar_url && !profile.avatar_url.includes('mehdi-cohen') ? profile.avatar_url : null) || getLeaderPortrait(profile?.slug || activeSlug, profile?.avatar_url) || '/logos/tl-square-white.png'}
                     alt={distributorFullName}
                     className="h-12 w-12 rounded-full object-cover border-2 border-[#c5a059]/60 shadow-md"
                     onError={(e) => {
-                      ;(e.currentTarget as HTMLImageElement).src = '/leaders/standardized/mehdi-cohen.png'
+                      ;(e.currentTarget as HTMLImageElement).src = '/logos/tl-square-white.png'
                     }}
                   />
                   <div>
@@ -939,11 +958,11 @@ export function WagyuLandingPage({ profile: propProfile, distributorSlug }: Wagy
             <div className="rounded-3xl border border-[#c5a059]/30 bg-gradient-to-br from-[#1a1614] via-[#14110e] to-[#0c0a09] p-8 sm:p-12 grid gap-8 lg:grid-cols-12 items-center shadow-2xl">
               <div className="lg:col-span-4 flex flex-col items-center text-center space-y-3">
                 <img
-                  src={profile?.avatar_url || getLeaderPortrait(profile?.slug || activeSlug, '/leaders/standardized/mehdi-cohen.png')}
+                  src={(profile?.avatar_url && !profile.avatar_url.includes('mehdi-cohen') ? profile.avatar_url : null) || getLeaderPortrait(profile?.slug || activeSlug, profile?.avatar_url) || '/logos/tl-square-white.png'}
                   alt={distributorFullName}
                   className="h-28 w-28 rounded-full object-cover border-4 border-[#c5a059]/60 shadow-2xl"
                   onError={(e) => {
-                    ;(e.currentTarget as HTMLImageElement).src = '/leaders/standardized/mehdi-cohen.png'
+                    ;(e.currentTarget as HTMLImageElement).src = '/logos/tl-square-white.png'
                   }}
                 />
                 <div>

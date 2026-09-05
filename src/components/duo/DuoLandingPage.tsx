@@ -39,24 +39,6 @@ interface DuoLandingPageProps {
   distributorSlug?: string
 }
 
-const LEADER_PORTRAITS: Record<string, string> = {
-  'mehdi-cohen': '/leaders/standardized/mehdi-cohen.png',
-  'simon-loh': '/leaders/standardized/simon-loh-v2.png',
-  'ming-way-sia': '/leaders/standardized/ming-way-sia.png',
-  'dr-ed-vance': '/leaders/standardized/dr-ed-vance.png',
-  'andrea-freschi': '/leaders/standardized/andrea-freschi.png',
-  'elias-cohen': '/leaders/standardized/elias-cohen.png',
-  'valery-schwarz': '/leaders/standardized/valery-schwarz.png',
-  'nassim-habib': '/leaders/standardized/nassim-habib.png',
-  'nour-el-bouhali': '/leaders/standardized/nour-el-bouhali.png',
-  'adam-habib': '/leaders/standardized/adam-habib.png',
-  'farah-el-kadiri': '/leaders/standardized/farah-el-kadiri.png',
-  'ismail-el-bouhali': '/leaders/standardized/ismail-el-bouhali.png',
-  'soufiane-el-bouhali': '/leaders/standardized/soufiane-el-bouhali.png',
-  'mehdi-d': '/leaders/standardized/mehdi-d.png',
-  'elias-d': '/leaders/standardized/elias-d.png',
-  'dany-d': '/leaders/standardized/dany-d.png',
-}
 
 const I18N = {
   en: {
@@ -898,8 +880,9 @@ export function DuoLandingPage({ profile: propProfile, distributorSlug: propSlug
   const distributorFirstName = distributorName.split(' ')[0]
   const distributorTitle = profile?.title || 'Verified True Legacy Leader'
   const leaderAvatar =
-    LEADER_PORTRAITS[profile?.slug || distributorSlugActive] ||
-    getLeaderPortrait(profile?.slug || distributorSlugActive, '/leaders/standardized/mehdi-cohen.png')
+    (profile?.avatar_url && !profile.avatar_url.includes('mehdi-cohen') ? profile.avatar_url : null) ||
+    getLeaderPortrait(profile?.slug || distributorSlugActive, profile?.avatar_url) ||
+    '/logos/tl-square-white.png'
 
   // Smooth scroll helpers
   const scrollToEquation = () => equationRef.current?.scrollIntoView({ behavior: 'smooth' })
@@ -930,15 +913,9 @@ export function DuoLandingPage({ profile: propProfile, distributorSlug: propSlug
   const kangenPageUrl = `/d/${distributorSlugActive}/kangen?source=duo&interest=product`
   const emguardePageUrl = `/d/${distributorSlugActive}/emguarde?source=duo&interest=duo`
 
-  // Primary CTA action router
+  // Primary CTA action router - always opens two-button purchase choice modal explaining both
   const handlePrimaryDuoCta = () => {
-    if (hasDuoDirectUrl && duoPurchaseUrl) {
-      window.open(duoPurchaseUrl, '_blank', 'noopener,noreferrer')
-    } else if (hasBothUrls) {
-      setIsPurchaseModalOpen(true)
-    } else {
-      scrollToEquation()
-    }
+    setIsPurchaseModalOpen(true)
   }
 
   return (
@@ -966,6 +943,25 @@ export function DuoLandingPage({ profile: propProfile, distributorSlug: propSlug
           </div>
 
           <div className="flex items-center gap-2 sm:gap-3">
+            {/* Corner Leader Profile Badge */}
+            <Link
+              to={`/d/${distributorSlugActive}`}
+              className="flex items-center gap-2 rounded-full border border-white/15 bg-white/5 hover:bg-white/10 px-2.5 py-1 transition-all group shrink-0"
+              title={`Shared by ${distributorName}`}
+            >
+              <img
+                src={leaderAvatar}
+                alt={distributorName}
+                className="h-6 w-6 rounded-full object-cover border border-cyan-400/60 shrink-0 group-hover:scale-105 transition-transform"
+                onError={(e) => {
+                  ;(e.currentTarget as HTMLImageElement).src = '/logos/tl-square-white.png'
+                }}
+              />
+              <span className="hidden md:inline text-xs font-bold text-white truncate max-w-[120px]">
+                {distributorFirstName}
+              </span>
+            </Link>
+
             {/* Language Switcher */}
             <div className="flex items-center rounded-xl border border-white/10 bg-white/5 p-1 text-[11px] font-bold">
               {(['en', 'es', 'fr', 'pt'] as const).map((l) => (
@@ -1034,6 +1030,9 @@ export function DuoLandingPage({ profile: propProfile, distributorSlug: propSlug
                   src={leaderAvatar}
                   alt={distributorName}
                   className="h-5 w-5 rounded-full object-cover border border-cyan-400/60"
+                  onError={(e) => {
+                    ;(e.currentTarget as HTMLImageElement).src = '/logos/tl-square-white.png'
+                  }}
                 />
                 <span className="text-[11px] font-semibold text-slate-300">
                   {t.sharedBy} <strong className="text-white font-black">{distributorName}</strong>
@@ -1901,6 +1900,9 @@ export function DuoLandingPage({ profile: propProfile, distributorSlug: propSlug
                 src={leaderAvatar}
                 alt={distributorName}
                 className="h-28 w-28 sm:h-36 sm:w-36 rounded-3xl object-cover border-2 border-cyan-400/50 shadow-2xl"
+                onError={(e) => {
+                  ;(e.currentTarget as HTMLImageElement).src = '/logos/tl-square-white.png'
+                }}
               />
               <div className="absolute -bottom-2 -right-2 rounded-full border border-white/20 bg-cyan-500 p-1.5 text-slate-950 shadow-lg">
                 <ShieldCheck className="h-4 w-4" />
@@ -2053,8 +2055,8 @@ export function DuoLandingPage({ profile: propProfile, distributorSlug: propSlug
         isOpen={isPurchaseModalOpen}
         onClose={() => setIsPurchaseModalOpen(false)}
         distributorName={distributorName}
-        k8PurchaseUrl={k8PurchaseUrl}
-        emguardePurchaseUrl={emguardePurchaseUrl}
+        k8PurchaseUrl={k8PurchaseUrl || 'https://www.enagic.com/en_US/products/leveluk-k8'}
+        emguardePurchaseUrl={emguardePurchaseUrl || 'https://www.enagic.com/en_US/product-emguarde'}
         whatsappUrl={whatsappUrl}
         locale={locale}
       />

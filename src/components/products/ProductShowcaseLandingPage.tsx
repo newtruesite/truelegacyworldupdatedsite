@@ -84,8 +84,9 @@ export function ProductShowcaseLandingPage({
   const distributorName = profile?.display_name || 'True Legacy Leader'
   const distributorFirstName = distributorName.split(' ')[0]
   const leaderAvatar =
+    (profile?.slug && getLeaderPortrait(profile.slug, profile?.avatar_url)) ||
     profile?.avatar_url ||
-    (profile?.slug && getLeaderPortrait(profile.slug, LEADER_PORTRAITS[profile.slug])) ||
+    (effectiveSlug && getLeaderPortrait(effectiveSlug)) ||
     '/logos/tl-square-white.png'
 
   const whatsappPhone = profile?.phone ? profile.phone.replace(/\D/g, '') : '18649072149'
@@ -733,6 +734,27 @@ export function ProductShowcaseLandingPage({
                 <span className="text-xs font-bold text-white">Showcase</span>
               </div>
             </Link>
+            {profile && (
+              <Link
+                to={`/d/${profile.slug}`}
+                className="hidden sm:flex items-center gap-2 rounded-full border border-white/10 bg-white/5 py-1 pl-1 pr-3 hover:border-cyan-400/40 hover:bg-white/10 transition-colors"
+                title={distributorName}
+              >
+                <img
+                  src={leaderAvatar}
+                  alt={distributorName}
+                  className="h-6 w-6 rounded-full object-cover border border-cyan-400/40 bg-black/40"
+                  onError={(e) => {
+                    const target = e.currentTarget
+                    target.onerror = null
+                    target.src = '/logos/tl-square-white.png'
+                  }}
+                />
+                <span className="text-xs font-semibold text-slate-200">
+                  {distributorFirstName}
+                </span>
+              </Link>
+            )}
           </div>
 
           <div className="flex items-center gap-2 sm:gap-3">

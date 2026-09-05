@@ -1442,7 +1442,10 @@ export function EmguardeLandingPage({ profile: propProfile, distributorSlug }: E
   const distributorName = profile?.display_name || 'True Legacy Leader'
   const distributorFirstName = distributorName.split(' ')[0]
   const leaderTitle = profile?.title || (locale === 'es' ? 'Líder True Legacy' : locale === 'fr' ? 'Leader True Legacy' : locale === 'pt' ? 'Líder True Legacy' : 'True Legacy Leader')
-  const leaderAvatar = profile?.avatar_url || (profile?.slug ? getLeaderPortrait(profile.slug) : '/logos/tl-square-white.png')
+  const leaderAvatar =
+    (profile?.avatar_url && !profile.avatar_url.includes('mehdi-cohen') ? profile.avatar_url : null) ||
+    getLeaderPortrait(profile?.slug || effectiveSlug, profile?.avatar_url) ||
+    '/logos/tl-square-white.png'
 
   // Dynamic Purchase Link resolution
   const directPurchaseUrl = getProductPurchaseLink(profile?.purchase_links, 'emguarde')
@@ -1528,6 +1531,27 @@ export function EmguardeLandingPage({ profile: propProfile, distributorSlug }: E
 
           {/* Right Header Navigation Controls */}
           <div className="flex items-center gap-2.5 sm:gap-3">
+            {/* Corner Leader Profile Badge */}
+            {isLeaderPage && (
+              <Link
+                to={distributorProfileRoute}
+                className="flex items-center gap-2 rounded-full border border-white/15 bg-white/5 hover:bg-white/10 px-2.5 py-1 transition-all group shrink-0"
+                title={`Shared by ${distributorName}`}
+              >
+                <img
+                  src={leaderAvatar}
+                  alt={distributorName}
+                  className="w-6 h-6 rounded-full object-cover border border-cyan-400/60 shrink-0 group-hover:scale-105 transition-transform"
+                  onError={(e) => {
+                    ;(e.currentTarget as HTMLImageElement).src = '/logos/tl-square-white.png'
+                  }}
+                />
+                <span className="hidden sm:inline text-xs font-bold text-white truncate max-w-[110px]">
+                  {distributorFirstName}
+                </span>
+              </Link>
+            )}
+
             {/* Symmetrical Round Language Selector Bubbles */}
             <div className="flex items-center gap-1 rounded-full border border-white/10 bg-white/5 p-1 notranslate" translate="no">
               {(['en', 'es', 'fr', 'pt'] as const).map((lang) => (

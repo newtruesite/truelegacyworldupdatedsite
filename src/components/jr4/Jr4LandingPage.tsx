@@ -80,9 +80,12 @@ export function Jr4LandingPage({ profile: propProfile, distributorSlug }: Jr4Lan
   }, [propProfile, activeSlug])
 
   const portraitUrl = useMemo(() => {
-    if (!profile) return '/leaders/standardized/mehdi-cohen.png'
-    return getLeaderPortrait(profile.slug, profile.avatar_url || undefined)
-  }, [profile])
+    return (
+      (profile?.avatar_url && !profile.avatar_url.includes('mehdi-cohen') ? profile.avatar_url : null) ||
+      getLeaderPortrait(profile?.slug || activeSlug, profile?.avatar_url) ||
+      '/logos/tl-square-white.png'
+    )
+  }, [profile, activeSlug])
 
   const leaderFirstName = useMemo(() => {
     if (!profile) return 'Mehdi'
@@ -277,6 +280,25 @@ export function Jr4LandingPage({ profile: propProfile, distributorSlug }: Jr4Lan
           </div>
 
           <div className="flex items-center gap-3 sm:gap-4">
+            {/* Corner Leader Profile Badge */}
+            <Link
+              to={`/d/${activeSlug}`}
+              className="flex items-center gap-2 rounded-full border border-white/15 bg-white/5 hover:bg-white/10 px-2.5 py-1 transition-all group shrink-0"
+              title={`Shared by ${profile?.display_name || 'Leader'}`}
+            >
+              <img
+                src={portraitUrl}
+                alt={profile?.display_name || 'Leader'}
+                className="w-6 h-6 rounded-full object-cover border border-cyan-400/60 shrink-0 group-hover:scale-105 transition-transform"
+                onError={(e) => {
+                  ;(e.currentTarget as HTMLImageElement).src = '/logos/tl-square-white.png'
+                }}
+              />
+              <span className="hidden sm:inline text-xs font-bold text-white truncate max-w-[110px]">
+                {leaderFirstName}
+              </span>
+            </Link>
+
             {/* Language Selector */}
             <div className="relative">
               <select

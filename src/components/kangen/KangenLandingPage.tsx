@@ -688,7 +688,10 @@ export function KangenLandingPage({ profile: propProfile, distributorSlug }: Kan
   }, [effectiveSlug, propProfile])
 
   const distributorName = profile?.display_name || 'True Legacy Leader'
-  const leaderAvatar = profile?.avatar_url || (profile?.slug ? getLeaderPortrait(profile.slug) : '/logos/tl-square-white.png')
+  const leaderAvatar =
+    (profile?.avatar_url && !profile.avatar_url.includes('mehdi-cohen') ? profile.avatar_url : null) ||
+    getLeaderPortrait(profile?.slug || effectiveSlug, profile?.avatar_url) ||
+    '/logos/tl-square-white.png'
   
   const rawVideoUrl = PRODUCT_VIDEOS.kangenWater[selectedVideoLang] || PRODUCT_VIDEOS.kangenWater.en
   const embedVideoUrl = useMemo(() => toEmbedUrl(rawVideoUrl), [rawVideoUrl])
@@ -741,6 +744,25 @@ export function KangenLandingPage({ profile: propProfile, distributorSlug }: Kan
           </div>
 
           <div className="flex items-center gap-2 sm:gap-3">
+            {/* Corner Leader Profile Badge */}
+            <Link
+              to={`/d/${effectiveSlug}`}
+              className="flex items-center gap-2 rounded-full border border-white/15 bg-white/5 hover:bg-white/10 px-2.5 py-1 transition-all group shrink-0"
+              title={`Shared by ${distributorName}`}
+            >
+              <img
+                src={leaderAvatar}
+                alt={distributorName}
+                className="h-6 w-6 rounded-full object-cover border border-cyan-400/60 shrink-0 group-hover:scale-105 transition-transform"
+                onError={(e) => {
+                  ;(e.currentTarget as HTMLImageElement).src = '/logos/tl-square-white.png'
+                }}
+              />
+              <span className="hidden md:inline text-xs font-bold text-white truncate max-w-[110px]">
+                {distributorName.split(' ')[0]}
+              </span>
+            </Link>
+
             <DistributorBuyButton profile={profile} productId="k8" label={locale === 'fr' ? 'Acheter' : locale === 'es' || locale === 'pt' ? 'Comprar' : 'Buy Now'} compactOnMobile className="shrink-0" />
             {/* 4-Language Toggle (EN, ES, FR, PT) */}
             <div className="flex items-center rounded-lg border border-white/10 bg-white/[0.04] p-0.5 text-xs font-semibold notranslate" translate="no">

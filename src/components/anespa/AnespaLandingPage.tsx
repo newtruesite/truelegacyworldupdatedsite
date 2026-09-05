@@ -65,9 +65,12 @@ export function AnespaLandingPage({ profile: propProfile, distributorSlug }: Ane
   }, [propProfile, activeSlug])
 
   const portraitUrl = useMemo(() => {
-    if (!profile) return '/leaders/standardized/mehdi-cohen.png'
-    return getLeaderPortrait(profile.slug, profile.avatar_url || undefined)
-  }, [profile])
+    return (
+      (profile?.avatar_url && !profile.avatar_url.includes('mehdi-cohen') ? profile.avatar_url : null) ||
+      getLeaderPortrait(profile?.slug || activeSlug, profile?.avatar_url) ||
+      '/logos/tl-square-white.png'
+    )
+  }, [profile, activeSlug])
 
   const handleLeadSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -144,6 +147,26 @@ export function AnespaLandingPage({ profile: propProfile, distributorSlug }: Ane
           </div>
 
           <div className="flex items-center gap-2.5 sm:gap-3">
+            {profile && (
+              <Link
+                to={`/d/${profile.slug}`}
+                className="flex items-center gap-2 rounded-full border border-white/15 bg-white/5 hover:bg-white/10 px-2.5 py-1 transition-all group shrink-0"
+                title={`Shared by ${profile.display_name}`}
+              >
+                <img
+                  src={portraitUrl}
+                  alt={profile.display_name}
+                  className="w-6 h-6 rounded-full object-cover border border-cyan-400/60 shrink-0 group-hover:scale-105 transition-transform"
+                  onError={(e) => {
+                    ;(e.currentTarget as HTMLImageElement).src = '/logos/tl-square-white.png'
+                  }}
+                />
+                <span className="hidden sm:inline text-xs font-bold text-white truncate max-w-[110px]">
+                  {profile.display_name.split(' ')[0]}
+                </span>
+              </Link>
+            )}
+
             <DistributorBuyButton profile={profile} productId="anespa_dx" label="Buy Now" compactOnMobile className="shrink-0" />
             <button
               onClick={() => setShowModal(true)}

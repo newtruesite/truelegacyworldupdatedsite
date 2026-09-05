@@ -1041,9 +1041,9 @@ export function BusinessLandingPage({ profile: initialProfile, distributorSlug }
   const referralCode = profile?.referral_code || distributorSlugActive
 
   const leaderPhoto =
-    profile?.avatar_url ||
-    getLeaderPortrait(distributorSlugActive, LEADER_PORTRAITS[distributorSlugActive]) ||
-    '/leaders/standardized/mehdi-cohen.png'
+    (profile?.avatar_url && !profile.avatar_url.includes('mehdi-cohen') ? profile.avatar_url : null) ||
+    getLeaderPortrait(distributorSlugActive, profile?.avatar_url) ||
+    '/logos/tl-square-white.png'
 
   const whatsappNumber = profile?.phone ? profile.phone.replace(/\D/g, '') : '18649072149'
 
@@ -1129,6 +1129,25 @@ export function BusinessLandingPage({ profile: initialProfile, distributorSlug }
           </div>
 
           <div className="flex items-center gap-3 sm:gap-4">
+            {/* Corner Leader Profile Badge */}
+            <Link
+              to={`/d/${encodeURIComponent(distributorSlugActive)}`}
+              className="flex items-center gap-2 rounded-full border border-white/15 bg-white/5 hover:bg-white/10 px-2.5 py-1 transition-all group shrink-0"
+              title={`Shared by ${distributorName}`}
+            >
+              <img
+                src={leaderPhoto}
+                alt={distributorName}
+                className="w-6 h-6 rounded-full object-cover border border-amber-400/60 shrink-0 group-hover:scale-105 transition-transform"
+                onError={(e) => {
+                  ;(e.currentTarget as HTMLImageElement).src = '/logos/tl-square-white.png'
+                }}
+              />
+              <span className="hidden sm:inline text-xs font-bold text-white truncate max-w-[110px]">
+                {distributorFirstName}
+              </span>
+            </Link>
+
             <div className="flex items-center rounded-lg border border-white/10 bg-white/[0.04] p-0.5 text-xs font-semibold notranslate" translate="no">
               {(['en', 'es', 'fr', 'pt'] as const).map((lang) => (
                 <button

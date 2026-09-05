@@ -1465,9 +1465,9 @@ export function UkonLandingPage({ profile: propProfile, distributorSlug: propDis
   const distributorFirstName = distributorName.split(' ')[0]
   const distributorTitle = profile?.title || 'True Legacy Leader'
   const leaderAvatar =
-    profile?.avatar_url ||
-    (profile?.slug && getLeaderPortrait(profile.slug)) ||
-    '/leaders/standardized/mehdi-cohen.png'
+    (profile?.avatar_url && !profile.avatar_url.includes('mehdi-cohen') ? profile.avatar_url : null) ||
+    getLeaderPortrait(profile?.slug || activeSlug, profile?.avatar_url) ||
+    '/logos/tl-square-white.png'
   const distributorProfileRoute = `/d/${profile?.slug || activeSlug}`
 
   const rawPhone = profile?.phone ? profile.phone.replace(/[^0-9]/g, '') : '14389947844'
@@ -1591,6 +1591,27 @@ export function UkonLandingPage({ profile: propProfile, distributorSlug: propDis
 
           {/* Right Header Controls */}
           <div className="flex items-center gap-2.5 sm:gap-3">
+            {/* Corner Leader Profile Badge */}
+            {isLeaderPage && (
+              <Link
+                to={distributorProfileRoute}
+                className="flex items-center gap-2 rounded-full border border-white/15 bg-white/5 hover:bg-white/10 px-2.5 py-1 transition-all group shrink-0"
+                title={`Shared by ${distributorName}`}
+              >
+                <img
+                  src={leaderAvatar}
+                  alt={distributorName}
+                  className="w-6 h-6 rounded-full object-cover border border-amber-400/60 shrink-0 group-hover:scale-105 transition-transform"
+                  onError={(e) => {
+                    ;(e.currentTarget as HTMLImageElement).src = '/logos/tl-square-white.png'
+                  }}
+                />
+                <span className="hidden sm:inline text-xs font-bold text-white truncate max-w-[110px]">
+                  {distributorFirstName}
+                </span>
+              </Link>
+            )}
+
             {/* Symmetrical Uniform Language Selector */}
             <div className="flex items-center gap-1 rounded-full border border-white/10 bg-white/5 p-1">
               {(['en', 'es', 'fr', 'pt'] as const).map((lang) => (

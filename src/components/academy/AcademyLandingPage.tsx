@@ -67,20 +67,7 @@ const LEADER_PORTRAITS: Record<string, string> = {
 }
 
 function resolveLeaderPhoto(slug: string, customUrl?: string | null): string {
-  if (customUrl && !customUrl.includes('placeholder')) return customUrl
-  const normalized = slug.toLowerCase().trim()
-  if (LEADER_PORTRAITS[normalized]) return LEADER_PORTRAITS[normalized]
-  if (normalized.includes('ryan')) return LEADER_PORTRAITS['ryan-pool']
-  if (normalized.includes('emanuela')) return LEADER_PORTRAITS['emanuela']
-  if (normalized.includes('zah')) return LEADER_PORTRAITS['zah-naderi']
-  if (normalized.includes('simon')) return LEADER_PORTRAITS['simon-loh']
-  if (normalized.includes('ming')) return LEADER_PORTRAITS['ming-way-sia']
-  if (normalized.includes('magaly')) return LEADER_PORTRAITS['magaly-cardona']
-  if (normalized.includes('mehdi')) return LEADER_PORTRAITS['mehdi-cohen']
-  if (normalized.includes('alex')) return LEADER_PORTRAITS['alex-gonzalez']
-  if (normalized.includes('jesse')) return LEADER_PORTRAITS['jesse-schexnayder']
-  if (normalized.includes('angel')) return LEADER_PORTRAITS['angel-mok']
-  return '/logos/tl-square-white.png'
+  return getLeaderPortrait(slug, customUrl)
 }
 
 // 10 Real Training Curriculum Modules (Syllabus Outlines for Private Academy)

@@ -66,9 +66,12 @@ export function BeauteLandingPage({ profile: propProfile, distributorSlug }: Bea
   const firstName = useMemo(() => profile?.display_name.split(' ')[0] || 'Leader', [profile])
 
   const portraitUrl = useMemo(() => {
-    if (!profile) return '/leaders/standardized/mehdi-cohen.png'
-    return getLeaderPortrait(profile.slug, profile.avatar_url || undefined)
-  }, [profile])
+    return (
+      (profile?.avatar_url && !profile.avatar_url.includes('mehdi-cohen') ? profile.avatar_url : null) ||
+      getLeaderPortrait(profile?.slug || activeSlug, profile?.avatar_url) ||
+      '/logos/tl-square-white.png'
+    )
+  }, [profile, activeSlug])
 
   const whatsappMessage = useMemo(() => {
     return encodeURIComponent(
@@ -203,6 +206,24 @@ export function BeauteLandingPage({ profile: propProfile, distributorSlug }: Bea
           </div>
 
           <div className="flex items-center gap-3">
+            <Link
+              to={`/d/${activeSlug}`}
+              className="flex items-center gap-2 rounded-full border border-white/15 bg-white/5 hover:bg-white/10 px-2.5 py-1 transition-all group shrink-0"
+              title={`Shared by ${profile?.display_name || 'Leader'}`}
+            >
+              <img
+                src={portraitUrl}
+                alt={profile?.display_name || 'Leader'}
+                className="w-6 h-6 rounded-full object-cover border border-amber-400/60 shrink-0 group-hover:scale-105 transition-transform"
+                onError={(e) => {
+                  ;(e.currentTarget as HTMLImageElement).src = '/logos/tl-square-white.png'
+                }}
+              />
+              <span className="hidden sm:inline text-xs font-bold text-white truncate max-w-[110px]">
+                {firstName}
+              </span>
+            </Link>
+
             <DistributorBuyButton profile={profile} productId="kangen_beaute" label="Buy Now" compactOnMobile className="shrink-0" />
             <a
               href={whatsappUrl}
