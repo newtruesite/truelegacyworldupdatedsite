@@ -982,17 +982,15 @@ export function DuoLandingPage({ profile: propProfile, distributorSlug: propSlug
               ))}
             </div>
 
-            {/* Direct Purchase / Modal CTA in Header if links configured */}
-            {hasBothUrls && (
-              <button
-                type="button"
-                onClick={() => setIsPurchaseModalOpen(true)}
-                className="hidden lg:inline-flex items-center gap-1.5 rounded-xl bg-amber-500 hover:bg-amber-400 px-3.5 py-1.5 text-xs font-black text-slate-950 transition-all cursor-pointer shadow-md shadow-amber-500/20"
-              >
-                <ShoppingCart className="h-3.5 w-3.5" />
-                <span>{t.buyDuoBtn}</span>
-              </button>
-            )}
+            {/* Direct Purchase / Modal CTA in Header */}
+            <button
+              type="button"
+              onClick={handlePrimaryDuoCta}
+              className="hidden sm:inline-flex items-center gap-1.5 rounded-xl bg-orange-500 hover:bg-orange-400 px-3.5 py-1.5 text-xs font-black text-white transition-all cursor-pointer shadow-md shadow-orange-500/25 active:scale-95"
+            >
+              <ShoppingCart className="h-3.5 w-3.5" />
+              <span>{t.buyDuoBtn}</span>
+            </button>
 
             {/* Guide Contact Link */}
             <a
@@ -1012,18 +1010,18 @@ export function DuoLandingPage({ profile: propProfile, distributorSlug: propSlug
       {/* ========================================================================= */}
       {/* 02. CINEMATIC HERO SECTION: K8 + EMGUARDE ON RIGHT, TYPOGRAPHY ON LEFT */}
       {/* ========================================================================= */}
-      <section className="relative min-h-[92vh] pt-24 pb-16 flex items-center overflow-hidden border-b border-white/10">
-        {/* Background Visual Asset: Sunrise Ocean Terrace with K8 + emGuarde on Right */}
-        <div className="absolute inset-0 z-0">
+      <section className="relative min-h-[92vh] pt-24 pb-16 flex items-center overflow-hidden border-b border-white/10 bg-[#02050a]">
+        {/* Background Visual Asset: Hidden on mobile (< lg) for pristine clarity, cinematic right-side on desktop */}
+        <div className="hidden lg:block absolute inset-0 z-0">
           <img
             src="/duo/duo-master-hero.jpg"
             alt="True Legacy Duo Leveluk K8 and emGuarde GO on Ocean Terrace"
             fetchPriority="high"
-            className="w-full h-full object-cover object-right md:object-center filter brightness-[0.82] contrast-[1.04]"
+            className="w-full h-full object-cover object-right filter brightness-[0.85] contrast-[1.04]"
           />
           {/* Subtle responsive vignette & dark overlay for text legibility on left */}
-          <div className="absolute inset-0 bg-gradient-to-t sm:bg-gradient-to-r from-[#02050a] via-[#02050a]/85 to-transparent sm:w-3/5" />
-          <div className="absolute inset-0 bg-gradient-to-t from-[#02050a] via-transparent to-black/40" />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#02050a] via-[#02050a]/90 to-transparent w-3/5" />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#02050a] via-transparent to-black/30" />
         </div>
 
         <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 w-full">
@@ -1081,39 +1079,34 @@ export function DuoLandingPage({ profile: propProfile, distributorSlug: propSlug
                   <span>{t.watchStoryBtn}</span>
                 </button>
 
-                {/* Direct Purchase Button if configured */}
-                {hasBothUrls && (
-                  <button
-                    type="button"
-                    onClick={() => setIsPurchaseModalOpen(true)}
-                    className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black px-6 py-3.5 text-sm shadow-xl shadow-amber-500/25 transition-all hover:scale-105 active:scale-95 cursor-pointer"
-                  >
-                    <ShoppingCart className="h-4 w-4" />
-                    <span>{t.buyDuoBtn}</span>
-                  </button>
-                )}
-                {hasK8Only && (
-                  <a
-                    href={k8PurchaseUrl!}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black px-6 py-3.5 text-sm shadow-xl shadow-amber-500/25 transition-all hover:scale-105 active:scale-95 cursor-pointer"
-                  >
-                    <ShoppingCart className="h-4 w-4" />
-                    <span>{t.buyKangenBtn}</span>
-                  </a>
-                )}
-                {hasEmguardeOnly && (
-                  <a
-                    href={emguardePurchaseUrl!}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black px-6 py-3.5 text-sm shadow-xl shadow-emerald-500/25 transition-all hover:scale-105 active:scale-95 cursor-pointer"
-                  >
-                    <ShoppingCart className="h-4 w-4" />
-                    <span>{t.buyEmguardeBtn}</span>
-                  </a>
-                )}
+                {/* Direct Purchase Button (Orange color as requested) */}
+                <button
+                  type="button"
+                  onClick={handlePrimaryDuoCta}
+                  className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-orange-500 hover:bg-orange-400 text-white font-black px-6 py-3.5 text-sm shadow-xl shadow-orange-500/30 transition-all hover:scale-105 active:scale-95 cursor-pointer"
+                >
+                  <ShoppingCart className="h-4 w-4" />
+                  <span>{t.buyDuoBtn}</span>
+                </button>
+              </div>
+
+              {/* Mobile Dedicated Picture Card: Clean, uncropped, editorial framing */}
+              <div className="lg:hidden my-6 rounded-2xl sm:rounded-3xl overflow-hidden border border-white/15 bg-gradient-to-b from-white/[0.08] to-[#050b14] p-1.5 sm:p-2 shadow-2xl relative group">
+                <div className="relative aspect-[16/9] w-full overflow-hidden rounded-xl sm:rounded-2xl bg-black">
+                  <img
+                    src="/duo/duo-master-hero.jpg"
+                    alt="True Legacy Duo: Leveluk K8 and emGuarde GO"
+                    className="w-full h-full object-cover filter brightness-[0.95] contrast-[1.02]"
+                  />
+                  {/* Subtle glass badge overlay */}
+                  <div className="absolute bottom-2.5 left-2.5 right-2.5 flex items-center justify-between rounded-lg bg-black/75 backdrop-blur-md px-3 py-1.5 border border-white/15 text-[11px] font-mono text-slate-200">
+                    <span className="font-bold text-white flex items-center gap-1.5">
+                      <span className="h-1.5 w-1.5 rounded-full bg-cyan-400" />
+                      Leveluk K8® + emGuarde® GO
+                    </span>
+                    <span className="text-cyan-400 font-black">ENAGIC® OEM</span>
+                  </div>
+                </div>
               </div>
 
               {/* 4 Trust Highlights */}
@@ -1130,6 +1123,115 @@ export function DuoLandingPage({ profile: propProfile, distributorSlug: propSlug
             {/* Right Column: Kept visually clear for the high-res penthouse product photograph */}
             <div className="hidden lg:block lg:col-span-5 xl:col-span-6 pointer-events-none" />
           </div>
+        </div>
+      </section>
+
+      {/* ========================================================================= */}
+      {/* 03. WATCH THE DUO: DUAL VIDEO THEATER (RIGHT UNDERNEATH HERO) */}
+      {/* ========================================================================= */}
+      <section ref={videoRef} id="video-story" className="scroll-mt-20 py-20 sm:py-28 border-b border-white/10 bg-[#03050a] relative">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="text-center max-w-3xl mx-auto">
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-cyan-400/30 bg-cyan-400/10 px-3.5 py-1 text-xs font-bold text-cyan-300 tracking-wider uppercase">
+              <Play className="h-3 w-3 fill-current text-cyan-400" />
+              DUAL VIDEO THEATER
+            </span>
+            <h2 className="mt-4 text-3xl sm:text-4xl md:text-5xl font-black text-white tracking-tight">
+              {t.videoHeading}
+            </h2>
+            <p className="mt-3 text-base sm:text-lg text-[#b8c0cf]">
+              {t.videoSub}
+            </p>
+          </div>
+
+          {/* DUAL VIDEOS GRID */}
+          <div className="mt-12 sm:mt-16 grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-10">
+            {/* Video 1: Leveluk K8 Water Demo */}
+            <article className="rounded-3xl border border-cyan-500/25 bg-gradient-to-b from-[#091524] via-[#050b14] to-black p-5 sm:p-6 shadow-2xl shadow-cyan-500/10 flex flex-col justify-between group hover:border-cyan-400/50 transition-all duration-300">
+              <div>
+                <div className="flex items-center justify-between gap-3 mb-3.5">
+                  <span className="inline-flex items-center gap-1.5 rounded-full border border-cyan-400/40 bg-cyan-400/15 px-3 py-1 text-[11px] font-black uppercase text-cyan-300 tracking-wider">
+                    <Droplets className="h-3 w-3 text-cyan-400" />
+                    {t.videoTabK8}
+                  </span>
+                  <span className="text-[11px] font-mono text-cyan-400/80">JAPANESE MED-TECH</span>
+                </div>
+
+                <div className="relative overflow-hidden rounded-2xl border border-white/10 shadow-2xl bg-black">
+                  <YouTubeEmbed
+                    url={localizedProductVideo('kangenWater', locale)}
+                    title={t.videoK8Title}
+                    className="border-0 bg-black"
+                  />
+                </div>
+
+                <div className="mt-5">
+                  <h3 className="text-lg sm:text-xl font-black text-white group-hover:text-cyan-300 transition-colors">
+                    {t.videoK8Title}
+                  </h3>
+                  <p className="mt-2 text-xs sm:text-sm text-[#a4b0c2] leading-relaxed">
+                    {t.videoK8Desc}
+                  </p>
+                </div>
+              </div>
+
+              <div className="mt-6 pt-4 border-t border-white/10 flex items-center justify-between">
+                <span className="text-xs font-semibold text-slate-400">Pillar 01: Water Vitality</span>
+                <Link
+                  to={kangenPageUrl}
+                  className="inline-flex items-center gap-1.5 text-xs font-bold text-cyan-400 hover:text-cyan-300 transition-colors"
+                >
+                  <span>{t.exploreIndK8Cta}</span>
+                  <ArrowRight className="h-3.5 w-3.5" />
+                </Link>
+              </div>
+            </article>
+
+            {/* Video 2: emGuarde GO Frequency Demo */}
+            <article className="rounded-3xl border border-emerald-500/25 bg-gradient-to-b from-[#061814] via-[#040f0c] to-black p-5 sm:p-6 shadow-2xl shadow-emerald-500/10 flex flex-col justify-between group hover:border-emerald-400/50 transition-all duration-300">
+              <div>
+                <div className="flex items-center justify-between gap-3 mb-3.5">
+                  <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-400/40 bg-emerald-400/15 px-3 py-1 text-[11px] font-black uppercase text-emerald-300 tracking-wider">
+                    <Radio className="h-3 w-3 text-emerald-400" />
+                    {t.videoTabEmguarde}
+                  </span>
+                  <span className="text-[11px] font-mono text-emerald-400/80">PATENTED HARMONIC</span>
+                </div>
+
+                <div className="relative overflow-hidden rounded-2xl border border-white/10 shadow-2xl bg-black">
+                  <YouTubeEmbed
+                    url={localizedProductVideo('emguardeGo', locale)}
+                    title={t.videoEmguardeTitle}
+                    className="border-0 bg-black"
+                  />
+                </div>
+
+                <div className="mt-5">
+                  <h3 className="text-lg sm:text-xl font-black text-white group-hover:text-emerald-300 transition-colors">
+                    {t.videoEmguardeTitle}
+                  </h3>
+                  <p className="mt-2 text-xs sm:text-sm text-[#a4b0c2] leading-relaxed">
+                    {t.videoEmguardeDesc}
+                  </p>
+                </div>
+              </div>
+
+              <div className="mt-6 pt-4 border-t border-white/10 flex items-center justify-between">
+                <span className="text-xs font-semibold text-slate-400">Pillar 02: Environmental Calm</span>
+                <Link
+                  to={emguardePageUrl}
+                  className="inline-flex items-center gap-1.5 text-xs font-bold text-emerald-400 hover:text-emerald-300 transition-colors"
+                >
+                  <span>{t.exploreIndEmguardeCta}</span>
+                  <ArrowRight className="h-3.5 w-3.5" />
+                </Link>
+              </div>
+            </article>
+          </div>
+
+          <p className="mt-8 text-center text-xs text-slate-400">
+            Official presentation videos localized for {locale.toUpperCase()}. Sound starts only upon your explicit play interaction.
+          </p>
         </div>
       </section>
 
@@ -1712,114 +1814,6 @@ export function DuoLandingPage({ profile: propProfile, distributorSlug: propSlug
         </div>
       </section>
 
-      {/* ========================================================================= */}
-      {/* 11. WATCH THE DUO: DUAL VIDEO THEATER (BOTH DEMOS PLAYABLE SIDE-BY-SIDE) */}
-      {/* ========================================================================= */}
-      <section ref={videoRef} id="video-story" className="scroll-mt-20 py-20 sm:py-28 border-b border-white/10 bg-[#03050a] relative">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-3xl mx-auto">
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-cyan-400/30 bg-cyan-400/10 px-3.5 py-1 text-xs font-bold text-cyan-300 tracking-wider uppercase">
-              <Play className="h-3 w-3 fill-current text-cyan-400" />
-              DUAL VIDEO THEATER
-            </span>
-            <h2 className="mt-4 text-3xl sm:text-4xl md:text-5xl font-black text-white tracking-tight">
-              {t.videoHeading}
-            </h2>
-            <p className="mt-3 text-base sm:text-lg text-[#b8c0cf]">
-              {t.videoSub}
-            </p>
-          </div>
-
-          {/* DUAL VIDEOS GRID */}
-          <div className="mt-12 sm:mt-16 grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-10">
-            {/* Video 1: Leveluk K8 Water Demo */}
-            <article className="rounded-3xl border border-cyan-500/25 bg-gradient-to-b from-[#091524] via-[#050b14] to-black p-5 sm:p-6 shadow-2xl shadow-cyan-500/10 flex flex-col justify-between group hover:border-cyan-400/50 transition-all duration-300">
-              <div>
-                <div className="flex items-center justify-between gap-3 mb-3.5">
-                  <span className="inline-flex items-center gap-1.5 rounded-full border border-cyan-400/40 bg-cyan-400/15 px-3 py-1 text-[11px] font-black uppercase text-cyan-300 tracking-wider">
-                    <Droplets className="h-3 w-3 text-cyan-400" />
-                    {t.videoTabK8}
-                  </span>
-                  <span className="text-[11px] font-mono text-cyan-400/80">JAPANESE MED-TECH</span>
-                </div>
-
-                <div className="relative overflow-hidden rounded-2xl border border-white/10 shadow-2xl bg-black">
-                  <YouTubeEmbed
-                    url={localizedProductVideo('kangenWater', locale)}
-                    title={t.videoK8Title}
-                    className="border-0 bg-black"
-                  />
-                </div>
-
-                <div className="mt-5">
-                  <h3 className="text-lg sm:text-xl font-black text-white group-hover:text-cyan-300 transition-colors">
-                    {t.videoK8Title}
-                  </h3>
-                  <p className="mt-2 text-xs sm:text-sm text-[#a4b0c2] leading-relaxed">
-                    {t.videoK8Desc}
-                  </p>
-                </div>
-              </div>
-
-              <div className="mt-6 pt-4 border-t border-white/10 flex items-center justify-between">
-                <span className="text-xs font-semibold text-slate-400">Pillar 01: Water Vitality</span>
-                <Link
-                  to={kangenPageUrl}
-                  className="inline-flex items-center gap-1.5 text-xs font-bold text-cyan-400 hover:text-cyan-300 transition-colors"
-                >
-                  <span>{t.exploreIndK8Cta}</span>
-                  <ArrowRight className="h-3.5 w-3.5" />
-                </Link>
-              </div>
-            </article>
-
-            {/* Video 2: emGuarde GO Frequency Demo */}
-            <article className="rounded-3xl border border-emerald-500/25 bg-gradient-to-b from-[#061814] via-[#040f0c] to-black p-5 sm:p-6 shadow-2xl shadow-emerald-500/10 flex flex-col justify-between group hover:border-emerald-400/50 transition-all duration-300">
-              <div>
-                <div className="flex items-center justify-between gap-3 mb-3.5">
-                  <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-400/40 bg-emerald-400/15 px-3 py-1 text-[11px] font-black uppercase text-emerald-300 tracking-wider">
-                    <Radio className="h-3 w-3 text-emerald-400" />
-                    {t.videoTabEmguarde}
-                  </span>
-                  <span className="text-[11px] font-mono text-emerald-400/80">PATENTED HARMONIC</span>
-                </div>
-
-                <div className="relative overflow-hidden rounded-2xl border border-white/10 shadow-2xl bg-black">
-                  <YouTubeEmbed
-                    url={localizedProductVideo('emguardeGo', locale)}
-                    title={t.videoEmguardeTitle}
-                    className="border-0 bg-black"
-                  />
-                </div>
-
-                <div className="mt-5">
-                  <h3 className="text-lg sm:text-xl font-black text-white group-hover:text-emerald-300 transition-colors">
-                    {t.videoEmguardeTitle}
-                  </h3>
-                  <p className="mt-2 text-xs sm:text-sm text-[#a4b0c2] leading-relaxed">
-                    {t.videoEmguardeDesc}
-                  </p>
-                </div>
-              </div>
-
-              <div className="mt-6 pt-4 border-t border-white/10 flex items-center justify-between">
-                <span className="text-xs font-semibold text-slate-400">Pillar 02: Environmental Calm</span>
-                <Link
-                  to={emguardePageUrl}
-                  className="inline-flex items-center gap-1.5 text-xs font-bold text-emerald-400 hover:text-emerald-300 transition-colors"
-                >
-                  <span>{t.exploreIndEmguardeCta}</span>
-                  <ArrowRight className="h-3.5 w-3.5" />
-                </Link>
-              </div>
-            </article>
-          </div>
-
-          <p className="mt-8 text-center text-xs text-slate-400">
-            Official presentation videos localized for {locale.toUpperCase()}. Sound starts only upon your explicit play interaction.
-          </p>
-        </div>
-      </section>
 
       {/* ========================================================================= */}
       {/* 12. EXPLORE INDIVIDUALLY: GO DEEPER */}
@@ -1998,17 +1992,23 @@ export function DuoLandingPage({ profile: propProfile, distributorSlug: propSlug
       {/* ========================================================================= */}
       {/* 15. FINAL CINEMATIC CTA: YOUR WATER. YOUR ENVIRONMENT. YOUR NEXT STEP. */}
       {/* ========================================================================= */}
-      <section className="py-24 sm:py-32 bg-[#020409] relative overflow-hidden text-center">
+      <section id="final-cta" className="py-24 sm:py-32 bg-[#020409] relative overflow-hidden text-center">
         <div className="pointer-events-none absolute inset-0">
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-[600px] w-[900px] rounded-full bg-cyan-500/10 blur-[180px]" />
         </div>
 
         <div className="relative mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
           {/* Dual Product Visual Harmony with ProductStage */}
-          <div className="flex items-end justify-center gap-6 sm:gap-12 mb-10">
-            <ProductStage product="k8" context="cta" />
-            <div className="h-20 w-px bg-white/20 mb-4" />
-            <ProductStage product="emguarde" context="cta" />
+          <div className="flex items-end justify-center gap-6 sm:gap-12 mb-10 h-[220px] sm:h-[250px]">
+            <div className="flex flex-col items-center justify-end h-full">
+              <ProductStage product="k8" context="cta" />
+              <span className="mt-2 text-xs font-mono font-bold tracking-wider text-cyan-400 uppercase">Leveluk K8®</span>
+            </div>
+            <div className="h-20 w-px bg-white/20 mb-5 hidden sm:block" />
+            <div className="flex flex-col items-center justify-end h-full">
+              <ProductStage product="emguarde" context="cta" />
+              <span className="mt-2 text-xs font-mono font-bold tracking-wider text-emerald-400 uppercase">emGuarde® GO</span>
+            </div>
           </div>
 
           <h2 className="text-3xl sm:text-5xl md:text-6xl font-black text-white tracking-tight leading-[1.1]">
@@ -2020,36 +2020,14 @@ export function DuoLandingPage({ profile: propProfile, distributorSlug: propSlug
           </p>
 
           <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
-            {hasBothUrls ? (
-              <button
-                type="button"
-                onClick={() => setIsPurchaseModalOpen(true)}
-                className="inline-flex min-h-12 w-full sm:w-auto items-center justify-center gap-2 rounded-xl bg-amber-500 hover:bg-amber-400 px-8 py-3.5 text-sm font-black text-slate-950 shadow-xl shadow-amber-500/25 transition-all active:scale-95 cursor-pointer"
-              >
-                <ShoppingCart className="h-4 w-4" />
-                <span>{t.buyDuoBtn}</span>
-              </button>
-            ) : hasDuoDirectUrl ? (
-              <a
-                href={duoPurchaseUrl!}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex min-h-12 w-full sm:w-auto items-center justify-center gap-2 rounded-xl bg-amber-500 hover:bg-amber-400 px-8 py-3.5 text-sm font-black text-slate-950 shadow-xl shadow-amber-500/25 transition-all active:scale-95 cursor-pointer"
-              >
-                <ShoppingCart className="h-4 w-4" />
-                <span>{t.buyDuoBtn}</span>
-                <ExternalLink className="h-4 w-4" />
-              </a>
-            ) : (
-              <button
-                type="button"
-                onClick={scrollToEquation}
-                className="inline-flex min-h-12 w-full sm:w-auto items-center justify-center gap-2 rounded-xl bg-cyan-400 hover:bg-cyan-300 px-8 py-3.5 text-sm font-black text-slate-950 shadow-xl shadow-cyan-400/20 transition-all active:scale-95 cursor-pointer"
-              >
-                <span>{t.finalPrimaryCta}</span>
-                <ArrowRight className="h-4 w-4" />
-              </button>
-            )}
+            <button
+              type="button"
+              onClick={handlePrimaryDuoCta}
+              className="inline-flex min-h-12 w-full sm:w-auto items-center justify-center gap-2 rounded-xl bg-orange-500 hover:bg-orange-400 px-8 py-3.5 text-sm font-black text-white shadow-xl shadow-orange-500/30 transition-all hover:scale-105 active:scale-95 cursor-pointer"
+            >
+              <ShoppingCart className="h-4 w-4" />
+              <span>{t.buyDuoBtn}</span>
+            </button>
 
             <a
               href={whatsappUrl}

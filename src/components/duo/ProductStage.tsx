@@ -35,7 +35,7 @@ export function ProductStage({
   priority = false,
 }: ProductStageProps) {
   const isK8 = product === 'k8'
-  const src = isK8 ? '/products/k8.png' : '/products/emguarde-go.png'
+  const src = isK8 ? '/products/k8.png' : '/products/emguarde-tight.png'
   const defaultAlt = isK8
     ? 'Enagic Leveluk K8 Flagship 8-Plate Water Ionizer'
     : 'emGuarde GO Dual-Unit Portable Electromagnetic Harmonizer Set'
@@ -49,7 +49,7 @@ export function ProductStage({
           container: 'relative w-full flex items-center justify-center py-4',
           image: isK8
             ? 'h-60 sm:h-72 md:h-80 w-auto max-w-[90%] object-contain drop-shadow-[0_20px_40px_rgba(6,182,212,0.35)]'
-            : 'h-44 sm:h-52 md:h-60 w-auto max-w-[80%] object-contain drop-shadow-[0_20px_40px_rgba(16,185,129,0.3)]',
+            : 'h-48 sm:h-56 md:h-64 w-auto max-w-[80%] object-contain drop-shadow-[0_20px_40px_rgba(16,185,129,0.3)]',
         }
 
       case 'equation':
@@ -89,12 +89,12 @@ export function ProductStage({
         }
 
       case 'cta':
-        // Section 15 / Final CTA: Dual product side-by-side
+        // Section 15 / Final CTA: Dual product side-by-side (Strict proportionate scale)
         return {
           container: 'relative flex items-end justify-center',
           image: isK8
-            ? 'h-36 sm:h-44 md:h-48 w-auto object-contain drop-shadow-[0_20px_40px_rgba(6,182,212,0.35)]'
-            : 'h-40 sm:h-48 md:h-52 w-auto object-contain drop-shadow-[0_15px_30px_rgba(16,185,129,0.3)] mb-1',
+            ? 'h-[160px] sm:h-[185px] md:h-[200px] max-h-[200px] w-auto max-w-[220px] object-contain drop-shadow-[0_20px_40px_rgba(6,182,212,0.35)]'
+            : 'h-[130px] sm:h-[150px] md:h-[165px] max-h-[165px] w-auto max-w-[110px] object-contain drop-shadow-[0_15px_30px_rgba(16,185,129,0.35)] mb-0.5',
         }
 
       case 'mobile':
