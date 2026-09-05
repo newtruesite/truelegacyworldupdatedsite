@@ -227,94 +227,130 @@ export function AnespaLandingPage({ profile: propProfile, distributorSlug }: Ane
             className="h-full w-full object-cover object-center"
           />
           {/* Multi-layer cinematic overlay */}
-          <div className="absolute inset-0 bg-gradient-to-r from-[#0d0b09]/90 via-[#0d0b09]/60 to-[#0d0b09]/20" />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#0d0b09]/95 via-[#0d0b09]/70 to-[#0d0b09]/10" />
           <div className="absolute inset-0 bg-gradient-to-t from-[#0d0b09]/80 via-transparent to-[#0d0b09]/30" />
           {/* Warm amber tint overlay */}
-          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_right,rgba(120,60,0,0.25)_0%,transparent_60%)]" />
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_right,rgba(120,60,0,0.15)_0%,transparent_60%)]" />
         </div>
 
-        {/* Hero Content */}
-        <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-16 pb-24 sm:py-32">
-          <div className="max-w-3xl">
-            {/* Eyebrow */}
-            <motion.div
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-              className="inline-flex items-center gap-2.5 rounded-full border border-amber-400/30 bg-amber-400/10 px-4 py-1.5 text-xs font-bold uppercase tracking-[0.3em] text-amber-300"
-            >
-              <Waves className="h-3.5 w-3.5" />
-              MINERAL ION WATER SPA · ENAGIC®
-            </motion.div>
+        {/* Hero Content — Two Column */}
+        <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-16 pb-28 sm:py-32">
+          <div className="grid items-center gap-10 lg:grid-cols-12">
 
-            {/* Main Headline */}
-            <motion.h1
-              initial={{ opacity: 0, y: 24 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: 0.1 }}
-              className="mt-7 text-5xl font-black tracking-tight text-white sm:text-6xl lg:text-7xl xl:text-8xl leading-[1.05]"
-            >
-              Turn Your Shower
-              <br />
-              <span className="bg-gradient-to-r from-amber-300 via-stone-200 to-amber-400 bg-clip-text text-transparent">
-                Into a Spa.
-              </span>
-            </motion.h1>
-
-            {/* Subheadline */}
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: 0.2 }}
-              className="mt-7 max-w-xl text-lg leading-relaxed text-stone-300 sm:text-xl"
-            >
-              Inspired by Japan's legendary hot springs, Anespa® DX filters your tap water and 
-              infuses natural Hokkaido mineral ions — transforming your daily shower into a private onsen ritual.
-            </motion.p>
-
-            {/* CTA Buttons */}
-            <motion.div
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.3 }}
-              className="mt-10 flex flex-wrap items-center gap-4"
-            >
-              <button
-                onClick={() => scrollToSection('journey')}
-                className="inline-flex items-center justify-center gap-2.5 rounded-2xl bg-gradient-to-r from-amber-500 to-orange-500 px-8 py-4 text-sm font-black text-black shadow-[0_10px_40px_rgba(245,158,11,0.4)] hover:from-amber-400 hover:to-orange-400 hover:scale-[1.02] active:scale-[0.98] transition-all"
-              >
-                Discover the Journey
-                <ChevronDown className="h-4 w-4" />
-              </button>
-              <button
-                onClick={() => setShowModal(true)}
-                className="inline-flex items-center justify-center gap-2 rounded-2xl border border-white/20 bg-white/[0.06] px-7 py-4 text-sm font-bold text-white hover:border-amber-400/50 hover:bg-white/[0.10] transition-all backdrop-blur-sm"
-              >
-                <MessageCircle className="h-4 w-4 text-amber-400" />
-                Talk to Me
-              </button>
-            </motion.div>
-
-            {/* Distributor Identity Badge */}
-            {profile && (
+            {/* ── Left: Editorial Copy ── */}
+            <div className="lg:col-span-7">
+              {/* Eyebrow */}
               <motion.div
-                initial={{ opacity: 0, y: 12 }}
+                initial={{ opacity: 0, y: 16 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.5 }}
-                className="mt-10 flex items-center gap-3.5 rounded-2xl border border-white/10 bg-black/40 backdrop-blur-md p-3.5 max-w-sm"
+                transition={{ duration: 0.6 }}
+                className="inline-flex items-center gap-2.5 rounded-full border border-amber-400/30 bg-amber-400/10 px-4 py-1.5 text-xs font-bold uppercase tracking-[0.3em] text-amber-300"
               >
-                <img
-                  src={portraitUrl}
-                  alt={`${profile.display_name} profile avatar`}
-                  className="h-12 w-12 rounded-xl object-cover border border-amber-400/30"
-                />
-                <div>
-                  <p className="text-[11px] font-bold uppercase tracking-wider text-amber-400">Your Personal Spa Advisor</p>
-                  <p className="text-sm font-black text-white">{profile.display_name}</p>
-                  <p className="text-xs text-stone-400">{profile.title || 'Independent Enagic Distributor'}</p>
-                </div>
+                <Waves className="h-3.5 w-3.5" />
+                MINERAL ION WATER SPA · ENAGIC®
               </motion.div>
-            )}
+
+              {/* Main Headline */}
+              <motion.h1
+                initial={{ opacity: 0, y: 24 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.7, delay: 0.1 }}
+                className="mt-7 text-5xl font-black tracking-tight text-white sm:text-6xl lg:text-7xl xl:text-8xl leading-[1.05]"
+              >
+                Turn Your Shower
+                <br />
+                <span className="bg-gradient-to-r from-amber-300 via-stone-200 to-amber-400 bg-clip-text text-transparent">
+                  Into a Spa.
+                </span>
+              </motion.h1>
+
+              {/* Subheadline */}
+              <motion.p
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.7, delay: 0.2 }}
+                className="mt-7 max-w-xl text-lg leading-relaxed text-stone-300 sm:text-xl"
+              >
+                Inspired by Japan's legendary hot springs, Anespa® DX filters your tap water and
+                infuses natural Hokkaido mineral ions — transforming your daily shower into a private onsen ritual.
+              </motion.p>
+
+              {/* CTA Buttons */}
+              <motion.div
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.3 }}
+                className="mt-10 flex flex-wrap items-center gap-4"
+              >
+                <button
+                  onClick={() => scrollToSection('journey')}
+                  className="inline-flex items-center justify-center gap-2.5 rounded-2xl bg-gradient-to-r from-amber-500 to-orange-500 px-8 py-4 text-sm font-black text-black shadow-[0_10px_40px_rgba(245,158,11,0.4)] hover:from-amber-400 hover:to-orange-400 hover:scale-[1.02] active:scale-[0.98] transition-all"
+                >
+                  Discover the Journey
+                  <ChevronDown className="h-4 w-4" />
+                </button>
+                <button
+                  onClick={() => setShowModal(true)}
+                  className="inline-flex items-center justify-center gap-2 rounded-2xl border border-white/20 bg-white/[0.06] px-7 py-4 text-sm font-bold text-white hover:border-amber-400/50 hover:bg-white/[0.10] transition-all backdrop-blur-sm"
+                >
+                  <MessageCircle className="h-4 w-4 text-amber-400" />
+                  Talk to Me
+                </button>
+              </motion.div>
+
+              {/* Distributor Identity Badge */}
+              {profile && (
+                <motion.div
+                  initial={{ opacity: 0, y: 12 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, delay: 0.5 }}
+                  className="mt-10 flex items-center gap-3.5 rounded-2xl border border-white/10 bg-black/40 backdrop-blur-md p-3.5 max-w-sm"
+                >
+                  <img
+                    src={portraitUrl}
+                    alt={`${profile.display_name} profile avatar`}
+                    className="h-12 w-12 rounded-xl object-cover border border-amber-400/30"
+                  />
+                  <div>
+                    <p className="text-[11px] font-bold uppercase tracking-wider text-amber-400">Your Personal Spa Advisor</p>
+                    <p className="text-sm font-black text-white">{profile.display_name}</p>
+                    <p className="text-xs text-stone-400">{profile.title || 'Independent Enagic Distributor'}</p>
+                  </div>
+                </motion.div>
+              )}
+            </div>
+
+            {/* ── Right: Product PNG Showcase ── */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.92, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.25 }}
+              className="lg:col-span-5 relative flex flex-col items-center hidden lg:flex"
+            >
+              {/* Ambient glow ring behind product */}
+              <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                <div className="h-[420px] w-[420px] rounded-full bg-[radial-gradient(circle,rgba(245,158,11,0.18)_0%,rgba(120,53,15,0.08)_50%,transparent_75%)] blur-2xl" />
+              </div>
+
+              {/* Badge */}
+              <div className="absolute -top-2 right-4 z-20 rounded-full border border-amber-400/40 bg-[#0d0b09]/80 backdrop-blur-sm px-3.5 py-1 text-[11px] font-bold text-amber-300 shadow-lg">
+                Made in Japan · Enagic®
+              </div>
+
+              {/* Product image */}
+              <img
+                src="/products/anespa-dx.png"
+                alt="Enagic Anespa DX Mineral Ion Water Spa unit with shower head"
+                className="relative z-10 h-auto w-full max-w-[340px] xl:max-w-[400px] object-contain drop-shadow-[0_30px_60px_rgba(245,158,11,0.25)] hover:scale-105 transition-transform duration-500"
+              />
+
+              {/* Product name tag */}
+              <div className="relative z-10 mt-4 text-center">
+                <p className="text-[11px] font-bold uppercase tracking-[0.25em] text-amber-400">Anespa® DX</p>
+                <p className="text-xs text-stone-400 mt-0.5">Dual Filtration · Hokkaido Mineral Ions · Massage Shower</p>
+              </div>
+            </motion.div>
+
           </div>
         </div>
 
