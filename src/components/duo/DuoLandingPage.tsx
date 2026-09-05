@@ -803,6 +803,49 @@ const I18N = {
   },
 }
 
+const BUSINESS_BRIDGE = {
+  en: {
+    eyebrow: 'THE BUSINESS SIDE',
+    heading: 'TWO PRODUCTS. ONE STRONGER STARTING STORY.',
+    body: 'The Duo gives you two distinct product conversations from the beginning: Kangen Water® and emGuarde®. If you are curious about how that can fit into the True Legacy business model, explore the opportunity next.',
+    productLine: 'PRODUCT EXPERIENCE',
+    opportunityLine: 'BUSINESS POSSIBILITY',
+    primary: 'LEARN MORE ABOUT THE BUSINESS',
+    secondary: 'MESSAGE',
+    note: 'Independent distributor opportunity · Results vary · No income or business outcome is guaranteed',
+  },
+  es: {
+    eyebrow: 'EL LADO DEL NEGOCIO',
+    heading: 'DOS PRODUCTOS. UNA HISTORIA MÁS SÓLIDA PARA COMENZAR.',
+    body: 'El Dúo te permite iniciar con dos conversaciones de producto distintas: Agua Kangen® y emGuarde®. Si quieres descubrir cómo pueden integrarse en el modelo de negocio de True Legacy, explora la oportunidad.',
+    productLine: 'EXPERIENCIA DE PRODUCTO',
+    opportunityLine: 'POSIBILIDAD DE NEGOCIO',
+    primary: 'CONOCER MÁS SOBRE EL NEGOCIO',
+    secondary: 'ESCRIBIR A',
+    note: 'Oportunidad de distribuidor independiente · Los resultados varían · No se garantizan ingresos ni resultados comerciales',
+  },
+  fr: {
+    eyebrow: 'LE CÔTÉ ENTREPRENEURIAL',
+    heading: 'DEUX PRODUITS. UNE HISTOIRE PLUS FORTE POUR COMMENCER.',
+    body: 'Le Duo vous permet d’aborder dès le départ deux conversations produit distinctes : Kangen Water® et emGuarde®. Découvrez ensuite comment cela peut s’intégrer au modèle commercial True Legacy.',
+    productLine: 'EXPÉRIENCE PRODUIT',
+    opportunityLine: 'POSSIBILITÉ ENTREPRENEURIALE',
+    primary: 'DÉCOUVRIR LE MODÈLE COMMERCIAL',
+    secondary: 'ÉCRIRE À',
+    note: 'Opportunité de distributeur indépendant · Les résultats varient · Aucun revenu ni résultat commercial n’est garanti',
+  },
+  pt: {
+    eyebrow: 'O LADO DO NEGÓCIO',
+    heading: 'DOIS PRODUTOS. UMA HISTÓRIA MAIS FORTE PARA COMEÇAR.',
+    body: 'O Duo permite começar com duas conversas de produto distintas: Kangen Water® e emGuarde®. Se você tem curiosidade sobre como isso pode se encaixar no modelo de negócios da True Legacy, conheça a oportunidade.',
+    productLine: 'EXPERIÊNCIA DE PRODUTO',
+    opportunityLine: 'POSSIBILIDADE DE NEGÓCIO',
+    primary: 'CONHECER O LADO DO NEGÓCIO',
+    secondary: 'FALAR COM',
+    note: 'Oportunidade de distribuidor independente · Os resultados variam · Nenhuma renda ou resultado comercial é garantido',
+  },
+} as const
+
 export function DuoLandingPage({ profile: propProfile, distributorSlug: propSlug }: DuoLandingPageProps) {
   const { slug: routeSlug } = useParams()
   const [searchParams] = useSearchParams()
@@ -818,6 +861,7 @@ export function DuoLandingPage({ profile: propProfile, distributorSlug: propSlug
 
   const distributorSlugActive = propSlug || routeSlug || 'mehdi-cohen'
   const t = I18N[locale as keyof typeof I18N] || I18N.en
+  const businessBridge = BUSINESS_BRIDGE[locale as keyof typeof BUSINESS_BRIDGE] || BUSINESS_BRIDGE.en
 
   // Load distributor profile if not provided via props
   useEffect(() => {
@@ -912,6 +956,7 @@ export function DuoLandingPage({ profile: propProfile, distributorSlug: propSlug
   // Individual product page URLs preserving attribution
   const kangenPageUrl = `/d/${distributorSlugActive}/kangen?source=duo&interest=product`
   const emguardePageUrl = `/d/${distributorSlugActive}/emguarde?source=duo&interest=duo`
+  const businessPageUrl = `/d/${distributorSlugActive}/business?source=duo&interest=business`
 
   // Primary CTA action router - always opens two-button purchase choice modal explaining both
   const handlePrimaryDuoCta = () => {
@@ -1632,9 +1677,9 @@ export function DuoLandingPage({ profile: propProfile, distributorSlug: propSlug
       </section>
 
       {/* ========================================================================= */}
-      {/* 09. DEDICATED PRODUCT SHOWCASE: MEET THE DUO */}
+      {/* Redundant Meet the Duo presentation retired; the visitor already understands both products. */}
       {/* ========================================================================= */}
-      <section ref={showcaseRef} id="meet-the-duo" className="scroll-mt-20 py-20 sm:py-28 border-b border-white/10 bg-[#02050b] relative">
+      <section ref={showcaseRef} id="meet-the-duo" className="hidden" aria-hidden="true">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-14">
             <span className="text-xs font-bold uppercase tracking-[0.25em] text-cyan-400">
@@ -1992,14 +2037,95 @@ export function DuoLandingPage({ profile: propProfile, distributorSlug: propSlug
       </section>
 
       {/* ========================================================================= */}
-      {/* 15. FINAL CINEMATIC CTA: YOUR WATER. YOUR ENVIRONMENT. YOUR NEXT STEP. */}
+      {/* 15. BUSINESS OPPORTUNITY BRIDGE */}
       {/* ========================================================================= */}
-      <section id="final-cta" className="py-24 sm:py-32 bg-[#020409] relative overflow-hidden text-center">
+      <section id="final-cta" className="py-24 sm:py-32 bg-gradient-to-br from-[#020409] via-[#07101d] to-[#03070d] relative overflow-hidden">
         <div className="pointer-events-none absolute inset-0">
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-[600px] w-[900px] rounded-full bg-cyan-500/10 blur-[180px]" />
         </div>
 
-        <div className="relative mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
+        <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="grid items-center gap-12 lg:grid-cols-12 lg:text-left">
+            <div className="lg:col-span-6">
+              <span className="inline-flex items-center gap-2 rounded-full border border-cyan-400/30 bg-cyan-400/10 px-3.5 py-1.5 text-xs font-bold uppercase tracking-[0.24em] text-cyan-300">
+                <Globe className="h-3.5 w-3.5" />
+                {businessBridge.eyebrow}
+              </span>
+
+              <h2 className="mt-5 text-3xl sm:text-5xl md:text-6xl font-black text-white tracking-tight leading-[1.08]">
+                {businessBridge.heading}
+              </h2>
+
+              <p className="mt-6 max-w-2xl text-base sm:text-lg text-[#c5cdd9] leading-relaxed">
+                {businessBridge.body}
+              </p>
+
+              <div className="mt-7 inline-flex flex-wrap items-center gap-3 rounded-2xl border border-white/10 bg-black/30 px-5 py-3 text-[11px] font-black tracking-[0.16em]">
+                <span className="text-cyan-300">{businessBridge.productLine}</span>
+                <span className="text-white/35">+</span>
+                <span className="text-amber-300">{businessBridge.opportunityLine}</span>
+              </div>
+
+              <div className="mt-8 flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
+                <Link
+                  to={businessPageUrl}
+                  onClick={() => trackEvent('duo_business_bridge_click', {
+                    distributor: distributorSlugActive,
+                    source: 'duo',
+                    interest: 'business',
+                    locale,
+                  })}
+                  className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-cyan-400 hover:bg-cyan-300 px-7 py-3.5 text-sm font-black text-slate-950 shadow-xl shadow-cyan-500/20 transition-all hover:scale-[1.02] active:scale-95"
+                >
+                  <span>{businessBridge.primary}</span>
+                  <ArrowRight className="h-4 w-4" />
+                </Link>
+
+                <a
+                  href={whatsappUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={() => trackEvent('duo_business_message_click', {
+                    distributor: distributorSlugActive,
+                    source: 'duo',
+                    interest: 'business',
+                    locale,
+                  })}
+                  className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl border border-white/20 bg-white/5 hover:bg-white/10 px-6 py-3.5 text-sm font-bold text-white transition-all active:scale-95"
+                >
+                  <MessageCircle className="h-4 w-4 text-emerald-400" />
+                  <span>{businessBridge.secondary} {distributorFirstName}</span>
+                </a>
+              </div>
+
+              <p className="mt-7 max-w-2xl text-xs leading-relaxed text-slate-500">
+                {businessBridge.note}
+              </p>
+            </div>
+
+            <div className="lg:col-span-6">
+              <div className="rounded-[2rem] border border-white/10 bg-black/35 p-6 sm:p-8 shadow-2xl backdrop-blur-sm">
+                <div className="flex items-end justify-center gap-5 sm:gap-10 h-[230px] sm:h-[280px]">
+                  <div className="flex h-full flex-1 flex-col items-center justify-end">
+                    <ProductStage product="k8" context="cta" />
+                    <span className="mt-2 text-[11px] font-mono font-bold tracking-wider text-cyan-400 uppercase">Kangen K8®</span>
+                  </div>
+                  <span className="mb-12 text-3xl font-light text-white/40">+</span>
+                  <div className="flex h-full flex-1 flex-col items-center justify-end">
+                    <ProductStage product="emguarde" context="cta" />
+                    <span className="mt-2 text-[11px] font-mono font-bold tracking-wider text-emerald-400 uppercase">emGuarde®</span>
+                  </div>
+                </div>
+                <div className="mt-6 border-t border-white/10 pt-5 text-center">
+                  <p className="text-xs font-black uppercase tracking-[0.22em] text-white">The True Legacy Duo</p>
+                  <p className="mt-2 text-xs text-slate-400">Two distinct product categories. One connected starting story.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Previous product-ordering CTA intentionally removed to prevent the Duo story from restarting. */}
+          <div className="hidden">
           {/* Dual Product Visual Harmony with ProductStage */}
           <div className="flex items-end justify-center gap-6 sm:gap-12 mb-10 h-[220px] sm:h-[250px]">
             <div className="flex flex-col items-center justify-end h-full">
@@ -2045,6 +2171,7 @@ export function DuoLandingPage({ profile: propProfile, distributorSlug: propSlug
           <p className="mt-8 text-xs text-slate-500 font-mono">
             {t.finalTrust}
           </p>
+          </div>
         </div>
       </section>
 
