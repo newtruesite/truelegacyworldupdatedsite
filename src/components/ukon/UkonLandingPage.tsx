@@ -60,6 +60,53 @@ const LOCALES = {
       contactDistributor: 'Contact Distributor',
       whatsappDistributor: 'WhatsApp',
     },
+    journey: {
+      eyebrow: 'THE UKON JOURNEY',
+      headline: 'From Okinawan Earth to a Modern Ritual',
+      sub: 'Dedicated fields, careful harvest, vivid golden turmeric, and precise Japanese formulation—shown through the real visual story of Ukon.',
+      items: [
+        {
+          src: '/ukon/yanbaru-field-close.jpg',
+          title: 'Rooted in Yanbaru, Okinawa',
+          desc: 'Mineral-dense subtropical soil',
+        },
+        {
+          src: '/ukon/farmer-among-ukon.jpg',
+          title: 'Careful Cultivation',
+          desc: 'Grown without synthetic chemicals',
+        },
+        {
+          src: '/ukon/farm-harvest.jpg',
+          title: 'Harvested at the Source',
+          desc: 'Hand-harvested at peak vitality',
+        },
+        {
+          src: '/ukon/turmeric-root.jpg',
+          title: 'The Golden Rhizome',
+          desc: 'Wild Haru & Autumn Aki Ukon',
+        },
+        {
+          src: '/ukon/turmeric-spoon.jpg',
+          title: 'Pure Curcuminoids',
+          desc: 'Concentrated antioxidant essence',
+        },
+        {
+          src: '/ukon/turmeric-powder-board.jpg',
+          title: 'Artisanal Preparation',
+          desc: 'Washed with Kangen Water®',
+        },
+        {
+          src: '/ukon/turmeric-bowl.jpg',
+          title: 'Ground Turmeric Root',
+          desc: '100% natural, additive-free',
+        },
+        {
+          src: '/ukon/mehdi-enagic-kangen-foods-okinawa.jpg',
+          title: 'Enagic Kangen Foods Farm',
+          desc: 'Mehdi Cohen at the Okinawa facility',
+        },
+      ],
+    },
     supplement: {
       eyebrow: 'NEW TO UKON?',
       headline: 'Start with the supplement.',
@@ -354,6 +401,53 @@ const LOCALES = {
       askOrdering: 'Consultar Pedido',
       contactDistributor: 'Contactar Distribuidor',
       whatsappDistributor: 'WhatsApp',
+    },
+    journey: {
+      eyebrow: 'EL VIAJE DE UKON',
+      headline: 'De la tierra de Okinawa a un ritual moderno',
+      sub: 'Campos dedicados, cosecha meticulosa, cúrcuma dorada viva y formulación japonesa de precisión a través de la historia visual de Ukon.',
+      items: [
+        {
+          src: '/ukon/yanbaru-field-close.jpg',
+          title: 'Arraigado en Yanbaru, Okinawa',
+          desc: 'Suelo subtropical rico en minerales',
+        },
+        {
+          src: '/ukon/farmer-among-ukon.jpg',
+          title: 'Cultivo cuidadoso',
+          desc: 'Sin pesticidas ni químicos sintéticos',
+        },
+        {
+          src: '/ukon/farm-harvest.jpg',
+          title: 'Cosechado en el origen',
+          desc: 'Recolección a mano en plena vitalidad',
+        },
+        {
+          src: '/ukon/turmeric-root.jpg',
+          title: 'El rizoma dorado',
+          desc: 'Sinergia de Haru y Aki Ukon silvestre',
+        },
+        {
+          src: '/ukon/turmeric-spoon.jpg',
+          title: 'Curcuminoides puros',
+          desc: 'Esencia antioxidante concentrada',
+        },
+        {
+          src: '/ukon/turmeric-powder-board.jpg',
+          title: 'Preparación artesanal',
+          desc: 'Lavado con Agua Kangen®',
+        },
+        {
+          src: '/ukon/turmeric-bowl.jpg',
+          title: 'Cúrcuma pura molida',
+          desc: '100% natural y libre de aditivos',
+        },
+        {
+          src: '/ukon/mehdi-enagic-kangen-foods-okinawa.jpg',
+          title: 'Granja Enagic Kangen Foods',
+          desc: 'Mehdi Cohen en la sede de Okinawa',
+        },
+      ],
     },
     supplement: {
       eyebrow: '¿NUEVO EN UKON?',
@@ -650,6 +744,53 @@ const LOCALES = {
       contactDistributor: 'Contacter le Distributeur',
       whatsappDistributor: 'WhatsApp',
     },
+    journey: {
+      eyebrow: 'LE VOYAGE DU UKON',
+      headline: 'De la terre d’Okinawa au rituel moderne',
+      sub: 'Champs préservés, récolte minutieuse, curcuma doré vibrant et formulation japonaise d’excellence à travers l’histoire visuelle du Ukon.',
+      items: [
+        {
+          src: '/ukon/yanbaru-field-close.jpg',
+          title: 'Enraciné dans le Yanbaru, Okinawa',
+          desc: 'Terres subtropicales riches en minéraux',
+        },
+        {
+          src: '/ukon/farmer-among-ukon.jpg',
+          title: 'Culture attentionnée',
+          desc: 'Sans engrais ni pesticides de synthèse',
+        },
+        {
+          src: '/ukon/farm-harvest.jpg',
+          title: 'Récolte à la source',
+          desc: 'Cueillie à la main à maturité optimale',
+        },
+        {
+          src: '/ukon/turmeric-root.jpg',
+          title: 'Le rhizome doré',
+          desc: 'Synergie Haru & Aki Ukon sauvage',
+        },
+        {
+          src: '/ukon/turmeric-spoon.jpg',
+          title: 'Curcuminoïdes purs',
+          desc: 'Concentré antioxydant naturel',
+        },
+        {
+          src: '/ukon/turmeric-powder-board.jpg',
+          title: 'Préparation artisanale',
+          desc: 'Purifié avec l’Eau Kangen®',
+        },
+        {
+          src: '/ukon/turmeric-bowl.jpg',
+          title: 'Poudre de curcuma pure',
+          desc: '100% naturel, sans aucun additif',
+        },
+        {
+          src: '/ukon/mehdi-enagic-kangen-foods-okinawa.jpg',
+          title: 'Domaine Enagic Kangen Foods',
+          desc: 'Mehdi Cohen sur le site d’Okinawa',
+        },
+      ],
+    },
     supplement: {
       eyebrow: 'NOUVEAU SUR UKON ?',
       headline: 'Commencez par le complément.',
@@ -944,6 +1085,53 @@ const LOCALES = {
       askOrdering: 'Consultar Pedido',
       contactDistributor: 'Falar com Distribuidor',
       whatsappDistributor: 'WhatsApp',
+    },
+    journey: {
+      eyebrow: 'A JORNADA DO UKON',
+      headline: 'Da terra de Okinawa a um ritual moderno',
+      sub: 'Campos dedicados, colheita cuidadosa, cúrcuma dourada intensa e formulação japonesa de precisão através da história visual do Ukon.',
+      items: [
+        {
+          src: '/ukon/yanbaru-field-close.jpg',
+          title: 'Enraizado em Yanbaru, Okinawa',
+          desc: 'Solo subtropical rico em minerais',
+        },
+        {
+          src: '/ukon/farmer-among-ukon.jpg',
+          title: 'Cultivo cuidadoso',
+          desc: 'Sem químicos sintéticos ou agrotóxicos',
+        },
+        {
+          src: '/ukon/farm-harvest.jpg',
+          title: 'Colhido na origem',
+          desc: 'Colheita manual no ponto ideal de vitalidade',
+        },
+        {
+          src: '/ukon/turmeric-root.jpg',
+          title: 'O rizoma dourado',
+          desc: 'Sinergia de Haru e Aki Ukon selvagem',
+        },
+        {
+          src: '/ukon/turmeric-spoon.jpg',
+          title: 'Curcuminoides puros',
+          desc: 'Essência antioxidante concentrada',
+        },
+        {
+          src: '/ukon/turmeric-powder-board.jpg',
+          title: 'Preparo artesanal',
+          desc: 'Higienizado com Água Kangen®',
+        },
+        {
+          src: '/ukon/turmeric-bowl.jpg',
+          title: 'Cúrcuma pura em pó',
+          desc: '100% natural, sem aditivos',
+        },
+        {
+          src: '/ukon/mehdi-enagic-kangen-foods-okinawa.jpg',
+          title: 'Fazenda Enagic Kangen Foods',
+          desc: 'Mehdi Cohen na fábrica de Okinawa',
+        },
+      ],
     },
     supplement: {
       eyebrow: 'NOVO NO UKON?',
@@ -1703,8 +1891,8 @@ export function UkonLandingPage({ profile: propProfile, distributorSlug: propDis
                 <div className="relative z-10 flex flex-col items-center">
                   <img
                     src="/ukon/ukon-orange-splash.jpg"
-                    alt="Kangen Ukon Sigma dietary supplement with turmeric and an orange water splash"
-                    className="w-full max-w-[420px] aspect-square rounded-3xl object-cover drop-shadow-[0_25px_50px_rgba(0,0,0,0.85)] hover:scale-[1.02] transition-transform duration-500"
+                    alt="Kangen Ukon Sigma Box with Okinawan Turmeric and Water Splash"
+                    className="w-full max-w-[420px] aspect-square rounded-3xl object-cover drop-shadow-[0_25px_50px_rgba(0,0,0,0.85)] hover:scale-[1.02] transition-transform duration-500 border border-amber-500/20 shadow-2xl"
                   />
                   <div className="mt-4 inline-flex items-center gap-2 rounded-full border border-amber-500/30 bg-black/60 backdrop-blur-md px-3.5 py-1 text-xs text-amber-200 shadow-lg">
                     <Award className="w-3.5 h-3.5 text-amber-400" />
@@ -1713,43 +1901,6 @@ export function UkonLandingPage({ profile: propProfile, distributorSlug: propDis
                 </div>
               </div>
             </motion.div>
-          </div>
-        </div>
-      </section>
-
-      {/* ── VISUAL JOURNEY ── */}
-      <section className="border-b border-white/10 bg-[#050811] py-16 sm:py-20">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="max-w-3xl">
-            <p className="text-xs font-bold uppercase tracking-[0.25em] text-amber-400">THE UKON JOURNEY</p>
-            <h2 className="mt-3 text-3xl font-black text-white sm:text-4xl">From Okinawan Earth to a Modern Ritual</h2>
-            <p className="mt-4 text-sm leading-relaxed text-slate-300 sm:text-base">Dedicated fields, careful harvest, vivid golden turmeric, and precise Japanese formulation—shown through the real visual story of Ukon.</p>
-          </div>
-          <div className="mt-10 grid auto-rows-[180px] grid-cols-2 gap-3 sm:auto-rows-[220px] sm:gap-4 lg:grid-cols-4">
-            <figure className="group relative col-span-2 row-span-2 overflow-hidden rounded-3xl border border-white/10">
-              <img src="/ukon/yanbaru-field-close.jpg" alt="Rows of thriving Ukon plants on an Okinawan farm" className="h-full w-full object-cover transition duration-700 group-hover:scale-105" loading="lazy" />
-              <figcaption className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black via-black/65 to-transparent p-5 pt-16 text-sm font-bold text-white">Rooted in Yanbaru, Okinawa</figcaption>
-            </figure>
-            <figure className="group relative overflow-hidden rounded-3xl border border-white/10">
-              <img src="/ukon/farmer-among-ukon.jpg" alt="Farmer tending tall green Ukon plants" className="h-full w-full object-cover transition duration-700 group-hover:scale-105" loading="lazy" />
-              <figcaption className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black to-transparent p-4 pt-12 text-xs font-bold text-white">Careful cultivation</figcaption>
-            </figure>
-            <figure className="group relative overflow-hidden rounded-3xl border border-white/10">
-              <img src="/ukon/farm-harvest.jpg" alt="Farmer harvesting Ukon from Okinawan soil" className="h-full w-full object-cover transition duration-700 group-hover:scale-105" loading="lazy" />
-              <figcaption className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black to-transparent p-4 pt-12 text-xs font-bold text-white">Harvested at the source</figcaption>
-            </figure>
-            <figure className="group relative overflow-hidden rounded-3xl border border-white/10">
-              <img src="/ukon/turmeric-root.jpg" alt="Fresh turmeric root surrounded by golden powder" className="h-full w-full object-cover transition duration-700 group-hover:scale-105" loading="lazy" />
-            </figure>
-            <figure className="group relative overflow-hidden rounded-3xl border border-white/10">
-              <img src="/ukon/turmeric-spoon.jpg" alt="Vivid golden turmeric powder on a spoon" className="h-full w-full object-cover transition duration-700 group-hover:scale-105" loading="lazy" />
-            </figure>
-          </div>
-          <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-4">
-            <img src="/ukon/turmeric-powder-board.jpg" alt="Turmeric powder on a wooden spoon" className="h-36 w-full rounded-2xl border border-white/10 object-cover sm:h-44" loading="lazy" />
-            <img src="/ukon/turmeric-bowl.jpg" alt="Turmeric powder and roots in a dark studio setting" className="h-36 w-full rounded-2xl border border-white/10 object-cover sm:h-44" loading="lazy" />
-            <img src="/ukon/ukon-supplement-close.jpg" alt="Close view of Kangen Ukon Sigma packaging" className="h-36 w-full rounded-2xl border border-white/10 object-cover sm:h-44" loading="lazy" />
-            <img src="/ukon/yanbaru-farm-wide.jpg" alt="Wide view of green Ukon fields in Okinawa" className="h-36 w-full rounded-2xl border border-white/10 object-cover sm:h-44" loading="lazy" />
           </div>
         </div>
       </section>
@@ -1778,6 +1929,50 @@ export function UkonLandingPage({ profile: propProfile, distributorSlug: propDis
         </div>
       </section>
 
+      {/* ── VISUAL JOURNEY: FROM OKINAWAN EARTH TO A MODERN RITUAL ── */}
+      <section className="py-16 sm:py-24 border-b border-white/10 bg-[#060911] relative">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="max-w-3xl mb-10 sm:mb-12">
+            <div className="inline-flex items-center gap-2 rounded-full border border-amber-500/30 bg-amber-500/10 px-3.5 py-1 text-xs font-bold uppercase tracking-widest text-amber-400 mb-3">
+              <Sparkles className="w-3.5 h-3.5" />
+              <span>{content.journey.eyebrow}</span>
+            </div>
+            <h2 className="text-3xl sm:text-4xl font-black tracking-tight text-white">
+              {content.journey.headline}
+            </h2>
+            <p className="mt-3 text-sm sm:text-base text-slate-300 leading-relaxed">
+              {content.journey.sub}
+            </p>
+          </div>
+
+          {/* 8-Photo Uniform Grid: All identical size, aspect ratio, and framing */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3.5 sm:gap-5">
+            {content.journey.items.map((item, idx) => (
+              <div
+                key={idx}
+                className="group relative aspect-[4/3] w-full overflow-hidden rounded-2xl sm:rounded-3xl border border-white/10 bg-slate-900/60 shadow-xl transition-all duration-300 hover:border-amber-500/40 hover:shadow-2xl hover:shadow-amber-500/10"
+              >
+                <img
+                  src={item.src}
+                  alt={item.title}
+                  className="h-full w-full object-cover object-center transition-transform duration-700 ease-out group-hover:scale-105"
+                  loading="lazy"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/35 to-transparent opacity-85 group-hover:opacity-95 transition-opacity" />
+                <div className="absolute inset-x-0 bottom-0 p-3 sm:p-4 text-left">
+                  <p className="text-xs sm:text-sm font-bold text-white tracking-tight leading-snug drop-shadow-sm">
+                    {item.title}
+                  </p>
+                  <p className="text-[10px] sm:text-[11px] text-amber-300/90 font-medium line-clamp-1 mt-0.5">
+                    {item.desc}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* ── SECTION 5: START WITH THE SUPPLEMENT ── */}
       <section id="supplement" className="py-20 md:py-28 border-b border-white/10 bg-[#070b12] relative">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -1789,10 +1984,9 @@ export function UkonLandingPage({ profile: propProfile, distributorSlug: propDis
                   {content.supplement.badge}
                 </span>
                 <img
-                  src="/ukon/ukon-white-product.jpg"
-                  alt="Kangen Ukon Sigma box with Okinawan turmeric and water splash"
-                  className="w-full aspect-square rounded-2xl object-cover drop-shadow-[0_20px_40px_rgba(245,158,11,0.25)] mx-auto hover:scale-[1.02] transition-transform duration-300"
-                  loading="lazy"
+                  src="/products/ukon/ukon-sigma-supplement-showcase.png"
+                  alt="Kangen Ukon Sigma Box with Okinawan Turmeric Root"
+                  className="w-full h-auto object-contain drop-shadow-[0_20px_40px_rgba(245,158,11,0.25)] mx-auto hover:scale-105 transition-transform duration-300"
                 />
                 <div className="mt-6 border-t border-white/10 pt-4 flex items-center justify-between text-xs text-slate-400">
                   <span>Enagic® International</span>
@@ -1921,10 +2115,9 @@ export function UkonLandingPage({ profile: propProfile, distributorSlug: propDis
             <div className="lg:col-span-6">
               <div className="relative rounded-3xl overflow-hidden border border-white/10 shadow-2xl group">
                 <img
-                  src="/ukon/yanbaru-farm-wide.jpg"
-                  alt="Wide view of dedicated Ukon fields in Yanbaru, Okinawa"
+                  src="/true-legacy-assets/ukon-okinawa-heritage.jpg"
+                  alt="Yanbaru Okinawa Turmeric Terraces Japan"
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                  loading="lazy"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent pointer-events-none" />
                 <div className="absolute bottom-6 left-6 right-6">
@@ -2050,10 +2243,9 @@ export function UkonLandingPage({ profile: propProfile, distributorSlug: propDis
 
                   <div className="relative h-56 flex items-center justify-center my-4 overflow-hidden">
                     <img
-                      src={prod.id === 'ukon_sigma' ? '/ukon/ukon-black-product.jpg' : prod.id === 'ukon_tea' ? '/ukon/turmeric-tea.jpg' : '/ukon/ukon-soap.jpg'}
+                      src={prod.img}
                       alt={prod.title}
-                      className="h-52 w-full rounded-2xl object-cover drop-shadow-xl group-hover:scale-105 transition-transform duration-300"
-                      loading="lazy"
+                      className="max-h-52 w-auto object-contain drop-shadow-xl group-hover:scale-105 transition-transform duration-300"
                     />
                   </div>
 
@@ -2150,10 +2342,9 @@ export function UkonLandingPage({ profile: propProfile, distributorSlug: propDis
             <div className="lg:col-span-6">
               <div className="relative rounded-3xl overflow-hidden border border-white/10 shadow-2xl">
                 <img
-                  src="/ukon/turmeric-tea.jpg"
-                  alt="Warm golden turmeric tea prepared as a daily wellness ritual"
+                  src="/true-legacy-assets/ukon-daily-ritual.jpg"
+                  alt="Daily Wellness Ritual with Kangen Ukon and Water"
                   className="w-full h-full object-cover hover:scale-105 transition-transform duration-700"
-                  loading="lazy"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent pointer-events-none" />
                 <div className="absolute bottom-6 left-6 right-6">
