@@ -256,42 +256,10 @@ export function BeauteLandingPage({ profile: propProfile, distributorSlug }: Bea
         </div>
       </header>
 
-      {/* FEATURED FILM + PURCHASE PATH */}
-      <section className="relative border-b border-white/10 bg-gradient-to-b from-[#070c1d] to-[#040714] py-10 sm:py-14">
-        <div className="mx-auto grid max-w-7xl items-center gap-8 px-4 sm:px-6 lg:grid-cols-12 lg:px-8">
-          <div className="lg:col-span-4">
-            <p className="text-xs font-bold uppercase tracking-[0.25em] text-amber-300">Discover Kangen Beauté®</p>
-            <h2 className="mt-3 text-3xl font-black leading-tight text-white sm:text-4xl">
-              See the Three-Step Ritual
-            </h2>
-            <p className="mt-4 text-sm leading-relaxed text-[#cccccc]">
-              Watch the collection story, then connect with {firstName} for availability and the official ordering path in your market.
-            </p>
-            <div className="mt-6 flex flex-wrap gap-3">
-              {purchaseAction('Buy Kangen Beauté®')}
-              <a
-                href={whatsappUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/15 bg-white/5 px-5 py-3 text-xs font-bold text-white transition-all hover:border-amber-300/50 hover:bg-white/10"
-              >
-                <MessageCircle className="h-4 w-4 text-amber-300" />
-                Ask {firstName}
-              </a>
-            </div>
-          </div>
-          <div className="lg:col-span-8">
-            <YouTubeEmbed
-              url="https://youtu.be/eKmwwHAhw3A"
-              title="Discover the Kangen Beauté three-step skincare collection"
-              className="rounded-3xl border-amber-300/25 shadow-[0_24px_80px_rgba(0,0,0,0.55)]"
-            />
-          </div>
-        </div>
-      </section>
-
       {/* 2. LUXURY HERO */}
-      <section className="relative pt-12 pb-20 sm:pt-20 sm:pb-28">
+      <section className="relative isolate overflow-hidden pt-12 pb-20 sm:pt-20 sm:pb-28">
+        <div className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(circle_at_78%_35%,rgba(251,191,36,0.16),transparent_30%),radial-gradient(circle_at_15%_70%,rgba(14,165,233,0.11),transparent_34%),linear-gradient(135deg,#040714_0%,#07122c_48%,#160d0a_100%)]" />
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 -z-10 h-px bg-gradient-to-r from-transparent via-amber-300/40 to-transparent" />
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="grid items-center gap-12 lg:grid-cols-12">
             {/* Left Column: Hero Story */}
@@ -394,6 +362,36 @@ export function BeauteLandingPage({ profile: propProfile, distributorSlug }: Bea
                 </div>
               </div>
             </motion.div>
+          </div>
+        </div>
+      </section>
+
+      {/* FEATURED FILM + PURCHASE PATH */}
+      <section className="relative border-y border-white/10 bg-gradient-to-b from-[#070c1d] to-[#040714] py-12 sm:py-16">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="mb-8 max-w-3xl">
+            <p className="text-xs font-bold uppercase tracking-[0.25em] text-amber-300">Watch the Collection Story</p>
+            <h2 className="mt-3 text-3xl font-black leading-tight text-white sm:text-4xl">See the Three-Step Ritual in Motion</h2>
+            <p className="mt-4 text-sm leading-relaxed text-[#cccccc] sm:text-base">
+              After discovering the collection, watch how the Kangen Beauté® ritual comes together—then connect with {firstName} for availability and the official ordering path in your market.
+            </p>
+          </div>
+          <YouTubeEmbed
+            url="https://youtu.be/eKmwwHAhw3A"
+            title="Discover the Kangen Beauté three-step skincare collection"
+            className="rounded-3xl border-amber-300/25 shadow-[0_24px_80px_rgba(0,0,0,0.55)]"
+          />
+          <div className="mt-7 flex flex-wrap items-center justify-center gap-3">
+            {purchaseAction('Buy Kangen Beauté®', 'px-7 py-3.5 text-sm')}
+            <a
+              href={whatsappUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/15 bg-white/5 px-6 py-3.5 text-sm font-bold text-white transition-all hover:border-amber-300/50 hover:bg-white/10"
+            >
+              <MessageCircle className="h-4 w-4 text-amber-300" />
+              Ask {firstName}
+            </a>
           </div>
         </div>
       </section>
