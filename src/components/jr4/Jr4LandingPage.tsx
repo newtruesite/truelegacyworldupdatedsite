@@ -428,36 +428,39 @@ export function Jr4LandingPage({ profile: propProfile, distributorSlug }: Jr4Lan
                 </motion.p>
               </div>
 
-              {/* Right: Product PNG */}
+              {/* Right: Glassmorphic Floating Badges / Unobstructed View of Machine */}
               <motion.div
-                initial={{ opacity: 0, scale: 0.9, y: 20 }}
+                initial={{ opacity: 0, scale: 0.95, y: 20 }}
                 animate={{ opacity: 1, scale: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.3 }}
-                className="lg:col-span-5 relative hidden lg:flex flex-col items-center"
+                className="lg:col-span-5 relative hidden lg:flex flex-col items-end justify-between self-stretch py-8 pointer-events-none min-h-[420px]"
               >
-                {/* Glow halo */}
-                <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                  <div className="h-[380px] w-[380px] rounded-full bg-[radial-gradient(circle,rgba(34,211,238,0.12)_0%,rgba(14,116,144,0.06)_50%,transparent_72%)] blur-2xl" />
+                {/* Top Badge: Enagic Certified */}
+                <div className="rounded-2xl border border-cyan-400/30 bg-[#060911]/80 backdrop-blur-md px-5 py-3 shadow-2xl text-right">
+                  <div className="flex items-center justify-end gap-2 text-[11px] font-black uppercase tracking-[0.2em] text-cyan-400">
+                    <span className="h-2 w-2 rounded-full bg-cyan-400 animate-pulse" />
+                    Made in Japan · Enagic®
+                  </div>
+                  <p className="text-sm font-black text-white mt-0.5">LeveLuk JrIV</p>
+                  <p className="text-xs text-slate-400 mt-0.5">4 Solid Plates · 120W Low Energy</p>
                 </div>
 
-                {/* Badge */}
-                <div className="absolute -top-2 right-4 z-20 rounded-full border border-cyan-400/40 bg-[#060911]/80 backdrop-blur-sm px-3.5 py-1 text-[11px] font-bold text-cyan-300 shadow-lg">
-                  Made in Japan · Enagic®
-                </div>
-
-                {/* The real product PNG */}
-                <img
-                  src="/products/jr-iv.png"
-                  alt="Enagic LeveLuk JrIV compact Kangen Water ionizer"
-                  className="relative z-10 h-auto w-full max-w-[280px] xl:max-w-[320px] object-contain drop-shadow-[0_30px_60px_rgba(34,211,238,0.20)] hover:scale-105 transition-transform duration-500"
-                />
-
-                {/* Name tag */}
-                <div className="relative z-10 mt-4 text-center">
-                  <p className="text-[11px] font-bold uppercase tracking-[0.25em] text-cyan-400">LeveLuk JrIV</p>
-                  <p className="text-xs text-slate-400 mt-0.5">4 Plates · 120W · 5 Water Types</p>
+                {/* Bottom Floating Glass Tag */}
+                <div className="rounded-2xl border border-white/15 bg-black/60 backdrop-blur-md p-4 text-right max-w-xs shadow-2xl">
+                  <div className="flex items-center justify-end gap-2 text-xs font-bold text-white">
+                    <Sparkles className="h-3.5 w-3.5 text-cyan-400" />
+                    <span>5 Functional Water Types</span>
+                  </div>
+                  <p className="text-[11px] text-slate-300 mt-1 leading-snug">
+                    Continuous electrolysis with touch-button selection and automated cleaning.
+                  </p>
+                  <div className="mt-2.5 flex items-center justify-end gap-2 text-[10px] font-mono text-cyan-300">
+                    <span className="rounded bg-cyan-950/80 px-2 py-0.5 border border-cyan-500/30">pH 2.5 — 11.5</span>
+                    <span className="rounded bg-cyan-950/80 px-2 py-0.5 border border-cyan-500/30">Singles & Couples</span>
+                  </div>
                 </div>
               </motion.div>
+
 
             </div>
           </div>
@@ -547,15 +550,15 @@ export function Jr4LandingPage({ profile: propProfile, distributorSlug }: Jr4Lan
               {/* Right: Lifestyle image */}
               <div className="relative rounded-3xl overflow-hidden aspect-[4/3] shadow-2xl">
                 <img
-                  src="/true-legacy-assets/jr4-lifestyle-couple.jpg"
-                  alt="Couple using LeveLuk JrIV in morning kitchen"
+                  src="/true-legacy-assets/jr4-lifestyle-living.jpg"
+                  alt="LeveLuk JrIV in modern home alongside Healthy Living and Clean Water books"
                   className="h-full w-full object-cover object-center"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#060911]/60 via-transparent to-transparent" />
                 <div className="absolute bottom-4 left-4 right-4">
                   <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-black/50 backdrop-blur-sm px-3 py-1.5 text-[10px] font-bold text-white">
                     <span className="h-1.5 w-1.5 rounded-full bg-cyan-400" />
-                    THIS FITS MY LIFE.
+                    HEALTHY LIVING · STREAMLINED
                   </div>
                 </div>
               </div>
@@ -666,6 +669,31 @@ export function Jr4LandingPage({ profile: propProfile, distributorSlug }: Jr4Lan
           </div>
         </section>
 
+        {/* ─── JAPANESE SPRING WATER HERITAGE ─── */}
+        <section className="py-16 bg-[#060911] border-b border-white/10">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div className="relative rounded-3xl overflow-hidden border border-cyan-400/20 shadow-[0_20px_60px_rgba(6,182,212,0.15)] min-h-[440px] flex items-center">
+              <img
+                src="/true-legacy-assets/jr4-waterfall-spring.jpg"
+                alt="LeveLuk JrIV beside pristine natural Japanese mountain spring waterfall"
+                className="absolute inset-0 h-full w-full object-cover object-right sm:object-center"
+              />
+              <div className="absolute inset-0 bg-gradient-to-r from-[#060911]/95 via-[#060911]/75 to-[#060911]/15 lg:via-[#060911]/60 lg:to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#060911]/80 via-transparent to-transparent" />
+              <div className="relative z-10 max-w-xl p-8 sm:p-12 lg:p-14">
+                <span className="text-xs font-bold uppercase tracking-[0.3em] text-cyan-400">THE ORIGIN OF KANGEN WATER®</span>
+                <h3 className="mt-3 text-3xl sm:text-4xl lg:text-5xl font-black text-white leading-tight">
+                  INSPIRED BY NATURAL SPRINGS.<br />
+                  <span className="text-cyan-400">PERFECTED AT YOUR SINK.</span>
+                </h3>
+                <p className="mt-4 text-sm sm:text-base text-slate-300 leading-relaxed">
+                  Long before modern ionizers existed, untouched mountain streams were prized for their purity and vitality. Enagic® brings this standard into your home through precision electrolysis powered by four medical-grade platinum-titanium plates.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
         {/* ─── FOUR PLATES TECHNOLOGY ─── */}
         <section className="py-24 bg-[#060911] border-b border-white/10">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -729,7 +757,7 @@ export function Jr4LandingPage({ profile: propProfile, distributorSlug }: Jr4Lan
               {/* Water detail image */}
               <div className="lg:col-span-5 relative rounded-3xl overflow-hidden aspect-[4/3] shadow-2xl">
                 <img
-                  src="/true-legacy-assets/jr4-water-detail.jpg"
+                  src="/true-legacy-assets/jr4-kitchen-angle.jpg"
                   alt="Crystal clear water filling a glass from the LeveLuk JrIV"
                   className="h-full w-full object-cover object-center"
                 />
@@ -1125,51 +1153,53 @@ export function Jr4LandingPage({ profile: propProfile, distributorSlug }: Jr4Lan
         </section>
 
         {/* ─── CLOSING CINEMATIC CTA ─── */}
-        <section className="relative min-h-[520px] flex items-center overflow-hidden border-b border-white/10">
+        <section className="relative min-h-[560px] flex items-center overflow-hidden border-b border-white/10">
           <div className="absolute inset-0">
             <img
               src="/true-legacy-assets/jr4-closing-cta.jpg"
-              alt="Premium kitchen with LeveLuk JrIV"
-              className="h-full w-full object-cover object-center"
+              alt="Sunlit kitchen with LeveLuk JrIV dispensing clean water"
+              className="h-full w-full object-cover object-[75%_center] lg:object-center"
             />
-            <div className="absolute inset-0 bg-gradient-to-r from-[#060911]/95 via-[#060911]/75 to-[#060911]/15" />
-            <div className="absolute inset-0 bg-gradient-to-t from-[#060911]/60 via-transparent to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-r from-[#060911]/95 via-[#060911]/80 to-[#060911]/20 lg:via-[#060911]/70 lg:to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#060911]/70 via-transparent to-transparent" />
           </div>
 
           <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-24">
-            <div className="max-w-2xl">
-              <span className="text-xs font-bold uppercase tracking-[0.3em] text-cyan-400">LEVELUK JRIV</span>
-              <h2 className="mt-5 text-5xl font-black text-white sm:text-6xl leading-[1.0]">
-                THE KANGEN EXPERIENCE.<br />
-                <span className="text-cyan-400">RIGHT-SIZED FOR YOUR LIFE.</span>
-              </h2>
-              <p className="mt-6 text-lg text-slate-300 leading-relaxed max-w-lg">
-                Five water types. Four platinum-coated titanium plates. One streamlined way to bring Kangen Water® into your home.
-              </p>
+            <div className="grid lg:grid-cols-12 items-center">
+              <div className="lg:col-span-7">
+                <span className="text-xs font-bold uppercase tracking-[0.3em] text-cyan-400">LEVELUK JRIV</span>
+                <h2 className="mt-5 text-5xl font-black text-white sm:text-6xl leading-[1.0]">
+                  THE KANGEN EXPERIENCE.<br />
+                  <span className="text-cyan-400">RIGHT-SIZED FOR YOUR LIFE.</span>
+                </h2>
+                <p className="mt-6 text-lg text-slate-300 leading-relaxed max-w-lg">
+                  Five water types. Four platinum-coated titanium plates. One streamlined way to bring Kangen Water® into your home.
+                </p>
 
-              <div className="mt-10 flex flex-wrap gap-4">
-                <button
-                  onClick={() => setShowModal(true)}
-                  className="inline-flex items-center gap-2.5 rounded-2xl bg-cyan-400 px-8 py-4 text-sm font-black text-slate-950 shadow-[0_10px_40px_rgba(34,211,238,0.35)] hover:bg-cyan-300 hover:scale-[1.02] transition-all"
-                >
-                  Get Started with JrIV
-                  <ArrowRight className="h-4 w-4" />
-                </button>
-                <a
-                  href={whatsappUrl}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="inline-flex items-center gap-2 rounded-2xl border border-white/25 bg-white/[0.07] px-7 py-4 text-sm font-bold text-white hover:bg-white/[0.12] transition backdrop-blur-sm"
-                >
-                  <MessageCircle className="h-4 w-4 text-cyan-400" />
-                  Ask {leaderFirstName}
-                </a>
-                <Link
-                  to={`/d/${activeSlug}/kangen`}
-                  className="inline-flex items-center gap-2 rounded-2xl border border-cyan-400/25 bg-cyan-400/[0.07] px-6 py-4 text-sm font-bold text-cyan-300 hover:bg-cyan-400/[0.12] transition"
-                >
-                  Compare with K8
-                </Link>
+                <div className="mt-10 flex flex-wrap gap-4">
+                  <button
+                    onClick={() => setShowModal(true)}
+                    className="inline-flex items-center gap-2.5 rounded-2xl bg-cyan-400 px-8 py-4 text-sm font-black text-slate-950 shadow-[0_10px_40px_rgba(34,211,238,0.35)] hover:bg-cyan-300 hover:scale-[1.02] transition-all"
+                  >
+                    Get Started with JrIV
+                    <ArrowRight className="h-4 w-4" />
+                  </button>
+                  <a
+                    href={whatsappUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-flex items-center gap-2 rounded-2xl border border-white/25 bg-white/[0.07] px-7 py-4 text-sm font-bold text-white hover:bg-white/[0.12] transition backdrop-blur-sm"
+                  >
+                    <MessageCircle className="h-4 w-4 text-cyan-400" />
+                    Ask {leaderFirstName}
+                  </a>
+                  <Link
+                    to={`/d/${activeSlug}/kangen`}
+                    className="inline-flex items-center gap-2 rounded-2xl border border-cyan-400/25 bg-cyan-400/[0.07] px-6 py-4 text-sm font-bold text-cyan-300 hover:bg-cyan-400/[0.12] transition"
+                  >
+                    Compare with K8
+                  </Link>
+                </div>
               </div>
             </div>
           </div>
