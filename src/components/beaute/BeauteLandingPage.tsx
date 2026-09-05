@@ -256,17 +256,18 @@ export function BeauteLandingPage({ profile: propProfile, distributorSlug }: Bea
         </div>
       </header>
 
-      {/* 2. LUXURY HERO */}
-      <section className="relative isolate flex min-h-[680px] items-center overflow-hidden py-16 sm:min-h-[720px] sm:py-24">
+      {/* 2. LUXURY HERO — FULL-BLEED CINEMATIC BACKGROUND */}
+      <section className="relative isolate flex min-h-[720px] lg:min-h-[780px] items-center overflow-hidden py-16 sm:py-24 border-b border-white/10">
         <img
           src="/products/kangen-beaute-hero-cinematic.png"
-          alt=""
-          aria-hidden="true"
-          className="pointer-events-none absolute inset-0 -z-20 h-full w-full object-cover object-[68%_center] sm:object-[64%_center]"
+          alt="Kangen Beauté Timeless Radiance Skincare Collection at Sunrise by Mount Fuji"
+          fetchPriority="high"
+          className="pointer-events-none absolute inset-0 -z-20 h-full w-full object-cover object-[72%_center] sm:object-[70%_center] filter brightness-[0.92] contrast-[1.04]"
         />
-        <div className="pointer-events-none absolute inset-0 -z-10 bg-[linear-gradient(90deg,rgba(2,7,18,0.98)_0%,rgba(2,7,18,0.91)_32%,rgba(2,7,18,0.52)_53%,rgba(2,7,18,0.08)_78%),linear-gradient(0deg,rgba(2,7,18,0.58)_0%,transparent_35%)] max-lg:bg-[linear-gradient(90deg,rgba(2,7,18,0.96)_0%,rgba(2,7,18,0.84)_52%,rgba(2,7,18,0.28)_100%)]" />
+        {/* Editorial left gradient overlay ensuring razor-sharp typography readability */}
+        <div className="pointer-events-none absolute inset-0 -z-10 bg-[linear-gradient(90deg,rgba(4,7,20,0.98)_0%,rgba(4,7,20,0.92)_36%,rgba(4,7,20,0.48)_58%,rgba(4,7,20,0.08)_80%),linear-gradient(0deg,rgba(4,7,20,0.65)_0%,transparent_35%)] max-lg:bg-[linear-gradient(90deg,rgba(4,7,20,0.96)_0%,rgba(4,7,20,0.88)_52%,rgba(4,7,20,0.32)_100%)]" />
         <div className="pointer-events-none absolute inset-x-0 bottom-0 -z-10 h-px bg-gradient-to-r from-transparent via-amber-300/40 to-transparent" />
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 w-full">
           <div className="grid items-center gap-12 lg:grid-cols-12">
             {/* Left Column: Hero Story */}
             <motion.div
@@ -275,7 +276,7 @@ export function BeauteLandingPage({ profile: propProfile, distributorSlug }: Bea
               transition={{ duration: 0.6 }}
               className="lg:col-span-7 xl:col-span-6"
             >
-              <div className="inline-flex items-center gap-2.5 rounded-full border border-amber-300/30 bg-amber-400/10 px-3.5 py-1.5 text-xs font-bold uppercase tracking-[0.25em] text-amber-200">
+              <div className="inline-flex items-center gap-2.5 rounded-full border border-amber-300/30 bg-amber-400/10 px-3.5 py-1.5 text-xs font-bold uppercase tracking-[0.25em] text-amber-200 backdrop-blur-md">
                 <Sparkles className="h-3.5 w-3.5 text-amber-300" />
                 THE TIMELESS RADIANCE COLLECTION
               </div>
@@ -297,9 +298,9 @@ export function BeauteLandingPage({ profile: propProfile, distributorSlug }: Bea
 
               {/* 3 Step Visual Product Pill Badges */}
               <div className="mt-6 flex flex-wrap gap-2 text-xs font-bold text-amber-200">
-                <span className="rounded-xl border border-white/10 bg-white/5 px-3 py-1.5">1. First Light Essence</span>
-                <span className="rounded-xl border border-white/10 bg-white/5 px-3 py-1.5">2. Vital Rich Cream</span>
-                <span className="rounded-xl border border-white/10 bg-white/5 px-3 py-1.5">3. Crystal Ampoule Cream</span>
+                <span className="rounded-xl border border-white/15 bg-black/40 backdrop-blur-md px-3 py-1.5">1. First Light Essence</span>
+                <span className="rounded-xl border border-white/15 bg-black/40 backdrop-blur-md px-3 py-1.5">2. Vital Rich Cream</span>
+                <span className="rounded-xl border border-white/15 bg-black/40 backdrop-blur-md px-3 py-1.5">3. Crystal Ampoule Cream</span>
               </div>
 
               {/* Personalized Line */}
@@ -309,6 +310,24 @@ export function BeauteLandingPage({ profile: propProfile, distributorSlug }: Bea
                   <span>Shared personally with you by <strong className="text-white">{profile.display_name}</strong></span>
                 </div>
               )}
+
+              {/* Mobile Dedicated Picture Card: Uncropped, pristine framing of the new artwork */}
+              <div className="lg:hidden my-6 rounded-2xl sm:rounded-3xl overflow-hidden border border-amber-300/30 bg-gradient-to-b from-amber-400/10 to-black p-1.5 shadow-2xl relative group">
+                <div className="relative aspect-[16/9] w-full overflow-hidden rounded-xl bg-black">
+                  <img
+                    src="/products/kangen-beaute-hero-cinematic.png"
+                    alt="Kangen Beauté Three-Step Skincare Collection"
+                    className="w-full h-full object-cover filter brightness-[0.95] contrast-[1.02]"
+                  />
+                  <div className="absolute bottom-2.5 left-2.5 right-2.5 flex items-center justify-between rounded-lg bg-black/85 backdrop-blur-md px-3 py-1.5 border border-amber-300/20 text-[11px]">
+                    <span className="font-bold text-amber-200 flex items-center gap-1.5">
+                      <Sparkles className="h-3 w-3 text-amber-300" />
+                      Kangen Beauté® Collection
+                    </span>
+                    <span className="text-amber-300 font-extrabold uppercase tracking-wider text-[10px]">ENAGIC® OEM</span>
+                  </div>
+                </div>
+              </div>
 
               <div className="mt-8 flex flex-wrap items-center gap-4">
                 <button
@@ -325,7 +344,7 @@ export function BeauteLandingPage({ profile: propProfile, distributorSlug }: Bea
                   href={whatsappUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center gap-2 rounded-2xl border border-white/15 bg-white/[0.04] px-6 py-4 text-sm font-bold text-white hover:border-amber-300/50 hover:bg-white/[0.08] transition-all"
+                  className="inline-flex items-center justify-center gap-2 rounded-2xl border border-white/15 bg-black/40 backdrop-blur-md px-6 py-4 text-sm font-bold text-white hover:border-amber-300/50 hover:bg-white/[0.08] transition-all"
                 >
                   <MessageCircle className="h-4 w-4 text-amber-300" />
                   Ask {firstName}
@@ -337,6 +356,34 @@ export function BeauteLandingPage({ profile: propProfile, distributorSlug }: Bea
                 For external use only · Individual results may vary
               </p>
             </motion.div>
+
+            {/* Right Column: Open cinematic view of the collection with a floating glass quick-action card */}
+            <div className="hidden lg:flex lg:col-span-5 xl:col-span-6 flex-col justify-end items-end min-h-[460px] pb-2">
+              <motion.div
+                initial={{ opacity: 0, y: 25 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.7, delay: 0.2 }}
+                className="rounded-3xl border border-amber-300/35 bg-black/65 backdrop-blur-xl p-5 shadow-[0_20px_50px_rgba(0,0,0,0.8)] max-w-sm space-y-3"
+              >
+                <div className="flex items-center justify-between">
+                  <span className="inline-flex items-center gap-1.5 text-xs font-black uppercase tracking-wider text-amber-300">
+                    <Sparkles className="h-3.5 w-3.5" /> Enagic® Skincare
+                  </span>
+                  <span className="rounded-full bg-amber-400/20 px-2.5 py-0.5 text-[10px] font-extrabold text-amber-200 border border-amber-400/30">
+                    pH 5.5 Formula
+                  </span>
+                </div>
+                <h3 className="text-base font-black text-white leading-snug">
+                  Timeless Radiance Three-Step Ritual
+                </h3>
+                <p className="text-xs text-[#cccccc] leading-relaxed">
+                  First Light Essence · Vital Rich Cream · Crystal Ampoule Cream
+                </p>
+                <div className="pt-1">
+                  {purchaseAction('Buy Now', 'w-full justify-center !py-2.5 !text-xs font-black')}
+                </div>
+              </motion.div>
+            </div>
           </div>
         </div>
       </section>
