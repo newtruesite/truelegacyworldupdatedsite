@@ -11,6 +11,7 @@ import {
   Info,
   Leaf,
   MessageCircle,
+  ShoppingCart,
   ShieldCheck,
   Sparkles,
   Sun,
@@ -18,10 +19,11 @@ import {
 } from 'lucide-react'
 import TrueLegacyLogo from '@/components/ui/TrueLegacyLogo'
 import { SEO } from '@/components/SEO'
-import { DistributorBuyButton } from '@/components/products/DistributorBuyButton'
+import { YouTubeEmbed } from '@/components/ui/YouTubeEmbed'
 import { Footer } from '@/components/layout/Footer'
 import { LandingHeaderBackButton } from '@/components/layout/LandingHeaderBackButton'
 import { getLeaderPortrait, getPublicDistributors, submitCrmApplication, type PublicDistributor } from '@/lib/crm'
+import { getProductPurchaseLink } from '@/config/productPurchaseLinks'
 
 interface BeauteLandingPageProps {
   profile?: PublicDistributor | null
@@ -83,6 +85,23 @@ export function BeauteLandingPage({ profile: propProfile, distributorSlug }: Bea
     const phoneNum = profile?.phone ? profile.phone.replace(/[^0-9]/g, '') : '14389947844'
     return `https://wa.me/${phoneNum}?text=${whatsappMessage}`
   }, [profile, whatsappMessage])
+
+  const beautePurchaseUrl = useMemo(
+    () => getProductPurchaseLink(profile?.purchase_links, 'kangen_beaute'),
+    [profile?.purchase_links]
+  )
+
+  const purchaseAction = (label: string, className = '') => (
+    <a
+      href={beautePurchaseUrl || whatsappUrl}
+      target="_blank"
+      rel="noopener noreferrer"
+      className={`inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-amber-400 to-amber-500 px-5 py-3 text-xs font-black text-slate-950 shadow-[0_10px_30px_rgba(251,191,36,0.18)] transition-all hover:from-amber-300 hover:to-amber-400 hover:scale-[1.02] active:scale-[0.98] ${className}`}
+    >
+      {beautePurchaseUrl ? <ShoppingCart className="h-4 w-4" /> : <MessageCircle className="h-4 w-4" />}
+      {beautePurchaseUrl ? label : 'Ask About Ordering'}
+    </a>
+  )
 
   const handleLeadSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -224,7 +243,7 @@ export function BeauteLandingPage({ profile: propProfile, distributorSlug }: Bea
               </span>
             </Link>
 
-            <DistributorBuyButton profile={profile} productId="kangen_beaute" label="Buy Now" compactOnMobile className="shrink-0" />
+            {purchaseAction('Buy Now', 'shrink-0 px-4 py-2')}
             <a
               href={whatsappUrl}
               target="_blank"
@@ -236,6 +255,40 @@ export function BeauteLandingPage({ profile: propProfile, distributorSlug }: Bea
           </div>
         </div>
       </header>
+
+      {/* FEATURED FILM + PURCHASE PATH */}
+      <section className="relative border-b border-white/10 bg-gradient-to-b from-[#070c1d] to-[#040714] py-10 sm:py-14">
+        <div className="mx-auto grid max-w-7xl items-center gap-8 px-4 sm:px-6 lg:grid-cols-12 lg:px-8">
+          <div className="lg:col-span-4">
+            <p className="text-xs font-bold uppercase tracking-[0.25em] text-amber-300">Discover Kangen Beauté®</p>
+            <h2 className="mt-3 text-3xl font-black leading-tight text-white sm:text-4xl">
+              See the Three-Step Ritual
+            </h2>
+            <p className="mt-4 text-sm leading-relaxed text-[#cccccc]">
+              Watch the collection story, then connect with {firstName} for availability and the official ordering path in your market.
+            </p>
+            <div className="mt-6 flex flex-wrap gap-3">
+              {purchaseAction('Buy Kangen Beauté®')}
+              <a
+                href={whatsappUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/15 bg-white/5 px-5 py-3 text-xs font-bold text-white transition-all hover:border-amber-300/50 hover:bg-white/10"
+              >
+                <MessageCircle className="h-4 w-4 text-amber-300" />
+                Ask {firstName}
+              </a>
+            </div>
+          </div>
+          <div className="lg:col-span-8">
+            <YouTubeEmbed
+              url="https://youtu.be/eKmwwHAhw3A"
+              title="Discover the Kangen Beauté three-step skincare collection"
+              className="rounded-3xl border-amber-300/25 shadow-[0_24px_80px_rgba(0,0,0,0.55)]"
+            />
+          </div>
+        </div>
+      </section>
 
       {/* 2. LUXURY HERO */}
       <section className="relative pt-12 pb-20 sm:pt-20 sm:pb-28">
@@ -336,12 +389,7 @@ export function BeauteLandingPage({ profile: propProfile, distributorSlug }: Bea
                   <p className="text-xs text-[#cccccc]">First Light Essence · Vital Rich Cream · Crystal Ampoule Cream</p>
 
                   <div className="pt-3">
-                    <DistributorBuyButton
-                      profile={profile}
-                      productId="kangen_beaute"
-                      label="Order Kangen Beauté®"
-                      className="w-full justify-center"
-                    />
+                    {purchaseAction('Order Kangen Beauté®', 'w-full')}
                   </div>
                 </div>
               </div>
@@ -959,6 +1007,8 @@ export function BeauteLandingPage({ profile: propProfile, distributorSlug }: Bea
           </p>
 
           <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
+            {purchaseAction('Buy Kangen Beauté®', 'px-8 py-4 text-sm')}
+
             <a
               href={whatsappUrl}
               target="_blank"
