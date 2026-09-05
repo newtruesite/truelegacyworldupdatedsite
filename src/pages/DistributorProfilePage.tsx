@@ -2,9 +2,10 @@ import { Footer } from '@/components/layout/Footer'
 import { Navbar } from '@/components/layout/Navbar'
 import { SEO } from '@/components/SEO'
 import { useLocaleContext } from '@/contexts/LocaleContext'
-import { crmSupabase, getPublicDistributors, getLeaderPortrait } from '@/lib/crm'
+import { crmSupabase, getPublicDistributors, getLeaderPortrait, getCrmMembership, getCrmDistributors } from '@/lib/crm'
 import type { PublicDistributor } from '@/lib/crm'
 import { ProfileCardGrid } from '@/components/profile/ProfileCardGrid'
+import { LeaderQuickAccessDrawer } from '@/components/profile/LeaderQuickAccessDrawer'
 import {
   ArrowDown,
   ArrowRight,
@@ -23,6 +24,7 @@ import {
   Globe2,
   Instagram,
   Languages,
+  Layers,
   Mail,
   MapPin,
   MessageCircle,
@@ -36,8 +38,8 @@ import {
   UserCheck,
 } from 'lucide-react'
 import { useEffect, useState } from 'react'
-import { Link, useParams } from 'react-router-dom'
-import { motion, AnimatePresence, useReducedMotion } from 'framer-motion'
+import { Link, useParams, useSearchParams } from 'react-router-dom'
+import { motion } from 'framer-motion'
 import NotFoundPage from './NotFoundPage'
 
 const LEADER_PORTRAITS: Record<string, string> = {
@@ -120,16 +122,75 @@ function getShortPositioning(bio: string): string {
 
 export default function DistributorProfilePage() {
   const { slug } = useParams()
+  const [searchParams] = useSearchParams()
   const { locale } = useLocaleContext()
   const [profile, setProfile] = useState<PublicDistributor | null | undefined>(undefined)
+  const [isLeaderDrawerOpen, setIsLeaderDrawerOpen] = useState(false)
+  const [isLeaderAuthenticated, setIsLeaderAuthenticated] = useState(false)
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 })
   const [isHovered, setIsHovered] = useState(false)
-  const prefersReducedMotion = useReducedMotion()
 
   const handleMouseMove = (e: React.MouseEvent<HTMLElement>) => {
     const rect = e.currentTarget.getBoundingClientRect()
     setMousePos({ x: e.clientX - rect.left, y: e.clientY - rect.top })
   }
+
+  // Detect whether current visitor is the authenticated leader or admin of this profile
+  useEffect(() => {
+    // If leader_preview is requested in URL params, enable for dev/testing
+    if (searchParams.get('leader_preview') === 'true') {
+      setIsLeaderAuthenticated(true)
+      return
+    }
+
+    const client = crmSupabase
+    if (!client) return
+
+    let active = true
+    const checkAuth = async () => {
+      try {
+        const { data } = await client.auth.getSession()
+        const session = data.session
+        if (!session?.user) {
+          if (active) setIsLeaderAuthenticated(false)
+          return
+        }
+
+        const [membership, distributors] = await Promise.all([
+          getCrmMembership(session.user.id).catch(() => null),
+          getCrmDistributors().catch(() => []),
+        ])
+        if (!active) return
+
+        const isAdmin = membership?.role === 'admin'
+        // Identify authenticated distributor
+        let authDistributor = distributors.find((d) => d.id === membership?.distributor_id)
+        if (!authDistributor) {
+          authDistributor = distributors.find((d) => d.auth_user_id === session.user.id)
+        }
+        if (!authDistributor && session.user.email) {
+          const cleanEmail = session.user.email.toLowerCase()
+          authDistributor = distributors.find((d) => d.login_email?.toLowerCase() === cleanEmail)
+        }
+
+        // Allowed if this is the authenticated distributor's own profile OR if the user is an admin
+        const isOwner = authDistributor?.slug === slug
+        setIsLeaderAuthenticated(Boolean(isAdmin || isOwner))
+      } catch {
+        if (active) setIsLeaderAuthenticated(false)
+      }
+    }
+
+    checkAuth()
+    const { data: sub } = client.auth.onAuthStateChange(() => {
+      checkAuth()
+    })
+
+    return () => {
+      active = false
+      sub.subscription.unsubscribe()
+    }
+  }, [slug, searchParams])
 
   useEffect(() => {
     let active = true
@@ -151,24 +212,6 @@ export default function DistributorProfilePage() {
     if (!profile || !crmSupabase) return
     void crmSupabase.rpc('crm_track_share_click', { p_slug: profile.slug, p_campaign: 'profile', p_locale: locale })
   }, [profile, locale])
-
-  const [isScrolled, setIsScrolled] = useState(false)
-  useEffect(() => {
-    let ticking = false
-    const handleScroll = () => {
-      if (!ticking) {
-        window.requestAnimationFrame(() => {
-          // Separate collapse and expand thresholds prevent a height change from
-          // repeatedly crossing one trigger point and causing a visible flicker.
-          setIsScrolled(current => current ? window.scrollY > 48 : window.scrollY > 112)
-          ticking = false
-        })
-        ticking = true
-      }
-    }
-    window.addEventListener('scroll', handleScroll, { passive: true })
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [])
 
   if (profile === null) return <NotFoundPage />
 
@@ -569,107 +612,53 @@ export default function DistributorProfilePage() {
       <main className="mx-auto flex w-full max-w-6xl flex-1 flex-col px-4 pt-24 pb-16 sm:px-6 md:pt-28 md:pb-24">
         {profile ? (
           <>
-            {/* 1. TOP HERO CARD (Smoothly Minimizes on Scroll) */}
-            <motion.header
-              layout={!prefersReducedMotion}
-              transition={prefersReducedMotion ? { duration: 0 } : { layout: { type: 'spring', stiffness: 320, damping: 34 } }}
+            {/* 1. TOP HERO CARD (Natural Document Scroll) */}
+            <header
               onMouseMove={handleMouseMove}
               onMouseEnter={() => setIsHovered(true)}
               onMouseLeave={() => setIsHovered(false)}
-              className={`group relative mb-8 overflow-hidden rounded-2xl sm:rounded-3xl border border-white/10 bg-[#090d16]/95 backdrop-blur-xl shadow-2xl transition-all duration-500 ${
-                isScrolled
-                  ? 'sticky top-20 z-40 p-3 sm:p-4 border-cyan-500/40 shadow-[0_12px_40px_rgba(0,0,0,0.9)]'
-                  : 'p-6 sm:p-8 hover:border-cyan-500/30'
-              }`}
+              className="group relative mb-8 overflow-hidden rounded-2xl sm:rounded-3xl border border-white/10 bg-[#090d16]/95 p-6 sm:p-8 backdrop-blur-xl shadow-2xl transition-all duration-500 hover:border-cyan-500/30"
             >
               {/* Interactive dynamic subtle cursor spotlight */}
               <div
                 className="pointer-events-none absolute -inset-px transition-opacity duration-300 z-0"
                 style={{
-                  opacity: isHovered && !isScrolled ? 1 : 0,
+                  opacity: isHovered ? 1 : 0,
                   background: `radial-gradient(400px circle at ${mousePos.x}px ${mousePos.y}px, rgba(41, 151, 255, 0.09), transparent 80%)`,
                 }}
               />
 
-              <AnimatePresence initial={false} mode="popLayout">
-                {isScrolled ? (
-                  /* MINIMIZED COMPACT STATE (after the expanded card begins leaving view) */
-                  <motion.div
-                    key="minimized"
-                    initial={{ opacity: 0, y: -6 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -6 }}
-                    transition={prefersReducedMotion ? { duration: 0 } : { duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
-                    className="relative z-10 flex items-center justify-between gap-3"
-                  >
-                    {/* Compact Leader Avatar & Identity */}
-                    <div className="flex items-center gap-3 min-w-0">
-                      <div className="relative h-11 w-11 shrink-0 overflow-hidden rounded-full border border-cyan-400/60 shadow-lg">
-                        <img
-                          src={leaderPhoto}
-                          alt={profile.display_name}
-                          className="h-full w-full object-cover object-top"
-                        />
-                      </div>
-                      <div className="min-w-0 flex-1">
-                        <div className="flex items-center gap-2">
-                          <h2 className="truncate text-base font-bold text-white">
-                            {profile.display_name}
-                          </h2>
-                          <span className="inline-flex items-center gap-1 rounded-full bg-cyan-500/10 px-2 py-0.5 text-[10px] font-bold text-[#2997ff] border border-cyan-400/30">
-                            <BadgeCheck className="h-3 w-3 text-[#2997ff]" />
-                            {ui.verifiedLeader}
-                          </span>
-                        </div>
-                        <p className="truncate text-xs text-[#86868b]">
-                          {activeTitle}
-                        </p>
-                      </div>
-                    </div>
+              {/* Invitation & Attribution Top Banner */}
+              <div className="relative z-10 mb-6 flex flex-wrap items-center justify-between gap-3 border-b border-white/10 pb-4">
+                <div className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-black/50 px-3.5 py-1 text-xs font-semibold text-[#2997ff]">
+                  <UserCheck className="h-3.5 w-3.5 text-[#2997ff]" />
+                  {ui.invitationBadge}
+                </div>
 
-                    {/* Minimized Action CTAs */}
-                    <div className="flex items-center gap-2 shrink-0">
-                      {whatsappUrl && (
-                        <a
-                          href={whatsappUrl}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="inline-flex items-center justify-center gap-1.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 px-3.5 py-1.5 text-xs font-bold text-slate-950 transition-all shadow-md shadow-emerald-500/10 active:scale-95"
-                        >
-                          <MessageCircle className="h-3.5 w-3.5" />
-                          <span className="hidden sm:inline">{ui.primaryMessage}</span>
-                          <span className="sm:hidden">WhatsApp</span>
-                        </a>
-                      )}
-                      <Link
-                        to={applyUrl}
-                        className="inline-flex items-center justify-center gap-1.5 rounded-xl border border-white/15 bg-white/10 hover:bg-white/20 px-3 py-1.5 text-xs font-semibold text-white transition-all active:scale-95"
-                      >
-                        <span>{ui.requestInfo}</span>
-                        <ArrowRight className="h-3.5 w-3.5" />
-                      </Link>
-                    </div>
-                  </motion.div>
-                ) : (
-                  /* FULL EXPANDED STATE (At top of page) */
-                  <motion.div
-                    key="expanded"
-                    initial={{ opacity: 0, y: 6 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: 6 }}
-                    transition={prefersReducedMotion ? { duration: 0 } : { duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
-                  >
-                    {/* Invitation & Attribution Top Banner */}
-                    <div className="relative z-10 mb-6 flex flex-wrap items-center justify-between gap-3 border-b border-white/10 pb-4">
-                      <div className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-black/50 px-3.5 py-1 text-xs font-semibold text-[#2997ff]">
-                        <UserCheck className="h-3.5 w-3.5 text-[#2997ff]" />
-                        {ui.invitationBadge}
-                      </div>
-                      <div className="inline-flex items-center gap-1.5 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3 py-1 text-xs font-semibold text-emerald-400">
-                        <ShieldCheck className="h-3.5 w-3.5 text-emerald-400" />
-                        <span>{ui.attributionAssurance}</span>
-                      </div>
-                    </div>
+                <div className="flex items-center gap-2.5">
+                  {/* LEADER-ONLY QUICK ACCESS CONTROL */}
+                  {isLeaderAuthenticated && (
+                    <button
+                      type="button"
+                      onClick={() => setIsLeaderDrawerOpen(true)}
+                      className="inline-flex items-center gap-2 rounded-full border border-cyan-500/40 bg-gradient-to-r from-cyan-500/20 via-blue-500/15 to-purple-500/20 px-3.5 py-1 text-xs font-bold text-cyan-300 hover:border-cyan-400 hover:bg-cyan-500/30 transition-all shadow-md shadow-cyan-500/10 active:scale-95 cursor-pointer group"
+                      title="Open My Landing Pages & Quick Access Panel"
+                    >
+                      <span className="relative flex h-2 w-2">
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75" />
+                        <span className="relative inline-flex rounded-full h-2 w-2 bg-cyan-500" />
+                      </span>
+                      <Layers className="h-3.5 w-3.5 text-cyan-300 group-hover:rotate-12 transition-transform" />
+                      <span>MY LANDING PAGES</span>
+                    </button>
+                  )}
+
+                  <div className="inline-flex items-center gap-1.5 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3 py-1 text-xs font-semibold text-emerald-400">
+                    <ShieldCheck className="h-3.5 w-3.5 text-emerald-400" />
+                    <span>{ui.attributionAssurance}</span>
+                  </div>
+                </div>
+              </div>
 
               {/* Balanced 3-Column Hero Grid */}
               <div className="relative z-10 grid gap-6 sm:grid-cols-[160px_1fr] md:grid-cols-[190px_1fr] lg:grid-cols-[200px_1fr_270px] items-center">
@@ -806,10 +795,7 @@ export default function DistributorProfilePage() {
                   </div>
                 </div>
               </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </motion.header>
+            </header>
 
             {/* 2. VISUAL GUIDED EXPERIENCE DESTINATION CARDS */}
             <section className="mb-14">
@@ -961,6 +947,36 @@ export default function DistributorProfilePage() {
           </div>
         )}
       </main>
+
+      {/* LEADER-ONLY FLOATING QUICK ACCESS DOCK TRIGGER */}
+      {profile && isLeaderAuthenticated && (
+        <motion.button
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          type="button"
+          onClick={() => setIsLeaderDrawerOpen(true)}
+          className="fixed bottom-6 right-6 z-40 flex items-center gap-2.5 rounded-full border border-cyan-400/50 bg-[#060913]/90 px-4 py-2.5 text-xs font-bold text-cyan-300 shadow-[0_8px_32px_rgba(0,0,0,0.8)] backdrop-blur-xl hover:border-cyan-400 hover:bg-cyan-500/20 hover:scale-105 active:scale-95 transition-all cursor-pointer group"
+          aria-label="Open My Landing Pages"
+        >
+          <span className="relative flex h-2 w-2">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75" />
+            <span className="relative inline-flex rounded-full h-2 w-2 bg-cyan-500" />
+          </span>
+          <Layers className="h-4 w-4 text-cyan-400 group-hover:rotate-12 transition-transform" />
+          <span className="hidden sm:inline">My Landing Pages</span>
+          <span className="sm:hidden">My Pages</span>
+        </motion.button>
+      )}
+
+      {/* LEADER QUICK ACCESS DRAWER */}
+      {profile && isLeaderAuthenticated && (
+        <LeaderQuickAccessDrawer
+          isOpen={isLeaderDrawerOpen}
+          onClose={() => setIsLeaderDrawerOpen(false)}
+          profile={profile}
+          locale={locale}
+        />
+      )}
 
       <Footer />
     </div>
