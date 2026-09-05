@@ -1075,9 +1075,6 @@ export default function K8Page({ profile: propProfile, distributorSlug: propSlug
   const [activeWaterTab, setActiveWaterTab] = useState(0);
   const activeWater = content.waterSettings.tabs[activeWaterTab];
 
-  // Accordion transcript toggle
-  const [showTranscript, setShowTranscript] = useState(false);
-
   // FAQ open index state
   const [openFaq, setOpenFaq] = useState<number | null>(0);
 
@@ -1622,46 +1619,12 @@ export default function K8Page({ profile: propProfile, distributorSlug: propSlug
           </div>
 
           {/* YouTube Video Player Container */}
-          <div className="relative rounded-3xl border border-cyan-500/30 bg-black/60 p-2 sm:p-3 shadow-2xl shadow-cyan-950/40 overflow-hidden mb-6">
+          <div className="relative rounded-3xl border border-cyan-500/30 bg-black/60 p-2 sm:p-3 shadow-2xl shadow-cyan-950/40 overflow-hidden mb-10">
             <YouTubeEmbed
               url={videoUrl}
               title="Leveluk K8 4-Minute Demonstration"
               className="rounded-2xl"
             />
-          </div>
-
-          {/* Transcript / Summary Accordion */}
-          <div className="mb-10">
-            <button
-              onClick={() => setShowTranscript(!showTranscript)}
-              className="w-full flex items-center justify-between rounded-2xl border border-white/10 bg-white/[0.03] px-5 py-3.5 text-xs font-semibold text-slate-300 hover:bg-white/[0.06] transition-colors"
-            >
-              <div className="flex items-center gap-2">
-                <FileText className="w-4 h-4 text-cyan-400" />
-                <span>{content.demo.transcriptToggle}</span>
-              </div>
-              {showTranscript ? (
-                <ChevronUp className="w-4 h-4 text-slate-400" />
-              ) : (
-                <ChevronDown className="w-4 h-4 text-slate-400" />
-              )}
-            </button>
-
-            <AnimatePresence>
-              {showTranscript && (
-                <motion.div
-                  initial={{ height: 0, opacity: 0 }}
-                  animate={{ height: "auto", opacity: 1 }}
-                  exit={{ height: 0, opacity: 0 }}
-                  transition={{ duration: 0.3 }}
-                  className="overflow-hidden"
-                >
-                  <div className="mt-2 rounded-2xl border border-white/10 bg-black/40 p-5 text-xs text-slate-300 leading-relaxed whitespace-pre-line font-mono">
-                    {content.demo.transcriptText}
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
           </div>
 
           {/* Post-Video Actions */}

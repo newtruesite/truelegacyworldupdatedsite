@@ -1418,7 +1418,6 @@ export function UkonLandingPage({ profile: propProfile, distributorSlug: propDis
   const content = LOCALES[currentLang]
 
   const [openFaq, setOpenFaq] = useState<number | null>(null)
-  const [showTranscript, setShowTranscript] = useState(false)
   const [showIngredientsModal, setShowIngredientsModal] = useState(false)
 
   // Guide Lead Form
@@ -1952,35 +1951,12 @@ export function UkonLandingPage({ profile: propProfile, distributorSlug: propDis
           </div>
 
           {/* YouTube Video Player Container */}
-          <div className="relative rounded-3xl border border-amber-500/30 bg-black/60 p-2 sm:p-3 shadow-2xl shadow-amber-950/40 overflow-hidden mb-6">
+          <div className="relative rounded-3xl border border-amber-500/30 bg-black/60 p-2 sm:p-3 shadow-2xl shadow-amber-950/40 overflow-hidden">
             <YouTubeEmbed
               url="https://www.youtube.com/watch?v=0d_RcSmf2XI"
               title="Kangen Ukon® — The Story of Okinawan Turmeric"
               className="rounded-2xl"
             />
-          </div>
-
-          {/* Transcript Accordion */}
-          <div className="mt-6">
-            <button
-              type="button"
-              onClick={() => setShowTranscript(!showTranscript)}
-              className="w-full rounded-2xl border border-white/10 bg-white/[0.02] p-4 flex items-center justify-between text-xs font-bold text-slate-300 hover:bg-white/5 transition-all"
-            >
-              <span className="flex items-center gap-2">
-                <FileText className="w-4 h-4 text-amber-400" />
-                {content.video.transcriptBtn}
-              </span>
-              <ChevronDown
-                className={cn('w-4 h-4 transition-transform duration-200', showTranscript ? 'rotate-180 text-amber-400' : '')}
-              />
-            </button>
-
-            {showTranscript && (
-              <div className="mt-2 rounded-2xl border border-white/10 bg-black/60 p-5 text-xs text-slate-300 leading-relaxed whitespace-pre-line">
-                {content.video.transcript}
-              </div>
-            )}
           </div>
         </div>
       </section>
