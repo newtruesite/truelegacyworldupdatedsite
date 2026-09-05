@@ -2,26 +2,18 @@ import { useState, useEffect, useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
-  ArrowLeft,
   ArrowRight,
   CheckCircle2,
   ChevronDown,
-  ChevronRight,
   Droplets,
   ExternalLink,
   Filter,
-  Flame,
   Info,
-  Layers,
   MessageCircle,
-  Package,
-  ShieldCheck,
   Sparkles,
-  UserCheck,
   Waves,
-  Wrench,
-  Zap,
   X,
+  Zap,
 } from 'lucide-react'
 import TrueLegacyLogo from '@/components/ui/TrueLegacyLogo'
 import { SEO } from '@/components/SEO'
@@ -39,8 +31,8 @@ export function Jr4LandingPage({ profile: propProfile, distributorSlug }: Jr4Lan
   const { locale, setLocale } = useLocaleContext()
   const [profile, setProfile] = useState<PublicDistributor | null>(propProfile || null)
   const [loadingProfile, setLoadingProfile] = useState(!propProfile)
-  
-  // Compatibility Modal State
+
+  // Modal State
   const [showModal, setShowModal] = useState(false)
   const [submitting, setSubmitting] = useState(false)
   const [formSuccess, setFormSuccess] = useState(false)
@@ -153,153 +145,146 @@ export function Jr4LandingPage({ profile: propProfile, distributorSlug }: Jr4Lan
     const lang = locale === 'es' ? 'es' : locale === 'fr' ? 'fr' : locale === 'pt' ? 'pt' : 'en'
     return {
       en: {
-        badge: 'THE COMPACT KANGEN WATER® STARTER MODEL',
-        title: 'Leveluk JrIV',
-        subtitle: 'Five Water Types. Compact Design. Built for Smaller Households.',
-        heroBody:
-          'Designed primarily for singles and couples, the Leveluk JrIV combines four platinum-coated titanium electrode plates, lower power consumption, automatic operation, and access to Enagic’s five water types.',
-        sharedBy: `Shared personally with you by ${profile?.display_name || 'Mehdi Cohen'}`,
-        primaryCta: 'See If the JrIV Fits My Home',
+        badge: 'LEVELUK JRIV · KANGEN WATER®',
+        headline1: 'KANGEN WATER.',
+        headline2: 'SIMPLIFIED.',
+        subhead: 'The LeveLuk JrIV brings Enagic\'s Kangen Water® technology into a streamlined four-plate ionizer designed especially for singles, couples and lower-demand households.',
+        primaryCta: 'Explore the JrIV',
         secondaryCta: `Ask ${leaderFirstName}`,
-        heroSpecs: 'Four electrode plates · 120 watts · Five water types · Three-year warranty (Ref. U.S. Market)',
+        heroSpecs: 'Four electrode plates · 120 watts · Five water types · 3-year warranty (U.S. ref.)',
       },
       es: {
-        badge: 'EL MODELO COMPACTO DE INICIACIÓN KANGEN WATER®',
-        title: 'Leveluk JrIV',
-        subtitle: 'Cinco Tipos de Agua. Diseño Compacto. Creado para Hogares Pequeños.',
-        heroBody:
-          'Diseñado principalmente para personas solteras y parejas, el Leveluk JrIV combina cuatro placas de titanio revestidas en platino, menor consumo de energía, funcionamiento automático y acceso a los cinco tipos de agua de Enagic.',
-        sharedBy: `Compartido personalmente por ${profile?.display_name || 'Mehdi Cohen'}`,
-        primaryCta: 'Verificar si el JrIV se Adapta a mi Hogar',
-        secondaryCta: `Consultar a ${leaderFirstName}`,
-        heroSpecs: 'Cuatro placas de titanio · 120 vatios · Cinco tipos de agua · Garantía de 3 años (Mercado EE. UU.)',
+        badge: 'LEVELUK JRIV · KANGEN WATER®',
+        headline1: 'KANGEN WATER.',
+        headline2: 'SIMPLIFICADO.',
+        subhead: 'El LeveLuk JrIV lleva la tecnología Kangen Water® de Enagic a un ionizador de cuatro placas diseñado especialmente para personas solteras, parejas y hogares de menor demanda.',
+        primaryCta: 'Explorar el JrIV',
+        secondaryCta: `Preguntar a ${leaderFirstName}`,
+        heroSpecs: 'Cuatro placas de titanio · 120 vatios · Cinco tipos de agua · Garantía 3 años (ref. EE.UU.)',
       },
       fr: {
-        badge: 'LE MODÈLE COMPACT DE DÉMARRAGE KANGEN WATER®',
-        title: 'Leveluk JrIV',
-        subtitle: 'Cinq Types d’Eau. Design Compact. Conçu pour les Petits Foyers.',
-        heroBody:
-          'Conçu principalement pour les personnes seules et les couples, le Leveluk JrIV combine quatre plaques en titane revêtues de platine, une consommation d’énergie réduite, un fonctionnement automatique et l’accès aux cinq types d’eau Enagic.',
-        sharedBy: `Partagé personnellement par ${profile?.display_name || 'Mehdi Cohen'}`,
-        primaryCta: 'Vérifier si le JrIV Convient à Mon Foyer',
+        badge: 'LEVELUK JRIV · KANGEN WATER®',
+        headline1: 'KANGEN WATER.',
+        headline2: 'SIMPLIFIÉ.',
+        subhead: 'Le LeveLuk JrIV apporte la technologie Kangen Water® d\'Enagic dans un ioniseur quatre plaques conçu spécialement pour les personnes seules, les couples et les foyers à faible demande.',
+        primaryCta: 'Explorer le JrIV',
         secondaryCta: `Demander à ${leaderFirstName}`,
-        heroSpecs: 'Quatre plaques en titane · 120 watts · Cinq types d’eau · Garantie 3 ans (Réf. É.-U.)',
+        heroSpecs: 'Quatre plaques titane · 120 watts · Cinq types d\'eau · Garantie 3 ans (réf. É.-U.)',
       },
       pt: {
-        badge: 'O MODELO COMPACTO DE ENTRADA KANGEN WATER®',
-        title: 'Leveluk JrIV',
-        subtitle: 'Cinco Tipos de Água. Design Compacto. Criado para Lares Menores.',
-        heroBody:
-          'Projetado principalmente para pessoas solteiras e casais, o Leveluk JrIV combina quatro placas de titânio revestidas em platina, menor consumo de energia, operação automática e acesso aos cinco tipos de água da Enagic.',
-        sharedBy: `Compartilhado pessoalmente por ${profile?.display_name || 'Mehdi Cohen'}`,
-        primaryCta: 'Ver se o JrIV Serve para Minha Casa',
+        badge: 'LEVELUK JRIV · KANGEN WATER®',
+        headline1: 'KANGEN WATER.',
+        headline2: 'SIMPLIFICADO.',
+        subhead: 'O LeveLuk JrIV traz a tecnologia Kangen Water® da Enagic em um ionizador de quatro placas projetado especialmente para solteiros, casais e lares com menor demanda.',
+        primaryCta: 'Explorar o JrIV',
         secondaryCta: `Perguntar a ${leaderFirstName}`,
-        heroSpecs: 'Quatro placas de titânio · 120 watts · Cinco tipos de água · Garantia de 3 anos (Ref. EUA)',
+        heroSpecs: 'Quatro placas de titânio · 120 watts · Cinco tipos de água · Garantia 3 anos (ref. EUA)',
       },
     }[lang]
-  }, [locale, profile, leaderFirstName])
+  }, [locale, leaderFirstName])
 
-  // FAQ Accordion Content (All 13 Required Questions)
+  // FAQ List — 13 required questions, all compliant
   const faqList = useMemo(() => [
     {
-      q: 'Is the JrIV recommended for a family?',
-      a: 'Enagic recommends the JrIV primarily for singles or couples because it has fewer plates (4 plates), lower power consumption (120W), and lower water output rate than larger models. A larger household should compare more robust machines like the 8-plate Leveluk K8.',
+      q: 'What is the LeveLuk JrIV?',
+      a: 'The LeveLuk JrIV is a countertop water ionizer made by Enagic®. It uses four solid platinum-coated titanium electrode plates to perform electrolysis on filtered tap water, producing five different water types across a pH range of 2.5–11.5.',
     },
     {
-      q: 'Does it produce all five water types?',
-      a: 'Yes. Enagic lists Strong Kangen Water (pH 11.0+), Kangen Water (pH 8.5–9.5), Clean Water (pH 7.0), Beauty Water (pH 5.5–6.0), and Strong Acidic Water (pH 2.5).',
+      q: 'How is JrIV different from the K8?',
+      a: 'The JrIV uses 4 electrode plates and draws 120W of power, while the K8 uses 8 electrode plates and draws 230W. Both produce the same five water types, but the K8 has higher water output capability and a longer U.S. warranty (5 years vs. 3 years). The JrIV is designed primarily for singles and couples with lower output requirements.',
     },
     {
-      q: 'Can I drink all five water types?',
-      a: 'No. Only drink water modes officially designated for drinking: Kangen Water® (pH 8.5, 9.0, 9.5) and Clean Water (pH 7.0). Strong Kangen Water, Beauty Water, and Strong Acidic Water are NOT for drinking. Always follow the machine manual.',
+      q: 'How many electrode plates does the JrIV have?',
+      a: 'The JrIV has 4 solid platinum-coated titanium electrode plates, each measuring 135 × 75 mm.',
     },
     {
-      q: 'Is the JrIV a water purifier?',
-      a: 'Do not describe it as a universal purifier. It includes internal filtration (high-grade antibacterial activated charcoal and calcium sulfite) combined with water-ionization technology. Actual contaminant reduction depends on the installed filter and source-water conditions.',
+      q: 'What five water types does it produce?',
+      a: 'The JrIV produces: Kangen Water® (pH 8.5–9.5, intended for drinking), Clean Water (pH 7.0, intended for drinking/medications), Beauty Water (pH 5.5–6.0, not for drinking), Strong Kangen Water (pH 11.0+, not for drinking), and Strong Acidic Water (pH 2.5, not for drinking). Only Kangen Water® and Clean Water are intended for drinking.',
     },
     {
-      q: 'Does it work with every faucet?',
-      a: 'No. Faucet and plumbing compatibility must be assessed before ordering. Standard faucets with removable aerators connect directly with included diverters, while pull-out spray heads or custom designer faucets may require alternative plumbing or an undersink kit.',
+      q: 'Who is the JrIV recommended for?',
+      a: 'Enagic recommends the JrIV primarily for singles and couples or smaller households with lower water-output requirements. Those wanting higher output capability or living in larger households may want to consider a model with more electrode plates, like the K8.',
     },
     {
-      q: 'Can it use well water?',
-      a: 'Suitability depends on tested source-water chemistry, pressure, sediment, hardness, iron, contaminants, and any required pre-treatment. Do not connect the machine to an unsuitable source without professional assessment.',
+      q: 'Can families use the JrIV?',
+      a: 'The JrIV\'s lower plate count (4 plates) and lower power rating (120W) mean it has a lower water output rate (3.0–4.9 L/min for Kangen Water) than larger models. Larger families with continuous high-volume demand should compare it honestly against the 8-plate K8 before ordering.',
     },
     {
-      q: 'Does the JrIV require an electrolysis enhancer?',
-      a: 'The built-in enhancer tank is used specifically for production of Strong Kangen Water (pH 11.0+) and Strong Acidic Water (pH 2.5) according to official operating instructions.',
+      q: 'How much water can the JrIV produce?',
+      a: 'According to official reference data: Kangen Water production rate is 3.0–4.9 L/min. Acidic Water is 0.2–1.9 L/min. Strong Acidic Water is 0.3–0.7 L/min. These figures represent standard test conditions and vary with source water, pressure, temperature, and machine condition.',
     },
     {
-      q: 'How often does the filter need replacement?',
-      a: 'It depends on the specific filter model, household water usage, and local water quality. The machine includes a smart filter-change notification (LCD and buzzer), but this should be understood as a system notification rather than a real-time purity test.',
+      q: 'Does the JrIV clean itself automatically?',
+      a: 'Yes. The JrIV uses a microcomputer-controlled automatic cleaning system. Periodic deep cleaning using food-grade citric acid (E-Cleaning) is also recommended per official Enagic operating instructions.',
     },
     {
-      q: 'Is the JrIV medical-grade?',
-      a: 'Do not use "medical-grade" unless the exact market-specific device has an applicable regulatory classification in that specific country that legally supports that wording. Enagic is an ISO 13485 certified medical device manufacturer in Japan.',
+      q: 'How will I know when to change the filter?',
+      a: 'The JrIV has a smart filter notification system that alerts you via the LCD display and buzzer when replacement is due according to system usage metrics. This is a system notification, not a real-time water purity test.',
     },
     {
-      q: 'Will it create the same results as the K8?',
-      a: 'The JrIV and K8 produce the same categories of water, but they use different numbers of electrode plates (4 plates vs. 8 plates) and have different power ratings (120W vs. 230W) and flow production capabilities.',
+      q: 'What is the electrolysis enhancer tank?',
+      a: 'The JrIV includes a built-in electrolysis enhancer tank that is used specifically when producing Strong Kangen Water (pH 11.0+) and Strong Acidic Water (pH 2.5), according to official operating instructions.',
     },
     {
       q: 'What is the warranty?',
-      a: 'The referenced U.S. product page lists a three-year manufacturer warranty. Confirm the exact current warranty terms in the purchaser’s specific geographic market.',
+      a: 'The referenced U.S. product page lists a 3-year manufacturer warranty. Exact warranty terms vary by geographic market. Confirm current warranty in your specific region before purchasing.',
     },
     {
-      q: 'What does it cost?',
-      a: 'Pricing, taxes, shipping, regional financing options, and promotions vary by market and country. Contact the verified distributor on this page for current official regional details.',
+      q: 'How do I order the JrIV?',
+      a: 'Contact the verified distributor who shared this page. Pricing, availability, shipping, regional financing, and ordering procedures vary by country and market. Never order through unverified third-party links.',
     },
     {
-      q: 'Can I order it internationally?',
-      a: 'Availability, voltage requirements (120V vs 220-240V), included components, warranty terms, and official ordering procedures vary by country. Confirm the correct regional model before purchasing.',
+      q: 'Can I speak with my distributor before choosing?',
+      a: `Absolutely. ${leaderFirstName} can review your household size, water source, faucet compatibility, and help you understand whether the JrIV or another Kangen model is the better fit.`,
     },
-  ], [])
+  ], [leaderFirstName])
 
   return (
-    <div className="page-wrapper bg-[#060911] text-white min-h-screen font-sans selection:bg-cyan-500 selection:text-black">
+    <div className="min-h-screen bg-[#060911] text-white selection:bg-cyan-400 selection:text-black font-sans">
       <SEO
-        title={`Leveluk JrIV | Compact Kangen Water System | ${profile?.display_name || 'True Legacy Guide'}`}
-        description={`Explore the Leveluk JrIV, Enagic’s compact four-plate starter model designed primarily for singles and couples, with guidance from ${profile?.display_name || 'your guide'}.`}
+        title={`LeveLuk JrIV | Compact Kangen Water® System | ${profile?.display_name || 'True Legacy'}`}
+        description={`The LeveLuk JrIV by Enagic® — a streamlined four-plate Kangen Water ionizer designed for singles, couples and lower-demand households. Explore with ${profile?.display_name || 'your guide'}.`}
         image="/products/jr-iv.png"
       />
 
-      {/* 1. SIMPLIFIED PERSONALIZED HEADER (This page only) */}
-      <header className="sticky top-0 z-40 w-full border-b border-white/10 bg-[#060911]/90 backdrop-blur-xl transition-all">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6">
+      {/* ─── STICKY NAVIGATION HEADER ─── */}
+      <header className="sticky top-0 z-40 border-b border-white/10 bg-[#060911]/90 backdrop-blur-xl">
+        <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6 lg:px-8">
           <div className="flex items-center gap-2.5 sm:gap-3">
             <LandingHeaderBackButton
-              fallbackUrl={`/d/${activeSlug}`}
-              label="Return to Leader Profile"
+              fallbackUrl={profile?.slug ? `/d/${profile.slug}` : '/'}
+              label={profile ? `Back to ${profile.display_name?.split(' ')[0] || 'Leader'}'s Profile` : 'Go back'}
             />
             <Link to="/" className="flex items-center gap-2 group" aria-label="True Legacy World Home">
               <TrueLegacyLogo className="h-8 w-auto transition-transform group-hover:scale-105" />
               <span className="text-[10px] font-semibold text-cyan-400/90 border border-cyan-500/30 bg-cyan-500/10 px-2 py-0.5 rounded-md uppercase tracking-widest hidden sm:inline-block">
-                Leveluk JrIV
+                LeveLuk JrIV
               </span>
             </Link>
           </div>
 
-          <div className="flex items-center gap-3 sm:gap-4">
-            {/* Corner Leader Profile Badge */}
-            <Link
-              to={`/d/${activeSlug}`}
-              className="flex items-center gap-2 rounded-full border border-white/15 bg-white/5 hover:bg-white/10 px-2.5 py-1 transition-all group shrink-0"
-              title={`Shared by ${profile?.display_name || 'Leader'}`}
-            >
-              <img
-                src={portraitUrl}
-                alt={profile?.display_name || 'Leader'}
-                className="w-6 h-6 rounded-full object-cover border border-cyan-400/60 shrink-0 group-hover:scale-105 transition-transform"
-                onError={(e) => {
-                  ;(e.currentTarget as HTMLImageElement).src = '/logos/tl-square-white.png'
-                }}
-              />
-              <span className="hidden sm:inline text-xs font-bold text-white truncate max-w-[110px]">
-                {leaderFirstName}
-              </span>
-            </Link>
+          <div className="flex items-center gap-2.5 sm:gap-3">
+            {profile && (
+              <Link
+                to={`/d/${profile.slug}`}
+                className="flex items-center gap-2 rounded-full border border-white/15 bg-white/5 hover:bg-white/10 px-2.5 py-1 transition-all group shrink-0"
+                title={`Shared by ${profile.display_name}`}
+              >
+                <img
+                  src={portraitUrl}
+                  alt={profile.display_name}
+                  className="w-6 h-6 rounded-full object-cover border border-cyan-400/60 shrink-0 group-hover:scale-105 transition-transform"
+                  onError={(e) => {
+                    ;(e.currentTarget as HTMLImageElement).src = '/logos/tl-square-white.png'
+                  }}
+                />
+                <span className="hidden sm:inline text-xs font-bold text-white truncate max-w-[110px]">
+                  {leaderFirstName}
+                </span>
+              </Link>
+            )}
 
-            {/* Language Selector */}
+            {/* Language selector */}
             <div className="relative">
               <select
                 value={locale}
@@ -315,554 +300,662 @@ export function Jr4LandingPage({ profile: propProfile, distributorSlug }: Jr4Lan
               <ChevronDown className="pointer-events-none absolute right-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-slate-400" />
             </div>
 
-            {/* Ask Distributor Header Button */}
-            <a
-              href={whatsappUrl}
-              target="_blank"
-              rel="noreferrer"
-              className="inline-flex items-center gap-2 rounded-xl bg-emerald-500/20 border border-emerald-500/40 px-3.5 py-1.5 text-xs font-bold text-emerald-400 transition hover:bg-emerald-500/30 hover:border-emerald-400 active:scale-95"
+            <button
+              onClick={() => setShowModal(true)}
+              className="inline-flex items-center gap-2 rounded-xl border border-cyan-400/40 bg-cyan-400/10 px-3.5 py-2 text-xs font-bold text-cyan-300 hover:bg-cyan-400/20 transition active:scale-95"
             >
               <MessageCircle className="h-4 w-4" />
-              <span>Ask {leaderFirstName}</span>
-            </a>
+              <span className="hidden sm:inline">Ask {leaderFirstName}</span>
+            </button>
           </div>
         </div>
       </header>
 
       <main>
-        {/* 2. PREMIUM HERO */}
-        <section className="relative overflow-hidden bg-gradient-to-b from-[#0a0f1d] via-[#060911] to-[#080d18] pt-12 pb-20 border-b border-white/10">
-          <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(41,151,255,0.15),rgba(255,255,255,0))]" />
-          <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 h-96 w-96 rounded-full bg-cyan-500/10 blur-[120px] pointer-events-none" />
 
-          <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <div className="grid gap-12 lg:grid-cols-12 lg:items-center">
-              {/* Left Column Text */}
-              <div className="lg:col-span-7 space-y-6 text-center lg:text-left">
-                <div className="inline-flex items-center gap-2 rounded-full border border-cyan-400/30 bg-cyan-400/10 px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-cyan-300">
-                  <Sparkles className="h-3.5 w-3.5 text-cyan-400" />
+        {/* ─── CINEMATIC HERO — Full Bleed Kitchen ─── */}
+        <section className="relative min-h-screen flex items-center overflow-hidden">
+          {/* Background image */}
+          <div className="absolute inset-0">
+            <img
+              src="/true-legacy-assets/jr4-hero-kitchen.jpg"
+              alt="Premium kitchen with LeveLuk JrIV water ionizer"
+              className="h-full w-full object-cover object-center"
+            />
+            {/* Left dark gradient for copy space */}
+            <div className="absolute inset-0 bg-gradient-to-r from-[#060911]/95 via-[#060911]/75 to-[#060911]/10" />
+            {/* Bottom fade */}
+            <div className="absolute inset-0 bg-gradient-to-t from-[#060911]/80 via-transparent to-[#060911]/20" />
+            {/* Subtle cyan tint right */}
+            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_right,rgba(34,211,238,0.06)_0%,transparent_55%)]" />
+          </div>
+
+          {/* Hero content */}
+          <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-16 pb-28 sm:py-32">
+            <div className="grid items-center gap-10 lg:grid-cols-12">
+
+              {/* Left: Editorial copy */}
+              <div className="lg:col-span-7">
+                {/* Eyebrow */}
+                <motion.div
+                  initial={{ opacity: 0, y: 16 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6 }}
+                  className="inline-flex items-center gap-2.5 rounded-full border border-cyan-400/30 bg-cyan-400/10 px-4 py-1.5 text-xs font-bold uppercase tracking-[0.3em] text-cyan-300"
+                >
+                  <Waves className="h-3.5 w-3.5" />
                   {copy.badge}
-                </div>
+                </motion.div>
 
-                <h1 className="text-4xl font-black tracking-tight text-white sm:text-5xl md:text-6xl">
-                  {copy.title}
-                </h1>
+                {/* Headline */}
+                <motion.h1
+                  initial={{ opacity: 0, y: 24 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.7, delay: 0.1 }}
+                  className="mt-7 text-6xl font-black tracking-tight text-white sm:text-7xl lg:text-8xl xl:text-9xl leading-[0.95]"
+                >
+                  {copy.headline1}
+                  <br />
+                  <span className="bg-gradient-to-r from-cyan-300 via-white to-cyan-400 bg-clip-text text-transparent">
+                    {copy.headline2}
+                  </span>
+                </motion.h1>
 
-                <p className="text-xl font-bold leading-snug text-cyan-200/90 sm:text-2xl">
-                  {copy.subtitle}
-                </p>
-
-                <p className="text-base leading-relaxed text-slate-300 max-w-2xl mx-auto lg:mx-0">
-                  {copy.heroBody}
-                </p>
-
-                {/* Personalized Guide Attribution */}
-                <div className="inline-flex items-center gap-3 rounded-2xl border border-white/10 bg-white/[0.04] p-3 pr-5 backdrop-blur-md">
-                  <img
-                    src={portraitUrl}
-                    alt={profile?.display_name || 'Leader'}
-                    className="h-10 w-10 rounded-xl object-cover border border-cyan-400/30"
-                  />
-                  <div className="text-left text-xs">
-                    <p className="font-bold text-slate-200">{copy.sharedBy}</p>
-                    <p className="text-[#2997ff] font-medium">Verified True Legacy Guide</p>
-                  </div>
-                </div>
+                {/* Subhead */}
+                <motion.p
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.7, delay: 0.2 }}
+                  className="mt-8 max-w-xl text-lg leading-relaxed text-slate-300 sm:text-xl"
+                >
+                  {copy.subhead}
+                </motion.p>
 
                 {/* CTAs */}
-                <div className="flex flex-wrap items-center justify-center lg:justify-start gap-4 pt-2">
+                <motion.div
+                  initial={{ opacity: 0, y: 16 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, delay: 0.3 }}
+                  className="mt-10 flex flex-wrap items-center gap-4"
+                >
                   <button
-                    type="button"
                     onClick={() => setShowModal(true)}
-                    className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-cyan-400 px-6 py-3 text-sm font-black text-slate-950 shadow-lg shadow-cyan-400/25 transition hover:bg-cyan-300 hover:scale-[1.02] active:scale-95 cursor-pointer"
+                    className="inline-flex items-center justify-center gap-2.5 rounded-2xl bg-cyan-400 px-8 py-4 text-sm font-black text-slate-950 shadow-[0_10px_40px_rgba(34,211,238,0.35)] hover:bg-cyan-300 hover:scale-[1.02] active:scale-[0.98] transition-all"
                   >
-                    <span>{copy.primaryCta}</span>
+                    {copy.primaryCta}
                     <ArrowRight className="h-4 w-4" />
                   </button>
-
                   <a
                     href={whatsappUrl}
                     target="_blank"
                     rel="noreferrer"
-                    className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl border border-emerald-500/40 bg-emerald-500/10 px-6 py-3 text-sm font-bold text-emerald-400 transition hover:bg-emerald-500/20 hover:border-emerald-400 active:scale-95"
+                    className="inline-flex items-center justify-center gap-2 rounded-2xl border border-white/20 bg-white/[0.06] px-7 py-4 text-sm font-bold text-white hover:border-cyan-400/50 hover:bg-white/[0.10] transition-all backdrop-blur-sm"
                   >
-                    <MessageCircle className="h-4 w-4" />
-                    <span>{copy.secondaryCta}</span>
+                    <MessageCircle className="h-4 w-4 text-cyan-400" />
+                    {copy.secondaryCta}
                   </a>
-                </div>
+                </motion.div>
 
-                {/* Supporting Spec Pills */}
-                <div className="pt-2 text-xs text-slate-400 font-medium">
-                  {copy.heroSpecs}
-                </div>
-              </div>
-
-              {/* Right Column Product Image */}
-              <div className="lg:col-span-5 relative flex justify-center">
-                <div className="relative w-full max-w-md rounded-3xl border border-white/10 bg-gradient-to-b from-white/[0.08] to-white/[0.02] p-6 shadow-2xl backdrop-blur-xl text-center group">
-                  <div className="absolute inset-0 bg-cyan-500/5 rounded-3xl blur-xl group-hover:bg-cyan-500/10 transition-colors pointer-events-none" />
-                  
-                  <img
-                    src="/products/jr-iv.png"
-                    alt="Enagic Leveluk JrIV Compact Kangen Water Machine"
-                    className="relative z-10 mx-auto h-72 sm:h-80 w-auto object-contain drop-shadow-[0_15px_35px_rgba(41,151,255,0.25)] transition-transform duration-500 group-hover:scale-105"
-                  />
-
-                  <div className="mt-4 flex items-center justify-between border-t border-white/10 pt-4 text-left text-xs">
+                {/* Distributor badge */}
+                {profile && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 12 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6, delay: 0.5 }}
+                    className="mt-10 flex items-center gap-3.5 rounded-2xl border border-white/10 bg-black/40 backdrop-blur-md p-3.5 max-w-sm"
+                  >
+                    <img
+                      src={portraitUrl}
+                      alt={`${profile.display_name} profile`}
+                      className="h-12 w-12 rounded-xl object-cover border border-cyan-400/30"
+                    />
                     <div>
-                      <p className="font-bold text-white">Enagic® Leveluk JrIV</p>
-                      <p className="text-slate-400">Compact Countertop Format</p>
+                      <p className="text-[11px] font-bold uppercase tracking-wider text-cyan-400">Your Personal Water Guide</p>
+                      <p className="text-sm font-black text-white">{profile.display_name}</p>
+                      <p className="text-xs text-slate-400">{profile.title || 'Independent Enagic Distributor'}</p>
                     </div>
-                    <span className="rounded-full bg-cyan-400/10 border border-cyan-400/30 px-3 py-1 font-bold text-cyan-300">
-                      120W · 4-Plate
-                    </span>
-                  </div>
-                </div>
+                  </motion.div>
+                )}
+
+                {/* Spec pill */}
+                <motion.p
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 0.6, delay: 0.7 }}
+                  className="mt-6 text-xs text-slate-500 font-medium"
+                >
+                  {copy.heroSpecs}
+                </motion.p>
               </div>
+
+              {/* Right: Product PNG */}
+              <motion.div
+                initial={{ opacity: 0, scale: 0.9, y: 20 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.3 }}
+                className="lg:col-span-5 relative hidden lg:flex flex-col items-center"
+              >
+                {/* Glow halo */}
+                <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                  <div className="h-[380px] w-[380px] rounded-full bg-[radial-gradient(circle,rgba(34,211,238,0.12)_0%,rgba(14,116,144,0.06)_50%,transparent_72%)] blur-2xl" />
+                </div>
+
+                {/* Badge */}
+                <div className="absolute -top-2 right-4 z-20 rounded-full border border-cyan-400/40 bg-[#060911]/80 backdrop-blur-sm px-3.5 py-1 text-[11px] font-bold text-cyan-300 shadow-lg">
+                  Made in Japan · Enagic®
+                </div>
+
+                {/* The real product PNG */}
+                <img
+                  src="/products/jr-iv.png"
+                  alt="Enagic LeveLuk JrIV compact Kangen Water ionizer"
+                  className="relative z-10 h-auto w-full max-w-[280px] xl:max-w-[320px] object-contain drop-shadow-[0_30px_60px_rgba(34,211,238,0.20)] hover:scale-105 transition-transform duration-500"
+                />
+
+                {/* Name tag */}
+                <div className="relative z-10 mt-4 text-center">
+                  <p className="text-[11px] font-bold uppercase tracking-[0.25em] text-cyan-400">LeveLuk JrIV</p>
+                  <p className="text-xs text-slate-400 mt-0.5">4 Plates · 120W · 5 Water Types</p>
+                </div>
+              </motion.div>
+
+            </div>
+          </div>
+
+          {/* Scroll indicator */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 1, delay: 1 }}
+            className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
+          >
+            <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-slate-500">Scroll</span>
+            <motion.div animate={{ y: [0, 6, 0] }} transition={{ repeat: Infinity, duration: 1.5 }}>
+              <ChevronDown className="h-5 w-5 text-cyan-400/60" />
+            </motion.div>
+          </motion.div>
+        </section>
+
+        {/* ─── TRUST STRIP ─── */}
+        <section className="border-b border-white/10 bg-[#070c18]">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-6">
+            <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
+              {[
+                { icon: <Sparkles className="h-4 w-4" />, label: '4 PLATINUM-COATED TITANIUM PLATES' },
+                { icon: <Droplets className="h-4 w-4" />, label: '5 WATER TYPES' },
+                { icon: <Zap className="h-4 w-4" />, label: 'LOWER ENERGY CONSUMPTION' },
+                { icon: <Waves className="h-4 w-4" />, label: 'DESIGNED FOR SINGLES & COUPLES' },
+              ].map((item, i) => (
+                <div key={i} className="flex items-center gap-2.5 justify-center md:justify-start">
+                  <span className="text-cyan-400 shrink-0">{item.icon}</span>
+                  <span className="text-[10px] font-bold uppercase tracking-widest text-slate-300">{item.label}</span>
+                </div>
+              ))}
             </div>
           </div>
         </section>
 
-        {/* 3. QUICK PRODUCT-FIT SUMMARY ("The JrIV at a Glance") */}
-        <section className="py-12 bg-[#080d1a] border-b border-white/10">
+        {/* ─── POSITIONING SECTION — "Not Every Home Needs the K8" ─── */}
+        <section className="py-24 bg-[#060911] border-b border-white/10">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <div className="rounded-3xl border border-cyan-400/20 bg-gradient-to-r from-cyan-950/30 via-slate-900/60 to-cyan-950/30 p-6 sm:p-8 shadow-xl">
-              <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 border-b border-white/10 pb-6">
-                <div>
-                  <h2 className="text-2xl font-black text-white sm:text-3xl">The JrIV at a Glance</h2>
-                  <p className="text-sm text-slate-300 mt-1">Key technical & practical highlights of Enagic's junior starter model.</p>
+            <div className="grid gap-16 lg:grid-cols-2 lg:items-center">
+
+              {/* Left: Copy */}
+              <div className="space-y-8">
+                <span className="text-xs font-bold uppercase tracking-[0.3em] text-cyan-400">THE JUNIOR MODEL</span>
+
+                <h2 className="text-5xl font-black tracking-tight text-white sm:text-6xl leading-[1.0]">
+                  NOT EVERY HOME<br />
+                  <span className="text-slate-400">NEEDS THE K8.</span>
+                </h2>
+
+                <div className="space-y-4 text-slate-300 leading-relaxed">
+                  <p>
+                    Some households need the greater output and eight-plate performance of the flagship K8. Others simply want the Kangen Water® experience in a machine designed around a smaller household.
+                  </p>
+                  <p>
+                    That's where the JrIV fits.
+                  </p>
+                  <p className="font-bold text-white">
+                    The right machine for the right home.
+                  </p>
                 </div>
+
+                {/* Three audience cards */}
+                <div className="grid grid-cols-3 gap-3 pt-2">
+                  {[
+                    { label: 'FOR SINGLES', icon: '◎' },
+                    { label: 'FOR COUPLES', icon: '◎◎' },
+                    { label: 'LOWER DEMAND', icon: '◎◎◎' },
+                  ].map((item, i) => (
+                    <div key={i} className="rounded-2xl border border-cyan-400/20 bg-cyan-950/20 p-4 text-center">
+                      <div className="text-lg text-cyan-400 mb-1">{item.icon}</div>
+                      <p className="text-[10px] font-bold uppercase tracking-widest text-slate-300">{item.label}</p>
+                    </div>
+                  ))}
+                </div>
+
                 <button
-                  type="button"
                   onClick={() => setShowModal(true)}
-                  className="self-start md:self-auto inline-flex items-center gap-2 rounded-xl bg-cyan-500/20 border border-cyan-400/40 px-4 py-2 text-xs font-bold text-cyan-300 hover:bg-cyan-400 hover:text-black transition cursor-pointer"
+                  className="inline-flex items-center gap-2.5 rounded-2xl bg-cyan-400 px-7 py-3.5 text-sm font-black text-slate-950 shadow-[0_8px_30px_rgba(34,211,238,0.3)] hover:bg-cyan-300 hover:scale-[1.02] transition-all"
                 >
-                  <span>Evaluate Household Fit</span>
-                  <ChevronRight className="h-4 w-4" />
+                  See If JrIV Fits My Home
+                  <ArrowRight className="h-4 w-4" />
                 </button>
               </div>
 
-              {/* Grid Highlights */}
-              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 pt-6 text-sm">
-                <div className="flex items-start gap-3 rounded-2xl bg-white/[0.03] p-4 border border-white/5">
-                  <CheckCircle2 className="h-5 w-5 shrink-0 text-cyan-400 mt-0.5" />
-                  <div>
-                    <strong className="block text-white">Target Audience</strong>
-                    <span className="text-slate-300 text-xs">Recommended primarily for singles and couples.</span>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-3 rounded-2xl bg-white/[0.03] p-4 border border-white/5">
-                  <CheckCircle2 className="h-5 w-5 shrink-0 text-cyan-400 mt-0.5" />
-                  <div>
-                    <strong className="block text-white">4 Electrode Plates</strong>
-                    <span className="text-slate-300 text-xs">Solid platinum-coated titanium plates (135 × 75 mm).</span>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-3 rounded-2xl bg-white/[0.03] p-4 border border-white/5">
-                  <CheckCircle2 className="h-5 w-5 shrink-0 text-cyan-400 mt-0.5" />
-                  <div>
-                    <strong className="block text-white">5 Water Types</strong>
-                    <span className="text-slate-300 text-xs">Produces all five Enagic water categories.</span>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-3 rounded-2xl bg-white/[0.03] p-4 border border-white/5">
-                  <CheckCircle2 className="h-5 w-5 shrink-0 text-cyan-400 mt-0.5" />
-                  <div>
-                    <strong className="block text-white">Lower Power Draw</strong>
-                    <span className="text-slate-300 text-xs">120-watt power rating for energy efficiency.</span>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-3 rounded-2xl bg-white/[0.03] p-4 border border-white/5">
-                  <CheckCircle2 className="h-5 w-5 shrink-0 text-cyan-400 mt-0.5" />
-                  <div>
-                    <strong className="block text-white">Auto Cleaning & Enhancer Tank</strong>
-                    <span className="text-slate-300 text-xs">Microcomputer cleaning & built-in enhancer tank.</span>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-3 rounded-2xl bg-white/[0.03] p-4 border border-white/5">
-                  <CheckCircle2 className="h-5 w-5 shrink-0 text-cyan-400 mt-0.5" />
-                  <div>
-                    <strong className="block text-white">3-Year Warranty (U.S.)</strong>
-                    <span className="text-slate-300 text-xs">Referenced U.S. manufacturer warranty term.</span>
+              {/* Right: Lifestyle image */}
+              <div className="relative rounded-3xl overflow-hidden aspect-[4/3] shadow-2xl">
+                <img
+                  src="/true-legacy-assets/jr4-lifestyle-couple.jpg"
+                  alt="Couple using LeveLuk JrIV in morning kitchen"
+                  className="h-full w-full object-cover object-center"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#060911]/60 via-transparent to-transparent" />
+                <div className="absolute bottom-4 left-4 right-4">
+                  <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-black/50 backdrop-blur-sm px-3 py-1.5 text-[10px] font-bold text-white">
+                    <span className="h-1.5 w-1.5 rounded-full bg-cyan-400" />
+                    THIS FITS MY LIFE.
                   </div>
                 </div>
               </div>
 
-              {/* Highlighted Disclaimer Banner */}
-              <div className="mt-6 flex items-center gap-3 rounded-2xl border border-amber-500/30 bg-amber-500/10 p-4 text-xs text-amber-200">
-                <Info className="h-5 w-5 shrink-0 text-amber-400" />
-                <p>
-                  <strong className="text-white font-bold">Important Distinction:</strong> Compact does not mean identical output. The Leveluk JrIV is designed for moderate household demand, not high-volume continuous output.
-                </p>
-              </div>
             </div>
           </div>
         </section>
 
-        {/* 4. WHO THE JrIV IS DESIGNED FOR ("Is the JrIV the Right Fit for You?") */}
-        <section className="py-16 bg-[#060911] border-b border-white/10">
+        {/* ─── HOW IT WORKS — One Machine. Five Types of Water. ─── */}
+        <section className="py-24 bg-[#080d18] border-b border-white/10">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <div className="text-center max-w-3xl mx-auto mb-12">
-              <h2 className="text-3xl font-black text-white sm:text-4xl">Is the JrIV the Right Fit for You?</h2>
-              <p className="mt-3 text-slate-300 text-base">
-                An honest comparative assessment to ensure you select the machine that matches your household demand.
+            <div className="text-center max-w-3xl mx-auto mb-16">
+              <span className="text-xs font-bold uppercase tracking-[0.3em] text-cyan-400">FROM YOUR TAP</span>
+              <h2 className="mt-4 text-4xl font-black text-white sm:text-5xl leading-tight">
+                ONE MACHINE.<br />FIVE TYPES OF WATER.
+              </h2>
+              <p className="mt-4 text-slate-300 text-base">
+                The JrIV produces Enagic's five water types for drinking, cooking, cosmetic and household applications.
               </p>
             </div>
 
-            <div className="grid gap-8 md:grid-cols-2">
-              {/* Column 1: A Strong Fit For */}
-              <div className="rounded-3xl border border-emerald-500/30 bg-gradient-to-b from-emerald-950/20 to-slate-900/40 p-6 sm:p-8 shadow-xl">
-                <div className="flex items-center gap-3 border-b border-white/10 pb-4 mb-6">
-                  <div className="grid h-10 w-10 place-items-center rounded-xl bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 font-bold">
-                    ✓
+            {/* Process flow */}
+            <div className="flex flex-col md:flex-row items-center justify-center gap-0 mb-16">
+              {[
+                { step: '01', label: 'TAP WATER', desc: 'Cold water from your faucet' },
+                { step: '02', label: 'FILTRATION', desc: 'High-grade activated charcoal filter' },
+                { step: '03', label: 'ELECTROLYSIS', desc: '4 platinum-titanium plates' },
+                { step: '04', label: '5 WATER TYPES', desc: 'pH 2.5 → 11.5' },
+              ].map((item, i) => (
+                <div key={i} className="flex items-center">
+                  <div className="flex flex-col items-center text-center p-6">
+                    <div className="h-14 w-14 rounded-full border border-cyan-400/30 bg-cyan-400/10 flex items-center justify-center text-xs font-black text-cyan-400 mb-3">
+                      {item.step}
+                    </div>
+                    <p className="text-xs font-black uppercase tracking-widest text-white">{item.label}</p>
+                    <p className="text-[11px] text-slate-400 mt-1 max-w-[100px]">{item.desc}</p>
                   </div>
-                  <div>
-                    <h3 className="text-xl font-black text-white">A Strong Fit For</h3>
-                    <p className="text-xs text-emerald-400 font-semibold">Recommended for moderate household use</p>
-                  </div>
+                  {i < 3 && (
+                    <div className="hidden md:block text-slate-600 text-xl font-thin mx-2">→</div>
+                  )}
                 </div>
-
-                <ul className="space-y-3.5 text-sm text-slate-300">
-                  <li className="flex items-start gap-3">
-                    <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-400 mt-1" />
-                    <span><strong>One-person households:</strong> Single individuals wanting direct daily Kangen Water.</span>
-                  </li>
-                  <li className="flex items-start gap-3">
-                    <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-400 mt-1" />
-                    <span><strong>Couples:</strong> Two-person homes with moderate daily drinking & cooking needs.</span>
-                  </li>
-                  <li className="flex items-start gap-3">
-                    <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-400 mt-1" />
-                    <span><strong>Smaller kitchen footprints:</strong> Countertops where space is at a premium.</span>
-                  </li>
-                  <li className="flex items-start gap-3">
-                    <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-400 mt-1" />
-                    <span><strong>Full 5-water access:</strong> Those who want all five water types including Strong Acidic (pH 2.5).</span>
-                  </li>
-                  <li className="flex items-start gap-3">
-                    <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-400 mt-1" />
-                    <span><strong>Lower energy preference:</strong> Users prioritizing lower power draw (120W).</span>
-                  </li>
-                  <li className="flex items-start gap-3">
-                    <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-400 mt-1" />
-                    <span><strong>Realistic expectations:</strong> Users who understand its lower flow rate vs 7-8 plate models.</span>
-                  </li>
-                </ul>
-              </div>
-
-              {/* Column 2: Consider a Larger Model If */}
-              <div className="rounded-3xl border border-amber-500/30 bg-gradient-to-b from-amber-950/20 to-slate-900/40 p-6 sm:p-8 shadow-xl">
-                <div className="flex items-center gap-3 border-b border-white/10 pb-4 mb-6">
-                  <div className="grid h-10 w-10 place-items-center rounded-xl bg-amber-500/20 text-amber-400 border border-amber-500/40 font-bold">
-                    !
-                  </div>
-                  <div>
-                    <h3 className="text-xl font-black text-white">Consider a Larger Model If</h3>
-                    <p className="text-xs text-amber-400 font-semibold">Higher volume or larger family needs</p>
-                  </div>
-                </div>
-
-                <ul className="space-y-3.5 text-sm text-slate-300">
-                  <li className="flex items-start gap-3">
-                    <Info className="h-4 w-4 shrink-0 text-amber-400 mt-1" />
-                    <span><strong>Larger households:</strong> Families of 3 or more people using water continuously throughout the day.</span>
-                  </li>
-                  <li className="flex items-start gap-3">
-                    <Info className="h-4 w-4 shrink-0 text-amber-400 mt-1" />
-                    <span><strong>High volume demand:</strong> Frequent filling of multiple large water jugs or heavy cooking.</span>
-                  </li>
-                  <li className="flex items-start gap-3">
-                    <Info className="h-4 w-4 shrink-0 text-amber-400 mt-1" />
-                    <span><strong>Commercial / Business use:</strong> Restaurants, spas, offices, or high-traffic environments.</span>
-                  </li>
-                  <li className="flex items-start gap-3">
-                    <Info className="h-4 w-4 shrink-0 text-amber-400 mt-1" />
-                    <span><strong>Faster flow expectations:</strong> Users expecting maximum ionization flow speeds.</span>
-                  </li>
-                  <li className="flex items-start gap-3">
-                    <Info className="h-4 w-4 shrink-0 text-amber-400 mt-1" />
-                    <span><strong>Desire for flagship performance:</strong> Those wanting 8-plate power (e.g. Leveluk K8).</span>
-                  </li>
-                </ul>
-              </div>
+              ))}
             </div>
 
-            {/* Assessment Callout */}
-            <div className="mt-8 text-center bg-cyan-950/30 border border-cyan-400/20 rounded-2xl p-6 text-sm text-slate-300">
-              <p className="max-w-3xl mx-auto">
-                <strong className="text-white font-bold">Guiding Principle:</strong> Choosing the correct machine matters more than choosing the lowest price. Your household size, water conditions, expected usage, and faucet installation should be reviewed before ordering.
-              </p>
+            {/* 5 Water type cards */}
+            <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-5">
+              {[
+                {
+                  name: 'Kangen Water®',
+                  ph: 'pH 8.5–9.5',
+                  drink: true,
+                  color: 'border-cyan-400/30 from-cyan-950/40',
+                  badge: 'bg-emerald-500/20 border-emerald-500/40 text-emerald-400',
+                  badgeLabel: '✓ FOR DRINKING',
+                  desc: 'Electrolyzed hydrogen-rich water for daily hydration, tea, cooking.',
+                },
+                {
+                  name: 'Clean Water',
+                  ph: 'pH 7.0',
+                  drink: true,
+                  color: 'border-blue-400/30 from-blue-950/40',
+                  badge: 'bg-emerald-500/20 border-emerald-500/40 text-emerald-400',
+                  badgeLabel: '✓ FOR DRINKING',
+                  desc: 'Filtered neutral water. Used for baby formula and medications.',
+                },
+                {
+                  name: 'Beauty Water',
+                  ph: 'pH 5.5–6.0',
+                  drink: false,
+                  color: 'border-pink-400/30 from-pink-950/30',
+                  badge: 'bg-rose-500/20 border-rose-500/40 text-rose-300',
+                  badgeLabel: '✕ NOT FOR DRINKING',
+                  desc: 'Slightly acidic. Gentle facial astringent, hair rinse, glass cleaning.',
+                },
+                {
+                  name: 'Strong Kangen',
+                  ph: 'pH 11.0+',
+                  drink: false,
+                  color: 'border-purple-400/30 from-purple-950/30',
+                  badge: 'bg-rose-500/20 border-rose-500/40 text-rose-300',
+                  badgeLabel: '✕ NOT FOR DRINKING',
+                  desc: 'High-alkaline water for kitchen degreasing and dishwashing.',
+                },
+                {
+                  name: 'Strong Acidic',
+                  ph: 'pH 2.5',
+                  drink: false,
+                  color: 'border-amber-400/30 from-amber-950/30',
+                  badge: 'bg-rose-500/20 border-rose-500/40 text-rose-300',
+                  badgeLabel: '✕ NOT FOR DRINKING',
+                  desc: 'Hypochlorous acid water for household surface sanitation.',
+                },
+              ].map((w, i) => (
+                <div key={i} className={`rounded-2xl border ${w.color} bg-gradient-to-b to-slate-900/60 p-5 flex flex-col`}>
+                  <span className={`self-start rounded-full border px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-wider ${w.badge} mb-3`}>
+                    {w.badgeLabel}
+                  </span>
+                  <p className="font-mono text-xs text-slate-400 mb-1">{w.ph}</p>
+                  <h3 className="text-base font-black text-white mb-2">{w.name}</h3>
+                  <p className="text-xs leading-relaxed text-slate-400 flex-1">{w.desc}</p>
+                </div>
+              ))}
             </div>
+
+            <p className="mt-6 text-center text-xs text-slate-500">
+              * Refer to the official LeveLuk JrIV owner's manual for detailed operating guidelines for each water setting.
+            </p>
           </div>
         </section>
 
-        {/* 5. FIVE WATER TYPES ("One Machine. Five Water Types.") */}
-        <section className="py-16 bg-[#080d18] border-b border-white/10">
+        {/* ─── FOUR PLATES TECHNOLOGY ─── */}
+        <section className="py-24 bg-[#060911] border-b border-white/10">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <div className="text-center max-w-3xl mx-auto mb-12">
-              <span className="text-xs font-bold uppercase tracking-widest text-cyan-400">VERSATILE IONIZATION SYSTEM</span>
-              <h2 className="text-3xl font-black text-white sm:text-4xl mt-2">One Machine. Five Water Types.</h2>
-              <p className="mt-3 text-slate-300 text-base">
-                The JrIV produces Enagic’s five water types for different drinking, cooking, cosmetic, and household applications.
-              </p>
-            </div>
-
-            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-              {/* 1. Kangen Water */}
-              <div className="rounded-3xl border border-cyan-400/30 bg-gradient-to-b from-cyan-950/40 to-slate-900/60 p-6 flex flex-col justify-between">
-                <div>
-                  <div className="flex items-center justify-between gap-2 mb-4">
-                    <span className="rounded-full bg-emerald-500/20 border border-emerald-500/40 px-3 py-1 text-[10px] font-bold text-emerald-400 uppercase tracking-wider">
-                      ✓ INTENDED FOR DRINKING
-                    </span>
-                    <span className="text-xs font-mono text-cyan-300">pH 8.5 – 9.5</span>
-                  </div>
-                  <h3 className="text-xl font-black text-white">Kangen Water®</h3>
-                  <p className="mt-2 text-xs leading-relaxed text-slate-300">
-                    Electrolyzed hydrogen-rich drinking water designed for daily hydration, brewing tea, and preparing healthy meals.
-                  </p>
-                </div>
-                <div className="mt-6 border-t border-white/10 pt-4 text-[11px] text-slate-400">
-                  Official Use: Daily drinking water, food preparation, soups, tea & coffee.
-                </div>
-              </div>
-
-              {/* 2. Clean Water */}
-              <div className="rounded-3xl border border-blue-400/30 bg-gradient-to-b from-blue-950/40 to-slate-900/60 p-6 flex flex-col justify-between">
-                <div>
-                  <div className="flex items-center justify-between gap-2 mb-4">
-                    <span className="rounded-full bg-emerald-500/20 border border-emerald-500/40 px-3 py-1 text-[10px] font-bold text-emerald-400 uppercase tracking-wider">
-                      ✓ INTENDED FOR DRINKING
-                    </span>
-                    <span className="text-xs font-mono text-blue-300">pH 7.0 Neutral</span>
-                  </div>
-                  <h3 className="text-xl font-black text-white">Clean Water</h3>
-                  <p className="mt-2 text-xs leading-relaxed text-slate-300">
-                    Purified, non-ionized filtered water passed through the high-grade internal filter without electrolysis.
-                  </p>
-                </div>
-                <div className="mt-6 border-t border-white/10 pt-4 text-[11px] text-slate-400">
-                  Official Use: Baby formula preparation and taking prescription medications.
-                </div>
-              </div>
-
-              {/* 3. Beauty Water */}
-              <div className="rounded-3xl border border-pink-400/30 bg-gradient-to-b from-pink-950/30 to-slate-900/60 p-6 flex flex-col justify-between">
-                <div>
-                  <div className="flex items-center justify-between gap-2 mb-4">
-                    <span className="rounded-full bg-rose-500/20 border border-rose-500/40 px-3 py-1 text-[10px] font-bold text-rose-300 uppercase tracking-wider">
-                      ✕ NOT FOR DRINKING
-                    </span>
-                    <span className="text-xs font-mono text-pink-300">pH 5.5 – 6.0</span>
-                  </div>
-                  <h3 className="text-xl font-black text-white">Beauty Water</h3>
-                  <p className="mt-2 text-xs leading-relaxed text-slate-300">
-                    Slightly acidic water matching the natural pH range of human skin for gentle facial astringent and hair rinsing.
-                  </p>
-                </div>
-                <div className="mt-6 border-t border-white/10 pt-4 text-[11px] text-slate-400">
-                  Official Use: Face washing, skin toning, hair rinsing, glass cleaning.
-                </div>
-              </div>
-
-              {/* 4. Strong Kangen Water */}
-              <div className="rounded-3xl border border-purple-400/30 bg-gradient-to-b from-purple-950/30 to-slate-900/60 p-6 flex flex-col justify-between">
-                <div>
-                  <div className="flex items-center justify-between gap-2 mb-4">
-                    <span className="rounded-full bg-rose-500/20 border border-rose-500/40 px-3 py-1 text-[10px] font-bold text-rose-300 uppercase tracking-wider">
-                      ✕ NOT FOR DRINKING
-                    </span>
-                    <span className="text-xs font-mono text-purple-300">pH 11.0+</span>
-                  </div>
-                  <h3 className="text-xl font-black text-white">Strong Kangen Water</h3>
-                  <p className="mt-2 text-xs leading-relaxed text-slate-300">
-                    High-alkaline non-drinking water produced using the electrolysis enhancer tank for emulsifying grease and kitchen cleaning.
-                  </p>
-                </div>
-                <div className="mt-6 border-t border-white/10 pt-4 text-[11px] text-slate-400">
-                  Official Use: Dishwashing, kitchen degreasing, washing cutting boards.
-                </div>
-              </div>
-
-              {/* 5. Strong Acidic Water */}
-              <div className="rounded-3xl border border-amber-400/30 bg-gradient-to-b from-amber-950/30 to-slate-900/60 p-6 flex flex-col justify-between sm:col-span-2 lg:col-span-1">
-                <div>
-                  <div className="flex items-center justify-between gap-2 mb-4">
-                    <span className="rounded-full bg-rose-500/20 border border-rose-500/40 px-3 py-1 text-[10px] font-bold text-rose-300 uppercase tracking-wider">
-                      ✕ NOT FOR DRINKING
-                    </span>
-                    <span className="text-xs font-mono text-amber-300">pH 2.5</span>
-                  </div>
-                  <h3 className="text-xl font-black text-white">Strong Acidic Water</h3>
-                  <p className="mt-2 text-xs leading-relaxed text-slate-300">
-                    Hypochlorous acid water generated via electrolysis enhancer for external non-drinking household sanitation.
-                  </p>
-                </div>
-                <div className="mt-6 border-t border-white/10 pt-4 text-[11px] text-slate-400">
-                  Official Use: Sanitizing countertops, utensils, hands, and household surfaces.
-                </div>
-              </div>
-            </div>
-
-            <div className="mt-8 text-center text-xs text-slate-400">
-              * Refer to the official Leveluk JrIV owner's manual for detailed operating guidelines for each water setting.
-            </div>
-          </div>
-        </section>
-
-        {/* 6. FOUR-PLATE TECHNOLOGY ("Four Solid Platinum-Coated Titanium Plates") */}
-        <section className="py-16 bg-[#060911] border-b border-white/10">
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <div className="grid gap-12 lg:grid-cols-12 lg:items-center">
-              <div className="lg:col-span-6 space-y-6">
-                <span className="text-xs font-bold uppercase tracking-widest text-cyan-400">
-                  COMPACT ELECTROLYSIS TECHNOLOGY
-                </span>
-
-                <h2 className="text-3xl font-black text-white sm:text-4xl">
-                  Four Solid Platinum-Coated Titanium Plates
+            <div className="grid gap-16 lg:grid-cols-2 lg:items-center">
+              <div className="space-y-6">
+                <span className="text-xs font-bold uppercase tracking-[0.3em] text-cyan-400">ENGINEERED FOR EFFICIENCY</span>
+                <h2 className="text-5xl font-black text-white sm:text-6xl leading-[1.0]">
+                  FOUR SOLID<br />
+                  <span className="text-cyan-400">ELECTRODE PLATES.</span>
                 </h2>
-
-                <p className="text-sm leading-relaxed text-slate-300">
-                  The Leveluk JrIV uses four solid platinum-coated titanium electrode plates to perform electrolysis. Its smaller electrode configuration reduces energy consumption (120W) compared with Enagic’s more powerful models while still allowing it to produce the complete five-water system.
+                <p className="text-slate-300 leading-relaxed">
+                  The JrIV uses four solid platinum-coated titanium electrode plates to perform electrolysis. The reduced plate count helps keep energy consumption lower — 120W — while still allowing the machine to produce all five of Enagic's water types.
                 </p>
 
-                {/* Tech Diagram Flow */}
-                <div className="space-y-3 rounded-2xl border border-white/10 bg-white/[0.02] p-5">
-                  <div className="text-xs font-bold uppercase text-cyan-300 tracking-wider">Electrolysis Process Flow</div>
-                  
-                  <div className="grid grid-cols-1 gap-2 text-xs text-slate-300">
-                    <div className="flex items-center gap-3 rounded-xl bg-white/[0.04] p-3 border border-white/5">
-                      <span className="grid h-6 w-6 place-items-center rounded-lg bg-cyan-500/20 text-cyan-400 font-bold text-[11px]">1</span>
-                      <span><strong>Source Tap Water:</strong> Enters through cold water faucet diverter valve.</span>
+                {/* Electrolysis process */}
+                <div className="space-y-2 rounded-2xl border border-white/10 bg-white/[0.02] p-5">
+                  <p className="text-xs font-bold uppercase tracking-wider text-cyan-300 mb-3">Electrolysis Process</p>
+                  {[
+                    { n: '1', label: 'Source Tap Water', desc: 'Enters through cold faucet diverter valve' },
+                    { n: '2', label: 'Internal Filtration', desc: 'High-grade antibacterial charcoal filter' },
+                    { n: '3', label: 'Electrolysis Chamber', desc: '4 solid platinum-titanium plates split water' },
+                    { n: '4', label: 'Dual Hose Output', desc: 'Selected water exits upper pipe or acidic hose' },
+                  ].map((step) => (
+                    <div key={step.n} className="flex items-center gap-3 rounded-xl bg-white/[0.03] p-3 border border-white/5 text-xs">
+                      <span className="grid h-6 w-6 shrink-0 place-items-center rounded-lg bg-cyan-500/20 text-cyan-400 font-bold text-[11px]">{step.n}</span>
+                      <span className="text-slate-300"><strong className="text-white">{step.label}:</strong> {step.desc}</span>
                     </div>
-                    <div className="flex items-center gap-3 rounded-xl bg-white/[0.04] p-3 border border-white/5">
-                      <span className="grid h-6 w-6 place-items-center rounded-lg bg-cyan-500/20 text-cyan-400 font-bold text-[11px]">2</span>
-                      <span><strong>Internal Filtration:</strong> High-grade antibacterial charcoal filter removes chlorine & sediment.</span>
-                    </div>
-                    <div className="flex items-center gap-3 rounded-xl bg-white/[0.04] p-3 border border-white/5">
-                      <span className="grid h-6 w-6 place-items-center rounded-lg bg-cyan-500/20 text-cyan-400 font-bold text-[11px]">3</span>
-                      <span><strong>Electrolysis Chamber:</strong> 4 solid platinum-coated titanium plates split water molecules.</span>
-                    </div>
-                    <div className="flex items-center gap-3 rounded-xl bg-white/[0.04] p-3 border border-white/5">
-                      <span className="grid h-6 w-6 place-items-center rounded-lg bg-cyan-500/20 text-cyan-400 font-bold text-[11px]">4</span>
-                      <span><strong>Dual Hose Output:</strong> Selected water streams out upper flexible pipe and lower acidic hose.</span>
-                    </div>
-                  </div>
+                  ))}
                 </div>
 
-                <div className="p-4 rounded-xl border border-cyan-400/20 bg-cyan-950/20 text-xs text-slate-300">
+                <div className="rounded-xl border border-cyan-400/20 bg-cyan-950/20 p-4 text-xs text-slate-400">
                   <strong className="text-white block mb-1">Performance Notice:</strong>
                   Actual pH and ORP values vary with source water chemistry, flow rate, temperature, machine condition, and operating conditions. Published specifications represent standard laboratory testing conditions.
                 </div>
               </div>
 
-              {/* Right Column Tech Cards */}
-              <div className="lg:col-span-6 grid gap-4 sm:grid-cols-2">
-                <div className="rounded-3xl border border-white/10 bg-white/[0.03] p-6 text-center">
-                  <div className="text-4xl font-black text-cyan-400">4</div>
-                  <div className="mt-1 text-sm font-bold text-white">Electrode Plates</div>
-                  <div className="mt-1 text-xs text-slate-400">Solid Platinum-Coated Titanium</div>
-                </div>
-
-                <div className="rounded-3xl border border-white/10 bg-white/[0.03] p-6 text-center">
-                  <div className="text-4xl font-black text-cyan-400">135×75</div>
-                  <div className="mt-1 text-sm font-bold text-white">Plate Size (mm)</div>
-                  <div className="mt-1 text-xs text-slate-400">Large Solid Surface Area</div>
-                </div>
-
-                <div className="rounded-3xl border border-white/10 bg-white/[0.03] p-6 text-center">
-                  <div className="text-4xl font-black text-cyan-400">120 W</div>
-                  <div className="mt-1 text-sm font-bold text-white">Power Draw</div>
-                  <div className="mt-1 text-xs text-slate-400">Energy-efficient operation</div>
-                </div>
-
-                <div className="rounded-3xl border border-white/10 bg-white/[0.03] p-6 text-center">
-                  <div className="text-4xl font-black text-cyan-400">-450 mV</div>
-                  <div className="mt-1 text-sm font-bold text-white">Published ORP</div>
-                  <div className="mt-1 text-xs text-slate-400">Under specified test conditions</div>
-                </div>
+              {/* Stat cards */}
+              <div className="grid grid-cols-2 gap-4">
+                {[
+                  { big: '4', label: 'Electrode Plates', sub: 'Solid Platinum-Coated Titanium' },
+                  { big: '135×75', label: 'Plate Size (mm)', sub: 'Large solid surface area' },
+                  { big: '120 W', label: 'Power Draw', sub: 'Energy-efficient operation' },
+                  { big: '2.5–11.5', label: 'pH Range', sub: 'Full spectrum, 5 water types' },
+                ].map((stat, i) => (
+                  <div key={i} className="rounded-3xl border border-white/10 bg-white/[0.03] p-6 text-center hover:border-cyan-400/30 transition-colors">
+                    <div className="text-3xl font-black text-cyan-400">{stat.big}</div>
+                    <div className="mt-1 text-sm font-bold text-white">{stat.label}</div>
+                    <div className="mt-1 text-xs text-slate-400">{stat.sub}</div>
+                  </div>
+                ))}
               </div>
             </div>
           </div>
         </section>
 
-        {/* 7. USER-FRIENDLY OWNERSHIP ("Designed to Keep Everyday Use Simple") */}
-        <section className="py-16 bg-[#080d18] border-b border-white/10">
+        {/* ─── ENERGY STORY ─── */}
+        <section className="py-24 bg-[#080d18] border-b border-white/10">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <div className="text-center max-w-3xl mx-auto mb-12">
-              <span className="text-xs font-bold uppercase tracking-widest text-cyan-400">INTUITIVE OPERATION</span>
-              <h2 className="text-3xl font-black text-white sm:text-4xl mt-2">Designed to Keep Everyday Use Simple</h2>
-              <p className="mt-3 text-slate-300 text-base">
-                Four core system features that make operating and caring for the Leveluk JrIV effortless.
-              </p>
-            </div>
+            <div className="grid gap-12 lg:grid-cols-12 lg:items-center">
 
-            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-              <div className="rounded-3xl border border-white/10 bg-white/[0.03] p-6 flex flex-col justify-between">
-                <div>
-                  <div className="grid h-12 w-12 place-items-center rounded-2xl bg-cyan-500/10 text-cyan-400 border border-cyan-400/30 mb-4 font-bold">
-                    01
-                  </div>
-                  <h3 className="text-lg font-black text-white">Touch-Button Selection</h3>
-                  <p className="mt-2 text-xs text-slate-300 leading-relaxed">
-                    Select your desired water mode effortlessly using the control panel on the machine’s front face.
-                  </p>
+              {/* Water detail image */}
+              <div className="lg:col-span-5 relative rounded-3xl overflow-hidden aspect-[4/3] shadow-2xl">
+                <img
+                  src="/true-legacy-assets/jr4-water-detail.jpg"
+                  alt="Crystal clear water filling a glass from the LeveLuk JrIV"
+                  className="h-full w-full object-cover object-center"
+                />
+                <div className="absolute inset-0 bg-gradient-to-r from-[#080d18]/20 to-transparent" />
+              </div>
+
+              {/* Copy */}
+              <div className="lg:col-span-7 space-y-6">
+                <span className="text-xs font-bold uppercase tracking-[0.3em] text-cyan-400">120 WATTS</span>
+                <h2 className="text-5xl font-black text-white sm:text-6xl leading-[1.0]">
+                  DESIGNED TO DO MORE<br />
+                  <span className="text-slate-400">WITH LESS.</span>
+                </h2>
+                <p className="text-slate-300 leading-relaxed">
+                  The JrIV operates at 120W — a lower power draw than Enagic's larger models. This reflects the machine's streamlined four-plate design, which is optimized for lower-demand households rather than maximum throughput.
+                </p>
+
+                {/* 4 ease-of-use features */}
+                <div className="grid grid-cols-2 gap-3 pt-2">
+                  {[
+                    { n: '01', label: 'Touch-Button Selection', desc: 'Select your water mode from the front panel' },
+                    { n: '02', label: 'Automatic Cleaning', desc: 'Microcomputer-triggered internal cleaning cycles' },
+                    { n: '03', label: 'Smart Filter Notification', desc: 'LCD and buzzer alert when filter is due' },
+                    { n: '04', label: 'Built-In Enhancer Tank', desc: 'For Strong Kangen (11.0+) and Strong Acidic (2.5)' },
+                  ].map((feat) => (
+                    <div key={feat.n} className="rounded-2xl border border-white/10 bg-white/[0.03] p-4">
+                      <div className="text-xs font-black text-cyan-400 mb-1.5">{feat.n}</div>
+                      <p className="text-sm font-bold text-white">{feat.label}</p>
+                      <p className="text-xs text-slate-400 mt-1">{feat.desc}</p>
+                    </div>
+                  ))}
                 </div>
               </div>
 
-              <div className="rounded-3xl border border-white/10 bg-white/[0.03] p-6 flex flex-col justify-between">
-                <div>
-                  <div className="grid h-12 w-12 place-items-center rounded-2xl bg-cyan-500/10 text-cyan-400 border border-cyan-400/30 mb-4 font-bold">
-                    02
-                  </div>
-                  <h3 className="text-lg font-black text-white">Automatic Cleaning</h3>
-                  <p className="mt-2 text-xs text-slate-300 leading-relaxed">
-                    The internal microcomputer periodically triggers a self-cleaning cycle to maintain electrode performance.
-                  </p>
-                </div>
-              </div>
-
-              <div className="rounded-3xl border border-white/10 bg-white/[0.03] p-6 flex flex-col justify-between">
-                <div>
-                  <div className="grid h-12 w-12 place-items-center rounded-2xl bg-cyan-500/10 text-cyan-400 border border-cyan-400/30 mb-4 font-bold">
-                    03
-                  </div>
-                  <h3 className="text-lg font-black text-white">Smart Filter Notification</h3>
-                  <p className="mt-2 text-xs text-slate-300 leading-relaxed">
-                    The LCD and buzzer notify you when the system detects that filter replacement is due based on volume & usage.
-                  </p>
-                </div>
-              </div>
-
-              <div className="rounded-3xl border border-white/10 bg-white/[0.03] p-6 flex flex-col justify-between">
-                <div>
-                  <div className="grid h-12 w-12 place-items-center rounded-2xl bg-cyan-500/10 text-cyan-400 border border-cyan-400/30 mb-4 font-bold">
-                    04
-                  </div>
-                  <h3 className="text-lg font-black text-white">Built-In Enhancer Tank</h3>
-                  <p className="mt-2 text-xs text-slate-300 leading-relaxed">
-                    Supports production of Strong Kangen (pH 11.0+) and Strong Acidic (pH 2.5) water when operated according to instructions.
-                  </p>
-                </div>
-              </div>
             </div>
           </div>
         </section>
 
-        {/* 8. TECHNICAL SPECIFICATIONS TABLE */}
-        <section className="py-16 bg-[#060911] border-b border-white/10">
-          <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
-            <div className="text-center mb-10">
-              <span className="text-xs font-bold uppercase tracking-widest text-cyan-400">OFFICIAL U.S. REFERENCE DATA</span>
-              <h2 className="text-3xl font-black text-white mt-2">Leveluk JrIV Specifications</h2>
+        {/* ─── JRIV VS K8 ─── */}
+        <section className="py-24 bg-[#060911] border-b border-white/10">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div className="text-center max-w-3xl mx-auto mb-16">
+              <span className="text-xs font-bold uppercase tracking-[0.3em] text-cyan-400">HONEST COMPARISON</span>
+              <h2 className="mt-4 text-4xl font-black text-white sm:text-5xl leading-tight">
+                WHICH KANGEN MACHINE<br />FITS YOUR HOME?
+              </h2>
+              <p className="mt-4 text-slate-300">Compare the streamlined JrIV against Enagic's flagship K8.</p>
             </div>
 
+            {/* Side-by-side product cards */}
+            <div className="grid gap-6 md:grid-cols-2 max-w-4xl mx-auto">
+              {/* JrIV */}
+              <div className="relative rounded-3xl border border-cyan-400/30 bg-gradient-to-b from-cyan-950/30 to-slate-900/50 p-8 text-center">
+                <div className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full border border-cyan-400/50 bg-[#060911] px-4 py-1 text-[10px] font-black text-cyan-400 uppercase tracking-widest">
+                  RIGHT-SIZED
+                </div>
+                <img
+                  src="/products/jr-iv.png"
+                  alt="Enagic LeveLuk JrIV"
+                  className="mx-auto h-40 w-auto object-contain mb-5 drop-shadow-[0_15px_30px_rgba(34,211,238,0.15)]"
+                />
+                <h3 className="text-xl font-black text-white">LeveLuk JrIV</h3>
+                <p className="text-xs text-cyan-400 font-bold mb-5">Junior Model</p>
+                <div className="space-y-2 text-sm text-left">
+                  {[
+                    ['Electrode Plates', '4 Solid Plates'],
+                    ['Power Rating', '120W'],
+                    ['Water Types', '5 Water Types'],
+                    ['Best Suited For', 'Singles & Couples'],
+                    ['Output Rate', '3.0–4.9 L/min'],
+                    ['Warranty (U.S.)', '3 Years'],
+                  ].map(([k, v]) => (
+                    <div key={k} className="flex justify-between border-b border-white/5 pb-2">
+                      <span className="text-slate-400">{k}</span>
+                      <span className="font-bold text-white text-right">{v}</span>
+                    </div>
+                  ))}
+                </div>
+                <button
+                  onClick={() => setShowModal(true)}
+                  className="mt-6 w-full rounded-xl bg-cyan-400 py-2.5 text-xs font-black text-slate-950 hover:bg-cyan-300 transition"
+                >
+                  Explore JrIV
+                </button>
+              </div>
+
+              {/* K8 */}
+              <div className="relative rounded-3xl border border-white/15 bg-gradient-to-b from-slate-800/30 to-slate-900/50 p-8 text-center">
+                <div className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full border border-white/30 bg-[#060911] px-4 py-1 text-[10px] font-black text-slate-300 uppercase tracking-widest">
+                  MAXIMUM CAPABILITY
+                </div>
+                <img
+                  src="/products/k8.png"
+                  alt="Enagic Leveluk K8"
+                  className="mx-auto h-40 w-auto object-contain mb-5 drop-shadow-[0_15px_30px_rgba(255,255,255,0.06)]"
+                />
+                <h3 className="text-xl font-black text-white">Leveluk K8</h3>
+                <p className="text-xs text-slate-400 font-bold mb-5">Flagship Model</p>
+                <div className="space-y-2 text-sm text-left">
+                  {[
+                    ['Electrode Plates', '8 Solid Plates'],
+                    ['Power Rating', '230W'],
+                    ['Water Types', '5 Water Types'],
+                    ['Best Suited For', 'Families & Heavy Use'],
+                    ['Output Rate', '4.5–7.6 L/min'],
+                    ['Warranty (U.S.)', '5 Years'],
+                  ].map(([k, v]) => (
+                    <div key={k} className="flex justify-between border-b border-white/5 pb-2">
+                      <span className="text-slate-400">{k}</span>
+                      <span className="font-bold text-white text-right">{v}</span>
+                    </div>
+                  ))}
+                </div>
+                <Link
+                  to={`/d/${activeSlug}/kangen`}
+                  className="mt-6 block w-full rounded-xl border border-white/20 py-2.5 text-xs font-black text-white hover:bg-white/10 transition text-center"
+                >
+                  Explore K8
+                </Link>
+              </div>
+            </div>
+
+            <p className="mt-8 text-center text-xs text-slate-500 max-w-2xl mx-auto">
+              The JrIV is not the "cheaper K8" — it is the right-sized Kangen machine for lower-demand households. The K8 is not necessarily better for every visitor; the correct choice depends on household size, usage, and water conditions.
+            </p>
+          </div>
+        </section>
+
+        {/* ─── WHO IS IT FOR? ─── */}
+        <section className="py-24 bg-[#080d18] border-b border-white/10">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div className="text-center max-w-3xl mx-auto mb-16">
+              <span className="text-xs font-bold uppercase tracking-[0.3em] text-cyan-400">IS JRIV RIGHT FOR YOU?</span>
+              <h2 className="mt-4 text-4xl font-black text-white sm:text-5xl">IS JRIV<br />RIGHT FOR YOU?</h2>
+            </div>
+
+            <div className="grid gap-8 md:grid-cols-2 max-w-4xl mx-auto">
+              {/* YES IF */}
+              <div className="rounded-3xl border border-emerald-500/30 bg-emerald-950/15 p-7">
+                <div className="flex items-center gap-3 mb-5 pb-4 border-b border-white/10">
+                  <div className="grid h-10 w-10 place-items-center rounded-xl bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 font-black">✓</div>
+                  <div>
+                    <h3 className="font-black text-white text-lg">YES IF</h3>
+                    <p className="text-xs text-emerald-400 font-semibold">Strong match for your situation</p>
+                  </div>
+                </div>
+                <ul className="space-y-3 text-sm text-slate-300">
+                  {[
+                    "You're living alone",
+                    "You're a couple",
+                    'Your household has lower water-output requirements',
+                    'You want the full five-water-type Kangen® experience',
+                    'You prefer a streamlined, energy-efficient model',
+                  ].map((item, i) => (
+                    <li key={i} className="flex items-start gap-3">
+                      <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-400 mt-0.5" />
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              {/* CONSIDER K8 IF */}
+              <div className="rounded-3xl border border-amber-500/30 bg-amber-950/15 p-7">
+                <div className="flex items-center gap-3 mb-5 pb-4 border-b border-white/10">
+                  <div className="grid h-10 w-10 place-items-center rounded-xl bg-amber-500/20 text-amber-400 border border-amber-500/40 font-black">!</div>
+                  <div>
+                    <h3 className="font-black text-white text-lg">CONSIDER K8 IF</h3>
+                    <p className="text-xs text-amber-400 font-semibold">Higher output requirements</p>
+                  </div>
+                </div>
+                <ul className="space-y-3 text-sm text-slate-300">
+                  {[
+                    'You have a larger household',
+                    'You expect heavier continuous output requirements',
+                    "You want Enagic's flagship eight-plate configuration",
+                    'You need faster filling of multiple large bottles',
+                    'You want the longest U.S. warranty (5 years)',
+                  ].map((item, i) => (
+                    <li key={i} className="flex items-start gap-3">
+                      <Info className="h-4 w-4 shrink-0 text-amber-400 mt-0.5" />
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+
+            <div className="mt-8 text-center">
+              <button
+                onClick={() => setShowModal(true)}
+                className="inline-flex items-center gap-2 rounded-2xl border border-cyan-400/30 bg-cyan-400/10 px-6 py-3 text-sm font-bold text-cyan-300 hover:bg-cyan-400/20 transition"
+              >
+                Not sure? Let's figure it out together
+                <ArrowRight className="h-4 w-4" />
+              </button>
+            </div>
+          </div>
+        </section>
+
+        {/* ─── TECHNICAL SPECIFICATIONS ─── */}
+        <section className="py-20 bg-[#060911] border-b border-white/10">
+          <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+            <div className="text-center mb-12">
+              <span className="text-xs font-bold uppercase tracking-[0.3em] text-cyan-400">OFFICIAL U.S. REFERENCE DATA</span>
+              <h2 className="mt-3 text-3xl font-black text-white sm:text-4xl">LeveLuk JrIV Specifications</h2>
+            </div>
+
+            {/* Big number stats */}
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 mb-10">
+              {[
+                { big: '4', label: 'ELECTRODE\nPLATES' },
+                { big: '5', label: 'WATER\nTYPES' },
+                { big: '120 W', label: 'POWER' },
+                { big: '2.5–11.5', label: 'pH\nRANGE' },
+                { big: '3 YR', label: 'WARRANTY\n(U.S.)' },
+                { big: '6.3 kg', label: 'WEIGHT' },
+              ].map((s, i) => (
+                <div key={i} className="rounded-2xl border border-white/10 bg-white/[0.03] p-4 text-center hover:border-cyan-400/20 transition-colors">
+                  <div className="text-2xl font-black text-cyan-400">{s.big}</div>
+                  <div className="mt-1 text-[10px] font-bold uppercase tracking-wider text-slate-400 whitespace-pre-line">{s.label}</div>
+                </div>
+              ))}
+            </div>
+
+            {/* Full spec table */}
             <div className="overflow-hidden rounded-3xl border border-white/10 bg-white/[0.02] shadow-2xl">
               <table className="w-full text-left text-sm text-slate-300">
                 <thead className="bg-white/[0.05] text-xs font-bold uppercase tracking-wider text-cyan-300 border-b border-white/10">
@@ -875,7 +968,6 @@ export function Jr4LandingPage({ profile: propProfile, distributorSlug }: Jr4Lan
                   <tr className="hover:bg-white/[0.02]"><td className="px-6 py-3.5 font-bold text-white">Electrode Plates</td><td className="px-6 py-3.5">4 solid plates</td></tr>
                   <tr className="hover:bg-white/[0.02]"><td className="px-6 py-3.5 font-bold text-white">Electrode Material</td><td className="px-6 py-3.5">Platinum-coated titanium</td></tr>
                   <tr className="hover:bg-white/[0.02]"><td className="px-6 py-3.5 font-bold text-white">Plate Size</td><td className="px-6 py-3.5">135 × 75 mm</td></tr>
-                  <tr className="hover:bg-white/[0.02]"><td className="px-6 py-3.5 font-bold text-white">Published Negative ORP</td><td className="px-6 py-3.5">-450 mV (under test conditions)</td></tr>
                   <tr className="hover:bg-white/[0.02]"><td className="px-6 py-3.5 font-bold text-white">Published pH Range</td><td className="px-6 py-3.5">2.5 – 11.5</td></tr>
                   <tr className="hover:bg-white/[0.02]"><td className="px-6 py-3.5 font-bold text-white">Water Types</td><td className="px-6 py-3.5">5 distinct types</td></tr>
                   <tr className="hover:bg-white/[0.02]"><td className="px-6 py-3.5 font-bold text-white">Power Consumption</td><td className="px-6 py-3.5">120 W</td></tr>
@@ -890,237 +982,57 @@ export function Jr4LandingPage({ profile: propProfile, distributorSlug }: Jr4Lan
                 </tbody>
               </table>
             </div>
-
-            <p className="mt-4 text-center text-xs text-slate-400">
-              Specifications and included components can vary by geographic region. Confirm local voltage & market specs prior to ordering.
+            <p className="mt-4 text-center text-xs text-slate-500">
+              Specifications and included components can vary by geographic region. Confirm local voltage &amp; market specs prior to ordering.
             </p>
           </div>
         </section>
 
-        {/* 9. INSTALLATION AND COMPATIBILITY ASSESSMENT */}
-        <section className="py-16 bg-[#080d18] border-b border-white/10" id="installation">
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <div className="rounded-3xl border border-cyan-400/30 bg-gradient-to-br from-cyan-950/40 via-slate-900/60 to-slate-950 p-8 sm:p-12 shadow-2xl">
-              <div className="grid gap-8 lg:grid-cols-12 lg:items-center">
-                <div className="lg:col-span-7 space-y-4">
-                  <span className="text-xs font-bold uppercase tracking-widest text-cyan-400">PRE-ORDER FAUCET ASSESSMENT</span>
-                  <h2 className="text-3xl font-black text-white sm:text-4xl">Before the JrIV Reaches Your Counter</h2>
-                  <p className="text-sm text-slate-300 leading-relaxed">
-                    Countertop ionizer installation depends on your existing kitchen faucet style, available space, and water pressure. Let us evaluate your setup before ordering to guarantee seamless installation.
-                  </p>
-
-                  <div className="grid gap-3 sm:grid-cols-2 text-xs text-slate-300 pt-2">
-                    <div className="flex items-center gap-2">
-                      <span className="h-2 w-2 rounded-full bg-cyan-400" />
-                      <span>Standard Aerator Threading</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <span className="h-2 w-2 rounded-full bg-cyan-400" />
-                      <span>Counter Dimensions (264 × 338 mm)</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <span className="h-2 w-2 rounded-full bg-cyan-400" />
-                      <span>Nearby Grounded Electric Outlet</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <span className="h-2 w-2 rounded-full bg-cyan-400" />
-                      <span>Source Water Chemistry & Pressure</span>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="lg:col-span-5 text-center lg:text-right">
-                  <button
-                    type="button"
-                    onClick={() => setShowModal(true)}
-                    className="inline-flex min-h-13 w-full sm:w-auto items-center justify-center gap-2 rounded-xl bg-cyan-400 px-8 py-4 text-sm font-black text-slate-950 shadow-lg shadow-cyan-400/20 hover:bg-cyan-300 transition cursor-pointer"
-                  >
-                    <span>Check My Faucet Compatibility</span>
-                    <ArrowRight className="h-5 w-5" />
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* 10. JrIV VERSUS K8 COMPARISON */}
-        <section className="py-16 bg-[#060911] border-b border-white/10">
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <div className="text-center max-w-3xl mx-auto mb-12">
-              <span className="text-xs font-bold uppercase tracking-widest text-cyan-400">HONEST MODEL COMPARISON</span>
-              <h2 className="text-3xl font-black text-white sm:text-4xl mt-2">JrIV or K8: Which One Fits Your Life?</h2>
-              <p className="mt-3 text-slate-300 text-base">
-                Compare Enagic’s junior starter model with the flagship 8-plate Leveluk K8.
-              </p>
-            </div>
-
-            {/* Desktop Comparison Table */}
-            <div className="hidden md:block overflow-hidden rounded-3xl border border-white/10 bg-white/[0.02] shadow-2xl">
-              <table className="w-full text-left text-sm text-slate-300">
-                <thead className="bg-white/[0.05] text-xs font-bold uppercase tracking-wider border-b border-white/10">
-                  <tr>
-                    <th className="px-6 py-4 text-slate-400">Category</th>
-                    <th className="px-6 py-4 text-cyan-300">Leveluk JrIV (Junior Model)</th>
-                    <th className="px-6 py-4 text-cyan-400">Leveluk K8 (Flagship Model)</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-white/5">
-                  <tr className="hover:bg-white/[0.02]">
-                    <td className="px-6 py-4 font-bold text-white">Best Suited For</td>
-                    <td className="px-6 py-4 text-slate-200">Singles and couples</td>
-                    <td className="px-6 py-4 text-slate-200">Larger households or heavy use</td>
-                  </tr>
-                  <tr className="hover:bg-white/[0.02]">
-                    <td className="px-6 py-4 font-bold text-white">Electrode Plates</td>
-                    <td className="px-6 py-4 font-mono text-cyan-300">4 Solid Platinum-Coated Titanium</td>
-                    <td className="px-6 py-4 font-mono text-cyan-400">8 Solid Platinum-Coated Titanium</td>
-                  </tr>
-                  <tr className="hover:bg-white/[0.02]">
-                    <td className="px-6 py-4 font-bold text-white">Power Rating</td>
-                    <td className="px-6 py-4">120 W</td>
-                    <td className="px-6 py-4">230 W</td>
-                  </tr>
-                  <tr className="hover:bg-white/[0.02]">
-                    <td className="px-6 py-4 font-bold text-white">Water Types</td>
-                    <td className="px-6 py-4">5 Water Types</td>
-                    <td className="px-6 py-4">5 Water Types</td>
-                  </tr>
-                  <tr className="hover:bg-white/[0.02]">
-                    <td className="px-6 py-4 font-bold text-white">Water Output Rate</td>
-                    <td className="px-6 py-4">Moderate (3.0–4.9 L/min)</td>
-                    <td className="px-6 py-4">Higher / Rapid Flow (4.5–7.6 L/min)</td>
-                  </tr>
-                  <tr className="hover:bg-white/[0.02]">
-                    <td className="px-6 py-4 font-bold text-white">Physical Format</td>
-                    <td className="px-6 py-4">Compact Countertop</td>
-                    <td className="px-6 py-4">Full Flagship Format</td>
-                  </tr>
-                  <tr className="hover:bg-white/[0.02]">
-                    <td className="px-6 py-4 font-bold text-white">Manufacturer Warranty (U.S.)</td>
-                    <td className="px-6 py-4">3 Years</td>
-                    <td className="px-6 py-4">5 Years</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-
-            {/* Mobile Stacked Comparison Cards */}
-            <div className="md:hidden space-y-6">
-              <div className="rounded-3xl border border-cyan-400/30 bg-cyan-950/20 p-6 space-y-3 text-sm">
-                <div className="font-black text-cyan-300 text-lg border-b border-white/10 pb-2">Leveluk JrIV (Starter)</div>
-                <div className="flex justify-between"><span>Plates:</span><strong className="text-white">4 Solid Plates</strong></div>
-                <div className="flex justify-between"><span>Power:</span><strong className="text-white">120W</strong></div>
-                <div className="flex justify-between"><span>Best for:</span><strong className="text-white">Singles & Couples</strong></div>
-                <div className="flex justify-between"><span>Output:</span><strong className="text-white">Moderate Flow</strong></div>
-                <div className="flex justify-between"><span>Warranty (US):</span><strong className="text-white">3 Years</strong></div>
-              </div>
-
-              <div className="rounded-3xl border border-cyan-400/40 bg-slate-900/60 p-6 space-y-3 text-sm">
-                <div className="font-black text-cyan-400 text-lg border-b border-white/10 pb-2">Leveluk K8 (Flagship)</div>
-                <div className="flex justify-between"><span>Plates:</span><strong className="text-white">8 Solid Plates</strong></div>
-                <div className="flex justify-between"><span>Power:</span><strong className="text-white">230W</strong></div>
-                <div className="flex justify-between"><span>Best for:</span><strong className="text-white">Families & Heavy Use</strong></div>
-                <div className="flex justify-between"><span>Output:</span><strong className="text-white">Rapid Flow</strong></div>
-                <div className="flex justify-between"><span>Warranty (US):</span><strong className="text-white">5 Years</strong></div>
-              </div>
-            </div>
-
-            <div className="mt-8 text-center text-xs text-slate-300 bg-white/[0.02] border border-white/10 rounded-2xl p-4">
-              The K8 is not automatically necessary for every visitor, and the JrIV is not appropriate for every household. The correct choice depends on household demand, water conditions, expected use, budget, and long-term goals.
-            </div>
-
-            <div className="mt-6 text-center">
-              <Link
-                to={`/d/${activeSlug}/kangen`}
-                className="inline-flex items-center gap-2 text-xs font-bold text-cyan-300 hover:text-cyan-200 transition"
-              >
-                <span>View Full K8 Flagship Details</span>
-                <ArrowRight className="h-4 w-4" />
-              </Link>
-            </div>
-          </div>
-        </section>
-
-        {/* 11. FILTERS, CLEANING AND WARRANTY */}
-        <section className="py-16 bg-[#080d18] border-b border-white/10">
+        {/* ─── OWNERSHIP & WARRANTY ACCORDIONS ─── */}
+        <section className="py-20 bg-[#080d18] border-b border-white/10">
           <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-10">
-              <span className="text-xs font-bold uppercase tracking-widest text-cyan-400">OWNERSHIP EXPERIENCE</span>
-              <h2 className="text-3xl font-black text-white mt-2">Understand the Ownership Experience</h2>
+              <span className="text-xs font-bold uppercase tracking-[0.3em] text-cyan-400">OWNERSHIP EXPERIENCE</span>
+              <h2 className="mt-3 text-3xl font-black text-white">Understand the Ownership Experience</h2>
             </div>
 
             <div className="space-y-4">
-              {/* Accordion 1: Internal Filtration */}
-              <div className="rounded-2xl border border-white/10 bg-white/[0.02] overflow-hidden">
-                <button
-                  type="button"
-                  onClick={() => setOpenOwnership(openOwnership === 0 ? null : 0)}
-                  className="w-full flex items-center justify-between p-5 text-left font-bold text-white hover:bg-white/[0.02] transition cursor-pointer"
-                >
-                  <span>Internal Filtration Details</span>
-                  <ChevronDown className={`h-5 w-5 text-cyan-400 transition-transform ${openOwnership === 0 ? 'rotate-180' : ''}`} />
-                </button>
-                {openOwnership === 0 && (
-                  <div className="p-5 pt-0 text-xs text-slate-300 leading-relaxed border-t border-white/5 mt-2">
-                    The JrIV includes an internal FC1 high-grade filter utilizing premium antibacterial activated charcoal and calcium sulfite. It effectively reduces chlorine odor, taste, and sediment from municipal source water. It is not certified as a universal reverse-osmosis purifier.
-                  </div>
-                )}
-              </div>
-
-              {/* Accordion 2: Filter Replacement */}
-              <div className="rounded-2xl border border-white/10 bg-white/[0.02] overflow-hidden">
-                <button
-                  type="button"
-                  onClick={() => setOpenOwnership(openOwnership === 1 ? null : 1)}
-                  className="w-full flex items-center justify-between p-5 text-left font-bold text-white hover:bg-white/[0.02] transition cursor-pointer"
-                >
-                  <span>Filter Replacement Schedule</span>
-                  <ChevronDown className={`h-5 w-5 text-cyan-400 transition-transform ${openOwnership === 1 ? 'rotate-180' : ''}`} />
-                </button>
-                {openOwnership === 1 && (
-                  <div className="p-5 pt-0 text-xs text-slate-300 leading-relaxed border-t border-white/5 mt-2">
-                    Filter replacement timing depends on water usage volume and source water quality. The machine's smart notification system alerts you via the LCD screen and buzzer when replacement is due according to system metrics.
-                  </div>
-                )}
-              </div>
-
-              {/* Accordion 3: Automatic and Deep Cleaning */}
-              <div className="rounded-2xl border border-white/10 bg-white/[0.02] overflow-hidden">
-                <button
-                  type="button"
-                  onClick={() => setOpenOwnership(openOwnership === 2 ? null : 2)}
-                  className="w-full flex items-center justify-between p-5 text-left font-bold text-white hover:bg-white/[0.02] transition cursor-pointer"
-                >
-                  <span>Automatic & Periodic Cleaning</span>
-                  <ChevronDown className={`h-5 w-5 text-cyan-400 transition-transform ${openOwnership === 2 ? 'rotate-180' : ''}`} />
-                </button>
-                {openOwnership === 2 && (
-                  <div className="p-5 pt-0 text-xs text-slate-300 leading-relaxed border-t border-white/5 mt-2">
-                    The microcomputer automatically controls periodic internal cleaning cycles. Owners should also perform periodic deep cleaning (E-Cleaning with food-grade citric acid) according to official Enagic instructions to clear mineral scale from electrode plates.
-                  </div>
-                )}
-              </div>
-
-              {/* Accordion 4: Manufacturer Warranty */}
-              <div className="rounded-2xl border border-white/10 bg-white/[0.02] overflow-hidden">
-                <button
-                  type="button"
-                  onClick={() => setOpenOwnership(openOwnership === 3 ? null : 3)}
-                  className="w-full flex items-center justify-between p-5 text-left font-bold text-white hover:bg-white/[0.02] transition cursor-pointer"
-                >
-                  <span>Manufacturer Warranty Terms</span>
-                  <ChevronDown className={`h-5 w-5 text-cyan-400 transition-transform ${openOwnership === 3 ? 'rotate-180' : ''}`} />
-                </button>
-                {openOwnership === 3 && (
-                  <div className="p-5 pt-0 text-xs text-slate-300 leading-relaxed border-t border-white/5 mt-2">
-                    The referenced U.S. model includes a 3-year manufacturer warranty covering defects in materials and workmanship. Regional terms and registration requirements vary by international market.
-                  </div>
-                )}
-              </div>
+              {[
+                {
+                  title: 'Internal Filtration Details',
+                  body: 'The JrIV includes an internal FC1 high-grade filter utilizing premium antibacterial activated charcoal and calcium sulfite. It effectively reduces chlorine odor, taste, and sediment from municipal source water. It is not certified as a universal reverse-osmosis purifier.',
+                },
+                {
+                  title: 'Filter Replacement Schedule',
+                  body: 'Filter replacement timing depends on water usage volume and source water quality. The machine\'s smart notification system alerts you via the LCD screen and buzzer when replacement is due according to system metrics.',
+                },
+                {
+                  title: 'Automatic & Periodic Cleaning',
+                  body: 'The microcomputer automatically controls periodic internal cleaning cycles. Owners should also perform periodic deep cleaning (E-Cleaning with food-grade citric acid) according to official Enagic instructions to clear mineral scale from electrode plates.',
+                },
+                {
+                  title: 'Manufacturer Warranty Terms',
+                  body: 'The referenced U.S. model includes a 3-year manufacturer warranty covering defects in materials and workmanship. Regional terms and registration requirements vary by international market.',
+                },
+              ].map((item, idx) => (
+                <div key={idx} className="rounded-2xl border border-white/10 bg-white/[0.02] overflow-hidden">
+                  <button
+                    type="button"
+                    onClick={() => setOpenOwnership(openOwnership === idx ? null : idx)}
+                    className="w-full flex items-center justify-between p-5 text-left font-bold text-white hover:bg-white/[0.02] transition cursor-pointer"
+                  >
+                    <span>{item.title}</span>
+                    <ChevronDown className={`h-5 w-5 text-cyan-400 transition-transform ${openOwnership === idx ? 'rotate-180' : ''}`} />
+                  </button>
+                  {openOwnership === idx && (
+                    <div className="p-5 pt-0 text-xs text-slate-300 leading-relaxed border-t border-white/5 mt-2">
+                      {item.body}
+                    </div>
+                  )}
+                </div>
+              ))}
             </div>
 
-            {/* Official External Link */}
             <div className="mt-8 text-center">
               <a
                 href="https://www.enagic.com/en_US/products/leveluk-jr4"
@@ -1135,12 +1047,12 @@ export function Jr4LandingPage({ profile: propProfile, distributorSlug }: Jr4Lan
           </div>
         </section>
 
-        {/* 12. FREQUENTLY ASKED QUESTIONS */}
-        <section className="py-16 bg-[#060911] border-b border-white/10">
+        {/* ─── FAQ ─── */}
+        <section className="py-20 bg-[#060911] border-b border-white/10">
           <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-12">
-              <span className="text-xs font-bold uppercase tracking-widest text-cyan-400">CLEAR ANSWERS</span>
-              <h2 className="text-3xl font-black text-white mt-2">Questions About the Leveluk JrIV</h2>
+              <span className="text-xs font-bold uppercase tracking-[0.3em] text-cyan-400">CLEAR ANSWERS</span>
+              <h2 className="mt-3 text-3xl font-black text-white sm:text-4xl">Questions About the LeveLuk JrIV</h2>
             </div>
 
             <div className="space-y-3">
@@ -1151,7 +1063,7 @@ export function Jr4LandingPage({ profile: propProfile, distributorSlug }: Jr4Lan
                     <button
                       type="button"
                       onClick={() => setOpenFaq(isOpen ? null : idx)}
-                      className="w-full flex items-center justify-between p-5 text-left font-bold text-white hover:bg-white/[0.02] transition cursor-pointer text-sm sm:text-base"
+                      className="w-full flex items-center justify-between p-5 text-left font-bold text-white hover:bg-white/[0.02] transition cursor-pointer text-sm"
                     >
                       <span className="pr-4">{item.q}</span>
                       <ChevronDown className={`h-5 w-5 shrink-0 text-cyan-400 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
@@ -1168,28 +1080,27 @@ export function Jr4LandingPage({ profile: propProfile, distributorSlug }: Jr4Lan
           </div>
         </section>
 
-        {/* 13. PERSONAL DISTRIBUTOR GUIDANCE */}
-        <section className="py-16 bg-[#080d18] border-b border-white/10">
+        {/* ─── DISTRIBUTOR HANDOFF ─── */}
+        <section className="py-20 bg-[#080d18] border-b border-white/10">
           <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
             <div className="rounded-3xl border border-cyan-400/30 bg-gradient-to-br from-cyan-950/40 to-slate-950 p-8 sm:p-10 shadow-2xl">
               <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6">
                 <img
                   src={portraitUrl}
-                  alt={profile?.display_name || 'Mehdi Cohen'}
+                  alt={profile?.display_name || 'Leader'}
                   className="h-24 w-24 rounded-2xl object-cover border-2 border-cyan-400/40 shadow-xl shrink-0"
                 />
                 <div className="space-y-3 text-center sm:text-left">
-                  <span className="text-xs font-bold uppercase tracking-widest text-cyan-400">YOUR PERSONAL WATER GUIDE</span>
-                  <h3 className="text-2xl font-black text-white">Find the Right Machine With {leaderFirstName}</h3>
-
-                  <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
-                    {isMehdi ? (
-                      `"I shared the JrIV with you because not everyone needs the largest machine. For a single person or couple with moderate water needs, the JrIV may be a more practical way to access Enagic’s five water types while using less power and taking up less counter space. The important part is choosing honestly. I’ll help you review your household size, water source, faucet, expected usage, and available options so you can understand whether the JrIV fits you or whether another model makes more sense."`
-                    ) : (
-                      `${leaderFirstName} can help you review your household needs, water source, faucet compatibility, and current official JrIV options.`
-                    )}
+                  <span className="text-xs font-bold uppercase tracking-[0.3em] text-cyan-400">NOT SURE WHICH MACHINE FITS YOUR HOME?</span>
+                  <h3 className="text-2xl font-black text-white">
+                    Talk Directly with {leaderFirstName}
+                  </h3>
+                  <p className="text-sm text-slate-300 leading-relaxed">
+                    {isMehdi
+                      ? `"I shared the JrIV with you because not everyone needs the largest machine. I'll help you review your household size, water source, faucet, expected usage, and budget — so you choose honestly."`
+                      : `${leaderFirstName} can help you review your household needs, water source, faucet compatibility, and understand whether the JrIV or another Kangen model is the better fit.`
+                    }
                   </p>
-
                   <div className="pt-2 flex flex-wrap items-center justify-center sm:justify-start gap-3">
                     <a
                       href={whatsappUrl}
@@ -1198,14 +1109,13 @@ export function Jr4LandingPage({ profile: propProfile, distributorSlug }: Jr4Lan
                       className="inline-flex items-center gap-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 px-5 py-2.5 text-xs font-bold text-slate-950 transition active:scale-95"
                     >
                       <MessageCircle className="h-4 w-4" />
-                      <span>Ask {leaderFirstName} About the JrIV</span>
+                      Ask {leaderFirstName} About the JrIV
                     </a>
-
                     <Link
-                      to={`/d/${activeSlug}`}
+                      to={`/d/${activeSlug}/kangen`}
                       className="inline-flex items-center gap-2 rounded-xl border border-white/20 px-5 py-2.5 text-xs font-bold text-white hover:bg-white/10 transition"
                     >
-                      <span>View {leaderFirstName}’s Profile</span>
+                      Compare with K8
                     </Link>
                   </div>
                 </div>
@@ -1214,50 +1124,64 @@ export function Jr4LandingPage({ profile: propProfile, distributorSlug }: Jr4Lan
           </div>
         </section>
 
-        {/* 14. FINAL COMPATIBILITY CTA */}
-        <section className="py-20 bg-gradient-to-b from-[#0a0f1d] to-[#04060c] text-center border-b border-white/10">
-          <div className="mx-auto max-w-3xl px-4 sm:px-6">
-            <span className="text-xs font-bold uppercase tracking-widest text-cyan-400">START WITH THE RIGHT FIT</span>
-            <h2 className="text-3xl font-black text-white sm:text-4xl mt-3">
-              Could the Leveluk JrIV Be Right for Your Home?
-            </h2>
-            <p className="mt-4 text-sm sm:text-base text-slate-300 leading-relaxed">
-              Review your household size, water source, faucet compatibility, current pricing, and official market options with the verified distributor who shared this page.
-            </p>
+        {/* ─── CLOSING CINEMATIC CTA ─── */}
+        <section className="relative min-h-[520px] flex items-center overflow-hidden border-b border-white/10">
+          <div className="absolute inset-0">
+            <img
+              src="/true-legacy-assets/jr4-closing-cta.jpg"
+              alt="Premium kitchen with LeveLuk JrIV"
+              className="h-full w-full object-cover object-center"
+            />
+            <div className="absolute inset-0 bg-gradient-to-r from-[#060911]/95 via-[#060911]/75 to-[#060911]/15" />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#060911]/60 via-transparent to-transparent" />
+          </div>
 
-            <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
-              <button
-                type="button"
-                onClick={() => setShowModal(true)}
-                className="inline-flex min-h-13 items-center justify-center gap-2 rounded-xl bg-cyan-400 px-8 py-3.5 text-sm font-black text-slate-950 shadow-xl shadow-cyan-400/25 hover:bg-cyan-300 transition cursor-pointer"
-              >
-                <span>Check My JrIV Compatibility</span>
-                <ArrowRight className="h-4 w-4" />
-              </button>
+          <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-24">
+            <div className="max-w-2xl">
+              <span className="text-xs font-bold uppercase tracking-[0.3em] text-cyan-400">LEVELUK JRIV</span>
+              <h2 className="mt-5 text-5xl font-black text-white sm:text-6xl leading-[1.0]">
+                THE KANGEN EXPERIENCE.<br />
+                <span className="text-cyan-400">RIGHT-SIZED FOR YOUR LIFE.</span>
+              </h2>
+              <p className="mt-6 text-lg text-slate-300 leading-relaxed max-w-lg">
+                Five water types. Four platinum-coated titanium plates. One streamlined way to bring Kangen Water® into your home.
+              </p>
 
-              <a
-                href={whatsappUrl}
-                target="_blank"
-                rel="noreferrer"
-                className="inline-flex min-h-13 items-center justify-center gap-2 rounded-xl border border-emerald-500/40 bg-emerald-500/10 px-6 py-3.5 text-sm font-bold text-emerald-400 hover:bg-emerald-500/20 transition"
-              >
-                <MessageCircle className="h-4 w-4" />
-                <span>Message {leaderFirstName}</span>
-              </a>
-            </div>
-
-            <div className="mt-6 text-xs text-slate-400">
-              Clear information. Honest comparison. Personal guidance.
+              <div className="mt-10 flex flex-wrap gap-4">
+                <button
+                  onClick={() => setShowModal(true)}
+                  className="inline-flex items-center gap-2.5 rounded-2xl bg-cyan-400 px-8 py-4 text-sm font-black text-slate-950 shadow-[0_10px_40px_rgba(34,211,238,0.35)] hover:bg-cyan-300 hover:scale-[1.02] transition-all"
+                >
+                  Get Started with JrIV
+                  <ArrowRight className="h-4 w-4" />
+                </button>
+                <a
+                  href={whatsappUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex items-center gap-2 rounded-2xl border border-white/25 bg-white/[0.07] px-7 py-4 text-sm font-bold text-white hover:bg-white/[0.12] transition backdrop-blur-sm"
+                >
+                  <MessageCircle className="h-4 w-4 text-cyan-400" />
+                  Ask {leaderFirstName}
+                </a>
+                <Link
+                  to={`/d/${activeSlug}/kangen`}
+                  className="inline-flex items-center gap-2 rounded-2xl border border-cyan-400/25 bg-cyan-400/[0.07] px-6 py-4 text-sm font-bold text-cyan-300 hover:bg-cyan-400/[0.12] transition"
+                >
+                  Compare with K8
+                </Link>
+              </div>
             </div>
           </div>
         </section>
 
-        {/* 15. PRODUCT DISCLAIMER */}
+        {/* ─── DISCLAIMER ─── */}
         <section className="py-8 bg-[#04060c]">
           <div className="mx-auto max-w-5xl px-4 text-center text-[11px] leading-relaxed text-slate-500">
-            The Leveluk JrIV is a water ionization system, not a substitute for safe source water, appropriate filtration, plumbing assessment, or medical care. Actual pH, ORP, flow rate, and water characteristics vary with source-water chemistry, pressure, temperature, flow, machine condition, settings, and maintenance. Product specifications, voltage, included components, warranty, availability, and permitted claims vary by market. Follow the official manual and local Enagic guidance.
+            The LeveLuk JrIV is a water ionization system, not a substitute for safe source water, appropriate filtration, plumbing assessment, or medical care. Actual pH, ORP, flow rate, and water characteristics vary with source-water chemistry, pressure, temperature, flow, machine condition, settings, and maintenance. Product specifications, voltage, included components, warranty, availability, and permitted claims vary by market. Follow the official manual and local Enagic guidance.
           </div>
         </section>
+
       </main>
 
       <Footer />
@@ -1269,7 +1193,7 @@ export function Jr4LandingPage({ profile: propProfile, distributorSlug }: Jr4Lan
           onClick={() => setShowModal(true)}
           className="w-full flex items-center justify-center gap-2 rounded-xl bg-cyan-400 py-3 text-xs font-black text-slate-950 shadow-lg shadow-cyan-400/20 active:scale-95"
         >
-          <span>Check JrIV Compatibility</span>
+          Explore the JrIV
           <ArrowRight className="h-4 w-4" />
         </button>
       </div>
@@ -1305,16 +1229,13 @@ export function Jr4LandingPage({ profile: propProfile, distributorSlug }: Jr4Lan
                   <div className="grid h-16 w-16 place-items-center rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 mx-auto">
                     <CheckCircle2 className="h-8 w-8" />
                   </div>
-                  <h3 className="text-2xl font-black text-white">Compatibility Request Sent</h3>
+                  <h3 className="text-2xl font-black text-white">Request Sent</h3>
                   <p className="text-xs text-slate-300 leading-relaxed max-w-xs mx-auto">
                     Thank you! {leaderFirstName} will review your faucet and household parameters and reach out shortly.
                   </p>
                   <button
                     type="button"
-                    onClick={() => {
-                      setFormSuccess(false)
-                      setShowModal(false)
-                    }}
+                    onClick={() => { setFormSuccess(false); setShowModal(false) }}
                     className="mt-4 rounded-xl bg-cyan-400 px-6 py-2.5 text-xs font-bold text-slate-950"
                   >
                     Close
@@ -1323,8 +1244,8 @@ export function Jr4LandingPage({ profile: propProfile, distributorSlug }: Jr4Lan
               ) : (
                 <form onSubmit={handleLeadSubmit} className="space-y-4 text-left">
                   <div>
-                    <span className="text-[10px] font-bold uppercase tracking-widest text-cyan-400">FAUCET & HOUSHOLD REVIEW</span>
-                    <h3 className="text-xl font-black text-white">Check JrIV Faucet Compatibility</h3>
+                    <span className="text-[10px] font-bold uppercase tracking-widest text-cyan-400">FAUCET & HOUSEHOLD REVIEW</span>
+                    <h3 className="text-xl font-black text-white mt-1">Check JrIV Compatibility</h3>
                     <p className="text-xs text-slate-300 mt-1">
                       Assigned Guide: <strong className="text-cyan-300">{profile?.display_name || 'Mehdi Cohen'}</strong>
                     </p>
@@ -1442,7 +1363,7 @@ export function Jr4LandingPage({ profile: propProfile, distributorSlug }: Jr4Lan
                     disabled={submitting}
                     className="mt-4 w-full rounded-xl bg-cyan-400 py-3 text-xs font-black text-slate-950 hover:bg-cyan-300 transition cursor-pointer disabled:opacity-50"
                   >
-                    {submitting ? 'Evaluating...' : 'Submit Compatibility Check'}
+                    {submitting ? 'Sending...' : 'Submit Compatibility Check'}
                   </button>
                 </form>
               )}

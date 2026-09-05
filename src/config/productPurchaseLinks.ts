@@ -96,6 +96,14 @@ export const PURCHASE_LINK_CONFIG: ProductPurchaseLinkItem[] = [
     subtitle: 'Japanese Medical Grade Air Purification Technology',
     placeholder: 'https://... your Kangen Air order link',
   },
+  {
+    id: 'jr4',
+    name: 'Leveluk JrIV',
+    category: 'other',
+    subtitle: '4-Plate Compact Kangen Water Ionizer for Singles & Couples',
+    placeholder: 'https://... your Leveluk JrIV order link',
+    enagicUrl: 'https://www.enagic.com/en_US/products/leveluk-jr4',
+  },
 ]
 
 export const STANDARD_PURCHASE_PRODUCTS = PURCHASE_LINK_CONFIG.filter((p) => p.category === 'standard')
@@ -117,6 +125,9 @@ export const PRODUCT_PURCHASE_LINK_KEYS: Record<string, readonly string[]> = {
   kangen_beaute: ['kangen_beaute'],
   kangen_wagyu: ['kangen_wagyu', 'wagyu', 'wagyuPurchaseUrl'],
   kangen_air: ['kangen_air'],
+  jr4: ['jr4', 'jriv', 'leveluk_jr4', 'leveluk_jriv'],
+  jriv: ['jr4', 'jriv', 'leveluk_jr4', 'leveluk_jriv'],
+  leveluk_jr4: ['jr4', 'jriv', 'leveluk_jr4', 'leveluk_jriv'],
 }
 
 export function getProductPurchaseLink(
