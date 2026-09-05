@@ -1890,9 +1890,9 @@ export function UkonLandingPage({ profile: propProfile, distributorSlug: propDis
                 {/* Box Floating Showcase */}
                 <div className="relative z-10 flex flex-col items-center">
                   <img
-                    src="/ukon/ukon-orange-splash.jpg"
-                    alt="Kangen Ukon Sigma Box with Okinawan Turmeric and Water Splash"
-                    className="w-full max-w-[420px] aspect-square rounded-3xl object-cover drop-shadow-[0_25px_50px_rgba(0,0,0,0.85)] hover:scale-[1.02] transition-transform duration-500 border border-amber-500/20 shadow-2xl"
+                    src="/products/ukon/ukon-sigma-box.png"
+                    alt="Kangen Ukon Sigma Dietary Supplement Box"
+                    className="w-full max-w-[460px] h-auto object-contain drop-shadow-[0_25px_50px_rgba(245,158,11,0.3)] hover:scale-105 transition-transform duration-500"
                   />
                   <div className="mt-4 inline-flex items-center gap-2 rounded-full border border-amber-500/30 bg-black/60 backdrop-blur-md px-3.5 py-1 text-xs text-amber-200 shadow-lg">
                     <Award className="w-3.5 h-3.5 text-amber-400" />
