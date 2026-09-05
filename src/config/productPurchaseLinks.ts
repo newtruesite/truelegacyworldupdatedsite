@@ -25,6 +25,13 @@ export const PURCHASE_LINK_CONFIG: ProductPurchaseLinkItem[] = [
     placeholder: 'https://... your direct emGuarde purchase URL',
     enagicUrl: 'https://www.enagic.com/en_US/product-emguarde',
   },
+  {
+    id: 'duo',
+    name: 'True Legacy Duo (Bundle / Package)',
+    category: 'standard',
+    subtitle: 'Optional official package link for both K8 + emGuarde. If saved, Buy The Duo can route directly here.',
+    placeholder: 'https://... your direct Duo package order link (optional)',
+  },
 
   // Other Products (Below Standard Products)
   {
@@ -99,6 +106,7 @@ export const PRODUCT_PURCHASE_LINK_KEYS: Record<string, readonly string[]> = {
   k8: ['k8'],
   emguarde: ['emguarde', 'emguarde_original'],
   emguarde_original: ['emguarde', 'emguarde_original'],
+  duo: ['duo', 'duoPurchaseUrl', 'true_legacy_duo'],
   ukon_sigma: ['ukon_sigma', 'ukonPurchaseUrl', 'ukon'],
   ukon: ['ukonPurchaseUrl', 'ukon_sigma', 'ukon'],
   ukonPurchaseUrl: ['ukonPurchaseUrl', 'ukon_sigma', 'ukon'],

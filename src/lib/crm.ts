@@ -350,6 +350,7 @@ const FALLBACK_DISTRIBUTORS: PublicDistributor[] = [
     website_url: 'https://mehdicohen.com',
     purchase_links: {
       k8: 'https://www.enagic.com/en_US/products/leveluk-k8',
+      emguarde: 'https://www.enagic.com/en_US/product-emguarde',
     },
   },
   {
