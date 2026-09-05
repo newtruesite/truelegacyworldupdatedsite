@@ -257,8 +257,14 @@ export function BeauteLandingPage({ profile: propProfile, distributorSlug }: Bea
       </header>
 
       {/* 2. LUXURY HERO */}
-      <section className="relative isolate overflow-hidden pt-12 pb-20 sm:pt-20 sm:pb-28">
-        <div className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(circle_at_78%_35%,rgba(251,191,36,0.16),transparent_30%),radial-gradient(circle_at_15%_70%,rgba(14,165,233,0.11),transparent_34%),linear-gradient(135deg,#040714_0%,#07122c_48%,#160d0a_100%)]" />
+      <section className="relative isolate flex min-h-[680px] items-center overflow-hidden py-16 sm:min-h-[720px] sm:py-24">
+        <img
+          src="/products/kangen-beaute-hero-cinematic.png"
+          alt=""
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 -z-20 h-full w-full object-cover object-[68%_center] sm:object-[64%_center]"
+        />
+        <div className="pointer-events-none absolute inset-0 -z-10 bg-[linear-gradient(90deg,rgba(2,7,18,0.98)_0%,rgba(2,7,18,0.91)_32%,rgba(2,7,18,0.52)_53%,rgba(2,7,18,0.08)_78%),linear-gradient(0deg,rgba(2,7,18,0.58)_0%,transparent_35%)] max-lg:bg-[linear-gradient(90deg,rgba(2,7,18,0.96)_0%,rgba(2,7,18,0.84)_52%,rgba(2,7,18,0.28)_100%)]" />
         <div className="pointer-events-none absolute inset-x-0 bottom-0 -z-10 h-px bg-gradient-to-r from-transparent via-amber-300/40 to-transparent" />
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="grid items-center gap-12 lg:grid-cols-12">
@@ -267,7 +273,7 @@ export function BeauteLandingPage({ profile: propProfile, distributorSlug }: Bea
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
-              className="lg:col-span-7"
+              className="lg:col-span-7 xl:col-span-6"
             >
               <div className="inline-flex items-center gap-2.5 rounded-full border border-amber-300/30 bg-amber-400/10 px-3.5 py-1.5 text-xs font-bold uppercase tracking-[0.25em] text-amber-200">
                 <Sparkles className="h-3.5 w-3.5 text-amber-300" />
@@ -313,6 +319,8 @@ export function BeauteLandingPage({ profile: propProfile, distributorSlug }: Bea
                   <ChevronRight className="h-4 w-4" />
                 </button>
 
+                {purchaseAction('Buy Now', 'rounded-2xl px-7 py-4 text-sm')}
+
                 <a
                   href={whatsappUrl}
                   target="_blank"
@@ -328,39 +336,6 @@ export function BeauteLandingPage({ profile: propProfile, distributorSlug }: Bea
                 <ShieldCheck className="h-4 w-4 text-amber-300" />
                 For external use only · Individual results may vary
               </p>
-            </motion.div>
-
-            {/* Right Column: Collection Product Artwork */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.7, delay: 0.15 }}
-              className="lg:col-span-5 relative"
-            >
-              <div className="relative mx-auto max-w-md rounded-[32px] border border-amber-300/30 bg-gradient-to-b from-amber-950/20 via-slate-900/50 to-black p-6 sm:p-8 shadow-[0_30px_100px_rgba(0,0,0,0.8)] backdrop-blur-md">
-                <div className="absolute -top-3.5 right-6 rounded-full border border-amber-300/40 bg-[#040714] px-4 py-1 text-[11px] font-bold text-amber-200 shadow-lg">
-                  Japanese & Korean Skincare Artistry
-                </div>
-
-                <div className="relative my-6 flex min-h-[340px] items-center justify-center sm:min-h-[400px]">
-                  <div className="absolute inset-0 rounded-full bg-amber-300/10 blur-2xl animate-pulse pointer-events-none" />
-                  
-                  <img
-                    src="/products/kangen-beaute-collection-original.png"
-                    alt="Kangen Beauté three-product collection: First Light Essence, Vital Rich Cream, and Crystal Ampoule Cream"
-                    className="relative z-10 h-auto max-h-[340px] w-auto max-w-full object-contain drop-shadow-[0_20px_45px_rgba(254,243,199,0.25)] transition-transform duration-500 hover:scale-105 sm:max-h-[400px]"
-                  />
-                </div>
-
-                <div className="space-y-2 border-t border-white/10 pt-5 text-center">
-                  <h3 className="text-xl font-black text-white">Kangen Beauté® Collection</h3>
-                  <p className="text-xs text-[#cccccc]">First Light Essence · Vital Rich Cream · Crystal Ampoule Cream</p>
-
-                  <div className="pt-3">
-                    {purchaseAction('Order Kangen Beauté®', 'w-full')}
-                  </div>
-                </div>
-              </div>
             </motion.div>
           </div>
         </div>
