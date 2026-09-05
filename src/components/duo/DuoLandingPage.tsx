@@ -33,6 +33,7 @@ import TrueLegacyLogo from '@/components/ui/TrueLegacyLogo'
 import { SEO } from '@/components/SEO'
 import { getProductPurchaseLink } from '@/config/productPurchaseLinks'
 import { Footer } from '@/components/layout/Footer'
+import { LandingHeaderBackButton } from '@/components/layout/LandingHeaderBackButton'
 import { useLocaleContext } from '@/contexts/LocaleContext'
 import { localizedProductVideo } from '@/lib/productVideos'
 import { crmSupabase, getLeaderPortrait, getPublicDistributors, type PublicDistributor } from '@/lib/crm'
@@ -1029,16 +1030,11 @@ export function DuoLandingPage({ profile: initialProfile, distributorSlug }: Duo
       <header className="sticky top-0 z-50 w-full border-b border-white/[0.08] bg-[#040711]/90 backdrop-blur-xl transition-all duration-300">
         <div className="mx-auto flex h-16 w-full max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
           {/* Logo & Back button */}
-          <div className="flex items-center gap-3 sm:gap-4">
-            <Link
-              to={`/d/${encodeURIComponent(distributorSlugActive)}`}
-              className="inline-flex items-center gap-1.5 rounded-xl border border-white/15 bg-white/5 hover:bg-white/10 px-3 py-1.5 text-xs font-bold text-white transition-all shadow-sm active:scale-95"
-              title="Return to Leader Hub"
-            >
-              <ArrowLeft className="h-4 w-4 text-cyan-400" />
-              <span className="hidden xs:inline">Back to Profile</span>
-              <span className="xs:hidden">Back</span>
-            </Link>
+          <div className="flex items-center gap-2.5 sm:gap-3">
+            <LandingHeaderBackButton
+              fallbackUrl={`/d/${encodeURIComponent(distributorSlugActive)}`}
+              label="Return to Leader Profile"
+            />
             <Link to="/" className="flex items-center gap-3 group">
               <TrueLegacyLogo variant="nav" />
             </Link>

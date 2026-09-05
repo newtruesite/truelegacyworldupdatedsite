@@ -26,6 +26,7 @@ import {
 import TrueLegacyLogo from '@/components/ui/TrueLegacyLogo'
 import { SEO } from '@/components/SEO'
 import { Footer } from '@/components/layout/Footer'
+import { LandingHeaderBackButton } from '@/components/layout/LandingHeaderBackButton'
 import { useLocaleContext } from '@/contexts/LocaleContext'
 import { getLeaderPortrait, getPublicDistributors, submitCrmApplication, type PublicDistributor } from '@/lib/crm'
 
@@ -262,9 +263,18 @@ export function Jr4LandingPage({ profile: propProfile, distributorSlug }: Jr4Lan
       {/* 1. SIMPLIFIED PERSONALIZED HEADER (This page only) */}
       <header className="sticky top-0 z-40 w-full border-b border-white/10 bg-[#060911]/90 backdrop-blur-xl transition-all">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6">
-          <Link to="/" className="flex items-center gap-3 group" aria-label="True Legacy World Home">
-            <TrueLegacyLogo className="h-8 w-auto transition-transform group-hover:scale-105" />
-          </Link>
+          <div className="flex items-center gap-2.5 sm:gap-3">
+            <LandingHeaderBackButton
+              fallbackUrl={`/d/${activeSlug}`}
+              label="Return to Leader Profile"
+            />
+            <Link to="/" className="flex items-center gap-2 group" aria-label="True Legacy World Home">
+              <TrueLegacyLogo className="h-8 w-auto transition-transform group-hover:scale-105" />
+              <span className="text-[10px] font-semibold text-cyan-400/90 border border-cyan-500/30 bg-cyan-500/10 px-2 py-0.5 rounded-md uppercase tracking-widest hidden sm:inline-block">
+                Leveluk JrIV
+              </span>
+            </Link>
+          </div>
 
           <div className="flex items-center gap-3 sm:gap-4">
             {/* Language Selector */}

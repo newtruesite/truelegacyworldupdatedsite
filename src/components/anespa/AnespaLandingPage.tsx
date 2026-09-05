@@ -22,6 +22,7 @@ import TrueLegacyLogo from '@/components/ui/TrueLegacyLogo'
 import { SEO } from '@/components/SEO'
 import { DistributorBuyButton } from '@/components/products/DistributorBuyButton'
 import { Footer } from '@/components/layout/Footer'
+import { LandingHeaderBackButton } from '@/components/layout/LandingHeaderBackButton'
 import { getLeaderPortrait, getPublicDistributors, submitCrmApplication, type PublicDistributor } from '@/lib/crm'
 
 interface AnespaLandingPageProps {
@@ -128,29 +129,25 @@ export function AnespaLandingPage({ profile: propProfile, distributorSlug }: Ane
 
       {/* Navigation Bar */}
       <header className="sticky top-0 z-40 border-b border-white/10 bg-[#040817]/80 backdrop-blur-xl">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3.5 sm:px-6 lg:px-8">
-          <div className="flex items-center gap-3">
-            <DistributorBuyButton profile={profile} productId="anespa_dx" label="Buy Now" compactOnMobile className="shrink-0" />
-            <Link
-              to="/landing-pages"
-              className="group flex h-9 w-9 items-center justify-center rounded-xl border border-white/10 bg-white/5 hover:border-cyan-400/50 hover:bg-cyan-500/10 transition-all"
-              title="Explore More Landing Pages"
-            >
-              <ArrowLeft className="h-4 w-4 text-cyan-400 group-hover:-translate-x-0.5 transition-transform" />
+        <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6 lg:px-8">
+          <div className="flex items-center gap-2.5 sm:gap-3">
+            <LandingHeaderBackButton
+              fallbackUrl={profile?.slug ? `/d/${profile.slug}` : '/'}
+              label={profile ? `Back to ${profile.display_name?.split(' ')[0] || 'Leader'}'s Profile` : 'Go back'}
+            />
+            <Link to="/" className="flex items-center gap-2 group">
+              <TrueLegacyLogo />
+              <span className="text-[10px] font-semibold text-cyan-400/90 border border-cyan-500/30 bg-cyan-500/10 px-2 py-0.5 rounded-md uppercase tracking-widest hidden sm:inline-block">
+                Anespa® DX
+              </span>
             </Link>
-            <TrueLegacyLogo />
           </div>
 
-          <div className="flex items-center gap-3">
-            <Link
-              to="/landing-pages"
-              className="hidden text-xs font-bold text-[#86868b] hover:text-cyan-300 transition-colors sm:inline-block"
-            >
-              More Pages
-            </Link>
+          <div className="flex items-center gap-2.5 sm:gap-3">
+            <DistributorBuyButton profile={profile} productId="anespa_dx" label="Buy Now" compactOnMobile className="shrink-0" />
             <button
               onClick={() => setShowModal(true)}
-              className="rounded-xl border border-cyan-400/40 bg-gradient-to-r from-cyan-500/20 to-blue-600/20 px-4 py-2 text-xs font-bold text-cyan-300 hover:border-cyan-300 hover:from-cyan-500/30 hover:to-blue-600/30 transition-all shadow-[0_0_20px_rgba(14,165,233,0.2)]"
+              className="rounded-xl border border-cyan-400/40 bg-gradient-to-r from-cyan-500/20 to-blue-600/20 px-3.5 py-2 text-xs font-bold text-cyan-300 hover:border-cyan-300 hover:from-cyan-500/30 hover:to-blue-600/30 transition-all shadow-[0_0_20px_rgba(14,165,233,0.2)] active:scale-95"
             >
               Talk to Me
             </button>

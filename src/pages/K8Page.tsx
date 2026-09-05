@@ -1,6 +1,7 @@
 import { SEO } from "@/components/SEO";
 import TrueLegacyLogo from "@/components/ui/TrueLegacyLogo";
 import { YouTubeEmbed } from "@/components/ui/YouTubeEmbed";
+import { LandingHeaderBackButton } from "@/components/layout/LandingHeaderBackButton";
 import { useLocaleContext } from "@/contexts/LocaleContext";
 import { trackEvent } from "@/lib/analytics";
 import { COUNTRIES } from "@/lib/countries";
@@ -1180,8 +1181,12 @@ export default function K8Page({ profile: propProfile, distributorSlug: propSlug
       {/* ── STICKY SLIM HEADER (DESKTOP & TABLET) ── */}
       <header className="sticky top-0 z-50 w-full border-b border-white/10 bg-[#070b12]/85 backdrop-blur-xl transition-all duration-300">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-2.5 sm:px-6 lg:px-8">
-          {/* Left: Original True Legacy Logo, Kangen Water Badge & Back to Profile (if on leader page) */}
-          <div className="flex items-center gap-3">
+          {/* Left: Back Button, Original True Legacy Logo, Kangen Water Badge & Back to Profile (if on leader page) */}
+          <div className="flex items-center gap-2 sm:gap-3">
+            <LandingHeaderBackButton
+              fallbackUrl={distributorProfileRoute}
+              label={isLeaderPage ? `Back to ${distributorFirstName}'s Profile` : 'Go back'}
+            />
             <Link
               to="/"
               className="flex items-center gap-2.5 group focus:outline-none focus:ring-2 focus:ring-cyan-500 rounded-lg p-0.5 shrink-0"
@@ -1198,7 +1203,6 @@ export default function K8Page({ profile: propProfile, distributorSlug: propSlug
                 className="hidden lg:inline-flex items-center gap-1.5 ml-2 pl-3 border-l border-white/10 text-xs text-slate-300 hover:text-white transition-colors group"
                 title={`Back to ${distributorName}'s Profile`}
               >
-                <ArrowLeft className="w-3.5 h-3.5 text-cyan-400 group-hover:-translate-x-0.5 transition-transform" />
                 <span className="text-slate-400">Leader:</span>
                 <span className="font-semibold text-white truncate max-w-[120px]">{distributorFirstName}</span>
               </Link>

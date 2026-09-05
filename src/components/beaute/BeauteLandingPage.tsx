@@ -20,6 +20,7 @@ import TrueLegacyLogo from '@/components/ui/TrueLegacyLogo'
 import { SEO } from '@/components/SEO'
 import { DistributorBuyButton } from '@/components/products/DistributorBuyButton'
 import { Footer } from '@/components/layout/Footer'
+import { LandingHeaderBackButton } from '@/components/layout/LandingHeaderBackButton'
 import { getLeaderPortrait, getPublicDistributors, submitCrmApplication, type PublicDistributor } from '@/lib/crm'
 
 interface BeauteLandingPageProps {
@@ -187,16 +188,18 @@ export function BeauteLandingPage({ profile: propProfile, distributorSlug }: Bea
 
       {/* 1. SIMPLIFIED HEADER (No distracting global nav links) */}
       <header className="sticky top-0 z-40 border-b border-white/10 bg-[#040714]/85 backdrop-blur-xl">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3.5 sm:px-6 lg:px-8">
-          <div className="flex items-center gap-3">
-            <Link
-              to={`/d/${activeSlug}`}
-              className="group flex h-9 w-9 items-center justify-center rounded-xl border border-white/10 bg-white/5 hover:border-amber-300/50 hover:bg-amber-500/10 transition-all"
-              title={`Return to ${firstName}'s profile`}
-            >
-              <ArrowLeft className="h-4 w-4 text-amber-300 group-hover:-translate-x-0.5 transition-transform" />
+        <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6 lg:px-8">
+          <div className="flex items-center gap-2.5 sm:gap-3">
+            <LandingHeaderBackButton
+              fallbackUrl={`/d/${activeSlug}`}
+              label={`Return to ${firstName}'s profile`}
+            />
+            <Link to="/" className="flex items-center gap-2 group">
+              <TrueLegacyLogo />
+              <span className="text-[10px] font-semibold text-amber-300 border border-amber-500/30 bg-amber-500/10 px-2 py-0.5 rounded-md uppercase tracking-widest hidden sm:inline-block">
+                Kangen Beauté®
+              </span>
             </Link>
-            <TrueLegacyLogo />
           </div>
 
           <div className="flex items-center gap-3">

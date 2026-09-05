@@ -28,6 +28,7 @@ import {
 import TrueLegacyLogo from '@/components/ui/TrueLegacyLogo'
 import { SEO } from '@/components/SEO'
 import { Footer } from '@/components/layout/Footer'
+import { LandingHeaderBackButton } from '@/components/layout/LandingHeaderBackButton'
 import { useLocaleContext } from '@/contexts/LocaleContext'
 import { getProductPurchaseLink } from '@/config/productPurchaseLinks'
 import { getLeaderPortrait, getPublicDistributors, submitCrmApplication, type PublicDistributor } from '@/lib/crm'
@@ -311,9 +312,16 @@ export function WagyuLandingPage({ profile: propProfile, distributorSlug }: Wagy
           ───────────────────────────────────────────────────────────── */}
       <header className="sticky top-0 z-50 border-b border-[#2b241f] bg-[#0c0a09]/95 backdrop-blur-md px-4 sm:px-8 py-3.5 transition-colors">
         <div className="mx-auto flex max-w-7xl items-center justify-between">
-          <Link to="/" className="flex items-center gap-3 group">
-            <TrueLegacyLogo className="h-8 w-auto text-[#ede8df] group-hover:text-[#e5c583] transition-colors" />
-          </Link>
+          <div className="flex items-center gap-2.5 sm:gap-3">
+            <LandingHeaderBackButton
+              fallbackUrl={`/d/${activeSlug}`}
+              label="Return to Leader Profile"
+              className="border-[#3e342b] bg-[#1a1614] hover:bg-[#25201c] text-[#a89f91] hover:text-[#ede8df]"
+            />
+            <Link to="/" className="flex items-center gap-3 group">
+              <TrueLegacyLogo className="h-8 w-auto text-[#ede8df] group-hover:text-[#e5c583] transition-colors" />
+            </Link>
+          </div>
 
           {/* Desktop Nav Anchors */}
           <nav className="hidden lg:flex items-center gap-6 text-xs font-semibold tracking-wider text-[#a89f91] uppercase">

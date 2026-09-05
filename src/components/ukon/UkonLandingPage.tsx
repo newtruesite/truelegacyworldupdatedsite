@@ -2,6 +2,7 @@ import { SEO } from '@/components/SEO'
 import TrueLegacyLogo from '@/components/ui/TrueLegacyLogo'
 import { YouTubeEmbed } from '@/components/ui/YouTubeEmbed'
 import { Footer } from '@/components/layout/Footer'
+import { LandingHeaderBackButton } from '@/components/layout/LandingHeaderBackButton'
 import { useLocaleContext } from '@/contexts/LocaleContext'
 import { trackEvent } from '@/lib/analytics'
 import { getLeaderPortrait, getPublicDistributors, submitCrmApplication, type PublicDistributor } from '@/lib/crm'
@@ -35,7 +36,7 @@ import {
   Zap,
 } from 'lucide-react'
 import React, { useEffect, useMemo, useState } from 'react'
-import { Link, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 
 // ── LOCALIZATION DICTIONARY ──────────────────────────────────
 const LOCALES = {
@@ -1407,6 +1408,7 @@ interface UkonLandingPageProps {
 
 export function UkonLandingPage({ profile: propProfile, distributorSlug: propDistributorSlug }: UkonLandingPageProps) {
   const params = useParams<{ slug?: string; country?: string }>()
+  const navigate = useNavigate()
   const activeSlug = propDistributorSlug || propProfile?.slug || params.slug || 'mehdi-cohen'
   const isLeaderPage = Boolean(activeSlug)
 
@@ -1559,8 +1561,13 @@ export function UkonLandingPage({ profile: propProfile, distributorSlug: propDis
       {/* ── STICKY SLIM HEADER ── */}
       <header className="sticky top-0 z-50 w-full border-b border-white/10 bg-[#070b12]/85 backdrop-blur-xl transition-all duration-300">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-2.5 sm:px-6 lg:px-8">
-          {/* Left: True Legacy Logo, Ukon Badge & Back to Profile */}
-          <div className="flex items-center gap-3">
+          {/* Left: Back Button, True Legacy Logo, Ukon Badge & Back to Profile */}
+          <div className="flex items-center gap-2 sm:gap-3">
+            <LandingHeaderBackButton
+              fallbackUrl={distributorProfileRoute}
+              label={isLeaderPage ? `Back to ${distributorFirstName}'s Profile` : 'Go back'}
+            />
+
             <Link
               to="/"
               className="flex items-center gap-2.5 group focus:outline-none focus:ring-2 focus:ring-amber-500 rounded-lg p-0.5 shrink-0"
@@ -1577,7 +1584,6 @@ export function UkonLandingPage({ profile: propProfile, distributorSlug: propDis
                 className="hidden lg:inline-flex items-center gap-1.5 ml-2 pl-3 border-l border-white/10 text-xs text-slate-300 hover:text-white transition-colors group"
                 title={`Back to ${distributorName}'s Profile`}
               >
-                <ArrowLeft className="w-3.5 h-3.5 text-amber-400 group-hover:-translate-x-0.5 transition-transform" />
                 <span className="text-slate-400">Leader:</span>
                 <span className="font-semibold text-white truncate max-w-[120px]">{distributorFirstName}</span>
               </Link>
@@ -1925,6 +1931,56 @@ export function UkonLandingPage({ profile: propProfile, distributorSlug: propDis
               <ShieldCheck className="w-4 h-4 text-amber-400 shrink-0" />
               <span>100 CAPSULES PER BOX</span>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── VIDEO SECTION (MOVED BELOW HERO) ── */}
+      <section id="ukon-video" className="py-16 md:py-24 border-b border-white/10 bg-[#070b12]">
+        <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+          <div className="text-center space-y-4 mb-10">
+            <div className="inline-flex items-center gap-2 rounded-full border border-amber-500/30 bg-amber-500/10 px-3.5 py-1 text-xs font-bold uppercase tracking-widest text-amber-400">
+              <Play className="w-3.5 h-3.5 fill-current" />
+              <span>{content.video.eyebrow}</span>
+            </div>
+            <h2 className="text-3xl sm:text-5xl font-black tracking-tight text-white">
+              {content.video.headline}
+            </h2>
+            <p className="text-sm sm:text-base text-slate-400 max-w-2xl mx-auto leading-relaxed">
+              {content.video.sub}
+            </p>
+          </div>
+
+          {/* YouTube Video Player Container */}
+          <div className="relative rounded-3xl border border-amber-500/30 bg-black/60 p-2 sm:p-3 shadow-2xl shadow-amber-950/40 overflow-hidden mb-6">
+            <YouTubeEmbed
+              url="https://www.youtube.com/watch?v=0d_RcSmf2XI"
+              title="Kangen Ukon® — The Story of Okinawan Turmeric"
+              className="rounded-2xl"
+            />
+          </div>
+
+          {/* Transcript Accordion */}
+          <div className="mt-6">
+            <button
+              type="button"
+              onClick={() => setShowTranscript(!showTranscript)}
+              className="w-full rounded-2xl border border-white/10 bg-white/[0.02] p-4 flex items-center justify-between text-xs font-bold text-slate-300 hover:bg-white/5 transition-all"
+            >
+              <span className="flex items-center gap-2">
+                <FileText className="w-4 h-4 text-amber-400" />
+                {content.video.transcriptBtn}
+              </span>
+              <ChevronDown
+                className={cn('w-4 h-4 transition-transform duration-200', showTranscript ? 'rotate-180 text-amber-400' : '')}
+              />
+            </button>
+
+            {showTranscript && (
+              <div className="mt-2 rounded-2xl border border-white/10 bg-black/60 p-5 text-xs text-slate-300 leading-relaxed whitespace-pre-line">
+                {content.video.transcript}
+              </div>
+            )}
           </div>
         </div>
       </section>
@@ -2419,56 +2475,7 @@ export function UkonLandingPage({ profile: propProfile, distributorSlug: propDis
         </div>
       </section>
 
-      {/* ── SECTION 15: CINEMATIC STORY VIDEO ── */}
-      <section id="ukon-video" className="py-20 md:py-28 border-b border-white/10 bg-[#070b12]">
-        <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
-          <div className="text-center space-y-4 mb-12">
-            <div className="inline-flex items-center gap-2 rounded-full border border-amber-500/30 bg-amber-500/10 px-3.5 py-1 text-xs font-bold uppercase tracking-widest text-amber-400">
-              <Play className="w-3.5 h-3.5 fill-current" />
-              <span>{content.video.eyebrow}</span>
-            </div>
-            <h2 className="text-3xl sm:text-5xl font-black tracking-tight text-white">
-              {content.video.headline}
-            </h2>
-            <p className="text-sm sm:text-base text-slate-400 max-w-2xl mx-auto leading-relaxed">
-              {content.video.sub}
-            </p>
-          </div>
-
-          {/* YouTube Video Player Container */}
-          <div className="rounded-3xl overflow-hidden border border-amber-500/30 shadow-[0_20px_60px_rgba(0,0,0,0.8)] bg-black">
-            <div className="aspect-video w-full">
-              <YouTubeEmbed
-                url="https://www.youtube.com/watch?v=542a-l5Q_sU"
-                title="Inside Kangen Foods: The Okinawa Origin of Kangen Ukon®"
-              />
-            </div>
-          </div>
-
-          {/* Transcript Accordion */}
-          <div className="mt-6">
-            <button
-              type="button"
-              onClick={() => setShowTranscript(!showTranscript)}
-              className="w-full rounded-2xl border border-white/10 bg-white/[0.02] p-4 flex items-center justify-between text-xs font-bold text-slate-300 hover:bg-white/5 transition-all"
-            >
-              <span className="flex items-center gap-2">
-                <FileText className="w-4 h-4 text-amber-400" />
-                {content.video.transcriptBtn}
-              </span>
-              <ChevronDown
-                className={cn('w-4 h-4 transition-transform duration-200', showTranscript ? 'rotate-180 text-amber-400' : '')}
-              />
-            </button>
-
-            {showTranscript && (
-              <div className="mt-2 rounded-2xl border border-white/10 bg-black/60 p-5 text-xs text-slate-300 leading-relaxed whitespace-pre-line">
-                {content.video.transcript}
-              </div>
-            )}
-          </div>
-        </div>
-      </section>
+      {/* (Video section moved above — right after hero trust strip) */}
 
       {/* ── SECTION 16: FREE GUIDE / LEAD CAPTURE ── */}
       <section className="py-20 md:py-28 border-b border-white/10 bg-[#090d16]">

@@ -1,4 +1,6 @@
 import { Footer } from '@/components/layout/Footer'
+import { LandingHeaderBackButton } from '@/components/layout/LandingHeaderBackButton'
+import TrueLegacyLogo from '@/components/ui/TrueLegacyLogo'
 import { SEO } from '@/components/SEO'
 import { getProductPurchaseLink } from '@/config/productPurchaseLinks'
 import { useLocaleContext } from '@/contexts/LocaleContext'
@@ -718,19 +720,19 @@ export function ProductShowcaseLandingPage({
       {/* HEADER NAVIGATION */}
       <header className="sticky top-0 z-50 border-b border-white/10 bg-[#040711]/90 backdrop-blur-xl">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6">
-          <div className="flex items-center gap-3">
-            <Link
-              to={profile ? `/d/${profile.slug}` : '/'}
-              className="inline-flex items-center gap-1.5 rounded-xl border border-white/15 bg-white/5 hover:bg-white/10 px-3 py-1.5 text-xs font-bold text-white transition-colors"
-            >
-              <ArrowLeft className="h-3.5 w-3.5" />
-              <span className="hidden xs:inline">{profile ? copy.back : copy.backGeneral}</span>
+          <div className="flex items-center gap-2.5 sm:gap-3">
+            <LandingHeaderBackButton
+              fallbackUrl={profile ? `/d/${profile.slug}` : '/'}
+              label={profile ? copy.back : copy.backGeneral}
+            />
+            <Link to="/" className="flex items-center gap-2 group">
+              <TrueLegacyLogo />
+              <div className="hidden sm:flex items-center gap-2 pl-2 border-l border-white/10">
+                <span className="text-xs font-black tracking-wider uppercase text-cyan-400">Enagic®</span>
+                <span className="text-xs text-[#86868b]">·</span>
+                <span className="text-xs font-bold text-white">Showcase</span>
+              </div>
             </Link>
-            <div className="hidden sm:flex items-center gap-2 pl-2 border-l border-white/10">
-              <span className="text-xs font-black tracking-wider uppercase text-cyan-400">Enagic®</span>
-              <span className="text-xs text-[#86868b]">·</span>
-              <span className="text-xs font-bold text-white">True Legacy Showcase</span>
-            </div>
           </div>
 
           <div className="flex items-center gap-2 sm:gap-3">
