@@ -778,19 +778,19 @@ export function BusinessLandingPage({ profile: initialProfile, distributorSlug: 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
             {/* Left Metaphor B-roll */}
             <div className="lg:col-span-5 order-2 lg:order-1">
-              <div className="relative rounded-3xl overflow-hidden border border-white/15 shadow-2xl">
+              <div className="relative rounded-3xl overflow-hidden border border-white/15 shadow-2xl bg-black">
                 <img
-                  src="/business/business-broll-03-progression.jpg"
-                  alt="Architectural Progression Metaphor"
-                  className="w-full aspect-[4/5] object-cover"
+                  src="/business/duo-rank-progression-columns.jpg"
+                  alt="Enagic Rank Advancement 1A to 6A with Leveluk K8 and emGuarde"
+                  className="w-full h-auto object-cover"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#020408] via-transparent to-transparent" />
-                <div className="absolute bottom-6 left-6 right-6 p-4 rounded-xl backdrop-blur-md bg-black/60 border border-white/10">
+                <div className="absolute inset-0 bg-gradient-to-t from-[#020408]/90 via-transparent to-transparent pointer-events-none" />
+                <div className="absolute bottom-6 left-6 right-6 p-4 rounded-xl backdrop-blur-md bg-black/70 border border-white/10">
                   <div className="text-xs font-semibold uppercase tracking-wider text-cyan-300">
-                    Cumulative Growth
+                    Cumulative Growth Architecture
                   </div>
                   <div className="text-sm text-zinc-300 mt-1">
-                    Every direct and indirect group sale counts toward your permanent rank milestones.
+                    Every direct and indirect group sale advances your organization through permanent rank milestones from 1A to 6A.
                   </div>
                 </div>
               </div>
