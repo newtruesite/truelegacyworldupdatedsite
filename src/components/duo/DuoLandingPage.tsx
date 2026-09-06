@@ -969,6 +969,7 @@ export function DuoLandingPage({ profile: propProfile, distributorSlug: propSlug
         title={`True Legacy Duo · Water & Environment | ${distributorName}`}
         description={`Experience the ultimate synergy of Japanese water ionization and ambient harmonic frequency protection. Presented by ${distributorName}.`}
         canonical={`https://www.truelegacyworld.com/d/${distributorSlugActive}/duo`}
+        image="/duo/duo-night-terrace-hero.jpg"
       />
 
       {/* ========================================================================= */}
@@ -1055,7 +1056,7 @@ export function DuoLandingPage({ profile: propProfile, distributorSlug: propSlug
         {/* Background Visual Asset: Hidden on mobile (< lg) for pristine clarity, cinematic right-side on desktop */}
         <div className="hidden lg:block absolute inset-0 z-0">
           <img
-            src="/duo/duo-master-hero.jpg"
+            src="/duo/duo-night-terrace-hero.jpg"
             alt="True Legacy Duo Leveluk K8 and emGuarde GO on Ocean Terrace"
             fetchPriority="high"
             className="w-full h-full object-cover object-right filter brightness-[0.85] contrast-[1.04]"
@@ -1138,7 +1139,7 @@ export function DuoLandingPage({ profile: propProfile, distributorSlug: propSlug
               <div className="lg:hidden my-6 rounded-2xl sm:rounded-3xl overflow-hidden border border-white/15 bg-gradient-to-b from-white/[0.08] to-[#050b14] p-1.5 sm:p-2 shadow-2xl relative group">
                 <div className="relative aspect-[16/9] w-full overflow-hidden rounded-xl sm:rounded-2xl bg-black">
                   <img
-                    src="/duo/duo-master-hero.jpg"
+                    src="/duo/duo-night-terrace-hero.jpg"
                     alt="True Legacy Duo: Leveluk K8 and emGuarde GO"
                     className="w-full h-full object-cover filter brightness-[0.95] contrast-[1.02]"
                   />
