@@ -1614,6 +1614,36 @@ export function BusinessLandingPage({ profile: initialProfile, distributorSlug: 
               </div>
             </div>
           </div>
+
+          {/* Dedicated Event Access Callout Directly Underneath Group Picture */}
+          <div className="mt-6 p-5 sm:p-6 rounded-3xl border border-amber-500/40 bg-gradient-to-r from-amber-950/40 via-[#0a0f1d] to-[#040815] backdrop-blur-xl shadow-2xl flex flex-col md:flex-row items-center justify-between gap-6">
+            <div className="flex items-center gap-4 text-center md:text-left">
+              <div className="w-12 h-12 rounded-2xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-400 shrink-0 mx-auto md:mx-0 shadow-lg shadow-amber-500/10">
+                <Calendar className="w-6 h-6" />
+              </div>
+              <div>
+                <div className="text-xs font-mono font-bold uppercase tracking-widest text-amber-400">
+                  FULL HOUSE POWER (FHP) KANGEN GROUP · MALAYSIA
+                </div>
+                <h4 className="text-base sm:text-lg font-black text-white mt-0.5">
+                  Attend the Next In-Person Assembly in Kuala Lumpur
+                </h4>
+                <p className="text-xs text-zinc-300 mt-0.5">
+                  Get full event dates, venue briefings, and workshop curriculum at The Gardens Mall, KL.
+                </p>
+              </div>
+            </div>
+
+            <a
+              href="https://www.fhptrainings.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-full md:w-auto inline-flex items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-amber-400 via-amber-500 to-yellow-500 px-7 py-3.5 text-xs sm:text-sm font-black !text-neutral-950 hover:brightness-110 shadow-xl shadow-amber-500/25 transition-all whitespace-nowrap cursor-pointer"
+            >
+              <span className="!text-neutral-950 font-black tracking-wide">ACCESS KUALA LUMPUR EVENT DETAILS</span>
+              <ExternalLink className="w-4 h-4 !text-neutral-950 shrink-0" />
+            </a>
+          </div>
         </div>
       </section>
 
