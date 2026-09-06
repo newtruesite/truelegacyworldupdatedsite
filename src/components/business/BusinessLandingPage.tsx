@@ -106,6 +106,8 @@ export function BusinessLandingPage({ profile: initialProfile, distributorSlug: 
   const [copied, setCopied] = useState(false)
   const [showStickyCta, setShowStickyCta] = useState(false)
   const [qualificationsExpanded, setQualificationsExpanded] = useState(false)
+  const [duoTab, setDuoTab] = useState<'double' | 'fasttrack'>('double')
+  const [showDuoSlides, setShowDuoSlides] = useState(false)
 
   const heroRef = useRef<HTMLDivElement>(null)
   const finalCtaRef = useRef<HTMLDivElement>(null)
@@ -867,7 +869,7 @@ export function BusinessLandingPage({ profile: initialProfile, distributorSlug: 
       </section>
 
       {/* ========================================================================= */}
-      {/* 06 — THE DUO REVEAL: THE AHA MOMENT */}
+      {/* 06 — THE DUO REVEAL: DOUBLE COMMISSIONS & FAST TRACK TO 6A */}
       {/* ========================================================================= */}
       <section className="py-24 border-b border-white/10 relative bg-[#040815] overflow-hidden">
         {/* Background Visual */}
@@ -880,63 +882,405 @@ export function BusinessLandingPage({ profile: initialProfile, distributorSlug: 
         </div>
 
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-3xl mx-auto mb-16">
+          <div className="text-center max-w-3xl mx-auto mb-12">
             <span className="text-xs font-bold tracking-[0.25em] uppercase text-cyan-400">
-              THE DUO STRATEGY
+              THE DUO ADVANTAGE
             </span>
             <h2 className="mt-3 text-3xl sm:text-5xl font-black text-white tracking-tight">
-              NOW YOU CAN SEE<br />
+              TWO ACCOUNTS. DOUBLE COMMISSIONS.<br />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 via-sky-200 to-amber-300">
-                WHY THE DUO MATTERS.
+                FAST TRACK TO 6A.
               </span>
             </h2>
-            <p className="mt-4 text-lg text-zinc-300">
-              Instead of beginning with only one product conversation, the Duo strategy introduces two complementary positions.
+            <p className="mt-4 text-base sm:text-lg text-zinc-300 leading-relaxed">
+              When you establish a Duo position, you unlock two income accounts from day one. Every Duo sale pays out commissions on <strong className="text-white">both products simultaneously</strong> and counts as <strong className="text-white">two unit sales</strong> toward your rank progression.
             </p>
           </div>
 
-          {/* Architecture Visual */}
-          <div className="max-w-4xl mx-auto p-8 sm:p-12 rounded-3xl border-2 border-cyan-500/40 bg-gradient-to-b from-[#0a182e] via-[#050e1c] to-[#02050b] shadow-2xl">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-              {/* Account 1 */}
-              <div className="p-6 rounded-2xl border border-cyan-500/30 bg-cyan-950/40 text-center">
-                <div className="text-xs font-mono font-bold text-cyan-400 uppercase tracking-widest">
-                  ACCOUNT 01
+          {/* Account Architecture Graphic */}
+          <div className="max-w-5xl mx-auto mb-12 p-6 sm:p-8 rounded-3xl border border-cyan-500/30 bg-gradient-to-b from-[#0a182e]/80 via-[#050e1c]/80 to-[#02050b] backdrop-blur-xl shadow-2xl">
+            <div className="text-center mb-6">
+              <span className="text-xs font-mono font-bold tracking-widest text-cyan-400 uppercase">
+                YOUR ENAGIC DUO POSITION STRUCTURE
+              </span>
+              <h3 className="text-lg sm:text-xl font-black text-white mt-1">
+                How Two Accounts Stack to Double Your Commission on Every Duo Sale
+              </h3>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-center">
+              {/* Top Account (K8) */}
+              <div className="p-6 rounded-2xl border border-cyan-500/40 bg-cyan-950/40 text-center relative overflow-hidden">
+                <div className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 text-[11px] font-bold uppercase tracking-wider mb-2">
+                  YOUR 1ST ACCOUNT
                 </div>
-                <h4 className="text-xl font-black text-white mt-1">KANGEN WATER®</h4>
-                <div className="text-sm font-semibold text-zinc-300">Leveluk K8</div>
-                <div className="text-3xl font-black text-cyan-300 my-4">$350 / POINT</div>
-                <div className="text-xs text-zinc-400">
-                  Everyday hydration ritual · Household centerpiece
+                <h4 className="text-lg font-black text-white">Leveluk K8®</h4>
+                <div className="text-xs text-zinc-400">Medical Electrolysis Device</div>
+                <div className="text-3xl font-black text-cyan-300 my-3">$350<span className="text-sm font-normal text-zinc-400">/pt</span></div>
+                <div className="text-xs text-zinc-300 bg-cyan-950/60 py-1.5 px-2 rounded-lg border border-cyan-500/20">
+                  Fixed 1A Position = <strong>$500</strong> per Duo sale
                 </div>
               </div>
 
-              {/* Account 2 */}
-              <div className="p-6 rounded-2xl border border-amber-500/30 bg-amber-950/40 text-center">
-                <div className="text-xs font-mono font-bold text-amber-400 uppercase tracking-widest">
-                  ACCOUNT 02
+              {/* Center Operator / Plus Indicator */}
+              <div className="flex flex-col items-center justify-center text-center py-2">
+                <div className="w-12 h-12 rounded-full bg-gradient-to-br from-cyan-500 to-amber-500 p-0.5 shadow-lg shadow-cyan-500/25 flex items-center justify-center">
+                  <div className="w-full h-full rounded-full bg-[#030712] flex items-center justify-center font-black text-white text-lg">
+                    +
+                  </div>
                 </div>
-                <h4 className="text-xl font-black text-white mt-1">EMGUARDE®</h4>
-                <div className="text-sm font-semibold text-zinc-300">emGuarde GO</div>
-                <div className="text-3xl font-black text-amber-300 my-4">$150 / POINT</div>
-                <div className="text-xs text-zinc-400">
-                  Connected workspace & home · Modern technology
+                <div className="mt-3 text-xs font-black uppercase tracking-wider text-white">
+                  STACKED POSITION
+                </div>
+                <div className="text-xs text-zinc-400 mt-0.5">
+                  1 Duo = 2 Group Units
+                </div>
+              </div>
+
+              {/* Bottom Account (emGuarde) */}
+              <div className="p-6 rounded-2xl border border-amber-500/40 bg-amber-950/40 text-center relative overflow-hidden">
+                <div className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-amber-500/20 text-amber-300 text-[11px] font-bold uppercase tracking-wider mb-2">
+                  YOUR 2ND ACCOUNT
+                </div>
+                <h4 className="text-lg font-black text-white">emGuarde® GO</h4>
+                <div className="text-xs text-zinc-400">Bio-Resonance EMF Defense</div>
+                <div className="text-3xl font-black text-amber-300 my-3">$150<span className="text-sm font-normal text-zinc-400">/pt</span></div>
+                <div className="text-xs text-zinc-300 bg-amber-950/60 py-1.5 px-2 rounded-lg border border-amber-500/20">
+                  Advances 1A–6A = <strong>$500 to $3,000</strong>/sale
                 </div>
               </div>
             </div>
 
-            {/* Core Realization Box */}
-            <div className="mt-8 pt-8 border-t border-white/10 text-center">
-              <div className="text-xs font-bold uppercase tracking-[0.25em] text-cyan-400 mb-2">
-                THE STRUCTURAL REALIZATION
+            {/* Total Combined Banner */}
+            <div className="mt-6 p-4 rounded-xl border border-white/15 bg-white/[0.03] flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left">
+              <div>
+                <span className="text-xs font-bold uppercase tracking-wider text-emerald-400">
+                  Combined Duo Commission Point Value
+                </span>
+                <div className="text-base sm:text-lg font-black text-white">
+                  $350 (K8) + $150 (emGuarde) = <span className="text-emerald-400">$500 Per Point</span>
+                </div>
               </div>
-              <div className="text-xl sm:text-2xl font-black text-white mb-4">
-                TWO PRODUCTS. TWO PRODUCT POSITIONS. ONE BUSINESS STRATEGY.
+              <div className="text-xs sm:text-sm text-zinc-300 max-w-md">
+                Every qualifying Duo sale flows through both accounts, generating <strong>$1,000 to $3,500</strong> in net commission.
               </div>
-              <p className="text-sm sm:text-base text-zinc-300 max-w-2xl mx-auto leading-relaxed">
-                Kangen Water creates one natural conversation. emGuarde creates another. Together, the Duo gives an independent distributor two distinct ways to open conversations and introduce the business from the very beginning.
-              </p>
             </div>
+          </div>
+
+          {/* Interactive Mode Toggle */}
+          <div className="flex justify-center mb-8">
+            <div className="inline-flex p-1 rounded-2xl border border-white/15 bg-white/5 backdrop-blur-xl">
+              <button
+                onClick={() => setDuoTab('double')}
+                className={`px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer ${
+                  duoTab === 'double'
+                    ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow-lg shadow-cyan-500/25'
+                    : 'text-zinc-400 hover:text-white'
+                }`}
+              >
+                Double Commission Matrix
+              </button>
+              <button
+                onClick={() => setDuoTab('fasttrack')}
+                className={`px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer ${
+                  duoTab === 'fasttrack'
+                    ? 'bg-gradient-to-r from-emerald-500 to-teal-600 text-white shadow-lg shadow-emerald-500/25'
+                    : 'text-zinc-400 hover:text-white'
+                }`}
+              >
+                Fast Track to 6A Roadmap
+              </button>
+            </div>
+          </div>
+
+          {/* TAB 1: DOUBLE COMMISSION MATRIX */}
+          {duoTab === 'double' && (
+            <motion.div
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3 }}
+              className="space-y-8 max-w-5xl mx-auto"
+            >
+              {/* Matrix Table */}
+              <div className="rounded-3xl border border-white/15 bg-white/[0.02] backdrop-blur-xl overflow-hidden shadow-2xl">
+                <div className="p-6 border-b border-white/10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                  <div>
+                    <span className="text-xs font-bold uppercase tracking-wider text-cyan-400">
+                      ENAGIC DUO PROGRESSIVE PAYOUT
+                    </span>
+                    <h3 className="text-xl font-black text-white mt-0.5">
+                      Net Commission Per Duo Sale Across Ranks
+                    </h3>
+                  </div>
+                  <div className="text-xs text-zinc-400 bg-white/5 px-3 py-1.5 rounded-lg border border-white/10">
+                    Dual Payout: 1st Account ($500) + 2nd Account ($500 to $3,000)
+                  </div>
+                </div>
+
+                <div className="overflow-x-auto">
+                  <table className="w-full text-left border-collapse min-w-[620px]">
+                    <thead>
+                      <tr className="border-b border-white/10 bg-white/[0.04] text-[11px] font-bold uppercase tracking-wider text-zinc-400">
+                        <th className="py-4 px-5">Rank Tier</th>
+                        <th className="py-4 px-5">Direct Sales Milestone</th>
+                        <th className="py-4 px-5 text-cyan-300">1st Account (K8)</th>
+                        <th className="py-4 px-5 text-amber-300">2nd Account (emGuarde)</th>
+                        <th className="py-4 px-5 text-right text-emerald-400 font-black">Total Net Commission</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-white/5 text-sm">
+                      {[
+                        { rank: '1A', milestone: 'Sales 1–2', acc1: '$500 (1 pt)', acc2: '$500 (1 pt)', total: '$1,000', note: '2 sales = $2,000' },
+                        { rank: '2A', milestone: 'Sales 3–5', acc1: '$500 (1 pt)', acc2: '$1,000 (2 pts)', total: '$1,500', note: '3 sales = $4,500' },
+                        { rank: '3A', milestone: 'Sale 6 (11 units)', acc1: '$500 (1 pt)', acc2: '$1,500 (3 pts)', total: '$2,000', note: '1 sale = $2,000' },
+                        { rank: '4A', milestone: 'Sales 11+ (21 units)', acc1: '$500 (1 pt)', acc2: '$2,000 (4 pts)', total: '$2,500', note: 'Unlocks 4-point lanes' },
+                        { rank: '5A', milestone: 'Sales 26+ (51 units)', acc1: '$500 (1 pt)', acc2: '$2,500 (5 pts)', total: '$3,000', note: 'Senior leadership tier' },
+                        { rank: '6A', milestone: 'Sales 51+ (101 units)', acc1: '$500 (1 pt)', acc2: '$3,000 (6 pts)', total: '$3,500', note: 'Flagship title qualification' },
+                      ].map((row, idx) => (
+                        <tr
+                          key={row.rank}
+                          className={`hover:bg-white/[0.04] transition-colors ${idx === 2 ? 'bg-cyan-500/10 border-y border-cyan-500/30' : ''}`}
+                        >
+                          <td className="py-4 px-5 font-black text-white flex items-center gap-2">
+                            <span className="w-8 h-8 rounded-lg bg-cyan-950 border border-cyan-500/40 text-cyan-300 flex items-center justify-center text-xs font-black">
+                              {row.rank}
+                            </span>
+                            {idx === 2 && (
+                              <span className="text-[10px] uppercase font-bold bg-amber-400 text-black px-1.5 py-0.5 rounded">
+                                $8,500 Hit
+                              </span>
+                            )}
+                          </td>
+                          <td className="py-4 px-5 text-zinc-300 font-medium">
+                            {row.milestone}
+                            <span className="block text-[11px] text-zinc-500">{row.note}</span>
+                          </td>
+                          <td className="py-4 px-5 font-bold text-cyan-300">{row.acc1}</td>
+                          <td className="py-4 px-5 font-bold text-amber-300">{row.acc2}</td>
+                          <td className="py-4 px-5 text-right font-black text-emerald-400 text-base">
+                            {row.total}
+                            <span className="block text-[10px] text-zinc-400 font-normal">per Duo sold</span>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              {/* $8,500 Fast-Start Highlight Box */}
+              <div className="p-8 rounded-3xl border-2 border-amber-500/40 bg-gradient-to-r from-amber-950/40 via-yellow-950/20 to-[#030612] relative overflow-hidden shadow-2xl">
+                <div className="absolute top-0 right-0 p-8 opacity-10 pointer-events-none">
+                  <Award className="w-48 h-48 text-amber-400" />
+                </div>
+                <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
+                  <div className="lg:col-span-7">
+                    <span className="text-xs font-mono font-bold tracking-widest text-amber-400 uppercase">
+                      THE FIRST 6 DUO SALES MILESTONE
+                    </span>
+                    <h3 className="text-2xl sm:text-3xl font-black text-white mt-1">
+                      $8,500 In Net Commissions on Your First 6 Duo Sales.
+                    </h3>
+                    <p className="mt-2 text-sm text-zinc-300 leading-relaxed">
+                      Because each Duo counts as 2 units, your 6th Duo sale brings your total to 12 units—automatically advancing your second account to <strong>3A</strong>:
+                    </p>
+                    <div className="mt-4 flex flex-wrap gap-2 text-xs font-bold">
+                      <span className="px-3 py-1.5 rounded-lg bg-black/60 border border-white/15 text-zinc-200">
+                        2 × $1,000 (1A) = $2,000
+                      </span>
+                      <span className="text-zinc-500 self-center">+</span>
+                      <span className="px-3 py-1.5 rounded-lg bg-black/60 border border-white/15 text-zinc-200">
+                        3 × $1,500 (2A) = $4,500
+                      </span>
+                      <span className="text-zinc-500 self-center">+</span>
+                      <span className="px-3 py-1.5 rounded-lg bg-black/60 border border-white/15 text-zinc-200">
+                        1 × $2,000 (3A) = $2,000
+                      </span>
+                    </div>
+                  </div>
+                  <div className="lg:col-span-5 text-center lg:text-right p-6 rounded-2xl bg-black/50 border border-amber-500/30">
+                    <div className="text-xs uppercase tracking-wider text-zinc-400 font-bold">
+                      Total Upfront Direct Cashflow
+                    </div>
+                    <div className="text-4xl sm:text-5xl font-black text-amber-300 my-1">
+                      $8,500
+                    </div>
+                    <div className="text-xs text-emerald-400 font-semibold">
+                      Completely covers your Duo hardware investment
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          )}
+
+          {/* TAB 2: FAST TRACK TO 6A ROADMAP */}
+          {duoTab === 'fasttrack' && (
+            <motion.div
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3 }}
+              className="space-y-8 max-w-5xl mx-auto"
+            >
+              {/* Comparative Visual Roadmaps */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                {/* Single Product Path */}
+                <div className="p-8 rounded-3xl border border-white/15 bg-white/[0.02] backdrop-blur-xl relative flex flex-col justify-between">
+                  <div>
+                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-zinc-400 text-xs font-bold uppercase mb-4">
+                      Option 01 · Single Product
+                    </div>
+                    <h3 className="text-2xl font-black text-white">Leveluk K8® Path</h3>
+                    <div className="text-xs text-zinc-400 mt-1">$5,890 + Tax · 1 Sale = 1 Unit Volume</div>
+
+                    <div className="my-6 p-4 rounded-2xl bg-black/40 border border-white/10 text-center">
+                      <div className="text-xs uppercase font-bold text-zinc-400">Total Sales Needed to Reach 6A</div>
+                      <div className="text-4xl font-black text-white mt-1">101+ Sales</div>
+                      <div className="text-xs text-zinc-500 mt-1">Standard 1-unit pace</div>
+                    </div>
+
+                    <ul className="space-y-2 text-xs text-zinc-400">
+                      <li className="flex items-center gap-2">
+                        <ChevronRight className="w-4 h-4 text-zinc-600" />
+                        Single income position unlocked
+                      </li>
+                      <li className="flex items-center gap-2">
+                        <ChevronRight className="w-4 h-4 text-zinc-600" />
+                        $350 per point commission structure
+                      </li>
+                      <li className="flex items-center gap-2">
+                        <ChevronRight className="w-4 h-4 text-zinc-600" />
+                        Requires 101 individual machine sales
+                      </li>
+                    </ul>
+                  </div>
+
+                  <div className="mt-8 pt-4 border-t border-white/10 text-xs text-zinc-500">
+                    The traditional approach for single-product distributors.
+                  </div>
+                </div>
+
+                {/* Duo Fast Track Path */}
+                <div className="p-8 rounded-3xl border-2 border-emerald-500/40 bg-gradient-to-b from-emerald-950/30 via-[#05111b] to-[#02050b] backdrop-blur-xl relative flex flex-col justify-between shadow-2xl shadow-emerald-500/10">
+                  <div className="absolute top-4 right-4">
+                    <span className="px-3 py-1 rounded-full bg-emerald-500 text-black text-[11px] font-black uppercase tracking-wider">
+                      RECOMMENDED
+                    </span>
+                  </div>
+                  <div>
+                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/20 border border-emerald-500/30 text-emerald-300 text-xs font-bold uppercase mb-4">
+                      Option 02 · Duo Fast Track
+                    </div>
+                    <h3 className="text-2xl font-black text-white">Duo (K8 + emGuarde)</h3>
+                    <div className="text-xs text-emerald-400 mt-1 font-semibold">$8,770 + Tax · 1 Duo = 2 Units Volume</div>
+
+                    <div className="my-6 p-4 rounded-2xl bg-emerald-950/40 border border-emerald-500/30 text-center">
+                      <div className="text-xs uppercase font-bold text-emerald-300">Total Sales Needed to Reach 6A</div>
+                      <div className="text-4xl sm:text-5xl font-black text-emerald-400 mt-1">51+ Sales</div>
+                      <div className="text-xs text-emerald-300 font-semibold mt-1">
+                        Cuts required sales by 50% (102 group units!)
+                      </div>
+                    </div>
+
+                    <ul className="space-y-2 text-xs text-zinc-300">
+                      <li className="flex items-center gap-2 font-semibold text-white">
+                        <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+                        Unlocks 2 income positions from Day 01
+                      </li>
+                      <li className="flex items-center gap-2 font-semibold text-white">
+                        <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+                        Double commissions ($1,000 to $3,500 per sale)
+                      </li>
+                      <li className="flex items-center gap-2 font-semibold text-white">
+                        <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+                        Cuts time and sales required to 6A in half
+                      </li>
+                    </ul>
+                  </div>
+
+                  <div className="mt-8 pt-4 border-t border-emerald-500/20 text-xs text-emerald-300 font-bold">
+                    Strategic velocity: less time, more protection, double compensation.
+                  </div>
+                </div>
+              </div>
+
+              {/* 3 Pillars of 6A Acceleration */}
+              <div className="p-6 rounded-3xl border border-white/15 bg-white/[0.03] grid grid-cols-1 sm:grid-cols-3 gap-6 text-center">
+                <div className="p-4 rounded-2xl bg-black/40 border border-white/10">
+                  <div className="w-10 h-10 rounded-xl bg-cyan-500/20 text-cyan-300 flex items-center justify-center mx-auto mb-3 font-black text-base">
+                    90
+                  </div>
+                  <div className="font-black text-white text-base">90 Days or Less</div>
+                  <div className="text-xs text-zinc-400 mt-1">
+                    Focused execution strategy designed to compress the timeline to 6A title achievement.
+                  </div>
+                </div>
+
+                <div className="p-4 rounded-2xl bg-black/40 border border-white/10">
+                  <div className="w-10 h-10 rounded-xl bg-amber-500/20 text-amber-300 flex items-center justify-center mx-auto mb-3 font-black text-base">
+                    5×10
+                  </div>
+                  <div className="font-black text-white text-base">5 Leaders × 10 Sales</div>
+                  <div className="text-xs text-zinc-400 mt-1">
+                    Team duplication leverage: just 5 team leaders producing 10 Duo sales each reaches 6A.
+                  </div>
+                </div>
+
+                <div className="p-4 rounded-2xl bg-black/40 border border-white/10">
+                  <div className="w-10 h-10 rounded-xl bg-emerald-500/20 text-emerald-300 flex items-center justify-center mx-auto mb-3 font-black text-base">
+                    2X
+                  </div>
+                  <div className="font-black text-white text-base">Two Product Defense</div>
+                  <div className="text-xs text-zinc-400 mt-1">
+                    Complete internal hydration plus external whole-home EMF radiation protection.
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          )}
+
+          {/* Slide Modal / Visual Toggle */}
+          <div className="mt-12 text-center">
+            <button
+              onClick={() => setShowDuoSlides(!showDuoSlides)}
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full border border-white/20 bg-white/5 hover:bg-white/10 text-xs font-bold text-zinc-300 hover:text-white transition-all cursor-pointer"
+            >
+              <span>{showDuoSlides ? 'Hide' : 'View'} Official True Legacy Presentation Slides</span>
+              <ChevronDown className={`w-4 h-4 transition-transform ${showDuoSlides ? 'rotate-180' : ''}`} />
+            </button>
+
+            <AnimatePresence>
+              {showDuoSlides && (
+                <motion.div
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: 'auto' }}
+                  exit={{ opacity: 0, height: 0 }}
+                  className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6"
+                >
+                  <div className="rounded-2xl overflow-hidden border border-white/15 bg-black shadow-xl">
+                    <img
+                      src="/business/slide-duo-double-commissions.png"
+                      alt="Your Enagic Business Duo Double Commission Slide"
+                      className="w-full h-auto object-contain"
+                    />
+                    <div className="p-3 text-left text-xs font-semibold text-zinc-300 bg-white/5 border-t border-white/10">
+                      Official Curriculum · Duo Double Commission Matrix Slide
+                    </div>
+                  </div>
+
+                  <div className="rounded-2xl overflow-hidden border border-white/15 bg-black shadow-xl">
+                    <img
+                      src="/business/slide-fast-track-6a.png"
+                      alt="Fast Track to 6A Roadmap Slide"
+                      className="w-full h-auto object-contain"
+                    />
+                    <div className="p-3 text-left text-xs font-semibold text-zinc-300 bg-white/5 border-t border-white/10">
+                      Official Curriculum · Fast Track to 6A (51 vs 101 Sales) Slide
+                    </div>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
         </div>
       </section>
@@ -1434,17 +1778,17 @@ export function BusinessLandingPage({ profile: initialProfile, distributorSlug: 
             <div className="lg:col-span-6">
               <div className="relative rounded-3xl overflow-hidden border border-white/15 shadow-2xl">
                 <img
-                  src="/business/business-broll-09-leadership.jpg"
-                  alt="Leadership Mentorship Briefing"
+                  src="/business/malaysia-training-whiteboard.jpg"
+                  alt="Real True Legacy Leadership Duplication Training"
                   className="w-full aspect-[16/10] object-cover"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#020408] via-transparent to-transparent" />
-                <div className="absolute bottom-6 left-6 right-6 p-4 rounded-xl backdrop-blur-md bg-black/60 border border-white/10">
+                <div className="absolute bottom-6 left-6 right-6 p-4 rounded-xl backdrop-blur-md bg-black/70 border border-white/10">
                   <div className="text-xs font-semibold uppercase tracking-wider text-cyan-300">
-                    Sustainable Duplication
+                    Real Leadership Duplication in the Field
                   </div>
                   <div className="text-sm text-zinc-300 mt-1">
-                    Empowering emerging leaders to conduct presentations and train teams autonomously.
+                    Jesse Schexnayder and leaders in executive strategy session with Ming-Way Sia mapping the 6A executive roadmap in Kuala Lumpur.
                   </div>
                 </div>
               </div>
