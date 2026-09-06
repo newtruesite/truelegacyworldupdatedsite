@@ -500,15 +500,15 @@ export function BusinessLandingPage({ profile: initialProfile, distributorSlug: 
             <div className="lg:col-span-6">
               <div className="relative rounded-3xl overflow-hidden border border-white/15 shadow-2xl group">
                 <img
-                  src="/business/business-broll-01-entrepreneur.jpg"
-                  alt="Modern Entrepreneur Vision"
+                  src="/business/what-are-you-building-duo-global.jpg"
+                  alt="Leveluk K8 and emGuarde Global Enterprise Vision"
                   className="w-full aspect-[16/10] object-cover object-center group-hover:scale-105 transition-transform duration-700"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#020408] via-transparent to-transparent" />
-                <div className="absolute bottom-6 left-6 right-6 p-4 rounded-xl backdrop-blur-md bg-black/60 border border-white/10">
-                  <div className="text-xs font-semibold uppercase tracking-wider text-cyan-300">Vision & Focus</div>
+                <div className="absolute bottom-6 left-6 right-6 p-4 rounded-xl backdrop-blur-md bg-black/70 border border-white/10">
+                  <div className="text-xs font-semibold uppercase tracking-wider text-cyan-300">Global Enterprise Infrastructure</div>
                   <div className="text-sm text-zinc-300 mt-1">
-                    Building an independent, asset-backed global business with institutional discipline.
+                    Building an independent, asset-backed global distribution business with Leveluk K8 and emGuarde across 170+ countries.
                   </div>
                 </div>
               </div>
@@ -778,20 +778,19 @@ export function BusinessLandingPage({ profile: initialProfile, distributorSlug: 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
             {/* Left Metaphor B-roll */}
             <div className="lg:col-span-5 order-2 lg:order-1">
-              <div className="relative rounded-3xl overflow-hidden border border-white/15 shadow-2xl bg-black">
+              <div className="rounded-3xl overflow-hidden border border-white/15 shadow-2xl bg-black">
                 <img
                   src="/business/duo-rank-progression-columns.jpg"
                   alt="Enagic Rank Advancement 1A to 6A with Leveluk K8 and emGuarde"
                   className="w-full h-auto object-cover"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#020408]/90 via-transparent to-transparent pointer-events-none" />
-                <div className="absolute bottom-6 left-6 right-6 p-4 rounded-xl backdrop-blur-md bg-black/70 border border-white/10">
-                  <div className="text-xs font-semibold uppercase tracking-wider text-cyan-300">
-                    Cumulative Growth Architecture
-                  </div>
-                  <div className="text-sm text-zinc-300 mt-1">
-                    Every direct and indirect group sale advances your organization through permanent rank milestones from 1A to 6A.
-                  </div>
+              </div>
+              <div className="mt-4 p-4 sm:p-5 rounded-2xl border border-white/10 bg-white/[0.03] backdrop-blur-md">
+                <div className="text-xs font-semibold uppercase tracking-wider text-cyan-300">
+                  Cumulative Growth Architecture
+                </div>
+                <div className="text-xs sm:text-sm text-zinc-300 mt-1 leading-relaxed">
+                  Every direct and indirect group sale advances your organization through permanent rank milestones from 1A to 6A.
                 </div>
               </div>
             </div>
@@ -1350,18 +1349,17 @@ export function BusinessLandingPage({ profile: initialProfile, distributorSlug: 
               </div>
             </div>
 
-            <div className="lg:col-span-6">
-              <div className="relative rounded-3xl overflow-hidden border border-white/15 shadow-2xl">
+            <div className="lg:col-span-6 flex flex-col justify-center">
+              <div className="relative rounded-3xl overflow-hidden border border-white/15 bg-gradient-to-b from-white/[0.04] to-transparent p-4 sm:p-6 shadow-2xl backdrop-blur-xl">
                 <img
-                  src="/business/business-broll-05-conversations.jpg"
-                  alt="Real Business Conversations"
-                  className="w-full aspect-[16/11] object-cover"
+                  src="/business/laptop-zoom-team-call.png"
+                  alt="True Legacy Global Team Leadership Zoom Mastermind"
+                  className="w-full h-auto object-contain drop-shadow-[0_20px_50px_rgba(8,145,178,0.25)] hover:scale-[1.02] transition-transform duration-500"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#020408] via-transparent to-transparent" />
-                <div className="absolute bottom-6 left-6 right-6 p-4 rounded-xl backdrop-blur-md bg-black/60 border border-white/10">
-                  <div className="text-xs font-semibold uppercase tracking-wider text-cyan-300">Natural Conversations</div>
+                <div className="mt-4 p-4 rounded-2xl backdrop-blur-md bg-black/70 border border-white/10">
+                  <div className="text-xs font-semibold uppercase tracking-wider text-cyan-300">Global Digital Masterminds</div>
                   <div className="text-sm text-zinc-300 mt-1">
-                    Real entrepreneurs having real conversations with zero artificial hype.
+                    Real weekly leadership masterminds, distributor alignment calls, and global training from anywhere in the world.
                   </div>
                 </div>
               </div>
