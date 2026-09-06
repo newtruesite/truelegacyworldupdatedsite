@@ -702,7 +702,7 @@ export function BusinessLandingPage({ profile: initialProfile, distributorSlug: 
           </div>
 
           {/* Active Product Details */}
-          <div className="max-w-5xl mx-auto mb-10 p-6 rounded-2xl border border-white/15 bg-white/[0.02] flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div className="max-w-6xl mx-auto mb-8 p-6 rounded-2xl border border-white/15 bg-white/[0.02] flex flex-col sm:flex-row items-center justify-between gap-4">
             <div>
               <div className="text-xs font-bold uppercase tracking-wider text-cyan-400">
                 Selected Model: {commissionData[activeTab].name}
@@ -718,22 +718,28 @@ export function BusinessLandingPage({ profile: initialProfile, distributorSlug: 
           </div>
 
           {/* 1A to 6A Commission Value Grid */}
-          <div className="max-w-5xl mx-auto grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
+          <div className="max-w-6xl mx-auto grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4">
             {commissionData[activeTab].tiers.map((tier) => (
               <div
                 key={tier.rank}
-                className={`p-5 rounded-2xl border text-center transition-all ${
+                className={`py-5 px-3 sm:px-4 rounded-2xl border text-center transition-all flex flex-col items-center justify-between min-h-[160px] sm:min-h-[170px] ${
                   activeTab === 'k8'
                     ? 'border-cyan-500/30 bg-cyan-950/20 hover:border-cyan-400'
                     : 'border-amber-500/30 bg-amber-950/20 hover:border-amber-400'
                 }`}
               >
-                <div className="text-xs font-mono font-bold text-zinc-400">{tier.rank} Direct Lane</div>
-                <div className="text-xs text-zinc-500 mt-0.5">{tier.points}</div>
-                <div className="text-2xl sm:text-3xl font-black text-white my-3 tracking-tight">
+                <div>
+                  <div className="inline-block px-2.5 py-0.5 rounded-md bg-white/5 border border-white/10 text-[11px] font-mono font-bold text-zinc-300">
+                    {tier.rank} Direct Lane
+                  </div>
+                  <div className="text-[11px] font-medium text-zinc-400 mt-1.5">{tier.points}</div>
+                </div>
+
+                <div className="text-xl sm:text-2xl font-black text-white my-3 tracking-tight tabular-nums whitespace-nowrap">
                   {tier.commission}
                 </div>
-                <div className="text-[11px] text-zinc-400 leading-tight">
+
+                <div className="text-[11px] text-zinc-400 leading-snug">
                   Per direct sale in this lane
                 </div>
               </div>
@@ -741,7 +747,7 @@ export function BusinessLandingPage({ profile: initialProfile, distributorSlug: 
           </div>
 
           {/* Official 8-Point Patent Certificate Callout */}
-          <div className="max-w-5xl mx-auto mt-12 p-6 sm:p-8 rounded-3xl border border-white/15 bg-gradient-to-r from-white/[0.04] to-transparent flex flex-col md:flex-row items-center gap-6">
+          <div className="max-w-6xl mx-auto mt-10 p-6 sm:p-8 rounded-3xl border border-white/15 bg-gradient-to-r from-white/[0.04] to-transparent flex flex-col md:flex-row items-center gap-6">
             <div className="w-24 h-24 rounded-2xl bg-amber-500/10 border border-amber-500/30 p-2 shrink-0 flex items-center justify-center">
               <Award className="w-12 h-12 text-amber-400" />
             </div>
