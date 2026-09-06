@@ -406,6 +406,7 @@ const FALLBACK_DISTRIBUTORS: PublicDistributor[] = [
     purchase_links: {
       k8: 'https://www.enagic.com/en_US/products/leveluk-k8',
       emguarde: 'https://www.enagic.com/en_US/product-emguarde',
+      jr4: 'https://www.enagic.com/en_US/products/leveluk-jr4',
     },
   },
   {

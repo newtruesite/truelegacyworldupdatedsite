@@ -68,11 +68,11 @@ export const PURCHASE_LINK_CONFIG: ProductPurchaseLinkItem[] = [
   },
   {
     id: 'sd501',
-    name: 'Leveluk Jr IV',
+    name: 'Leveluk SD501',
     category: 'other',
-    subtitle: '4-Plate Compact Starter Ionizer for Small Households',
-    placeholder: 'https://... your Jr IV order link',
-    enagicUrl: 'https://www.enagic.com/en_US/product-comparison',
+    subtitle: '7-Plate Classic High-Performance Flagship Predecessor',
+    placeholder: 'https://... your SD501 order link',
+    enagicUrl: 'https://www.enagic.com/en_US/products/leveluk-sd501',
   },
   {
     id: 'kangen_beaute',
@@ -125,9 +125,9 @@ export const PRODUCT_PURCHASE_LINK_KEYS: Record<string, readonly string[]> = {
   kangen_beaute: ['kangen_beaute'],
   kangen_wagyu: ['kangen_wagyu', 'wagyu', 'wagyuPurchaseUrl'],
   kangen_air: ['kangen_air'],
-  jr4: ['jr4', 'jriv', 'leveluk_jr4', 'leveluk_jriv'],
-  jriv: ['jr4', 'jriv', 'leveluk_jr4', 'leveluk_jriv'],
-  leveluk_jr4: ['jr4', 'jriv', 'leveluk_jr4', 'leveluk_jriv'],
+  jr4: ['jr4', 'jriv', 'leveluk_jr4', 'leveluk_jriv', 'jr_iv', 'junior4', 'junior', 'sd501'],
+  jriv: ['jr4', 'jriv', 'leveluk_jr4', 'leveluk_jriv', 'jr_iv', 'junior4', 'junior', 'sd501'],
+  leveluk_jr4: ['jr4', 'jriv', 'leveluk_jr4', 'leveluk_jriv', 'jr_iv', 'junior4', 'junior', 'sd501'],
 }
 
 export function getProductPurchaseLink(

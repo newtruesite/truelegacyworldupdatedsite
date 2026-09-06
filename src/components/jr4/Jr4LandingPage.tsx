@@ -10,6 +10,7 @@ import {
   Filter,
   Info,
   MessageCircle,
+  ShoppingCart,
   Sparkles,
   Waves,
   X,
@@ -21,6 +22,7 @@ import { Footer } from '@/components/layout/Footer'
 import { LandingHeaderBackButton } from '@/components/layout/LandingHeaderBackButton'
 import { useLocaleContext } from '@/contexts/LocaleContext'
 import { getLeaderPortrait, getPublicDistributors, submitCrmApplication, type PublicDistributor } from '@/lib/crm'
+import { getProductPurchaseLink } from '@/config/productPurchaseLinks'
 
 interface Jr4LandingPageProps {
   profile?: PublicDistributor | null
@@ -87,6 +89,30 @@ export function Jr4LandingPage({ profile: propProfile, distributorSlug }: Jr4Lan
   const isMehdi = useMemo(() => {
     return !profile || profile.slug.toLowerCase() === 'mehdi-cohen'
   }, [profile])
+
+  const jr4PurchaseUrl = useMemo(() => {
+    return (
+      getProductPurchaseLink(profile?.purchase_links, 'jr4') ||
+      getProductPurchaseLink(profile?.purchase_links, 'jriv') ||
+      getProductPurchaseLink(profile?.purchase_links, 'leveluk_jr4') ||
+      getProductPurchaseLink(profile?.purchase_links, 'leveluk_jriv') ||
+      getProductPurchaseLink(profile?.purchase_links, 'sd501')
+    )
+  }, [profile])
+  const hasPurchaseLink = Boolean(jr4PurchaseUrl)
+
+  const buyNowLabel = useMemo(() => {
+    switch (locale) {
+      case 'es':
+        return 'Comprar JrIV'
+      case 'fr':
+        return 'Commander JrIV'
+      case 'pt':
+        return 'Comprar JrIV'
+      default:
+        return 'Order JrIV'
+    }
+  }, [locale])
 
   const whatsappUrl = useMemo(() => {
     const num = profile?.phone ? profile.phone.replace(/\D/g, '') : '18649072149'
@@ -300,6 +326,20 @@ export function Jr4LandingPage({ profile: propProfile, distributorSlug }: Jr4Lan
               <ChevronDown className="pointer-events-none absolute right-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-slate-400" />
             </div>
 
+            {/* Direct Purchase Link (Header) */}
+            {hasPurchaseLink && (
+              <a
+                href={jr4PurchaseUrl!}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 rounded-xl bg-gradient-to-r from-amber-400 via-amber-300 to-yellow-400 px-3 sm:px-3.5 py-1.5 text-xs font-black text-slate-950 shadow-md shadow-amber-500/25 hover:from-amber-300 hover:to-yellow-300 hover:scale-105 active:scale-95 transition-all shrink-0"
+              >
+                <ShoppingCart className="h-3.5 w-3.5" />
+                <span>{buyNowLabel}</span>
+                <ExternalLink className="h-3 w-3 opacity-70 hidden sm:inline" />
+              </a>
+            )}
+
             <button
               onClick={() => setShowModal(true)}
               className="inline-flex items-center gap-2 rounded-xl border border-cyan-400/40 bg-cyan-400/10 px-3.5 py-2 text-xs font-bold text-cyan-300 hover:bg-cyan-400/20 transition active:scale-95"
@@ -378,13 +418,37 @@ export function Jr4LandingPage({ profile: propProfile, distributorSlug }: Jr4Lan
                   transition={{ duration: 0.6, delay: 0.3 }}
                   className="mt-10 flex flex-wrap items-center gap-4"
                 >
-                  <button
-                    onClick={() => setShowModal(true)}
-                    className="inline-flex items-center justify-center gap-2.5 rounded-2xl bg-cyan-400 px-8 py-4 text-sm font-black text-slate-950 shadow-[0_10px_40px_rgba(34,211,238,0.35)] hover:bg-cyan-300 hover:scale-[1.02] active:scale-[0.98] transition-all"
-                  >
-                    {copy.primaryCta}
-                    <ArrowRight className="h-4 w-4" />
-                  </button>
+                  {hasPurchaseLink ? (
+                    <a
+                      href={jr4PurchaseUrl!}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center justify-center gap-2.5 rounded-2xl bg-gradient-to-r from-amber-400 via-amber-300 to-yellow-400 px-8 py-4 text-sm font-black text-slate-950 shadow-[0_10px_35px_rgba(251,191,36,0.35)] hover:from-amber-300 hover:to-yellow-300 hover:scale-[1.02] active:scale-[0.98] transition-all"
+                    >
+                      <ShoppingCart className="h-4 w-4" />
+                      {buyNowLabel}
+                      <ExternalLink className="h-3.5 w-3.5 opacity-75" />
+                    </a>
+                  ) : (
+                    <button
+                      onClick={() => setShowModal(true)}
+                      className="inline-flex items-center justify-center gap-2.5 rounded-2xl bg-cyan-400 px-8 py-4 text-sm font-black text-slate-950 shadow-[0_10px_40px_rgba(34,211,238,0.35)] hover:bg-cyan-300 hover:scale-[1.02] active:scale-[0.98] transition-all"
+                    >
+                      {copy.primaryCta}
+                      <ArrowRight className="h-4 w-4" />
+                    </button>
+                  )}
+
+                  {hasPurchaseLink && (
+                    <button
+                      onClick={() => setShowModal(true)}
+                      className="inline-flex items-center justify-center gap-2 rounded-2xl border border-cyan-400/40 bg-cyan-400/10 px-7 py-4 text-sm font-bold text-cyan-300 hover:bg-cyan-400/20 transition-all backdrop-blur-sm"
+                    >
+                      {copy.primaryCta}
+                      <ArrowRight className="h-4 w-4" />
+                    </button>
+                  )}
+
                   <a
                     href={whatsappUrl}
                     target="_blank"
@@ -538,13 +602,31 @@ export function Jr4LandingPage({ profile: propProfile, distributorSlug }: Jr4Lan
                   ))}
                 </div>
 
-                <button
-                  onClick={() => setShowModal(true)}
-                  className="inline-flex items-center gap-2.5 rounded-2xl bg-cyan-400 px-7 py-3.5 text-sm font-black text-slate-950 shadow-[0_8px_30px_rgba(34,211,238,0.3)] hover:bg-cyan-300 hover:scale-[1.02] transition-all"
-                >
-                  See If JrIV Fits My Home
-                  <ArrowRight className="h-4 w-4" />
-                </button>
+                <div className="flex flex-wrap items-center gap-3">
+                  {hasPurchaseLink && (
+                    <a
+                      href={jr4PurchaseUrl!}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-2 rounded-2xl bg-gradient-to-r from-amber-400 via-amber-300 to-yellow-400 px-6 py-3.5 text-sm font-black text-slate-950 shadow-[0_8px_30px_rgba(251,191,36,0.3)] hover:from-amber-300 hover:to-yellow-300 hover:scale-[1.02] active:scale-[0.98] transition-all"
+                    >
+                      <ShoppingCart className="h-4 w-4" />
+                      <span>{buyNowLabel}</span>
+                      <ExternalLink className="h-3.5 w-3.5 opacity-70" />
+                    </a>
+                  )}
+                  <button
+                    onClick={() => setShowModal(true)}
+                    className={`inline-flex items-center gap-2.5 rounded-2xl px-6 py-3.5 text-sm font-black transition-all ${
+                      hasPurchaseLink
+                        ? 'border border-cyan-400/40 bg-cyan-400/10 text-cyan-300 hover:bg-cyan-400/20 backdrop-blur-sm'
+                        : 'bg-cyan-400 text-slate-950 shadow-[0_8px_30px_rgba(34,211,238,0.3)] hover:bg-cyan-300 hover:scale-[1.02]'
+                    }`}
+                  >
+                    See If JrIV Fits My Home
+                    <ArrowRight className="h-4 w-4" />
+                  </button>
+                </div>
               </div>
 
               {/* Right: Lifestyle image */}
@@ -836,12 +918,25 @@ export function Jr4LandingPage({ profile: propProfile, distributorSlug }: Jr4Lan
                     </div>
                   ))}
                 </div>
-                <button
-                  onClick={() => setShowModal(true)}
-                  className="mt-6 w-full rounded-xl bg-cyan-400 py-2.5 text-xs font-black text-slate-950 hover:bg-cyan-300 transition"
-                >
-                  Explore JrIV
-                </button>
+                {hasPurchaseLink ? (
+                  <a
+                    href={jr4PurchaseUrl!}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="mt-6 w-full inline-flex items-center justify-center gap-1.5 rounded-xl bg-gradient-to-r from-amber-400 to-yellow-400 py-2.5 text-xs font-black text-slate-950 hover:from-amber-300 hover:to-yellow-300 shadow-md shadow-amber-500/20 transition"
+                  >
+                    <ShoppingCart className="h-3.5 w-3.5" />
+                    <span>{buyNowLabel}</span>
+                    <ExternalLink className="h-3 w-3 opacity-70" />
+                  </a>
+                ) : (
+                  <button
+                    onClick={() => setShowModal(true)}
+                    className="mt-6 w-full rounded-xl bg-cyan-400 py-2.5 text-xs font-black text-slate-950 hover:bg-cyan-300 transition"
+                  >
+                    Explore JrIV
+                  </button>
+                )}
               </div>
 
               {/* K8 */}
@@ -1177,9 +1272,25 @@ export function Jr4LandingPage({ profile: propProfile, distributorSlug }: Jr4Lan
                 </p>
 
                 <div className="mt-10 flex flex-wrap gap-4">
+                  {hasPurchaseLink && (
+                    <a
+                      href={jr4PurchaseUrl!}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-2.5 rounded-2xl bg-gradient-to-r from-amber-400 via-amber-300 to-yellow-400 px-8 py-4 text-sm font-black text-slate-950 shadow-[0_10px_40px_rgba(251,191,36,0.35)] hover:from-amber-300 hover:to-yellow-300 hover:scale-[1.02] transition-all"
+                    >
+                      <ShoppingCart className="h-4 w-4" />
+                      {buyNowLabel}
+                      <ExternalLink className="h-3.5 w-3.5 opacity-70" />
+                    </a>
+                  )}
                   <button
                     onClick={() => setShowModal(true)}
-                    className="inline-flex items-center gap-2.5 rounded-2xl bg-cyan-400 px-8 py-4 text-sm font-black text-slate-950 shadow-[0_10px_40px_rgba(34,211,238,0.35)] hover:bg-cyan-300 hover:scale-[1.02] transition-all"
+                    className={`inline-flex items-center gap-2.5 rounded-2xl px-8 py-4 text-sm font-black transition-all ${
+                      hasPurchaseLink
+                        ? 'border border-cyan-400/40 bg-cyan-400/10 text-cyan-300 hover:bg-cyan-400/20 backdrop-blur-sm'
+                        : 'bg-cyan-400 text-slate-950 shadow-[0_10px_40px_rgba(34,211,238,0.35)] hover:bg-cyan-300 hover:scale-[1.02]'
+                    }`}
                   >
                     Get Started with JrIV
                     <ArrowRight className="h-4 w-4" />
@@ -1218,14 +1329,36 @@ export function Jr4LandingPage({ profile: propProfile, distributorSlug }: Jr4Lan
 
       {/* STICKY MOBILE BOTTOM CTA */}
       <div className="fixed bottom-0 left-0 right-0 z-30 p-3 bg-[#060911]/95 border-t border-white/10 backdrop-blur-lg sm:hidden">
-        <button
-          type="button"
-          onClick={() => setShowModal(true)}
-          className="w-full flex items-center justify-center gap-2 rounded-xl bg-cyan-400 py-3 text-xs font-black text-slate-950 shadow-lg shadow-cyan-400/20 active:scale-95"
-        >
-          Explore the JrIV
-          <ArrowRight className="h-4 w-4" />
-        </button>
+        {hasPurchaseLink ? (
+          <div className="flex items-center gap-2">
+            <a
+              href={jr4PurchaseUrl!}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex-1 flex items-center justify-center gap-1.5 rounded-xl bg-gradient-to-r from-amber-400 to-yellow-500 py-3 text-xs font-black text-slate-950 shadow-lg shadow-amber-500/25 active:scale-95"
+            >
+              <ShoppingCart className="h-4 w-4 fill-current" />
+              <span>{buyNowLabel}</span>
+              <ExternalLink className="h-3 w-3 opacity-75" />
+            </a>
+            <button
+              type="button"
+              onClick={() => setShowModal(true)}
+              className="flex items-center justify-center gap-1 rounded-xl border border-cyan-400/40 bg-cyan-400/10 px-4 py-3 text-xs font-bold text-cyan-300 active:scale-95"
+            >
+              Ask
+            </button>
+          </div>
+        ) : (
+          <button
+            type="button"
+            onClick={() => setShowModal(true)}
+            className="w-full flex items-center justify-center gap-2 rounded-xl bg-cyan-400 py-3 text-xs font-black text-slate-950 shadow-lg shadow-cyan-400/20 active:scale-95"
+          >
+            Explore the JrIV
+            <ArrowRight className="h-4 w-4" />
+          </button>
+        )}
       </div>
 
       {/* COMPATIBILITY ASSESSMENT MODAL */}
