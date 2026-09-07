@@ -24,6 +24,7 @@ import {
   Award,
   Clock,
   ArrowUpRight,
+  PlayCircle,
 } from 'lucide-react'
 import TrueLegacyLogo from '@/components/ui/TrueLegacyLogo'
 import { SEO } from '@/components/SEO'
@@ -326,6 +327,10 @@ export function WagyuLandingPage({ profile: propProfile, distributorSlug }: Wagy
           {/* Desktop Nav Anchors */}
           <nav className="hidden lg:flex items-center gap-6 text-xs font-semibold tracking-wider text-[#a89f91] uppercase">
             <a href="#overview" className="hover:text-[#e5c583] transition-colors">Overview</a>
+            <a href="#video-demo" className="hover:text-[#e5c583] transition-colors flex items-center gap-1.5 text-[#e5c583]">
+              <PlayCircle className="h-3.5 w-3.5" />
+              <span>Video Demo</span>
+            </a>
             <a href="#difference" className="hover:text-[#e5c583] transition-colors">The Difference</a>
             <a href="#heritage" className="hover:text-[#e5c583] transition-colors">Heritage</a>
             <a href="#ranch" className="hover:text-[#e5c583] transition-colors">The Ranch</a>
@@ -444,11 +449,19 @@ export function WagyuLandingPage({ profile: propProfile, distributorSlug }: Wagy
                   <DynamicWagyuButton size="md" />
 
                   <a
+                    href="#video-demo"
+                    className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl border border-[#c5a059]/40 bg-[#1f1a16] px-5 py-3 text-xs sm:text-sm font-bold text-[#e5c583] hover:border-[#e5c583] hover:bg-[#2c241e] transition-colors shadow-sm"
+                  >
+                    <PlayCircle className="h-4 w-4 text-[#e5c583]" />
+                    <span>Watch Video Demo</span>
+                  </a>
+
+                  <a
                     href="#collection"
-                    className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl border border-[#3e342b] bg-[#1a1614] px-6 py-3 text-xs sm:text-sm font-bold text-[#ede8df] hover:border-[#c5a059] hover:bg-[#26201b] transition-colors shadow-sm"
+                    className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl border border-[#3e342b] bg-[#1a1614] px-5 py-3 text-xs sm:text-sm font-bold text-[#ede8df] hover:border-[#c5a059] hover:bg-[#26201b] transition-colors shadow-sm"
                   >
                     <span>{copy.exploreBtn}</span>
-                    <ChevronRight className="h-4 w-4 text-[#c5a059]" />
+                    <ChevronRight className="h-4 w-4 text-[#a89f91]" />
                   </a>
 
                   <a
@@ -485,6 +498,71 @@ export function WagyuLandingPage({ profile: propProfile, distributorSlug }: Wagy
                   </div>
                 </div>
               </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ─────────────────────────────────────────────────────────────
+            OFFICIAL VIDEO DEMONSTRATION (SECOND LAYER UNDERNEATH HEADER)
+            ───────────────────────────────────────────────────────────── */}
+        <section id="video-demo" className="py-16 sm:py-24 border-b border-[#2b241f] bg-gradient-to-b from-[#14110e] via-[#0f0d0b] to-[#0a0908] relative overflow-hidden">
+          {/* Ambient Warm Gold Glow */}
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[450px] bg-gradient-to-r from-[#c5a059]/10 via-[#8b2522]/5 to-[#c5a059]/10 blur-3xl pointer-events-none" />
+
+          <div className="relative mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+            <div className="text-center max-w-3xl mx-auto mb-10 sm:mb-12 space-y-3">
+              <div className="inline-flex items-center gap-2 rounded-full border border-[#c5a059]/30 bg-[#1f1a16]/90 px-4 py-1.5 text-xs font-black tracking-widest text-[#e5c583] uppercase shadow-sm">
+                <PlayCircle className="h-3.5 w-3.5 text-[#e5c583]" />
+                <span>OFFICIAL VIDEO DEMONSTRATION</span>
+              </div>
+              <h2 className="text-3xl sm:text-5xl font-black text-[#f7f4ee] tracking-tight">
+                SEE HOW IT'S RAISED.<br />
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#e5c583] via-[#c5a059] to-[#dfba73]">
+                  THE KANGEN WAGYU® EXPERIENCE.
+                </span>
+              </h2>
+              <p className="text-base text-[#a89f91] leading-relaxed max-w-2xl mx-auto font-normal">
+                Discover the daily care, heritage genetics, and daily Kangen Water® hydration protocol at Masami Ranch that create exceptional marbling and unforgettable tenderness.
+              </p>
+            </div>
+
+            {/* Video Player Container */}
+            <div className="relative rounded-3xl border-2 border-[#c5a059]/40 bg-gradient-to-b from-[#1c1713] via-[#120f0d] to-[#080706] p-3 sm:p-5 shadow-2xl shadow-[#c5a059]/10">
+              <div className="relative w-full rounded-2xl overflow-hidden bg-black aspect-video border border-white/10 shadow-inner">
+                <iframe
+                  src="https://www.youtube.com/embed/YLWX5Mkgj5M"
+                  title="Kangen Wagyu: The Wagyu Beef Raised With Kangen Water"
+                  className="absolute inset-0 h-full w-full border-0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                  allowFullScreen
+                />
+              </div>
+
+              {/* Player Footer Credentials */}
+              <div className="mt-4 flex flex-col sm:flex-row items-center justify-between gap-3 px-2 text-xs text-[#a89f91]">
+                <span className="flex items-center gap-2 text-[#f5da9e] font-semibold">
+                  <ShieldCheck className="w-4 h-4 text-[#e5c583]" />
+                  Official True Legacy Production · Masami Ranch, California
+                </span>
+                <span className="font-mono text-[#8f8576]">
+                  100% Kuroge Wagyu × Black Angus Genetics
+                </span>
+              </div>
+            </div>
+
+            {/* Quick Action Underneath Video */}
+            <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
+              <DynamicWagyuButton size="md" />
+
+              <a
+                href={whatsappUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-xl border border-[#3e342b] bg-[#1a1614] hover:bg-[#26201b] hover:border-[#c5a059] px-6 py-3.5 text-xs sm:text-sm font-bold text-[#ede8df] hover:text-[#e5c583] transition-colors shadow-sm"
+              >
+                <MessageCircle className="w-4 h-4 text-[#25D366]" />
+                <span>ASK {distributorFirstName.toUpperCase()} ABOUT ORDERING</span>
+              </a>
             </div>
           </div>
         </section>
