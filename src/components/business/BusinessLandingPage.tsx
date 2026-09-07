@@ -498,18 +498,17 @@ export function BusinessLandingPage({ profile: initialProfile, distributorSlug: 
 
             {/* Right B-roll Editorial */}
             <div className="lg:col-span-6">
-              <div className="relative rounded-3xl overflow-hidden border border-white/15 shadow-2xl group">
+              <div className="rounded-3xl overflow-hidden border border-white/15 shadow-2xl group bg-black">
                 <img
                   src="/business/what-are-you-building-duo-global.jpg"
                   alt="Leveluk K8 and emGuarde Global Enterprise Vision"
                   className="w-full aspect-[16/10] object-cover object-center group-hover:scale-105 transition-transform duration-700"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#020408] via-transparent to-transparent" />
-                <div className="absolute bottom-6 left-6 right-6 p-4 rounded-xl backdrop-blur-md bg-black/70 border border-white/10">
-                  <div className="text-xs font-semibold uppercase tracking-wider text-cyan-300">Global Enterprise Infrastructure</div>
-                  <div className="text-sm text-zinc-300 mt-1">
-                    Building an independent, asset-backed global distribution business with Leveluk K8 and emGuarde across 170+ countries.
-                  </div>
+              </div>
+              <div className="mt-4 p-4 sm:p-5 rounded-2xl border border-white/10 bg-white/[0.03] backdrop-blur-md">
+                <div className="text-xs font-semibold uppercase tracking-wider text-cyan-300">Global Enterprise Infrastructure</div>
+                <div className="text-xs sm:text-sm text-zinc-300 mt-1 leading-relaxed">
+                  Building an independent, asset-backed global distribution business with Leveluk K8 and emGuarde across 170+ countries.
                 </div>
               </div>
             </div>
@@ -1525,18 +1524,17 @@ export function BusinessLandingPage({ profile: initialProfile, distributorSlug: 
             </div>
 
             <div className="lg:col-span-6">
-              <div className="relative rounded-3xl overflow-hidden border border-white/15 shadow-2xl">
+              <div className="rounded-3xl overflow-hidden border border-white/15 shadow-2xl group bg-black">
                 <img
-                  src="/business/business-broll-06-workspace.jpg"
-                  alt="True Legacy Digital Workspace"
-                  className="w-full aspect-[16/10] object-cover"
+                  src="/business/true-legacy-system-laptop-workspace.jpg"
+                  alt="True Legacy Digital Platform and emGuarde Workspace"
+                  className="w-full aspect-[16/10] object-cover object-center group-hover:scale-105 transition-transform duration-700"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#020408] via-transparent to-transparent" />
-                <div className="absolute bottom-6 left-6 right-6 p-4 rounded-xl backdrop-blur-md bg-black/60 border border-white/10">
-                  <div className="text-xs font-semibold uppercase tracking-wider text-cyan-300">Turnkey Digital Platform</div>
-                  <div className="text-sm text-zinc-300 mt-1">
-                    Manage your pipeline, training modules, and landing pages on desktop and mobile.
-                  </div>
+              </div>
+              <div className="mt-4 p-4 sm:p-5 rounded-2xl border border-white/10 bg-white/[0.03] backdrop-blur-md">
+                <div className="text-xs font-semibold uppercase tracking-wider text-cyan-300">Turnkey Digital Platform</div>
+                <div className="text-xs sm:text-sm text-zinc-300 mt-1 leading-relaxed">
+                  Manage your pipeline, training modules, and landing pages on desktop and mobile.
                 </div>
               </div>
             </div>
