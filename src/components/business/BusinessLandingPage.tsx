@@ -1956,18 +1956,19 @@ export function BusinessLandingPage({ profile: initialProfile, distributorSlug: 
           </div>
 
           {/* Long Term Metaphor B-roll */}
-          <div className="mt-12 max-w-5xl mx-auto rounded-3xl overflow-hidden border border-white/10 shadow-2xl relative">
-            <img
-              src="/business/business-broll-10-long-term.jpg"
-              alt="Long Term Entrepreneurial Vision"
-              className="w-full aspect-[21/9] object-cover"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-[#020408] via-transparent to-transparent" />
-            <div className="absolute bottom-6 left-6 right-6 p-4 rounded-xl backdrop-blur-md bg-black/60 border border-white/10 max-w-lg">
+          <div className="mt-12 max-w-5xl mx-auto">
+            <div className="rounded-3xl overflow-hidden border border-white/15 shadow-2xl bg-black group">
+              <img
+                src="/business/leadership-stage-auditorium.jpg"
+                alt="True Legacy Leadership and Global Enterprise Event"
+                className="w-full aspect-[16/9] sm:aspect-[16/10] object-cover object-[center_30%] group-hover:scale-105 transition-transform duration-700"
+              />
+            </div>
+            <div className="mt-4 p-4 sm:p-5 rounded-2xl border border-white/10 bg-white/[0.03] backdrop-blur-md max-w-2xl mx-auto text-center">
               <div className="text-xs font-semibold uppercase tracking-wider text-cyan-300">
                 Quiet Purpose & Time Freedom
               </div>
-              <div className="text-sm text-zinc-300 mt-0.5">
+              <div className="text-xs sm:text-sm text-zinc-300 mt-1 leading-relaxed">
                 The ultimate goal is building enterprise equity that gives you choice, direction, and long-term autonomy.
               </div>
             </div>
