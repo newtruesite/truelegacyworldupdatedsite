@@ -1582,32 +1582,31 @@ export function BusinessLandingPage({ profile: initialProfile, distributorSlug: 
 
         {/* THE REAL MALAYSIA EVENT PHOTOGRAPH — FULL WIDTH EDITORIAL MOMENT */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="relative rounded-3xl overflow-hidden border-2 border-amber-500/30 shadow-2xl bg-black">
+          <div className="rounded-3xl overflow-hidden border-2 border-amber-500/30 shadow-2xl bg-black">
             <img
               src="/business/malaysia-group-event-optimized.jpg"
               alt="Malaysia Leadership & Training Event — Official True Legacy Community"
               className="w-full h-auto object-cover max-h-[750px]"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent pointer-events-none" />
-            
-            <div className="absolute bottom-6 left-6 right-6 sm:bottom-8 sm:left-8 sm:right-8 flex flex-col sm:flex-row items-start sm:items-end justify-between gap-4">
-              <div className="p-4 rounded-2xl backdrop-blur-md bg-black/70 border border-white/15 max-w-xl">
-                <span className="text-[11px] font-bold uppercase tracking-wider text-amber-400">
-                  Official True Legacy Leadership Event
-                </span>
-                <div className="text-base sm:text-lg font-bold text-white mt-1">
-                  Enagic Global Workshop & Leadership Assembly · Malaysia
-                </div>
-                <p className="text-xs text-zinc-300 mt-1 leading-relaxed">
-                  Quarterly gatherings bring leaders and distributors together from across Asia, the Americas, and Europe for in-person masterclasses, strategy alignment, and culture building.
-                </p>
-              </div>
+          </div>
 
-              <div className="text-right hidden sm:block">
-                <span className="px-3 py-1.5 rounded-full border border-white/20 bg-black/60 text-xs font-semibold text-zinc-300 backdrop-blur-md">
-                  Real Community · Real Leadership · Real Infrastructure
-                </span>
+          <div className="mt-4 p-4 sm:p-5 rounded-2xl border border-white/10 bg-white/[0.03] backdrop-blur-md flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div className="max-w-2xl">
+              <span className="text-[11px] font-bold uppercase tracking-wider text-amber-400">
+                Official True Legacy Leadership Event
+              </span>
+              <div className="text-base sm:text-lg font-bold text-white mt-0.5">
+                Enagic Global Workshop & Leadership Assembly · Malaysia
               </div>
+              <p className="text-xs sm:text-sm text-zinc-300 mt-1 leading-relaxed">
+                Quarterly gatherings bring leaders and distributors together from across Asia, the Americas, and Europe for in-person masterclasses, strategy alignment, and culture building.
+              </p>
+            </div>
+
+            <div className="shrink-0 hidden sm:block">
+              <span className="px-3.5 py-2 rounded-full border border-white/20 bg-black/60 text-xs font-semibold text-zinc-300 backdrop-blur-md">
+                Real Community · Real Leadership · Real Infrastructure
+              </span>
             </div>
           </div>
 
@@ -1680,20 +1679,19 @@ export function BusinessLandingPage({ profile: initialProfile, distributorSlug: 
 
             {/* Stage Leaders Real Photo */}
             <div className="lg:col-span-7">
-              <div className="relative rounded-3xl overflow-hidden border border-white/15 shadow-2xl">
+              <div className="rounded-3xl overflow-hidden border border-white/15 shadow-2xl bg-black group">
                 <img
                   src="/business/malaysia-stage-leaders.jpg"
                   alt="True Legacy Leaders on Stage in Malaysia"
-                  className="w-full aspect-[16/10] object-cover"
+                  className="w-full aspect-[16/10] object-cover group-hover:scale-105 transition-transform duration-700"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#020408] via-transparent to-transparent" />
-                <div className="absolute bottom-6 left-6 right-6 p-4 rounded-xl backdrop-blur-md bg-black/60 border border-white/10">
-                  <div className="text-xs font-semibold uppercase tracking-wider text-cyan-300">
-                    On-Stage Masterclass Experience
-                  </div>
-                  <div className="text-sm text-zinc-300 mt-1">
-                    Simon Loh, Ming-Way Sia, Mehdi Cohen, and international leadership training on stage in Kuala Lumpur.
-                  </div>
+              </div>
+              <div className="mt-4 p-4 sm:p-5 rounded-2xl border border-white/10 bg-white/[0.03] backdrop-blur-md">
+                <div className="text-xs font-semibold uppercase tracking-wider text-cyan-300">
+                  On-Stage Masterclass Experience
+                </div>
+                <div className="text-xs sm:text-sm text-zinc-300 mt-1 leading-relaxed">
+                  Simon Loh, Ming-Way Sia, Mehdi Cohen, and international leadership training on stage in Kuala Lumpur.
                 </div>
               </div>
             </div>
@@ -1808,20 +1806,19 @@ export function BusinessLandingPage({ profile: initialProfile, distributorSlug: 
             </div>
 
             <div className="lg:col-span-6">
-              <div className="relative rounded-3xl overflow-hidden border border-white/15 shadow-2xl">
+              <div className="rounded-3xl overflow-hidden border border-white/15 shadow-2xl bg-black group">
                 <img
                   src="/business/malaysia-training-whiteboard.jpg"
                   alt="Real True Legacy Leadership Duplication Training"
-                  className="w-full aspect-[16/10] object-cover"
+                  className="w-full aspect-[16/10] object-cover group-hover:scale-105 transition-transform duration-700"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#020408] via-transparent to-transparent" />
-                <div className="absolute bottom-6 left-6 right-6 p-4 rounded-xl backdrop-blur-md bg-black/70 border border-white/10">
-                  <div className="text-xs font-semibold uppercase tracking-wider text-cyan-300">
-                    Real Leadership Duplication in the Field
-                  </div>
-                  <div className="text-sm text-zinc-300 mt-1">
-                    Jesse Schexnayder and leaders in executive strategy session with Ming-Way Sia mapping the 6A executive roadmap in Kuala Lumpur.
-                  </div>
+              </div>
+              <div className="mt-4 p-4 sm:p-5 rounded-2xl border border-white/10 bg-white/[0.03] backdrop-blur-md">
+                <div className="text-xs font-semibold uppercase tracking-wider text-cyan-300">
+                  Real Leadership Duplication in the Field
+                </div>
+                <div className="text-xs sm:text-sm text-zinc-300 mt-1 leading-relaxed">
+                  Jesse Schexnayder and leaders in executive strategy session with Ming-Way Sia mapping the 6A executive roadmap in Kuala Lumpur.
                 </div>
               </div>
             </div>
