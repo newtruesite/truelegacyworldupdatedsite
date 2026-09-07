@@ -1427,7 +1427,7 @@ export default function K8Page({ profile: propProfile, distributorSlug: propSlug
           className="k8-hero-bg absolute inset-0 w-full h-full"
           aria-hidden="true"
           style={{
-            backgroundImage: "url('/true-legacy-assets/k8-cinematic-hero.png')",
+            backgroundImage: "url('/true-legacy-assets/k8-cinematic-hero-modern.png')",
             backgroundSize: "cover",
             backgroundRepeat: "no-repeat",
             // Desktop: image is 16:9, K8 sits right-center. Anchor it so K8 stays right.
