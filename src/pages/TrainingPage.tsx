@@ -1,5 +1,6 @@
 import { EventsTab } from "@/components/EventsTab";
 import { PresentationCenter } from "@/components/training/PresentationCenter";
+import { UnifiedAcademyLibrary } from "@/components/training/UnifiedAcademyLibrary";
 import { Footer } from "@/components/layout/Footer";
 import { Navbar } from "@/components/layout/Navbar";
 import { SEO } from "@/components/SEO";
@@ -1285,6 +1286,11 @@ export default function TrainingPage() {
 
                 {/* TRUE LEGACY LEADER PRESENTATION CENTER */}
                 <PresentationCenter />
+
+                {/* UNIFIED TRUE LEGACY ACADEMY CURRICULUM */}
+                <div className="mt-14 border-t border-white/10 pt-10">
+                  <UnifiedAcademyLibrary />
+                </div>
 
                 {/* CLEAR TRANSITION INTO TRUE LEGACY ACADEMY */}
                 <div className="mt-14 mb-8 pt-10 border-t border-white/10 text-center">
