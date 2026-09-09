@@ -1877,81 +1877,28 @@ export function DuoLandingPage({ profile: propProfile, distributorSlug: propSlug
             </p>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            {/* Card 1: Kangen */}
-            <div className="rounded-3xl border border-white/15 bg-gradient-to-br from-white/[0.05] via-[#071226] to-[#040711] p-8 sm:p-10 flex flex-col justify-between shadow-2xl relative overflow-hidden group">
-              <div>
-                <span className="inline-flex items-center gap-1.5 rounded-full border border-cyan-400/30 bg-cyan-400/10 px-3 py-1 text-xs font-bold text-cyan-300">
-                  <Droplets className="h-3.5 w-3.5" />
-                  WATER EXPERIENCE
-                </span>
-                <h3 className="mt-4 text-2xl sm:text-3xl font-black text-white">
-                  Kangen Water® Experience
-                </h3>
-                <p className="mt-3 text-sm text-[#b0b9c7] leading-relaxed">
-                  Dive into the full Japanese water ionizer story: molecular hydrogen hydration, the 5 water types, produce cleaning, beauty skincare, and household use cases.
-                </p>
-              </div>
-
-              {/* Standardized ProductStage for K8 */}
-              <ProductStage product="k8" context="card" />
-
-              <Link
-                to={kangenPageUrl}
-                className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-black py-3.5 text-sm transition-all shadow-lg shadow-cyan-500/20"
-              >
-                <span>{t.exploreIndK8Cta}</span>
-                <ArrowRight className="h-4 w-4" />
-              </Link>
+          {/* Duo Video Embed */}
+          <div className="mx-auto max-w-4xl w-full">
+            <div className="relative rounded-3xl overflow-hidden border border-white/10 shadow-2xl shadow-black/50" style={{paddingBottom: '56.25%', height: 0}}>
+              <iframe
+                src="https://www.youtube.com/embed/lB5fW55DmaI?rel=0&modestbranding=1"
+                title="The True Legacy Duo Presentation"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowFullScreen
+                className="absolute inset-0 w-full h-full rounded-3xl"
+              />
             </div>
+          </div>
 
-            {/* Card 2: emGuarde */}
-            <div className="rounded-3xl border border-white/15 bg-gradient-to-br from-white/[0.05] via-[#0b171c] to-[#040711] p-8 sm:p-10 flex flex-col justify-between shadow-2xl relative overflow-hidden group">
-              <div>
-                <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-400/30 bg-emerald-400/10 px-3 py-1 text-xs font-bold text-emerald-300">
-                  <Radio className="h-3.5 w-3.5" />
-                  ENVIRONMENT EXPERIENCE
-                </span>
-                <h3 className="mt-4 text-2xl sm:text-3xl font-black text-white">
-                  emGuarde® Technology Experience
-                </h3>
-                <p className="mt-3 text-sm text-[#b0b9c7] leading-relaxed">
-                  Explore how harmonic frequency resonance works in workspaces, smart homes, and travel environments without disrupting cellular or Wi-Fi connectivity.
-                </p>
-              </div>
-
-              {/* Standardized ProductStage for emGuarde */}
-              <ProductStage product="emguarde" context="card" />
-
-              <Link
-                to={emguardePageUrl}
-                className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black py-3.5 text-sm transition-all shadow-lg shadow-emerald-500/20"
-              >
-                <span>{t.exploreIndEmguardeCta}</span>
-                <ArrowRight className="h-4 w-4" />
-              </Link>
-            </div>
-
-          {/* Go Deeper - Additional CTAs: Duo Presentation + Business Opportunity */}
-          <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
-            <a
-              href="https://canva.link/cgnoo41cjkcbzgm"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex w-full sm:w-auto items-center justify-center gap-2.5 rounded-2xl border border-white/20 bg-white/[0.06] hover:bg-white/[0.12] backdrop-blur-sm text-white font-bold py-4 px-8 text-sm transition-all duration-200 shadow-lg group"
-            >
-              <ExternalLink className="h-4 w-4 text-cyan-400 group-hover:scale-110 transition-transform" />
-              <span>VIEW THE DUO PRESENTATION</span>
-            </a>
-
+          {/* Business Opportunity CTA - centered */}
+          <div className="mt-10 flex justify-center">
             <Link
               to={businessPageUrl}
-              className="inline-flex w-full sm:w-auto items-center justify-center gap-2.5 rounded-2xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-950 font-black py-4 px-8 text-sm transition-all duration-200 shadow-lg shadow-amber-500/20 group"
+              className="inline-flex items-center justify-center gap-2.5 rounded-2xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-950 font-black py-4 px-10 text-sm transition-all duration-200 shadow-lg shadow-amber-500/20 group"
             >
               <Sparkles className="h-4 w-4 group-hover:scale-110 transition-transform" />
               <span>EXPLORE THE BUSINESS OPPORTUNITY</span>
             </Link>
-          </div>
           </div>
         </div>
       </section>
