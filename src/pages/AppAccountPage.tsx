@@ -82,6 +82,7 @@ export default function AppAccountPage() {
   const [message, setMessage] = useState('')
   const [error, setError] = useState('')
   const [customAvatarUrl, setCustomAvatarUrl] = useState<string | null>(null)
+  const [savingPortrait, setSavingPortrait] = useState(false)
   const [copiedLink, setCopiedLink] = useState(false)
 
   // Collapsible section states - all collapsed by default for sleek appearance
@@ -207,7 +208,9 @@ export default function AppAccountPage() {
 
   useEffect(() => {
     if (distributor) {
-      setCustomAvatarUrl(distributor.avatar_url || '')
+      // Ignore dead in-memory blob URLs from previous sessions
+      const initialAvatar = distributor.avatar_url && !distributor.avatar_url.startsWith('blob:') ? distributor.avatar_url : ''
+      setCustomAvatarUrl(initialAvatar)
       setPurchaseLinks(distributor.purchase_links || {})
       const custom = distributor.application_settings || {}
       setCustomHeadline(custom.customHeadline || '')
@@ -423,8 +426,17 @@ export default function AppAccountPage() {
         cleanPurchaseLinks.ukon = ukonVal
       }
 
+      let finalAvatarToSave = customAvatarUrl || distributor.avatar_url || null
+      if (finalAvatarToSave && finalAvatarToSave.startsWith('blob:')) {
+        try {
+          finalAvatarToSave = await convertToPermanentDataUrl(finalAvatarToSave)
+        } catch {
+          finalAvatarToSave = distributor.avatar_url && !distributor.avatar_url.startsWith('blob:') ? distributor.avatar_url : null
+        }
+      }
+
       const updates: DistributorProfileUpdate = {
-        avatarUrl: customAvatarUrl || distributor.avatar_url || null,
+        avatarUrl: finalAvatarToSave,
         displayName,
         title,
         bio,
@@ -484,6 +496,66 @@ export default function AppAccountPage() {
       setError(errorMsg)
     } finally {
       setSaving(false)
+    }
+  }
+
+  const handleSavePortraitOnly = async () => {
+    if (!distributor) return
+    if (!customAvatarUrl) {
+      setError('Please choose or generate a portrait before saving.')
+      return
+    }
+
+    setSavingPortrait(true)
+    setMessage('')
+    setError('')
+
+    try {
+      let finalAvatar = customAvatarUrl
+      if (finalAvatar.startsWith('blob:')) {
+        finalAvatar = await convertToPermanentDataUrl(finalAvatar)
+      }
+
+      const updates: DistributorProfileUpdate = {
+        avatarUrl: finalAvatar,
+        displayName: distributor.display_name,
+        title: distributor.title,
+        bio: distributor.bio || '',
+        phone: distributor.phone || '',
+        instagramUrl: distributor.instagram_url || '',
+        websiteUrl: distributor.website_url || '',
+        regions: distributor.regions && distributor.regions.length > 0 ? distributor.regions : ['North America'],
+        languages: distributor.languages && distributor.languages.length > 0 ? distributor.languages : ['en'],
+        acceptingLeads: distributor.accepting_leads,
+        applicationSettings: distributor.application_settings || {},
+        purchaseLinks: distributor.purchase_links || {},
+      }
+
+      const updated = await updateDistributorProfile(distributor.id, updates)
+
+      if (updated) {
+        if (finalAvatar) {
+          setCustomLeaderAvatar(distributor.slug, finalAvatar)
+        }
+        setDistributors((prev) =>
+          prev.map((item) =>
+            item.id === distributor.id
+              ? {
+                  ...item,
+                  avatar_url: finalAvatar,
+                }
+              : item
+          )
+        )
+        setMessage('Your portrait has been saved and is now live across your public profile and landing pages!')
+      } else {
+        throw new Error('Account storage is unavailable')
+      }
+    } catch (err: unknown) {
+      console.error('Failed to save portrait:', err)
+      setError(err instanceof Error ? err.message : 'Failed to save portrait. Please try again.')
+    } finally {
+      setSavingPortrait(false)
     }
   }
 
@@ -724,11 +796,33 @@ export default function AppAccountPage() {
                   <LeaderPortraitGenerator
                     title="Leader Portrait"
                     onPortraitChange={handlePortraitChange}
-                    onApprovePortrait={(approvedUrl) => {
-                      setCustomAvatarUrl(approvedUrl)
-                      setMessage('Standardized portrait approved for your profile. Click "Save all changes" below to finalize.')
+                    onApprovePortrait={async (approvedUrl) => {
+                      let finalUrl = approvedUrl
+                      if (finalUrl.startsWith('blob:')) {
+                        try {
+                          finalUrl = await convertToPermanentDataUrl(finalUrl)
+                        } catch {}
+                      }
+                      setCustomAvatarUrl(finalUrl)
+                      setMessage('Portrait approved! Click "Save Portrait to Profile" below to apply it immediately.')
                     }}
                   />
+                  {customAvatarUrl && (
+                    <div className="mt-4 pt-4 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-3">
+                      <div className="text-xs text-[#aeb4c0]">
+                        <span className="font-bold text-white">Portrait Ready:</span> Click below to apply your portrait directly to your public profile.
+                      </div>
+                      <button
+                        type="button"
+                        disabled={savingPortrait}
+                        onClick={handleSavePortraitOnly}
+                        className="inline-flex min-h-11 w-full sm:w-auto items-center justify-center gap-2 rounded-xl bg-cyan-400 hover:bg-cyan-300 px-5 text-xs font-black text-slate-950 shadow-lg shadow-cyan-400/20 transition cursor-pointer disabled:opacity-50 whitespace-nowrap"
+                      >
+                        <Save className="h-4 w-4" />
+                        {savingPortrait ? 'Saving Portrait…' : 'Save Portrait to Profile'}
+                      </button>
+                    </div>
+                  )}
                 </div>
               )}
             </div>

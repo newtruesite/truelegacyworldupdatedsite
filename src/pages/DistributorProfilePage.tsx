@@ -668,6 +668,12 @@ export default function DistributorProfilePage() {
                   <img
                     src={leaderPhoto}
                     alt={profile.display_name}
+                    onError={(e) => {
+                      const target = e.currentTarget
+                      if (target.src !== '/logos/tl-square-white.png') {
+                        target.src = '/logos/tl-square-white.png'
+                      }
+                    }}
                     className="h-full w-full object-cover object-top transition duration-500 group-hover/photo:scale-105"
                   />
                   <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
@@ -903,6 +909,12 @@ export default function DistributorProfilePage() {
                   <img
                     src={leaderPhoto}
                     alt={profile.display_name}
+                    onError={(e) => {
+                      const target = e.currentTarget
+                      if (target.src !== '/logos/tl-square-white.png') {
+                        target.src = '/logos/tl-square-white.png'
+                      }
+                    }}
                     className="h-full w-full rounded-full object-cover object-top"
                   />
                 </div>

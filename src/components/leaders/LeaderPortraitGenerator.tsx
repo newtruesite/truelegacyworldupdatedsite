@@ -261,8 +261,20 @@ export function LeaderPortraitGenerator({
   }
 
   // ── Approve portrait ──────────────────────────────────────────────────────
-  const handleApprove = () => {
-    const url = generatedUrl
+  const handleApprove = async () => {
+    let url = generatedUrl
+    // Ensure the portrait URL is a permanent Base64 Data URL so it survives tab closures and loads across all devices
+    if (generatedBlob || url.startsWith('blob:')) {
+      try {
+        const permUrl = await convertToPermanentDataUrl(generatedBlob || url)
+        if (permUrl) {
+          url = permUrl
+          setGeneratedUrl(permUrl)
+        }
+      } catch (err) {
+        console.error('Failed to convert portrait blob to permanent data URL:', err)
+      }
+    }
     setApprovedUrl(url)
     setIsApproved(true)
     setStatus('applicant_approved')
@@ -279,6 +291,39 @@ export function LeaderPortraitGenerator({
     }
     notify(data)
     onApprovePortrait?.(url, data)
+  }
+
+  // ── Use original photo directly without AI segmentation ───────────────────
+  const handleUseOriginalDirectly = async () => {
+    if (!originalFile) return
+    try {
+      setIsValidating(true)
+      const permUrl = await convertToPermanentDataUrl(originalFile)
+      if (generatedUrl.startsWith('blob:')) URL.revokeObjectURL(generatedUrl)
+      setGeneratedBlob(originalFile)
+      setGeneratedUrl(permUrl)
+      setApprovedUrl(permUrl)
+      setIsApproved(true)
+      setStatus('applicant_approved')
+      setUiState('review')
+      const data: LeaderPortraitData = {
+        originalFile,
+        originalFileName: originalName,
+        originalPreviewUrl: permUrl,
+        generatedPortraitUrl: permUrl,
+        approvedPortraitUrl: permUrl,
+        promptUsed: 'Direct Photo Upload',
+        status: 'applicant_approved',
+        qualityPassed: true,
+        validationNotes: ['Uploaded photo used directly'],
+      }
+      notify(data)
+      onApprovePortrait?.(permUrl, data)
+    } catch {
+      setErrorMessage('Failed to process photo.')
+    } finally {
+      setIsValidating(false)
+    }
   }
 
   // ── Download ──────────────────────────────────────────────────────────────
@@ -485,17 +530,28 @@ export function LeaderPortraitGenerator({
               </div>
             )}
 
-            {/* Generate button */}
+            {/* Action buttons when a photo is uploaded */}
             {originalUrl && (
-              <button
-                type="button"
-                disabled={isGenerating || !originalFile}
-                onClick={handleGenerate}
-                className="inline-flex min-h-[56px] w-full items-center justify-center gap-2.5 rounded-xl bg-cyan-400 px-6 py-3.5 text-sm font-black text-slate-950 transition hover:bg-cyan-300 active:scale-[0.99] disabled:opacity-50 shadow-lg shadow-cyan-950/20 whitespace-nowrap"
-              >
-                <Sparkles className="h-4.5 w-4.5 shrink-0" />
-                <span>Generate My Leader Portrait</span>
-              </button>
+              <div className="space-y-2.5">
+                <button
+                  type="button"
+                  disabled={isGenerating || !originalFile}
+                  onClick={handleGenerate}
+                  className="inline-flex min-h-[56px] w-full items-center justify-center gap-2.5 rounded-xl bg-cyan-400 px-6 py-3.5 text-sm font-black text-slate-950 transition hover:bg-cyan-300 active:scale-[0.99] disabled:opacity-50 shadow-lg shadow-cyan-950/20 whitespace-nowrap cursor-pointer"
+                >
+                  <Sparkles className="h-4.5 w-4.5 shrink-0" />
+                  <span>Generate My Leader Portrait (AI Studio)</span>
+                </button>
+                <button
+                  type="button"
+                  disabled={isGenerating || !originalFile}
+                  onClick={handleUseOriginalDirectly}
+                  className="inline-flex min-h-[46px] w-full items-center justify-center gap-2 rounded-xl border border-white/15 bg-white/[0.04] px-5 py-2.5 text-xs font-bold text-white hover:bg-white/10 active:scale-[0.99] transition cursor-pointer"
+                >
+                  <UserCheck className="h-4 w-4 shrink-0 text-cyan-400" />
+                  <span>Use Uploaded Photo Directly (Without AI Studio Background)</span>
+                </button>
+              </div>
             )}
           </div>
         )}

@@ -1931,6 +1931,27 @@ export function DuoLandingPage({ profile: propProfile, distributorSlug: propSlug
                 <ArrowRight className="h-4 w-4" />
               </Link>
             </div>
+
+          {/* Go Deeper - Additional CTAs: Duo Presentation + Business Opportunity */}
+          <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
+            <a
+              href="https://canva.link/cgnoo41cjkcbzgm"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex w-full sm:w-auto items-center justify-center gap-2.5 rounded-2xl border border-white/20 bg-white/[0.06] hover:bg-white/[0.12] backdrop-blur-sm text-white font-bold py-4 px-8 text-sm transition-all duration-200 shadow-lg group"
+            >
+              <ExternalLink className="h-4 w-4 text-cyan-400 group-hover:scale-110 transition-transform" />
+              <span>VIEW THE DUO PRESENTATION</span>
+            </a>
+
+            <Link
+              to={businessPageUrl}
+              className="inline-flex w-full sm:w-auto items-center justify-center gap-2.5 rounded-2xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-950 font-black py-4 px-8 text-sm transition-all duration-200 shadow-lg shadow-amber-500/20 group"
+            >
+              <Sparkles className="h-4 w-4 group-hover:scale-110 transition-transform" />
+              <span>EXPLORE THE BUSINESS OPPORTUNITY</span>
+            </Link>
+          </div>
           </div>
         </div>
       </section>

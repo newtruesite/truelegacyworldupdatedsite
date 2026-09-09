@@ -292,16 +292,19 @@ export function resolveCanonicalAvatarUrl(slug?: string | null, rawUrl?: string 
 
   // 2. Check if rawUrl is a legitimate personalized image (not an accidental fallback for another leader)
   if (rawUrl && typeof rawUrl === 'string' && rawUrl.trim() !== '') {
-    const isStandardizedOther =
-      rawUrl.includes('/leaders/standardized/') &&
-      normalizedSlug &&
-      !rawUrl.toLowerCase().includes(normalizedSlug) &&
-      !rawUrl.toLowerCase().includes(normalizedSlug.split('-')[0])
-    const isGenericFallback = rawUrl.includes('/logos/') || rawUrl.includes('placeholder')
+    // In-memory blob URLs are ephemeral and invalid across sessions/devices; ignore them
+    if (!rawUrl.startsWith('blob:')) {
+      const isStandardizedOther =
+        rawUrl.includes('/leaders/standardized/') &&
+        normalizedSlug &&
+        !rawUrl.toLowerCase().includes(normalizedSlug) &&
+        !rawUrl.toLowerCase().includes(normalizedSlug.split('-')[0])
+      const isGenericFallback = rawUrl.includes('/logos/') || rawUrl.includes('placeholder')
 
-    // If it's a legitimate custom photo URL or matches the leader, use it
-    if (!isStandardizedOther && !isGenericFallback) {
-      return rawUrl
+      // If it's a legitimate custom photo URL or matches the leader, use it
+      if (!isStandardizedOther && !isGenericFallback) {
+        return rawUrl
+      }
     }
   }
 
@@ -317,10 +320,14 @@ export function resolveCanonicalAvatarUrl(slug?: string | null, rawUrl?: string 
         return path
       }
     }
-    return `/leaders/standardized/${normalizedSlug}.png`
   }
 
-  return rawUrl || '/logos/tl-square-white.png'
+  // If rawUrl is valid and not a dead blob or placeholder, use it
+  if (rawUrl && typeof rawUrl === 'string' && !rawUrl.startsWith('blob:') && !rawUrl.includes('placeholder')) {
+    return rawUrl
+  }
+
+  return '/logos/tl-square-white.png'
 }
 
 export function getLeaderPortrait(slug?: string | null, fallback?: string | null): string {
