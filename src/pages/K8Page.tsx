@@ -41,6 +41,7 @@ const LOCALES = {
     hero: {
       eyebrow: "KANGEN WATER® · JAPANESE WATER TECHNOLOGY",
       headline: "Better water, freshly made at your tap.",
+      headlineLines: ["Better water,", "freshly made", "at your tap."],
       sub: "Meet the Leveluk K8—a premium home water ionizer that filters ordinary tap water and creates multiple water settings for drinking, cooking, beauty, produce washing, and everyday cleaning.",
       ctaPrimary: "Watch the 4-Minute Demo",
       ctaSecondary: "Contact Your Distributor",
@@ -266,11 +267,29 @@ const LOCALES = {
       earnings: "Distributor Disclaimer: True Legacy is an independent team platform. Enagic product sales offer optional independent distributor compensation. Individual results vary based on personal effort, location, and market demand.",
       distributor: "Notice: This landing page is independently owned and operated by True Legacy independent distributors and is not the corporate site of Enagic Co., Ltd.",
     },
+    ui: {
+      backToProfile: "Back to {name}'s Profile",
+      goBack: "Go back",
+      leaderLabel: "Leader:",
+      sharedBy: "Shared by {name}",
+      switchLanguage: "Switch language to {language}",
+      videoTitle: "Leveluk K8 4-Minute Demonstration",
+      kitchenImageAlt: "Leveluk K8 integrated into a modern kitchen",
+      waterUsesImageAlt: "Everyday practical uses of Leveluk K8 water",
+      primaryUses: "Primary Household Uses:",
+      handlingNote: "Usage & Handling Note:",
+      certificationsBody: "Enagic holds ISO 13485 (Medical Devices Quality Management System), ISO 9001, ISO 14001, and the Water Quality Association (WQA) Gold Seal certification.",
+      defaultLeaderTitle: "True Legacy 6A Leader",
+      allRightsReserved: "All Rights Reserved.",
+      privacyTerms: "Privacy Policy & Terms",
+      enagicCorporate: "Enagic® Corporate",
+    },
   },
   es: {
     hero: {
       eyebrow: "TRUE LEGACY × LEVELUK K8",
       headline: "Transforma tu Agua. Eleva tu Legado.",
+      headlineLines: ["Mejor agua,", "recién producida", "en tu grifo."],
       sub: "Descubre el LEVELUK K8—un ionizador de agua premium para el hogar diseñado para ofrecer múltiples tipos de agua para beber, cocinar, belleza y uso doméstico diario.",
       ctaPrimary: "Explorar el K8",
       ctaSecondary: "Conectar con tu Líder True Legacy",
@@ -497,11 +516,29 @@ const LOCALES = {
       earnings: "Aviso de Distribuidor: True Legacy es un equipo independiente. La venta de equipos Enagic ofrece comisiones opcionales para distribuidores. Los resultados varían según el esfuerzo individual y las condiciones del mercado.",
       distributor: "Aviso Legal: Este sitio web es administrado de manera independiente por distribuidores de True Legacy y no es el sitio corporativo oficial de Enagic Co., Ltd.",
     },
+    ui: {
+      backToProfile: "Volver al perfil de {name}",
+      goBack: "Volver",
+      leaderLabel: "Líder:",
+      sharedBy: "Compartido por {name}",
+      switchLanguage: "Cambiar idioma a {language}",
+      videoTitle: "Demostración de Leveluk K8 en 4 minutos",
+      kitchenImageAlt: "Leveluk K8 integrada en una cocina moderna",
+      waterUsesImageAlt: "Usos cotidianos del agua de Leveluk K8",
+      primaryUses: "Usos principales en el hogar:",
+      handlingNote: "Nota de uso y manipulación:",
+      certificationsBody: "Enagic cuenta con las certificaciones ISO 13485 (Sistema de Gestión de Calidad para Dispositivos Médicos), ISO 9001, ISO 14001 y el Sello de Oro de la Water Quality Association (WQA).",
+      defaultLeaderTitle: "Líder 6A de True Legacy",
+      allRightsReserved: "Todos los derechos reservados.",
+      privacyTerms: "Política de Privacidad y Términos",
+      enagicCorporate: "Sitio corporativo de Enagic®",
+    },
   },
   fr: {
     hero: {
       eyebrow: "TRUE LEGACY × LEVELUK K8",
       headline: "Transformez votre Eau. Élevez votre Héritage.",
+      headlineLines: ["Une meilleure eau,", "fraîchement produite", "à votre robinet."],
       sub: "Découvrez le LEVELUK K8—un ioniseur d'eau domestique premium conçu pour fournir plusieurs types d'eau pour la boisson, la cuisine, la beauté et l'usage quotidien.",
       ctaPrimary: "Explorer le K8",
       ctaSecondary: "Contacter votre Leader True Legacy",
@@ -728,11 +765,29 @@ const LOCALES = {
       earnings: "Avertissement Distributeur : True Legacy est un réseau indépendant. La vente de produits Enagic offre des commissions de distribution optionnelles.",
       distributor: "Mentions Légales : Ce site est géré de manière indépendante par des distributeurs True Legacy et n'est pas le site officiel d'Enagic Co., Ltd.",
     },
+    ui: {
+      backToProfile: "Retour au profil de {name}",
+      goBack: "Retour",
+      leaderLabel: "Leader :",
+      sharedBy: "Partagé par {name}",
+      switchLanguage: "Changer la langue en {language}",
+      videoTitle: "Démonstration du Leveluk K8 en 4 minutes",
+      kitchenImageAlt: "Leveluk K8 intégré dans une cuisine moderne",
+      waterUsesImageAlt: "Usages quotidiens pratiques de l'eau Leveluk K8",
+      primaryUses: "Principaux usages domestiques :",
+      handlingNote: "Conseils d'utilisation :",
+      certificationsBody: "Enagic détient les certifications ISO 13485 (système de management de la qualité des dispositifs médicaux), ISO 9001, ISO 14001 ainsi que le Sceau d'Or de la Water Quality Association (WQA).",
+      defaultLeaderTitle: "Leader 6A de True Legacy",
+      allRightsReserved: "Tous droits réservés.",
+      privacyTerms: "Politique de confidentialité et conditions",
+      enagicCorporate: "Site officiel d'Enagic®",
+    },
   },
   pt: {
     hero: {
       eyebrow: "TRUE LEGACY × LEVELUK K8",
       headline: "Transforme sua Água. Eleve seu Legado.",
+      headlineLines: ["Água de alta qualidade,", "produzida na hora", "na sua torneira."],
       sub: "Descubra o LEVELUK K8—um ionizador de água residencial premium projetado para fornecer múltiplos tipos de água para beber, cozinhar, beleza e uso doméstico diário.",
       ctaPrimary: "Explorar o K8",
       ctaSecondary: "Conectar com seu Líder True Legacy",
@@ -959,6 +1014,23 @@ const LOCALES = {
       earnings: "Aviso de Distribuidor: True Legacy é uma equipe independente. Vendas de produtos Enagic oferecem comissões opcionais.",
       distributor: "Aviso Legal: Este site é operado de forma independente por distribuidores True Legacy e não é o site corporativo da Enagic Co., Ltd.",
     },
+    ui: {
+      backToProfile: "Voltar ao perfil de {name}",
+      goBack: "Voltar",
+      leaderLabel: "Líder:",
+      sharedBy: "Compartilhado por {name}",
+      switchLanguage: "Mudar o idioma para {language}",
+      videoTitle: "Demonstração da Leveluk K8 em 4 minutos",
+      kitchenImageAlt: "Leveluk K8 integrada a uma cozinha moderna",
+      waterUsesImageAlt: "Usos práticos diários da água Leveluk K8",
+      primaryUses: "Principais usos domésticos:",
+      handlingNote: "Nota de uso e manuseio:",
+      certificationsBody: "A Enagic possui as certificações ISO 13485 (Sistema de Gestão da Qualidade para Dispositivos Médicos), ISO 9001, ISO 14001 e o Selo de Ouro da Water Quality Association (WQA).",
+      defaultLeaderTitle: "Líder 6A da True Legacy",
+      allRightsReserved: "Todos os direitos reservados.",
+      privacyTerms: "Política de Privacidade e Termos",
+      enagicCorporate: "Site corporativo da Enagic®",
+    },
   },
 } as const;
 
@@ -1008,7 +1080,14 @@ export default function K8Page({ profile: propProfile, distributorSlug: propSlug
     (profile?.avatar_url && !profile.avatar_url.includes('mehdi-cohen') ? profile.avatar_url : null) ||
     (activeSlug ? getLeaderPortrait(activeSlug, profile?.avatar_url) : "/logos/tl-square-white.png");
   const leaderTitle =
-    profile?.title || "Independent Enagic Distributor · True Legacy Leader";
+    !profile?.title || profile.title === "True Legacy 6A Leader"
+      ? content.ui.defaultLeaderTitle
+      : profile.title;
+  const localizedUi = (template: string, values: Record<string, string>) =>
+    Object.entries(values).reduce(
+      (result, [key, value]) => result.replace(`{${key}}`, value),
+      template
+    );
 
   // Purchase Link detection
   const k8PurchaseUrl = getProductPurchaseLink(profile?.purchase_links, "k8");
@@ -1182,7 +1261,11 @@ export default function K8Page({ profile: propProfile, distributorSlug: propSlug
           <div className="flex items-center gap-2 sm:gap-3">
             <LandingHeaderBackButton
               fallbackUrl={distributorProfileRoute}
-              label={isLeaderPage ? `Back to ${distributorFirstName}'s Profile` : 'Go back'}
+              label={
+                isLeaderPage
+                  ? localizedUi(content.ui.backToProfile, { name: distributorFirstName })
+                  : content.ui.goBack
+              }
             />
             <Link
               to="/"
@@ -1198,9 +1281,9 @@ export default function K8Page({ profile: propProfile, distributorSlug: propSlug
               <Link
                 to={distributorProfileRoute}
                 className="hidden lg:inline-flex items-center gap-1.5 ml-2 pl-3 border-l border-white/10 text-xs text-slate-300 hover:text-white transition-colors group"
-                title={`Back to ${distributorName}'s Profile`}
+                title={localizedUi(content.ui.backToProfile, { name: distributorName })}
               >
-                <span className="text-slate-400">Leader:</span>
+                <span className="text-slate-400">{content.ui.leaderLabel}</span>
                 <span className="font-semibold text-white truncate max-w-[120px]">{distributorFirstName}</span>
               </Link>
             )}
@@ -1213,7 +1296,7 @@ export default function K8Page({ profile: propProfile, distributorSlug: propSlug
               <Link
                 to={distributorProfileRoute}
                 className="flex items-center gap-2 rounded-full border border-white/15 bg-white/5 hover:bg-white/10 px-2.5 py-1 transition-all group shrink-0"
-                title={`Shared by ${distributorName}`}
+                title={localizedUi(content.ui.sharedBy, { name: distributorName })}
               >
                 <img
                   src={leaderAvatar}
@@ -1242,7 +1325,7 @@ export default function K8Page({ profile: propProfile, distributorSlug: propSlug
                       ? "bg-cyan-500 text-slate-950 font-black shadow-md shadow-cyan-500/20"
                       : "text-slate-400 hover:text-white hover:bg-white/10 font-bold"
                   )}
-                  aria-label={`Switch language to ${lang.toUpperCase()}`}
+                  aria-label={localizedUi(content.ui.switchLanguage, { language: lang.toUpperCase() })}
                 >
                   {lang}
                 </button>
@@ -1470,13 +1553,13 @@ export default function K8Page({ profile: propProfile, distributorSlug: propSlug
 
             {/* Headline — 3-line premium editorial treatment */}
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-[1.08] text-white">
-              Better water,
+              {content.hero.headlineLines[0]}
               <br />
               <span className="bg-gradient-to-r from-cyan-400 via-sky-300 to-blue-400 bg-clip-text text-transparent">
-                freshly made
+                {content.hero.headlineLines[1]}
               </span>
               <br />
-              at your tap.
+              {content.hero.headlineLines[2]}
             </h1>
 
             {/* Supporting paragraph */}
@@ -1643,7 +1726,7 @@ export default function K8Page({ profile: propProfile, distributorSlug: propSlug
           <div className="relative rounded-3xl border border-cyan-500/30 bg-black/60 p-2 sm:p-3 shadow-2xl shadow-cyan-950/40 overflow-hidden mb-10">
             <YouTubeEmbed
               url={videoUrl}
-              title="Leveluk K8 4-Minute Demonstration"
+              title={content.ui.videoTitle}
               className="rounded-2xl"
             />
           </div>
@@ -1738,7 +1821,7 @@ export default function K8Page({ profile: propProfile, distributorSlug: propSlug
               <div className="relative rounded-3xl border border-white/15 bg-white/[0.02] overflow-hidden p-3 shadow-2xl group">
                 <img
                   src="/true-legacy-assets/k8-lifestyle-kitchen.png"
-                  alt="Leveluk K8 kitchen lifestyle integration with happy couple"
+                  alt={content.ui.kitchenImageAlt}
                   className="w-full h-auto object-cover rounded-2xl max-h-[440px] transition-transform duration-700 group-hover:scale-[1.02]"
                   loading="lazy"
                 />
@@ -1834,7 +1917,7 @@ export default function K8Page({ profile: propProfile, distributorSlug: propSlug
               <div className="space-y-4">
                 <div className="rounded-xl border border-white/10 bg-black/30 p-4">
                   <div className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">
-                    Primary Household Uses:
+                    {content.ui.primaryUses}
                   </div>
                   <div className="text-sm font-medium text-slate-200">
                     {activeWater.use}
@@ -1843,7 +1926,7 @@ export default function K8Page({ profile: propProfile, distributorSlug: propSlug
 
                 <div className="rounded-xl border border-white/10 bg-black/30 p-4">
                   <div className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">
-                    Usage & Handling Note:
+                    {content.ui.handlingNote}
                   </div>
                   <div className="text-sm text-slate-300 leading-relaxed">
                     {activeWater.note}
@@ -1857,7 +1940,7 @@ export default function K8Page({ profile: propProfile, distributorSlug: propSlug
               <div className="rounded-2xl border border-white/10 overflow-hidden shadow-xl p-2 bg-black/40">
                 <img
                   src="/true-legacy-assets/k8-everyday-uses.png"
-                  alt="Leveluk K8 everyday practical water uses demonstration"
+                  alt={content.ui.waterUsesImageAlt}
                   className="w-full h-auto object-cover rounded-xl max-h-[380px]"
                   loading="lazy"
                 />
@@ -1913,7 +1996,7 @@ export default function K8Page({ profile: propProfile, distributorSlug: propSlug
               {content.confidence.certificationsTitle}
             </h3>
             <p className="text-xs sm:text-sm text-slate-300 max-w-2xl mx-auto">
-              Enagic holds ISO 13485 (Medical Devices Quality Management System), ISO 9001, ISO 14001, and the Water Quality Association (WQA) Gold Seal certification.
+              {content.ui.certificationsBody}
             </p>
             <div>
               <a
@@ -2243,11 +2326,11 @@ export default function K8Page({ profile: propProfile, distributorSlug: propSlug
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-4 border-t border-white/5 text-[11px]">
             <div className="flex items-center gap-2 text-slate-300">
               <span className="font-bold text-white">TRUE LEGACY WORLD</span>
-              <span>© {new Date().getFullYear()} All Rights Reserved.</span>
+              <span>© {new Date().getFullYear()} {content.ui.allRightsReserved}</span>
             </div>
             <div className="flex items-center gap-6">
               <Link to="/legal" className="hover:text-white transition-colors">
-                Privacy Policy & Terms
+                {content.ui.privacyTerms}
               </Link>
               <a
                 href="https://www.enagic.com"
@@ -2255,7 +2338,7 @@ export default function K8Page({ profile: propProfile, distributorSlug: propSlug
                 rel="noopener noreferrer"
                 className="hover:text-white transition-colors flex items-center gap-1"
               >
-                <span>Enagic® Corporate</span>
+                <span>{content.ui.enagicCorporate}</span>
                 <ExternalLink className="w-3 h-3" />
               </a>
             </div>
