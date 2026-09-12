@@ -1,4 +1,5 @@
 import { LanguageReset } from "@/components/LanguageReset";
+import { LegacySpanishTranslationBridge } from "@/components/LegacySpanishTranslationBridge";
 import { BackToTopButton } from "@/components/layout/BackToTopButton";
 import { AppInstallPrompt } from "@/components/pwa/AppInstallPrompt";
 import { AppNavigation } from "@/components/pwa/AppNavigation";
@@ -502,6 +503,7 @@ export default function App() {
     <BrowserRouter>
       <LanguageReset />
       <LocaleProvider>
+        <LegacySpanishTranslationBridge />
         <GlobalCursorGlow />
         <AnimatedRoutes />
         <AppInstallPrompt />

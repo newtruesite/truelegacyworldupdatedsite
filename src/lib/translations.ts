@@ -252,6 +252,7 @@ export const t = {
         useCanvaTemplate: 'Use Canva Template',
         versionLabel: 'Version',
         updatedLabel: 'Updated',
+        languageLabel: 'Language',
       }
     },
     trainingModules: {
@@ -490,6 +491,7 @@ export const t = {
         useCanvaTemplate: 'Usar plantilla de Canva',
         versionLabel: 'Versión',
         updatedLabel: 'Actualizado',
+        languageLabel: 'Idioma',
       }
     },
     trainingModules: {
@@ -824,6 +826,7 @@ export const t = {
         useCanvaTemplate: 'Utiliser le modèle Canva',
         versionLabel: 'Version',
         updatedLabel: 'Mis à jour',
+        languageLabel: 'Langue',
       }
     },
     trainingModules: {
@@ -1158,6 +1161,7 @@ export const t = {
         useCanvaTemplate: 'Usar modelo do Canva',
         versionLabel: 'Versão',
         updatedLabel: 'Atualizado',
+        languageLabel: 'Idioma',
       }
     },
     trainingModules: {

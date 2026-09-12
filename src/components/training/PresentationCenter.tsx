@@ -45,6 +45,7 @@ export const PresentationCenter: React.FC<PresentationCenterProps> = ({
     useCanvaTemplate: "Use Canva Template",
     versionLabel: "Version",
     updatedLabel: "Updated",
+    languageLabel: "Language",
   };
 
   const handleOpenPresentation = (item: PresentationItem) => {
@@ -77,6 +78,31 @@ export const PresentationCenter: React.FC<PresentationCenterProps> = ({
     window.open(item.canvaUrl, "_blank", "noopener,noreferrer");
   };
 
+  const orderedItems = [...items].sort((a, b) => Number(b.language === locale) - Number(a.language === locale));
+  const languageNames: Record<string, Record<string, string>> = {
+    en: { en: "English", es: "Inglés", fr: "Anglais", pt: "Inglês" },
+    es: { en: "Spanish", es: "Español", fr: "Espagnol", pt: "Espanhol" },
+    fr: { en: "French", es: "Francés", fr: "Français", pt: "Francês" },
+    pt: { en: "Portuguese", es: "Portugués", fr: "Portugais", pt: "Português" },
+  };
+  const englishPresentationCopy = {
+    es: {
+      title: "Presentación True Legacy",
+      description: "La presentación oficial para explicar a tus prospectos la visión, los productos, la oportunidad de negocio y el sistema True Legacy con un mensaje claro y consistente.",
+      updatedAt: "Septiembre 2026",
+    },
+    fr: {
+      title: "Présentation True Legacy",
+      description: "La présentation officielle conçue pour expliquer aux prospects la vision, les produits, l’opportunité commerciale et le système True Legacy avec un message clair et cohérent.",
+      updatedAt: "Septembre 2026",
+    },
+    pt: {
+      title: "Apresentação True Legacy",
+      description: "A apresentação oficial criada para explicar aos prospectos a visão, os produtos, a oportunidade de negócio e o sistema True Legacy com uma mensagem clara e consistente.",
+      updatedAt: "Setembro de 2026",
+    },
+  } as const;
+
   return (
     <section
       className={`mb-12 rounded-[2rem] border border-amber-500/20 bg-gradient-to-br from-black/60 via-slate-950/40 to-amber-950/10 backdrop-blur-xl p-5 sm:p-7 shadow-[0_24px_80px_rgba(0,0,0,0.4)] ${className}`}
@@ -106,7 +132,13 @@ export const PresentationCenter: React.FC<PresentationCenterProps> = ({
 
       {/* PRESENTATIONS CARDS GRID */}
       <div className="mt-7 space-y-6">
-        {items.map((item) => {
+        {orderedItems.map((item) => {
+          const localizedEnglish = item.id === "official-true-legacy-presentation" && locale !== "en"
+            ? englishPresentationCopy[locale as keyof typeof englishPresentationCopy]
+            : undefined;
+          const itemTitle = localizedEnglish?.title || item.title;
+          const itemDescription = localizedEnglish?.description || item.description;
+          const itemUpdatedAt = localizedEnglish?.updatedAt || item.updatedAt;
           const isPdfConfigured = Boolean(item.pdfUrl && item.pdfUrl.trim().length > 0);
           const isCanvaConfigured = Boolean(item.canvaUrl && item.canvaUrl.trim().length > 0);
           const isPresentationConfigured = Boolean(
@@ -126,7 +158,7 @@ export const PresentationCenter: React.FC<PresentationCenterProps> = ({
                   <div className="relative aspect-[16/10] w-full overflow-hidden rounded-xl border border-white/10 bg-black/60 shadow-lg">
                     <img
                       src={item.thumbnail}
-                      alt={item.title}
+                      alt={itemTitle}
                       className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/20" />
@@ -184,6 +216,9 @@ export const PresentationCenter: React.FC<PresentationCenterProps> = ({
                         <span className="inline-flex items-center gap-1 rounded-full border border-cyan-400/30 bg-cyan-400/10 px-2.5 py-0.5 text-[10px] font-black uppercase tracking-wider text-[#2997ff]">
                           {pcCopy.badgeTrueLegacy}
                         </span>
+                        <span className="inline-flex items-center gap-1 rounded-full border border-white/15 bg-white/[0.06] px-2.5 py-0.5 text-[10px] font-black uppercase tracking-wider text-white">
+                          {pcCopy.languageLabel}: {languageNames[item.language]?.[locale] || item.language.toUpperCase()}
+                        </span>
                         {item.isCustomizable && (
                           <span className="inline-flex items-center gap-1 rounded-full border border-purple-400/30 bg-purple-400/10 px-2.5 py-0.5 text-[10px] font-black uppercase tracking-wider text-purple-300">
                             <Sparkles className="h-3 w-3" />
@@ -197,13 +232,13 @@ export const PresentationCenter: React.FC<PresentationCenterProps> = ({
                         )}
                       </div>
 
-                      {(item.version || item.updatedAt) && (
+                      {(item.version || itemUpdatedAt) && (
                         <div className="flex items-center gap-2 text-[11px] text-[#86868b]">
                           <Clock className="h-3 w-3 text-tl-gold" />
                           <span>
                             {item.version && `${pcCopy.versionLabel} ${item.version}`}
-                            {item.version && item.updatedAt && " · "}
-                            {item.updatedAt && `${pcCopy.updatedLabel} ${item.updatedAt}`}
+                            {item.version && itemUpdatedAt && " · "}
+                            {itemUpdatedAt && `${pcCopy.updatedLabel} ${itemUpdatedAt}`}
                           </span>
                         </div>
                       )}
@@ -211,10 +246,10 @@ export const PresentationCenter: React.FC<PresentationCenterProps> = ({
 
                     {/* Title & Description */}
                     <h3 className="text-xl sm:text-2xl font-bold text-white group-hover:text-amber-200 transition-colors">
-                      {item.title}
+                      {itemTitle}
                     </h3>
                     <p className="mt-2 text-xs sm:text-sm text-[#cccccc] leading-relaxed">
-                      {item.description}
+                      {itemDescription}
                     </p>
                   </div>
 

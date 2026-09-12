@@ -554,7 +554,7 @@ const I18N: Record<
       paragraph1:
         'La vida moderna nos envuelve en una densidad de frecuencias electromagnéticas sin precedentes emitida por smartphones, torres 5G, routers Wi-Fi 6 y equipos digitales. Si bien son indispensables para comunicarnos, esta exposición continua genera ruido de alta frecuencia que interactúa con las células humanas.',
       paragraph2:
-        'The Enagic emGuarde™ es un supresor armónico ultraportátil desarrollado tras más de una década de investigación. Basado en tecnología patentada en EE. UU., suprime el ruido electromagnético de alta frecuencia en un radio de 3 metros, favoreciendo el bienestar biológico dondequiera que estés.',
+        'Enagic emGuarde™ es un supresor armónico ultraportátil desarrollado tras más de una década de investigación. Basado en tecnología patentada en EE. UU., suprime el ruido electromagnético de alta frecuencia en un radio de 3 metros, favoreciendo el bienestar biológico dondequiera que estés.',
       bullets: [
         'Genera un campo armónico de 360° alrededor de tu cuerpo',
         'Cero interferencia con la cobertura de celulares o velocidad de Wi-Fi',
@@ -756,7 +756,7 @@ const I18N: Record<
     faqs: [
       {
         q: '¿Qué es Enagic emGuarde™ y qué función cumple?',
-        a: 'The Enagic emGuarde™ es un dispositivo personal portátil diseñado para armonizar el ruido electromagnético de alta frecuencia. Con tecnología patentada en EE. UU. (US-12539416), genera un campo armónico esférico de 3 metros que apoya el equilibrio corporal sin cortar las señales inalámbricas.',
+        a: 'Enagic emGuarde™ es un dispositivo personal portátil diseñado para armonizar el ruido electromagnético de alta frecuencia. Con tecnología patentada en EE. UU. (US-12539416), genera un campo armónico esférico de 3 metros que apoya el equilibrio corporal sin cortar las señales inalámbricas.',
       },
       {
         q: '¿Bloquea o elimina las frecuencias electromagnéticas?',
@@ -801,7 +801,7 @@ const I18N: Record<
     },
     legal: {
       compliance:
-        'Aviso de Cumplimiento: The Enagic emGuarde™ es un dispositivo electrónico de armonización ambiental. No bloquea frecuencias inalámbricas ni es un dispositivo médico. No está diseñado para diagnosticar, tratar, curar ni prevenir enfermedades. Los resultados de los ensayos de UTAR representan respuestas biológicas observadas bajo los parámetros de estudio.',
+        'Aviso de Cumplimiento: Enagic emGuarde™ es un dispositivo electrónico de armonización ambiental. No bloquea frecuencias inalámbricas ni es un dispositivo médico. No está diseñado para diagnosticar, tratar, curar ni prevenir enfermedades. Los resultados de los ensayos de UTAR representan respuestas biológicas observadas bajo los parámetros de estudio.',
       distributor:
         'Aviso de Distribuidor Independiente: Esta página es administrada de manera independiente por distribuidores autorizados de True Legacy y no representa el sitio web corporativo de Enagic Co., Ltd.',
       disclaimer: 'Todas las marcas, logotipos y patentes pertenecen a sus respectivos titulares.',

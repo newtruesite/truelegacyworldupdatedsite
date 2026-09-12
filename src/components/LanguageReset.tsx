@@ -10,13 +10,12 @@ export function LanguageReset() {
 
     const p = pathname.toLowerCase().replace(/\/$/, '') || '/'
 
-    // Only on home: full locale reset to English (fresh start)
+    // Keep an explicit language choice when members move between sections.
+    // The home page should not silently undo the language switch.
     if (p === '/') {
-      sessionStorage.removeItem('tl_user_chose_lang')
-      Object.keys(sessionStorage)
-        .filter((k) => k.startsWith('tl_lang_'))
-        .forEach((k) => sessionStorage.removeItem(k))
-      localStorage.setItem('tl_lang', 'en')
+      if (!sessionStorage.getItem('tl_user_chose_lang') && !localStorage.getItem('tl_lang')) {
+        localStorage.setItem('tl_lang', 'en')
+      }
       return
     }
 

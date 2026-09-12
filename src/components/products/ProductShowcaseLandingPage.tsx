@@ -713,7 +713,7 @@ export function ProductShowcaseLandingPage({
   return (
     <div className="page-wrapper bg-[#040711] text-white selection:bg-cyan-500 selection:text-slate-950 min-h-screen">
       <SEO
-        title={`${copy.headline} | True Legacy Official Collection`}
+        title={`${copy.headline} | ${locale === 'es' ? 'Colección Oficial True Legacy' : locale === 'fr' ? 'Collection Officielle True Legacy' : locale === 'pt' ? 'Coleção Oficial True Legacy' : 'True Legacy Official Collection'}`}
         description={copy.subheadline}
         image={leaderAvatar}
       />
