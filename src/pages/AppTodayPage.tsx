@@ -1,6 +1,8 @@
 import { SEO } from '@/components/SEO'
 import { Navbar } from '@/components/layout/Navbar'
 import { AppPageHeader } from '@/components/layout/AppPageHeader'
+import { MemberStartingPlan } from '@/components/training/MemberStartingPlan'
+import { followUpQueue, leadNextStep } from '@/lib/todayGuidance'
 import { crmConfigured, crmSupabase, getCrmDistributors, getCrmLeads, getCrmMembership } from '@/lib/crm'
 import type { CrmDistributor, CrmLead, CrmMembership } from '@/lib/crm'
 import type { Session } from '@supabase/supabase-js'
@@ -24,17 +26,24 @@ export default function AppTodayPage() {
   const [onboarding, setOnboarding] = useState<Progress[]>([])
   const [meetings, setMeetings] = useState<Meeting[]>([])
   const [loading, setLoading] = useState(crmConfigured)
+  const [loadError, setLoadError] = useState(false)
+  const [reload, setReload] = useState(0)
+  const [partialData, setPartialData] = useState(false)
+  const [loadedUserId, setLoadedUserId] = useState<string | null>(null)
 
   useEffect(() => {
     if (!crmSupabase) return
-    crmSupabase.auth.getSession().then(({ data }) => { setSession(data.session); if (!data.session) setLoading(false) })
-    const { data } = crmSupabase.auth.onAuthStateChange((_event, next) => setSession(next))
+    crmSupabase.auth.getSession().then(({ data, error }) => { if (error) setLoadError(true); setSession(data.session); if (!data.session) setLoading(false) }).catch(() => { setLoadError(true); setLoading(false) })
+    const { data } = crmSupabase.auth.onAuthStateChange((_event, next) => { setSession(next); if (!next) setLoading(false) })
     return () => data.subscription.unsubscribe()
   }, [])
 
   useEffect(() => {
     if (!session || !crmSupabase) return
     let current = true
+    setLoading(true)
+    setLoadError(false)
+    setMembership(null)
     async function load() {
       try {
         const member = await getCrmMembership(session!.user.id)
@@ -51,22 +60,26 @@ export default function AppTodayPage() {
           crmSupabase!.from('crm_meetings').select('*').eq('status', 'scheduled').order('starts_at', { ascending: true }),
         ])
         const mine = team.find(item => item.id === member.distributor_id) || (session?.user ? team.find(item => item.auth_user_id === session.user.id) : null) || (session?.user?.email ? team.find(item => item.login_email?.toLowerCase() === session.user.email!.toLowerCase()) : null) || (member.role === 'admin' ? team.find(item => item.slug === 'mehdi-cohen') || team[0] : null) || null
+        if (!current) return
+        setPartialData([msResult, isResult, tpResult, opResult, mtResult].some(result => result.error))
         setDistributor(mine)
         setLeads(allLeads.filter(item => item.assigned_distributor_id === mine?.id))
-        setModules((msResult.data || []) as Module[])
-        setItems((isResult.data || []) as Item[])
+        setModules((msResult.error || tpResult.error ? [] : msResult.data || []) as Module[])
+        setItems((isResult.error || opResult.error ? [] : isResult.data || []) as Item[])
         setTraining(((tpResult.data || []) as Progress[]).filter(item => item.distributor_id === mine?.id))
         setOnboarding(((opResult.data || []) as Progress[]).filter(item => item.distributor_id === mine?.id))
         setMeetings(((mtResult.data || []) as Meeting[]).filter(item => item.distributor_id === mine?.id))
-      } finally { if (current) setLoading(false) }
+      } catch { if (current) setLoadError(true) }
+      finally { if (current) { setLoadedUserId(session!.user.id); setLoading(false) } }
     }
     load()
     return () => { current = false }
-  }, [session])
+  }, [session?.user.id, reload])
 
   const now = new Date()
-  const due = useMemo(() => leads.filter(item => item.next_follow_up_at && new Date(item.next_follow_up_at) < new Date(now.getFullYear(), now.getMonth(), now.getDate())), [leads, now])
-  const today = useMemo(() => leads.filter(item => { if (!item.next_follow_up_at) return false; const d = new Date(item.next_follow_up_at); return d.getFullYear() === now.getFullYear() && d.getMonth() === now.getMonth() && d.getDate() === now.getDate() }), [leads, now])
+  const queue = followUpQueue(leads, now)
+  const due = queue.filter(item => item.next_follow_up_at && new Date(item.next_follow_up_at) < new Date(now.getFullYear(), now.getMonth(), now.getDate()))
+  const today = queue.filter(item => { if (!item.next_follow_up_at) return false; const d = new Date(item.next_follow_up_at); return d.getFullYear() === now.getFullYear() && d.getMonth() === now.getMonth() && d.getDate() === now.getDate() })
   const newLeads = useMemo(() => leads.filter(item => item.status === 'new'), [leads])
   const todayMeetings = useMemo(() => meetings.filter(item => { const d = new Date(item.starts_at); return d.getFullYear() === now.getFullYear() && d.getMonth() === now.getMonth() && d.getDate() === now.getDate() }), [meetings, now])
 
@@ -74,10 +87,11 @@ export default function AppTodayPage() {
   const completedOnboarding = onboarding.filter(item => item.completed)
   const nextModule = modules.find(item => !completedTraining.some(p => p.module_id === item.id))
   const nextOnboarding = items.find(item => !completedOnboarding.some(p => p.item_id === item.id))
-  const actionCount = due.length + today.length + newLeads.length + todayMeetings.length + (nextModule ? 1 : 0) + (nextOnboarding ? 1 : 0)
+  const actionCount = queue.length + todayMeetings.length + (nextModule ? 1 : 0) + (nextOnboarding ? 1 : 0)
 
   if (!crmConfigured) return <TodayMessage title="App connection required" body="The secure True Legacy connection is unavailable." />
-  if (loading) return <main className="min-h-screen bg-black" />
+  if (loading || (session && loadedUserId !== session.user.id)) return <TodayMessage title="Loading your day…" body="Getting your contacts, calls, and learning progress." />
+  if (loadError) return <TodayMessage title="Your daily plan could not load" body="You can still open your contacts and training, or try loading your plan again." action={<div className="flex flex-wrap justify-center gap-4"><button onClick={() => session ? setReload(value => value + 1) : window.location.reload()} className="rounded-xl bg-cyan-400 px-5 py-3 font-bold text-slate-950">Try again</button><Link to="/crm" className="px-3 py-3 underline">Contacts</Link><Link to="/training" className="px-3 py-3 underline">Academy</Link></div>} />
   if (!session) return <TodayMessage title="Distributor login required" body="Sign in to see your leads, follow-ups, and next training actions." action={<Link to="/crm" className="inline-flex rounded-xl bg-cyan-400 px-5 py-3 font-black text-slate-950">Sign in</Link>} />
   if (!membership?.active) return <TodayMessage title="Account not authorized" body="An active distributor account is required to open Today." />
 
@@ -101,25 +115,28 @@ export default function AppTodayPage() {
             }
           />
 
+          <MemberStartingPlan key={session.user.id} user={session.user} />
+          {partialData && <p role="status" className="mt-4 rounded-xl border border-amber-300/20 p-4 text-sm text-amber-200">Some call or learning progress could not load. Your contacts remain available. <button onClick={() => setReload(value => value + 1)} className="ml-2 underline">Try again</button></p>}
+
           <section className="mt-7 grid gap-4 sm:grid-cols-2 xl:grid-cols-5"><Metric icon={<Clock3 />} value={due.length} label="Overdue follow-ups" tone="rose" /><Metric icon={<CalendarCheck2 />} value={today.length} label="Due today" tone="amber" /><Metric icon={<UserPlus />} value={newLeads.length} label="New contacts" tone="cyan" /><Metric icon={<CalendarCheck2 />} value={todayMeetings.length} label="Calls today" tone="cyan" /><Metric icon={<CheckCircle2 />} value={`${completedOnboarding.length}/${items.length}`} label="Onboarding" tone="emerald" /></section>
 
           {todayMeetings.length > 0 && <section className="mt-7 rounded-[28px] border border-white/20 bg-violet-400/[.05] p-5 sm:p-7"><div className="flex items-center justify-between"><div><p className="text-xs font-bold uppercase tracking-[.18em] text-[#2997ff]">Scheduled today</p><h2 className="mt-2 text-2xl font-black">Your conversations</h2></div><Link to="/app/bookings" className="text-sm font-bold text-[#2997ff]">All bookings</Link></div><div className="mt-5 grid gap-3 md:grid-cols-2">{todayMeetings.map(meeting => <article key={meeting.id} className="flex items-center gap-4 rounded-2xl border border-white/[.08] bg-black/15 p-4"><span className="grid h-12 w-12 shrink-0 place-items-center rounded-xl bg-violet-400/10 text-sm font-black text-[#2997ff]">{new Date(meeting.starts_at).toLocaleTimeString([], { hour: 'numeric' })}</span><div className="min-w-0"><h3 className="truncate font-black">{meeting.guest_name}</h3><p className="mt-1 truncate text-xs text-[#86868b]">{new Date(meeting.starts_at).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })} · {meeting.guest_email}</p></div></article>)}</div></section>}
 
           <div className="mt-7 grid gap-6 xl:grid-cols-[1.25fr_.75fr]">
-            <section className="rounded-[28px] border border-white/10 bg-white/[.03] p-5 sm:p-7"><div className="flex items-center justify-between"><div><p className="text-xs font-bold uppercase tracking-[.18em] text-rose-300">People first</p><h2 className="mt-2 text-2xl font-black">Follow-up queue</h2></div><Link to="/crm?attention=due" className="text-sm font-bold text-[#2997ff]">All contacts</Link></div><div className="mt-5 space-y-3">{[...due, ...today, ...newLeads.filter(lead => !due.some(item => item.id === lead.id) && !today.some(item => item.id === lead.id))].slice(0, 8).map(lead => <LeadAction key={lead.id} lead={lead} />)}{due.length + today.length + newLeads.length === 0 ? <EmptyState /> : null}</div></section>
+            <section className="rounded-[28px] border border-white/10 bg-white/[.03] p-5 sm:p-7"><div className="flex items-center justify-between"><div><p className="text-xs font-bold uppercase tracking-[.18em] text-rose-300">People first</p><h2 className="mt-2 text-2xl font-black">Follow-up queue</h2></div><Link to="/crm?attention=due" className="text-sm font-bold text-[#2997ff]">All contacts</Link></div><div className="mt-5 space-y-3">{queue.slice(0, 8).map(lead => <LeadAction key={lead.id} lead={lead} />)}{queue.length === 0 ? <EmptyState /> : null}</div></section>
 
             <div className="space-y-6">
               <section className="rounded-[28px] border border-white/20 bg-gradient-to-br from-cyan-400/[.1] to-blue-500/[.04] p-6">
                 <GraduationCap className="h-7 w-7 text-[#2997ff]" />
                 <p className="mt-4 text-xs font-bold uppercase tracking-[.18em] text-[#2997ff]">Next learning action</p>
-                <h2 className="mt-1.5 text-lg sm:text-xl font-black text-white">{nextModule ? nextModule.title.en : 'Academy complete'}</h2>
-                <p className="mt-2 text-xs sm:text-sm leading-6 text-[#cccccc]">{nextModule ? `${completedTraining.length} of ${modules.length} modules complete. Continue with the next lesson.` : 'You have completed every active training module.'}</p>
+                <h2 className="mt-1.5 text-lg sm:text-xl font-black text-white">{nextModule ? nextModule.title.en : modules.length ? 'Academy complete' : 'Explore your Academy'}</h2>
+                <p className="mt-2 text-xs sm:text-sm leading-6 text-[#cccccc]">{nextModule ? `${completedTraining.length} of ${modules.length} modules complete. Continue with the next lesson.` : modules.length ? 'You have completed every active training module.' : 'Open the Academy to explore the available learning paths.'}</p>
                 <Link to="/training" className="mt-4 inline-flex items-center gap-2 rounded-xl bg-cyan-400 px-5 py-2.5 text-xs sm:text-sm font-black text-slate-950 hover:bg-cyan-300 transition-colors">Open Academy <ArrowRight className="h-4 w-4" /></Link>
               </section>
               <section className="rounded-[28px] border border-amber-300/15 bg-amber-300/[.05] p-6">
                 <Sparkles className="h-7 w-7 text-amber-300" />
                 <p className="mt-4 text-xs font-bold uppercase tracking-[.18em] text-amber-300">Next setup action</p>
-                <h2 className="mt-1.5 text-lg sm:text-xl font-black text-white">{nextOnboarding ? nextOnboarding.title.en : 'Onboarding complete'}</h2>
+                <h2 className="mt-1.5 text-lg sm:text-xl font-black text-white">{nextOnboarding ? nextOnboarding.title.en : items.length ? 'Onboarding complete' : 'Explore your setup steps'}</h2>
                 <p className="mt-2 text-xs sm:text-sm leading-6 text-[#cccccc]">{completedOnboarding.length} of {items.length} True Legacy setup steps complete.</p>
                 <Link to="/crm/growth" className="mt-4 inline-flex items-center gap-2 text-xs sm:text-sm font-black text-amber-200 hover:text-amber-100 transition-colors">Open progress center <ArrowRight className="h-4 w-4" /></Link>
               </section>
@@ -155,6 +172,7 @@ function LeadAction({ lead }: { lead: CrmLead }) {
         <p className="mt-1 text-xs text-[#86868b]">
           {overdue ? 'Follow-up overdue' : lead.next_follow_up_at ? `Follow up ${new Date(lead.next_follow_up_at).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })}` : 'New contact — make the first connection'}
         </p>
+        <p className="mt-2 text-sm leading-6 text-[#cccccc]">{leadNextStep(lead)}</p>
       </div>
       <div className="flex flex-wrap items-center gap-2">
         {lead.phone && (

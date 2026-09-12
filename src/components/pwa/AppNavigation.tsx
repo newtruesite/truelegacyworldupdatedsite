@@ -32,6 +32,7 @@ export function AppNavigation() {
   const { pathname } = useLocation()
   const navigate = useNavigate()
   const [isAdmin, setIsAdmin] = useState(false)
+  const [authUserId, setAuthUserId] = useState<string | null>(null)
   const isDistributorPage = pathname.startsWith('/d/')
   const appRoute =
     !isDistributorPage &&
@@ -56,22 +57,26 @@ export function AppNavigation() {
 
   useEffect(() => {
     if (!crmSupabase) return
-    crmSupabase.auth.getSession().then(async ({ data }) => {
-      if (data.session?.user?.id) {
-        const member = await getCrmMembership(data.session.user.id)
-        setIsAdmin(member?.role === 'admin')
-      }
-    })
-    const { data } = crmSupabase.auth.onAuthStateChange(async (_event, session) => {
-      if (session?.user?.id) {
-        const member = await getCrmMembership(session.user.id)
-        setIsAdmin(member?.role === 'admin')
-      } else {
-        setIsAdmin(false)
-      }
+    // Auth callbacks run under the session lock; do database reads in a separate effect.
+    crmSupabase.auth.getSession().then(({ data }) => {
+      setAuthUserId(data.session?.user.id ?? null)
+    }).catch(() => setAuthUserId(null))
+    const { data } = crmSupabase.auth.onAuthStateChange((_event, session) => {
+      setAuthUserId(session?.user.id ?? null)
     })
     return () => data.subscription.unsubscribe()
   }, [])
+
+  useEffect(() => {
+    let current = true
+    setIsAdmin(false)
+    if (authUserId) {
+      getCrmMembership(authUserId).then(member => {
+        if (current) setIsAdmin(Boolean(member?.active && member.role === 'admin'))
+      }).catch(() => { if (current) setIsAdmin(false) })
+    }
+    return () => { current = false }
+  }, [authUserId])
 
   useEffect(() => {
     document.body.classList.toggle('tl-app-route', appRoute)
