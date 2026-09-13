@@ -4,7 +4,9 @@ import { SpanishLegacyAnespaBeaute } from "@/lib/spanishLegacyAnespaBeaute";
 import { SpanishLegacyBusiness } from "@/lib/spanishLegacyBusiness";
 import { SpanishLegacyCore } from "@/lib/spanishLegacyCore";
 import { SpanishLegacyWagyuJr4 } from "@/lib/spanishLegacyWagyuJr4";
+import { CRM_LOCALE_COPY } from "@/lib/crmLocaleCopy";
 import { useLayoutEffect } from "react";
+import { useLocation } from "react-router-dom";
 
 const spanishCopy: Readonly<Record<string, string>> = Object.freeze({
   ...SpanishLegacyCore,
@@ -44,9 +46,9 @@ function replacePreservingWhitespace(value: string, translated: string) {
   return `${start}${translated}${end}`;
 }
 
-function translateDocument() {
+function translateDocument(copy: Readonly<Record<string, string>>, protect: (value: string) => string) {
   const title = document.title.trim();
-  const translatedTitle = spanishCopy[title] ? protectBrandNames(spanishCopy[title]) : undefined;
+  const translatedTitle = copy[title] ? protect(copy[title]) : undefined;
   if (translatedTitle) {
     translatedTitleToOriginal.set(translatedTitle, title);
     document.title = translatedTitle;
@@ -58,7 +60,7 @@ function translateDocument() {
     const textNode = node as Text;
     const value = textNode.nodeValue ?? "";
     const key = value.trim();
-    const translated = spanishCopy[key] ? protectBrandNames(spanishCopy[key]) : undefined;
+    const translated = copy[key] ? protect(copy[key]) : undefined;
     if (!translated) continue;
     if (!originalText.has(textNode)) originalText.set(textNode, value);
     textNode.nodeValue = replacePreservingWhitespace(value, translated);
@@ -70,7 +72,7 @@ function translateDocument() {
       for (const attribute of translatableAttributes) {
         const value = element.getAttribute(attribute);
         if (!value) continue;
-        const translated = spanishCopy[value.trim()] ? protectBrandNames(spanishCopy[value.trim()]) : undefined;
+        const translated = copy[value.trim()] ? protect(copy[value.trim()]) : undefined;
         if (!translated) continue;
         let originals = originalAttributes.get(element);
         if (!originals) {
@@ -90,8 +92,7 @@ function restoreDocument() {
     const textNode = node as Text;
     const original = originalText.get(textNode);
     if (!original) continue;
-    const translated = spanishCopy[original.trim()] ? protectBrandNames(spanishCopy[original.trim()]) : undefined;
-    if (translated && textNode.nodeValue?.trim() === translated) textNode.nodeValue = original;
+    textNode.nodeValue = original;
   }
 
   document.body
@@ -100,10 +101,7 @@ function restoreDocument() {
       const originals = originalAttributes.get(element);
       if (!originals) return;
       originals.forEach((original, attribute) => {
-        const translated = spanishCopy[original.trim()] ? protectBrandNames(spanishCopy[original.trim()]) : undefined;
-        if (translated && element.getAttribute(attribute)?.trim() === translated) {
-          element.setAttribute(attribute, original);
-        }
+        element.setAttribute(attribute, original);
       });
     });
 
@@ -112,18 +110,23 @@ function restoreDocument() {
 }
 
 /**
- * Transitional coverage for legacy landing pages whose copy predates the locale
- * dictionaries. New and edited components should continue using page-level
- * dictionaries; this bridge only fills exact English strings in Spanish mode.
+ * Transitional coverage for legacy landing pages and the private CRM workspace.
+ * The CRM catalog is exact-match only so member-authored data is never altered.
  */
 export function LegacySpanishTranslationBridge() {
   const { locale } = useLocaleContext();
+  const { pathname } = useLocation();
 
   useLayoutEffect(() => {
-    if (locale !== "es") {
-      restoreDocument();
-      return;
-    }
+    restoreDocument();
+    const isCrmWorkspace = pathname === '/training' || pathname.startsWith('/app') || pathname.startsWith('/crm');
+    const copy = locale === 'es'
+      ? (isCrmWorkspace ? { ...spanishCopy, ...CRM_LOCALE_COPY.es } : spanishCopy)
+      : isCrmWorkspace && (locale === 'fr' || locale === 'pt')
+        ? CRM_LOCALE_COPY[locale]
+        : null;
+    if (!copy) return;
+    const protect = locale === 'es' ? protectBrandNames : (value: string) => value;
 
     let scheduled = false;
     const observer = new MutationObserver(() => {
@@ -132,7 +135,7 @@ export function LegacySpanishTranslationBridge() {
       queueMicrotask(() => {
         scheduled = false;
         observer.disconnect();
-        translateDocument();
+        translateDocument(copy, protect);
         observer.observe(document.documentElement, {
           subtree: true,
           childList: true,
@@ -143,7 +146,7 @@ export function LegacySpanishTranslationBridge() {
       });
     });
 
-    translateDocument();
+    translateDocument(copy, protect);
     observer.observe(document.documentElement, {
       subtree: true,
       childList: true,
@@ -153,7 +156,7 @@ export function LegacySpanishTranslationBridge() {
     });
 
     return () => observer.disconnect();
-  }, [locale]);
+  }, [locale, pathname]);
 
   return null;
 }

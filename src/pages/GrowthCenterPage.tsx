@@ -1,5 +1,6 @@
 import { SEO } from '@/components/SEO'
 import { AppPageHeader } from '@/components/layout/AppPageHeader'
+import { useLocaleContext } from '@/contexts/LocaleContext'
 import { crmSupabase, getCrmDistributors, getCrmLeads, getCrmMembership } from '@/lib/crm'
 import type { CrmDistributor, CrmMembership } from '@/lib/crm'
 import type { Session } from '@supabase/supabase-js'
@@ -22,6 +23,7 @@ const CAMPAIGNS = [
 ] as const
 
 export default function GrowthCenterPage() {
+  const { locale } = useLocaleContext()
   const [session,setSession]=useState<Session|null>(null)
   const [membership,setMembership]=useState<CrmMembership|null>(null)
   const [distributors,setDistributors]=useState<CrmDistributor[]>([])
@@ -46,7 +48,6 @@ export default function GrowthCenterPage() {
   const distributor=visible.find(d=>d.id===selected)||visible[0]
   const doneModules=training.filter(p=>p.distributor_id===distributor?.id&&p.completed).length
   const doneItems=onboarding.filter(p=>p.distributor_id===distributor?.id&&p.completed).length
-  const locale='en'
   const canEdit=membership?.role==='admin'||membership?.distributor_id===distributor?.id
 
   const setProgress=async(kind:'training'|'onboarding',id:string,completed:boolean)=>{ if(!distributor||!crmSupabase)return; const fn=kind==='training'?'crm_set_training_progress':'crm_set_onboarding_progress'; const args=kind==='training'?{p_distributor_id:distributor.id,p_module_id:id,p_completed:completed}:{p_distributor_id:distributor.id,p_item_id:id,p_completed:completed}; const {error}=await crmSupabase.rpc(fn,args); if(error)return; const setter=kind==='training'?setTraining:setOnboarding; setter(current=>[...current.filter(p=>!(p.distributor_id===distributor.id&&(kind==='training'?p.module_id:p.item_id)===id)),{distributor_id:distributor.id,[kind==='training'?'module_id':'item_id']:id,completed}]) }

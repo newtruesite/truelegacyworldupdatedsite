@@ -18,6 +18,7 @@ import {
   UserRound,
 } from 'lucide-react'
 import { useEffect, useMemo, useState } from 'react'
+import { useLocaleContext, type Locale } from '@/contexts/LocaleContext'
 import { Link } from 'react-router-dom'
 
 interface SharePageItem {
@@ -29,26 +30,47 @@ interface SharePageItem {
   badge?: string
 }
 
-const ALL_PAGES: SharePageItem[] = [
+const PORTUGUESE_CARD_COPY: Record<string, { label: string; description: string; badge: string }> = {
+  duo: { label: 'Conheça o Duo K8 + emGuarde GO', description: 'Veja como duas tecnologias complementares apoiam a água que você bebe e o ambiente ao seu redor.', badge: 'O DUO' },
+  kangen: { label: 'Conheça o Leveluk K8', description: 'Conheça o principal ionizador doméstico da Enagic e os cinco tipos de água que ele produz.', badge: 'IONIZAÇÃO' },
+  emguarde: { label: 'Entenda a proteção emGuarde®', description: 'Conheça a tecnologia portátil de ressonância harmônica e como ela se integra ao dia a dia.', badge: 'PROTEÇÃO' },
+  business: { label: 'Conheça a oportunidade de negócio', description: 'Veja o modelo de distribuidor independente, a orientação e o sistema de apoio da True Legacy.', badge: 'OPORTUNIDADE' },
+  training: { label: 'Aprenda, lidere e construa com confiança', description: 'Acesse treinamentos, recursos e um caminho organizado para desenvolver suas habilidades.', badge: 'ACADEMIA' },
+  events: { label: 'Viva a True Legacy ao vivo', description: 'Participe de chamadas semanais, apresentações e eventos da comunidade True Legacy.', badge: 'EVENTOS AO VIVO' },
+  products: { label: 'Explore a coleção de produtos', description: 'Conheça a linha completa de produtos japoneses de bem-estar da Enagic.', badge: 'VITRINE' },
+  anespa: { label: 'Transforme seu banho diário', description: 'Conheça o sistema de banho mineral Anespa DX para uma experiência de spa em casa.', badge: 'BEM-ESTAR EM CASA' },
+  jr4: { label: 'Conheça o Leveluk JrIV', description: 'Explore o sistema compacto de água Kangen para espaços e rotinas menores.', badge: 'SISTEMA COMPACTO' },
+  beaute: { label: 'Conheça Kangen Beauté', description: 'Explore o ritual japonês de cuidados com a pele em três etapas.', badge: 'RITUAL DE BELEZA' },
+  wagyu: { label: 'Descubra Kangen Wagyu', description: 'Conheça uma experiência culinária premium criada para a comunidade True Legacy.', badge: 'EXPERIÊNCIA CULINÁRIA' },
+  ukon: { label: 'Conheça Kangen Ukon Sigma', description: 'Explore a fórmula japonesa de cúrcuma de Okinawa para o bem-estar diário.', badge: 'BEM-ESTAR DIÁRIO' },
+}
+
+function getAllPages(locale: Locale): SharePageItem[] {
+  const lang: 'en' | 'es' | 'fr' = locale === 'es' ? 'es' : locale === 'fr' ? 'fr' : 'en'
+  const leaderLabel = locale === 'es' ? 'tu líder de True Legacy' : locale === 'fr' ? 'votre leader True Legacy' : locale === 'pt' ? 'seu líder True Legacy' : 'your True Legacy leader'
+  return [
   {
     id: 'profile',
-    label: 'My Profile',
-    description: 'Your verified leader profile, biography, markets, languages, and direct contact channels.',
+    label: locale === 'es' ? 'Mi perfil' : locale === 'fr' ? 'Mon profil' : locale === 'pt' ? 'Meu perfil' : 'My Profile',
+    description: locale === 'es' ? 'Tu perfil de líder verificado, biografía, mercados, idiomas y canales de contacto directo.' : locale === 'fr' ? 'Votre profil de leader vérifié, votre biographie, vos marchés, vos langues et vos moyens de contact.' : locale === 'pt' ? 'Seu perfil de líder verificado, biografia, mercados, idiomas e canais de contato direto.' : 'Your verified leader profile, biography, markets, languages, and direct contact channels.',
     icon: UserRound,
     getPath: (slug) => `/d/${slug}`,
-    badge: 'Hub',
+    badge: locale === 'es' ? 'Centro' : locale === 'fr' ? 'Accueil' : locale === 'pt' ? 'Central' : 'Hub',
   },
   ...getActiveProfileLandingCards().map((card): SharePageItem => ({
     id: card.id,
-    label: card.title.en,
-    description: card.description.en('your True Legacy leader'),
+    label: locale === 'pt' && PORTUGUESE_CARD_COPY[card.id] ? PORTUGUESE_CARD_COPY[card.id].label : card.title[lang] || card.title.en,
+    description: locale === 'pt' && PORTUGUESE_CARD_COPY[card.id] ? PORTUGUESE_CARD_COPY[card.id].description : (card.description[lang] || card.description.en)(leaderLabel),
     icon: card.icon,
     getPath: card.getPath,
-    badge: card.categoryLabel.en,
+    badge: locale === 'pt' && PORTUGUESE_CARD_COPY[card.id] ? PORTUGUESE_CARD_COPY[card.id].badge : card.categoryLabel[lang] || card.categoryLabel.en,
   })),
-]
+  ]
+}
 
 export default function AppSharePage() {
+  const { locale } = useLocaleContext()
+  const allPages = useMemo(() => getAllPages(locale), [locale])
   const [session, setSession] = useState<Session | null>(null)
   const [membership, setMembership] = useState<CrmMembership | null>(null)
   const [distributors, setDistributors] = useState<CrmDistributor[]>([])
@@ -108,7 +130,7 @@ export default function AppSharePage() {
     [distributors, matchedDistributor, selectedDistributorId, session]
   )
 
-  const page = ALL_PAGES.find((item) => item.id === selected) || ALL_PAGES[0]
+  const page = allPages.find((item) => item.id === selected) || allPages[0]
 
   const url = useMemo(() => {
     if (!distributor) return ''
@@ -259,13 +281,13 @@ export default function AppSharePage() {
           <div className="flex items-center justify-between">
             <p className="text-xs font-bold uppercase tracking-[.2em] text-amber-300">1 · Choose what to share</p>
             <span className="text-xs text-[#86868b]">
-              {ALL_PAGES.length} individual pages
+              {allPages.length} individual pages
             </span>
           </div>
 
           {/* Every active personalized page in one visible selector. */}
           <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-            {ALL_PAGES.map((item) => {
+            {allPages.map((item) => {
               const Icon = item.icon
               const active = item.id === selected
               return (

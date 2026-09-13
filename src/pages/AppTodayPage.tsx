@@ -8,6 +8,7 @@ import type { CrmDistributor, CrmLead, CrmMembership } from '@/lib/crm'
 import type { Session } from '@supabase/supabase-js'
 import { ArrowRight, BookOpenCheck, CalendarCheck2, CheckCircle2, Clock3, GraduationCap, Mail, MessageCircle, Sparkles, UserPlus, Users } from 'lucide-react'
 import { useEffect, useMemo, useState } from 'react'
+import { useLocaleContext } from '@/contexts/LocaleContext'
 import { Link } from 'react-router-dom'
 
 type Module = { id: string; position: number; category: string; title: Record<string, string>; video_url: string | null }
@@ -16,6 +17,7 @@ type Progress = { distributor_id: string; module_id?: string; item_id?: string; 
 type Meeting = { id: string; distributor_id: string; guest_name: string; guest_email: string; starts_at: string; status: string }
 
 export default function AppTodayPage() {
+  const { locale } = useLocaleContext()
   const [session, setSession] = useState<Session | null>(null)
   const [membership, setMembership] = useState<CrmMembership | null>(null)
   const [distributor, setDistributor] = useState<CrmDistributor | null>(null)
@@ -129,14 +131,14 @@ export default function AppTodayPage() {
               <section className="rounded-[28px] border border-white/20 bg-gradient-to-br from-cyan-400/[.1] to-blue-500/[.04] p-6">
                 <GraduationCap className="h-7 w-7 text-[#2997ff]" />
                 <p className="mt-4 text-xs font-bold uppercase tracking-[.18em] text-[#2997ff]">Next learning action</p>
-                <h2 className="mt-1.5 text-lg sm:text-xl font-black text-white">{nextModule ? nextModule.title.en : modules.length ? 'Academy complete' : 'Explore your Academy'}</h2>
+                <h2 className="mt-1.5 text-lg sm:text-xl font-black text-white">{nextModule ? (nextModule.title[locale] || nextModule.title.en) : modules.length ? 'Academy complete' : 'Explore your Academy'}</h2>
                 <p className="mt-2 text-xs sm:text-sm leading-6 text-[#cccccc]">{nextModule ? `${completedTraining.length} of ${modules.length} modules complete. Continue with the next lesson.` : modules.length ? 'You have completed every active training module.' : 'Open the Academy to explore the available learning paths.'}</p>
                 <Link to="/training" className="mt-4 inline-flex items-center gap-2 rounded-xl bg-cyan-400 px-5 py-2.5 text-xs sm:text-sm font-black text-slate-950 hover:bg-cyan-300 transition-colors">Open Academy <ArrowRight className="h-4 w-4" /></Link>
               </section>
               <section className="rounded-[28px] border border-amber-300/15 bg-amber-300/[.05] p-6">
                 <Sparkles className="h-7 w-7 text-amber-300" />
                 <p className="mt-4 text-xs font-bold uppercase tracking-[.18em] text-amber-300">Next setup action</p>
-                <h2 className="mt-1.5 text-lg sm:text-xl font-black text-white">{nextOnboarding ? nextOnboarding.title.en : items.length ? 'Onboarding complete' : 'Explore your setup steps'}</h2>
+                <h2 className="mt-1.5 text-lg sm:text-xl font-black text-white">{nextOnboarding ? (nextOnboarding.title[locale] || nextOnboarding.title.en) : items.length ? 'Onboarding complete' : 'Explore your setup steps'}</h2>
                 <p className="mt-2 text-xs sm:text-sm leading-6 text-[#cccccc]">{completedOnboarding.length} of {items.length} True Legacy setup steps complete.</p>
                 <Link to="/crm/growth" className="mt-4 inline-flex items-center gap-2 text-xs sm:text-sm font-black text-amber-200 hover:text-amber-100 transition-colors">Open progress center <ArrowRight className="h-4 w-4" /></Link>
               </section>
