@@ -1719,12 +1719,30 @@ export function EmguardeLandingPage({ profile: propProfile, distributorSlug }: E
             className="emguarde-hero-bg absolute inset-0 w-full h-full"
             aria-hidden="true"
             style={{
-              backgroundImage: "url('/emguarde/emguarde-cinematic-hero.png')",
+              backgroundImage: "url('/emguarde/emguarde-cinematic-hero-clean.png')",
               backgroundSize: 'cover',
               backgroundRepeat: 'no-repeat',
               backgroundPosition: 'center right',
             }}
           />
+
+          {/* Untouched official product cutout keeps the emGuarde wordmark and hardware exact. */}
+          <div className="absolute inset-0 z-[2] pointer-events-none" aria-hidden="true">
+            <div className="emguarde-hero-product absolute overflow-hidden">
+              <img
+                src="/products/emguarde-go.png"
+                alt=""
+                className="absolute top-0 select-none"
+                style={{
+                  height: '100%',
+                  width: 'auto',
+                  maxWidth: 'none',
+                  left: '50%',
+                  transform: 'translateX(-50%)',
+                }}
+              />
+            </div>
+          </div>
 
           {/* Left-to-center dark gradient for high editorial contrast */}
           <div
@@ -1873,10 +1891,32 @@ export function EmguardeLandingPage({ profile: propProfile, distributorSlug }: E
           {/* Responsive background repositioning styles */}
           <style>{`
             @media (max-width: 639px) {
-              .emguarde-hero-bg { background-position: 78% center !important; min-height: 680px !important; }
+              .emguarde-hero-bg { background-position: 70% center !important; min-height: 680px !important; }
+              .emguarde-hero-product {
+                width: 126px;
+                right: -8px;
+                bottom: 72px;
+                opacity: 0.78;
+              }
             }
             @media (min-width: 640px) and (max-width: 1023px) {
-              .emguarde-hero-bg { background-position: 72% center !important; }
+              .emguarde-hero-bg { background-position: 68% center !important; }
+              .emguarde-hero-product {
+                width: clamp(180px, 25vw, 235px);
+                right: 3vw;
+                bottom: 7%;
+              }
+            }
+            @media (min-width: 1024px) {
+              .emguarde-hero-product {
+                width: clamp(235px, 20vw, 315px);
+                right: clamp(3rem, 8vw, 10rem);
+                bottom: 8%;
+              }
+            }
+            .emguarde-hero-product {
+              aspect-ratio: 283 / 558;
+              filter: drop-shadow(0 32px 32px rgba(0, 0, 0, 0.55)) drop-shadow(0 0 24px rgba(34, 211, 238, 0.16));
             }
           `}</style>
         </section>
