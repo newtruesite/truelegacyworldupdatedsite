@@ -2,11 +2,14 @@ import { SEO } from '@/components/SEO'
 import { Navbar } from '@/components/layout/Navbar'
 import { AppPageHeader } from '@/components/layout/AppPageHeader'
 import { MemberStartingPlan } from '@/components/training/MemberStartingPlan'
-import { followUpQueue, leadNextStep } from '@/lib/todayGuidance'
+import { readStartingPlan } from '@/lib/memberDirection'
+import type { StartingPlan } from '@/lib/memberDirection'
+import { chooseNextBestAction, followUpQueue, leadNextStep } from '@/lib/todayGuidance'
+import type { NextBestActionKey } from '@/lib/todayGuidance'
 import { crmConfigured, crmSupabase, getCrmDistributors, getCrmLeads, getCrmMembership } from '@/lib/crm'
 import type { CrmDistributor, CrmLead, CrmMembership } from '@/lib/crm'
 import type { Session } from '@supabase/supabase-js'
-import { ArrowRight, BookOpenCheck, CalendarCheck2, CheckCircle2, Clock3, GraduationCap, Mail, MessageCircle, Sparkles, UserPlus, Users } from 'lucide-react'
+import { ArrowRight, BookOpenCheck, CalendarCheck2, CheckCircle2, Clock3, Compass, GraduationCap, HandHeart, Mail, MessageCircle, Sparkles, UserPlus, Users } from 'lucide-react'
 import { useEffect, useMemo, useState } from 'react'
 import { useLocaleContext } from '@/contexts/LocaleContext'
 import { Link } from 'react-router-dom'
@@ -15,6 +18,38 @@ type Module = { id: string; position: number; category: string; title: Record<st
 type Item = { id: string; position: number; title: Record<string, string> }
 type Progress = { distributor_id: string; module_id?: string; item_id?: string; completed: boolean }
 type Meeting = { id: string; distributor_id: string; guest_name: string; guest_email: string; starts_at: string; status: string }
+type Relationship = { distributor_id: string; sponsor_distributor_id: string | null }
+
+const todayCopy = {
+  en: {
+    eyebrow: 'YOUR DAILY OPERATING SYSTEM', title: 'Today', welcomeBack: 'Welcome back', welcome: 'Here is the shortest path to momentum.', recommended: 'recommended actions', next: 'YOUR NEXT MOVE', mentorEyebrow: 'YOUR MENTOR CONNECTION', mentorTitle: 'You do not have to do this alone.', mentorBody: (name: string) => `${name} is connected to your True Legacy account and can help you prepare for conversations, understand the system, and choose your next step.`, contact: 'Connect with', mentorPending: 'Your mentor connection is being confirmed.', mentorPendingBody: 'Continue with the Academy while your sponsor connection is completed.', academy: 'Open Academy', actions: {
+      direction: ['Set your direction', 'Answer four quick questions so this page can guide you toward your goal.', '#starting-plan', 'Choose my focus'],
+      overdue: ['Reconnect with the people waiting on you', 'Start with your overdue follow-ups. A thoughtful response is the best next move.', '/crm?attention=due', 'Open follow-ups'],
+      meeting: ['Prepare for today’s conversation', 'Review the guest and the relevant presentation before your scheduled call.', '/app/bookings', 'Review bookings'],
+      'new-lead': ['Welcome your newest contact', 'Make a human first connection and ask what they would most like to understand.', '/crm', 'Open new contacts'],
+      setup: ['Complete your next setup step', 'Finish one onboarding action before adding more to your day.', '/crm/growth', 'Continue setup'],
+      learning: ['Continue one Academy lesson', 'Build confidence by finishing the next lesson in your learning path.', '/training', 'Continue learning'],
+      share: ['Start one meaningful conversation', 'Choose the page that fits the person, then send it with a personal message.', '/app/share', 'Choose a page'],
+      bookings: ['Prepare your discovery-call link', 'Make it simple for the next interested person to choose a time with you.', '/app/bookings', 'Open bookings'],
+      team: ['Support one team member', 'Review team progress and help one person move through their next step.', '/crm/growth', 'Review team progress'],
+    },
+  },
+  es: {
+    eyebrow: 'TU SISTEMA DIARIO', title: 'Hoy', welcomeBack: 'Bienvenido de nuevo', welcome: 'Este es el camino más corto para avanzar.', recommended: 'acciones recomendadas', next: 'TU SIGUIENTE PASO', mentorEyebrow: 'TU CONEXIÓN CON EL MENTOR', mentorTitle: 'No tienes que hacerlo solo.', mentorBody: (name: string) => `${name} está conectado a tu cuenta True Legacy y puede ayudarte a preparar conversaciones, entender el sistema y elegir tu siguiente paso.`, contact: 'Conectar con', mentorPending: 'Estamos confirmando tu conexión con el mentor.', mentorPendingBody: 'Continúa con la Academia mientras se completa la conexión con tu patrocinador.', academy: 'Abrir la Academia', actions: {
+      direction: ['Define tu dirección', 'Responde cuatro preguntas rápidas para que esta página pueda guiarte hacia tu meta.', '#starting-plan', 'Elegir mi enfoque'], overdue: ['Reconecta con quienes esperan tu respuesta', 'Comienza con tus seguimientos vencidos. Una respuesta atenta es el mejor siguiente paso.', '/crm?attention=due', 'Abrir seguimientos'], meeting: ['Prepárate para la conversación de hoy', 'Revisa al invitado y la presentación adecuada antes de tu llamada.', '/app/bookings', 'Revisar reservas'], 'new-lead': ['Da la bienvenida a tu contacto más reciente', 'Haz una primera conexión humana y pregunta qué desea comprender.', '/crm', 'Abrir contactos nuevos'], setup: ['Completa tu siguiente paso de configuración', 'Termina una acción de incorporación antes de agregar más a tu día.', '/crm/growth', 'Continuar configuración'], learning: ['Continúa una lección de la Academia', 'Gana confianza terminando la siguiente lección de tu ruta.', '/training', 'Continuar aprendiendo'], share: ['Inicia una conversación significativa', 'Elige la página adecuada y envíala con un mensaje personal.', '/app/share', 'Elegir una página'], bookings: ['Prepara tu enlace de llamada', 'Facilita que la próxima persona interesada elija un horario contigo.', '/app/bookings', 'Abrir reservas'], team: ['Apoya a un miembro del equipo', 'Revisa el progreso y ayuda a una persona con su siguiente paso.', '/crm/growth', 'Revisar el equipo'],
+    },
+  },
+  fr: {
+    eyebrow: 'VOTRE SYSTÈME QUOTIDIEN', title: 'Aujourd’hui', welcomeBack: 'Bon retour', welcome: 'Voici le chemin le plus direct pour avancer.', recommended: 'actions recommandées', next: 'VOTRE PROCHAINE ACTION', mentorEyebrow: 'VOTRE LIEN AVEC LE MENTOR', mentorTitle: 'Vous n’avez pas à avancer seul(e).', mentorBody: (name: string) => `${name} est lié à votre compte True Legacy et peut vous aider à préparer vos conversations, comprendre le système et choisir la prochaine étape.`, contact: 'Contacter', mentorPending: 'Votre lien avec le mentor est en cours de confirmation.', mentorPendingBody: 'Poursuivez l’Académie pendant la confirmation de votre parrain.', academy: 'Ouvrir l’Académie', actions: {
+      direction: ['Définissez votre direction', 'Répondez à quatre questions rapides afin que cette page vous guide vers votre objectif.', '#starting-plan', 'Choisir ma priorité'], overdue: ['Recontactez les personnes qui vous attendent', 'Commencez par vos suivis en retard. Une réponse attentionnée est la meilleure prochaine action.', '/crm?attention=due', 'Ouvrir les suivis'], meeting: ['Préparez la conversation du jour', 'Consultez le profil de l’invité et la présentation adaptée avant votre appel.', '/app/bookings', 'Voir les réservations'], 'new-lead': ['Accueillez votre nouveau contact', 'Créez un premier lien humain et demandez ce que la personne souhaite comprendre.', '/crm', 'Ouvrir les nouveaux contacts'], setup: ['Terminez la prochaine étape de configuration', 'Finalisez une action d’intégration avant d’en ajouter une autre.', '/crm/growth', 'Continuer la configuration'], learning: ['Continuez une leçon de l’Académie', 'Renforcez votre assurance en terminant la prochaine leçon de votre parcours.', '/training', 'Continuer à apprendre'], share: ['Lancez une conversation utile', 'Choisissez la page adaptée et envoyez-la avec un message personnel.', '/app/share', 'Choisir une page'], bookings: ['Préparez votre lien de rendez-vous', 'Permettez à la prochaine personne intéressée de choisir facilement un créneau.', '/app/bookings', 'Ouvrir les réservations'], team: ['Soutenez un membre de l’équipe', 'Consultez la progression et aidez une personne à avancer.', '/crm/growth', 'Voir la progression'],
+    },
+  },
+  pt: {
+    eyebrow: 'SEU SISTEMA DIÁRIO', title: 'Hoje', welcomeBack: 'Bem-vindo de volta', welcome: 'Este é o caminho mais curto para avançar.', recommended: 'ações recomendadas', next: 'SEU PRÓXIMO PASSO', mentorEyebrow: 'SUA CONEXÃO COM O MENTOR', mentorTitle: 'Você não precisa fazer isso sozinho.', mentorBody: (name: string) => `${name} está conectado à sua conta True Legacy e pode ajudar você a preparar conversas, entender o sistema e escolher o próximo passo.`, contact: 'Falar com', mentorPending: 'Sua conexão com o mentor está sendo confirmada.', mentorPendingBody: 'Continue com a Academia enquanto a conexão com seu patrocinador é concluída.', academy: 'Abrir a Academia', actions: {
+      direction: ['Defina sua direção', 'Responda a quatro perguntas rápidas para que esta página possa orientar você até sua meta.', '#starting-plan', 'Escolher meu foco'], overdue: ['Reconecte-se com quem espera sua resposta', 'Comece pelos acompanhamentos atrasados. Uma resposta atenciosa é o melhor próximo passo.', '/crm?attention=due', 'Abrir acompanhamentos'], meeting: ['Prepare-se para a conversa de hoje', 'Revise o convidado e a apresentação adequada antes da chamada.', '/app/bookings', 'Revisar agendamentos'], 'new-lead': ['Receba seu contato mais recente', 'Faça uma primeira conexão humana e pergunte o que a pessoa deseja entender.', '/crm', 'Abrir novos contatos'], setup: ['Conclua a próxima etapa de configuração', 'Finalize uma ação de integração antes de acrescentar mais ao seu dia.', '/crm/growth', 'Continuar configuração'], learning: ['Continue uma lição da Academia', 'Ganhe confiança concluindo a próxima lição da sua trilha.', '/training', 'Continuar aprendendo'], share: ['Inicie uma conversa significativa', 'Escolha a página certa e envie com uma mensagem pessoal.', '/app/share', 'Escolher uma página'], bookings: ['Prepare seu link de chamada', 'Facilite para a próxima pessoa interessada escolher um horário com você.', '/app/bookings', 'Abrir agendamentos'], team: ['Apoie um membro da equipe', 'Revise o progresso e ajude uma pessoa a dar o próximo passo.', '/crm/growth', 'Revisar equipe'],
+    },
+  },
+} as const satisfies Record<string, { actions: Record<NextBestActionKey, readonly [string, string, string, string]> } & Record<string, unknown>>
 
 export default function AppTodayPage() {
   const { locale } = useLocaleContext()
@@ -27,6 +62,8 @@ export default function AppTodayPage() {
   const [training, setTraining] = useState<Progress[]>([])
   const [onboarding, setOnboarding] = useState<Progress[]>([])
   const [meetings, setMeetings] = useState<Meeting[]>([])
+  const [mentor, setMentor] = useState<CrmDistributor | null>(null)
+  const [startingPlan, setStartingPlan] = useState<StartingPlan | null>(null)
   const [loading, setLoading] = useState(crmConfigured)
   const [loadError, setLoadError] = useState(false)
   const [reload, setReload] = useState(0)
@@ -52,7 +89,7 @@ export default function AppTodayPage() {
         if (!current) return
         setMembership(member)
         if (!member?.active) return
-        const [team, allLeads, msResult, isResult, tpResult, opResult, mtResult] = await Promise.all([
+        const [team, allLeads, msResult, isResult, tpResult, opResult, mtResult, relationshipResult] = await Promise.all([
           getCrmDistributors(),
           getCrmLeads(),
           crmSupabase!.from('crm_training_modules').select('*').eq('active', true).order('position'),
@@ -60,11 +97,15 @@ export default function AppTodayPage() {
           crmSupabase!.from('crm_training_progress').select('*'),
           crmSupabase!.from('crm_onboarding_progress').select('*'),
           crmSupabase!.from('crm_meetings').select('*').eq('status', 'scheduled').order('starts_at', { ascending: true }),
+          crmSupabase!.from('crm_team_relationships').select('distributor_id,sponsor_distributor_id'),
         ])
         const mine = team.find(item => item.id === member.distributor_id) || (session?.user ? team.find(item => item.auth_user_id === session.user.id) : null) || (session?.user?.email ? team.find(item => item.login_email?.toLowerCase() === session.user.email!.toLowerCase()) : null) || (member.role === 'admin' ? team.find(item => item.slug === 'mehdi-cohen') || team[0] : null) || null
         if (!current) return
-        setPartialData([msResult, isResult, tpResult, opResult, mtResult].some(result => result.error))
+        const relationship = ((relationshipResult.data || []) as Relationship[]).find(item => item.distributor_id === mine?.id)
+        setPartialData([msResult, isResult, tpResult, opResult, mtResult, relationshipResult].some(result => result.error))
         setDistributor(mine)
+        setStartingPlan(readStartingPlan(session!.user.user_metadata?.tl_starting_plan))
+        setMentor(team.find(item => item.id === relationship?.sponsor_distributor_id) || null)
         setLeads(allLeads.filter(item => item.assigned_distributor_id === mine?.id))
         setModules((msResult.error || tpResult.error ? [] : msResult.data || []) as Module[])
         setItems((isResult.error || opResult.error ? [] : isResult.data || []) as Item[])
@@ -76,20 +117,23 @@ export default function AppTodayPage() {
     }
     load()
     return () => { current = false }
-  }, [session?.user.id, reload])
+  }, [session, reload])
 
   const now = new Date()
   const queue = followUpQueue(leads, now)
   const due = queue.filter(item => item.next_follow_up_at && new Date(item.next_follow_up_at) < new Date(now.getFullYear(), now.getMonth(), now.getDate()))
   const today = queue.filter(item => { if (!item.next_follow_up_at) return false; const d = new Date(item.next_follow_up_at); return d.getFullYear() === now.getFullYear() && d.getMonth() === now.getMonth() && d.getDate() === now.getDate() })
   const newLeads = useMemo(() => leads.filter(item => item.status === 'new'), [leads])
-  const todayMeetings = useMemo(() => meetings.filter(item => { const d = new Date(item.starts_at); return d.getFullYear() === now.getFullYear() && d.getMonth() === now.getMonth() && d.getDate() === now.getDate() }), [meetings, now])
+  const todayMeetings = meetings.filter(item => { const d = new Date(item.starts_at); return d.getFullYear() === now.getFullYear() && d.getMonth() === now.getMonth() && d.getDate() === now.getDate() })
 
   const completedTraining = training.filter(item => item.completed)
   const completedOnboarding = onboarding.filter(item => item.completed)
   const nextModule = modules.find(item => !completedTraining.some(p => p.module_id === item.id))
   const nextOnboarding = items.find(item => !completedOnboarding.some(p => p.item_id === item.id))
-  const actionCount = queue.length + todayMeetings.length + (nextModule ? 1 : 0) + (nextOnboarding ? 1 : 0)
+  const nextBestAction = chooseNextBestAction({ hasPlan: Boolean(startingPlan), focus: startingPlan?.focus, overdueFollowUps: due.length, meetingsToday: todayMeetings.length, newLeads: newLeads.length, hasOnboardingStep: Boolean(nextOnboarding), hasLearningStep: Boolean(nextModule) })
+  const t = todayCopy[locale]
+  const [nextTitle, nextBody, nextTo, nextCta] = t.actions[nextBestAction]
+  const actionCount = queue.length + todayMeetings.length + (nextModule ? 1 : 0) + (nextOnboarding ? 1 : 0) + (startingPlan ? 0 : 1)
 
   if (!crmConfigured) return <TodayMessage title="App connection required" body="The secure True Legacy connection is unavailable." />
   if (loading || (session && loadedUserId !== session.user.id)) return <TodayMessage title="Loading your day…" body="Getting your contacts, calls, and learning progress." />
@@ -104,20 +148,28 @@ export default function AppTodayPage() {
         <SEO title="Today | True Legacy" description="Your daily True Legacy distributor action plan." noIndex />
         <div className="mx-auto max-w-7xl">
           <AppPageHeader
-            eyebrow="YOUR DAILY OPERATING SYSTEM"
-            title="Today"
-            description={`Welcome back${distributor ? `, ${distributor.display_name.split(' ')[0]}` : ''}. Here is the shortest path to momentum.`}
+            eyebrow={t.eyebrow}
+            title={t.title}
+            description={`${t.welcomeBack}${distributor ? `, ${distributor.display_name.split(' ')[0]}` : ''}. ${t.welcome}`}
             backTo="/app"
             maxWidthClass="max-w-7xl"
             stat={
               <div className="rounded-2xl border border-white/20 bg-cyan-300/[.07] px-5 py-2.5">
                 <span className="text-2xl font-black text-[#2997ff]">{actionCount}</span>
-                <span className="ml-2 text-xs sm:text-sm text-[#cccccc]">recommended actions</span>
+                <span className="ml-2 text-xs sm:text-sm text-[#cccccc]">{t.recommended}</span>
               </div>
             }
           />
 
-          <MemberStartingPlan key={session.user.id} user={session.user} />
+          <section className="mt-7 overflow-hidden rounded-[28px] border border-cyan-300/25 bg-gradient-to-br from-cyan-400/[.14] via-blue-500/[.07] to-transparent p-5 sm:p-7">
+            <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
+              <div className="max-w-3xl"><p className="flex items-center gap-2 text-xs font-black tracking-[.2em] text-cyan-300"><Compass className="h-4 w-4" /> {t.next}</p><h2 className="mt-3 text-2xl font-black sm:text-3xl">{nextTitle}</h2><p className="mt-2 leading-7 text-[#cccccc]">{nextBody}</p></div>
+              <Link to={nextTo} className="inline-flex shrink-0 items-center justify-center gap-2 rounded-xl bg-cyan-400 px-5 py-3 text-sm font-black text-slate-950 hover:bg-cyan-300">{nextCta}<ArrowRight className="h-4 w-4" /></Link>
+            </div>
+          </section>
+
+          <MemberStartingPlan key={session.user.id} user={session.user} onPlanChange={setStartingPlan} />
+          {startingPlan?.mentorSupport && <MentorSupport mentor={mentor} plan={startingPlan} copy={t} />}
           {partialData && <p role="status" className="mt-4 rounded-xl border border-amber-300/20 p-4 text-sm text-amber-200">Some call or learning progress could not load. Your contacts remain available. <button onClick={() => setReload(value => value + 1)} className="ml-2 underline">Try again</button></p>}
 
           <section className="mt-7 grid gap-4 sm:grid-cols-2 xl:grid-cols-5"><Metric icon={<Clock3 />} value={due.length} label="Overdue follow-ups" tone="rose" /><Metric icon={<CalendarCheck2 />} value={today.length} label="Due today" tone="amber" /><Metric icon={<UserPlus />} value={newLeads.length} label="New contacts" tone="cyan" /><Metric icon={<CalendarCheck2 />} value={todayMeetings.length} label="Calls today" tone="cyan" /><Metric icon={<CheckCircle2 />} value={`${completedOnboarding.length}/${items.length}`} label="Onboarding" tone="emerald" /></section>
@@ -206,6 +258,22 @@ function LeadAction({ lead }: { lead: CrmLead }) {
       </div>
     </article>
   )
+}
+
+function MentorSupport({ mentor, plan, copy }: { mentor: CrmDistributor | null; plan: StartingPlan; copy: { mentorEyebrow: string; mentorTitle: string; mentorBody: (name: string) => string; contact: string; mentorPending: string; mentorPendingBody: string; academy: string } }) {
+  if (!mentor) return <section className="mt-7 rounded-[28px] border border-emerald-300/15 bg-emerald-400/[.04] p-5 sm:p-7"><HandHeart className="h-7 w-7 text-emerald-300" /><p className="mt-4 text-xs font-black tracking-[.2em] text-emerald-300">{copy.mentorEyebrow}</p><h2 className="mt-2 text-xl font-black">{copy.mentorPending}</h2><p className="mt-2 max-w-2xl leading-7 text-[#cccccc]">{copy.mentorPendingBody}</p><Link to="/training" className="mt-4 inline-flex items-center gap-2 text-sm font-black text-emerald-200">{copy.academy}<ArrowRight className="h-4 w-4" /></Link></section>
+
+  const digits = mentor.phone?.replace(/\D/g, '')
+  const contact = plan.preferredContact === 'whatsapp' && digits
+    ? { href: `https://wa.me/${digits}`, external: true }
+    : plan.preferredContact === 'email' && mentor.login_email
+      ? { href: `mailto:${mentor.login_email}`, external: true }
+      : plan.preferredContact === 'team-call'
+        ? { href: '/events', external: false }
+        : { href: `/d/${mentor.slug}`, external: false }
+
+  const button = <>{copy.contact} {mentor.display_name.split(' ')[0]}<ArrowRight className="h-4 w-4" /></>
+  return <section className="mt-7 rounded-[28px] border border-emerald-300/20 bg-gradient-to-br from-emerald-400/[.09] to-cyan-400/[.03] p-5 sm:p-7"><div className="flex flex-col gap-5 sm:flex-row sm:items-center"><img src={mentor.avatar_url || '/logos/tl-square-white.png'} alt={mentor.display_name} className="h-20 w-20 rounded-2xl border border-white/15 object-cover object-top" /><div className="min-w-0 flex-1"><p className="text-xs font-black tracking-[.2em] text-emerald-300">{copy.mentorEyebrow}</p><h2 className="mt-2 text-xl font-black">{copy.mentorTitle}</h2><p className="mt-2 max-w-3xl leading-7 text-[#cccccc]">{copy.mentorBody(mentor.display_name)}</p></div>{contact.external ? <a href={contact.href} target={contact.href.startsWith('http') ? '_blank' : undefined} rel={contact.href.startsWith('http') ? 'noreferrer' : undefined} className="inline-flex shrink-0 items-center justify-center gap-2 rounded-xl border border-emerald-300/30 bg-emerald-400/10 px-5 py-3 text-sm font-black text-emerald-100 hover:bg-emerald-400/20">{button}</a> : <Link to={contact.href} className="inline-flex shrink-0 items-center justify-center gap-2 rounded-xl border border-emerald-300/30 bg-emerald-400/10 px-5 py-3 text-sm font-black text-emerald-100 hover:bg-emerald-400/20">{button}</Link>}</div></section>
 }
 const METRIC_TONES: Record<string, string> = { rose: 'text-rose-300', amber: 'text-amber-300', cyan: 'text-[#2997ff]', emerald: 'text-[#cccccc]' }
 function Metric({ icon, value, label, tone }: { icon: React.ReactNode; value: string | number; label: string; tone: string }) { return <div className="rounded-2xl border border-white/10 bg-white/[.03] p-5"><span className={METRIC_TONES[tone]}>{icon}</span><p className="mt-4 text-3xl font-black">{value}</p><p className="mt-1 text-xs font-bold uppercase tracking-wider text-[#86868b]">{label}</p></div> }

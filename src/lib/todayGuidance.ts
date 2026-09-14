@@ -1,5 +1,29 @@
 import type { CrmLead } from './crm'
 
+export type NextBestActionKey = 'direction' | 'overdue' | 'meeting' | 'new-lead' | 'setup' | 'learning' | 'share' | 'bookings' | 'team'
+
+export type DailyDirection = {
+  hasPlan: boolean
+  focus?: 'product' | 'referral' | 'business' | 'leadership'
+  overdueFollowUps: number
+  meetingsToday: number
+  newLeads: number
+  hasOnboardingStep: boolean
+  hasLearningStep: boolean
+}
+
+export function chooseNextBestAction(input: DailyDirection): NextBestActionKey {
+  if (!input.hasPlan) return 'direction'
+  if (input.overdueFollowUps > 0) return 'overdue'
+  if (input.meetingsToday > 0) return 'meeting'
+  if (input.newLeads > 0) return 'new-lead'
+  if (input.hasOnboardingStep) return 'setup'
+  if (input.hasLearningStep) return 'learning'
+  if (input.focus === 'leadership') return 'team'
+  if (input.focus === 'business') return 'bookings'
+  return 'share'
+}
+
 export function leadNextStep(lead: Pick<CrmLead, 'status'>): string {
   switch (lead.status) {
     case 'new': return 'Introduce yourself and ask what they would like to learn.'
